@@ -1,0 +1,255 @@
+# FlagDetailResponseData
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**CreatedAt** | **time.Time** |  | 
+**DefaultValue** | **bool** |  | 
+**Description** | **string** |  | 
+**FeatureId** | Pointer to **NullableString** |  | [optional] 
+**FlagType** | **string** |  | 
+**Id** | **string** |  | 
+**Key** | **string** |  | 
+**Name** | **string** |  | 
+**Rules** | [**[]RuleDetailResponseData**](RuleDetailResponseData.md) |  | 
+**UpdatedAt** | **time.Time** |  | 
+
+## Methods
+
+### NewFlagDetailResponseData
+
+`func NewFlagDetailResponseData(createdAt time.Time, defaultValue bool, description string, flagType string, id string, key string, name string, rules []RuleDetailResponseData, updatedAt time.Time, ) *FlagDetailResponseData`
+
+NewFlagDetailResponseData instantiates a new FlagDetailResponseData object
+This constructor will assign default values to properties that have it defined,
+and makes sure properties required by API are set, but the set of arguments
+will change when the set of required properties is changed
+
+### NewFlagDetailResponseDataWithDefaults
+
+`func NewFlagDetailResponseDataWithDefaults() *FlagDetailResponseData`
+
+NewFlagDetailResponseDataWithDefaults instantiates a new FlagDetailResponseData object
+This constructor will only assign default values to properties that have it defined,
+but it doesn't guarantee that properties required by API are set
+
+### GetCreatedAt
+
+`func (o *FlagDetailResponseData) GetCreatedAt() time.Time`
+
+GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
+
+### GetCreatedAtOk
+
+`func (o *FlagDetailResponseData) GetCreatedAtOk() (*time.Time, bool)`
+
+GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCreatedAt
+
+`func (o *FlagDetailResponseData) SetCreatedAt(v time.Time)`
+
+SetCreatedAt sets CreatedAt field to given value.
+
+
+### GetDefaultValue
+
+`func (o *FlagDetailResponseData) GetDefaultValue() bool`
+
+GetDefaultValue returns the DefaultValue field if non-nil, zero value otherwise.
+
+### GetDefaultValueOk
+
+`func (o *FlagDetailResponseData) GetDefaultValueOk() (*bool, bool)`
+
+GetDefaultValueOk returns a tuple with the DefaultValue field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDefaultValue
+
+`func (o *FlagDetailResponseData) SetDefaultValue(v bool)`
+
+SetDefaultValue sets DefaultValue field to given value.
+
+
+### GetDescription
+
+`func (o *FlagDetailResponseData) GetDescription() string`
+
+GetDescription returns the Description field if non-nil, zero value otherwise.
+
+### GetDescriptionOk
+
+`func (o *FlagDetailResponseData) GetDescriptionOk() (*string, bool)`
+
+GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDescription
+
+`func (o *FlagDetailResponseData) SetDescription(v string)`
+
+SetDescription sets Description field to given value.
+
+
+### GetFeatureId
+
+`func (o *FlagDetailResponseData) GetFeatureId() string`
+
+GetFeatureId returns the FeatureId field if non-nil, zero value otherwise.
+
+### GetFeatureIdOk
+
+`func (o *FlagDetailResponseData) GetFeatureIdOk() (*string, bool)`
+
+GetFeatureIdOk returns a tuple with the FeatureId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFeatureId
+
+`func (o *FlagDetailResponseData) SetFeatureId(v string)`
+
+SetFeatureId sets FeatureId field to given value.
+
+### HasFeatureId
+
+`func (o *FlagDetailResponseData) HasFeatureId() bool`
+
+HasFeatureId returns a boolean if a field has been set.
+
+### SetFeatureIdNil
+
+`func (o *FlagDetailResponseData) SetFeatureIdNil(b bool)`
+
+ SetFeatureIdNil sets the value for FeatureId to be an explicit nil
+
+### UnsetFeatureId
+`func (o *FlagDetailResponseData) UnsetFeatureId()`
+
+UnsetFeatureId ensures that no value is present for FeatureId, not even an explicit nil
+### GetFlagType
+
+`func (o *FlagDetailResponseData) GetFlagType() string`
+
+GetFlagType returns the FlagType field if non-nil, zero value otherwise.
+
+### GetFlagTypeOk
+
+`func (o *FlagDetailResponseData) GetFlagTypeOk() (*string, bool)`
+
+GetFlagTypeOk returns a tuple with the FlagType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFlagType
+
+`func (o *FlagDetailResponseData) SetFlagType(v string)`
+
+SetFlagType sets FlagType field to given value.
+
+
+### GetId
+
+`func (o *FlagDetailResponseData) GetId() string`
+
+GetId returns the Id field if non-nil, zero value otherwise.
+
+### GetIdOk
+
+`func (o *FlagDetailResponseData) GetIdOk() (*string, bool)`
+
+GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetId
+
+`func (o *FlagDetailResponseData) SetId(v string)`
+
+SetId sets Id field to given value.
+
+
+### GetKey
+
+`func (o *FlagDetailResponseData) GetKey() string`
+
+GetKey returns the Key field if non-nil, zero value otherwise.
+
+### GetKeyOk
+
+`func (o *FlagDetailResponseData) GetKeyOk() (*string, bool)`
+
+GetKeyOk returns a tuple with the Key field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetKey
+
+`func (o *FlagDetailResponseData) SetKey(v string)`
+
+SetKey sets Key field to given value.
+
+
+### GetName
+
+`func (o *FlagDetailResponseData) GetName() string`
+
+GetName returns the Name field if non-nil, zero value otherwise.
+
+### GetNameOk
+
+`func (o *FlagDetailResponseData) GetNameOk() (*string, bool)`
+
+GetNameOk returns a tuple with the Name field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetName
+
+`func (o *FlagDetailResponseData) SetName(v string)`
+
+SetName sets Name field to given value.
+
+
+### GetRules
+
+`func (o *FlagDetailResponseData) GetRules() []RuleDetailResponseData`
+
+GetRules returns the Rules field if non-nil, zero value otherwise.
+
+### GetRulesOk
+
+`func (o *FlagDetailResponseData) GetRulesOk() (*[]RuleDetailResponseData, bool)`
+
+GetRulesOk returns a tuple with the Rules field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRules
+
+`func (o *FlagDetailResponseData) SetRules(v []RuleDetailResponseData)`
+
+SetRules sets Rules field to given value.
+
+
+### GetUpdatedAt
+
+`func (o *FlagDetailResponseData) GetUpdatedAt() time.Time`
+
+GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
+
+### GetUpdatedAtOk
+
+`func (o *FlagDetailResponseData) GetUpdatedAtOk() (*time.Time, bool)`
+
+GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUpdatedAt
+
+`func (o *FlagDetailResponseData) SetUpdatedAt(v time.Time)`
+
+SetUpdatedAt sets UpdatedAt field to given value.
+
+
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

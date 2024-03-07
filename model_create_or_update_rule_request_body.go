@@ -25,7 +25,7 @@ type CreateOrUpdateRuleRequestBody struct {
 	Name string `json:"name"`
 	Priority int32 `json:"priority"`
 	PriorityGroup NullableInt32 `json:"priority_group,omitempty"`
-	SkipWebhooks NullableBool `json:"skip_webhooks,omitempty"`
+	RuleType NullableString `json:"rule_type,omitempty"`
 	Value bool `json:"value"`
 }
 
@@ -231,46 +231,46 @@ func (o *CreateOrUpdateRuleRequestBody) UnsetPriorityGroup() {
 	o.PriorityGroup.Unset()
 }
 
-// GetSkipWebhooks returns the SkipWebhooks field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreateOrUpdateRuleRequestBody) GetSkipWebhooks() bool {
-	if o == nil || IsNil(o.SkipWebhooks.Get()) {
-		var ret bool
+// GetRuleType returns the RuleType field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateOrUpdateRuleRequestBody) GetRuleType() string {
+	if o == nil || IsNil(o.RuleType.Get()) {
+		var ret string
 		return ret
 	}
-	return *o.SkipWebhooks.Get()
+	return *o.RuleType.Get()
 }
 
-// GetSkipWebhooksOk returns a tuple with the SkipWebhooks field value if set, nil otherwise
+// GetRuleTypeOk returns a tuple with the RuleType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreateOrUpdateRuleRequestBody) GetSkipWebhooksOk() (*bool, bool) {
+func (o *CreateOrUpdateRuleRequestBody) GetRuleTypeOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return o.SkipWebhooks.Get(), o.SkipWebhooks.IsSet()
+	return o.RuleType.Get(), o.RuleType.IsSet()
 }
 
-// HasSkipWebhooks returns a boolean if a field has been set.
-func (o *CreateOrUpdateRuleRequestBody) HasSkipWebhooks() bool {
-	if o != nil && o.SkipWebhooks.IsSet() {
+// HasRuleType returns a boolean if a field has been set.
+func (o *CreateOrUpdateRuleRequestBody) HasRuleType() bool {
+	if o != nil && o.RuleType.IsSet() {
 		return true
 	}
 
 	return false
 }
 
-// SetSkipWebhooks gets a reference to the given NullableBool and assigns it to the SkipWebhooks field.
-func (o *CreateOrUpdateRuleRequestBody) SetSkipWebhooks(v bool) {
-	o.SkipWebhooks.Set(&v)
+// SetRuleType gets a reference to the given NullableString and assigns it to the RuleType field.
+func (o *CreateOrUpdateRuleRequestBody) SetRuleType(v string) {
+	o.RuleType.Set(&v)
 }
-// SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-func (o *CreateOrUpdateRuleRequestBody) SetSkipWebhooksNil() {
-	o.SkipWebhooks.Set(nil)
+// SetRuleTypeNil sets the value for RuleType to be an explicit nil
+func (o *CreateOrUpdateRuleRequestBody) SetRuleTypeNil() {
+	o.RuleType.Set(nil)
 }
 
-// UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
-func (o *CreateOrUpdateRuleRequestBody) UnsetSkipWebhooks() {
-	o.SkipWebhooks.Unset()
+// UnsetRuleType ensures that no value is present for RuleType, not even an explicit nil
+func (o *CreateOrUpdateRuleRequestBody) UnsetRuleType() {
+	o.RuleType.Unset()
 }
 
 // GetValue returns the Value field value
@@ -317,8 +317,8 @@ func (o CreateOrUpdateRuleRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.PriorityGroup.IsSet() {
 		toSerialize["priority_group"] = o.PriorityGroup.Get()
 	}
-	if o.SkipWebhooks.IsSet() {
-		toSerialize["skip_webhooks"] = o.SkipWebhooks.Get()
+	if o.RuleType.IsSet() {
+		toSerialize["rule_type"] = o.RuleType.Get()
 	}
 	toSerialize["value"] = o.Value
 	return toSerialize, nil

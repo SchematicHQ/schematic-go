@@ -10,7 +10,6 @@ Method | HTTP request | Description
 [**ListPlans**](PlansApi.md#ListPlans) | **Get** /plans | List plans
 [**UpdatePlan**](PlansApi.md#UpdatePlan) | **Put** /plans/{plan_id} | Update plan
 [**UpdatePlanAudience**](PlansApi.md#UpdatePlanAudience) | **Put** /plan-audiences/{plan_audience_id} | Update plan audience
-[**UpsertBillingPeriod**](PlansApi.md#UpsertBillingPeriod) | **Post** /billing-periods/{key}/upsert | Upsert billing period
 
 
 
@@ -417,79 +416,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**UpdatePlanAudienceResponse**](UpdatePlanAudienceResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## UpsertBillingPeriod
-
-> UpsertBillingPeriodResponse UpsertBillingPeriod(ctx, key).UpsertBillingPeriodRequestBody(upsertBillingPeriodRequestBody).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
-
-Upsert billing period
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    "time"
-    openapiclient "github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-    key := "key_example" // string | key
-    upsertBillingPeriodRequestBody := *openapiclient.NewUpsertBillingPeriodRequestBody("CompanyId_example", time.Now()) // UpsertBillingPeriodRequestBody | 
-    xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.PlansApi.UpsertBillingPeriod(context.Background(), key).UpsertBillingPeriodRequestBody(upsertBillingPeriodRequestBody).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `PlansApi.UpsertBillingPeriod``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `UpsertBillingPeriod`: UpsertBillingPeriodResponse
-    fmt.Fprintf(os.Stdout, "Response from `PlansApi.UpsertBillingPeriod`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**key** | **string** | key | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiUpsertBillingPeriodRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **upsertBillingPeriodRequestBody** | [**UpsertBillingPeriodRequestBody**](UpsertBillingPeriodRequestBody.md) |  | 
- **xSchematicEnvironmentId** | **string** | If the request is made using an API key that is not environment-scoped, specify the environment using this header | 
-
-### Return type
-
-[**UpsertBillingPeriodResponse**](UpsertBillingPeriodResponse.md)
 
 ### Authorization
 

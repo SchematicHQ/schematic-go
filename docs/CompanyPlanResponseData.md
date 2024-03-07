@@ -6,18 +6,16 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CompanyId** | **string** |  | 
 **CreatedAt** | **time.Time** |  | 
-**EndedAt** | Pointer to **NullableTime** |  | [optional] 
 **EnvironmentId** | **string** |  | 
 **Id** | **string** |  | 
 **PlanId** | **string** |  | 
-**StartedAt** | **time.Time** |  | 
 **UpdatedAt** | **time.Time** |  | 
 
 ## Methods
 
 ### NewCompanyPlanResponseData
 
-`func NewCompanyPlanResponseData(companyId string, createdAt time.Time, environmentId string, id string, planId string, startedAt time.Time, updatedAt time.Time, ) *CompanyPlanResponseData`
+`func NewCompanyPlanResponseData(companyId string, createdAt time.Time, environmentId string, id string, planId string, updatedAt time.Time, ) *CompanyPlanResponseData`
 
 NewCompanyPlanResponseData instantiates a new CompanyPlanResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -72,41 +70,6 @@ and a boolean to check if the value has been set.
 SetCreatedAt sets CreatedAt field to given value.
 
 
-### GetEndedAt
-
-`func (o *CompanyPlanResponseData) GetEndedAt() time.Time`
-
-GetEndedAt returns the EndedAt field if non-nil, zero value otherwise.
-
-### GetEndedAtOk
-
-`func (o *CompanyPlanResponseData) GetEndedAtOk() (*time.Time, bool)`
-
-GetEndedAtOk returns a tuple with the EndedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetEndedAt
-
-`func (o *CompanyPlanResponseData) SetEndedAt(v time.Time)`
-
-SetEndedAt sets EndedAt field to given value.
-
-### HasEndedAt
-
-`func (o *CompanyPlanResponseData) HasEndedAt() bool`
-
-HasEndedAt returns a boolean if a field has been set.
-
-### SetEndedAtNil
-
-`func (o *CompanyPlanResponseData) SetEndedAtNil(b bool)`
-
- SetEndedAtNil sets the value for EndedAt to be an explicit nil
-
-### UnsetEndedAt
-`func (o *CompanyPlanResponseData) UnsetEndedAt()`
-
-UnsetEndedAt ensures that no value is present for EndedAt, not even an explicit nil
 ### GetEnvironmentId
 
 `func (o *CompanyPlanResponseData) GetEnvironmentId() string`
@@ -165,26 +128,6 @@ and a boolean to check if the value has been set.
 `func (o *CompanyPlanResponseData) SetPlanId(v string)`
 
 SetPlanId sets PlanId field to given value.
-
-
-### GetStartedAt
-
-`func (o *CompanyPlanResponseData) GetStartedAt() time.Time`
-
-GetStartedAt returns the StartedAt field if non-nil, zero value otherwise.
-
-### GetStartedAtOk
-
-`func (o *CompanyPlanResponseData) GetStartedAtOk() (*time.Time, bool)`
-
-GetStartedAtOk returns a tuple with the StartedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetStartedAt
-
-`func (o *CompanyPlanResponseData) SetStartedAt(v time.Time)`
-
-SetStartedAt sets StartedAt field to given value.
 
 
 ### GetUpdatedAt

@@ -24,7 +24,6 @@ type UpsertCompanyRequestBody struct {
 	Keys map[string]interface{} `json:"keys"`
 	LastSeenAt NullableTime `json:"last_seen_at,omitempty"`
 	Name NullableString `json:"name,omitempty"`
-	SkipWebhooks NullableBool `json:"skip_webhooks,omitempty"`
 	// A map of trait names to trait values
 	Traits map[string]interface{} `json:"traits,omitempty"`
 	UpdateOnly NullableBool `json:"update_only,omitempty"`
@@ -198,48 +197,6 @@ func (o *UpsertCompanyRequestBody) UnsetName() {
 	o.Name.Unset()
 }
 
-// GetSkipWebhooks returns the SkipWebhooks field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *UpsertCompanyRequestBody) GetSkipWebhooks() bool {
-	if o == nil || IsNil(o.SkipWebhooks.Get()) {
-		var ret bool
-		return ret
-	}
-	return *o.SkipWebhooks.Get()
-}
-
-// GetSkipWebhooksOk returns a tuple with the SkipWebhooks field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *UpsertCompanyRequestBody) GetSkipWebhooksOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.SkipWebhooks.Get(), o.SkipWebhooks.IsSet()
-}
-
-// HasSkipWebhooks returns a boolean if a field has been set.
-func (o *UpsertCompanyRequestBody) HasSkipWebhooks() bool {
-	if o != nil && o.SkipWebhooks.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetSkipWebhooks gets a reference to the given NullableBool and assigns it to the SkipWebhooks field.
-func (o *UpsertCompanyRequestBody) SetSkipWebhooks(v bool) {
-	o.SkipWebhooks.Set(&v)
-}
-// SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-func (o *UpsertCompanyRequestBody) SetSkipWebhooksNil() {
-	o.SkipWebhooks.Set(nil)
-}
-
-// UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
-func (o *UpsertCompanyRequestBody) UnsetSkipWebhooks() {
-	o.SkipWebhooks.Unset()
-}
-
 // GetTraits returns the Traits field value if set, zero value otherwise.
 func (o *UpsertCompanyRequestBody) GetTraits() map[string]interface{} {
 	if o == nil || IsNil(o.Traits) {
@@ -333,9 +290,6 @@ func (o UpsertCompanyRequestBody) ToMap() (map[string]interface{}, error) {
 	}
 	if o.Name.IsSet() {
 		toSerialize["name"] = o.Name.Get()
-	}
-	if o.SkipWebhooks.IsSet() {
-		toSerialize["skip_webhooks"] = o.SkipWebhooks.Get()
 	}
 	if !IsNil(o.Traits) {
 		toSerialize["traits"] = o.Traits

@@ -19,7 +19,7 @@ var _ MappedNullable = &CreateEventResponse{}
 
 // CreateEventResponse struct for CreateEventResponse
 type CreateEventResponse struct {
-	Data EventResponseData `json:"data"`
+	Data RawEventResponseData `json:"data"`
 	// Input parameters
 	Params map[string]interface{} `json:"params"`
 }
@@ -28,7 +28,7 @@ type CreateEventResponse struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateEventResponse(data EventResponseData, params map[string]interface{}) *CreateEventResponse {
+func NewCreateEventResponse(data RawEventResponseData, params map[string]interface{}) *CreateEventResponse {
 	this := CreateEventResponse{}
 	this.Data = data
 	this.Params = params
@@ -44,9 +44,9 @@ func NewCreateEventResponseWithDefaults() *CreateEventResponse {
 }
 
 // GetData returns the Data field value
-func (o *CreateEventResponse) GetData() EventResponseData {
+func (o *CreateEventResponse) GetData() RawEventResponseData {
 	if o == nil {
-		var ret EventResponseData
+		var ret RawEventResponseData
 		return ret
 	}
 
@@ -55,7 +55,7 @@ func (o *CreateEventResponse) GetData() EventResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *CreateEventResponse) GetDataOk() (*EventResponseData, bool) {
+func (o *CreateEventResponse) GetDataOk() (*RawEventResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -63,7 +63,7 @@ func (o *CreateEventResponse) GetDataOk() (*EventResponseData, bool) {
 }
 
 // SetData sets field value
-func (o *CreateEventResponse) SetData(v EventResponseData) {
+func (o *CreateEventResponse) SetData(v RawEventResponseData) {
 	o.Data = v
 }
 

@@ -11,7 +11,7 @@ Method | HTTP request | Description
 [**DeleteApiKey**](AccountsApi.md#DeleteApiKey) | **Delete** /api-keys/{api_key_id} | Delete api key
 [**DeleteEnvironment**](AccountsApi.md#DeleteEnvironment) | **Delete** /environments/{environment_id} | Delete environment
 [**GetApiKey**](AccountsApi.md#GetApiKey) | **Get** /api-keys/{api_key_id} | Get api key
-[**GetApiRequest**](AccountsApi.md#GetApiRequest) | **Get** /api-requests/{api_request_id} | Get api request
+[**GetApiRequest**](AccountsApi.md#GetApiRequest) | **Get** /api-requests/{key} | Get api request
 [**GetEnvironment**](AccountsApi.md#GetEnvironment) | **Get** /environments/{environment_id} | Get environment
 [**ListApiKeys**](AccountsApi.md#ListApiKeys) | **Get** /api-keys | List api keys
 [**ListApiRequests**](AccountsApi.md#ListApiRequests) | **Get** /api-requests | List api requests
@@ -506,7 +506,7 @@ Name | Type | Description  | Notes
 
 ## GetApiRequest
 
-> GetApiRequestResponse GetApiRequest(ctx, apiRequestId).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
+> GetApiRequestResponse GetApiRequest(ctx, key).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
 
 Get api request
 
@@ -523,12 +523,12 @@ import (
 )
 
 func main() {
-    apiRequestId := "apiRequestId_example" // string | api_request_id
+    key := "key_example" // string | key
     xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.AccountsApi.GetApiRequest(context.Background(), apiRequestId).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
+    resp, r, err := apiClient.AccountsApi.GetApiRequest(context.Background(), key).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `AccountsApi.GetApiRequest``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -544,7 +544,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**apiRequestId** | **string** | api_request_id | 
+**key** | **string** | key | 
 
 ### Other Parameters
 

@@ -25,7 +25,6 @@ type UpdateFeatureRequestBody struct {
 	Flag *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
 	LifecyclePhase NullableString `json:"lifecycle_phase,omitempty"`
 	Name NullableString `json:"name,omitempty"`
-	SkipWebhooks NullableBool `json:"skip_webhooks,omitempty"`
 	TraitId NullableString `json:"trait_id,omitempty"`
 }
 
@@ -288,48 +287,6 @@ func (o *UpdateFeatureRequestBody) UnsetName() {
 	o.Name.Unset()
 }
 
-// GetSkipWebhooks returns the SkipWebhooks field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *UpdateFeatureRequestBody) GetSkipWebhooks() bool {
-	if o == nil || IsNil(o.SkipWebhooks.Get()) {
-		var ret bool
-		return ret
-	}
-	return *o.SkipWebhooks.Get()
-}
-
-// GetSkipWebhooksOk returns a tuple with the SkipWebhooks field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *UpdateFeatureRequestBody) GetSkipWebhooksOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.SkipWebhooks.Get(), o.SkipWebhooks.IsSet()
-}
-
-// HasSkipWebhooks returns a boolean if a field has been set.
-func (o *UpdateFeatureRequestBody) HasSkipWebhooks() bool {
-	if o != nil && o.SkipWebhooks.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetSkipWebhooks gets a reference to the given NullableBool and assigns it to the SkipWebhooks field.
-func (o *UpdateFeatureRequestBody) SetSkipWebhooks(v bool) {
-	o.SkipWebhooks.Set(&v)
-}
-// SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-func (o *UpdateFeatureRequestBody) SetSkipWebhooksNil() {
-	o.SkipWebhooks.Set(nil)
-}
-
-// UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
-func (o *UpdateFeatureRequestBody) UnsetSkipWebhooks() {
-	o.SkipWebhooks.Unset()
-}
-
 // GetTraitId returns the TraitId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *UpdateFeatureRequestBody) GetTraitId() string {
 	if o == nil || IsNil(o.TraitId.Get()) {
@@ -399,9 +356,6 @@ func (o UpdateFeatureRequestBody) ToMap() (map[string]interface{}, error) {
 	}
 	if o.Name.IsSet() {
 		toSerialize["name"] = o.Name.Get()
-	}
-	if o.SkipWebhooks.IsSet() {
-		toSerialize["skip_webhooks"] = o.SkipWebhooks.Get()
 	}
 	if o.TraitId.IsSet() {
 		toSerialize["trait_id"] = o.TraitId.Get()

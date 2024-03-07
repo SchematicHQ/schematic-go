@@ -4,7 +4,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**SkipWebhooks** | Pointer to **NullableBool** |  | [optional] 
 **TraitType** | **string** |  | 
 
 ## Methods
@@ -26,41 +25,6 @@ NewUpdateEntityTraitDefinitionRequestBodyWithDefaults instantiates a new UpdateE
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetSkipWebhooks
-
-`func (o *UpdateEntityTraitDefinitionRequestBody) GetSkipWebhooks() bool`
-
-GetSkipWebhooks returns the SkipWebhooks field if non-nil, zero value otherwise.
-
-### GetSkipWebhooksOk
-
-`func (o *UpdateEntityTraitDefinitionRequestBody) GetSkipWebhooksOk() (*bool, bool)`
-
-GetSkipWebhooksOk returns a tuple with the SkipWebhooks field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetSkipWebhooks
-
-`func (o *UpdateEntityTraitDefinitionRequestBody) SetSkipWebhooks(v bool)`
-
-SetSkipWebhooks sets SkipWebhooks field to given value.
-
-### HasSkipWebhooks
-
-`func (o *UpdateEntityTraitDefinitionRequestBody) HasSkipWebhooks() bool`
-
-HasSkipWebhooks returns a boolean if a field has been set.
-
-### SetSkipWebhooksNil
-
-`func (o *UpdateEntityTraitDefinitionRequestBody) SetSkipWebhooksNil(b bool)`
-
- SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-
-### UnsetSkipWebhooks
-`func (o *UpdateEntityTraitDefinitionRequestBody) UnsetSkipWebhooks()`
-
-UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
 ### GetTraitType
 
 `func (o *UpdateEntityTraitDefinitionRequestBody) GetTraitType() string`

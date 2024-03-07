@@ -22,11 +22,9 @@ var _ MappedNullable = &CompanyPlanResponseData{}
 type CompanyPlanResponseData struct {
 	CompanyId string `json:"company_id"`
 	CreatedAt time.Time `json:"created_at"`
-	EndedAt NullableTime `json:"ended_at,omitempty"`
 	EnvironmentId string `json:"environment_id"`
 	Id string `json:"id"`
 	PlanId string `json:"plan_id"`
-	StartedAt time.Time `json:"started_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
@@ -34,14 +32,13 @@ type CompanyPlanResponseData struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCompanyPlanResponseData(companyId string, createdAt time.Time, environmentId string, id string, planId string, startedAt time.Time, updatedAt time.Time) *CompanyPlanResponseData {
+func NewCompanyPlanResponseData(companyId string, createdAt time.Time, environmentId string, id string, planId string, updatedAt time.Time) *CompanyPlanResponseData {
 	this := CompanyPlanResponseData{}
 	this.CompanyId = companyId
 	this.CreatedAt = createdAt
 	this.EnvironmentId = environmentId
 	this.Id = id
 	this.PlanId = planId
-	this.StartedAt = startedAt
 	this.UpdatedAt = updatedAt
 	return &this
 }
@@ -100,48 +97,6 @@ func (o *CompanyPlanResponseData) GetCreatedAtOk() (*time.Time, bool) {
 // SetCreatedAt sets field value
 func (o *CompanyPlanResponseData) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
-}
-
-// GetEndedAt returns the EndedAt field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CompanyPlanResponseData) GetEndedAt() time.Time {
-	if o == nil || IsNil(o.EndedAt.Get()) {
-		var ret time.Time
-		return ret
-	}
-	return *o.EndedAt.Get()
-}
-
-// GetEndedAtOk returns a tuple with the EndedAt field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CompanyPlanResponseData) GetEndedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.EndedAt.Get(), o.EndedAt.IsSet()
-}
-
-// HasEndedAt returns a boolean if a field has been set.
-func (o *CompanyPlanResponseData) HasEndedAt() bool {
-	if o != nil && o.EndedAt.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetEndedAt gets a reference to the given NullableTime and assigns it to the EndedAt field.
-func (o *CompanyPlanResponseData) SetEndedAt(v time.Time) {
-	o.EndedAt.Set(&v)
-}
-// SetEndedAtNil sets the value for EndedAt to be an explicit nil
-func (o *CompanyPlanResponseData) SetEndedAtNil() {
-	o.EndedAt.Set(nil)
-}
-
-// UnsetEndedAt ensures that no value is present for EndedAt, not even an explicit nil
-func (o *CompanyPlanResponseData) UnsetEndedAt() {
-	o.EndedAt.Unset()
 }
 
 // GetEnvironmentId returns the EnvironmentId field value
@@ -216,30 +171,6 @@ func (o *CompanyPlanResponseData) SetPlanId(v string) {
 	o.PlanId = v
 }
 
-// GetStartedAt returns the StartedAt field value
-func (o *CompanyPlanResponseData) GetStartedAt() time.Time {
-	if o == nil {
-		var ret time.Time
-		return ret
-	}
-
-	return o.StartedAt
-}
-
-// GetStartedAtOk returns a tuple with the StartedAt field value
-// and a boolean to check if the value has been set.
-func (o *CompanyPlanResponseData) GetStartedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.StartedAt, true
-}
-
-// SetStartedAt sets field value
-func (o *CompanyPlanResponseData) SetStartedAt(v time.Time) {
-	o.StartedAt = v
-}
-
 // GetUpdatedAt returns the UpdatedAt field value
 func (o *CompanyPlanResponseData) GetUpdatedAt() time.Time {
 	if o == nil {
@@ -276,13 +207,9 @@ func (o CompanyPlanResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["company_id"] = o.CompanyId
 	toSerialize["created_at"] = o.CreatedAt
-	if o.EndedAt.IsSet() {
-		toSerialize["ended_at"] = o.EndedAt.Get()
-	}
 	toSerialize["environment_id"] = o.EnvironmentId
 	toSerialize["id"] = o.Id
 	toSerialize["plan_id"] = o.PlanId
-	toSerialize["started_at"] = o.StartedAt
 	toSerialize["updated_at"] = o.UpdatedAt
 	return toSerialize, nil
 }

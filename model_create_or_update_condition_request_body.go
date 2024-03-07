@@ -30,7 +30,7 @@ type CreateOrUpdateConditionRequestBody struct {
 	// Value to compare the track event metric against
 	MetricValue int32 `json:"metric_value"`
 	Operator string `json:"operator"`
-	// List of resource IDs (companise, users, or plans) targeted by this condition
+	// List of resource IDs (companies, users, or plans) targeted by this condition
 	ResourceIds []string `json:"resource_ids"`
 	// ID of trait to use to measure this condition
 	TraitId NullableString `json:"trait_id,omitempty"`

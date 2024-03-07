@@ -6,7 +6,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **EnvironmentType** | Pointer to **NullableString** |  | [optional] 
 **Name** | Pointer to **NullableString** |  | [optional] 
-**SkipWebhooks** | Pointer to **NullableBool** |  | [optional] 
 
 ## Methods
 
@@ -97,41 +96,6 @@ HasName returns a boolean if a field has been set.
 `func (o *UpdateEnvironmentRequestBody) UnsetName()`
 
 UnsetName ensures that no value is present for Name, not even an explicit nil
-### GetSkipWebhooks
-
-`func (o *UpdateEnvironmentRequestBody) GetSkipWebhooks() bool`
-
-GetSkipWebhooks returns the SkipWebhooks field if non-nil, zero value otherwise.
-
-### GetSkipWebhooksOk
-
-`func (o *UpdateEnvironmentRequestBody) GetSkipWebhooksOk() (*bool, bool)`
-
-GetSkipWebhooksOk returns a tuple with the SkipWebhooks field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetSkipWebhooks
-
-`func (o *UpdateEnvironmentRequestBody) SetSkipWebhooks(v bool)`
-
-SetSkipWebhooks sets SkipWebhooks field to given value.
-
-### HasSkipWebhooks
-
-`func (o *UpdateEnvironmentRequestBody) HasSkipWebhooks() bool`
-
-HasSkipWebhooks returns a boolean if a field has been set.
-
-### SetSkipWebhooksNil
-
-`func (o *UpdateEnvironmentRequestBody) SetSkipWebhooksNil(b bool)`
-
- SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-
-### UnsetSkipWebhooks
-`func (o *UpdateEnvironmentRequestBody) UnsetSkipWebhooks()`
-
-UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -6,7 +6,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CompanyId** | Pointer to **string** |  | [optional] 
 **EventSubtype** | Pointer to **string** |  | [optional] 
-**FeatureId** | Pointer to **string** |  | [optional] 
 **Limit** | Pointer to **int32** |  | [optional] 
 **Offset** | Pointer to **int32** |  | [optional] 
 **UserId** | Pointer to **string** |  | [optional] 
@@ -79,31 +78,6 @@ SetEventSubtype sets EventSubtype field to given value.
 `func (o *ListEventsParams) HasEventSubtype() bool`
 
 HasEventSubtype returns a boolean if a field has been set.
-
-### GetFeatureId
-
-`func (o *ListEventsParams) GetFeatureId() string`
-
-GetFeatureId returns the FeatureId field if non-nil, zero value otherwise.
-
-### GetFeatureIdOk
-
-`func (o *ListEventsParams) GetFeatureIdOk() (*string, bool)`
-
-GetFeatureIdOk returns a tuple with the FeatureId field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetFeatureId
-
-`func (o *ListEventsParams) SetFeatureId(v string)`
-
-SetFeatureId sets FeatureId field to given value.
-
-### HasFeatureId
-
-`func (o *ListEventsParams) HasFeatureId() bool`
-
-HasFeatureId returns a boolean if a field has been set.
 
 ### GetLimit
 

@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **PlanId** | Pointer to **NullableString** |  | [optional] 
 **Priority** | **int32** |  | 
 **PriorityGroup** | Pointer to **NullableInt32** |  | [optional] 
+**RuleType** | **string** |  | 
 **UpdatedAt** | **time.Time** |  | 
 **Value** | **bool** |  | 
 
@@ -21,7 +22,7 @@ Name | Type | Description | Notes
 
 ### NewRuleDetailResponseData
 
-`func NewRuleDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, updatedAt time.Time, value bool, ) *RuleDetailResponseData`
+`func NewRuleDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, ruleType string, updatedAt time.Time, value bool, ) *RuleDetailResponseData`
 
 NewRuleDetailResponseData instantiates a new RuleDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -281,6 +282,26 @@ HasPriorityGroup returns a boolean if a field has been set.
 `func (o *RuleDetailResponseData) UnsetPriorityGroup()`
 
 UnsetPriorityGroup ensures that no value is present for PriorityGroup, not even an explicit nil
+### GetRuleType
+
+`func (o *RuleDetailResponseData) GetRuleType() string`
+
+GetRuleType returns the RuleType field if non-nil, zero value otherwise.
+
+### GetRuleTypeOk
+
+`func (o *RuleDetailResponseData) GetRuleTypeOk() (*string, bool)`
+
+GetRuleTypeOk returns a tuple with the RuleType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRuleType
+
+`func (o *RuleDetailResponseData) SetRuleType(v string)`
+
+SetRuleType sets RuleType field to given value.
+
+
 ### GetUpdatedAt
 
 `func (o *RuleDetailResponseData) GetUpdatedAt() time.Time`

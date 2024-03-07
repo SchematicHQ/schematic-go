@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **MetricPeriod** | Pointer to **NullableString** | Period of time over which to measure the track event metric | [optional] 
 **MetricValue** | **int32** | Value to compare the track event metric against | 
 **Operator** | **string** |  | 
-**ResourceIds** | **[]string** | List of resource IDs (companise, users, or plans) targeted by this condition | 
+**ResourceIds** | **[]string** | List of resource IDs (companies, users, or plans) targeted by this condition | 
 **TraitId** | Pointer to **NullableString** | ID of trait to use to measure this condition | [optional] 
 **TraitValue** | Pointer to **NullableString** | Value to compare the trait value against | [optional] 
 

@@ -11,22 +11,20 @@ Method | HTTP request | Description
 [**CountUsersAudience**](FeaturesApi.md#CountUsersAudience) | **Post** /audience/count-users | Count Users audience
 [**CreateFeature**](FeaturesApi.md#CreateFeature) | **Post** /features | Create feature
 [**CreateFlag**](FeaturesApi.md#CreateFlag) | **Post** /flags | Create flag
-[**CreateRule**](FeaturesApi.md#CreateRule) | **Post** /rules | Create rule
 [**DeleteFeature**](FeaturesApi.md#DeleteFeature) | **Delete** /features/{feature_id} | Delete feature
 [**DeleteFlag**](FeaturesApi.md#DeleteFlag) | **Delete** /flags/{flag_id} | Delete flag
 [**GetCompaniesAudience**](FeaturesApi.md#GetCompaniesAudience) | **Post** /audience/get-companies | Get Companies audience
 [**GetFeature**](FeaturesApi.md#GetFeature) | **Get** /features/{feature_id} | Get feature
 [**GetFlag**](FeaturesApi.md#GetFlag) | **Get** /flags/{flag_id} | Get flag
-[**GetFlagCheck**](FeaturesApi.md#GetFlagCheck) | **Get** /flag-checks/{flag_check_id} | Get flag check
-[**GetRule**](FeaturesApi.md#GetRule) | **Get** /rules/{rule_id} | Get rule
+[**GetFlagCheck**](FeaturesApi.md#GetFlagCheck) | **Get** /flag-checks/{key} | Get flag check
 [**GetUsersAudience**](FeaturesApi.md#GetUsersAudience) | **Post** /audience/get-users | Get Users audience
 [**LatestFlagChecks**](FeaturesApi.md#LatestFlagChecks) | **Get** /flag-checks/latest | Latest flag checks
 [**ListFeatures**](FeaturesApi.md#ListFeatures) | **Get** /features | List features
 [**ListFlagChecks**](FeaturesApi.md#ListFlagChecks) | **Get** /flag-checks | List flag checks
 [**ListFlags**](FeaturesApi.md#ListFlags) | **Get** /flags | List flags
+[**RulesFlag**](FeaturesApi.md#RulesFlag) | **Put** /flags/{flag_id}/rules | Rules flag
 [**UpdateFeature**](FeaturesApi.md#UpdateFeature) | **Put** /features/{feature_id} | Update feature
 [**UpdateFlag**](FeaturesApi.md#UpdateFlag) | **Put** /flags/{flag_id} | Update flag
-[**UpdateRule**](FeaturesApi.md#UpdateRule) | **Put** /rules/{rule_id} | Update rule
 
 
 
@@ -459,7 +457,7 @@ import (
 )
 
 func main() {
-    createFlagRequestBody := *openapiclient.NewCreateFlagRequestBody(false, "Description_example", "FlagType_example", "Key_example", "Name_example", []openapiclient.CreateOrUpdateRuleRequestBody{*openapiclient.NewCreateOrUpdateRuleRequestBody([]openapiclient.CreateOrUpdateConditionGroupRequestBody{*openapiclient.NewCreateOrUpdateConditionGroupRequestBody([]openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}, "Name_example", int32(123), false)}) // CreateFlagRequestBody | 
+    createFlagRequestBody := *openapiclient.NewCreateFlagRequestBody(false, "Description_example", "FlagType_example", "Key_example", "Name_example") // CreateFlagRequestBody | 
     xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
 
     configuration := openapiclient.NewConfiguration()
@@ -491,72 +489,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CreateFlagResponse**](CreateFlagResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## CreateRule
-
-> CreateRuleResponse CreateRule(ctx).CreateRuleRequestBody(createRuleRequestBody).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
-
-Create rule
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-    createRuleRequestBody := *openapiclient.NewCreateRuleRequestBody([]openapiclient.CreateOrUpdateConditionGroupRequestBody{*openapiclient.NewCreateOrUpdateConditionGroupRequestBody([]openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}, "Name_example", int32(123), false) // CreateRuleRequestBody | 
-    xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.FeaturesApi.CreateRule(context.Background()).CreateRuleRequestBody(createRuleRequestBody).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `FeaturesApi.CreateRule``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `CreateRule`: CreateRuleResponse
-    fmt.Fprintf(os.Stdout, "Response from `FeaturesApi.CreateRule`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCreateRuleRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **createRuleRequestBody** | [**CreateRuleRequestBody**](CreateRuleRequestBody.md) |  | 
- **xSchematicEnvironmentId** | **string** | If the request is made using an API key that is not environment-scoped, specify the environment using this header | 
-
-### Return type
-
-[**CreateRuleResponse**](CreateRuleResponse.md)
 
 ### Authorization
 
@@ -920,7 +852,7 @@ Name | Type | Description  | Notes
 
 ## GetFlagCheck
 
-> GetFlagCheckResponse GetFlagCheck(ctx, flagCheckId).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
+> GetFlagCheckResponse GetFlagCheck(ctx, key).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
 
 Get flag check
 
@@ -937,12 +869,12 @@ import (
 )
 
 func main() {
-    flagCheckId := "flagCheckId_example" // string | flag_check_id
+    key := "key_example" // string | key
     xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.FeaturesApi.GetFlagCheck(context.Background(), flagCheckId).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
+    resp, r, err := apiClient.FeaturesApi.GetFlagCheck(context.Background(), key).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `FeaturesApi.GetFlagCheck``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -958,7 +890,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**flagCheckId** | **string** | flag_check_id | 
+**key** | **string** | key | 
 
 ### Other Parameters
 
@@ -973,76 +905,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**GetFlagCheckResponse**](GetFlagCheckResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## GetRule
-
-> GetRuleResponse GetRule(ctx, ruleId).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
-
-Get rule
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-    ruleId := "ruleId_example" // string | rule_id
-    xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.FeaturesApi.GetRule(context.Background(), ruleId).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `FeaturesApi.GetRule``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetRule`: GetRuleResponse
-    fmt.Fprintf(os.Stdout, "Response from `FeaturesApi.GetRule`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**ruleId** | **string** | rule_id | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGetRuleRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **xSchematicEnvironmentId** | **string** | If the request is made using an API key that is not environment-scoped, specify the environment using this header | 
-
-### Return type
-
-[**GetRuleResponse**](GetRuleResponse.md)
 
 ### Authorization
 
@@ -1412,6 +1274,78 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## RulesFlag
+
+> RulesFlagResponse RulesFlag(ctx, flagId).UpdateFlagRulesRequestBody(updateFlagRulesRequestBody).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
+
+Rules flag
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+    flagId := "flagId_example" // string | flag_id
+    updateFlagRulesRequestBody := *openapiclient.NewUpdateFlagRulesRequestBody([]openapiclient.CreateOrUpdateRuleRequestBody{*openapiclient.NewCreateOrUpdateRuleRequestBody([]openapiclient.CreateOrUpdateConditionGroupRequestBody{*openapiclient.NewCreateOrUpdateConditionGroupRequestBody([]openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}, "Name_example", int32(123), false)}) // UpdateFlagRulesRequestBody | 
+    xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.FeaturesApi.RulesFlag(context.Background(), flagId).UpdateFlagRulesRequestBody(updateFlagRulesRequestBody).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FeaturesApi.RulesFlag``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `RulesFlag`: RulesFlagResponse
+    fmt.Fprintf(os.Stdout, "Response from `FeaturesApi.RulesFlag`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**flagId** | **string** | flag_id | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiRulesFlagRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **updateFlagRulesRequestBody** | [**UpdateFlagRulesRequestBody**](UpdateFlagRulesRequestBody.md) |  | 
+ **xSchematicEnvironmentId** | **string** | If the request is made using an API key that is not environment-scoped, specify the environment using this header | 
+
+### Return type
+
+[**RulesFlagResponse**](RulesFlagResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## UpdateFeature
 
 > UpdateFeatureResponse UpdateFeature(ctx, featureId).UpdateFeatureRequestBody(updateFeatureRequestBody).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
@@ -1504,7 +1438,7 @@ import (
 
 func main() {
     flagId := "flagId_example" // string | flag_id
-    createFlagRequestBody := *openapiclient.NewCreateFlagRequestBody(false, "Description_example", "FlagType_example", "Key_example", "Name_example", []openapiclient.CreateOrUpdateRuleRequestBody{*openapiclient.NewCreateOrUpdateRuleRequestBody([]openapiclient.CreateOrUpdateConditionGroupRequestBody{*openapiclient.NewCreateOrUpdateConditionGroupRequestBody([]openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}, "Name_example", int32(123), false)}) // CreateFlagRequestBody | 
+    createFlagRequestBody := *openapiclient.NewCreateFlagRequestBody(false, "Description_example", "FlagType_example", "Key_example", "Name_example") // CreateFlagRequestBody | 
     xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
 
     configuration := openapiclient.NewConfiguration()
@@ -1541,78 +1475,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**UpdateFlagResponse**](UpdateFlagResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## UpdateRule
-
-> UpdateRuleResponse UpdateRule(ctx, ruleId).UpdateRuleRequestBody(updateRuleRequestBody).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
-
-Update rule
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-    ruleId := "ruleId_example" // string | rule_id
-    updateRuleRequestBody := *openapiclient.NewUpdateRuleRequestBody([]openapiclient.CreateOrUpdateConditionGroupRequestBody{*openapiclient.NewCreateOrUpdateConditionGroupRequestBody([]openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []openapiclient.CreateOrUpdateConditionRequestBody{*openapiclient.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}, "Name_example", int32(123), false) // UpdateRuleRequestBody | 
-    xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.FeaturesApi.UpdateRule(context.Background(), ruleId).UpdateRuleRequestBody(updateRuleRequestBody).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `FeaturesApi.UpdateRule``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `UpdateRule`: UpdateRuleResponse
-    fmt.Fprintf(os.Stdout, "Response from `FeaturesApi.UpdateRule`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**ruleId** | **string** | rule_id | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiUpdateRuleRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **updateRuleRequestBody** | [**UpdateRuleRequestBody**](UpdateRuleRequestBody.md) |  | 
- **xSchematicEnvironmentId** | **string** | If the request is made using an API key that is not environment-scoped, specify the environment using this header | 
-
-### Return type
-
-[**UpdateRuleResponse**](UpdateRuleResponse.md)
 
 ### Authorization
 

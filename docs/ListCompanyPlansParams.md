@@ -4,7 +4,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Active** | Pointer to **bool** |  | [optional] 
 **CompanyId** | Pointer to **string** |  | [optional] 
 **Limit** | Pointer to **int32** |  | [optional] 
 **Offset** | Pointer to **int32** |  | [optional] 
@@ -28,31 +27,6 @@ will change when the set of required properties is changed
 NewListCompanyPlansParamsWithDefaults instantiates a new ListCompanyPlansParams object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
-
-### GetActive
-
-`func (o *ListCompanyPlansParams) GetActive() bool`
-
-GetActive returns the Active field if non-nil, zero value otherwise.
-
-### GetActiveOk
-
-`func (o *ListCompanyPlansParams) GetActiveOk() (*bool, bool)`
-
-GetActiveOk returns a tuple with the Active field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetActive
-
-`func (o *ListCompanyPlansParams) SetActive(v bool)`
-
-SetActive sets Active field to given value.
-
-### HasActive
-
-`func (o *ListCompanyPlansParams) HasActive() bool`
-
-HasActive returns a boolean if a field has been set.
 
 ### GetCompanyId
 

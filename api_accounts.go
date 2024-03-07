@@ -1276,7 +1276,7 @@ func (a *AccountsApiService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKey
 type ApiGetApiRequestRequest struct {
 	ctx context.Context
 	ApiService *AccountsApiService
-	apiRequestId string
+	key string
 	xSchematicEnvironmentId *string
 }
 
@@ -1294,14 +1294,14 @@ func (r ApiGetApiRequestRequest) Execute() (*GetApiRequestResponse, *http.Respon
 GetApiRequest Get api request
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param apiRequestId api_request_id
+ @param key key
  @return ApiGetApiRequestRequest
 */
-func (a *AccountsApiService) GetApiRequest(ctx context.Context, apiRequestId string) ApiGetApiRequestRequest {
+func (a *AccountsApiService) GetApiRequest(ctx context.Context, key string) ApiGetApiRequestRequest {
 	return ApiGetApiRequestRequest{
 		ApiService: a,
 		ctx: ctx,
-		apiRequestId: apiRequestId,
+		key: key,
 	}
 }
 
@@ -1320,8 +1320,8 @@ func (a *AccountsApiService) GetApiRequestExecute(r ApiGetApiRequestRequest) (*G
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/api-requests/{api_request_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"api_request_id"+"}", url.PathEscape(parameterValueToString(r.apiRequestId, "apiRequestId")), -1)
+	localVarPath := localBasePath + "/api-requests/{key}"
+	localVarPath = strings.Replace(localVarPath, "{"+"key"+"}", url.PathEscape(parameterValueToString(r.key, "key")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

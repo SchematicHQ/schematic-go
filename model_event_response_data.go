@@ -18,7 +18,7 @@ import (
 // checks if the EventResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &EventResponseData{}
 
-// EventResponseData The created resource
+// EventResponseData The returned resource
 type EventResponseData struct {
 	ApiKey NullableString `json:"api_key,omitempty"`
 	Body map[string]interface{} `json:"body"`
@@ -26,12 +26,13 @@ type EventResponseData struct {
 	CompanyId NullableString `json:"company_id,omitempty"`
 	EnrichedAt NullableTime `json:"enriched_at,omitempty"`
 	EnvironmentId NullableString `json:"environment_id,omitempty"`
-	FeatureId NullableString `json:"feature_id,omitempty"`
+	ErrorMessage NullableString `json:"error_message,omitempty"`
+	FeatureIds []string `json:"feature_ids"`
 	Id string `json:"id"`
 	LoadedAt NullableTime `json:"loaded_at,omitempty"`
 	ProcessedAt NullableTime `json:"processed_at,omitempty"`
-	ProcessingStatus string `json:"processing_status"`
 	SentAt NullableTime `json:"sent_at,omitempty"`
+	Status string `json:"status"`
 	Subtype NullableString `json:"subtype,omitempty"`
 	Type string `json:"type"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -42,12 +43,13 @@ type EventResponseData struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEventResponseData(body map[string]interface{}, capturedAt time.Time, id string, processingStatus string, type_ string, updatedAt time.Time) *EventResponseData {
+func NewEventResponseData(body map[string]interface{}, capturedAt time.Time, featureIds []string, id string, status string, type_ string, updatedAt time.Time) *EventResponseData {
 	this := EventResponseData{}
 	this.Body = body
 	this.CapturedAt = capturedAt
+	this.FeatureIds = featureIds
 	this.Id = id
-	this.ProcessingStatus = processingStatus
+	this.Status = status
 	this.Type = type_
 	this.UpdatedAt = updatedAt
 	return &this
@@ -277,46 +279,70 @@ func (o *EventResponseData) UnsetEnvironmentId() {
 	o.EnvironmentId.Unset()
 }
 
-// GetFeatureId returns the FeatureId field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *EventResponseData) GetFeatureId() string {
-	if o == nil || IsNil(o.FeatureId.Get()) {
+// GetErrorMessage returns the ErrorMessage field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *EventResponseData) GetErrorMessage() string {
+	if o == nil || IsNil(o.ErrorMessage.Get()) {
 		var ret string
 		return ret
 	}
-	return *o.FeatureId.Get()
+	return *o.ErrorMessage.Get()
 }
 
-// GetFeatureIdOk returns a tuple with the FeatureId field value if set, nil otherwise
+// GetErrorMessageOk returns a tuple with the ErrorMessage field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *EventResponseData) GetFeatureIdOk() (*string, bool) {
+func (o *EventResponseData) GetErrorMessageOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return o.FeatureId.Get(), o.FeatureId.IsSet()
+	return o.ErrorMessage.Get(), o.ErrorMessage.IsSet()
 }
 
-// HasFeatureId returns a boolean if a field has been set.
-func (o *EventResponseData) HasFeatureId() bool {
-	if o != nil && o.FeatureId.IsSet() {
+// HasErrorMessage returns a boolean if a field has been set.
+func (o *EventResponseData) HasErrorMessage() bool {
+	if o != nil && o.ErrorMessage.IsSet() {
 		return true
 	}
 
 	return false
 }
 
-// SetFeatureId gets a reference to the given NullableString and assigns it to the FeatureId field.
-func (o *EventResponseData) SetFeatureId(v string) {
-	o.FeatureId.Set(&v)
+// SetErrorMessage gets a reference to the given NullableString and assigns it to the ErrorMessage field.
+func (o *EventResponseData) SetErrorMessage(v string) {
+	o.ErrorMessage.Set(&v)
 }
-// SetFeatureIdNil sets the value for FeatureId to be an explicit nil
-func (o *EventResponseData) SetFeatureIdNil() {
-	o.FeatureId.Set(nil)
+// SetErrorMessageNil sets the value for ErrorMessage to be an explicit nil
+func (o *EventResponseData) SetErrorMessageNil() {
+	o.ErrorMessage.Set(nil)
 }
 
-// UnsetFeatureId ensures that no value is present for FeatureId, not even an explicit nil
-func (o *EventResponseData) UnsetFeatureId() {
-	o.FeatureId.Unset()
+// UnsetErrorMessage ensures that no value is present for ErrorMessage, not even an explicit nil
+func (o *EventResponseData) UnsetErrorMessage() {
+	o.ErrorMessage.Unset()
+}
+
+// GetFeatureIds returns the FeatureIds field value
+func (o *EventResponseData) GetFeatureIds() []string {
+	if o == nil {
+		var ret []string
+		return ret
+	}
+
+	return o.FeatureIds
+}
+
+// GetFeatureIdsOk returns a tuple with the FeatureIds field value
+// and a boolean to check if the value has been set.
+func (o *EventResponseData) GetFeatureIdsOk() ([]string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.FeatureIds, true
+}
+
+// SetFeatureIds sets field value
+func (o *EventResponseData) SetFeatureIds(v []string) {
+	o.FeatureIds = v
 }
 
 // GetId returns the Id field value
@@ -427,30 +453,6 @@ func (o *EventResponseData) UnsetProcessedAt() {
 	o.ProcessedAt.Unset()
 }
 
-// GetProcessingStatus returns the ProcessingStatus field value
-func (o *EventResponseData) GetProcessingStatus() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.ProcessingStatus
-}
-
-// GetProcessingStatusOk returns a tuple with the ProcessingStatus field value
-// and a boolean to check if the value has been set.
-func (o *EventResponseData) GetProcessingStatusOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.ProcessingStatus, true
-}
-
-// SetProcessingStatus sets field value
-func (o *EventResponseData) SetProcessingStatus(v string) {
-	o.ProcessingStatus = v
-}
-
 // GetSentAt returns the SentAt field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *EventResponseData) GetSentAt() time.Time {
 	if o == nil || IsNil(o.SentAt.Get()) {
@@ -491,6 +493,30 @@ func (o *EventResponseData) SetSentAtNil() {
 // UnsetSentAt ensures that no value is present for SentAt, not even an explicit nil
 func (o *EventResponseData) UnsetSentAt() {
 	o.SentAt.Unset()
+}
+
+// GetStatus returns the Status field value
+func (o *EventResponseData) GetStatus() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Status
+}
+
+// GetStatusOk returns a tuple with the Status field value
+// and a boolean to check if the value has been set.
+func (o *EventResponseData) GetStatusOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Status, true
+}
+
+// SetStatus sets field value
+func (o *EventResponseData) SetStatus(v string) {
+	o.Status = v
 }
 
 // GetSubtype returns the Subtype field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -649,9 +675,10 @@ func (o EventResponseData) ToMap() (map[string]interface{}, error) {
 	if o.EnvironmentId.IsSet() {
 		toSerialize["environment_id"] = o.EnvironmentId.Get()
 	}
-	if o.FeatureId.IsSet() {
-		toSerialize["feature_id"] = o.FeatureId.Get()
+	if o.ErrorMessage.IsSet() {
+		toSerialize["error_message"] = o.ErrorMessage.Get()
 	}
+	toSerialize["feature_ids"] = o.FeatureIds
 	toSerialize["id"] = o.Id
 	if o.LoadedAt.IsSet() {
 		toSerialize["loaded_at"] = o.LoadedAt.Get()
@@ -659,10 +686,10 @@ func (o EventResponseData) ToMap() (map[string]interface{}, error) {
 	if o.ProcessedAt.IsSet() {
 		toSerialize["processed_at"] = o.ProcessedAt.Get()
 	}
-	toSerialize["processing_status"] = o.ProcessingStatus
 	if o.SentAt.IsSet() {
 		toSerialize["sent_at"] = o.SentAt.Get()
 	}
+	toSerialize["status"] = o.Status
 	if o.Subtype.IsSet() {
 		toSerialize["subtype"] = o.Subtype.Get()
 	}

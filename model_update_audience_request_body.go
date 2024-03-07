@@ -21,7 +21,6 @@ var _ MappedNullable = &UpdateAudienceRequestBody{}
 type UpdateAudienceRequestBody struct {
 	ConditionGroups []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
 	Conditions []CreateOrUpdateConditionRequestBody `json:"conditions"`
-	SkipWebhooks NullableBool `json:"skip_webhooks,omitempty"`
 }
 
 // NewUpdateAudienceRequestBody instantiates a new UpdateAudienceRequestBody object
@@ -91,48 +90,6 @@ func (o *UpdateAudienceRequestBody) SetConditions(v []CreateOrUpdateConditionReq
 	o.Conditions = v
 }
 
-// GetSkipWebhooks returns the SkipWebhooks field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *UpdateAudienceRequestBody) GetSkipWebhooks() bool {
-	if o == nil || IsNil(o.SkipWebhooks.Get()) {
-		var ret bool
-		return ret
-	}
-	return *o.SkipWebhooks.Get()
-}
-
-// GetSkipWebhooksOk returns a tuple with the SkipWebhooks field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *UpdateAudienceRequestBody) GetSkipWebhooksOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.SkipWebhooks.Get(), o.SkipWebhooks.IsSet()
-}
-
-// HasSkipWebhooks returns a boolean if a field has been set.
-func (o *UpdateAudienceRequestBody) HasSkipWebhooks() bool {
-	if o != nil && o.SkipWebhooks.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetSkipWebhooks gets a reference to the given NullableBool and assigns it to the SkipWebhooks field.
-func (o *UpdateAudienceRequestBody) SetSkipWebhooks(v bool) {
-	o.SkipWebhooks.Set(&v)
-}
-// SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-func (o *UpdateAudienceRequestBody) SetSkipWebhooksNil() {
-	o.SkipWebhooks.Set(nil)
-}
-
-// UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
-func (o *UpdateAudienceRequestBody) UnsetSkipWebhooks() {
-	o.SkipWebhooks.Unset()
-}
-
 func (o UpdateAudienceRequestBody) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -145,9 +102,6 @@ func (o UpdateAudienceRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["condition_groups"] = o.ConditionGroups
 	toSerialize["conditions"] = o.Conditions
-	if o.SkipWebhooks.IsSet() {
-		toSerialize["skip_webhooks"] = o.SkipWebhooks.Get()
-	}
 	return toSerialize, nil
 }
 

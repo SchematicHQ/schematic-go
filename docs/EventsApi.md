@@ -7,7 +7,7 @@ Method | HTTP request | Description
 [**CountEventTypes**](EventsApi.md#CountEventTypes) | **Get** /event-types/count | Count event types
 [**CountEvents**](EventsApi.md#CountEvents) | **Get** /events/count | Count events
 [**CreateEvent**](EventsApi.md#CreateEvent) | **Post** /events | Create event
-[**GetEvent**](EventsApi.md#GetEvent) | **Get** /events/{event_id} | Get event
+[**GetEvent**](EventsApi.md#GetEvent) | **Get** /events/{key} | Get event
 [**GetEventType**](EventsApi.md#GetEventType) | **Get** /event-types/{key} | Get event type
 [**ListEventTypes**](EventsApi.md#ListEventTypes) | **Get** /event-types | List event types
 [**ListEvents**](EventsApi.md#ListEvents) | **Get** /events | List events
@@ -88,7 +88,7 @@ Name | Type | Description  | Notes
 
 ## CountEvents
 
-> CountEventsResponse CountEvents(ctx).XSchematicEnvironmentId(xSchematicEnvironmentId).CompanyId(companyId).UserId(userId).FeatureId(featureId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
+> CountEventsResponse CountEvents(ctx).XSchematicEnvironmentId(xSchematicEnvironmentId).CompanyId(companyId).UserId(userId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
 
 Count events
 
@@ -108,14 +108,13 @@ func main() {
     xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
     companyId := "companyId_example" // string |  (optional)
     userId := "userId_example" // string |  (optional)
-    featureId := "featureId_example" // string |  (optional)
     eventSubtype := "eventSubtype_example" // string |  (optional)
     limit := int32(56) // int32 | Page limit (default 100) (optional)
     offset := int32(56) // int32 | Page offset (default 0) (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.EventsApi.CountEvents(context.Background()).XSchematicEnvironmentId(xSchematicEnvironmentId).CompanyId(companyId).UserId(userId).FeatureId(featureId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
+    resp, r, err := apiClient.EventsApi.CountEvents(context.Background()).XSchematicEnvironmentId(xSchematicEnvironmentId).CompanyId(companyId).UserId(userId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `EventsApi.CountEvents``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -139,7 +138,6 @@ Name | Type | Description  | Notes
  **xSchematicEnvironmentId** | **string** | If the request is made using an API key that is not environment-scoped, specify the environment using this header | 
  **companyId** | **string** |  | 
  **userId** | **string** |  | 
- **featureId** | **string** |  | 
  **eventSubtype** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
@@ -230,7 +228,7 @@ Name | Type | Description  | Notes
 
 ## GetEvent
 
-> GetEventResponse GetEvent(ctx, eventId).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
+> GetEventResponse GetEvent(ctx, key).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
 
 Get event
 
@@ -247,12 +245,12 @@ import (
 )
 
 func main() {
-    eventId := "eventId_example" // string | event_id
+    key := "key_example" // string | key
     xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.EventsApi.GetEvent(context.Background(), eventId).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
+    resp, r, err := apiClient.EventsApi.GetEvent(context.Background(), key).XSchematicEnvironmentId(xSchematicEnvironmentId).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `EventsApi.GetEvent``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -268,7 +266,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**eventId** | **string** | event_id | 
+**key** | **string** | key | 
 
 ### Other Parameters
 
@@ -440,7 +438,7 @@ Name | Type | Description  | Notes
 
 ## ListEvents
 
-> ListEventsResponse ListEvents(ctx).XSchematicEnvironmentId(xSchematicEnvironmentId).CompanyId(companyId).UserId(userId).FeatureId(featureId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
+> ListEventsResponse ListEvents(ctx).XSchematicEnvironmentId(xSchematicEnvironmentId).CompanyId(companyId).UserId(userId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
 
 List events
 
@@ -460,14 +458,13 @@ func main() {
     xSchematicEnvironmentId := "xSchematicEnvironmentId_example" // string | If the request is made using an API key that is not environment-scoped, specify the environment using this header (optional)
     companyId := "companyId_example" // string |  (optional)
     userId := "userId_example" // string |  (optional)
-    featureId := "featureId_example" // string |  (optional)
     eventSubtype := "eventSubtype_example" // string |  (optional)
     limit := int32(56) // int32 | Page limit (default 100) (optional)
     offset := int32(56) // int32 | Page offset (default 0) (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.EventsApi.ListEvents(context.Background()).XSchematicEnvironmentId(xSchematicEnvironmentId).CompanyId(companyId).UserId(userId).FeatureId(featureId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
+    resp, r, err := apiClient.EventsApi.ListEvents(context.Background()).XSchematicEnvironmentId(xSchematicEnvironmentId).CompanyId(companyId).UserId(userId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `EventsApi.ListEvents``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -491,7 +488,6 @@ Name | Type | Description  | Notes
  **xSchematicEnvironmentId** | **string** | If the request is made using an API key that is not environment-scoped, specify the environment using this header | 
  **companyId** | **string** |  | 
  **userId** | **string** |  | 
- **featureId** | **string** |  | 
  **eventSubtype** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 

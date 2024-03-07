@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **Name** | **string** |  | 
 **Priority** | **int32** |  | 
 **PriorityGroup** | Pointer to **NullableInt32** |  | [optional] 
-**SkipWebhooks** | Pointer to **NullableBool** |  | [optional] 
+**RuleType** | Pointer to **NullableString** |  | [optional] 
 **Value** | **bool** |  | 
 
 ## Methods
@@ -182,41 +182,41 @@ HasPriorityGroup returns a boolean if a field has been set.
 `func (o *CreateOrUpdateRuleRequestBody) UnsetPriorityGroup()`
 
 UnsetPriorityGroup ensures that no value is present for PriorityGroup, not even an explicit nil
-### GetSkipWebhooks
+### GetRuleType
 
-`func (o *CreateOrUpdateRuleRequestBody) GetSkipWebhooks() bool`
+`func (o *CreateOrUpdateRuleRequestBody) GetRuleType() string`
 
-GetSkipWebhooks returns the SkipWebhooks field if non-nil, zero value otherwise.
+GetRuleType returns the RuleType field if non-nil, zero value otherwise.
 
-### GetSkipWebhooksOk
+### GetRuleTypeOk
 
-`func (o *CreateOrUpdateRuleRequestBody) GetSkipWebhooksOk() (*bool, bool)`
+`func (o *CreateOrUpdateRuleRequestBody) GetRuleTypeOk() (*string, bool)`
 
-GetSkipWebhooksOk returns a tuple with the SkipWebhooks field if it's non-nil, zero value otherwise
+GetRuleTypeOk returns a tuple with the RuleType field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetSkipWebhooks
+### SetRuleType
 
-`func (o *CreateOrUpdateRuleRequestBody) SetSkipWebhooks(v bool)`
+`func (o *CreateOrUpdateRuleRequestBody) SetRuleType(v string)`
 
-SetSkipWebhooks sets SkipWebhooks field to given value.
+SetRuleType sets RuleType field to given value.
 
-### HasSkipWebhooks
+### HasRuleType
 
-`func (o *CreateOrUpdateRuleRequestBody) HasSkipWebhooks() bool`
+`func (o *CreateOrUpdateRuleRequestBody) HasRuleType() bool`
 
-HasSkipWebhooks returns a boolean if a field has been set.
+HasRuleType returns a boolean if a field has been set.
 
-### SetSkipWebhooksNil
+### SetRuleTypeNil
 
-`func (o *CreateOrUpdateRuleRequestBody) SetSkipWebhooksNil(b bool)`
+`func (o *CreateOrUpdateRuleRequestBody) SetRuleTypeNil(b bool)`
 
- SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
+ SetRuleTypeNil sets the value for RuleType to be an explicit nil
 
-### UnsetSkipWebhooks
-`func (o *CreateOrUpdateRuleRequestBody) UnsetSkipWebhooks()`
+### UnsetRuleType
+`func (o *CreateOrUpdateRuleRequestBody) UnsetRuleType()`
 
-UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
+UnsetRuleType ensures that no value is present for RuleType, not even an explicit nil
 ### GetValue
 
 `func (o *CreateOrUpdateRuleRequestBody) GetValue() bool`

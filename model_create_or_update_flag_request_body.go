@@ -26,22 +26,19 @@ type CreateOrUpdateFlagRequestBody struct {
 	Id NullableString `json:"id,omitempty"`
 	Key string `json:"key"`
 	Name string `json:"name"`
-	Rules []CreateOrUpdateRuleRequestBody `json:"rules"`
-	SkipWebhooks NullableBool `json:"skip_webhooks,omitempty"`
 }
 
 // NewCreateOrUpdateFlagRequestBody instantiates a new CreateOrUpdateFlagRequestBody object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateOrUpdateFlagRequestBody(defaultValue bool, description string, flagType string, key string, name string, rules []CreateOrUpdateRuleRequestBody) *CreateOrUpdateFlagRequestBody {
+func NewCreateOrUpdateFlagRequestBody(defaultValue bool, description string, flagType string, key string, name string) *CreateOrUpdateFlagRequestBody {
 	this := CreateOrUpdateFlagRequestBody{}
 	this.DefaultValue = defaultValue
 	this.Description = description
 	this.FlagType = flagType
 	this.Key = key
 	this.Name = name
-	this.Rules = rules
 	return &this
 }
 
@@ -257,72 +254,6 @@ func (o *CreateOrUpdateFlagRequestBody) SetName(v string) {
 	o.Name = v
 }
 
-// GetRules returns the Rules field value
-func (o *CreateOrUpdateFlagRequestBody) GetRules() []CreateOrUpdateRuleRequestBody {
-	if o == nil {
-		var ret []CreateOrUpdateRuleRequestBody
-		return ret
-	}
-
-	return o.Rules
-}
-
-// GetRulesOk returns a tuple with the Rules field value
-// and a boolean to check if the value has been set.
-func (o *CreateOrUpdateFlagRequestBody) GetRulesOk() ([]CreateOrUpdateRuleRequestBody, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.Rules, true
-}
-
-// SetRules sets field value
-func (o *CreateOrUpdateFlagRequestBody) SetRules(v []CreateOrUpdateRuleRequestBody) {
-	o.Rules = v
-}
-
-// GetSkipWebhooks returns the SkipWebhooks field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreateOrUpdateFlagRequestBody) GetSkipWebhooks() bool {
-	if o == nil || IsNil(o.SkipWebhooks.Get()) {
-		var ret bool
-		return ret
-	}
-	return *o.SkipWebhooks.Get()
-}
-
-// GetSkipWebhooksOk returns a tuple with the SkipWebhooks field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreateOrUpdateFlagRequestBody) GetSkipWebhooksOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.SkipWebhooks.Get(), o.SkipWebhooks.IsSet()
-}
-
-// HasSkipWebhooks returns a boolean if a field has been set.
-func (o *CreateOrUpdateFlagRequestBody) HasSkipWebhooks() bool {
-	if o != nil && o.SkipWebhooks.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetSkipWebhooks gets a reference to the given NullableBool and assigns it to the SkipWebhooks field.
-func (o *CreateOrUpdateFlagRequestBody) SetSkipWebhooks(v bool) {
-	o.SkipWebhooks.Set(&v)
-}
-// SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-func (o *CreateOrUpdateFlagRequestBody) SetSkipWebhooksNil() {
-	o.SkipWebhooks.Set(nil)
-}
-
-// UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
-func (o *CreateOrUpdateFlagRequestBody) UnsetSkipWebhooks() {
-	o.SkipWebhooks.Unset()
-}
-
 func (o CreateOrUpdateFlagRequestBody) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -344,10 +275,6 @@ func (o CreateOrUpdateFlagRequestBody) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["key"] = o.Key
 	toSerialize["name"] = o.Name
-	toSerialize["rules"] = o.Rules
-	if o.SkipWebhooks.IsSet() {
-		toSerialize["skip_webhooks"] = o.SkipWebhooks.Get()
-	}
 	return toSerialize, nil
 }
 

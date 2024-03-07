@@ -9,7 +9,6 @@ Name | Type | Description | Notes
 **Name** | **string** |  | 
 **Priority** | **int32** |  | 
 **PriorityGroup** | Pointer to **NullableInt32** |  | [optional] 
-**SkipWebhooks** | Pointer to **NullableBool** |  | [optional] 
 **Value** | **bool** |  | 
 
 ## Methods
@@ -146,41 +145,6 @@ HasPriorityGroup returns a boolean if a field has been set.
 `func (o *UpdateRuleRequestBody) UnsetPriorityGroup()`
 
 UnsetPriorityGroup ensures that no value is present for PriorityGroup, not even an explicit nil
-### GetSkipWebhooks
-
-`func (o *UpdateRuleRequestBody) GetSkipWebhooks() bool`
-
-GetSkipWebhooks returns the SkipWebhooks field if non-nil, zero value otherwise.
-
-### GetSkipWebhooksOk
-
-`func (o *UpdateRuleRequestBody) GetSkipWebhooksOk() (*bool, bool)`
-
-GetSkipWebhooksOk returns a tuple with the SkipWebhooks field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetSkipWebhooks
-
-`func (o *UpdateRuleRequestBody) SetSkipWebhooks(v bool)`
-
-SetSkipWebhooks sets SkipWebhooks field to given value.
-
-### HasSkipWebhooks
-
-`func (o *UpdateRuleRequestBody) HasSkipWebhooks() bool`
-
-HasSkipWebhooks returns a boolean if a field has been set.
-
-### SetSkipWebhooksNil
-
-`func (o *UpdateRuleRequestBody) SetSkipWebhooksNil(b bool)`
-
- SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-
-### UnsetSkipWebhooks
-`func (o *UpdateRuleRequestBody) UnsetSkipWebhooks()`
-
-UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
 ### GetValue
 
 `func (o *UpdateRuleRequestBody) GetValue() bool`

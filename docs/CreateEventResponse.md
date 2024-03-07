@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**EventResponseData**](EventResponseData.md) |  | 
+**Data** | [**RawEventResponseData**](RawEventResponseData.md) |  | 
 **Params** | **map[string]interface{}** | Input parameters | 
 
 ## Methods
 
 ### NewCreateEventResponse
 
-`func NewCreateEventResponse(data EventResponseData, params map[string]interface{}, ) *CreateEventResponse`
+`func NewCreateEventResponse(data RawEventResponseData, params map[string]interface{}, ) *CreateEventResponse`
 
 NewCreateEventResponse instantiates a new CreateEventResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *CreateEventResponse) GetData() EventResponseData`
+`func (o *CreateEventResponse) GetData() RawEventResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *CreateEventResponse) GetDataOk() (*EventResponseData, bool)`
+`func (o *CreateEventResponse) GetDataOk() (*RawEventResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *CreateEventResponse) SetData(v EventResponseData)`
+`func (o *CreateEventResponse) SetData(v RawEventResponseData)`
 
 SetData sets Data field to given value.
 

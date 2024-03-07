@@ -19,7 +19,6 @@ var _ MappedNullable = &ListCompanyPlansParams{}
 
 // ListCompanyPlansParams Input parameters
 type ListCompanyPlansParams struct {
-	Active *bool `json:"active,omitempty"`
 	CompanyId *string `json:"company_id,omitempty"`
 	Limit *int32 `json:"limit,omitempty"`
 	Offset *int32 `json:"offset,omitempty"`
@@ -41,38 +40,6 @@ func NewListCompanyPlansParams() *ListCompanyPlansParams {
 func NewListCompanyPlansParamsWithDefaults() *ListCompanyPlansParams {
 	this := ListCompanyPlansParams{}
 	return &this
-}
-
-// GetActive returns the Active field value if set, zero value otherwise.
-func (o *ListCompanyPlansParams) GetActive() bool {
-	if o == nil || IsNil(o.Active) {
-		var ret bool
-		return ret
-	}
-	return *o.Active
-}
-
-// GetActiveOk returns a tuple with the Active field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ListCompanyPlansParams) GetActiveOk() (*bool, bool) {
-	if o == nil || IsNil(o.Active) {
-		return nil, false
-	}
-	return o.Active, true
-}
-
-// HasActive returns a boolean if a field has been set.
-func (o *ListCompanyPlansParams) HasActive() bool {
-	if o != nil && !IsNil(o.Active) {
-		return true
-	}
-
-	return false
-}
-
-// SetActive gets a reference to the given bool and assigns it to the Active field.
-func (o *ListCompanyPlansParams) SetActive(v bool) {
-	o.Active = &v
 }
 
 // GetCompanyId returns the CompanyId field value if set, zero value otherwise.
@@ -213,9 +180,6 @@ func (o ListCompanyPlansParams) MarshalJSON() ([]byte, error) {
 
 func (o ListCompanyPlansParams) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.Active) {
-		toSerialize["active"] = o.Active
-	}
 	if !IsNil(o.CompanyId) {
 		toSerialize["company_id"] = o.CompanyId
 	}

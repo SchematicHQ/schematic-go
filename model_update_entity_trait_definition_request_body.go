@@ -19,7 +19,6 @@ var _ MappedNullable = &UpdateEntityTraitDefinitionRequestBody{}
 
 // UpdateEntityTraitDefinitionRequestBody struct for UpdateEntityTraitDefinitionRequestBody
 type UpdateEntityTraitDefinitionRequestBody struct {
-	SkipWebhooks NullableBool `json:"skip_webhooks,omitempty"`
 	TraitType string `json:"trait_type"`
 }
 
@@ -39,48 +38,6 @@ func NewUpdateEntityTraitDefinitionRequestBody(traitType string) *UpdateEntityTr
 func NewUpdateEntityTraitDefinitionRequestBodyWithDefaults() *UpdateEntityTraitDefinitionRequestBody {
 	this := UpdateEntityTraitDefinitionRequestBody{}
 	return &this
-}
-
-// GetSkipWebhooks returns the SkipWebhooks field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *UpdateEntityTraitDefinitionRequestBody) GetSkipWebhooks() bool {
-	if o == nil || IsNil(o.SkipWebhooks.Get()) {
-		var ret bool
-		return ret
-	}
-	return *o.SkipWebhooks.Get()
-}
-
-// GetSkipWebhooksOk returns a tuple with the SkipWebhooks field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *UpdateEntityTraitDefinitionRequestBody) GetSkipWebhooksOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.SkipWebhooks.Get(), o.SkipWebhooks.IsSet()
-}
-
-// HasSkipWebhooks returns a boolean if a field has been set.
-func (o *UpdateEntityTraitDefinitionRequestBody) HasSkipWebhooks() bool {
-	if o != nil && o.SkipWebhooks.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetSkipWebhooks gets a reference to the given NullableBool and assigns it to the SkipWebhooks field.
-func (o *UpdateEntityTraitDefinitionRequestBody) SetSkipWebhooks(v bool) {
-	o.SkipWebhooks.Set(&v)
-}
-// SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-func (o *UpdateEntityTraitDefinitionRequestBody) SetSkipWebhooksNil() {
-	o.SkipWebhooks.Set(nil)
-}
-
-// UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
-func (o *UpdateEntityTraitDefinitionRequestBody) UnsetSkipWebhooks() {
-	o.SkipWebhooks.Unset()
 }
 
 // GetTraitType returns the TraitType field value
@@ -117,9 +74,6 @@ func (o UpdateEntityTraitDefinitionRequestBody) MarshalJSON() ([]byte, error) {
 
 func (o UpdateEntityTraitDefinitionRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.SkipWebhooks.IsSet() {
-		toSerialize["skip_webhooks"] = o.SkipWebhooks.Get()
-	}
 	toSerialize["trait_type"] = o.TraitType
 	return toSerialize, nil
 }

@@ -20,7 +20,6 @@ var _ MappedNullable = &CreatePlanRequestBody{}
 // CreatePlanRequestBody struct for CreatePlanRequestBody
 type CreatePlanRequestBody struct {
 	Name string `json:"name"`
-	SkipWebhooks NullableBool `json:"skip_webhooks,omitempty"`
 }
 
 // NewCreatePlanRequestBody instantiates a new CreatePlanRequestBody object
@@ -65,48 +64,6 @@ func (o *CreatePlanRequestBody) SetName(v string) {
 	o.Name = v
 }
 
-// GetSkipWebhooks returns the SkipWebhooks field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreatePlanRequestBody) GetSkipWebhooks() bool {
-	if o == nil || IsNil(o.SkipWebhooks.Get()) {
-		var ret bool
-		return ret
-	}
-	return *o.SkipWebhooks.Get()
-}
-
-// GetSkipWebhooksOk returns a tuple with the SkipWebhooks field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreatePlanRequestBody) GetSkipWebhooksOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.SkipWebhooks.Get(), o.SkipWebhooks.IsSet()
-}
-
-// HasSkipWebhooks returns a boolean if a field has been set.
-func (o *CreatePlanRequestBody) HasSkipWebhooks() bool {
-	if o != nil && o.SkipWebhooks.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetSkipWebhooks gets a reference to the given NullableBool and assigns it to the SkipWebhooks field.
-func (o *CreatePlanRequestBody) SetSkipWebhooks(v bool) {
-	o.SkipWebhooks.Set(&v)
-}
-// SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-func (o *CreatePlanRequestBody) SetSkipWebhooksNil() {
-	o.SkipWebhooks.Set(nil)
-}
-
-// UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
-func (o *CreatePlanRequestBody) UnsetSkipWebhooks() {
-	o.SkipWebhooks.Unset()
-}
-
 func (o CreatePlanRequestBody) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -118,9 +75,6 @@ func (o CreatePlanRequestBody) MarshalJSON() ([]byte, error) {
 func (o CreatePlanRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["name"] = o.Name
-	if o.SkipWebhooks.IsSet() {
-		toSerialize["skip_webhooks"] = o.SkipWebhooks.Get()
-	}
 	return toSerialize, nil
 }
 

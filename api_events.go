@@ -224,7 +224,6 @@ type ApiCountEventsRequest struct {
 	xSchematicEnvironmentId *string
 	companyId *string
 	userId *string
-	featureId *string
 	eventSubtype *string
 	limit *int32
 	offset *int32
@@ -243,11 +242,6 @@ func (r ApiCountEventsRequest) CompanyId(companyId string) ApiCountEventsRequest
 
 func (r ApiCountEventsRequest) UserId(userId string) ApiCountEventsRequest {
 	r.userId = &userId
-	return r
-}
-
-func (r ApiCountEventsRequest) FeatureId(featureId string) ApiCountEventsRequest {
-	r.featureId = &featureId
 	return r
 }
 
@@ -311,9 +305,6 @@ func (a *EventsApiService) CountEventsExecute(r ApiCountEventsRequest) (*CountEv
 	}
 	if r.userId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "user_id", r.userId, "")
-	}
-	if r.featureId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "feature_id", r.featureId, "")
 	}
 	if r.eventSubtype != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "event_subtype", r.eventSubtype, "")
@@ -616,7 +607,7 @@ func (a *EventsApiService) CreateEventExecute(r ApiCreateEventRequest) (*CreateE
 type ApiGetEventRequest struct {
 	ctx context.Context
 	ApiService *EventsApiService
-	eventId string
+	key string
 	xSchematicEnvironmentId *string
 }
 
@@ -634,14 +625,14 @@ func (r ApiGetEventRequest) Execute() (*GetEventResponse, *http.Response, error)
 GetEvent Get event
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param eventId event_id
+ @param key key
  @return ApiGetEventRequest
 */
-func (a *EventsApiService) GetEvent(ctx context.Context, eventId string) ApiGetEventRequest {
+func (a *EventsApiService) GetEvent(ctx context.Context, key string) ApiGetEventRequest {
 	return ApiGetEventRequest{
 		ApiService: a,
 		ctx: ctx,
-		eventId: eventId,
+		key: key,
 	}
 }
 
@@ -660,8 +651,8 @@ func (a *EventsApiService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/events/{event_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"event_id"+"}", url.PathEscape(parameterValueToString(r.eventId, "eventId")), -1)
+	localVarPath := localBasePath + "/events/{key}"
+	localVarPath = strings.Replace(localVarPath, "{"+"key"+"}", url.PathEscape(parameterValueToString(r.key, "key")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1148,7 +1139,6 @@ type ApiListEventsRequest struct {
 	xSchematicEnvironmentId *string
 	companyId *string
 	userId *string
-	featureId *string
 	eventSubtype *string
 	limit *int32
 	offset *int32
@@ -1167,11 +1157,6 @@ func (r ApiListEventsRequest) CompanyId(companyId string) ApiListEventsRequest {
 
 func (r ApiListEventsRequest) UserId(userId string) ApiListEventsRequest {
 	r.userId = &userId
-	return r
-}
-
-func (r ApiListEventsRequest) FeatureId(featureId string) ApiListEventsRequest {
-	r.featureId = &featureId
 	return r
 }
 
@@ -1235,9 +1220,6 @@ func (a *EventsApiService) ListEventsExecute(r ApiListEventsRequest) (*ListEvent
 	}
 	if r.userId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "user_id", r.userId, "")
-	}
-	if r.featureId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "feature_id", r.featureId, "")
 	}
 	if r.eventSubtype != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "event_subtype", r.eventSubtype, "")

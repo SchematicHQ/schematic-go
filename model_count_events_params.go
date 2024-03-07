@@ -21,7 +21,6 @@ var _ MappedNullable = &CountEventsParams{}
 type CountEventsParams struct {
 	CompanyId *string `json:"company_id,omitempty"`
 	EventSubtype *string `json:"event_subtype,omitempty"`
-	FeatureId *string `json:"feature_id,omitempty"`
 	Limit *int32 `json:"limit,omitempty"`
 	Offset *int32 `json:"offset,omitempty"`
 	UserId *string `json:"user_id,omitempty"`
@@ -106,38 +105,6 @@ func (o *CountEventsParams) HasEventSubtype() bool {
 // SetEventSubtype gets a reference to the given string and assigns it to the EventSubtype field.
 func (o *CountEventsParams) SetEventSubtype(v string) {
 	o.EventSubtype = &v
-}
-
-// GetFeatureId returns the FeatureId field value if set, zero value otherwise.
-func (o *CountEventsParams) GetFeatureId() string {
-	if o == nil || IsNil(o.FeatureId) {
-		var ret string
-		return ret
-	}
-	return *o.FeatureId
-}
-
-// GetFeatureIdOk returns a tuple with the FeatureId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CountEventsParams) GetFeatureIdOk() (*string, bool) {
-	if o == nil || IsNil(o.FeatureId) {
-		return nil, false
-	}
-	return o.FeatureId, true
-}
-
-// HasFeatureId returns a boolean if a field has been set.
-func (o *CountEventsParams) HasFeatureId() bool {
-	if o != nil && !IsNil(o.FeatureId) {
-		return true
-	}
-
-	return false
-}
-
-// SetFeatureId gets a reference to the given string and assigns it to the FeatureId field.
-func (o *CountEventsParams) SetFeatureId(v string) {
-	o.FeatureId = &v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -251,9 +218,6 @@ func (o CountEventsParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.EventSubtype) {
 		toSerialize["event_subtype"] = o.EventSubtype
-	}
-	if !IsNil(o.FeatureId) {
-		toSerialize["feature_id"] = o.FeatureId
 	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit

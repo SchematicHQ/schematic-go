@@ -10,12 +10,13 @@ Name | Type | Description | Notes
 **CompanyId** | Pointer to **NullableString** |  | [optional] 
 **EnrichedAt** | Pointer to **NullableTime** |  | [optional] 
 **EnvironmentId** | Pointer to **NullableString** |  | [optional] 
-**FeatureId** | Pointer to **NullableString** |  | [optional] 
+**ErrorMessage** | Pointer to **NullableString** |  | [optional] 
+**FeatureIds** | **[]string** |  | 
 **Id** | **string** |  | 
 **LoadedAt** | Pointer to **NullableTime** |  | [optional] 
 **ProcessedAt** | Pointer to **NullableTime** |  | [optional] 
-**ProcessingStatus** | **string** |  | 
 **SentAt** | Pointer to **NullableTime** |  | [optional] 
+**Status** | **string** |  | 
 **Subtype** | Pointer to **NullableString** |  | [optional] 
 **Type** | **string** |  | 
 **UpdatedAt** | **time.Time** |  | 
@@ -25,7 +26,7 @@ Name | Type | Description | Notes
 
 ### NewEventResponseData
 
-`func NewEventResponseData(body map[string]interface{}, capturedAt time.Time, id string, processingStatus string, type_ string, updatedAt time.Time, ) *EventResponseData`
+`func NewEventResponseData(body map[string]interface{}, capturedAt time.Time, featureIds []string, id string, status string, type_ string, updatedAt time.Time, ) *EventResponseData`
 
 NewEventResponseData instantiates a new EventResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -220,41 +221,61 @@ HasEnvironmentId returns a boolean if a field has been set.
 `func (o *EventResponseData) UnsetEnvironmentId()`
 
 UnsetEnvironmentId ensures that no value is present for EnvironmentId, not even an explicit nil
-### GetFeatureId
+### GetErrorMessage
 
-`func (o *EventResponseData) GetFeatureId() string`
+`func (o *EventResponseData) GetErrorMessage() string`
 
-GetFeatureId returns the FeatureId field if non-nil, zero value otherwise.
+GetErrorMessage returns the ErrorMessage field if non-nil, zero value otherwise.
 
-### GetFeatureIdOk
+### GetErrorMessageOk
 
-`func (o *EventResponseData) GetFeatureIdOk() (*string, bool)`
+`func (o *EventResponseData) GetErrorMessageOk() (*string, bool)`
 
-GetFeatureIdOk returns a tuple with the FeatureId field if it's non-nil, zero value otherwise
+GetErrorMessageOk returns a tuple with the ErrorMessage field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetFeatureId
+### SetErrorMessage
 
-`func (o *EventResponseData) SetFeatureId(v string)`
+`func (o *EventResponseData) SetErrorMessage(v string)`
 
-SetFeatureId sets FeatureId field to given value.
+SetErrorMessage sets ErrorMessage field to given value.
 
-### HasFeatureId
+### HasErrorMessage
 
-`func (o *EventResponseData) HasFeatureId() bool`
+`func (o *EventResponseData) HasErrorMessage() bool`
 
-HasFeatureId returns a boolean if a field has been set.
+HasErrorMessage returns a boolean if a field has been set.
 
-### SetFeatureIdNil
+### SetErrorMessageNil
 
-`func (o *EventResponseData) SetFeatureIdNil(b bool)`
+`func (o *EventResponseData) SetErrorMessageNil(b bool)`
 
- SetFeatureIdNil sets the value for FeatureId to be an explicit nil
+ SetErrorMessageNil sets the value for ErrorMessage to be an explicit nil
 
-### UnsetFeatureId
-`func (o *EventResponseData) UnsetFeatureId()`
+### UnsetErrorMessage
+`func (o *EventResponseData) UnsetErrorMessage()`
 
-UnsetFeatureId ensures that no value is present for FeatureId, not even an explicit nil
+UnsetErrorMessage ensures that no value is present for ErrorMessage, not even an explicit nil
+### GetFeatureIds
+
+`func (o *EventResponseData) GetFeatureIds() []string`
+
+GetFeatureIds returns the FeatureIds field if non-nil, zero value otherwise.
+
+### GetFeatureIdsOk
+
+`func (o *EventResponseData) GetFeatureIdsOk() (*[]string, bool)`
+
+GetFeatureIdsOk returns a tuple with the FeatureIds field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFeatureIds
+
+`func (o *EventResponseData) SetFeatureIds(v []string)`
+
+SetFeatureIds sets FeatureIds field to given value.
+
+
 ### GetId
 
 `func (o *EventResponseData) GetId() string`
@@ -345,26 +366,6 @@ HasProcessedAt returns a boolean if a field has been set.
 `func (o *EventResponseData) UnsetProcessedAt()`
 
 UnsetProcessedAt ensures that no value is present for ProcessedAt, not even an explicit nil
-### GetProcessingStatus
-
-`func (o *EventResponseData) GetProcessingStatus() string`
-
-GetProcessingStatus returns the ProcessingStatus field if non-nil, zero value otherwise.
-
-### GetProcessingStatusOk
-
-`func (o *EventResponseData) GetProcessingStatusOk() (*string, bool)`
-
-GetProcessingStatusOk returns a tuple with the ProcessingStatus field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetProcessingStatus
-
-`func (o *EventResponseData) SetProcessingStatus(v string)`
-
-SetProcessingStatus sets ProcessingStatus field to given value.
-
-
 ### GetSentAt
 
 `func (o *EventResponseData) GetSentAt() time.Time`
@@ -400,6 +401,26 @@ HasSentAt returns a boolean if a field has been set.
 `func (o *EventResponseData) UnsetSentAt()`
 
 UnsetSentAt ensures that no value is present for SentAt, not even an explicit nil
+### GetStatus
+
+`func (o *EventResponseData) GetStatus() string`
+
+GetStatus returns the Status field if non-nil, zero value otherwise.
+
+### GetStatusOk
+
+`func (o *EventResponseData) GetStatusOk() (*string, bool)`
+
+GetStatusOk returns a tuple with the Status field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetStatus
+
+`func (o *EventResponseData) SetStatus(v string)`
+
+SetStatus sets Status field to given value.
+
+
 ### GetSubtype
 
 `func (o *EventResponseData) GetSubtype() string`

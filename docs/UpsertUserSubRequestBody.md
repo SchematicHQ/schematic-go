@@ -8,7 +8,6 @@ Name | Type | Description | Notes
 **Keys** | **map[string]interface{}** |  | 
 **LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
 **Name** | Pointer to **NullableString** |  | [optional] 
-**SkipWebhooks** | Pointer to **NullableBool** |  | [optional] 
 **Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
 **UpdateOnly** | Pointer to **NullableBool** |  | [optional] 
 
@@ -156,41 +155,6 @@ HasName returns a boolean if a field has been set.
 `func (o *UpsertUserSubRequestBody) UnsetName()`
 
 UnsetName ensures that no value is present for Name, not even an explicit nil
-### GetSkipWebhooks
-
-`func (o *UpsertUserSubRequestBody) GetSkipWebhooks() bool`
-
-GetSkipWebhooks returns the SkipWebhooks field if non-nil, zero value otherwise.
-
-### GetSkipWebhooksOk
-
-`func (o *UpsertUserSubRequestBody) GetSkipWebhooksOk() (*bool, bool)`
-
-GetSkipWebhooksOk returns a tuple with the SkipWebhooks field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetSkipWebhooks
-
-`func (o *UpsertUserSubRequestBody) SetSkipWebhooks(v bool)`
-
-SetSkipWebhooks sets SkipWebhooks field to given value.
-
-### HasSkipWebhooks
-
-`func (o *UpsertUserSubRequestBody) HasSkipWebhooks() bool`
-
-HasSkipWebhooks returns a boolean if a field has been set.
-
-### SetSkipWebhooksNil
-
-`func (o *UpsertUserSubRequestBody) SetSkipWebhooksNil(b bool)`
-
- SetSkipWebhooksNil sets the value for SkipWebhooks to be an explicit nil
-
-### UnsetSkipWebhooks
-`func (o *UpsertUserSubRequestBody) UnsetSkipWebhooks()`
-
-UnsetSkipWebhooks ensures that no value is present for SkipWebhooks, not even an explicit nil
 ### GetTraits
 
 `func (o *UpsertUserSubRequestBody) GetTraits() map[string]interface{}`

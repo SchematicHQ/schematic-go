@@ -30,6 +30,7 @@ type RuleDetailResponseData struct {
 	PlanId NullableString `json:"plan_id,omitempty"`
 	Priority int32 `json:"priority"`
 	PriorityGroup NullableInt32 `json:"priority_group,omitempty"`
+	RuleType string `json:"rule_type"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Value bool `json:"value"`
 }
@@ -38,7 +39,7 @@ type RuleDetailResponseData struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRuleDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, updatedAt time.Time, value bool) *RuleDetailResponseData {
+func NewRuleDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, ruleType string, updatedAt time.Time, value bool) *RuleDetailResponseData {
 	this := RuleDetailResponseData{}
 	this.ConditionGroups = conditionGroups
 	this.Conditions = conditions
@@ -47,6 +48,7 @@ func NewRuleDetailResponseData(conditionGroups []RuleConditionGroupDetailRespons
 	this.Id = id
 	this.Name = name
 	this.Priority = priority
+	this.RuleType = ruleType
 	this.UpdatedAt = updatedAt
 	this.Value = value
 	return &this
@@ -354,6 +356,30 @@ func (o *RuleDetailResponseData) UnsetPriorityGroup() {
 	o.PriorityGroup.Unset()
 }
 
+// GetRuleType returns the RuleType field value
+func (o *RuleDetailResponseData) GetRuleType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.RuleType
+}
+
+// GetRuleTypeOk returns a tuple with the RuleType field value
+// and a boolean to check if the value has been set.
+func (o *RuleDetailResponseData) GetRuleTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.RuleType, true
+}
+
+// SetRuleType sets field value
+func (o *RuleDetailResponseData) SetRuleType(v string) {
+	o.RuleType = v
+}
+
 // GetUpdatedAt returns the UpdatedAt field value
 func (o *RuleDetailResponseData) GetUpdatedAt() time.Time {
 	if o == nil {
@@ -428,6 +454,7 @@ func (o RuleDetailResponseData) ToMap() (map[string]interface{}, error) {
 	if o.PriorityGroup.IsSet() {
 		toSerialize["priority_group"] = o.PriorityGroup.Get()
 	}
+	toSerialize["rule_type"] = o.RuleType
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["value"] = o.Value
 	return toSerialize, nil

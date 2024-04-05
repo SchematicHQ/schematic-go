@@ -22,3 +22,8 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+/out/
+.travis.yml
+git_push.sh
+cover.out

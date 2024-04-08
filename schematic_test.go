@@ -14,8 +14,7 @@ import (
 )
 
 func TestNewClient(t *testing.T) {
-	client, err := schematic.NewClient("test-api-key")
-	assert.Nil(t, err)
+	client := schematic.NewClient("test-api-key")
 	defer client.Close()
 	assert.NotNil(t, client)
 	assert.NotNil(t, client.API())
@@ -24,9 +23,8 @@ func TestNewClient(t *testing.T) {
 func TestCheckFlagWithCacheHit(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	apiClient, mocks := mocks.NewMockAPIClient(ctrl)
-	client, err := schematic.NewClient("test-api-key")
+	client := schematic.NewClient("test-api-key")
 	client.SetAPIClient(apiClient)
-	assert.Nil(t, err)
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -50,9 +48,8 @@ func TestCheckFlagWithCacheHit(t *testing.T) {
 func TestCheckFlagWithNoCache(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	apiClient, mocks := mocks.NewMockAPIClient(ctrl)
-	client, err := schematic.NewClient("test-api-key", schematic.WithDisableFlagCheckCache())
+	client := schematic.NewClient("test-api-key", schematic.WithDisableFlagCheckCache())
 	client.SetAPIClient(apiClient)
-	assert.Nil(t, err)
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -77,9 +74,8 @@ func TestCheckFlagWithCacheOptions(t *testing.T) {
 	apiClient, mocks := mocks.NewMockAPIClient(ctrl)
 	cacheTTL := 50 * time.Millisecond
 	cacheMaxSize := 1000
-	client, err := schematic.NewClient("test-api-key", schematic.WithLocalFlagCheckCache(cacheMaxSize, cacheTTL))
+	client := schematic.NewClient("test-api-key", schematic.WithLocalFlagCheckCache(cacheMaxSize, cacheTTL))
 	client.SetAPIClient(apiClient)
-	assert.Nil(t, err)
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -107,9 +103,8 @@ func TestCheckFlagWithCacheOptions(t *testing.T) {
 func TestTrackEventBatch(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	apiClient, mocks := mocks.NewMockAPIClient(ctrl)
-	client, err := schematic.NewClient("test-api-key", schematic.WithEventBufferPeriod(10*time.Millisecond))
+	client := schematic.NewClient("test-api-key", schematic.WithEventBufferPeriod(10*time.Millisecond))
 	client.SetAPIClient(apiClient)
-	assert.Nil(t, err)
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -127,9 +122,8 @@ func TestTrackEventBatch(t *testing.T) {
 func TestMultipleEventBatches(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	apiClient, mocks := mocks.NewMockAPIClient(ctrl)
-	client, err := schematic.NewClient("test-api-key", schematic.WithEventBufferPeriod(10*time.Millisecond))
+	client := schematic.NewClient("test-api-key", schematic.WithEventBufferPeriod(10*time.Millisecond))
 	client.SetAPIClient(apiClient)
-	assert.Nil(t, err)
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -150,8 +144,7 @@ func TestMultipleEventBatches(t *testing.T) {
 }
 
 func TestCheckFlagOfflineMode(t *testing.T) {
-	client, err := schematic.NewClient("", schematic.WithDefaultFlagValues(map[string]bool{"test-flag": true}))
-	assert.Nil(t, err)
+	client := schematic.NewClient("", schematic.WithDefaultFlagValues(map[string]bool{"test-flag": true}))
 	defer client.Close()
 
 	assert.True(t, client.CheckFlag(context.Background(), &schematic.CheckFlagRequestBody{}, "test-flag"))

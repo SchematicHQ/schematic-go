@@ -533,7 +533,7 @@ paths:
       - accounts
   /audience/count-companies:
     post:
-      operationId: countCompaniesAudience
+      operationId: countAudienceCompanies
       requestBody:
         content:
           application/json:
@@ -545,7 +545,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CountCompaniesAudienceResponse'
+                $ref: '#/components/schemas/CountAudienceCompaniesResponse'
           description: Created
         "400":
           content:
@@ -571,12 +571,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Count Companies audience
+      summary: Count audience companies
       tags:
       - features
   /audience/count-users:
     post:
-      operationId: countUsersAudience
+      operationId: countAudienceUsers
       requestBody:
         content:
           application/json:
@@ -588,7 +588,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CountUsersAudienceResponse'
+                $ref: '#/components/schemas/CountAudienceUsersResponse'
           description: Created
         "400":
           content:
@@ -614,12 +614,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Count Users audience
+      summary: Count audience users
       tags:
       - features
   /audience/get-companies:
     post:
-      operationId: getCompaniesAudience
+      operationId: listAudienceCompanies
       requestBody:
         content:
           application/json:
@@ -631,7 +631,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetCompaniesAudienceResponse'
+                $ref: '#/components/schemas/ListAudienceCompaniesResponse'
           description: OK
         "400":
           content:
@@ -657,12 +657,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Get Companies audience
+      summary: List audience companies
       tags:
       - features
   /audience/get-users:
     post:
-      operationId: getUsersAudience
+      operationId: listAudienceUsers
       requestBody:
         content:
           application/json:
@@ -674,7 +674,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUsersAudienceResponse'
+                $ref: '#/components/schemas/ListAudienceUsersResponse'
           description: OK
         "400":
           content:
@@ -700,7 +700,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Get Users audience
+      summary: List audience users
       tags:
       - features
   /companies:
@@ -769,7 +769,7 @@ paths:
       tags:
       - companies
     post:
-      operationId: createCompany
+      operationId: upsertCompany
       requestBody:
         content:
           application/json:
@@ -777,12 +777,12 @@ paths:
               $ref: '#/components/schemas/UpsertCompanyRequestBody'
         required: true
       responses:
-        "201":
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateCompanyResponse'
-          description: Created
+                $ref: '#/components/schemas/UpsertCompanyResponse'
+          description: OK
         "400":
           content:
             application/json:
@@ -807,7 +807,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Create company
+      summary: Upsert company
       tags:
       - companies
   /companies/{company_id}:
@@ -899,6 +899,92 @@ paths:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
       summary: Get company
+      tags:
+      - companies
+  /companies/create:
+    post:
+      operationId: createCompany
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertCompanyRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCompanyResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Create company
+      tags:
+      - companies
+  /companies/delete:
+    post:
+      operationId: deleteCompanyByKeys
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeysRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCompanyByKeysResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Delete company by keys
       tags:
       - companies
   /companies/lookup:
@@ -1018,7 +1104,7 @@ paths:
       tags:
       - companies
     post:
-      operationId: createCompanyMembership
+      operationId: getOrCreateCompanyMembership
       requestBody:
         content:
           application/json:
@@ -1026,12 +1112,12 @@ paths:
               $ref: '#/components/schemas/GetOrCreateCompanyMembershipRequestBody'
         required: true
       responses:
-        "201":
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateCompanyMembershipResponse'
-          description: Created
+                $ref: '#/components/schemas/GetOrCreateCompanyMembershipResponse'
+          description: OK
         "400":
           content:
             application/json:
@@ -1056,7 +1142,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Create company membership
+      summary: Get or create company membership
       tags:
       - companies
   /company-memberships/{company_membership_id}:
@@ -1437,7 +1523,7 @@ paths:
       - companies
   /company-traits:
     post:
-      operationId: createCompanyTrait
+      operationId: upsertCompanyTrait
       requestBody:
         content:
           application/json:
@@ -1445,12 +1531,12 @@ paths:
               $ref: '#/components/schemas/UpsertTraitRequestBody'
         required: true
       responses:
-        "201":
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateCompanyTraitResponse'
-          description: Created
+                $ref: '#/components/schemas/UpsertCompanyTraitResponse'
+          description: OK
         "400":
           content:
             application/json:
@@ -1475,12 +1561,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Create company trait
+      summary: Upsert company trait
       tags:
       - companies
   /entity-trait-definitions:
     post:
-      operationId: createEntityTraitDefinition
+      operationId: getOrCreateEntityTraitDefinition
       requestBody:
         content:
           application/json:
@@ -1488,12 +1574,12 @@ paths:
               $ref: '#/components/schemas/CreateEntityTraitDefinitionRequestBody'
         required: true
       responses:
-        "201":
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateEntityTraitDefinitionResponse'
-          description: Created
+                $ref: '#/components/schemas/GetOrCreateEntityTraitDefinitionResponse'
+          description: OK
         "400":
           content:
             application/json:
@@ -1518,7 +1604,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Create entity trait definition
+      summary: Get or create entity trait definition
       tags:
       - companies
   /entity-trait-definitions/{entity_trait_definition_id}:
@@ -1815,7 +1901,7 @@ paths:
       - events
   /event-types:
     get:
-      operationId: listEventTypes
+      operationId: getEventSummaries
       parameters:
       - explode: true
         in: query
@@ -1847,7 +1933,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListEventTypesResponse'
+                $ref: '#/components/schemas/GetEventSummariesResponse'
           description: OK
         "400":
           content:
@@ -1873,12 +1959,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: List event types
+      summary: Get event summaries
       tags:
       - events
   /event-types/{key}:
     get:
-      operationId: getEventType
+      operationId: getEventSummaryBySubtype
       parameters:
       - description: key
         explode: false
@@ -1893,7 +1979,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetEventTypeResponse'
+                $ref: '#/components/schemas/GetEventSummaryBySubtypeResponse'
           description: OK
         "401":
           content:
@@ -1919,12 +2005,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Get event type
+      summary: Get event summary by subtype
       tags:
       - events
   /event-types/count:
     get:
-      operationId: countEventTypes
+      operationId: countEventSummaries
       parameters:
       - explode: true
         in: query
@@ -1956,7 +2042,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CountEventTypesResponse'
+                $ref: '#/components/schemas/CountEventSummariesResponse'
           description: OK
         "400":
           content:
@@ -1982,7 +2068,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Count event types
+      summary: Count event summaries
       tags:
       - events
   /events:
@@ -2679,7 +2765,7 @@ paths:
       - features
   /flag-checks/latest:
     get:
-      operationId: latestFlagChecks
+      operationId: getLatestFlagChecks
       parameters:
       - explode: true
         in: query
@@ -2727,7 +2813,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LatestFlagChecksResponse'
+                $ref: '#/components/schemas/GetLatestFlagChecksResponse'
           description: OK
         "400":
           content:
@@ -2753,7 +2839,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Latest flag checks
+      summary: Get latest flag checks
       tags:
       - features
   /flags:
@@ -3020,7 +3106,7 @@ paths:
       - features
   /flags/{flag_id}/rules:
     put:
-      operationId: rulesFlag
+      operationId: updateFlagRules
       parameters:
       - description: flag_id
         explode: false
@@ -3041,7 +3127,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RulesFlagResponse'
+                $ref: '#/components/schemas/UpdateFlagRulesResponse'
           description: OK
         "400":
           content:
@@ -3073,7 +3159,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Rules flag
+      summary: Update flag rules
       tags:
       - features
   /flags/{key}/check:
@@ -3289,120 +3375,9 @@ paths:
       summary: List metric counts
       tags:
       - events
-  /metric-counts-hourly:
-    get:
-      operationId: listMetricCountsHourly
-      parameters:
-      - explode: true
-        in: query
-        name: start_time
-        required: false
-        schema:
-          format: date-time
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: end_time
-        required: false
-        schema:
-          format: date-time
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: event_subtype
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: event_subtypes
-        required: false
-        schema:
-          items:
-            type: string
-          type: array
-        style: form
-      - explode: true
-        in: query
-        name: company_id
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: company_ids
-        required: false
-        schema:
-          items:
-            type: string
-          type: array
-        style: form
-      - explode: true
-        in: query
-        name: user_id
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: Page limit (default 100)
-        explode: true
-        in: query
-        name: limit
-        required: false
-        schema:
-          example: 100
-          type: integer
-        style: form
-      - description: Page offset (default 0)
-        explode: true
-        in: query
-        name: offset
-        required: false
-        schema:
-          example: 0
-          type: integer
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListMetricCountsHourlyResponse'
-          description: OK
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Bad request
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Unauthorized
-        "403":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Forbidden
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Server error
-      summary: List metric counts hourly
-      tags:
-      - events
   /plan-audiences/{plan_audience_id}:
     delete:
-      operationId: deletePlanAudience
+      operationId: deleteAudience
       parameters:
       - description: plan_audience_id
         explode: false
@@ -3417,7 +3392,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeletePlanAudienceResponse'
+                $ref: '#/components/schemas/DeleteAudienceResponse'
           description: OK
         "400":
           content:
@@ -3443,11 +3418,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Delete plan audience
+      summary: Delete audience
       tags:
       - plans
     put:
-      operationId: updatePlanAudience
+      operationId: updateAudience
       parameters:
       - description: plan_audience_id
         explode: false
@@ -3468,7 +3443,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpdatePlanAudienceResponse'
+                $ref: '#/components/schemas/UpdateAudienceResponse'
           description: OK
         "400":
           content:
@@ -3500,7 +3475,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Update plan audience
+      summary: Update audience
       tags:
       - plans
   /plan-entitlements:
@@ -4011,7 +3986,7 @@ paths:
       - plans
   /user-traits:
     post:
-      operationId: createUserTrait
+      operationId: upsertUserTrait
       requestBody:
         content:
           application/json:
@@ -4019,12 +3994,12 @@ paths:
               $ref: '#/components/schemas/UpsertTraitRequestBody'
         required: true
       responses:
-        "201":
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateUserTraitResponse'
-          description: Created
+                $ref: '#/components/schemas/UpsertUserTraitResponse'
+          description: OK
         "400":
           content:
             application/json:
@@ -4049,7 +4024,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Create user trait
+      summary: Upsert user trait
       tags:
       - companies
   /users:
@@ -4118,7 +4093,7 @@ paths:
       tags:
       - companies
     post:
-      operationId: createUser
+      operationId: upsertUser
       requestBody:
         content:
           application/json:
@@ -4126,12 +4101,12 @@ paths:
               $ref: '#/components/schemas/UpsertUserRequestBody'
         required: true
       responses:
-        "201":
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateUserResponse'
-          description: Created
+                $ref: '#/components/schemas/UpsertUserResponse'
+          description: OK
         "400":
           content:
             application/json:
@@ -4156,7 +4131,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Create user
+      summary: Upsert user
       tags:
       - companies
   /users/{user_id}:
@@ -4248,6 +4223,92 @@ paths:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
       summary: Get user
+      tags:
+      - companies
+  /users/create:
+    post:
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertUserRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Create user
+      tags:
+      - companies
+  /users/delete:
+    post:
+      operationId: deleteUserByKeys
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeysRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteUserByKeysResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Delete user by keys
       tags:
       - companies
   /users/lookup:
@@ -7366,6 +7427,16 @@ components:
       - user_id
       title: GetOrCreateCompanyMembershipRequestBody
       type: object
+    KeysRequestBody:
+      example:
+        keys: "{}"
+      properties:
+        keys:
+          type: object
+      required:
+      - keys
+      title: KeysRequestBody
+      type: object
     MetricCountsHourlyResponseData:
       example:
         start_time: 2000-01-23T04:56:07.000+00:00
@@ -9656,7 +9727,7 @@ components:
       - params
       title: CountApiRequestsResponse
       type: object
-    CountCompaniesAudienceResponse:
+    CountAudienceCompaniesResponse:
       example:
         data:
           count: 0
@@ -9666,14 +9737,14 @@ components:
           $ref: '#/components/schemas/CountResponse'
         params:
           description: Input parameters
-          title: CountCompaniesAudienceParams
+          title: CountAudienceCompaniesParams
           type: object
       required:
       - data
       - params
-      title: CountCompaniesAudienceResponse
+      title: CountAudienceCompaniesResponse
       type: object
-    CountUsersAudienceResponse:
+    CountAudienceUsersResponse:
       example:
         data:
           count: 0
@@ -9683,14 +9754,14 @@ components:
           $ref: '#/components/schemas/CountResponse'
         params:
           description: Input parameters
-          title: CountUsersAudienceParams
+          title: CountAudienceUsersParams
           type: object
       required:
       - data
       - params
-      title: CountUsersAudienceResponse
+      title: CountAudienceUsersResponse
       type: object
-    GetCompaniesAudienceResponse:
+    ListAudienceCompaniesResponse:
       example:
         data:
         - traits: "{}"
@@ -9751,18 +9822,18 @@ components:
           description: The returned resources
           items:
             $ref: '#/components/schemas/CompanyDetailResponseData'
-          title: GetCompaniesAudienceResponseData
+          title: ListAudienceCompaniesResponseData
           type: array
         params:
           description: Input parameters
-          title: GetCompaniesAudienceParams
+          title: ListAudienceCompaniesParams
           type: object
       required:
       - data
       - params
-      title: GetCompaniesAudienceResponse
+      title: ListAudienceCompaniesResponse
       type: object
-    GetUsersAudienceResponse:
+    ListAudienceUsersResponse:
       example:
         data:
         - traits: "{}"
@@ -9873,16 +9944,16 @@ components:
           description: The returned resources
           items:
             $ref: '#/components/schemas/UserDetailResponseData'
-          title: GetUsersAudienceResponseData
+          title: ListAudienceUsersResponseData
           type: array
         params:
           description: Input parameters
-          title: GetUsersAudienceParams
+          title: ListAudienceUsersParams
           type: object
       required:
       - data
       - params
-      title: GetUsersAudienceResponse
+      title: ListAudienceUsersResponse
       type: object
     ListCompaniesParams:
       description: Input parameters
@@ -9940,7 +10011,7 @@ components:
       - params
       title: ListCompaniesResponse
       type: object
-    CreateCompanyResponse:
+    UpsertCompanyResponse:
       example:
         data:
           traits: "{}"
@@ -9975,12 +10046,12 @@ components:
           $ref: '#/components/schemas/CompanyDetailResponseData'
         params:
           description: Input parameters
-          title: CreateCompanyParams
+          title: UpsertCompanyParams
           type: object
       required:
       - data
       - params
-      title: CreateCompanyResponse
+      title: UpsertCompanyResponse
       type: object
     GetCompanyResponse:
       example:
@@ -10040,6 +10111,70 @@ components:
       - data
       - params
       title: DeleteCompanyResponse
+      type: object
+    CreateCompanyResponse:
+      example:
+        data:
+          traits: "{}"
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          keys:
+          - definition_id: definition_id
+            entity_type: entity_type
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            entity_id: entity_id
+            value: value
+            key: key
+          - definition_id: definition_id
+            entity_type: entity_type
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            entity_id: entity_id
+            value: value
+            key: key
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          last_seen_at: 2000-01-23T04:56:07.000+00:00
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/CompanyDetailResponseData'
+        params:
+          description: Input parameters
+          title: CreateCompanyParams
+          type: object
+      required:
+      - data
+      - params
+      title: CreateCompanyResponse
+      type: object
+    DeleteCompanyByKeysResponse:
+      example:
+        data:
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          last_seen_at: 2000-01-23T04:56:07.000+00:00
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/CompanyResponseData'
+        params:
+          description: Input parameters
+          title: DeleteCompanyByKeysParams
+          type: object
+      required:
+      - data
+      - params
+      title: DeleteCompanyByKeysResponse
       type: object
     LookupCompanyParams:
       description: Input parameters
@@ -10157,7 +10292,7 @@ components:
       - params
       title: ListCompanyMembershipsResponse
       type: object
-    CreateCompanyMembershipResponse:
+    GetOrCreateCompanyMembershipResponse:
       example:
         data:
           company_id: company_id
@@ -10178,12 +10313,12 @@ components:
           $ref: '#/components/schemas/CompanyMembershipDetailResponseData'
         params:
           description: Input parameters
-          title: CreateCompanyMembershipParams
+          title: GetOrCreateCompanyMembershipParams
           type: object
       required:
       - data
       - params
-      title: CreateCompanyMembershipResponse
+      title: GetOrCreateCompanyMembershipResponse
       type: object
     DeleteCompanyMembershipResponse:
       example:
@@ -10508,7 +10643,7 @@ components:
       - params
       title: ListCompanyPlansResponse
       type: object
-    CreateCompanyTraitResponse:
+    UpsertCompanyTraitResponse:
       example:
         data:
           traits: "{}"
@@ -10543,14 +10678,14 @@ components:
           $ref: '#/components/schemas/CompanyDetailResponseData'
         params:
           description: Input parameters
-          title: CreateCompanyTraitParams
+          title: UpsertCompanyTraitParams
           type: object
       required:
       - data
       - params
-      title: CreateCompanyTraitResponse
+      title: UpsertCompanyTraitResponse
       type: object
-    CreateEntityTraitDefinitionResponse:
+    GetOrCreateEntityTraitDefinitionResponse:
       example:
         data:
           entity_type: entity_type
@@ -10567,12 +10702,12 @@ components:
           $ref: '#/components/schemas/EntityTraitDefinitionResponseData'
         params:
           description: Input parameters
-          title: CreateEntityTraitDefinitionParams
+          title: GetOrCreateEntityTraitDefinitionParams
           type: object
       required:
       - data
       - params
-      title: CreateEntityTraitDefinitionResponse
+      title: GetOrCreateEntityTraitDefinitionResponse
       type: object
     UpdateEntityTraitDefinitionResponse:
       example:
@@ -10726,7 +10861,7 @@ components:
       - params
       title: CreateEventBatchResponse
       type: object
-    ListEventTypesParams:
+    GetEventSummariesParams:
       description: Input parameters
       example:
         q: q
@@ -10741,9 +10876,9 @@ components:
           type: integer
         q:
           type: string
-      title: ListEventTypesParams
+      title: GetEventSummariesParams
       type: object
-    ListEventTypesResponse:
+    GetEventSummariesResponse:
       example:
         data:
         - environment_id: environment_id
@@ -10765,16 +10900,16 @@ components:
           description: The returned resources
           items:
             $ref: '#/components/schemas/EventSummaryResponseData'
-          title: ListEventTypesResponseData
+          title: GetEventSummariesResponseData
           type: array
         params:
-          $ref: '#/components/schemas/ListEventTypesParams'
+          $ref: '#/components/schemas/GetEventSummariesParams'
       required:
       - data
       - params
-      title: ListEventTypesResponse
+      title: GetEventSummariesResponse
       type: object
-    GetEventTypeResponse:
+    GetEventSummaryBySubtypeResponse:
       example:
         data:
           environment_id: environment_id
@@ -10788,14 +10923,14 @@ components:
           $ref: '#/components/schemas/EventSummaryResponseData'
         params:
           description: Input parameters
-          title: GetEventTypeParams
+          title: GetEventSummaryBySubtypeParams
           type: object
       required:
       - data
       - params
-      title: GetEventTypeResponse
+      title: GetEventSummaryBySubtypeResponse
       type: object
-    CountEventTypesParams:
+    CountEventSummariesParams:
       description: Input parameters
       example:
         q: q
@@ -10810,9 +10945,9 @@ components:
           type: integer
         q:
           type: string
-      title: CountEventTypesParams
+      title: CountEventSummariesParams
       type: object
-    CountEventTypesResponse:
+    CountEventSummariesResponse:
       example:
         data:
           count: 0
@@ -10824,11 +10959,11 @@ components:
         data:
           $ref: '#/components/schemas/CountResponse'
         params:
-          $ref: '#/components/schemas/CountEventTypesParams'
+          $ref: '#/components/schemas/CountEventSummariesParams'
       required:
       - data
       - params
-      title: CountEventTypesResponse
+      title: CountEventSummariesResponse
       type: object
     ListEventsParams:
       description: Input parameters
@@ -13299,7 +13434,7 @@ components:
       - params
       title: CountFlagChecksResponse
       type: object
-    LatestFlagChecksParams:
+    GetLatestFlagChecksParams:
       description: Input parameters
       example:
         flag_id: flag_id
@@ -13324,9 +13459,9 @@ components:
         offset:
           example: 0
           type: integer
-      title: LatestFlagChecksParams
+      title: GetLatestFlagChecksParams
       type: object
-    LatestFlagChecksResponse:
+    GetLatestFlagChecksResponse:
       example:
         data:
         - flag_id: flag_id
@@ -13372,14 +13507,14 @@ components:
           description: The returned resources
           items:
             $ref: '#/components/schemas/FlagCheckLogResponseData'
-          title: LatestFlagChecksResponseData
+          title: GetLatestFlagChecksResponseData
           type: array
         params:
-          $ref: '#/components/schemas/LatestFlagChecksParams'
+          $ref: '#/components/schemas/GetLatestFlagChecksParams'
       required:
       - data
       - params
-      title: LatestFlagChecksResponse
+      title: GetLatestFlagChecksResponse
       type: object
     ListFlagsParams:
       description: Input parameters
@@ -14430,7 +14565,7 @@ components:
       - params
       title: DeleteFlagResponse
       type: object
-    RulesFlagResponse:
+    UpdateFlagRulesResponse:
       example:
         data:
           rules:
@@ -14746,12 +14881,12 @@ components:
           $ref: '#/components/schemas/RulesDetailResponseData'
         params:
           description: Input parameters
-          title: RulesFlagParams
+          title: UpdateFlagRulesParams
           type: object
       required:
       - data
       - params
-      title: RulesFlagResponse
+      title: UpdateFlagRulesResponse
       type: object
     CheckFlagResponse:
       example:
@@ -14900,97 +15035,7 @@ components:
       - params
       title: ListMetricCountsResponse
       type: object
-    ListMetricCountsHourlyParams:
-      description: Input parameters
-      example:
-        company_ids:
-        - company_ids
-        - company_ids
-        start_time: 2000-01-23T04:56:07.000+00:00
-        company_id: company_id
-        offset: 0
-        user_id: user_id
-        end_time: 2000-01-23T04:56:07.000+00:00
-        limit: 100
-        event_subtype: event_subtype
-        event_subtypes:
-        - event_subtypes
-        - event_subtypes
-      properties:
-        company_id:
-          type: string
-        company_ids:
-          items:
-            type: string
-          type: array
-        end_time:
-          format: date-time
-          type: string
-        event_subtype:
-          type: string
-        event_subtypes:
-          items:
-            type: string
-          type: array
-        limit:
-          example: 100
-          type: integer
-        offset:
-          example: 0
-          type: integer
-        start_time:
-          format: date-time
-          type: string
-        user_id:
-          type: string
-      title: ListMetricCountsHourlyParams
-      type: object
-    ListMetricCountsHourlyResponse:
-      example:
-        data:
-        - start_time: 2000-01-23T04:56:07.000+00:00
-          company_id: company_id
-          environment_id: environment_id
-          user_id: user_id
-          created_at: 2000-01-23T04:56:07.000+00:00
-          event_subtype: event_subtype
-          value: 0
-        - start_time: 2000-01-23T04:56:07.000+00:00
-          company_id: company_id
-          environment_id: environment_id
-          user_id: user_id
-          created_at: 2000-01-23T04:56:07.000+00:00
-          event_subtype: event_subtype
-          value: 0
-        params:
-          company_ids:
-          - company_ids
-          - company_ids
-          start_time: 2000-01-23T04:56:07.000+00:00
-          company_id: company_id
-          offset: 0
-          user_id: user_id
-          end_time: 2000-01-23T04:56:07.000+00:00
-          limit: 100
-          event_subtype: event_subtype
-          event_subtypes:
-          - event_subtypes
-          - event_subtypes
-      properties:
-        data:
-          description: The returned resources
-          items:
-            $ref: '#/components/schemas/MetricCountsHourlyResponseData'
-          title: ListMetricCountsHourlyResponseData
-          type: array
-        params:
-          $ref: '#/components/schemas/ListMetricCountsHourlyParams'
-      required:
-      - data
-      - params
-      title: ListMetricCountsHourlyResponse
-      type: object
-    UpdatePlanAudienceResponse:
+    UpdateAudienceResponse:
       example:
         data:
           flag_id: flag_id
@@ -15147,14 +15192,14 @@ components:
           $ref: '#/components/schemas/PlanAudienceDetailResponseData'
         params:
           description: Input parameters
-          title: UpdatePlanAudienceParams
+          title: UpdateAudienceParams
           type: object
       required:
       - data
       - params
-      title: UpdatePlanAudienceResponse
+      title: UpdateAudienceResponse
       type: object
-    DeletePlanAudienceResponse:
+    DeleteAudienceResponse:
       example:
         data:
           deleted: true
@@ -15164,12 +15209,12 @@ components:
           $ref: '#/components/schemas/DeleteResponse'
         params:
           description: Input parameters
-          title: DeletePlanAudienceParams
+          title: DeleteAudienceParams
           type: object
       required:
       - data
       - params
-      title: DeletePlanAudienceResponse
+      title: DeleteAudienceResponse
       type: object
     ListPlanEntitlementsParams:
       description: Input parameters
@@ -15532,7 +15577,7 @@ components:
       - params
       title: DeletePlanResponse
       type: object
-    CreateUserTraitResponse:
+    UpsertUserTraitResponse:
       example:
         data:
           traits: "{}"
@@ -15592,12 +15637,12 @@ components:
           $ref: '#/components/schemas/UserDetailResponseData'
         params:
           description: Input parameters
-          title: CreateUserTraitParams
+          title: UpsertUserTraitParams
           type: object
       required:
       - data
       - params
-      title: CreateUserTraitResponse
+      title: UpsertUserTraitResponse
       type: object
     ListUsersParams:
       description: Input parameters
@@ -15655,7 +15700,7 @@ components:
       - params
       title: ListUsersResponse
       type: object
-    CreateUserResponse:
+    UpsertUserResponse:
       example:
         data:
           traits: "{}"
@@ -15715,12 +15760,12 @@ components:
           $ref: '#/components/schemas/UserDetailResponseData'
         params:
           description: Input parameters
-          title: CreateUserParams
+          title: UpsertUserParams
           type: object
       required:
       - data
       - params
-      title: CreateUserResponse
+      title: UpsertUserResponse
       type: object
     GetUserResponse:
       example:
@@ -15805,6 +15850,95 @@ components:
       - data
       - params
       title: DeleteUserResponse
+      type: object
+    CreateUserResponse:
+      example:
+        data:
+          traits: "{}"
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          keys:
+          - definition_id: definition_id
+            entity_type: entity_type
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            entity_id: entity_id
+            value: value
+            key: key
+          - definition_id: definition_id
+            entity_type: entity_type
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            entity_id: entity_id
+            value: value
+            key: key
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          company_memberships:
+          - company_id: company_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            user_id: user_id
+            created_at: 2000-01-23T04:56:07.000+00:00
+            company:
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              last_seen_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+          - company_id: company_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            user_id: user_id
+            created_at: 2000-01-23T04:56:07.000+00:00
+            company:
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              last_seen_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+          last_seen_at: 2000-01-23T04:56:07.000+00:00
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/UserDetailResponseData'
+        params:
+          description: Input parameters
+          title: CreateUserParams
+          type: object
+      required:
+      - data
+      - params
+      title: CreateUserResponse
+      type: object
+    DeleteUserByKeysResponse:
+      example:
+        data:
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          last_seen_at: 2000-01-23T04:56:07.000+00:00
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/UserResponseData'
+        params:
+          description: Input parameters
+          title: DeleteUserByKeysParams
+          type: object
+      required:
+      - data
+      - params
+      title: DeleteUserByKeysResponse
       type: object
     LookupUserParams:
       description: Input parameters

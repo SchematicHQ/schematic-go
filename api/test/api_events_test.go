@@ -22,11 +22,11 @@ func Test_api_EventsAPIService(t *testing.T) {
 	configuration := schematicapi.NewConfiguration()
 	apiClient := schematicapi.NewAPIClient(configuration)
 
-	t.Run("Test EventsAPIService CountEventTypes", func(t *testing.T) {
+	t.Run("Test EventsAPIService CountEventSummaries", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.EventsAPI.CountEventTypes(context.Background()).Execute()
+		resp, httpRes, err := apiClient.EventsAPI.CountEventSummaries(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -84,13 +84,11 @@ func Test_api_EventsAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test EventsAPIService GetEventType", func(t *testing.T) {
+	t.Run("Test EventsAPIService GetEventSummaries", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var key string
-
-		resp, httpRes, err := apiClient.EventsAPI.GetEventType(context.Background(), key).Execute()
+		resp, httpRes, err := apiClient.EventsAPI.GetEventSummaries(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -98,11 +96,13 @@ func Test_api_EventsAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test EventsAPIService ListEventTypes", func(t *testing.T) {
+	t.Run("Test EventsAPIService GetEventSummaryBySubtype", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.EventsAPI.ListEventTypes(context.Background()).Execute()
+		var key string
+
+		resp, httpRes, err := apiClient.EventsAPI.GetEventSummaryBySubtype(context.Background(), key).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -127,18 +127,6 @@ func Test_api_EventsAPIService(t *testing.T) {
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.EventsAPI.ListMetricCounts(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test EventsAPIService ListMetricCountsHourly", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.EventsAPI.ListMetricCountsHourly(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

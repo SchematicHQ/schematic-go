@@ -4,24 +4,23 @@ All URIs are relative to *https://api.schematichq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CountEventTypes**](EventsAPI.md#CountEventTypes) | **Get** /event-types/count | Count event types
+[**CountEventSummaries**](EventsAPI.md#CountEventSummaries) | **Get** /event-types/count | Count event summaries
 [**CountEvents**](EventsAPI.md#CountEvents) | **Get** /events/count | Count events
 [**CreateEvent**](EventsAPI.md#CreateEvent) | **Post** /events | Create event
 [**CreateEventBatch**](EventsAPI.md#CreateEventBatch) | **Post** /event-batch | Create event batch
 [**GetEvent**](EventsAPI.md#GetEvent) | **Get** /events/{event_id} | Get event
-[**GetEventType**](EventsAPI.md#GetEventType) | **Get** /event-types/{key} | Get event type
-[**ListEventTypes**](EventsAPI.md#ListEventTypes) | **Get** /event-types | List event types
+[**GetEventSummaries**](EventsAPI.md#GetEventSummaries) | **Get** /event-types | Get event summaries
+[**GetEventSummaryBySubtype**](EventsAPI.md#GetEventSummaryBySubtype) | **Get** /event-types/{key} | Get event summary by subtype
 [**ListEvents**](EventsAPI.md#ListEvents) | **Get** /events | List events
 [**ListMetricCounts**](EventsAPI.md#ListMetricCounts) | **Get** /metric-counts | List metric counts
-[**ListMetricCountsHourly**](EventsAPI.md#ListMetricCountsHourly) | **Get** /metric-counts-hourly | List metric counts hourly
 
 
 
-## CountEventTypes
+## CountEventSummaries
 
-> CountEventTypesResponse CountEventTypes(ctx).Q(q).Limit(limit).Offset(offset).Execute()
+> CountEventSummariesResponse CountEventSummaries(ctx).Q(q).Limit(limit).Offset(offset).Execute()
 
-Count event types
+Count event summaries
 
 ### Example
 
@@ -45,13 +44,13 @@ func main() {
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EventsAPI.CountEventTypes(context.Background()).Q(q).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EventsAPI.CountEventSummaries(context.Background()).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.CountEventTypes``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.CountEventSummaries``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CountEventTypes`: CountEventTypesResponse
-	fmt.Fprintf(os.Stdout, "Response from `EventsAPI.CountEventTypes`: %v\n", resp)
+	// response from `CountEventSummaries`: CountEventSummariesResponse
+	fmt.Fprintf(os.Stdout, "Response from `EventsAPI.CountEventSummaries`: %v\n", resp)
 }
 ```
 
@@ -61,7 +60,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiCountEventTypesRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCountEventSummariesRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -72,7 +71,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**CountEventTypesResponse**](CountEventTypesResponse.md)
+[**CountEventSummariesResponse**](CountEventSummariesResponse.md)
 
 ### Authorization
 
@@ -368,82 +367,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetEventType
+## GetEventSummaries
 
-> GetEventTypeResponse GetEventType(ctx, key).Execute()
+> GetEventSummariesResponse GetEventSummaries(ctx).Q(q).Limit(limit).Offset(offset).Execute()
 
-Get event type
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	key := "key_example" // string | key
-
-	resp, r, err := client.API().EventsAPI.GetEventType(context.Background(), key).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.GetEventType``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `GetEventType`: GetEventTypeResponse
-	fmt.Fprintf(os.Stdout, "Response from `EventsAPI.GetEventType`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**key** | **string** | key | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGetEventTypeRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
-### Return type
-
-[**GetEventTypeResponse**](GetEventTypeResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ListEventTypes
-
-> ListEventTypesResponse ListEventTypes(ctx).Q(q).Limit(limit).Offset(offset).Execute()
-
-List event types
+Get event summaries
 
 ### Example
 
@@ -467,13 +395,13 @@ func main() {
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EventsAPI.ListEventTypes(context.Background()).Q(q).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EventsAPI.GetEventSummaries(context.Background()).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.ListEventTypes``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.GetEventSummaries``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListEventTypes`: ListEventTypesResponse
-	fmt.Fprintf(os.Stdout, "Response from `EventsAPI.ListEventTypes`: %v\n", resp)
+	// response from `GetEventSummaries`: GetEventSummariesResponse
+	fmt.Fprintf(os.Stdout, "Response from `EventsAPI.GetEventSummaries`: %v\n", resp)
 }
 ```
 
@@ -483,7 +411,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiListEventTypesRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetEventSummariesRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -494,7 +422,78 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ListEventTypesResponse**](ListEventTypesResponse.md)
+[**GetEventSummariesResponse**](GetEventSummariesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetEventSummaryBySubtype
+
+> GetEventSummaryBySubtypeResponse GetEventSummaryBySubtype(ctx, key).Execute()
+
+Get event summary by subtype
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	key := "key_example" // string | key
+
+	resp, r, err := client.API().EventsAPI.GetEventSummaryBySubtype(context.Background(), key).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.GetEventSummaryBySubtype``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetEventSummaryBySubtype`: GetEventSummaryBySubtypeResponse
+	fmt.Fprintf(os.Stdout, "Response from `EventsAPI.GetEventSummaryBySubtype`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**key** | **string** | key | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetEventSummaryBySubtypeRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**GetEventSummaryBySubtypeResponse**](GetEventSummaryBySubtypeResponse.md)
 
 ### Authorization
 
@@ -656,90 +655,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ListMetricCountsResponse**](ListMetricCountsResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ListMetricCountsHourly
-
-> ListMetricCountsHourlyResponse ListMetricCountsHourly(ctx).StartTime(startTime).EndTime(endTime).EventSubtype(eventSubtype).EventSubtypes(eventSubtypes).CompanyId(companyId).CompanyIds(companyIds).UserId(userId).Limit(limit).Offset(offset).Execute()
-
-List metric counts hourly
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-    "time"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	startTime := time.Now() // time.Time |  (optional)
-	endTime := time.Now() // time.Time |  (optional)
-	eventSubtype := "eventSubtype_example" // string |  (optional)
-	eventSubtypes := []string{"Inner_example"} // []string |  (optional)
-	companyId := "companyId_example" // string |  (optional)
-	companyIds := []string{"Inner_example"} // []string |  (optional)
-	userId := "userId_example" // string |  (optional)
-	limit := int32(100) // int32 | Page limit (default 100) (optional)
-	offset := int32(0) // int32 | Page offset (default 0) (optional)
-
-	resp, r, err := client.API().EventsAPI.ListMetricCountsHourly(context.Background()).StartTime(startTime).EndTime(endTime).EventSubtype(eventSubtype).EventSubtypes(eventSubtypes).CompanyId(companyId).CompanyIds(companyIds).UserId(userId).Limit(limit).Offset(offset).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.ListMetricCountsHourly``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `ListMetricCountsHourly`: ListMetricCountsHourlyResponse
-	fmt.Fprintf(os.Stdout, "Response from `EventsAPI.ListMetricCountsHourly`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiListMetricCountsHourlyRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **startTime** | **time.Time** |  | 
- **endTime** | **time.Time** |  | 
- **eventSubtype** | **string** |  | 
- **eventSubtypes** | **[]string** |  | 
- **companyId** | **string** |  | 
- **companyIds** | **[]string** |  | 
- **userId** | **string** |  | 
- **limit** | **int32** | Page limit (default 100) | 
- **offset** | **int32** | Page offset (default 0) | 
-
-### Return type
-
-[**ListMetricCountsHourlyResponse**](ListMetricCountsHourlyResponse.md)
 
 ### Authorization
 

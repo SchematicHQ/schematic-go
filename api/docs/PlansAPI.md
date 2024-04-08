@@ -5,12 +5,12 @@ All URIs are relative to *https://api.schematichq.com*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CreatePlan**](PlansAPI.md#CreatePlan) | **Post** /plans | Create plan
+[**DeleteAudience**](PlansAPI.md#DeleteAudience) | **Delete** /plan-audiences/{plan_audience_id} | Delete audience
 [**DeletePlan**](PlansAPI.md#DeletePlan) | **Delete** /plans/{plan_id} | Delete plan
-[**DeletePlanAudience**](PlansAPI.md#DeletePlanAudience) | **Delete** /plan-audiences/{plan_audience_id} | Delete plan audience
 [**GetPlan**](PlansAPI.md#GetPlan) | **Get** /plans/{plan_id} | Get plan
 [**ListPlans**](PlansAPI.md#ListPlans) | **Get** /plans | List plans
+[**UpdateAudience**](PlansAPI.md#UpdateAudience) | **Put** /plan-audiences/{plan_audience_id} | Update audience
 [**UpdatePlan**](PlansAPI.md#UpdatePlan) | **Put** /plans/{plan_id} | Update plan
-[**UpdatePlanAudience**](PlansAPI.md#UpdatePlanAudience) | **Put** /plan-audiences/{plan_audience_id} | Update plan audience
 
 
 
@@ -81,6 +81,77 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## DeleteAudience
+
+> DeleteAudienceResponse DeleteAudience(ctx, planAudienceId).Execute()
+
+Delete audience
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	planAudienceId := "planAudienceId_example" // string | plan_audience_id
+
+	resp, r, err := client.API().PlansAPI.DeleteAudience(context.Background(), planAudienceId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `PlansAPI.DeleteAudience``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DeleteAudience`: DeleteAudienceResponse
+	fmt.Fprintf(os.Stdout, "Response from `PlansAPI.DeleteAudience`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**planAudienceId** | **string** | plan_audience_id | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteAudienceRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**DeleteAudienceResponse**](DeleteAudienceResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## DeletePlan
 
 > DeletePlanResponse DeletePlan(ctx, planId).Execute()
@@ -137,77 +208,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**DeletePlanResponse**](DeletePlanResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## DeletePlanAudience
-
-> DeletePlanAudienceResponse DeletePlanAudience(ctx, planAudienceId).Execute()
-
-Delete plan audience
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	planAudienceId := "planAudienceId_example" // string | plan_audience_id
-
-	resp, r, err := client.API().PlansAPI.DeletePlanAudience(context.Background(), planAudienceId).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PlansAPI.DeletePlanAudience``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `DeletePlanAudience`: DeletePlanAudienceResponse
-	fmt.Fprintf(os.Stdout, "Response from `PlansAPI.DeletePlanAudience`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**planAudienceId** | **string** | plan_audience_id | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiDeletePlanAudienceRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
-### Return type
-
-[**DeletePlanAudienceResponse**](DeletePlanAudienceResponse.md)
 
 ### Authorization
 
@@ -363,6 +363,79 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## UpdateAudience
+
+> UpdateAudienceResponse UpdateAudience(ctx, planAudienceId).UpdateAudienceRequestBody(updateAudienceRequestBody).Execute()
+
+Update audience
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	planAudienceId := "planAudienceId_example" // string | plan_audience_id
+	updateAudienceRequestBody := *schematicapi.NewUpdateAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // UpdateAudienceRequestBody | 
+
+	resp, r, err := client.API().PlansAPI.UpdateAudience(context.Background(), planAudienceId).UpdateAudienceRequestBody(updateAudienceRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `PlansAPI.UpdateAudience``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateAudience`: UpdateAudienceResponse
+	fmt.Fprintf(os.Stdout, "Response from `PlansAPI.UpdateAudience`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**planAudienceId** | **string** | plan_audience_id | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateAudienceRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **updateAudienceRequestBody** | [**UpdateAudienceRequestBody**](UpdateAudienceRequestBody.md) |  | 
+
+### Return type
+
+[**UpdateAudienceResponse**](UpdateAudienceResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## UpdatePlan
 
 > UpdatePlanResponse UpdatePlan(ctx, planId).UpdatePlanRequestBody(updatePlanRequestBody).Execute()
@@ -421,79 +494,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**UpdatePlanResponse**](UpdatePlanResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## UpdatePlanAudience
-
-> UpdatePlanAudienceResponse UpdatePlanAudience(ctx, planAudienceId).UpdateAudienceRequestBody(updateAudienceRequestBody).Execute()
-
-Update plan audience
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	planAudienceId := "planAudienceId_example" // string | plan_audience_id
-	updateAudienceRequestBody := *schematicapi.NewUpdateAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // UpdateAudienceRequestBody | 
-
-	resp, r, err := client.API().PlansAPI.UpdatePlanAudience(context.Background(), planAudienceId).UpdateAudienceRequestBody(updateAudienceRequestBody).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PlansAPI.UpdatePlanAudience``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `UpdatePlanAudience`: UpdatePlanAudienceResponse
-	fmt.Fprintf(os.Stdout, "Response from `PlansAPI.UpdatePlanAudience`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**planAudienceId** | **string** | plan_audience_id | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiUpdatePlanAudienceRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **updateAudienceRequestBody** | [**UpdateAudienceRequestBody**](UpdateAudienceRequestBody.md) |  | 
-
-### Return type
-
-[**UpdatePlanAudienceResponse**](UpdatePlanAudienceResponse.md)
 
 ### Authorization
 

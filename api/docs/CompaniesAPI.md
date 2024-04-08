@@ -4,16 +4,16 @@ All URIs are relative to *https://api.schematichq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateCompany**](CompaniesAPI.md#CreateCompany) | **Post** /companies | Create company
-[**CreateCompanyMembership**](CompaniesAPI.md#CreateCompanyMembership) | **Post** /company-memberships | Create company membership
-[**CreateCompanyTrait**](CompaniesAPI.md#CreateCompanyTrait) | **Post** /company-traits | Create company trait
-[**CreateEntityTraitDefinition**](CompaniesAPI.md#CreateEntityTraitDefinition) | **Post** /entity-trait-definitions | Create entity trait definition
-[**CreateUser**](CompaniesAPI.md#CreateUser) | **Post** /users | Create user
-[**CreateUserTrait**](CompaniesAPI.md#CreateUserTrait) | **Post** /user-traits | Create user trait
+[**CreateCompany**](CompaniesAPI.md#CreateCompany) | **Post** /companies/create | Create company
+[**CreateUser**](CompaniesAPI.md#CreateUser) | **Post** /users/create | Create user
 [**DeleteCompany**](CompaniesAPI.md#DeleteCompany) | **Delete** /companies/{company_id} | Delete company
+[**DeleteCompanyByKeys**](CompaniesAPI.md#DeleteCompanyByKeys) | **Post** /companies/delete | Delete company by keys
 [**DeleteCompanyMembership**](CompaniesAPI.md#DeleteCompanyMembership) | **Delete** /company-memberships/{company_membership_id} | Delete company membership
 [**DeleteUser**](CompaniesAPI.md#DeleteUser) | **Delete** /users/{user_id} | Delete user
+[**DeleteUserByKeys**](CompaniesAPI.md#DeleteUserByKeys) | **Post** /users/delete | Delete user by keys
 [**GetCompany**](CompaniesAPI.md#GetCompany) | **Get** /companies/{company_id} | Get company
+[**GetOrCreateCompanyMembership**](CompaniesAPI.md#GetOrCreateCompanyMembership) | **Post** /company-memberships | Get or create company membership
+[**GetOrCreateEntityTraitDefinition**](CompaniesAPI.md#GetOrCreateEntityTraitDefinition) | **Post** /entity-trait-definitions | Get or create entity trait definition
 [**GetUser**](CompaniesAPI.md#GetUser) | **Get** /users/{user_id} | Get user
 [**ListCompanies**](CompaniesAPI.md#ListCompanies) | **Get** /companies | List companies
 [**ListCompanyMemberships**](CompaniesAPI.md#ListCompanyMemberships) | **Get** /company-memberships | List company memberships
@@ -22,6 +22,10 @@ Method | HTTP request | Description
 [**LookupCompany**](CompaniesAPI.md#LookupCompany) | **Get** /companies/lookup | Lookup company
 [**LookupUser**](CompaniesAPI.md#LookupUser) | **Get** /users/lookup | Lookup user
 [**UpdateEntityTraitDefinition**](CompaniesAPI.md#UpdateEntityTraitDefinition) | **Put** /entity-trait-definitions/{entity_trait_definition_id} | Update entity trait definition
+[**UpsertCompany**](CompaniesAPI.md#UpsertCompany) | **Post** /companies | Upsert company
+[**UpsertCompanyTrait**](CompaniesAPI.md#UpsertCompanyTrait) | **Post** /company-traits | Upsert company trait
+[**UpsertUser**](CompaniesAPI.md#UpsertUser) | **Post** /users | Upsert user
+[**UpsertUserTrait**](CompaniesAPI.md#UpsertUserTrait) | **Post** /user-traits | Upsert user trait
 
 
 
@@ -77,207 +81,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CreateCompanyResponse**](CreateCompanyResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## CreateCompanyMembership
-
-> CreateCompanyMembershipResponse CreateCompanyMembership(ctx).GetOrCreateCompanyMembershipRequestBody(getOrCreateCompanyMembershipRequestBody).Execute()
-
-Create company membership
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	getOrCreateCompanyMembershipRequestBody := *schematicapi.NewGetOrCreateCompanyMembershipRequestBody("CompanyId_example", "UserId_example") // GetOrCreateCompanyMembershipRequestBody | 
-
-	resp, r, err := client.API().CompaniesAPI.CreateCompanyMembership(context.Background()).GetOrCreateCompanyMembershipRequestBody(getOrCreateCompanyMembershipRequestBody).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CreateCompanyMembership``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CreateCompanyMembership`: CreateCompanyMembershipResponse
-	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.CreateCompanyMembership`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCreateCompanyMembershipRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **getOrCreateCompanyMembershipRequestBody** | [**GetOrCreateCompanyMembershipRequestBody**](GetOrCreateCompanyMembershipRequestBody.md) |  | 
-
-### Return type
-
-[**CreateCompanyMembershipResponse**](CreateCompanyMembershipResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## CreateCompanyTrait
-
-> CreateCompanyTraitResponse CreateCompanyTrait(ctx).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
-
-Create company trait
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	upsertTraitRequestBody := *schematicapi.NewUpsertTraitRequestBody(map[string]interface{}(123), "Trait_example") // UpsertTraitRequestBody | 
-
-	resp, r, err := client.API().CompaniesAPI.CreateCompanyTrait(context.Background()).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CreateCompanyTrait``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CreateCompanyTrait`: CreateCompanyTraitResponse
-	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.CreateCompanyTrait`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCreateCompanyTraitRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **upsertTraitRequestBody** | [**UpsertTraitRequestBody**](UpsertTraitRequestBody.md) |  | 
-
-### Return type
-
-[**CreateCompanyTraitResponse**](CreateCompanyTraitResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## CreateEntityTraitDefinition
-
-> CreateEntityTraitDefinitionResponse CreateEntityTraitDefinition(ctx).CreateEntityTraitDefinitionRequestBody(createEntityTraitDefinitionRequestBody).Execute()
-
-Create entity trait definition
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	createEntityTraitDefinitionRequestBody := *schematicapi.NewCreateEntityTraitDefinitionRequestBody("EntityType_example", []string{"Hierarchy_example"}, "TraitType_example") // CreateEntityTraitDefinitionRequestBody | 
-
-	resp, r, err := client.API().CompaniesAPI.CreateEntityTraitDefinition(context.Background()).CreateEntityTraitDefinitionRequestBody(createEntityTraitDefinitionRequestBody).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CreateEntityTraitDefinition``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CreateEntityTraitDefinition`: CreateEntityTraitDefinitionResponse
-	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.CreateEntityTraitDefinition`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCreateEntityTraitDefinitionRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **createEntityTraitDefinitionRequestBody** | [**CreateEntityTraitDefinitionRequestBody**](CreateEntityTraitDefinitionRequestBody.md) |  | 
-
-### Return type
-
-[**CreateEntityTraitDefinitionResponse**](CreateEntityTraitDefinitionResponse.md)
 
 ### Authorization
 
@@ -360,73 +163,6 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## CreateUserTrait
-
-> CreateUserTraitResponse CreateUserTrait(ctx).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
-
-Create user trait
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	upsertTraitRequestBody := *schematicapi.NewUpsertTraitRequestBody(map[string]interface{}(123), "Trait_example") // UpsertTraitRequestBody | 
-
-	resp, r, err := client.API().CompaniesAPI.CreateUserTrait(context.Background()).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CreateUserTrait``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CreateUserTrait`: CreateUserTraitResponse
-	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.CreateUserTrait`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCreateUserTraitRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **upsertTraitRequestBody** | [**UpsertTraitRequestBody**](UpsertTraitRequestBody.md) |  | 
-
-### Return type
-
-[**CreateUserTraitResponse**](CreateUserTraitResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## DeleteCompany
 
 > DeleteCompanyResponse DeleteCompany(ctx, companyId).Execute()
@@ -491,6 +227,73 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DeleteCompanyByKeys
+
+> DeleteCompanyByKeysResponse DeleteCompanyByKeys(ctx).KeysRequestBody(keysRequestBody).Execute()
+
+Delete company by keys
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	keysRequestBody := *schematicapi.NewKeysRequestBody(map[string]interface{}(123)) // KeysRequestBody | 
+
+	resp, r, err := client.API().CompaniesAPI.DeleteCompanyByKeys(context.Background()).KeysRequestBody(keysRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.DeleteCompanyByKeys``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DeleteCompanyByKeys`: DeleteCompanyByKeysResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.DeleteCompanyByKeys`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteCompanyByKeysRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **keysRequestBody** | [**KeysRequestBody**](KeysRequestBody.md) |  | 
+
+### Return type
+
+[**DeleteCompanyByKeysResponse**](DeleteCompanyByKeysResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -640,6 +443,73 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## DeleteUserByKeys
+
+> DeleteUserByKeysResponse DeleteUserByKeys(ctx).KeysRequestBody(keysRequestBody).Execute()
+
+Delete user by keys
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	keysRequestBody := *schematicapi.NewKeysRequestBody(map[string]interface{}(123)) // KeysRequestBody | 
+
+	resp, r, err := client.API().CompaniesAPI.DeleteUserByKeys(context.Background()).KeysRequestBody(keysRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.DeleteUserByKeys``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DeleteUserByKeys`: DeleteUserByKeysResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.DeleteUserByKeys`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteUserByKeysRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **keysRequestBody** | [**KeysRequestBody**](KeysRequestBody.md) |  | 
+
+### Return type
+
+[**DeleteUserByKeysResponse**](DeleteUserByKeysResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetCompany
 
 > GetCompanyResponse GetCompany(ctx, companyId).Execute()
@@ -704,6 +574,140 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetOrCreateCompanyMembership
+
+> GetOrCreateCompanyMembershipResponse GetOrCreateCompanyMembership(ctx).GetOrCreateCompanyMembershipRequestBody(getOrCreateCompanyMembershipRequestBody).Execute()
+
+Get or create company membership
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	getOrCreateCompanyMembershipRequestBody := *schematicapi.NewGetOrCreateCompanyMembershipRequestBody("CompanyId_example", "UserId_example") // GetOrCreateCompanyMembershipRequestBody | 
+
+	resp, r, err := client.API().CompaniesAPI.GetOrCreateCompanyMembership(context.Background()).GetOrCreateCompanyMembershipRequestBody(getOrCreateCompanyMembershipRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.GetOrCreateCompanyMembership``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetOrCreateCompanyMembership`: GetOrCreateCompanyMembershipResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.GetOrCreateCompanyMembership`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetOrCreateCompanyMembershipRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **getOrCreateCompanyMembershipRequestBody** | [**GetOrCreateCompanyMembershipRequestBody**](GetOrCreateCompanyMembershipRequestBody.md) |  | 
+
+### Return type
+
+[**GetOrCreateCompanyMembershipResponse**](GetOrCreateCompanyMembershipResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetOrCreateEntityTraitDefinition
+
+> GetOrCreateEntityTraitDefinitionResponse GetOrCreateEntityTraitDefinition(ctx).CreateEntityTraitDefinitionRequestBody(createEntityTraitDefinitionRequestBody).Execute()
+
+Get or create entity trait definition
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	createEntityTraitDefinitionRequestBody := *schematicapi.NewCreateEntityTraitDefinitionRequestBody("EntityType_example", []string{"Hierarchy_example"}, "TraitType_example") // CreateEntityTraitDefinitionRequestBody | 
+
+	resp, r, err := client.API().CompaniesAPI.GetOrCreateEntityTraitDefinition(context.Background()).CreateEntityTraitDefinitionRequestBody(createEntityTraitDefinitionRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.GetOrCreateEntityTraitDefinition``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetOrCreateEntityTraitDefinition`: GetOrCreateEntityTraitDefinitionResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.GetOrCreateEntityTraitDefinition`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetOrCreateEntityTraitDefinitionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **createEntityTraitDefinitionRequestBody** | [**CreateEntityTraitDefinitionRequestBody**](CreateEntityTraitDefinitionRequestBody.md) |  | 
+
+### Return type
+
+[**GetOrCreateEntityTraitDefinitionResponse**](GetOrCreateEntityTraitDefinitionResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -1262,6 +1266,274 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**UpdateEntityTraitDefinitionResponse**](UpdateEntityTraitDefinitionResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertCompany
+
+> UpsertCompanyResponse UpsertCompany(ctx).UpsertCompanyRequestBody(upsertCompanyRequestBody).Execute()
+
+Upsert company
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	upsertCompanyRequestBody := *schematicapi.NewUpsertCompanyRequestBody(map[string]interface{}(123)) // UpsertCompanyRequestBody | 
+
+	resp, r, err := client.API().CompaniesAPI.UpsertCompany(context.Background()).UpsertCompanyRequestBody(upsertCompanyRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.UpsertCompany``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertCompany`: UpsertCompanyResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.UpsertCompany`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertCompanyRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **upsertCompanyRequestBody** | [**UpsertCompanyRequestBody**](UpsertCompanyRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertCompanyResponse**](UpsertCompanyResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertCompanyTrait
+
+> UpsertCompanyTraitResponse UpsertCompanyTrait(ctx).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
+
+Upsert company trait
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	upsertTraitRequestBody := *schematicapi.NewUpsertTraitRequestBody(map[string]interface{}(123), "Trait_example") // UpsertTraitRequestBody | 
+
+	resp, r, err := client.API().CompaniesAPI.UpsertCompanyTrait(context.Background()).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.UpsertCompanyTrait``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertCompanyTrait`: UpsertCompanyTraitResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.UpsertCompanyTrait`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertCompanyTraitRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **upsertTraitRequestBody** | [**UpsertTraitRequestBody**](UpsertTraitRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertCompanyTraitResponse**](UpsertCompanyTraitResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertUser
+
+> UpsertUserResponse UpsertUser(ctx).UpsertUserRequestBody(upsertUserRequestBody).Execute()
+
+Upsert user
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	upsertUserRequestBody := *schematicapi.NewUpsertUserRequestBody(map[string]interface{}(123), map[string]interface{}(123)) // UpsertUserRequestBody | 
+
+	resp, r, err := client.API().CompaniesAPI.UpsertUser(context.Background()).UpsertUserRequestBody(upsertUserRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.UpsertUser``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertUser`: UpsertUserResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.UpsertUser`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertUserRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **upsertUserRequestBody** | [**UpsertUserRequestBody**](UpsertUserRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertUserResponse**](UpsertUserResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertUserTrait
+
+> UpsertUserTraitResponse UpsertUserTrait(ctx).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
+
+Upsert user trait
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	upsertTraitRequestBody := *schematicapi.NewUpsertTraitRequestBody(map[string]interface{}(123), "Trait_example") // UpsertTraitRequestBody | 
+
+	resp, r, err := client.API().CompaniesAPI.UpsertUserTrait(context.Background()).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.UpsertUserTrait``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertUserTrait`: UpsertUserTraitResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.UpsertUserTrait`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertUserTraitRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **upsertTraitRequestBody** | [**UpsertTraitRequestBody**](UpsertTraitRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertUserTraitResponse**](UpsertUserTraitResponse.md)
 
 ### Authorization
 

@@ -21,7 +21,7 @@ import (
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  client, err := schematic.NewClient(apiKey)
+  client := schematic.NewClient(apiKey)
   defer client.Close()
 }
 ```
@@ -41,7 +41,10 @@ func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
   cacheSizeBytes := 1000000
   cacheTTL := 1 * time.Second
-  client, err := schematic.NewClient(apiKey, schematic.WithLocalFlagCheckCache(cacheSizeBytes, cacheTTL))
+  client := schematic.NewClient(
+    apiKey,
+    schematic.WithLocalFlagCheckCache(cacheSizeBytes, cacheTTL),
+  )
   defer client.Close()
 }
 ```
@@ -57,7 +60,7 @@ import (
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  client, err := schematic.NewClient(apiKey, schematic.WithDisabledFlagCheckCache())
+  client := schematic.NewClient(apiKey, schematic.WithDisabledFlagCheckCache())
   defer client.Close()
 }
 ```
@@ -73,7 +76,7 @@ import (
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  client, err := schematic.NewClient(apiKey, schematic.WithDefaultFlagValues(map[string]bool{
+  client := schematic.NewClient(apiKey, schematic.WithDefaultFlagValues(map[string]bool{
     "some-flag-key": true,
   }))
   defer client.Close()
@@ -88,7 +91,7 @@ Create or update users and companies using identify events.
 
 ```go
 func main() {
-  client, err := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
   eventBody := NewEventBodyIdentify(map[string]any{
@@ -117,7 +120,7 @@ Track activity in your application using track events; these events can later be
 
 ```go
 func main() {
-  client, err := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
   eventBody := NewEventBodyTrack("some-action")
@@ -141,7 +144,7 @@ Although it is faster to create companies and users via identify events, if you 
 
 ```go
 func main() {
-  client, err := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
   body := schematic.NewUpsertCompanyRequestBody(map[string]any{
@@ -154,7 +157,7 @@ func main() {
     "is_active":  true,
   })
 
-  resp, r, err := client.API().CompaniesAPI.CreateCompany(context.Background()).UpsertCompanyRequestBody(*body).Execute()
+  resp, r, err := client.API().CompaniesAPI.UpsertCompany(context.Background()).UpsertCompanyRequestBody(*body).Execute()
 }
 ```
 
@@ -168,7 +171,7 @@ Similarly, you can upsert users using the Schematic API, as an alternative to us
 
 ```go
 func main() {
-  client, err := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
   companyKeys := map[string]any{
@@ -186,7 +189,7 @@ func main() {
     "is_staff":    false,
   })
 
-  resp, r, err := client.API().CompaniesAPI.CreateUser(context.Background()).UpsertUserRequestBody(*body).Execute()
+  resp, r, err := client.API().CompaniesAPI.UpsertUser(context.Background()).UpsertUserRequestBody(*body).Execute()
 }
 ```
 
@@ -199,7 +202,7 @@ When checking a flag, you'll provide keys for a company and/or keys for a user. 
 
 ```go
 func main() {
-  client, err := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
   evaluationCtx := schematic.CheckFlagRequestBody{
@@ -232,7 +235,7 @@ In development or testing environments, you may want to avoid making network req
 
 ```go
 func main() {
-  client, err := schematic.NewClient("")
+  client := schematic.NewClient("")
   defer client.Close()
 }
 ```
@@ -241,7 +244,7 @@ Offline mode works well with flag defaults:
 
 ```go
 func main() {
-  client, err := schematic.NewClient("", schematic.WithDefaultFlagValues(map[string]bool{
+  client := schematic.NewClient("", schematic.WithDefaultFlagValues(map[string]bool{
     "some-flag-key": true,
   }))
   defer client.Close()
@@ -252,7 +255,7 @@ In an automated testing context, you may also want to use offline mode and speci
 
 ```go
 func TestSomeFunctionality(t *testing.T) {
-  client, err := schematic.NewClient("")
+  client := schematic.NewClient("")
   defer client.Close()
 
   client.SetFlagDefault("some-flag-key", true)

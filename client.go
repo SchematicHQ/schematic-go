@@ -23,7 +23,7 @@ type client struct {
 	workerInterval          time.Duration
 }
 
-func NewClient(apiKey string, opts ...ClientOpt) (Client, error) {
+func NewClient(apiKey string, opts ...ClientOpt) Client {
 	apiConfig := api.NewConfiguration()
 	apiConfig.AddDefaultHeader("X-Schematic-Api-Key", apiKey)
 
@@ -42,7 +42,7 @@ func NewClient(apiKey string, opts ...ClientOpt) (Client, error) {
 	ctx := context.Background()
 	for _, opt := range opts {
 		if err := opt.Apply(ctx, client); err != nil {
-			return nil, err
+			client.errors <- err
 		}
 	}
 
@@ -57,7 +57,7 @@ func NewClient(apiKey string, opts ...ClientOpt) (Client, error) {
 	// Start background worker which handles async error logging and event buffering
 	go client.worker()
 
-	return client, nil
+	return client
 }
 
 func (c *client) SetAPIClient(apiClient *api.APIClient) {

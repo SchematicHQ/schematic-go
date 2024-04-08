@@ -34,13 +34,13 @@ func Test_api_PlansAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test PlansAPIService DeletePlan", func(t *testing.T) {
+	t.Run("Test PlansAPIService DeleteAudience", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var planId string
+		var planAudienceId string
 
-		resp, httpRes, err := apiClient.PlansAPI.DeletePlan(context.Background(), planId).Execute()
+		resp, httpRes, err := apiClient.PlansAPI.DeleteAudience(context.Background(), planAudienceId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -48,13 +48,13 @@ func Test_api_PlansAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test PlansAPIService DeletePlanAudience", func(t *testing.T) {
+	t.Run("Test PlansAPIService DeletePlan", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var planAudienceId string
+		var planId string
 
-		resp, httpRes, err := apiClient.PlansAPI.DeletePlanAudience(context.Background(), planAudienceId).Execute()
+		resp, httpRes, err := apiClient.PlansAPI.DeletePlan(context.Background(), planId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -88,13 +88,13 @@ func Test_api_PlansAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test PlansAPIService UpdatePlan", func(t *testing.T) {
+	t.Run("Test PlansAPIService UpdateAudience", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var planId string
+		var planAudienceId string
 
-		resp, httpRes, err := apiClient.PlansAPI.UpdatePlan(context.Background(), planId).Execute()
+		resp, httpRes, err := apiClient.PlansAPI.UpdateAudience(context.Background(), planAudienceId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -102,13 +102,13 @@ func Test_api_PlansAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test PlansAPIService UpdatePlanAudience", func(t *testing.T) {
+	t.Run("Test PlansAPIService UpdatePlan", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		var planAudienceId string
+		var planId string
 
-		resp, httpRes, err := apiClient.PlansAPI.UpdatePlanAudience(context.Background(), planAudienceId).Execute()
+		resp, httpRes, err := apiClient.PlansAPI.UpdatePlan(context.Background(), planId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

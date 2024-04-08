@@ -35,6 +35,19 @@ type PlansAPI interface {
 	CreatePlanExecute(r ApiCreatePlanRequest) (*CreatePlanResponse, *http.Response, error)
 
 	/*
+	DeleteAudience Delete audience
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param planAudienceId plan_audience_id
+	@return ApiDeleteAudienceRequest
+	*/
+	DeleteAudience(ctx context.Context, planAudienceId string) ApiDeleteAudienceRequest
+
+	// DeleteAudienceExecute executes the request
+	//  @return DeleteAudienceResponse
+	DeleteAudienceExecute(r ApiDeleteAudienceRequest) (*DeleteAudienceResponse, *http.Response, error)
+
+	/*
 	DeletePlan Delete plan
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -46,19 +59,6 @@ type PlansAPI interface {
 	// DeletePlanExecute executes the request
 	//  @return DeletePlanResponse
 	DeletePlanExecute(r ApiDeletePlanRequest) (*DeletePlanResponse, *http.Response, error)
-
-	/*
-	DeletePlanAudience Delete plan audience
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param planAudienceId plan_audience_id
-	@return ApiDeletePlanAudienceRequest
-	*/
-	DeletePlanAudience(ctx context.Context, planAudienceId string) ApiDeletePlanAudienceRequest
-
-	// DeletePlanAudienceExecute executes the request
-	//  @return DeletePlanAudienceResponse
-	DeletePlanAudienceExecute(r ApiDeletePlanAudienceRequest) (*DeletePlanAudienceResponse, *http.Response, error)
 
 	/*
 	GetPlan Get plan
@@ -86,6 +86,19 @@ type PlansAPI interface {
 	ListPlansExecute(r ApiListPlansRequest) (*ListPlansResponse, *http.Response, error)
 
 	/*
+	UpdateAudience Update audience
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param planAudienceId plan_audience_id
+	@return ApiUpdateAudienceRequest
+	*/
+	UpdateAudience(ctx context.Context, planAudienceId string) ApiUpdateAudienceRequest
+
+	// UpdateAudienceExecute executes the request
+	//  @return UpdateAudienceResponse
+	UpdateAudienceExecute(r ApiUpdateAudienceRequest) (*UpdateAudienceResponse, *http.Response, error)
+
+	/*
 	UpdatePlan Update plan
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -97,19 +110,6 @@ type PlansAPI interface {
 	// UpdatePlanExecute executes the request
 	//  @return UpdatePlanResponse
 	UpdatePlanExecute(r ApiUpdatePlanRequest) (*UpdatePlanResponse, *http.Response, error)
-
-	/*
-	UpdatePlanAudience Update plan audience
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param planAudienceId plan_audience_id
-	@return ApiUpdatePlanAudienceRequest
-	*/
-	UpdatePlanAudience(ctx context.Context, planAudienceId string) ApiUpdatePlanAudienceRequest
-
-	// UpdatePlanAudienceExecute executes the request
-	//  @return UpdatePlanAudienceResponse
-	UpdatePlanAudienceExecute(r ApiUpdatePlanAudienceRequest) (*UpdatePlanAudienceResponse, *http.Response, error)
 }
 
 // PlansAPIService PlansAPI service
@@ -285,48 +285,48 @@ func (a *PlansAPIService) CreatePlanExecute(r ApiCreatePlanRequest) (*CreatePlan
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiDeletePlanRequest struct {
+type ApiDeleteAudienceRequest struct {
 	ctx context.Context
 	ApiService PlansAPI
-	planId string
+	planAudienceId string
 }
 
-func (r ApiDeletePlanRequest) Execute() (*DeletePlanResponse, *http.Response, error) {
-	return r.ApiService.DeletePlanExecute(r)
+func (r ApiDeleteAudienceRequest) Execute() (*DeleteAudienceResponse, *http.Response, error) {
+	return r.ApiService.DeleteAudienceExecute(r)
 }
 
 /*
-DeletePlan Delete plan
+DeleteAudience Delete audience
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param planId plan_id
- @return ApiDeletePlanRequest
+ @param planAudienceId plan_audience_id
+ @return ApiDeleteAudienceRequest
 */
-func (a *PlansAPIService) DeletePlan(ctx context.Context, planId string) ApiDeletePlanRequest {
-	return ApiDeletePlanRequest{
+func (a *PlansAPIService) DeleteAudience(ctx context.Context, planAudienceId string) ApiDeleteAudienceRequest {
+	return ApiDeleteAudienceRequest{
 		ApiService: a,
 		ctx: ctx,
-		planId: planId,
+		planAudienceId: planAudienceId,
 	}
 }
 
 // Execute executes the request
-//  @return DeletePlanResponse
-func (a *PlansAPIService) DeletePlanExecute(r ApiDeletePlanRequest) (*DeletePlanResponse, *http.Response, error) {
+//  @return DeleteAudienceResponse
+func (a *PlansAPIService) DeleteAudienceExecute(r ApiDeleteAudienceRequest) (*DeleteAudienceResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *DeletePlanResponse
+		localVarReturnValue  *DeleteAudienceResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PlansAPIService.DeletePlan")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PlansAPIService.DeleteAudience")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/plans/{plan_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"plan_id"+"}", url.PathEscape(parameterValueToString(r.planId, "planId")), -1)
+	localVarPath := localBasePath + "/plan-audiences/{plan_audience_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"plan_audience_id"+"}", url.PathEscape(parameterValueToString(r.planAudienceId, "planAudienceId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -448,48 +448,48 @@ func (a *PlansAPIService) DeletePlanExecute(r ApiDeletePlanRequest) (*DeletePlan
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiDeletePlanAudienceRequest struct {
+type ApiDeletePlanRequest struct {
 	ctx context.Context
 	ApiService PlansAPI
-	planAudienceId string
+	planId string
 }
 
-func (r ApiDeletePlanAudienceRequest) Execute() (*DeletePlanAudienceResponse, *http.Response, error) {
-	return r.ApiService.DeletePlanAudienceExecute(r)
+func (r ApiDeletePlanRequest) Execute() (*DeletePlanResponse, *http.Response, error) {
+	return r.ApiService.DeletePlanExecute(r)
 }
 
 /*
-DeletePlanAudience Delete plan audience
+DeletePlan Delete plan
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param planAudienceId plan_audience_id
- @return ApiDeletePlanAudienceRequest
+ @param planId plan_id
+ @return ApiDeletePlanRequest
 */
-func (a *PlansAPIService) DeletePlanAudience(ctx context.Context, planAudienceId string) ApiDeletePlanAudienceRequest {
-	return ApiDeletePlanAudienceRequest{
+func (a *PlansAPIService) DeletePlan(ctx context.Context, planId string) ApiDeletePlanRequest {
+	return ApiDeletePlanRequest{
 		ApiService: a,
 		ctx: ctx,
-		planAudienceId: planAudienceId,
+		planId: planId,
 	}
 }
 
 // Execute executes the request
-//  @return DeletePlanAudienceResponse
-func (a *PlansAPIService) DeletePlanAudienceExecute(r ApiDeletePlanAudienceRequest) (*DeletePlanAudienceResponse, *http.Response, error) {
+//  @return DeletePlanResponse
+func (a *PlansAPIService) DeletePlanExecute(r ApiDeletePlanRequest) (*DeletePlanResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *DeletePlanAudienceResponse
+		localVarReturnValue  *DeletePlanResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PlansAPIService.DeletePlanAudience")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PlansAPIService.DeletePlan")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/plan-audiences/{plan_audience_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"plan_audience_id"+"}", url.PathEscape(parameterValueToString(r.planAudienceId, "planAudienceId")), -1)
+	localVarPath := localBasePath + "/plans/{plan_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"plan_id"+"}", url.PathEscape(parameterValueToString(r.planId, "planId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -953,60 +953,60 @@ func (a *PlansAPIService) ListPlansExecute(r ApiListPlansRequest) (*ListPlansRes
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiUpdatePlanRequest struct {
+type ApiUpdateAudienceRequest struct {
 	ctx context.Context
 	ApiService PlansAPI
-	planId string
-	updatePlanRequestBody *UpdatePlanRequestBody
+	planAudienceId string
+	updateAudienceRequestBody *UpdateAudienceRequestBody
 }
 
-func (r ApiUpdatePlanRequest) UpdatePlanRequestBody(updatePlanRequestBody UpdatePlanRequestBody) ApiUpdatePlanRequest {
-	r.updatePlanRequestBody = &updatePlanRequestBody
+func (r ApiUpdateAudienceRequest) UpdateAudienceRequestBody(updateAudienceRequestBody UpdateAudienceRequestBody) ApiUpdateAudienceRequest {
+	r.updateAudienceRequestBody = &updateAudienceRequestBody
 	return r
 }
 
-func (r ApiUpdatePlanRequest) Execute() (*UpdatePlanResponse, *http.Response, error) {
-	return r.ApiService.UpdatePlanExecute(r)
+func (r ApiUpdateAudienceRequest) Execute() (*UpdateAudienceResponse, *http.Response, error) {
+	return r.ApiService.UpdateAudienceExecute(r)
 }
 
 /*
-UpdatePlan Update plan
+UpdateAudience Update audience
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param planId plan_id
- @return ApiUpdatePlanRequest
+ @param planAudienceId plan_audience_id
+ @return ApiUpdateAudienceRequest
 */
-func (a *PlansAPIService) UpdatePlan(ctx context.Context, planId string) ApiUpdatePlanRequest {
-	return ApiUpdatePlanRequest{
+func (a *PlansAPIService) UpdateAudience(ctx context.Context, planAudienceId string) ApiUpdateAudienceRequest {
+	return ApiUpdateAudienceRequest{
 		ApiService: a,
 		ctx: ctx,
-		planId: planId,
+		planAudienceId: planAudienceId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdatePlanResponse
-func (a *PlansAPIService) UpdatePlanExecute(r ApiUpdatePlanRequest) (*UpdatePlanResponse, *http.Response, error) {
+//  @return UpdateAudienceResponse
+func (a *PlansAPIService) UpdateAudienceExecute(r ApiUpdateAudienceRequest) (*UpdateAudienceResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *UpdatePlanResponse
+		localVarReturnValue  *UpdateAudienceResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PlansAPIService.UpdatePlan")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PlansAPIService.UpdateAudience")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/plans/{plan_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"plan_id"+"}", url.PathEscape(parameterValueToString(r.planId, "planId")), -1)
+	localVarPath := localBasePath + "/plan-audiences/{plan_audience_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"plan_audience_id"+"}", url.PathEscape(parameterValueToString(r.planAudienceId, "planAudienceId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.updatePlanRequestBody == nil {
-		return localVarReturnValue, nil, reportError("updatePlanRequestBody is required and must be specified")
+	if r.updateAudienceRequestBody == nil {
+		return localVarReturnValue, nil, reportError("updateAudienceRequestBody is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -1027,7 +1027,7 @@ func (a *PlansAPIService) UpdatePlanExecute(r ApiUpdatePlanRequest) (*UpdatePlan
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.updatePlanRequestBody
+	localVarPostBody = r.updateAudienceRequestBody
   var key string
 	if r.ctx != nil {
 		// API Key Authentication
@@ -1138,60 +1138,60 @@ func (a *PlansAPIService) UpdatePlanExecute(r ApiUpdatePlanRequest) (*UpdatePlan
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiUpdatePlanAudienceRequest struct {
+type ApiUpdatePlanRequest struct {
 	ctx context.Context
 	ApiService PlansAPI
-	planAudienceId string
-	updateAudienceRequestBody *UpdateAudienceRequestBody
+	planId string
+	updatePlanRequestBody *UpdatePlanRequestBody
 }
 
-func (r ApiUpdatePlanAudienceRequest) UpdateAudienceRequestBody(updateAudienceRequestBody UpdateAudienceRequestBody) ApiUpdatePlanAudienceRequest {
-	r.updateAudienceRequestBody = &updateAudienceRequestBody
+func (r ApiUpdatePlanRequest) UpdatePlanRequestBody(updatePlanRequestBody UpdatePlanRequestBody) ApiUpdatePlanRequest {
+	r.updatePlanRequestBody = &updatePlanRequestBody
 	return r
 }
 
-func (r ApiUpdatePlanAudienceRequest) Execute() (*UpdatePlanAudienceResponse, *http.Response, error) {
-	return r.ApiService.UpdatePlanAudienceExecute(r)
+func (r ApiUpdatePlanRequest) Execute() (*UpdatePlanResponse, *http.Response, error) {
+	return r.ApiService.UpdatePlanExecute(r)
 }
 
 /*
-UpdatePlanAudience Update plan audience
+UpdatePlan Update plan
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param planAudienceId plan_audience_id
- @return ApiUpdatePlanAudienceRequest
+ @param planId plan_id
+ @return ApiUpdatePlanRequest
 */
-func (a *PlansAPIService) UpdatePlanAudience(ctx context.Context, planAudienceId string) ApiUpdatePlanAudienceRequest {
-	return ApiUpdatePlanAudienceRequest{
+func (a *PlansAPIService) UpdatePlan(ctx context.Context, planId string) ApiUpdatePlanRequest {
+	return ApiUpdatePlanRequest{
 		ApiService: a,
 		ctx: ctx,
-		planAudienceId: planAudienceId,
+		planId: planId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdatePlanAudienceResponse
-func (a *PlansAPIService) UpdatePlanAudienceExecute(r ApiUpdatePlanAudienceRequest) (*UpdatePlanAudienceResponse, *http.Response, error) {
+//  @return UpdatePlanResponse
+func (a *PlansAPIService) UpdatePlanExecute(r ApiUpdatePlanRequest) (*UpdatePlanResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *UpdatePlanAudienceResponse
+		localVarReturnValue  *UpdatePlanResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PlansAPIService.UpdatePlanAudience")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PlansAPIService.UpdatePlan")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/plan-audiences/{plan_audience_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"plan_audience_id"+"}", url.PathEscape(parameterValueToString(r.planAudienceId, "planAudienceId")), -1)
+	localVarPath := localBasePath + "/plans/{plan_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"plan_id"+"}", url.PathEscape(parameterValueToString(r.planId, "planId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.updateAudienceRequestBody == nil {
-		return localVarReturnValue, nil, reportError("updateAudienceRequestBody is required and must be specified")
+	if r.updatePlanRequestBody == nil {
+		return localVarReturnValue, nil, reportError("updatePlanRequestBody is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -1212,7 +1212,7 @@ func (a *PlansAPIService) UpdatePlanAudienceExecute(r ApiUpdatePlanAudienceReque
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.updateAudienceRequestBody
+	localVarPostBody = r.updatePlanRequestBody
   var key string
 	if r.ctx != nil {
 		// API Key Authentication

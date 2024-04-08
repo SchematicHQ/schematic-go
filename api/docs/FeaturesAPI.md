@@ -6,25 +6,25 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CheckFlag**](FeaturesAPI.md#CheckFlag) | **Post** /flags/{key}/check | Check flag
 [**CheckFlags**](FeaturesAPI.md#CheckFlags) | **Post** /flags/check | Check flags
-[**CountCompaniesAudience**](FeaturesAPI.md#CountCompaniesAudience) | **Post** /audience/count-companies | Count Companies audience
+[**CountAudienceCompanies**](FeaturesAPI.md#CountAudienceCompanies) | **Post** /audience/count-companies | Count audience companies
+[**CountAudienceUsers**](FeaturesAPI.md#CountAudienceUsers) | **Post** /audience/count-users | Count audience users
 [**CountFlagChecks**](FeaturesAPI.md#CountFlagChecks) | **Get** /flag-checks/count | Count flag checks
-[**CountUsersAudience**](FeaturesAPI.md#CountUsersAudience) | **Post** /audience/count-users | Count Users audience
 [**CreateFeature**](FeaturesAPI.md#CreateFeature) | **Post** /features | Create feature
 [**CreateFlag**](FeaturesAPI.md#CreateFlag) | **Post** /flags | Create flag
 [**DeleteFeature**](FeaturesAPI.md#DeleteFeature) | **Delete** /features/{feature_id} | Delete feature
 [**DeleteFlag**](FeaturesAPI.md#DeleteFlag) | **Delete** /flags/{flag_id} | Delete flag
-[**GetCompaniesAudience**](FeaturesAPI.md#GetCompaniesAudience) | **Post** /audience/get-companies | Get Companies audience
 [**GetFeature**](FeaturesAPI.md#GetFeature) | **Get** /features/{feature_id} | Get feature
 [**GetFlag**](FeaturesAPI.md#GetFlag) | **Get** /flags/{flag_id} | Get flag
 [**GetFlagCheck**](FeaturesAPI.md#GetFlagCheck) | **Get** /flag-checks/{flag_check_id} | Get flag check
-[**GetUsersAudience**](FeaturesAPI.md#GetUsersAudience) | **Post** /audience/get-users | Get Users audience
-[**LatestFlagChecks**](FeaturesAPI.md#LatestFlagChecks) | **Get** /flag-checks/latest | Latest flag checks
+[**GetLatestFlagChecks**](FeaturesAPI.md#GetLatestFlagChecks) | **Get** /flag-checks/latest | Get latest flag checks
+[**ListAudienceCompanies**](FeaturesAPI.md#ListAudienceCompanies) | **Post** /audience/get-companies | List audience companies
+[**ListAudienceUsers**](FeaturesAPI.md#ListAudienceUsers) | **Post** /audience/get-users | List audience users
 [**ListFeatures**](FeaturesAPI.md#ListFeatures) | **Get** /features | List features
 [**ListFlagChecks**](FeaturesAPI.md#ListFlagChecks) | **Get** /flag-checks | List flag checks
 [**ListFlags**](FeaturesAPI.md#ListFlags) | **Get** /flags | List flags
-[**RulesFlag**](FeaturesAPI.md#RulesFlag) | **Put** /flags/{flag_id}/rules | Rules flag
 [**UpdateFeature**](FeaturesAPI.md#UpdateFeature) | **Put** /features/{feature_id} | Update feature
 [**UpdateFlag**](FeaturesAPI.md#UpdateFlag) | **Put** /flags/{flag_id} | Update flag
+[**UpdateFlagRules**](FeaturesAPI.md#UpdateFlagRules) | **Put** /flags/{flag_id}/rules | Update flag rules
 
 
 
@@ -168,11 +168,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## CountCompaniesAudience
+## CountAudienceCompanies
 
-> CountCompaniesAudienceResponse CountCompaniesAudience(ctx).AudienceRequestBody(audienceRequestBody).Execute()
+> CountAudienceCompaniesResponse CountAudienceCompanies(ctx).AudienceRequestBody(audienceRequestBody).Execute()
 
-Count Companies audience
+Count audience companies
 
 ### Example
 
@@ -194,13 +194,13 @@ func main() {
 
 	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
 
-	resp, r, err := client.API().FeaturesAPI.CountCompaniesAudience(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
+	resp, r, err := client.API().FeaturesAPI.CountAudienceCompanies(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.CountCompaniesAudience``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.CountAudienceCompanies``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `CountCompaniesAudience`: CountCompaniesAudienceResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.CountCompaniesAudience`: %v\n", resp)
+	// response from `CountAudienceCompanies`: CountAudienceCompaniesResponse
+	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.CountAudienceCompanies`: %v\n", resp)
 }
 ```
 
@@ -210,7 +210,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiCountCompaniesAudienceRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCountAudienceCompaniesRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -219,7 +219,74 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**CountCompaniesAudienceResponse**](CountCompaniesAudienceResponse.md)
+[**CountAudienceCompaniesResponse**](CountAudienceCompaniesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CountAudienceUsers
+
+> CountAudienceUsersResponse CountAudienceUsers(ctx).AudienceRequestBody(audienceRequestBody).Execute()
+
+Count audience users
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
+
+	resp, r, err := client.API().FeaturesAPI.CountAudienceUsers(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.CountAudienceUsers``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountAudienceUsers`: CountAudienceUsersResponse
+	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.CountAudienceUsers`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountAudienceUsersRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **audienceRequestBody** | [**AudienceRequestBody**](AudienceRequestBody.md) |  | 
+
+### Return type
+
+[**CountAudienceUsersResponse**](CountAudienceUsersResponse.md)
 
 ### Authorization
 
@@ -303,73 +370,6 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## CountUsersAudience
-
-> CountUsersAudienceResponse CountUsersAudience(ctx).AudienceRequestBody(audienceRequestBody).Execute()
-
-Count Users audience
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
-
-	resp, r, err := client.API().FeaturesAPI.CountUsersAudience(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.CountUsersAudience``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CountUsersAudience`: CountUsersAudienceResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.CountUsersAudience`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCountUsersAudienceRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **audienceRequestBody** | [**AudienceRequestBody**](AudienceRequestBody.md) |  | 
-
-### Return type
-
-[**CountUsersAudienceResponse**](CountUsersAudienceResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -653,73 +653,6 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetCompaniesAudience
-
-> GetCompaniesAudienceResponse GetCompaniesAudience(ctx).AudienceRequestBody(audienceRequestBody).Execute()
-
-Get Companies audience
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
-
-	resp, r, err := client.API().FeaturesAPI.GetCompaniesAudience(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.GetCompaniesAudience``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `GetCompaniesAudience`: GetCompaniesAudienceResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.GetCompaniesAudience`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGetCompaniesAudienceRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **audienceRequestBody** | [**AudienceRequestBody**](AudienceRequestBody.md) |  | 
-
-### Return type
-
-[**GetCompaniesAudienceResponse**](GetCompaniesAudienceResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## GetFeature
 
 > GetFeatureResponse GetFeature(ctx, featureId).Execute()
@@ -933,78 +866,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetUsersAudience
+## GetLatestFlagChecks
 
-> GetUsersAudienceResponse GetUsersAudience(ctx).AudienceRequestBody(audienceRequestBody).Execute()
+> GetLatestFlagChecksResponse GetLatestFlagChecks(ctx).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
 
-Get Users audience
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
-
-	resp, r, err := client.API().FeaturesAPI.GetUsersAudience(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.GetUsersAudience``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `GetUsersAudience`: GetUsersAudienceResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.GetUsersAudience`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGetUsersAudienceRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **audienceRequestBody** | [**AudienceRequestBody**](AudienceRequestBody.md) |  | 
-
-### Return type
-
-[**GetUsersAudienceResponse**](GetUsersAudienceResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## LatestFlagChecks
-
-> LatestFlagChecksResponse LatestFlagChecks(ctx).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
-
-Latest flag checks
+Get latest flag checks
 
 ### Example
 
@@ -1030,13 +896,13 @@ func main() {
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().FeaturesAPI.LatestFlagChecks(context.Background()).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().FeaturesAPI.GetLatestFlagChecks(context.Background()).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.LatestFlagChecks``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.GetLatestFlagChecks``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `LatestFlagChecks`: LatestFlagChecksResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.LatestFlagChecks`: %v\n", resp)
+	// response from `GetLatestFlagChecks`: GetLatestFlagChecksResponse
+	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.GetLatestFlagChecks`: %v\n", resp)
 }
 ```
 
@@ -1046,7 +912,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiLatestFlagChecksRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetLatestFlagChecksRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -1059,7 +925,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**LatestFlagChecksResponse**](LatestFlagChecksResponse.md)
+[**GetLatestFlagChecksResponse**](GetLatestFlagChecksResponse.md)
 
 ### Authorization
 
@@ -1068,6 +934,140 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListAudienceCompanies
+
+> ListAudienceCompaniesResponse ListAudienceCompanies(ctx).AudienceRequestBody(audienceRequestBody).Execute()
+
+List audience companies
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
+
+	resp, r, err := client.API().FeaturesAPI.ListAudienceCompanies(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.ListAudienceCompanies``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListAudienceCompanies`: ListAudienceCompaniesResponse
+	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.ListAudienceCompanies`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListAudienceCompaniesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **audienceRequestBody** | [**AudienceRequestBody**](AudienceRequestBody.md) |  | 
+
+### Return type
+
+[**ListAudienceCompaniesResponse**](ListAudienceCompaniesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListAudienceUsers
+
+> ListAudienceUsersResponse ListAudienceUsers(ctx).AudienceRequestBody(audienceRequestBody).Execute()
+
+List audience users
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
+
+	resp, r, err := client.API().FeaturesAPI.ListAudienceUsers(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.ListAudienceUsers``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListAudienceUsers`: ListAudienceUsersResponse
+	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.ListAudienceUsers`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListAudienceUsersRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **audienceRequestBody** | [**AudienceRequestBody**](AudienceRequestBody.md) |  | 
+
+### Return type
+
+[**ListAudienceUsersResponse**](ListAudienceUsersResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -1292,79 +1292,6 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## RulesFlag
-
-> RulesFlagResponse RulesFlag(ctx, flagId).UpdateFlagRulesRequestBody(updateFlagRulesRequestBody).Execute()
-
-Rules flag
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	flagId := "flagId_example" // string | flag_id
-	updateFlagRulesRequestBody := *schematicapi.NewUpdateFlagRulesRequestBody([]schematicapi.CreateOrUpdateRuleRequestBody{*schematicapi.NewCreateOrUpdateRuleRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}, "Name_example", int32(123), false)}) // UpdateFlagRulesRequestBody | 
-
-	resp, r, err := client.API().FeaturesAPI.RulesFlag(context.Background(), flagId).UpdateFlagRulesRequestBody(updateFlagRulesRequestBody).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.RulesFlag``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `RulesFlag`: RulesFlagResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.RulesFlag`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**flagId** | **string** | flag_id | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiRulesFlagRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **updateFlagRulesRequestBody** | [**UpdateFlagRulesRequestBody**](UpdateFlagRulesRequestBody.md) |  | 
-
-### Return type
-
-[**RulesFlagResponse**](RulesFlagResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## UpdateFeature
 
 > UpdateFeatureResponse UpdateFeature(ctx, featureId).UpdateFeatureRequestBody(updateFeatureRequestBody).Execute()
@@ -1496,6 +1423,79 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**UpdateFlagResponse**](UpdateFlagResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpdateFlagRules
+
+> UpdateFlagRulesResponse UpdateFlagRules(ctx, flagId).UpdateFlagRulesRequestBody(updateFlagRulesRequestBody).Execute()
+
+Update flag rules
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	flagId := "flagId_example" // string | flag_id
+	updateFlagRulesRequestBody := *schematicapi.NewUpdateFlagRulesRequestBody([]schematicapi.CreateOrUpdateRuleRequestBody{*schematicapi.NewCreateOrUpdateRuleRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}, "Name_example", int32(123), false)}) // UpdateFlagRulesRequestBody | 
+
+	resp, r, err := client.API().FeaturesAPI.UpdateFlagRules(context.Background(), flagId).UpdateFlagRulesRequestBody(updateFlagRulesRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.UpdateFlagRules``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateFlagRules`: UpdateFlagRulesResponse
+	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.UpdateFlagRules`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**flagId** | **string** | flag_id | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateFlagRulesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **updateFlagRulesRequestBody** | [**UpdateFlagRulesRequestBody**](UpdateFlagRulesRequestBody.md) |  | 
+
+### Return type
+
+[**UpdateFlagRulesResponse**](UpdateFlagRulesResponse.md)
 
 ### Authorization
 

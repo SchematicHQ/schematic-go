@@ -25,16 +25,16 @@ import (
 type EventsAPI interface {
 
 	/*
-	CountEventTypes Count event types
+	CountEventSummaries Count event summaries
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountEventTypesRequest
+	@return ApiCountEventSummariesRequest
 	*/
-	CountEventTypes(ctx context.Context) ApiCountEventTypesRequest
+	CountEventSummaries(ctx context.Context) ApiCountEventSummariesRequest
 
-	// CountEventTypesExecute executes the request
-	//  @return CountEventTypesResponse
-	CountEventTypesExecute(r ApiCountEventTypesRequest) (*CountEventTypesResponse, *http.Response, error)
+	// CountEventSummariesExecute executes the request
+	//  @return CountEventSummariesResponse
+	CountEventSummariesExecute(r ApiCountEventSummariesRequest) (*CountEventSummariesResponse, *http.Response, error)
 
 	/*
 	CountEvents Count events
@@ -86,29 +86,29 @@ type EventsAPI interface {
 	GetEventExecute(r ApiGetEventRequest) (*GetEventResponse, *http.Response, error)
 
 	/*
-	GetEventType Get event type
+	GetEventSummaries Get event summaries
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetEventSummariesRequest
+	*/
+	GetEventSummaries(ctx context.Context) ApiGetEventSummariesRequest
+
+	// GetEventSummariesExecute executes the request
+	//  @return GetEventSummariesResponse
+	GetEventSummariesExecute(r ApiGetEventSummariesRequest) (*GetEventSummariesResponse, *http.Response, error)
+
+	/*
+	GetEventSummaryBySubtype Get event summary by subtype
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param key key
-	@return ApiGetEventTypeRequest
+	@return ApiGetEventSummaryBySubtypeRequest
 	*/
-	GetEventType(ctx context.Context, key string) ApiGetEventTypeRequest
+	GetEventSummaryBySubtype(ctx context.Context, key string) ApiGetEventSummaryBySubtypeRequest
 
-	// GetEventTypeExecute executes the request
-	//  @return GetEventTypeResponse
-	GetEventTypeExecute(r ApiGetEventTypeRequest) (*GetEventTypeResponse, *http.Response, error)
-
-	/*
-	ListEventTypes List event types
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListEventTypesRequest
-	*/
-	ListEventTypes(ctx context.Context) ApiListEventTypesRequest
-
-	// ListEventTypesExecute executes the request
-	//  @return ListEventTypesResponse
-	ListEventTypesExecute(r ApiListEventTypesRequest) (*ListEventTypesResponse, *http.Response, error)
+	// GetEventSummaryBySubtypeExecute executes the request
+	//  @return GetEventSummaryBySubtypeResponse
+	GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryBySubtypeRequest) (*GetEventSummaryBySubtypeResponse, *http.Response, error)
 
 	/*
 	ListEvents List events
@@ -133,24 +133,12 @@ type EventsAPI interface {
 	// ListMetricCountsExecute executes the request
 	//  @return ListMetricCountsResponse
 	ListMetricCountsExecute(r ApiListMetricCountsRequest) (*ListMetricCountsResponse, *http.Response, error)
-
-	/*
-	ListMetricCountsHourly List metric counts hourly
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListMetricCountsHourlyRequest
-	*/
-	ListMetricCountsHourly(ctx context.Context) ApiListMetricCountsHourlyRequest
-
-	// ListMetricCountsHourlyExecute executes the request
-	//  @return ListMetricCountsHourlyResponse
-	ListMetricCountsHourlyExecute(r ApiListMetricCountsHourlyRequest) (*ListMetricCountsHourlyResponse, *http.Response, error)
 }
 
 // EventsAPIService EventsAPI service
 type EventsAPIService service
 
-type ApiCountEventTypesRequest struct {
+type ApiCountEventSummariesRequest struct {
 	ctx context.Context
 	ApiService EventsAPI
 	q *string
@@ -158,51 +146,51 @@ type ApiCountEventTypesRequest struct {
 	offset *int32
 }
 
-func (r ApiCountEventTypesRequest) Q(q string) ApiCountEventTypesRequest {
+func (r ApiCountEventSummariesRequest) Q(q string) ApiCountEventSummariesRequest {
 	r.q = &q
 	return r
 }
 
 // Page limit (default 100)
-func (r ApiCountEventTypesRequest) Limit(limit int32) ApiCountEventTypesRequest {
+func (r ApiCountEventSummariesRequest) Limit(limit int32) ApiCountEventSummariesRequest {
 	r.limit = &limit
 	return r
 }
 
 // Page offset (default 0)
-func (r ApiCountEventTypesRequest) Offset(offset int32) ApiCountEventTypesRequest {
+func (r ApiCountEventSummariesRequest) Offset(offset int32) ApiCountEventSummariesRequest {
 	r.offset = &offset
 	return r
 }
 
-func (r ApiCountEventTypesRequest) Execute() (*CountEventTypesResponse, *http.Response, error) {
-	return r.ApiService.CountEventTypesExecute(r)
+func (r ApiCountEventSummariesRequest) Execute() (*CountEventSummariesResponse, *http.Response, error) {
+	return r.ApiService.CountEventSummariesExecute(r)
 }
 
 /*
-CountEventTypes Count event types
+CountEventSummaries Count event summaries
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountEventTypesRequest
+ @return ApiCountEventSummariesRequest
 */
-func (a *EventsAPIService) CountEventTypes(ctx context.Context) ApiCountEventTypesRequest {
-	return ApiCountEventTypesRequest{
+func (a *EventsAPIService) CountEventSummaries(ctx context.Context) ApiCountEventSummariesRequest {
+	return ApiCountEventSummariesRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CountEventTypesResponse
-func (a *EventsAPIService) CountEventTypesExecute(r ApiCountEventTypesRequest) (*CountEventTypesResponse, *http.Response, error) {
+//  @return CountEventSummariesResponse
+func (a *EventsAPIService) CountEventSummariesExecute(r ApiCountEventSummariesRequest) (*CountEventSummariesResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *CountEventTypesResponse
+		localVarReturnValue  *CountEventSummariesResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.CountEventTypes")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.CountEventSummaries")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1047,170 +1035,7 @@ func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetEventTypeRequest struct {
-	ctx context.Context
-	ApiService EventsAPI
-	key string
-}
-
-func (r ApiGetEventTypeRequest) Execute() (*GetEventTypeResponse, *http.Response, error) {
-	return r.ApiService.GetEventTypeExecute(r)
-}
-
-/*
-GetEventType Get event type
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param key key
- @return ApiGetEventTypeRequest
-*/
-func (a *EventsAPIService) GetEventType(ctx context.Context, key string) ApiGetEventTypeRequest {
-	return ApiGetEventTypeRequest{
-		ApiService: a,
-		ctx: ctx,
-		key: key,
-	}
-}
-
-// Execute executes the request
-//  @return GetEventTypeResponse
-func (a *EventsAPIService) GetEventTypeExecute(r ApiGetEventTypeRequest) (*GetEventTypeResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetEventTypeResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.GetEventType")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/event-types/{key}"
-	localVarPath = strings.Replace(localVarPath, "{"+"key"+"}", url.PathEscape(parameterValueToString(r.key, "key")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-  var key string
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["X-Schematic-Api-Key"] = key
-			}
-		}
-	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 403 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 404 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiListEventTypesRequest struct {
+type ApiGetEventSummariesRequest struct {
 	ctx context.Context
 	ApiService EventsAPI
 	q *string
@@ -1218,51 +1043,51 @@ type ApiListEventTypesRequest struct {
 	offset *int32
 }
 
-func (r ApiListEventTypesRequest) Q(q string) ApiListEventTypesRequest {
+func (r ApiGetEventSummariesRequest) Q(q string) ApiGetEventSummariesRequest {
 	r.q = &q
 	return r
 }
 
 // Page limit (default 100)
-func (r ApiListEventTypesRequest) Limit(limit int32) ApiListEventTypesRequest {
+func (r ApiGetEventSummariesRequest) Limit(limit int32) ApiGetEventSummariesRequest {
 	r.limit = &limit
 	return r
 }
 
 // Page offset (default 0)
-func (r ApiListEventTypesRequest) Offset(offset int32) ApiListEventTypesRequest {
+func (r ApiGetEventSummariesRequest) Offset(offset int32) ApiGetEventSummariesRequest {
 	r.offset = &offset
 	return r
 }
 
-func (r ApiListEventTypesRequest) Execute() (*ListEventTypesResponse, *http.Response, error) {
-	return r.ApiService.ListEventTypesExecute(r)
+func (r ApiGetEventSummariesRequest) Execute() (*GetEventSummariesResponse, *http.Response, error) {
+	return r.ApiService.GetEventSummariesExecute(r)
 }
 
 /*
-ListEventTypes List event types
+GetEventSummaries Get event summaries
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListEventTypesRequest
+ @return ApiGetEventSummariesRequest
 */
-func (a *EventsAPIService) ListEventTypes(ctx context.Context) ApiListEventTypesRequest {
-	return ApiListEventTypesRequest{
+func (a *EventsAPIService) GetEventSummaries(ctx context.Context) ApiGetEventSummariesRequest {
+	return ApiGetEventSummariesRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListEventTypesResponse
-func (a *EventsAPIService) ListEventTypesExecute(r ApiListEventTypesRequest) (*ListEventTypesResponse, *http.Response, error) {
+//  @return GetEventSummariesResponse
+func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesRequest) (*GetEventSummariesResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *ListEventTypesResponse
+		localVarReturnValue  *GetEventSummariesResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.ListEventTypes")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.GetEventSummaries")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1363,6 +1188,169 @@ func (a *EventsAPIService) ListEventTypesExecute(r ApiListEventTypesRequest) (*L
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetEventSummaryBySubtypeRequest struct {
+	ctx context.Context
+	ApiService EventsAPI
+	key string
+}
+
+func (r ApiGetEventSummaryBySubtypeRequest) Execute() (*GetEventSummaryBySubtypeResponse, *http.Response, error) {
+	return r.ApiService.GetEventSummaryBySubtypeExecute(r)
+}
+
+/*
+GetEventSummaryBySubtype Get event summary by subtype
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param key key
+ @return ApiGetEventSummaryBySubtypeRequest
+*/
+func (a *EventsAPIService) GetEventSummaryBySubtype(ctx context.Context, key string) ApiGetEventSummaryBySubtypeRequest {
+	return ApiGetEventSummaryBySubtypeRequest{
+		ApiService: a,
+		ctx: ctx,
+		key: key,
+	}
+}
+
+// Execute executes the request
+//  @return GetEventSummaryBySubtypeResponse
+func (a *EventsAPIService) GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryBySubtypeRequest) (*GetEventSummaryBySubtypeResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *GetEventSummaryBySubtypeResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.GetEventSummaryBySubtype")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/event-types/{key}"
+	localVarPath = strings.Replace(localVarPath, "{"+"key"+"}", url.PathEscape(parameterValueToString(r.key, "key")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+  var key string
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	if key == "" {
+		// No-op if no API key provided
+    return nil, nil, nil
+  }
+
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
 			var v ApiError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -1754,264 +1742,6 @@ func (a *EventsAPIService) ListMetricCountsExecute(r ApiListMetricCountsRequest)
 	}
 	if r.grouping != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "grouping", r.grouping, "")
-	}
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-  var key string
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["X-Schematic-Api-Key"] = key
-			}
-		}
-	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 400 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 403 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiListMetricCountsHourlyRequest struct {
-	ctx context.Context
-	ApiService EventsAPI
-	startTime *time.Time
-	endTime *time.Time
-	eventSubtype *string
-	eventSubtypes *[]string
-	companyId *string
-	companyIds *[]string
-	userId *string
-	limit *int32
-	offset *int32
-}
-
-func (r ApiListMetricCountsHourlyRequest) StartTime(startTime time.Time) ApiListMetricCountsHourlyRequest {
-	r.startTime = &startTime
-	return r
-}
-
-func (r ApiListMetricCountsHourlyRequest) EndTime(endTime time.Time) ApiListMetricCountsHourlyRequest {
-	r.endTime = &endTime
-	return r
-}
-
-func (r ApiListMetricCountsHourlyRequest) EventSubtype(eventSubtype string) ApiListMetricCountsHourlyRequest {
-	r.eventSubtype = &eventSubtype
-	return r
-}
-
-func (r ApiListMetricCountsHourlyRequest) EventSubtypes(eventSubtypes []string) ApiListMetricCountsHourlyRequest {
-	r.eventSubtypes = &eventSubtypes
-	return r
-}
-
-func (r ApiListMetricCountsHourlyRequest) CompanyId(companyId string) ApiListMetricCountsHourlyRequest {
-	r.companyId = &companyId
-	return r
-}
-
-func (r ApiListMetricCountsHourlyRequest) CompanyIds(companyIds []string) ApiListMetricCountsHourlyRequest {
-	r.companyIds = &companyIds
-	return r
-}
-
-func (r ApiListMetricCountsHourlyRequest) UserId(userId string) ApiListMetricCountsHourlyRequest {
-	r.userId = &userId
-	return r
-}
-
-// Page limit (default 100)
-func (r ApiListMetricCountsHourlyRequest) Limit(limit int32) ApiListMetricCountsHourlyRequest {
-	r.limit = &limit
-	return r
-}
-
-// Page offset (default 0)
-func (r ApiListMetricCountsHourlyRequest) Offset(offset int32) ApiListMetricCountsHourlyRequest {
-	r.offset = &offset
-	return r
-}
-
-func (r ApiListMetricCountsHourlyRequest) Execute() (*ListMetricCountsHourlyResponse, *http.Response, error) {
-	return r.ApiService.ListMetricCountsHourlyExecute(r)
-}
-
-/*
-ListMetricCountsHourly List metric counts hourly
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListMetricCountsHourlyRequest
-*/
-func (a *EventsAPIService) ListMetricCountsHourly(ctx context.Context) ApiListMetricCountsHourlyRequest {
-	return ApiListMetricCountsHourlyRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-// Execute executes the request
-//  @return ListMetricCountsHourlyResponse
-func (a *EventsAPIService) ListMetricCountsHourlyExecute(r ApiListMetricCountsHourlyRequest) (*ListMetricCountsHourlyResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListMetricCountsHourlyResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.ListMetricCountsHourly")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/metric-counts-hourly"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	if r.startTime != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "start_time", r.startTime, "")
-	}
-	if r.endTime != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "end_time", r.endTime, "")
-	}
-	if r.eventSubtype != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "event_subtype", r.eventSubtype, "")
-	}
-	if r.eventSubtypes != nil {
-		t := *r.eventSubtypes
-		if reflect.TypeOf(t).Kind() == reflect.Slice {
-			s := reflect.ValueOf(t)
-			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "event_subtypes", s.Index(i).Interface(), "multi")
-			}
-		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "event_subtypes", t, "multi")
-		}
-	}
-	if r.companyId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "company_id", r.companyId, "")
-	}
-	if r.companyIds != nil {
-		t := *r.companyIds
-		if reflect.TypeOf(t).Kind() == reflect.Slice {
-			s := reflect.ValueOf(t)
-			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "company_ids", s.Index(i).Interface(), "multi")
-			}
-		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "company_ids", t, "multi")
-		}
-	}
-	if r.userId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "user_id", r.userId, "")
-	}
-	if r.limit != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
-	}
-	if r.offset != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

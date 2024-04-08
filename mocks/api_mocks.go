@@ -522,96 +522,6 @@ func (mr *MockCompaniesAPIMockRecorder) CreateCompanyExecute(arg0 any) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCompanyExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateCompanyExecute), arg0)
 }
 
-// CreateCompanyMembership mocks base method.
-func (m *MockCompaniesAPI) CreateCompanyMembership(arg0 context.Context) api.ApiCreateCompanyMembershipRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateCompanyMembership", arg0)
-	ret0, _ := ret[0].(api.ApiCreateCompanyMembershipRequest)
-	return ret0
-}
-
-// CreateCompanyMembership indicates an expected call of CreateCompanyMembership.
-func (mr *MockCompaniesAPIMockRecorder) CreateCompanyMembership(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCompanyMembership", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateCompanyMembership), arg0)
-}
-
-// CreateCompanyMembershipExecute mocks base method.
-func (m *MockCompaniesAPI) CreateCompanyMembershipExecute(arg0 api.ApiCreateCompanyMembershipRequest) (*api.CreateCompanyMembershipResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateCompanyMembershipExecute", arg0)
-	ret0, _ := ret[0].(*api.CreateCompanyMembershipResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateCompanyMembershipExecute indicates an expected call of CreateCompanyMembershipExecute.
-func (mr *MockCompaniesAPIMockRecorder) CreateCompanyMembershipExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCompanyMembershipExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateCompanyMembershipExecute), arg0)
-}
-
-// CreateCompanyTrait mocks base method.
-func (m *MockCompaniesAPI) CreateCompanyTrait(arg0 context.Context) api.ApiCreateCompanyTraitRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateCompanyTrait", arg0)
-	ret0, _ := ret[0].(api.ApiCreateCompanyTraitRequest)
-	return ret0
-}
-
-// CreateCompanyTrait indicates an expected call of CreateCompanyTrait.
-func (mr *MockCompaniesAPIMockRecorder) CreateCompanyTrait(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCompanyTrait", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateCompanyTrait), arg0)
-}
-
-// CreateCompanyTraitExecute mocks base method.
-func (m *MockCompaniesAPI) CreateCompanyTraitExecute(arg0 api.ApiCreateCompanyTraitRequest) (*api.CreateCompanyTraitResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateCompanyTraitExecute", arg0)
-	ret0, _ := ret[0].(*api.CreateCompanyTraitResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateCompanyTraitExecute indicates an expected call of CreateCompanyTraitExecute.
-func (mr *MockCompaniesAPIMockRecorder) CreateCompanyTraitExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCompanyTraitExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateCompanyTraitExecute), arg0)
-}
-
-// CreateEntityTraitDefinition mocks base method.
-func (m *MockCompaniesAPI) CreateEntityTraitDefinition(arg0 context.Context) api.ApiCreateEntityTraitDefinitionRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateEntityTraitDefinition", arg0)
-	ret0, _ := ret[0].(api.ApiCreateEntityTraitDefinitionRequest)
-	return ret0
-}
-
-// CreateEntityTraitDefinition indicates an expected call of CreateEntityTraitDefinition.
-func (mr *MockCompaniesAPIMockRecorder) CreateEntityTraitDefinition(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEntityTraitDefinition", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateEntityTraitDefinition), arg0)
-}
-
-// CreateEntityTraitDefinitionExecute mocks base method.
-func (m *MockCompaniesAPI) CreateEntityTraitDefinitionExecute(arg0 api.ApiCreateEntityTraitDefinitionRequest) (*api.CreateEntityTraitDefinitionResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateEntityTraitDefinitionExecute", arg0)
-	ret0, _ := ret[0].(*api.CreateEntityTraitDefinitionResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateEntityTraitDefinitionExecute indicates an expected call of CreateEntityTraitDefinitionExecute.
-func (mr *MockCompaniesAPIMockRecorder) CreateEntityTraitDefinitionExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEntityTraitDefinitionExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateEntityTraitDefinitionExecute), arg0)
-}
-
 // CreateUser mocks base method.
 func (m *MockCompaniesAPI) CreateUser(arg0 context.Context) api.ApiCreateUserRequest {
 	m.ctrl.T.Helper()
@@ -642,36 +552,6 @@ func (mr *MockCompaniesAPIMockRecorder) CreateUserExecute(arg0 any) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUserExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateUserExecute), arg0)
 }
 
-// CreateUserTrait mocks base method.
-func (m *MockCompaniesAPI) CreateUserTrait(arg0 context.Context) api.ApiCreateUserTraitRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateUserTrait", arg0)
-	ret0, _ := ret[0].(api.ApiCreateUserTraitRequest)
-	return ret0
-}
-
-// CreateUserTrait indicates an expected call of CreateUserTrait.
-func (mr *MockCompaniesAPIMockRecorder) CreateUserTrait(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUserTrait", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateUserTrait), arg0)
-}
-
-// CreateUserTraitExecute mocks base method.
-func (m *MockCompaniesAPI) CreateUserTraitExecute(arg0 api.ApiCreateUserTraitRequest) (*api.CreateUserTraitResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateUserTraitExecute", arg0)
-	ret0, _ := ret[0].(*api.CreateUserTraitResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateUserTraitExecute indicates an expected call of CreateUserTraitExecute.
-func (mr *MockCompaniesAPIMockRecorder) CreateUserTraitExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUserTraitExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).CreateUserTraitExecute), arg0)
-}
-
 // DeleteCompany mocks base method.
 func (m *MockCompaniesAPI) DeleteCompany(arg0 context.Context, arg1 string) api.ApiDeleteCompanyRequest {
 	m.ctrl.T.Helper()
@@ -684,6 +564,36 @@ func (m *MockCompaniesAPI) DeleteCompany(arg0 context.Context, arg1 string) api.
 func (mr *MockCompaniesAPIMockRecorder) DeleteCompany(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCompany", reflect.TypeOf((*MockCompaniesAPI)(nil).DeleteCompany), arg0, arg1)
+}
+
+// DeleteCompanyByKeys mocks base method.
+func (m *MockCompaniesAPI) DeleteCompanyByKeys(arg0 context.Context) api.ApiDeleteCompanyByKeysRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteCompanyByKeys", arg0)
+	ret0, _ := ret[0].(api.ApiDeleteCompanyByKeysRequest)
+	return ret0
+}
+
+// DeleteCompanyByKeys indicates an expected call of DeleteCompanyByKeys.
+func (mr *MockCompaniesAPIMockRecorder) DeleteCompanyByKeys(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCompanyByKeys", reflect.TypeOf((*MockCompaniesAPI)(nil).DeleteCompanyByKeys), arg0)
+}
+
+// DeleteCompanyByKeysExecute mocks base method.
+func (m *MockCompaniesAPI) DeleteCompanyByKeysExecute(arg0 api.ApiDeleteCompanyByKeysRequest) (*api.DeleteCompanyByKeysResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteCompanyByKeysExecute", arg0)
+	ret0, _ := ret[0].(*api.DeleteCompanyByKeysResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// DeleteCompanyByKeysExecute indicates an expected call of DeleteCompanyByKeysExecute.
+func (mr *MockCompaniesAPIMockRecorder) DeleteCompanyByKeysExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCompanyByKeysExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).DeleteCompanyByKeysExecute), arg0)
 }
 
 // DeleteCompanyExecute mocks base method.
@@ -746,6 +656,36 @@ func (mr *MockCompaniesAPIMockRecorder) DeleteUser(arg0, arg1 any) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockCompaniesAPI)(nil).DeleteUser), arg0, arg1)
 }
 
+// DeleteUserByKeys mocks base method.
+func (m *MockCompaniesAPI) DeleteUserByKeys(arg0 context.Context) api.ApiDeleteUserByKeysRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteUserByKeys", arg0)
+	ret0, _ := ret[0].(api.ApiDeleteUserByKeysRequest)
+	return ret0
+}
+
+// DeleteUserByKeys indicates an expected call of DeleteUserByKeys.
+func (mr *MockCompaniesAPIMockRecorder) DeleteUserByKeys(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUserByKeys", reflect.TypeOf((*MockCompaniesAPI)(nil).DeleteUserByKeys), arg0)
+}
+
+// DeleteUserByKeysExecute mocks base method.
+func (m *MockCompaniesAPI) DeleteUserByKeysExecute(arg0 api.ApiDeleteUserByKeysRequest) (*api.DeleteUserByKeysResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteUserByKeysExecute", arg0)
+	ret0, _ := ret[0].(*api.DeleteUserByKeysResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// DeleteUserByKeysExecute indicates an expected call of DeleteUserByKeysExecute.
+func (mr *MockCompaniesAPIMockRecorder) DeleteUserByKeysExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUserByKeysExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).DeleteUserByKeysExecute), arg0)
+}
+
 // DeleteUserExecute mocks base method.
 func (m *MockCompaniesAPI) DeleteUserExecute(arg0 api.ApiDeleteUserRequest) (*api.DeleteUserResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
@@ -790,6 +730,66 @@ func (m *MockCompaniesAPI) GetCompanyExecute(arg0 api.ApiGetCompanyRequest) (*ap
 func (mr *MockCompaniesAPIMockRecorder) GetCompanyExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCompanyExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).GetCompanyExecute), arg0)
+}
+
+// GetOrCreateCompanyMembership mocks base method.
+func (m *MockCompaniesAPI) GetOrCreateCompanyMembership(arg0 context.Context) api.ApiGetOrCreateCompanyMembershipRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrCreateCompanyMembership", arg0)
+	ret0, _ := ret[0].(api.ApiGetOrCreateCompanyMembershipRequest)
+	return ret0
+}
+
+// GetOrCreateCompanyMembership indicates an expected call of GetOrCreateCompanyMembership.
+func (mr *MockCompaniesAPIMockRecorder) GetOrCreateCompanyMembership(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrCreateCompanyMembership", reflect.TypeOf((*MockCompaniesAPI)(nil).GetOrCreateCompanyMembership), arg0)
+}
+
+// GetOrCreateCompanyMembershipExecute mocks base method.
+func (m *MockCompaniesAPI) GetOrCreateCompanyMembershipExecute(arg0 api.ApiGetOrCreateCompanyMembershipRequest) (*api.GetOrCreateCompanyMembershipResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrCreateCompanyMembershipExecute", arg0)
+	ret0, _ := ret[0].(*api.GetOrCreateCompanyMembershipResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetOrCreateCompanyMembershipExecute indicates an expected call of GetOrCreateCompanyMembershipExecute.
+func (mr *MockCompaniesAPIMockRecorder) GetOrCreateCompanyMembershipExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrCreateCompanyMembershipExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).GetOrCreateCompanyMembershipExecute), arg0)
+}
+
+// GetOrCreateEntityTraitDefinition mocks base method.
+func (m *MockCompaniesAPI) GetOrCreateEntityTraitDefinition(arg0 context.Context) api.ApiGetOrCreateEntityTraitDefinitionRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrCreateEntityTraitDefinition", arg0)
+	ret0, _ := ret[0].(api.ApiGetOrCreateEntityTraitDefinitionRequest)
+	return ret0
+}
+
+// GetOrCreateEntityTraitDefinition indicates an expected call of GetOrCreateEntityTraitDefinition.
+func (mr *MockCompaniesAPIMockRecorder) GetOrCreateEntityTraitDefinition(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrCreateEntityTraitDefinition", reflect.TypeOf((*MockCompaniesAPI)(nil).GetOrCreateEntityTraitDefinition), arg0)
+}
+
+// GetOrCreateEntityTraitDefinitionExecute mocks base method.
+func (m *MockCompaniesAPI) GetOrCreateEntityTraitDefinitionExecute(arg0 api.ApiGetOrCreateEntityTraitDefinitionRequest) (*api.GetOrCreateEntityTraitDefinitionResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrCreateEntityTraitDefinitionExecute", arg0)
+	ret0, _ := ret[0].(*api.GetOrCreateEntityTraitDefinitionResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetOrCreateEntityTraitDefinitionExecute indicates an expected call of GetOrCreateEntityTraitDefinitionExecute.
+func (mr *MockCompaniesAPIMockRecorder) GetOrCreateEntityTraitDefinitionExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrCreateEntityTraitDefinitionExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).GetOrCreateEntityTraitDefinitionExecute), arg0)
 }
 
 // GetUser mocks base method.
@@ -1030,6 +1030,126 @@ func (m *MockCompaniesAPI) UpdateEntityTraitDefinitionExecute(arg0 api.ApiUpdate
 func (mr *MockCompaniesAPIMockRecorder) UpdateEntityTraitDefinitionExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateEntityTraitDefinitionExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).UpdateEntityTraitDefinitionExecute), arg0)
+}
+
+// UpsertCompany mocks base method.
+func (m *MockCompaniesAPI) UpsertCompany(arg0 context.Context) api.ApiUpsertCompanyRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertCompany", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertCompanyRequest)
+	return ret0
+}
+
+// UpsertCompany indicates an expected call of UpsertCompany.
+func (mr *MockCompaniesAPIMockRecorder) UpsertCompany(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCompany", reflect.TypeOf((*MockCompaniesAPI)(nil).UpsertCompany), arg0)
+}
+
+// UpsertCompanyExecute mocks base method.
+func (m *MockCompaniesAPI) UpsertCompanyExecute(arg0 api.ApiUpsertCompanyRequest) (*api.UpsertCompanyResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertCompanyExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertCompanyResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpsertCompanyExecute indicates an expected call of UpsertCompanyExecute.
+func (mr *MockCompaniesAPIMockRecorder) UpsertCompanyExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCompanyExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).UpsertCompanyExecute), arg0)
+}
+
+// UpsertCompanyTrait mocks base method.
+func (m *MockCompaniesAPI) UpsertCompanyTrait(arg0 context.Context) api.ApiUpsertCompanyTraitRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertCompanyTrait", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertCompanyTraitRequest)
+	return ret0
+}
+
+// UpsertCompanyTrait indicates an expected call of UpsertCompanyTrait.
+func (mr *MockCompaniesAPIMockRecorder) UpsertCompanyTrait(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCompanyTrait", reflect.TypeOf((*MockCompaniesAPI)(nil).UpsertCompanyTrait), arg0)
+}
+
+// UpsertCompanyTraitExecute mocks base method.
+func (m *MockCompaniesAPI) UpsertCompanyTraitExecute(arg0 api.ApiUpsertCompanyTraitRequest) (*api.UpsertCompanyTraitResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertCompanyTraitExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertCompanyTraitResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpsertCompanyTraitExecute indicates an expected call of UpsertCompanyTraitExecute.
+func (mr *MockCompaniesAPIMockRecorder) UpsertCompanyTraitExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCompanyTraitExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).UpsertCompanyTraitExecute), arg0)
+}
+
+// UpsertUser mocks base method.
+func (m *MockCompaniesAPI) UpsertUser(arg0 context.Context) api.ApiUpsertUserRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertUser", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertUserRequest)
+	return ret0
+}
+
+// UpsertUser indicates an expected call of UpsertUser.
+func (mr *MockCompaniesAPIMockRecorder) UpsertUser(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertUser", reflect.TypeOf((*MockCompaniesAPI)(nil).UpsertUser), arg0)
+}
+
+// UpsertUserExecute mocks base method.
+func (m *MockCompaniesAPI) UpsertUserExecute(arg0 api.ApiUpsertUserRequest) (*api.UpsertUserResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertUserExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertUserResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpsertUserExecute indicates an expected call of UpsertUserExecute.
+func (mr *MockCompaniesAPIMockRecorder) UpsertUserExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertUserExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).UpsertUserExecute), arg0)
+}
+
+// UpsertUserTrait mocks base method.
+func (m *MockCompaniesAPI) UpsertUserTrait(arg0 context.Context) api.ApiUpsertUserTraitRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertUserTrait", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertUserTraitRequest)
+	return ret0
+}
+
+// UpsertUserTrait indicates an expected call of UpsertUserTrait.
+func (mr *MockCompaniesAPIMockRecorder) UpsertUserTrait(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertUserTrait", reflect.TypeOf((*MockCompaniesAPI)(nil).UpsertUserTrait), arg0)
+}
+
+// UpsertUserTraitExecute mocks base method.
+func (m *MockCompaniesAPI) UpsertUserTraitExecute(arg0 api.ApiUpsertUserTraitRequest) (*api.UpsertUserTraitResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertUserTraitExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertUserTraitResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpsertUserTraitExecute indicates an expected call of UpsertUserTraitExecute.
+func (mr *MockCompaniesAPIMockRecorder) UpsertUserTraitExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertUserTraitExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).UpsertUserTraitExecute), arg0)
 }
 
 // MockEntitlementsAPI is a mock of EntitlementsAPI interface.
@@ -1378,34 +1498,34 @@ func (m *MockEventsAPI) EXPECT() *MockEventsAPIMockRecorder {
 	return m.recorder
 }
 
-// CountEventTypes mocks base method.
-func (m *MockEventsAPI) CountEventTypes(arg0 context.Context) api.ApiCountEventTypesRequest {
+// CountEventSummaries mocks base method.
+func (m *MockEventsAPI) CountEventSummaries(arg0 context.Context) api.ApiCountEventSummariesRequest {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountEventTypes", arg0)
-	ret0, _ := ret[0].(api.ApiCountEventTypesRequest)
+	ret := m.ctrl.Call(m, "CountEventSummaries", arg0)
+	ret0, _ := ret[0].(api.ApiCountEventSummariesRequest)
 	return ret0
 }
 
-// CountEventTypes indicates an expected call of CountEventTypes.
-func (mr *MockEventsAPIMockRecorder) CountEventTypes(arg0 any) *gomock.Call {
+// CountEventSummaries indicates an expected call of CountEventSummaries.
+func (mr *MockEventsAPIMockRecorder) CountEventSummaries(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountEventTypes", reflect.TypeOf((*MockEventsAPI)(nil).CountEventTypes), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountEventSummaries", reflect.TypeOf((*MockEventsAPI)(nil).CountEventSummaries), arg0)
 }
 
-// CountEventTypesExecute mocks base method.
-func (m *MockEventsAPI) CountEventTypesExecute(arg0 api.ApiCountEventTypesRequest) (*api.CountEventTypesResponse, *http.Response, error) {
+// CountEventSummariesExecute mocks base method.
+func (m *MockEventsAPI) CountEventSummariesExecute(arg0 api.ApiCountEventSummariesRequest) (*api.CountEventSummariesResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountEventTypesExecute", arg0)
-	ret0, _ := ret[0].(*api.CountEventTypesResponse)
+	ret := m.ctrl.Call(m, "CountEventSummariesExecute", arg0)
+	ret0, _ := ret[0].(*api.CountEventSummariesResponse)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// CountEventTypesExecute indicates an expected call of CountEventTypesExecute.
-func (mr *MockEventsAPIMockRecorder) CountEventTypesExecute(arg0 any) *gomock.Call {
+// CountEventSummariesExecute indicates an expected call of CountEventSummariesExecute.
+func (mr *MockEventsAPIMockRecorder) CountEventSummariesExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountEventTypesExecute", reflect.TypeOf((*MockEventsAPI)(nil).CountEventTypesExecute), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountEventSummariesExecute", reflect.TypeOf((*MockEventsAPI)(nil).CountEventSummariesExecute), arg0)
 }
 
 // CountEvents mocks base method.
@@ -1528,64 +1648,64 @@ func (mr *MockEventsAPIMockRecorder) GetEventExecute(arg0 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventExecute", reflect.TypeOf((*MockEventsAPI)(nil).GetEventExecute), arg0)
 }
 
-// GetEventType mocks base method.
-func (m *MockEventsAPI) GetEventType(arg0 context.Context, arg1 string) api.ApiGetEventTypeRequest {
+// GetEventSummaries mocks base method.
+func (m *MockEventsAPI) GetEventSummaries(arg0 context.Context) api.ApiGetEventSummariesRequest {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetEventType", arg0, arg1)
-	ret0, _ := ret[0].(api.ApiGetEventTypeRequest)
+	ret := m.ctrl.Call(m, "GetEventSummaries", arg0)
+	ret0, _ := ret[0].(api.ApiGetEventSummariesRequest)
 	return ret0
 }
 
-// GetEventType indicates an expected call of GetEventType.
-func (mr *MockEventsAPIMockRecorder) GetEventType(arg0, arg1 any) *gomock.Call {
+// GetEventSummaries indicates an expected call of GetEventSummaries.
+func (mr *MockEventsAPIMockRecorder) GetEventSummaries(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventType", reflect.TypeOf((*MockEventsAPI)(nil).GetEventType), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventSummaries", reflect.TypeOf((*MockEventsAPI)(nil).GetEventSummaries), arg0)
 }
 
-// GetEventTypeExecute mocks base method.
-func (m *MockEventsAPI) GetEventTypeExecute(arg0 api.ApiGetEventTypeRequest) (*api.GetEventTypeResponse, *http.Response, error) {
+// GetEventSummariesExecute mocks base method.
+func (m *MockEventsAPI) GetEventSummariesExecute(arg0 api.ApiGetEventSummariesRequest) (*api.GetEventSummariesResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetEventTypeExecute", arg0)
-	ret0, _ := ret[0].(*api.GetEventTypeResponse)
+	ret := m.ctrl.Call(m, "GetEventSummariesExecute", arg0)
+	ret0, _ := ret[0].(*api.GetEventSummariesResponse)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// GetEventTypeExecute indicates an expected call of GetEventTypeExecute.
-func (mr *MockEventsAPIMockRecorder) GetEventTypeExecute(arg0 any) *gomock.Call {
+// GetEventSummariesExecute indicates an expected call of GetEventSummariesExecute.
+func (mr *MockEventsAPIMockRecorder) GetEventSummariesExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventTypeExecute", reflect.TypeOf((*MockEventsAPI)(nil).GetEventTypeExecute), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventSummariesExecute", reflect.TypeOf((*MockEventsAPI)(nil).GetEventSummariesExecute), arg0)
 }
 
-// ListEventTypes mocks base method.
-func (m *MockEventsAPI) ListEventTypes(arg0 context.Context) api.ApiListEventTypesRequest {
+// GetEventSummaryBySubtype mocks base method.
+func (m *MockEventsAPI) GetEventSummaryBySubtype(arg0 context.Context, arg1 string) api.ApiGetEventSummaryBySubtypeRequest {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListEventTypes", arg0)
-	ret0, _ := ret[0].(api.ApiListEventTypesRequest)
+	ret := m.ctrl.Call(m, "GetEventSummaryBySubtype", arg0, arg1)
+	ret0, _ := ret[0].(api.ApiGetEventSummaryBySubtypeRequest)
 	return ret0
 }
 
-// ListEventTypes indicates an expected call of ListEventTypes.
-func (mr *MockEventsAPIMockRecorder) ListEventTypes(arg0 any) *gomock.Call {
+// GetEventSummaryBySubtype indicates an expected call of GetEventSummaryBySubtype.
+func (mr *MockEventsAPIMockRecorder) GetEventSummaryBySubtype(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEventTypes", reflect.TypeOf((*MockEventsAPI)(nil).ListEventTypes), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventSummaryBySubtype", reflect.TypeOf((*MockEventsAPI)(nil).GetEventSummaryBySubtype), arg0, arg1)
 }
 
-// ListEventTypesExecute mocks base method.
-func (m *MockEventsAPI) ListEventTypesExecute(arg0 api.ApiListEventTypesRequest) (*api.ListEventTypesResponse, *http.Response, error) {
+// GetEventSummaryBySubtypeExecute mocks base method.
+func (m *MockEventsAPI) GetEventSummaryBySubtypeExecute(arg0 api.ApiGetEventSummaryBySubtypeRequest) (*api.GetEventSummaryBySubtypeResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListEventTypesExecute", arg0)
-	ret0, _ := ret[0].(*api.ListEventTypesResponse)
+	ret := m.ctrl.Call(m, "GetEventSummaryBySubtypeExecute", arg0)
+	ret0, _ := ret[0].(*api.GetEventSummaryBySubtypeResponse)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// ListEventTypesExecute indicates an expected call of ListEventTypesExecute.
-func (mr *MockEventsAPIMockRecorder) ListEventTypesExecute(arg0 any) *gomock.Call {
+// GetEventSummaryBySubtypeExecute indicates an expected call of GetEventSummaryBySubtypeExecute.
+func (mr *MockEventsAPIMockRecorder) GetEventSummaryBySubtypeExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEventTypesExecute", reflect.TypeOf((*MockEventsAPI)(nil).ListEventTypesExecute), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventSummaryBySubtypeExecute", reflect.TypeOf((*MockEventsAPI)(nil).GetEventSummaryBySubtypeExecute), arg0)
 }
 
 // ListEvents mocks base method.
@@ -1646,36 +1766,6 @@ func (m *MockEventsAPI) ListMetricCountsExecute(arg0 api.ApiListMetricCountsRequ
 func (mr *MockEventsAPIMockRecorder) ListMetricCountsExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListMetricCountsExecute", reflect.TypeOf((*MockEventsAPI)(nil).ListMetricCountsExecute), arg0)
-}
-
-// ListMetricCountsHourly mocks base method.
-func (m *MockEventsAPI) ListMetricCountsHourly(arg0 context.Context) api.ApiListMetricCountsHourlyRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListMetricCountsHourly", arg0)
-	ret0, _ := ret[0].(api.ApiListMetricCountsHourlyRequest)
-	return ret0
-}
-
-// ListMetricCountsHourly indicates an expected call of ListMetricCountsHourly.
-func (mr *MockEventsAPIMockRecorder) ListMetricCountsHourly(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListMetricCountsHourly", reflect.TypeOf((*MockEventsAPI)(nil).ListMetricCountsHourly), arg0)
-}
-
-// ListMetricCountsHourlyExecute mocks base method.
-func (m *MockEventsAPI) ListMetricCountsHourlyExecute(arg0 api.ApiListMetricCountsHourlyRequest) (*api.ListMetricCountsHourlyResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListMetricCountsHourlyExecute", arg0)
-	ret0, _ := ret[0].(*api.ListMetricCountsHourlyResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// ListMetricCountsHourlyExecute indicates an expected call of ListMetricCountsHourlyExecute.
-func (mr *MockEventsAPIMockRecorder) ListMetricCountsHourlyExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListMetricCountsHourlyExecute", reflect.TypeOf((*MockEventsAPI)(nil).ListMetricCountsHourlyExecute), arg0)
 }
 
 // MockFeaturesAPI is a mock of FeaturesAPI interface.
@@ -1761,34 +1851,64 @@ func (mr *MockFeaturesAPIMockRecorder) CheckFlagsExecute(arg0 any) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckFlagsExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).CheckFlagsExecute), arg0)
 }
 
-// CountCompaniesAudience mocks base method.
-func (m *MockFeaturesAPI) CountCompaniesAudience(arg0 context.Context) api.ApiCountCompaniesAudienceRequest {
+// CountAudienceCompanies mocks base method.
+func (m *MockFeaturesAPI) CountAudienceCompanies(arg0 context.Context) api.ApiCountAudienceCompaniesRequest {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountCompaniesAudience", arg0)
-	ret0, _ := ret[0].(api.ApiCountCompaniesAudienceRequest)
+	ret := m.ctrl.Call(m, "CountAudienceCompanies", arg0)
+	ret0, _ := ret[0].(api.ApiCountAudienceCompaniesRequest)
 	return ret0
 }
 
-// CountCompaniesAudience indicates an expected call of CountCompaniesAudience.
-func (mr *MockFeaturesAPIMockRecorder) CountCompaniesAudience(arg0 any) *gomock.Call {
+// CountAudienceCompanies indicates an expected call of CountAudienceCompanies.
+func (mr *MockFeaturesAPIMockRecorder) CountAudienceCompanies(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountCompaniesAudience", reflect.TypeOf((*MockFeaturesAPI)(nil).CountCompaniesAudience), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountAudienceCompanies", reflect.TypeOf((*MockFeaturesAPI)(nil).CountAudienceCompanies), arg0)
 }
 
-// CountCompaniesAudienceExecute mocks base method.
-func (m *MockFeaturesAPI) CountCompaniesAudienceExecute(arg0 api.ApiCountCompaniesAudienceRequest) (*api.CountCompaniesAudienceResponse, *http.Response, error) {
+// CountAudienceCompaniesExecute mocks base method.
+func (m *MockFeaturesAPI) CountAudienceCompaniesExecute(arg0 api.ApiCountAudienceCompaniesRequest) (*api.CountAudienceCompaniesResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountCompaniesAudienceExecute", arg0)
-	ret0, _ := ret[0].(*api.CountCompaniesAudienceResponse)
+	ret := m.ctrl.Call(m, "CountAudienceCompaniesExecute", arg0)
+	ret0, _ := ret[0].(*api.CountAudienceCompaniesResponse)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// CountCompaniesAudienceExecute indicates an expected call of CountCompaniesAudienceExecute.
-func (mr *MockFeaturesAPIMockRecorder) CountCompaniesAudienceExecute(arg0 any) *gomock.Call {
+// CountAudienceCompaniesExecute indicates an expected call of CountAudienceCompaniesExecute.
+func (mr *MockFeaturesAPIMockRecorder) CountAudienceCompaniesExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountCompaniesAudienceExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).CountCompaniesAudienceExecute), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountAudienceCompaniesExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).CountAudienceCompaniesExecute), arg0)
+}
+
+// CountAudienceUsers mocks base method.
+func (m *MockFeaturesAPI) CountAudienceUsers(arg0 context.Context) api.ApiCountAudienceUsersRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountAudienceUsers", arg0)
+	ret0, _ := ret[0].(api.ApiCountAudienceUsersRequest)
+	return ret0
+}
+
+// CountAudienceUsers indicates an expected call of CountAudienceUsers.
+func (mr *MockFeaturesAPIMockRecorder) CountAudienceUsers(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountAudienceUsers", reflect.TypeOf((*MockFeaturesAPI)(nil).CountAudienceUsers), arg0)
+}
+
+// CountAudienceUsersExecute mocks base method.
+func (m *MockFeaturesAPI) CountAudienceUsersExecute(arg0 api.ApiCountAudienceUsersRequest) (*api.CountAudienceUsersResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountAudienceUsersExecute", arg0)
+	ret0, _ := ret[0].(*api.CountAudienceUsersResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CountAudienceUsersExecute indicates an expected call of CountAudienceUsersExecute.
+func (mr *MockFeaturesAPIMockRecorder) CountAudienceUsersExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountAudienceUsersExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).CountAudienceUsersExecute), arg0)
 }
 
 // CountFlagChecks mocks base method.
@@ -1819,36 +1939,6 @@ func (m *MockFeaturesAPI) CountFlagChecksExecute(arg0 api.ApiCountFlagChecksRequ
 func (mr *MockFeaturesAPIMockRecorder) CountFlagChecksExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountFlagChecksExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).CountFlagChecksExecute), arg0)
-}
-
-// CountUsersAudience mocks base method.
-func (m *MockFeaturesAPI) CountUsersAudience(arg0 context.Context) api.ApiCountUsersAudienceRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountUsersAudience", arg0)
-	ret0, _ := ret[0].(api.ApiCountUsersAudienceRequest)
-	return ret0
-}
-
-// CountUsersAudience indicates an expected call of CountUsersAudience.
-func (mr *MockFeaturesAPIMockRecorder) CountUsersAudience(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountUsersAudience", reflect.TypeOf((*MockFeaturesAPI)(nil).CountUsersAudience), arg0)
-}
-
-// CountUsersAudienceExecute mocks base method.
-func (m *MockFeaturesAPI) CountUsersAudienceExecute(arg0 api.ApiCountUsersAudienceRequest) (*api.CountUsersAudienceResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountUsersAudienceExecute", arg0)
-	ret0, _ := ret[0].(*api.CountUsersAudienceResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CountUsersAudienceExecute indicates an expected call of CountUsersAudienceExecute.
-func (mr *MockFeaturesAPIMockRecorder) CountUsersAudienceExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountUsersAudienceExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).CountUsersAudienceExecute), arg0)
 }
 
 // CreateFeature mocks base method.
@@ -1971,36 +2061,6 @@ func (mr *MockFeaturesAPIMockRecorder) DeleteFlagExecute(arg0 any) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteFlagExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).DeleteFlagExecute), arg0)
 }
 
-// GetCompaniesAudience mocks base method.
-func (m *MockFeaturesAPI) GetCompaniesAudience(arg0 context.Context) api.ApiGetCompaniesAudienceRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCompaniesAudience", arg0)
-	ret0, _ := ret[0].(api.ApiGetCompaniesAudienceRequest)
-	return ret0
-}
-
-// GetCompaniesAudience indicates an expected call of GetCompaniesAudience.
-func (mr *MockFeaturesAPIMockRecorder) GetCompaniesAudience(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCompaniesAudience", reflect.TypeOf((*MockFeaturesAPI)(nil).GetCompaniesAudience), arg0)
-}
-
-// GetCompaniesAudienceExecute mocks base method.
-func (m *MockFeaturesAPI) GetCompaniesAudienceExecute(arg0 api.ApiGetCompaniesAudienceRequest) (*api.GetCompaniesAudienceResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCompaniesAudienceExecute", arg0)
-	ret0, _ := ret[0].(*api.GetCompaniesAudienceResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// GetCompaniesAudienceExecute indicates an expected call of GetCompaniesAudienceExecute.
-func (mr *MockFeaturesAPIMockRecorder) GetCompaniesAudienceExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCompaniesAudienceExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).GetCompaniesAudienceExecute), arg0)
-}
-
 // GetFeature mocks base method.
 func (m *MockFeaturesAPI) GetFeature(arg0 context.Context, arg1 string) api.ApiGetFeatureRequest {
 	m.ctrl.T.Helper()
@@ -2091,64 +2151,94 @@ func (mr *MockFeaturesAPIMockRecorder) GetFlagExecute(arg0 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlagExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).GetFlagExecute), arg0)
 }
 
-// GetUsersAudience mocks base method.
-func (m *MockFeaturesAPI) GetUsersAudience(arg0 context.Context) api.ApiGetUsersAudienceRequest {
+// GetLatestFlagChecks mocks base method.
+func (m *MockFeaturesAPI) GetLatestFlagChecks(arg0 context.Context) api.ApiGetLatestFlagChecksRequest {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUsersAudience", arg0)
-	ret0, _ := ret[0].(api.ApiGetUsersAudienceRequest)
+	ret := m.ctrl.Call(m, "GetLatestFlagChecks", arg0)
+	ret0, _ := ret[0].(api.ApiGetLatestFlagChecksRequest)
 	return ret0
 }
 
-// GetUsersAudience indicates an expected call of GetUsersAudience.
-func (mr *MockFeaturesAPIMockRecorder) GetUsersAudience(arg0 any) *gomock.Call {
+// GetLatestFlagChecks indicates an expected call of GetLatestFlagChecks.
+func (mr *MockFeaturesAPIMockRecorder) GetLatestFlagChecks(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersAudience", reflect.TypeOf((*MockFeaturesAPI)(nil).GetUsersAudience), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestFlagChecks", reflect.TypeOf((*MockFeaturesAPI)(nil).GetLatestFlagChecks), arg0)
 }
 
-// GetUsersAudienceExecute mocks base method.
-func (m *MockFeaturesAPI) GetUsersAudienceExecute(arg0 api.ApiGetUsersAudienceRequest) (*api.GetUsersAudienceResponse, *http.Response, error) {
+// GetLatestFlagChecksExecute mocks base method.
+func (m *MockFeaturesAPI) GetLatestFlagChecksExecute(arg0 api.ApiGetLatestFlagChecksRequest) (*api.GetLatestFlagChecksResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUsersAudienceExecute", arg0)
-	ret0, _ := ret[0].(*api.GetUsersAudienceResponse)
+	ret := m.ctrl.Call(m, "GetLatestFlagChecksExecute", arg0)
+	ret0, _ := ret[0].(*api.GetLatestFlagChecksResponse)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// GetUsersAudienceExecute indicates an expected call of GetUsersAudienceExecute.
-func (mr *MockFeaturesAPIMockRecorder) GetUsersAudienceExecute(arg0 any) *gomock.Call {
+// GetLatestFlagChecksExecute indicates an expected call of GetLatestFlagChecksExecute.
+func (mr *MockFeaturesAPIMockRecorder) GetLatestFlagChecksExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersAudienceExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).GetUsersAudienceExecute), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestFlagChecksExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).GetLatestFlagChecksExecute), arg0)
 }
 
-// LatestFlagChecks mocks base method.
-func (m *MockFeaturesAPI) LatestFlagChecks(arg0 context.Context) api.ApiLatestFlagChecksRequest {
+// ListAudienceCompanies mocks base method.
+func (m *MockFeaturesAPI) ListAudienceCompanies(arg0 context.Context) api.ApiListAudienceCompaniesRequest {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LatestFlagChecks", arg0)
-	ret0, _ := ret[0].(api.ApiLatestFlagChecksRequest)
+	ret := m.ctrl.Call(m, "ListAudienceCompanies", arg0)
+	ret0, _ := ret[0].(api.ApiListAudienceCompaniesRequest)
 	return ret0
 }
 
-// LatestFlagChecks indicates an expected call of LatestFlagChecks.
-func (mr *MockFeaturesAPIMockRecorder) LatestFlagChecks(arg0 any) *gomock.Call {
+// ListAudienceCompanies indicates an expected call of ListAudienceCompanies.
+func (mr *MockFeaturesAPIMockRecorder) ListAudienceCompanies(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestFlagChecks", reflect.TypeOf((*MockFeaturesAPI)(nil).LatestFlagChecks), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAudienceCompanies", reflect.TypeOf((*MockFeaturesAPI)(nil).ListAudienceCompanies), arg0)
 }
 
-// LatestFlagChecksExecute mocks base method.
-func (m *MockFeaturesAPI) LatestFlagChecksExecute(arg0 api.ApiLatestFlagChecksRequest) (*api.LatestFlagChecksResponse, *http.Response, error) {
+// ListAudienceCompaniesExecute mocks base method.
+func (m *MockFeaturesAPI) ListAudienceCompaniesExecute(arg0 api.ApiListAudienceCompaniesRequest) (*api.ListAudienceCompaniesResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LatestFlagChecksExecute", arg0)
-	ret0, _ := ret[0].(*api.LatestFlagChecksResponse)
+	ret := m.ctrl.Call(m, "ListAudienceCompaniesExecute", arg0)
+	ret0, _ := ret[0].(*api.ListAudienceCompaniesResponse)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// LatestFlagChecksExecute indicates an expected call of LatestFlagChecksExecute.
-func (mr *MockFeaturesAPIMockRecorder) LatestFlagChecksExecute(arg0 any) *gomock.Call {
+// ListAudienceCompaniesExecute indicates an expected call of ListAudienceCompaniesExecute.
+func (mr *MockFeaturesAPIMockRecorder) ListAudienceCompaniesExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestFlagChecksExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).LatestFlagChecksExecute), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAudienceCompaniesExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).ListAudienceCompaniesExecute), arg0)
+}
+
+// ListAudienceUsers mocks base method.
+func (m *MockFeaturesAPI) ListAudienceUsers(arg0 context.Context) api.ApiListAudienceUsersRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAudienceUsers", arg0)
+	ret0, _ := ret[0].(api.ApiListAudienceUsersRequest)
+	return ret0
+}
+
+// ListAudienceUsers indicates an expected call of ListAudienceUsers.
+func (mr *MockFeaturesAPIMockRecorder) ListAudienceUsers(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAudienceUsers", reflect.TypeOf((*MockFeaturesAPI)(nil).ListAudienceUsers), arg0)
+}
+
+// ListAudienceUsersExecute mocks base method.
+func (m *MockFeaturesAPI) ListAudienceUsersExecute(arg0 api.ApiListAudienceUsersRequest) (*api.ListAudienceUsersResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAudienceUsersExecute", arg0)
+	ret0, _ := ret[0].(*api.ListAudienceUsersResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ListAudienceUsersExecute indicates an expected call of ListAudienceUsersExecute.
+func (mr *MockFeaturesAPIMockRecorder) ListAudienceUsersExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAudienceUsersExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).ListAudienceUsersExecute), arg0)
 }
 
 // ListFeatures mocks base method.
@@ -2241,36 +2331,6 @@ func (mr *MockFeaturesAPIMockRecorder) ListFlagsExecute(arg0 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFlagsExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).ListFlagsExecute), arg0)
 }
 
-// RulesFlag mocks base method.
-func (m *MockFeaturesAPI) RulesFlag(arg0 context.Context, arg1 string) api.ApiRulesFlagRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RulesFlag", arg0, arg1)
-	ret0, _ := ret[0].(api.ApiRulesFlagRequest)
-	return ret0
-}
-
-// RulesFlag indicates an expected call of RulesFlag.
-func (mr *MockFeaturesAPIMockRecorder) RulesFlag(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RulesFlag", reflect.TypeOf((*MockFeaturesAPI)(nil).RulesFlag), arg0, arg1)
-}
-
-// RulesFlagExecute mocks base method.
-func (m *MockFeaturesAPI) RulesFlagExecute(arg0 api.ApiRulesFlagRequest) (*api.RulesFlagResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RulesFlagExecute", arg0)
-	ret0, _ := ret[0].(*api.RulesFlagResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// RulesFlagExecute indicates an expected call of RulesFlagExecute.
-func (mr *MockFeaturesAPIMockRecorder) RulesFlagExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RulesFlagExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).RulesFlagExecute), arg0)
-}
-
 // UpdateFeature mocks base method.
 func (m *MockFeaturesAPI) UpdateFeature(arg0 context.Context, arg1 string) api.ApiUpdateFeatureRequest {
 	m.ctrl.T.Helper()
@@ -2331,6 +2391,36 @@ func (mr *MockFeaturesAPIMockRecorder) UpdateFlagExecute(arg0 any) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateFlagExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).UpdateFlagExecute), arg0)
 }
 
+// UpdateFlagRules mocks base method.
+func (m *MockFeaturesAPI) UpdateFlagRules(arg0 context.Context, arg1 string) api.ApiUpdateFlagRulesRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateFlagRules", arg0, arg1)
+	ret0, _ := ret[0].(api.ApiUpdateFlagRulesRequest)
+	return ret0
+}
+
+// UpdateFlagRules indicates an expected call of UpdateFlagRules.
+func (mr *MockFeaturesAPIMockRecorder) UpdateFlagRules(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateFlagRules", reflect.TypeOf((*MockFeaturesAPI)(nil).UpdateFlagRules), arg0, arg1)
+}
+
+// UpdateFlagRulesExecute mocks base method.
+func (m *MockFeaturesAPI) UpdateFlagRulesExecute(arg0 api.ApiUpdateFlagRulesRequest) (*api.UpdateFlagRulesResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateFlagRulesExecute", arg0)
+	ret0, _ := ret[0].(*api.UpdateFlagRulesResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpdateFlagRulesExecute indicates an expected call of UpdateFlagRulesExecute.
+func (mr *MockFeaturesAPIMockRecorder) UpdateFlagRulesExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateFlagRulesExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).UpdateFlagRulesExecute), arg0)
+}
+
 // MockPlansAPI is a mock of PlansAPI interface.
 type MockPlansAPI struct {
 	ctrl     *gomock.Controller
@@ -2384,6 +2474,36 @@ func (mr *MockPlansAPIMockRecorder) CreatePlanExecute(arg0 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePlanExecute", reflect.TypeOf((*MockPlansAPI)(nil).CreatePlanExecute), arg0)
 }
 
+// DeleteAudience mocks base method.
+func (m *MockPlansAPI) DeleteAudience(arg0 context.Context, arg1 string) api.ApiDeleteAudienceRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAudience", arg0, arg1)
+	ret0, _ := ret[0].(api.ApiDeleteAudienceRequest)
+	return ret0
+}
+
+// DeleteAudience indicates an expected call of DeleteAudience.
+func (mr *MockPlansAPIMockRecorder) DeleteAudience(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAudience", reflect.TypeOf((*MockPlansAPI)(nil).DeleteAudience), arg0, arg1)
+}
+
+// DeleteAudienceExecute mocks base method.
+func (m *MockPlansAPI) DeleteAudienceExecute(arg0 api.ApiDeleteAudienceRequest) (*api.DeleteAudienceResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAudienceExecute", arg0)
+	ret0, _ := ret[0].(*api.DeleteAudienceResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// DeleteAudienceExecute indicates an expected call of DeleteAudienceExecute.
+func (mr *MockPlansAPIMockRecorder) DeleteAudienceExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAudienceExecute", reflect.TypeOf((*MockPlansAPI)(nil).DeleteAudienceExecute), arg0)
+}
+
 // DeletePlan mocks base method.
 func (m *MockPlansAPI) DeletePlan(arg0 context.Context, arg1 string) api.ApiDeletePlanRequest {
 	m.ctrl.T.Helper()
@@ -2396,36 +2516,6 @@ func (m *MockPlansAPI) DeletePlan(arg0 context.Context, arg1 string) api.ApiDele
 func (mr *MockPlansAPIMockRecorder) DeletePlan(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePlan", reflect.TypeOf((*MockPlansAPI)(nil).DeletePlan), arg0, arg1)
-}
-
-// DeletePlanAudience mocks base method.
-func (m *MockPlansAPI) DeletePlanAudience(arg0 context.Context, arg1 string) api.ApiDeletePlanAudienceRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeletePlanAudience", arg0, arg1)
-	ret0, _ := ret[0].(api.ApiDeletePlanAudienceRequest)
-	return ret0
-}
-
-// DeletePlanAudience indicates an expected call of DeletePlanAudience.
-func (mr *MockPlansAPIMockRecorder) DeletePlanAudience(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePlanAudience", reflect.TypeOf((*MockPlansAPI)(nil).DeletePlanAudience), arg0, arg1)
-}
-
-// DeletePlanAudienceExecute mocks base method.
-func (m *MockPlansAPI) DeletePlanAudienceExecute(arg0 api.ApiDeletePlanAudienceRequest) (*api.DeletePlanAudienceResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeletePlanAudienceExecute", arg0)
-	ret0, _ := ret[0].(*api.DeletePlanAudienceResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// DeletePlanAudienceExecute indicates an expected call of DeletePlanAudienceExecute.
-func (mr *MockPlansAPIMockRecorder) DeletePlanAudienceExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePlanAudienceExecute", reflect.TypeOf((*MockPlansAPI)(nil).DeletePlanAudienceExecute), arg0)
 }
 
 // DeletePlanExecute mocks base method.
@@ -2504,6 +2594,36 @@ func (mr *MockPlansAPIMockRecorder) ListPlansExecute(arg0 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPlansExecute", reflect.TypeOf((*MockPlansAPI)(nil).ListPlansExecute), arg0)
 }
 
+// UpdateAudience mocks base method.
+func (m *MockPlansAPI) UpdateAudience(arg0 context.Context, arg1 string) api.ApiUpdateAudienceRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAudience", arg0, arg1)
+	ret0, _ := ret[0].(api.ApiUpdateAudienceRequest)
+	return ret0
+}
+
+// UpdateAudience indicates an expected call of UpdateAudience.
+func (mr *MockPlansAPIMockRecorder) UpdateAudience(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAudience", reflect.TypeOf((*MockPlansAPI)(nil).UpdateAudience), arg0, arg1)
+}
+
+// UpdateAudienceExecute mocks base method.
+func (m *MockPlansAPI) UpdateAudienceExecute(arg0 api.ApiUpdateAudienceRequest) (*api.UpdateAudienceResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAudienceExecute", arg0)
+	ret0, _ := ret[0].(*api.UpdateAudienceResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpdateAudienceExecute indicates an expected call of UpdateAudienceExecute.
+func (mr *MockPlansAPIMockRecorder) UpdateAudienceExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAudienceExecute", reflect.TypeOf((*MockPlansAPI)(nil).UpdateAudienceExecute), arg0)
+}
+
 // UpdatePlan mocks base method.
 func (m *MockPlansAPI) UpdatePlan(arg0 context.Context, arg1 string) api.ApiUpdatePlanRequest {
 	m.ctrl.T.Helper()
@@ -2516,36 +2636,6 @@ func (m *MockPlansAPI) UpdatePlan(arg0 context.Context, arg1 string) api.ApiUpda
 func (mr *MockPlansAPIMockRecorder) UpdatePlan(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePlan", reflect.TypeOf((*MockPlansAPI)(nil).UpdatePlan), arg0, arg1)
-}
-
-// UpdatePlanAudience mocks base method.
-func (m *MockPlansAPI) UpdatePlanAudience(arg0 context.Context, arg1 string) api.ApiUpdatePlanAudienceRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdatePlanAudience", arg0, arg1)
-	ret0, _ := ret[0].(api.ApiUpdatePlanAudienceRequest)
-	return ret0
-}
-
-// UpdatePlanAudience indicates an expected call of UpdatePlanAudience.
-func (mr *MockPlansAPIMockRecorder) UpdatePlanAudience(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePlanAudience", reflect.TypeOf((*MockPlansAPI)(nil).UpdatePlanAudience), arg0, arg1)
-}
-
-// UpdatePlanAudienceExecute mocks base method.
-func (m *MockPlansAPI) UpdatePlanAudienceExecute(arg0 api.ApiUpdatePlanAudienceRequest) (*api.UpdatePlanAudienceResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdatePlanAudienceExecute", arg0)
-	ret0, _ := ret[0].(*api.UpdatePlanAudienceResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// UpdatePlanAudienceExecute indicates an expected call of UpdatePlanAudienceExecute.
-func (mr *MockPlansAPIMockRecorder) UpdatePlanAudienceExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePlanAudienceExecute", reflect.TypeOf((*MockPlansAPI)(nil).UpdatePlanAudienceExecute), arg0)
 }
 
 // UpdatePlanExecute mocks base method.

@@ -34,59 +34,11 @@ func Test_api_CompaniesAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test CompaniesAPIService CreateCompanyMembership", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.CompaniesAPI.CreateCompanyMembership(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test CompaniesAPIService CreateCompanyTrait", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.CompaniesAPI.CreateCompanyTrait(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test CompaniesAPIService CreateEntityTraitDefinition", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.CompaniesAPI.CreateEntityTraitDefinition(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
 	t.Run("Test CompaniesAPIService CreateUser", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.CompaniesAPI.CreateUser(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test CompaniesAPIService CreateUserTrait", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.CompaniesAPI.CreateUserTrait(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -101,6 +53,18 @@ func Test_api_CompaniesAPIService(t *testing.T) {
 		var companyId string
 
 		resp, httpRes, err := apiClient.CompaniesAPI.DeleteCompany(context.Background(), companyId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CompaniesAPIService DeleteCompanyByKeys", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.CompaniesAPI.DeleteCompanyByKeys(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -136,6 +100,18 @@ func Test_api_CompaniesAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test CompaniesAPIService DeleteUserByKeys", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.CompaniesAPI.DeleteUserByKeys(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test CompaniesAPIService GetCompany", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -143,6 +119,30 @@ func Test_api_CompaniesAPIService(t *testing.T) {
 		var companyId string
 
 		resp, httpRes, err := apiClient.CompaniesAPI.GetCompany(context.Background(), companyId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CompaniesAPIService GetOrCreateCompanyMembership", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.CompaniesAPI.GetOrCreateCompanyMembership(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CompaniesAPIService GetOrCreateEntityTraitDefinition", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.CompaniesAPI.GetOrCreateEntityTraitDefinition(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -243,6 +243,54 @@ func Test_api_CompaniesAPIService(t *testing.T) {
 		var entityTraitDefinitionId string
 
 		resp, httpRes, err := apiClient.CompaniesAPI.UpdateEntityTraitDefinition(context.Background(), entityTraitDefinitionId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CompaniesAPIService UpsertCompany", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.CompaniesAPI.UpsertCompany(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CompaniesAPIService UpsertCompanyTrait", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.CompaniesAPI.UpsertCompanyTrait(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CompaniesAPIService UpsertUser", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.CompaniesAPI.UpsertUser(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CompaniesAPIService UpsertUserTrait", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.CompaniesAPI.UpsertUserTrait(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

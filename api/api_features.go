@@ -49,16 +49,28 @@ type FeaturesAPI interface {
 	CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFlagsResponse, *http.Response, error)
 
 	/*
-	CountCompaniesAudience Count Companies audience
+	CountAudienceCompanies Count audience companies
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountCompaniesAudienceRequest
+	@return ApiCountAudienceCompaniesRequest
 	*/
-	CountCompaniesAudience(ctx context.Context) ApiCountCompaniesAudienceRequest
+	CountAudienceCompanies(ctx context.Context) ApiCountAudienceCompaniesRequest
 
-	// CountCompaniesAudienceExecute executes the request
-	//  @return CountCompaniesAudienceResponse
-	CountCompaniesAudienceExecute(r ApiCountCompaniesAudienceRequest) (*CountCompaniesAudienceResponse, *http.Response, error)
+	// CountAudienceCompaniesExecute executes the request
+	//  @return CountAudienceCompaniesResponse
+	CountAudienceCompaniesExecute(r ApiCountAudienceCompaniesRequest) (*CountAudienceCompaniesResponse, *http.Response, error)
+
+	/*
+	CountAudienceUsers Count audience users
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountAudienceUsersRequest
+	*/
+	CountAudienceUsers(ctx context.Context) ApiCountAudienceUsersRequest
+
+	// CountAudienceUsersExecute executes the request
+	//  @return CountAudienceUsersResponse
+	CountAudienceUsersExecute(r ApiCountAudienceUsersRequest) (*CountAudienceUsersResponse, *http.Response, error)
 
 	/*
 	CountFlagChecks Count flag checks
@@ -71,18 +83,6 @@ type FeaturesAPI interface {
 	// CountFlagChecksExecute executes the request
 	//  @return CountFlagChecksResponse
 	CountFlagChecksExecute(r ApiCountFlagChecksRequest) (*CountFlagChecksResponse, *http.Response, error)
-
-	/*
-	CountUsersAudience Count Users audience
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountUsersAudienceRequest
-	*/
-	CountUsersAudience(ctx context.Context) ApiCountUsersAudienceRequest
-
-	// CountUsersAudienceExecute executes the request
-	//  @return CountUsersAudienceResponse
-	CountUsersAudienceExecute(r ApiCountUsersAudienceRequest) (*CountUsersAudienceResponse, *http.Response, error)
 
 	/*
 	CreateFeature Create feature
@@ -135,18 +135,6 @@ type FeaturesAPI interface {
 	DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteFlagResponse, *http.Response, error)
 
 	/*
-	GetCompaniesAudience Get Companies audience
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiGetCompaniesAudienceRequest
-	*/
-	GetCompaniesAudience(ctx context.Context) ApiGetCompaniesAudienceRequest
-
-	// GetCompaniesAudienceExecute executes the request
-	//  @return GetCompaniesAudienceResponse
-	GetCompaniesAudienceExecute(r ApiGetCompaniesAudienceRequest) (*GetCompaniesAudienceResponse, *http.Response, error)
-
-	/*
 	GetFeature Get feature
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -186,28 +174,40 @@ type FeaturesAPI interface {
 	GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*GetFlagCheckResponse, *http.Response, error)
 
 	/*
-	GetUsersAudience Get Users audience
+	GetLatestFlagChecks Get latest flag checks
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiGetUsersAudienceRequest
+	@return ApiGetLatestFlagChecksRequest
 	*/
-	GetUsersAudience(ctx context.Context) ApiGetUsersAudienceRequest
+	GetLatestFlagChecks(ctx context.Context) ApiGetLatestFlagChecksRequest
 
-	// GetUsersAudienceExecute executes the request
-	//  @return GetUsersAudienceResponse
-	GetUsersAudienceExecute(r ApiGetUsersAudienceRequest) (*GetUsersAudienceResponse, *http.Response, error)
+	// GetLatestFlagChecksExecute executes the request
+	//  @return GetLatestFlagChecksResponse
+	GetLatestFlagChecksExecute(r ApiGetLatestFlagChecksRequest) (*GetLatestFlagChecksResponse, *http.Response, error)
 
 	/*
-	LatestFlagChecks Latest flag checks
+	ListAudienceCompanies List audience companies
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiLatestFlagChecksRequest
+	@return ApiListAudienceCompaniesRequest
 	*/
-	LatestFlagChecks(ctx context.Context) ApiLatestFlagChecksRequest
+	ListAudienceCompanies(ctx context.Context) ApiListAudienceCompaniesRequest
 
-	// LatestFlagChecksExecute executes the request
-	//  @return LatestFlagChecksResponse
-	LatestFlagChecksExecute(r ApiLatestFlagChecksRequest) (*LatestFlagChecksResponse, *http.Response, error)
+	// ListAudienceCompaniesExecute executes the request
+	//  @return ListAudienceCompaniesResponse
+	ListAudienceCompaniesExecute(r ApiListAudienceCompaniesRequest) (*ListAudienceCompaniesResponse, *http.Response, error)
+
+	/*
+	ListAudienceUsers List audience users
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListAudienceUsersRequest
+	*/
+	ListAudienceUsers(ctx context.Context) ApiListAudienceUsersRequest
+
+	// ListAudienceUsersExecute executes the request
+	//  @return ListAudienceUsersResponse
+	ListAudienceUsersExecute(r ApiListAudienceUsersRequest) (*ListAudienceUsersResponse, *http.Response, error)
 
 	/*
 	ListFeatures List features
@@ -246,19 +246,6 @@ type FeaturesAPI interface {
 	ListFlagsExecute(r ApiListFlagsRequest) (*ListFlagsResponse, *http.Response, error)
 
 	/*
-	RulesFlag Rules flag
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param flagId flag_id
-	@return ApiRulesFlagRequest
-	*/
-	RulesFlag(ctx context.Context, flagId string) ApiRulesFlagRequest
-
-	// RulesFlagExecute executes the request
-	//  @return RulesFlagResponse
-	RulesFlagExecute(r ApiRulesFlagRequest) (*RulesFlagResponse, *http.Response, error)
-
-	/*
 	UpdateFeature Update feature
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -283,6 +270,19 @@ type FeaturesAPI interface {
 	// UpdateFlagExecute executes the request
 	//  @return UpdateFlagResponse
 	UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateFlagResponse, *http.Response, error)
+
+	/*
+	UpdateFlagRules Update flag rules
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param flagId flag_id
+	@return ApiUpdateFlagRulesRequest
+	*/
+	UpdateFlagRules(ctx context.Context, flagId string) ApiUpdateFlagRulesRequest
+
+	// UpdateFlagRulesExecute executes the request
+	//  @return UpdateFlagRulesResponse
+	UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest) (*UpdateFlagRulesResponse, *http.Response, error)
 }
 
 // FeaturesAPIService FeaturesAPI service
@@ -632,50 +632,220 @@ func (a *FeaturesAPIService) CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFl
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiCountCompaniesAudienceRequest struct {
+type ApiCountAudienceCompaniesRequest struct {
 	ctx context.Context
 	ApiService FeaturesAPI
 	audienceRequestBody *AudienceRequestBody
 }
 
-func (r ApiCountCompaniesAudienceRequest) AudienceRequestBody(audienceRequestBody AudienceRequestBody) ApiCountCompaniesAudienceRequest {
+func (r ApiCountAudienceCompaniesRequest) AudienceRequestBody(audienceRequestBody AudienceRequestBody) ApiCountAudienceCompaniesRequest {
 	r.audienceRequestBody = &audienceRequestBody
 	return r
 }
 
-func (r ApiCountCompaniesAudienceRequest) Execute() (*CountCompaniesAudienceResponse, *http.Response, error) {
-	return r.ApiService.CountCompaniesAudienceExecute(r)
+func (r ApiCountAudienceCompaniesRequest) Execute() (*CountAudienceCompaniesResponse, *http.Response, error) {
+	return r.ApiService.CountAudienceCompaniesExecute(r)
 }
 
 /*
-CountCompaniesAudience Count Companies audience
+CountAudienceCompanies Count audience companies
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountCompaniesAudienceRequest
+ @return ApiCountAudienceCompaniesRequest
 */
-func (a *FeaturesAPIService) CountCompaniesAudience(ctx context.Context) ApiCountCompaniesAudienceRequest {
-	return ApiCountCompaniesAudienceRequest{
+func (a *FeaturesAPIService) CountAudienceCompanies(ctx context.Context) ApiCountAudienceCompaniesRequest {
+	return ApiCountAudienceCompaniesRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CountCompaniesAudienceResponse
-func (a *FeaturesAPIService) CountCompaniesAudienceExecute(r ApiCountCompaniesAudienceRequest) (*CountCompaniesAudienceResponse, *http.Response, error) {
+//  @return CountAudienceCompaniesResponse
+func (a *FeaturesAPIService) CountAudienceCompaniesExecute(r ApiCountAudienceCompaniesRequest) (*CountAudienceCompaniesResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *CountCompaniesAudienceResponse
+		localVarReturnValue  *CountAudienceCompaniesResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CountCompaniesAudience")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CountAudienceCompanies")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/audience/count-companies"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.audienceRequestBody == nil {
+		return localVarReturnValue, nil, reportError("audienceRequestBody is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.audienceRequestBody
+  var key string
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	if key == "" {
+		// No-op if no API key provided
+    return nil, nil, nil
+  }
+
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCountAudienceUsersRequest struct {
+	ctx context.Context
+	ApiService FeaturesAPI
+	audienceRequestBody *AudienceRequestBody
+}
+
+func (r ApiCountAudienceUsersRequest) AudienceRequestBody(audienceRequestBody AudienceRequestBody) ApiCountAudienceUsersRequest {
+	r.audienceRequestBody = &audienceRequestBody
+	return r
+}
+
+func (r ApiCountAudienceUsersRequest) Execute() (*CountAudienceUsersResponse, *http.Response, error) {
+	return r.ApiService.CountAudienceUsersExecute(r)
+}
+
+/*
+CountAudienceUsers Count audience users
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiCountAudienceUsersRequest
+*/
+func (a *FeaturesAPIService) CountAudienceUsers(ctx context.Context) ApiCountAudienceUsersRequest {
+	return ApiCountAudienceUsersRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return CountAudienceUsersResponse
+func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRequest) (*CountAudienceUsersResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CountAudienceUsersResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CountAudienceUsers")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/audience/count-users"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -917,176 +1087,6 @@ func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["X-Schematic-Api-Key"] = key
-			}
-		}
-	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 400 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 403 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiCountUsersAudienceRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
-	audienceRequestBody *AudienceRequestBody
-}
-
-func (r ApiCountUsersAudienceRequest) AudienceRequestBody(audienceRequestBody AudienceRequestBody) ApiCountUsersAudienceRequest {
-	r.audienceRequestBody = &audienceRequestBody
-	return r
-}
-
-func (r ApiCountUsersAudienceRequest) Execute() (*CountUsersAudienceResponse, *http.Response, error) {
-	return r.ApiService.CountUsersAudienceExecute(r)
-}
-
-/*
-CountUsersAudience Count Users audience
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountUsersAudienceRequest
-*/
-func (a *FeaturesAPIService) CountUsersAudience(ctx context.Context) ApiCountUsersAudienceRequest {
-	return ApiCountUsersAudienceRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-// Execute executes the request
-//  @return CountUsersAudienceResponse
-func (a *FeaturesAPIService) CountUsersAudienceExecute(r ApiCountUsersAudienceRequest) (*CountUsersAudienceResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CountUsersAudienceResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CountUsersAudience")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/audience/count-users"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.audienceRequestBody == nil {
-		return localVarReturnValue, nil, reportError("audienceRequestBody is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.audienceRequestBody
   var key string
 	if r.ctx != nil {
 		// API Key Authentication
@@ -1852,176 +1852,6 @@ func (a *FeaturesAPIService) DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteF
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetCompaniesAudienceRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
-	audienceRequestBody *AudienceRequestBody
-}
-
-func (r ApiGetCompaniesAudienceRequest) AudienceRequestBody(audienceRequestBody AudienceRequestBody) ApiGetCompaniesAudienceRequest {
-	r.audienceRequestBody = &audienceRequestBody
-	return r
-}
-
-func (r ApiGetCompaniesAudienceRequest) Execute() (*GetCompaniesAudienceResponse, *http.Response, error) {
-	return r.ApiService.GetCompaniesAudienceExecute(r)
-}
-
-/*
-GetCompaniesAudience Get Companies audience
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetCompaniesAudienceRequest
-*/
-func (a *FeaturesAPIService) GetCompaniesAudience(ctx context.Context) ApiGetCompaniesAudienceRequest {
-	return ApiGetCompaniesAudienceRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-// Execute executes the request
-//  @return GetCompaniesAudienceResponse
-func (a *FeaturesAPIService) GetCompaniesAudienceExecute(r ApiGetCompaniesAudienceRequest) (*GetCompaniesAudienceResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetCompaniesAudienceResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.GetCompaniesAudience")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/audience/get-companies"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.audienceRequestBody == nil {
-		return localVarReturnValue, nil, reportError("audienceRequestBody is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.audienceRequestBody
-  var key string
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["X-Schematic-Api-Key"] = key
-			}
-		}
-	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 400 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 403 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
 type ApiGetFeatureRequest struct {
 	ctx context.Context
 	ApiService FeaturesAPI
@@ -2511,50 +2341,264 @@ func (a *FeaturesAPIService) GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*Get
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetUsersAudienceRequest struct {
+type ApiGetLatestFlagChecksRequest struct {
 	ctx context.Context
 	ApiService FeaturesAPI
-	audienceRequestBody *AudienceRequestBody
+	flagId *string
+	flagIds *[]string
+	id *string
+	limit *int32
+	offset *int32
 }
 
-func (r ApiGetUsersAudienceRequest) AudienceRequestBody(audienceRequestBody AudienceRequestBody) ApiGetUsersAudienceRequest {
-	r.audienceRequestBody = &audienceRequestBody
+func (r ApiGetLatestFlagChecksRequest) FlagId(flagId string) ApiGetLatestFlagChecksRequest {
+	r.flagId = &flagId
 	return r
 }
 
-func (r ApiGetUsersAudienceRequest) Execute() (*GetUsersAudienceResponse, *http.Response, error) {
-	return r.ApiService.GetUsersAudienceExecute(r)
+func (r ApiGetLatestFlagChecksRequest) FlagIds(flagIds []string) ApiGetLatestFlagChecksRequest {
+	r.flagIds = &flagIds
+	return r
+}
+
+func (r ApiGetLatestFlagChecksRequest) Id(id string) ApiGetLatestFlagChecksRequest {
+	r.id = &id
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiGetLatestFlagChecksRequest) Limit(limit int32) ApiGetLatestFlagChecksRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiGetLatestFlagChecksRequest) Offset(offset int32) ApiGetLatestFlagChecksRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiGetLatestFlagChecksRequest) Execute() (*GetLatestFlagChecksResponse, *http.Response, error) {
+	return r.ApiService.GetLatestFlagChecksExecute(r)
 }
 
 /*
-GetUsersAudience Get Users audience
+GetLatestFlagChecks Get latest flag checks
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetUsersAudienceRequest
+ @return ApiGetLatestFlagChecksRequest
 */
-func (a *FeaturesAPIService) GetUsersAudience(ctx context.Context) ApiGetUsersAudienceRequest {
-	return ApiGetUsersAudienceRequest{
+func (a *FeaturesAPIService) GetLatestFlagChecks(ctx context.Context) ApiGetLatestFlagChecksRequest {
+	return ApiGetLatestFlagChecksRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//  @return GetUsersAudienceResponse
-func (a *FeaturesAPIService) GetUsersAudienceExecute(r ApiGetUsersAudienceRequest) (*GetUsersAudienceResponse, *http.Response, error) {
+//  @return GetLatestFlagChecksResponse
+func (a *FeaturesAPIService) GetLatestFlagChecksExecute(r ApiGetLatestFlagChecksRequest) (*GetLatestFlagChecksResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
+		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *GetUsersAudienceResponse
+		localVarReturnValue  *GetLatestFlagChecksResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.GetUsersAudience")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.GetLatestFlagChecks")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/audience/get-users"
+	localVarPath := localBasePath + "/flag-checks/latest"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.flagId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "flag_id", r.flagId, "")
+	}
+	if r.flagIds != nil {
+		t := *r.flagIds
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "flag_ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "flag_ids", t, "multi")
+		}
+	}
+	if r.id != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+  var key string
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	if key == "" {
+		// No-op if no API key provided
+    return nil, nil, nil
+  }
+
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListAudienceCompaniesRequest struct {
+	ctx context.Context
+	ApiService FeaturesAPI
+	audienceRequestBody *AudienceRequestBody
+}
+
+func (r ApiListAudienceCompaniesRequest) AudienceRequestBody(audienceRequestBody AudienceRequestBody) ApiListAudienceCompaniesRequest {
+	r.audienceRequestBody = &audienceRequestBody
+	return r
+}
+
+func (r ApiListAudienceCompaniesRequest) Execute() (*ListAudienceCompaniesResponse, *http.Response, error) {
+	return r.ApiService.ListAudienceCompaniesExecute(r)
+}
+
+/*
+ListAudienceCompanies List audience companies
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiListAudienceCompaniesRequest
+*/
+func (a *FeaturesAPIService) ListAudienceCompanies(ctx context.Context) ApiListAudienceCompaniesRequest {
+	return ApiListAudienceCompaniesRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return ListAudienceCompaniesResponse
+func (a *FeaturesAPIService) ListAudienceCompaniesExecute(r ApiListAudienceCompaniesRequest) (*ListAudienceCompaniesResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *ListAudienceCompaniesResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.ListAudienceCompanies")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/audience/get-companies"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2681,106 +2725,60 @@ func (a *FeaturesAPIService) GetUsersAudienceExecute(r ApiGetUsersAudienceReques
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiLatestFlagChecksRequest struct {
+type ApiListAudienceUsersRequest struct {
 	ctx context.Context
 	ApiService FeaturesAPI
-	flagId *string
-	flagIds *[]string
-	id *string
-	limit *int32
-	offset *int32
+	audienceRequestBody *AudienceRequestBody
 }
 
-func (r ApiLatestFlagChecksRequest) FlagId(flagId string) ApiLatestFlagChecksRequest {
-	r.flagId = &flagId
+func (r ApiListAudienceUsersRequest) AudienceRequestBody(audienceRequestBody AudienceRequestBody) ApiListAudienceUsersRequest {
+	r.audienceRequestBody = &audienceRequestBody
 	return r
 }
 
-func (r ApiLatestFlagChecksRequest) FlagIds(flagIds []string) ApiLatestFlagChecksRequest {
-	r.flagIds = &flagIds
-	return r
-}
-
-func (r ApiLatestFlagChecksRequest) Id(id string) ApiLatestFlagChecksRequest {
-	r.id = &id
-	return r
-}
-
-// Page limit (default 100)
-func (r ApiLatestFlagChecksRequest) Limit(limit int32) ApiLatestFlagChecksRequest {
-	r.limit = &limit
-	return r
-}
-
-// Page offset (default 0)
-func (r ApiLatestFlagChecksRequest) Offset(offset int32) ApiLatestFlagChecksRequest {
-	r.offset = &offset
-	return r
-}
-
-func (r ApiLatestFlagChecksRequest) Execute() (*LatestFlagChecksResponse, *http.Response, error) {
-	return r.ApiService.LatestFlagChecksExecute(r)
+func (r ApiListAudienceUsersRequest) Execute() (*ListAudienceUsersResponse, *http.Response, error) {
+	return r.ApiService.ListAudienceUsersExecute(r)
 }
 
 /*
-LatestFlagChecks Latest flag checks
+ListAudienceUsers List audience users
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiLatestFlagChecksRequest
+ @return ApiListAudienceUsersRequest
 */
-func (a *FeaturesAPIService) LatestFlagChecks(ctx context.Context) ApiLatestFlagChecksRequest {
-	return ApiLatestFlagChecksRequest{
+func (a *FeaturesAPIService) ListAudienceUsers(ctx context.Context) ApiListAudienceUsersRequest {
+	return ApiListAudienceUsersRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//  @return LatestFlagChecksResponse
-func (a *FeaturesAPIService) LatestFlagChecksExecute(r ApiLatestFlagChecksRequest) (*LatestFlagChecksResponse, *http.Response, error) {
+//  @return ListAudienceUsersResponse
+func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequest) (*ListAudienceUsersResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
+		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *LatestFlagChecksResponse
+		localVarReturnValue  *ListAudienceUsersResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.LatestFlagChecks")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.ListAudienceUsers")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/flag-checks/latest"
+	localVarPath := localBasePath + "/audience/get-users"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.audienceRequestBody == nil {
+		return localVarReturnValue, nil, reportError("audienceRequestBody is required and must be specified")
+	}
 
-	if r.flagId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "flag_id", r.flagId, "")
-	}
-	if r.flagIds != nil {
-		t := *r.flagIds
-		if reflect.TypeOf(t).Kind() == reflect.Slice {
-			s := reflect.ValueOf(t)
-			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "flag_ids", s.Index(i).Interface(), "multi")
-			}
-		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "flag_ids", t, "multi")
-		}
-	}
-	if r.id != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
-	}
-	if r.limit != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
-	}
-	if r.offset != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
-	}
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
+	localVarHTTPContentTypes := []string{"application/json"}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
@@ -2796,6 +2794,8 @@ func (a *FeaturesAPIService) LatestFlagChecksExecute(r ApiLatestFlagChecksReques
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	// body params
+	localVarPostBody = r.audienceRequestBody
   var key string
 	if r.ctx != nil {
 		// API Key Authentication
@@ -3493,191 +3493,6 @@ func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlags
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiRulesFlagRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
-	flagId string
-	updateFlagRulesRequestBody *UpdateFlagRulesRequestBody
-}
-
-func (r ApiRulesFlagRequest) UpdateFlagRulesRequestBody(updateFlagRulesRequestBody UpdateFlagRulesRequestBody) ApiRulesFlagRequest {
-	r.updateFlagRulesRequestBody = &updateFlagRulesRequestBody
-	return r
-}
-
-func (r ApiRulesFlagRequest) Execute() (*RulesFlagResponse, *http.Response, error) {
-	return r.ApiService.RulesFlagExecute(r)
-}
-
-/*
-RulesFlag Rules flag
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param flagId flag_id
- @return ApiRulesFlagRequest
-*/
-func (a *FeaturesAPIService) RulesFlag(ctx context.Context, flagId string) ApiRulesFlagRequest {
-	return ApiRulesFlagRequest{
-		ApiService: a,
-		ctx: ctx,
-		flagId: flagId,
-	}
-}
-
-// Execute executes the request
-//  @return RulesFlagResponse
-func (a *FeaturesAPIService) RulesFlagExecute(r ApiRulesFlagRequest) (*RulesFlagResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *RulesFlagResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.RulesFlag")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/flags/{flag_id}/rules"
-	localVarPath = strings.Replace(localVarPath, "{"+"flag_id"+"}", url.PathEscape(parameterValueToString(r.flagId, "flagId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.updateFlagRulesRequestBody == nil {
-		return localVarReturnValue, nil, reportError("updateFlagRulesRequestBody is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.updateFlagRulesRequestBody
-  var key string
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["X-Schematic-Api-Key"] = key
-			}
-		}
-	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 400 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 403 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 404 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
 type ApiUpdateFeatureRequest struct {
 	ctx context.Context
 	ApiService FeaturesAPI
@@ -3938,6 +3753,191 @@ func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateF
 	}
 	// body params
 	localVarPostBody = r.createFlagRequestBody
+  var key string
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	if key == "" {
+		// No-op if no API key provided
+    return nil, nil, nil
+  }
+
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateFlagRulesRequest struct {
+	ctx context.Context
+	ApiService FeaturesAPI
+	flagId string
+	updateFlagRulesRequestBody *UpdateFlagRulesRequestBody
+}
+
+func (r ApiUpdateFlagRulesRequest) UpdateFlagRulesRequestBody(updateFlagRulesRequestBody UpdateFlagRulesRequestBody) ApiUpdateFlagRulesRequest {
+	r.updateFlagRulesRequestBody = &updateFlagRulesRequestBody
+	return r
+}
+
+func (r ApiUpdateFlagRulesRequest) Execute() (*UpdateFlagRulesResponse, *http.Response, error) {
+	return r.ApiService.UpdateFlagRulesExecute(r)
+}
+
+/*
+UpdateFlagRules Update flag rules
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param flagId flag_id
+ @return ApiUpdateFlagRulesRequest
+*/
+func (a *FeaturesAPIService) UpdateFlagRules(ctx context.Context, flagId string) ApiUpdateFlagRulesRequest {
+	return ApiUpdateFlagRulesRequest{
+		ApiService: a,
+		ctx: ctx,
+		flagId: flagId,
+	}
+}
+
+// Execute executes the request
+//  @return UpdateFlagRulesResponse
+func (a *FeaturesAPIService) UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest) (*UpdateFlagRulesResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *UpdateFlagRulesResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.UpdateFlagRules")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flags/{flag_id}/rules"
+	localVarPath = strings.Replace(localVarPath, "{"+"flag_id"+"}", url.PathEscape(parameterValueToString(r.flagId, "flagId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.updateFlagRulesRequestBody == nil {
+		return localVarReturnValue, nil, reportError("updateFlagRulesRequestBody is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.updateFlagRulesRequestBody
   var key string
 	if r.ctx != nil {
 		// API Key Authentication

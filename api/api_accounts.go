@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 type AccountsAPI interface {
 
 	/*
-	CountApiKeys Count api keys
+		CountApiKeys Count api keys
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountApiKeysRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountApiKeysRequest
 	*/
 	CountApiKeys(ctx context.Context) ApiCountApiKeysRequest
 
@@ -35,10 +34,10 @@ type AccountsAPI interface {
 	CountApiKeysExecute(r ApiCountApiKeysRequest) (*CountApiKeysResponse, *http.Response, error)
 
 	/*
-	CountApiRequests Count api requests
+		CountApiRequests Count api requests
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountApiRequestsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountApiRequestsRequest
 	*/
 	CountApiRequests(ctx context.Context) ApiCountApiRequestsRequest
 
@@ -47,10 +46,10 @@ type AccountsAPI interface {
 	CountApiRequestsExecute(r ApiCountApiRequestsRequest) (*CountApiRequestsResponse, *http.Response, error)
 
 	/*
-	CreateApiKey Create api key
+		CreateApiKey Create api key
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreateApiKeyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreateApiKeyRequest
 	*/
 	CreateApiKey(ctx context.Context) ApiCreateApiKeyRequest
 
@@ -59,10 +58,10 @@ type AccountsAPI interface {
 	CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*CreateApiKeyResponse, *http.Response, error)
 
 	/*
-	CreateEnvironment Create environment
+		CreateEnvironment Create environment
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreateEnvironmentRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreateEnvironmentRequest
 	*/
 	CreateEnvironment(ctx context.Context) ApiCreateEnvironmentRequest
 
@@ -71,11 +70,11 @@ type AccountsAPI interface {
 	CreateEnvironmentExecute(r ApiCreateEnvironmentRequest) (*CreateEnvironmentResponse, *http.Response, error)
 
 	/*
-	DeleteApiKey Delete api key
+		DeleteApiKey Delete api key
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param apiKeyId api_key_id
-	@return ApiDeleteApiKeyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param apiKeyId api_key_id
+		@return ApiDeleteApiKeyRequest
 	*/
 	DeleteApiKey(ctx context.Context, apiKeyId string) ApiDeleteApiKeyRequest
 
@@ -84,11 +83,11 @@ type AccountsAPI interface {
 	DeleteApiKeyExecute(r ApiDeleteApiKeyRequest) (*DeleteApiKeyResponse, *http.Response, error)
 
 	/*
-	DeleteEnvironment Delete environment
+		DeleteEnvironment Delete environment
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param environmentId environment_id
-	@return ApiDeleteEnvironmentRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param environmentId environment_id
+		@return ApiDeleteEnvironmentRequest
 	*/
 	DeleteEnvironment(ctx context.Context, environmentId string) ApiDeleteEnvironmentRequest
 
@@ -97,11 +96,11 @@ type AccountsAPI interface {
 	DeleteEnvironmentExecute(r ApiDeleteEnvironmentRequest) (*DeleteEnvironmentResponse, *http.Response, error)
 
 	/*
-	GetApiKey Get api key
+		GetApiKey Get api key
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param apiKeyId api_key_id
-	@return ApiGetApiKeyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param apiKeyId api_key_id
+		@return ApiGetApiKeyRequest
 	*/
 	GetApiKey(ctx context.Context, apiKeyId string) ApiGetApiKeyRequest
 
@@ -110,11 +109,11 @@ type AccountsAPI interface {
 	GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKeyResponse, *http.Response, error)
 
 	/*
-	GetApiRequest Get api request
+		GetApiRequest Get api request
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param apiRequestId api_request_id
-	@return ApiGetApiRequestRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param apiRequestId api_request_id
+		@return ApiGetApiRequestRequest
 	*/
 	GetApiRequest(ctx context.Context, apiRequestId string) ApiGetApiRequestRequest
 
@@ -123,11 +122,11 @@ type AccountsAPI interface {
 	GetApiRequestExecute(r ApiGetApiRequestRequest) (*GetApiRequestResponse, *http.Response, error)
 
 	/*
-	GetEnvironment Get environment
+		GetEnvironment Get environment
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param environmentId environment_id
-	@return ApiGetEnvironmentRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param environmentId environment_id
+		@return ApiGetEnvironmentRequest
 	*/
 	GetEnvironment(ctx context.Context, environmentId string) ApiGetEnvironmentRequest
 
@@ -136,10 +135,10 @@ type AccountsAPI interface {
 	GetEnvironmentExecute(r ApiGetEnvironmentRequest) (*GetEnvironmentResponse, *http.Response, error)
 
 	/*
-	ListApiKeys List api keys
+		ListApiKeys List api keys
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListApiKeysRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListApiKeysRequest
 	*/
 	ListApiKeys(ctx context.Context) ApiListApiKeysRequest
 
@@ -148,10 +147,10 @@ type AccountsAPI interface {
 	ListApiKeysExecute(r ApiListApiKeysRequest) (*ListApiKeysResponse, *http.Response, error)
 
 	/*
-	ListApiRequests List api requests
+		ListApiRequests List api requests
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListApiRequestsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListApiRequestsRequest
 	*/
 	ListApiRequests(ctx context.Context) ApiListApiRequestsRequest
 
@@ -160,11 +159,11 @@ type AccountsAPI interface {
 	ListApiRequestsExecute(r ApiListApiRequestsRequest) (*ListApiRequestsResponse, *http.Response, error)
 
 	/*
-	UpdateApiKey Update api key
+		UpdateApiKey Update api key
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param apiKeyId api_key_id
-	@return ApiUpdateApiKeyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param apiKeyId api_key_id
+		@return ApiUpdateApiKeyRequest
 	*/
 	UpdateApiKey(ctx context.Context, apiKeyId string) ApiUpdateApiKeyRequest
 
@@ -173,11 +172,11 @@ type AccountsAPI interface {
 	UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*UpdateApiKeyResponse, *http.Response, error)
 
 	/*
-	UpdateEnvironment Update environment
+		UpdateEnvironment Update environment
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param environmentId environment_id
-	@return ApiUpdateEnvironmentRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param environmentId environment_id
+		@return ApiUpdateEnvironmentRequest
 	*/
 	UpdateEnvironment(ctx context.Context, environmentId string) ApiUpdateEnvironmentRequest
 
@@ -190,12 +189,12 @@ type AccountsAPI interface {
 type AccountsAPIService service
 
 type ApiCountApiKeysRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
+	ctx                context.Context
+	ApiService         AccountsAPI
 	requireEnvironment *bool
-	environmentId *string
-	limit *int32
-	offset *int32
+	environmentId      *string
+	limit              *int32
+	offset             *int32
 }
 
 func (r ApiCountApiKeysRequest) RequireEnvironment(requireEnvironment bool) ApiCountApiKeysRequest {
@@ -227,24 +226,25 @@ func (r ApiCountApiKeysRequest) Execute() (*CountApiKeysResponse, *http.Response
 /*
 CountApiKeys Count api keys
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountApiKeysRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountApiKeysRequest
 */
 func (a *AccountsAPIService) CountApiKeys(ctx context.Context) ApiCountApiKeysRequest {
 	return ApiCountApiKeysRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CountApiKeysResponse
+//
+//	@return CountApiKeysResponse
 func (a *AccountsAPIService) CountApiKeysExecute(r ApiCountApiKeysRequest) (*CountApiKeysResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CountApiKeysResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountApiKeysResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.CountApiKeys")
@@ -288,11 +288,11 @@ func (a *AccountsAPIService) CountApiKeysExecute(r ApiCountApiKeysRequest) (*Cou
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -302,14 +302,13 @@ func (a *AccountsAPIService) CountApiKeysExecute(r ApiCountApiKeysRequest) (*Cou
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -336,8 +335,8 @@ func (a *AccountsAPIService) CountApiKeysExecute(r ApiCountApiKeysRequest) (*Cou
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -347,8 +346,8 @@ func (a *AccountsAPIService) CountApiKeysExecute(r ApiCountApiKeysRequest) (*Cou
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -358,8 +357,8 @@ func (a *AccountsAPIService) CountApiKeysExecute(r ApiCountApiKeysRequest) (*Cou
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -369,8 +368,8 @@ func (a *AccountsAPIService) CountApiKeysExecute(r ApiCountApiKeysRequest) (*Cou
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -388,12 +387,12 @@ func (a *AccountsAPIService) CountApiKeysExecute(r ApiCountApiKeysRequest) (*Cou
 }
 
 type ApiCountApiRequestsRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
-	q *string
+	ctx         context.Context
+	ApiService  AccountsAPI
+	q           *string
 	requestType *string
-	limit *int32
-	offset *int32
+	limit       *int32
+	offset      *int32
 }
 
 func (r ApiCountApiRequestsRequest) Q(q string) ApiCountApiRequestsRequest {
@@ -425,24 +424,25 @@ func (r ApiCountApiRequestsRequest) Execute() (*CountApiRequestsResponse, *http.
 /*
 CountApiRequests Count api requests
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountApiRequestsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountApiRequestsRequest
 */
 func (a *AccountsAPIService) CountApiRequests(ctx context.Context) ApiCountApiRequestsRequest {
 	return ApiCountApiRequestsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CountApiRequestsResponse
+//
+//	@return CountApiRequestsResponse
 func (a *AccountsAPIService) CountApiRequestsExecute(r ApiCountApiRequestsRequest) (*CountApiRequestsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CountApiRequestsResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountApiRequestsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.CountApiRequests")
@@ -485,11 +485,11 @@ func (a *AccountsAPIService) CountApiRequestsExecute(r ApiCountApiRequestsReques
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -499,14 +499,13 @@ func (a *AccountsAPIService) CountApiRequestsExecute(r ApiCountApiRequestsReques
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -533,8 +532,8 @@ func (a *AccountsAPIService) CountApiRequestsExecute(r ApiCountApiRequestsReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -544,8 +543,8 @@ func (a *AccountsAPIService) CountApiRequestsExecute(r ApiCountApiRequestsReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -555,8 +554,8 @@ func (a *AccountsAPIService) CountApiRequestsExecute(r ApiCountApiRequestsReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -566,8 +565,8 @@ func (a *AccountsAPIService) CountApiRequestsExecute(r ApiCountApiRequestsReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -585,8 +584,8 @@ func (a *AccountsAPIService) CountApiRequestsExecute(r ApiCountApiRequestsReques
 }
 
 type ApiCreateApiKeyRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
+	ctx                     context.Context
+	ApiService              AccountsAPI
 	createApiKeyRequestBody *CreateApiKeyRequestBody
 }
 
@@ -602,24 +601,25 @@ func (r ApiCreateApiKeyRequest) Execute() (*CreateApiKeyResponse, *http.Response
 /*
 CreateApiKey Create api key
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateApiKeyRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreateApiKeyRequest
 */
 func (a *AccountsAPIService) CreateApiKey(ctx context.Context) ApiCreateApiKeyRequest {
 	return ApiCreateApiKeyRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreateApiKeyResponse
+//
+//	@return CreateApiKeyResponse
 func (a *AccountsAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*CreateApiKeyResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateApiKeyResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateApiKeyResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.CreateApiKey")
@@ -655,11 +655,11 @@ func (a *AccountsAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*Cre
 	}
 	// body params
 	localVarPostBody = r.createApiKeyRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -669,14 +669,13 @@ func (a *AccountsAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*Cre
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -703,8 +702,8 @@ func (a *AccountsAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*Cre
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -714,8 +713,8 @@ func (a *AccountsAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*Cre
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -725,8 +724,8 @@ func (a *AccountsAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*Cre
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -736,8 +735,8 @@ func (a *AccountsAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*Cre
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -755,8 +754,8 @@ func (a *AccountsAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*Cre
 }
 
 type ApiCreateEnvironmentRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
+	ctx                          context.Context
+	ApiService                   AccountsAPI
 	createEnvironmentRequestBody *CreateEnvironmentRequestBody
 }
 
@@ -772,24 +771,25 @@ func (r ApiCreateEnvironmentRequest) Execute() (*CreateEnvironmentResponse, *htt
 /*
 CreateEnvironment Create environment
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateEnvironmentRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreateEnvironmentRequest
 */
 func (a *AccountsAPIService) CreateEnvironment(ctx context.Context) ApiCreateEnvironmentRequest {
 	return ApiCreateEnvironmentRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreateEnvironmentResponse
+//
+//	@return CreateEnvironmentResponse
 func (a *AccountsAPIService) CreateEnvironmentExecute(r ApiCreateEnvironmentRequest) (*CreateEnvironmentResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateEnvironmentResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateEnvironmentResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.CreateEnvironment")
@@ -825,11 +825,11 @@ func (a *AccountsAPIService) CreateEnvironmentExecute(r ApiCreateEnvironmentRequ
 	}
 	// body params
 	localVarPostBody = r.createEnvironmentRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -839,14 +839,13 @@ func (a *AccountsAPIService) CreateEnvironmentExecute(r ApiCreateEnvironmentRequ
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -873,8 +872,8 @@ func (a *AccountsAPIService) CreateEnvironmentExecute(r ApiCreateEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -884,8 +883,8 @@ func (a *AccountsAPIService) CreateEnvironmentExecute(r ApiCreateEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -895,8 +894,8 @@ func (a *AccountsAPIService) CreateEnvironmentExecute(r ApiCreateEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -906,8 +905,8 @@ func (a *AccountsAPIService) CreateEnvironmentExecute(r ApiCreateEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -925,9 +924,9 @@ func (a *AccountsAPIService) CreateEnvironmentExecute(r ApiCreateEnvironmentRequ
 }
 
 type ApiDeleteApiKeyRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService AccountsAPI
-	apiKeyId string
+	apiKeyId   string
 }
 
 func (r ApiDeleteApiKeyRequest) Execute() (*DeleteApiKeyResponse, *http.Response, error) {
@@ -937,26 +936,27 @@ func (r ApiDeleteApiKeyRequest) Execute() (*DeleteApiKeyResponse, *http.Response
 /*
 DeleteApiKey Delete api key
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param apiKeyId api_key_id
- @return ApiDeleteApiKeyRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param apiKeyId api_key_id
+	@return ApiDeleteApiKeyRequest
 */
 func (a *AccountsAPIService) DeleteApiKey(ctx context.Context, apiKeyId string) ApiDeleteApiKeyRequest {
 	return ApiDeleteApiKeyRequest{
 		ApiService: a,
-		ctx: ctx,
-		apiKeyId: apiKeyId,
+		ctx:        ctx,
+		apiKeyId:   apiKeyId,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteApiKeyResponse
+//
+//	@return DeleteApiKeyResponse
 func (a *AccountsAPIService) DeleteApiKeyExecute(r ApiDeleteApiKeyRequest) (*DeleteApiKeyResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteApiKeyResponse
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteApiKeyResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.DeleteApiKey")
@@ -988,11 +988,11 @@ func (a *AccountsAPIService) DeleteApiKeyExecute(r ApiDeleteApiKeyRequest) (*Del
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1002,14 +1002,13 @@ func (a *AccountsAPIService) DeleteApiKeyExecute(r ApiDeleteApiKeyRequest) (*Del
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1036,8 +1035,8 @@ func (a *AccountsAPIService) DeleteApiKeyExecute(r ApiDeleteApiKeyRequest) (*Del
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1047,8 +1046,8 @@ func (a *AccountsAPIService) DeleteApiKeyExecute(r ApiDeleteApiKeyRequest) (*Del
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1058,8 +1057,8 @@ func (a *AccountsAPIService) DeleteApiKeyExecute(r ApiDeleteApiKeyRequest) (*Del
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1069,8 +1068,8 @@ func (a *AccountsAPIService) DeleteApiKeyExecute(r ApiDeleteApiKeyRequest) (*Del
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1088,8 +1087,8 @@ func (a *AccountsAPIService) DeleteApiKeyExecute(r ApiDeleteApiKeyRequest) (*Del
 }
 
 type ApiDeleteEnvironmentRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
+	ctx           context.Context
+	ApiService    AccountsAPI
 	environmentId string
 }
 
@@ -1100,26 +1099,27 @@ func (r ApiDeleteEnvironmentRequest) Execute() (*DeleteEnvironmentResponse, *htt
 /*
 DeleteEnvironment Delete environment
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param environmentId environment_id
- @return ApiDeleteEnvironmentRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param environmentId environment_id
+	@return ApiDeleteEnvironmentRequest
 */
 func (a *AccountsAPIService) DeleteEnvironment(ctx context.Context, environmentId string) ApiDeleteEnvironmentRequest {
 	return ApiDeleteEnvironmentRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:    a,
+		ctx:           ctx,
 		environmentId: environmentId,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteEnvironmentResponse
+//
+//	@return DeleteEnvironmentResponse
 func (a *AccountsAPIService) DeleteEnvironmentExecute(r ApiDeleteEnvironmentRequest) (*DeleteEnvironmentResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteEnvironmentResponse
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteEnvironmentResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.DeleteEnvironment")
@@ -1151,11 +1151,11 @@ func (a *AccountsAPIService) DeleteEnvironmentExecute(r ApiDeleteEnvironmentRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1165,14 +1165,13 @@ func (a *AccountsAPIService) DeleteEnvironmentExecute(r ApiDeleteEnvironmentRequ
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1199,8 +1198,8 @@ func (a *AccountsAPIService) DeleteEnvironmentExecute(r ApiDeleteEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1210,8 +1209,8 @@ func (a *AccountsAPIService) DeleteEnvironmentExecute(r ApiDeleteEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1221,8 +1220,8 @@ func (a *AccountsAPIService) DeleteEnvironmentExecute(r ApiDeleteEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1232,8 +1231,8 @@ func (a *AccountsAPIService) DeleteEnvironmentExecute(r ApiDeleteEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1251,9 +1250,9 @@ func (a *AccountsAPIService) DeleteEnvironmentExecute(r ApiDeleteEnvironmentRequ
 }
 
 type ApiGetApiKeyRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService AccountsAPI
-	apiKeyId string
+	apiKeyId   string
 }
 
 func (r ApiGetApiKeyRequest) Execute() (*GetApiKeyResponse, *http.Response, error) {
@@ -1263,26 +1262,27 @@ func (r ApiGetApiKeyRequest) Execute() (*GetApiKeyResponse, *http.Response, erro
 /*
 GetApiKey Get api key
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param apiKeyId api_key_id
- @return ApiGetApiKeyRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param apiKeyId api_key_id
+	@return ApiGetApiKeyRequest
 */
 func (a *AccountsAPIService) GetApiKey(ctx context.Context, apiKeyId string) ApiGetApiKeyRequest {
 	return ApiGetApiKeyRequest{
 		ApiService: a,
-		ctx: ctx,
-		apiKeyId: apiKeyId,
+		ctx:        ctx,
+		apiKeyId:   apiKeyId,
 	}
 }
 
 // Execute executes the request
-//  @return GetApiKeyResponse
+//
+//	@return GetApiKeyResponse
 func (a *AccountsAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKeyResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetApiKeyResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetApiKeyResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.GetApiKey")
@@ -1314,11 +1314,11 @@ func (a *AccountsAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKey
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1328,14 +1328,13 @@ func (a *AccountsAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKey
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1362,8 +1361,8 @@ func (a *AccountsAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKey
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1373,8 +1372,8 @@ func (a *AccountsAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKey
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1384,8 +1383,8 @@ func (a *AccountsAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKey
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1395,8 +1394,8 @@ func (a *AccountsAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKey
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1414,8 +1413,8 @@ func (a *AccountsAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*GetApiKey
 }
 
 type ApiGetApiRequestRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
+	ctx          context.Context
+	ApiService   AccountsAPI
 	apiRequestId string
 }
 
@@ -1426,26 +1425,27 @@ func (r ApiGetApiRequestRequest) Execute() (*GetApiRequestResponse, *http.Respon
 /*
 GetApiRequest Get api request
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param apiRequestId api_request_id
- @return ApiGetApiRequestRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param apiRequestId api_request_id
+	@return ApiGetApiRequestRequest
 */
 func (a *AccountsAPIService) GetApiRequest(ctx context.Context, apiRequestId string) ApiGetApiRequestRequest {
 	return ApiGetApiRequestRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:   a,
+		ctx:          ctx,
 		apiRequestId: apiRequestId,
 	}
 }
 
 // Execute executes the request
-//  @return GetApiRequestResponse
+//
+//	@return GetApiRequestResponse
 func (a *AccountsAPIService) GetApiRequestExecute(r ApiGetApiRequestRequest) (*GetApiRequestResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetApiRequestResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetApiRequestResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.GetApiRequest")
@@ -1477,11 +1477,11 @@ func (a *AccountsAPIService) GetApiRequestExecute(r ApiGetApiRequestRequest) (*G
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1491,14 +1491,13 @@ func (a *AccountsAPIService) GetApiRequestExecute(r ApiGetApiRequestRequest) (*G
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1525,8 +1524,8 @@ func (a *AccountsAPIService) GetApiRequestExecute(r ApiGetApiRequestRequest) (*G
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1536,8 +1535,8 @@ func (a *AccountsAPIService) GetApiRequestExecute(r ApiGetApiRequestRequest) (*G
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1547,8 +1546,8 @@ func (a *AccountsAPIService) GetApiRequestExecute(r ApiGetApiRequestRequest) (*G
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1558,8 +1557,8 @@ func (a *AccountsAPIService) GetApiRequestExecute(r ApiGetApiRequestRequest) (*G
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1577,8 +1576,8 @@ func (a *AccountsAPIService) GetApiRequestExecute(r ApiGetApiRequestRequest) (*G
 }
 
 type ApiGetEnvironmentRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
+	ctx           context.Context
+	ApiService    AccountsAPI
 	environmentId string
 }
 
@@ -1589,26 +1588,27 @@ func (r ApiGetEnvironmentRequest) Execute() (*GetEnvironmentResponse, *http.Resp
 /*
 GetEnvironment Get environment
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param environmentId environment_id
- @return ApiGetEnvironmentRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param environmentId environment_id
+	@return ApiGetEnvironmentRequest
 */
 func (a *AccountsAPIService) GetEnvironment(ctx context.Context, environmentId string) ApiGetEnvironmentRequest {
 	return ApiGetEnvironmentRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:    a,
+		ctx:           ctx,
 		environmentId: environmentId,
 	}
 }
 
 // Execute executes the request
-//  @return GetEnvironmentResponse
+//
+//	@return GetEnvironmentResponse
 func (a *AccountsAPIService) GetEnvironmentExecute(r ApiGetEnvironmentRequest) (*GetEnvironmentResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetEnvironmentResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetEnvironmentResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.GetEnvironment")
@@ -1640,11 +1640,11 @@ func (a *AccountsAPIService) GetEnvironmentExecute(r ApiGetEnvironmentRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1654,14 +1654,13 @@ func (a *AccountsAPIService) GetEnvironmentExecute(r ApiGetEnvironmentRequest) (
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1688,8 +1687,8 @@ func (a *AccountsAPIService) GetEnvironmentExecute(r ApiGetEnvironmentRequest) (
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1699,8 +1698,8 @@ func (a *AccountsAPIService) GetEnvironmentExecute(r ApiGetEnvironmentRequest) (
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1710,8 +1709,8 @@ func (a *AccountsAPIService) GetEnvironmentExecute(r ApiGetEnvironmentRequest) (
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1721,8 +1720,8 @@ func (a *AccountsAPIService) GetEnvironmentExecute(r ApiGetEnvironmentRequest) (
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1740,12 +1739,12 @@ func (a *AccountsAPIService) GetEnvironmentExecute(r ApiGetEnvironmentRequest) (
 }
 
 type ApiListApiKeysRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
+	ctx                context.Context
+	ApiService         AccountsAPI
 	requireEnvironment *bool
-	environmentId *string
-	limit *int32
-	offset *int32
+	environmentId      *string
+	limit              *int32
+	offset             *int32
 }
 
 func (r ApiListApiKeysRequest) RequireEnvironment(requireEnvironment bool) ApiListApiKeysRequest {
@@ -1777,24 +1776,25 @@ func (r ApiListApiKeysRequest) Execute() (*ListApiKeysResponse, *http.Response, 
 /*
 ListApiKeys List api keys
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListApiKeysRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListApiKeysRequest
 */
 func (a *AccountsAPIService) ListApiKeys(ctx context.Context) ApiListApiKeysRequest {
 	return ApiListApiKeysRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListApiKeysResponse
+//
+//	@return ListApiKeysResponse
 func (a *AccountsAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) (*ListApiKeysResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListApiKeysResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListApiKeysResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.ListApiKeys")
@@ -1838,11 +1838,11 @@ func (a *AccountsAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) (*ListA
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1852,14 +1852,13 @@ func (a *AccountsAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) (*ListA
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1886,8 +1885,8 @@ func (a *AccountsAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) (*ListA
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1897,8 +1896,8 @@ func (a *AccountsAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) (*ListA
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1908,8 +1907,8 @@ func (a *AccountsAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) (*ListA
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1919,8 +1918,8 @@ func (a *AccountsAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) (*ListA
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1938,12 +1937,12 @@ func (a *AccountsAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) (*ListA
 }
 
 type ApiListApiRequestsRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
-	q *string
+	ctx         context.Context
+	ApiService  AccountsAPI
+	q           *string
 	requestType *string
-	limit *int32
-	offset *int32
+	limit       *int32
+	offset      *int32
 }
 
 func (r ApiListApiRequestsRequest) Q(q string) ApiListApiRequestsRequest {
@@ -1975,24 +1974,25 @@ func (r ApiListApiRequestsRequest) Execute() (*ListApiRequestsResponse, *http.Re
 /*
 ListApiRequests List api requests
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListApiRequestsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListApiRequestsRequest
 */
 func (a *AccountsAPIService) ListApiRequests(ctx context.Context) ApiListApiRequestsRequest {
 	return ApiListApiRequestsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListApiRequestsResponse
+//
+//	@return ListApiRequestsResponse
 func (a *AccountsAPIService) ListApiRequestsExecute(r ApiListApiRequestsRequest) (*ListApiRequestsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListApiRequestsResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListApiRequestsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.ListApiRequests")
@@ -2035,11 +2035,11 @@ func (a *AccountsAPIService) ListApiRequestsExecute(r ApiListApiRequestsRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2049,14 +2049,13 @@ func (a *AccountsAPIService) ListApiRequestsExecute(r ApiListApiRequestsRequest)
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2083,8 +2082,8 @@ func (a *AccountsAPIService) ListApiRequestsExecute(r ApiListApiRequestsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2094,8 +2093,8 @@ func (a *AccountsAPIService) ListApiRequestsExecute(r ApiListApiRequestsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2105,8 +2104,8 @@ func (a *AccountsAPIService) ListApiRequestsExecute(r ApiListApiRequestsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2116,8 +2115,8 @@ func (a *AccountsAPIService) ListApiRequestsExecute(r ApiListApiRequestsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2135,9 +2134,9 @@ func (a *AccountsAPIService) ListApiRequestsExecute(r ApiListApiRequestsRequest)
 }
 
 type ApiUpdateApiKeyRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
-	apiKeyId string
+	ctx                     context.Context
+	ApiService              AccountsAPI
+	apiKeyId                string
 	updateApiKeyRequestBody *UpdateApiKeyRequestBody
 }
 
@@ -2153,26 +2152,27 @@ func (r ApiUpdateApiKeyRequest) Execute() (*UpdateApiKeyResponse, *http.Response
 /*
 UpdateApiKey Update api key
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param apiKeyId api_key_id
- @return ApiUpdateApiKeyRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param apiKeyId api_key_id
+	@return ApiUpdateApiKeyRequest
 */
 func (a *AccountsAPIService) UpdateApiKey(ctx context.Context, apiKeyId string) ApiUpdateApiKeyRequest {
 	return ApiUpdateApiKeyRequest{
 		ApiService: a,
-		ctx: ctx,
-		apiKeyId: apiKeyId,
+		ctx:        ctx,
+		apiKeyId:   apiKeyId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdateApiKeyResponse
+//
+//	@return UpdateApiKeyResponse
 func (a *AccountsAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*UpdateApiKeyResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpdateApiKeyResponse
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpdateApiKeyResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.UpdateApiKey")
@@ -2209,11 +2209,11 @@ func (a *AccountsAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*Upd
 	}
 	// body params
 	localVarPostBody = r.updateApiKeyRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2223,14 +2223,13 @@ func (a *AccountsAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*Upd
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2257,8 +2256,8 @@ func (a *AccountsAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*Upd
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2268,8 +2267,8 @@ func (a *AccountsAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*Upd
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2279,8 +2278,8 @@ func (a *AccountsAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*Upd
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -2290,8 +2289,8 @@ func (a *AccountsAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*Upd
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2301,8 +2300,8 @@ func (a *AccountsAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*Upd
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2320,9 +2319,9 @@ func (a *AccountsAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*Upd
 }
 
 type ApiUpdateEnvironmentRequest struct {
-	ctx context.Context
-	ApiService AccountsAPI
-	environmentId string
+	ctx                          context.Context
+	ApiService                   AccountsAPI
+	environmentId                string
 	updateEnvironmentRequestBody *UpdateEnvironmentRequestBody
 }
 
@@ -2338,26 +2337,27 @@ func (r ApiUpdateEnvironmentRequest) Execute() (*UpdateEnvironmentResponse, *htt
 /*
 UpdateEnvironment Update environment
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param environmentId environment_id
- @return ApiUpdateEnvironmentRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param environmentId environment_id
+	@return ApiUpdateEnvironmentRequest
 */
 func (a *AccountsAPIService) UpdateEnvironment(ctx context.Context, environmentId string) ApiUpdateEnvironmentRequest {
 	return ApiUpdateEnvironmentRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:    a,
+		ctx:           ctx,
 		environmentId: environmentId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdateEnvironmentResponse
+//
+//	@return UpdateEnvironmentResponse
 func (a *AccountsAPIService) UpdateEnvironmentExecute(r ApiUpdateEnvironmentRequest) (*UpdateEnvironmentResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpdateEnvironmentResponse
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpdateEnvironmentResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.UpdateEnvironment")
@@ -2394,11 +2394,11 @@ func (a *AccountsAPIService) UpdateEnvironmentExecute(r ApiUpdateEnvironmentRequ
 	}
 	// body params
 	localVarPostBody = r.updateEnvironmentRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2408,14 +2408,13 @@ func (a *AccountsAPIService) UpdateEnvironmentExecute(r ApiUpdateEnvironmentRequ
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2442,8 +2441,8 @@ func (a *AccountsAPIService) UpdateEnvironmentExecute(r ApiUpdateEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2453,8 +2452,8 @@ func (a *AccountsAPIService) UpdateEnvironmentExecute(r ApiUpdateEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2464,8 +2463,8 @@ func (a *AccountsAPIService) UpdateEnvironmentExecute(r ApiUpdateEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -2475,8 +2474,8 @@ func (a *AccountsAPIService) UpdateEnvironmentExecute(r ApiUpdateEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2486,8 +2485,8 @@ func (a *AccountsAPIService) UpdateEnvironmentExecute(r ApiUpdateEnvironmentRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

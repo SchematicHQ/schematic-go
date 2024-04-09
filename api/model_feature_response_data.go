@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the FeatureResponseData type satisfies the MappedNullable interface at compile time
@@ -22,15 +22,15 @@ var _ MappedNullable = &FeatureResponseData{}
 
 // FeatureResponseData struct for FeatureResponseData
 type FeatureResponseData struct {
-	CreatedAt time.Time `json:"created_at"`
-	Description string `json:"description"`
-	EventSubtype NullableString `json:"event_subtype,omitempty"`
-	FeatureType string `json:"feature_type"`
-	Id string `json:"id"`
+	CreatedAt      time.Time      `json:"created_at"`
+	Description    string         `json:"description"`
+	EventSubtype   NullableString `json:"event_subtype,omitempty"`
+	FeatureType    string         `json:"feature_type"`
+	Id             string         `json:"id"`
 	LifecyclePhase NullableString `json:"lifecycle_phase,omitempty"`
-	Name string `json:"name"`
-	TraitId NullableString `json:"trait_id,omitempty"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Name           string         `json:"name"`
+	TraitId        NullableString `json:"trait_id,omitempty"`
+	UpdatedAt      time.Time      `json:"updated_at"`
 }
 
 type _FeatureResponseData FeatureResponseData
@@ -138,6 +138,7 @@ func (o *FeatureResponseData) HasEventSubtype() bool {
 func (o *FeatureResponseData) SetEventSubtype(v string) {
 	o.EventSubtype.Set(&v)
 }
+
 // SetEventSubtypeNil sets the value for EventSubtype to be an explicit nil
 func (o *FeatureResponseData) SetEventSubtypeNil() {
 	o.EventSubtype.Set(nil)
@@ -228,6 +229,7 @@ func (o *FeatureResponseData) HasLifecyclePhase() bool {
 func (o *FeatureResponseData) SetLifecyclePhase(v string) {
 	o.LifecyclePhase.Set(&v)
 }
+
 // SetLifecyclePhaseNil sets the value for LifecyclePhase to be an explicit nil
 func (o *FeatureResponseData) SetLifecyclePhaseNil() {
 	o.LifecyclePhase.Set(nil)
@@ -294,6 +296,7 @@ func (o *FeatureResponseData) HasTraitId() bool {
 func (o *FeatureResponseData) SetTraitId(v string) {
 	o.TraitId.Set(&v)
 }
+
 // SetTraitIdNil sets the value for TraitId to be an explicit nil
 func (o *FeatureResponseData) SetTraitIdNil() {
 	o.TraitId.Set(nil)
@@ -329,7 +332,7 @@ func (o *FeatureResponseData) SetUpdatedAt(v time.Time) {
 }
 
 func (o FeatureResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -374,10 +377,10 @@ func (o *FeatureResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -433,5 +436,3 @@ func (v *NullableFeatureResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

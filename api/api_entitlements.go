@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 type EntitlementsAPI interface {
 
 	/*
-	CreateCompanyOverride Create company override
+		CreateCompanyOverride Create company override
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreateCompanyOverrideRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreateCompanyOverrideRequest
 	*/
 	CreateCompanyOverride(ctx context.Context) ApiCreateCompanyOverrideRequest
 
@@ -35,10 +34,10 @@ type EntitlementsAPI interface {
 	CreateCompanyOverrideExecute(r ApiCreateCompanyOverrideRequest) (*CreateCompanyOverrideResponse, *http.Response, error)
 
 	/*
-	CreatePlanEntitlement Create plan entitlement
+		CreatePlanEntitlement Create plan entitlement
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreatePlanEntitlementRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreatePlanEntitlementRequest
 	*/
 	CreatePlanEntitlement(ctx context.Context) ApiCreatePlanEntitlementRequest
 
@@ -47,11 +46,11 @@ type EntitlementsAPI interface {
 	CreatePlanEntitlementExecute(r ApiCreatePlanEntitlementRequest) (*CreatePlanEntitlementResponse, *http.Response, error)
 
 	/*
-	DeleteCompanyOverride Delete company override
+		DeleteCompanyOverride Delete company override
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param companyOverrideId company_override_id
-	@return ApiDeleteCompanyOverrideRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param companyOverrideId company_override_id
+		@return ApiDeleteCompanyOverrideRequest
 	*/
 	DeleteCompanyOverride(ctx context.Context, companyOverrideId string) ApiDeleteCompanyOverrideRequest
 
@@ -60,11 +59,11 @@ type EntitlementsAPI interface {
 	DeleteCompanyOverrideExecute(r ApiDeleteCompanyOverrideRequest) (*DeleteCompanyOverrideResponse, *http.Response, error)
 
 	/*
-	DeletePlanEntitlement Delete plan entitlement
+		DeletePlanEntitlement Delete plan entitlement
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param planEntitlementId plan_entitlement_id
-	@return ApiDeletePlanEntitlementRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param planEntitlementId plan_entitlement_id
+		@return ApiDeletePlanEntitlementRequest
 	*/
 	DeletePlanEntitlement(ctx context.Context, planEntitlementId string) ApiDeletePlanEntitlementRequest
 
@@ -73,11 +72,11 @@ type EntitlementsAPI interface {
 	DeletePlanEntitlementExecute(r ApiDeletePlanEntitlementRequest) (*DeletePlanEntitlementResponse, *http.Response, error)
 
 	/*
-	GetCompanyOverride Get company override
+		GetCompanyOverride Get company override
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param companyOverrideId company_override_id
-	@return ApiGetCompanyOverrideRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param companyOverrideId company_override_id
+		@return ApiGetCompanyOverrideRequest
 	*/
 	GetCompanyOverride(ctx context.Context, companyOverrideId string) ApiGetCompanyOverrideRequest
 
@@ -86,11 +85,11 @@ type EntitlementsAPI interface {
 	GetCompanyOverrideExecute(r ApiGetCompanyOverrideRequest) (*GetCompanyOverrideResponse, *http.Response, error)
 
 	/*
-	GetPlanEntitlement Get plan entitlement
+		GetPlanEntitlement Get plan entitlement
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param planEntitlementId plan_entitlement_id
-	@return ApiGetPlanEntitlementRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param planEntitlementId plan_entitlement_id
+		@return ApiGetPlanEntitlementRequest
 	*/
 	GetPlanEntitlement(ctx context.Context, planEntitlementId string) ApiGetPlanEntitlementRequest
 
@@ -99,10 +98,10 @@ type EntitlementsAPI interface {
 	GetPlanEntitlementExecute(r ApiGetPlanEntitlementRequest) (*GetPlanEntitlementResponse, *http.Response, error)
 
 	/*
-	ListCompanyOverrides List company overrides
+		ListCompanyOverrides List company overrides
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListCompanyOverridesRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListCompanyOverridesRequest
 	*/
 	ListCompanyOverrides(ctx context.Context) ApiListCompanyOverridesRequest
 
@@ -111,10 +110,10 @@ type EntitlementsAPI interface {
 	ListCompanyOverridesExecute(r ApiListCompanyOverridesRequest) (*ListCompanyOverridesResponse, *http.Response, error)
 
 	/*
-	ListPlanEntitlements List plan entitlements
+		ListPlanEntitlements List plan entitlements
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListPlanEntitlementsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListPlanEntitlementsRequest
 	*/
 	ListPlanEntitlements(ctx context.Context) ApiListPlanEntitlementsRequest
 
@@ -123,11 +122,11 @@ type EntitlementsAPI interface {
 	ListPlanEntitlementsExecute(r ApiListPlanEntitlementsRequest) (*ListPlanEntitlementsResponse, *http.Response, error)
 
 	/*
-	UpdateCompanyOverride Update company override
+		UpdateCompanyOverride Update company override
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param companyOverrideId company_override_id
-	@return ApiUpdateCompanyOverrideRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param companyOverrideId company_override_id
+		@return ApiUpdateCompanyOverrideRequest
 	*/
 	UpdateCompanyOverride(ctx context.Context, companyOverrideId string) ApiUpdateCompanyOverrideRequest
 
@@ -136,11 +135,11 @@ type EntitlementsAPI interface {
 	UpdateCompanyOverrideExecute(r ApiUpdateCompanyOverrideRequest) (*UpdateCompanyOverrideResponse, *http.Response, error)
 
 	/*
-	UpdatePlanEntitlement Update plan entitlement
+		UpdatePlanEntitlement Update plan entitlement
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param planEntitlementId plan_entitlement_id
-	@return ApiUpdatePlanEntitlementRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param planEntitlementId plan_entitlement_id
+		@return ApiUpdatePlanEntitlementRequest
 	*/
 	UpdatePlanEntitlement(ctx context.Context, planEntitlementId string) ApiUpdatePlanEntitlementRequest
 
@@ -153,8 +152,8 @@ type EntitlementsAPI interface {
 type EntitlementsAPIService service
 
 type ApiCreateCompanyOverrideRequest struct {
-	ctx context.Context
-	ApiService EntitlementsAPI
+	ctx                              context.Context
+	ApiService                       EntitlementsAPI
 	createCompanyOverrideRequestBody *CreateCompanyOverrideRequestBody
 }
 
@@ -170,24 +169,25 @@ func (r ApiCreateCompanyOverrideRequest) Execute() (*CreateCompanyOverrideRespon
 /*
 CreateCompanyOverride Create company override
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateCompanyOverrideRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreateCompanyOverrideRequest
 */
 func (a *EntitlementsAPIService) CreateCompanyOverride(ctx context.Context) ApiCreateCompanyOverrideRequest {
 	return ApiCreateCompanyOverrideRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreateCompanyOverrideResponse
+//
+//	@return CreateCompanyOverrideResponse
 func (a *EntitlementsAPIService) CreateCompanyOverrideExecute(r ApiCreateCompanyOverrideRequest) (*CreateCompanyOverrideResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateCompanyOverrideResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateCompanyOverrideResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.CreateCompanyOverride")
@@ -223,11 +223,11 @@ func (a *EntitlementsAPIService) CreateCompanyOverrideExecute(r ApiCreateCompany
 	}
 	// body params
 	localVarPostBody = r.createCompanyOverrideRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -237,14 +237,13 @@ func (a *EntitlementsAPIService) CreateCompanyOverrideExecute(r ApiCreateCompany
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -271,8 +270,8 @@ func (a *EntitlementsAPIService) CreateCompanyOverrideExecute(r ApiCreateCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -282,8 +281,8 @@ func (a *EntitlementsAPIService) CreateCompanyOverrideExecute(r ApiCreateCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -293,8 +292,8 @@ func (a *EntitlementsAPIService) CreateCompanyOverrideExecute(r ApiCreateCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -304,8 +303,8 @@ func (a *EntitlementsAPIService) CreateCompanyOverrideExecute(r ApiCreateCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -323,8 +322,8 @@ func (a *EntitlementsAPIService) CreateCompanyOverrideExecute(r ApiCreateCompany
 }
 
 type ApiCreatePlanEntitlementRequest struct {
-	ctx context.Context
-	ApiService EntitlementsAPI
+	ctx                              context.Context
+	ApiService                       EntitlementsAPI
 	createPlanEntitlementRequestBody *CreatePlanEntitlementRequestBody
 }
 
@@ -340,24 +339,25 @@ func (r ApiCreatePlanEntitlementRequest) Execute() (*CreatePlanEntitlementRespon
 /*
 CreatePlanEntitlement Create plan entitlement
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreatePlanEntitlementRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreatePlanEntitlementRequest
 */
 func (a *EntitlementsAPIService) CreatePlanEntitlement(ctx context.Context) ApiCreatePlanEntitlementRequest {
 	return ApiCreatePlanEntitlementRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreatePlanEntitlementResponse
+//
+//	@return CreatePlanEntitlementResponse
 func (a *EntitlementsAPIService) CreatePlanEntitlementExecute(r ApiCreatePlanEntitlementRequest) (*CreatePlanEntitlementResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreatePlanEntitlementResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreatePlanEntitlementResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.CreatePlanEntitlement")
@@ -393,11 +393,11 @@ func (a *EntitlementsAPIService) CreatePlanEntitlementExecute(r ApiCreatePlanEnt
 	}
 	// body params
 	localVarPostBody = r.createPlanEntitlementRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -407,14 +407,13 @@ func (a *EntitlementsAPIService) CreatePlanEntitlementExecute(r ApiCreatePlanEnt
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -441,8 +440,8 @@ func (a *EntitlementsAPIService) CreatePlanEntitlementExecute(r ApiCreatePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -452,8 +451,8 @@ func (a *EntitlementsAPIService) CreatePlanEntitlementExecute(r ApiCreatePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -463,8 +462,8 @@ func (a *EntitlementsAPIService) CreatePlanEntitlementExecute(r ApiCreatePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -474,8 +473,8 @@ func (a *EntitlementsAPIService) CreatePlanEntitlementExecute(r ApiCreatePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -493,8 +492,8 @@ func (a *EntitlementsAPIService) CreatePlanEntitlementExecute(r ApiCreatePlanEnt
 }
 
 type ApiDeleteCompanyOverrideRequest struct {
-	ctx context.Context
-	ApiService EntitlementsAPI
+	ctx               context.Context
+	ApiService        EntitlementsAPI
 	companyOverrideId string
 }
 
@@ -505,26 +504,27 @@ func (r ApiDeleteCompanyOverrideRequest) Execute() (*DeleteCompanyOverrideRespon
 /*
 DeleteCompanyOverride Delete company override
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param companyOverrideId company_override_id
- @return ApiDeleteCompanyOverrideRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param companyOverrideId company_override_id
+	@return ApiDeleteCompanyOverrideRequest
 */
 func (a *EntitlementsAPIService) DeleteCompanyOverride(ctx context.Context, companyOverrideId string) ApiDeleteCompanyOverrideRequest {
 	return ApiDeleteCompanyOverrideRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:        a,
+		ctx:               ctx,
 		companyOverrideId: companyOverrideId,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteCompanyOverrideResponse
+//
+//	@return DeleteCompanyOverrideResponse
 func (a *EntitlementsAPIService) DeleteCompanyOverrideExecute(r ApiDeleteCompanyOverrideRequest) (*DeleteCompanyOverrideResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteCompanyOverrideResponse
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteCompanyOverrideResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.DeleteCompanyOverride")
@@ -556,11 +556,11 @@ func (a *EntitlementsAPIService) DeleteCompanyOverrideExecute(r ApiDeleteCompany
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -570,14 +570,13 @@ func (a *EntitlementsAPIService) DeleteCompanyOverrideExecute(r ApiDeleteCompany
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -604,8 +603,8 @@ func (a *EntitlementsAPIService) DeleteCompanyOverrideExecute(r ApiDeleteCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -615,8 +614,8 @@ func (a *EntitlementsAPIService) DeleteCompanyOverrideExecute(r ApiDeleteCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -626,8 +625,8 @@ func (a *EntitlementsAPIService) DeleteCompanyOverrideExecute(r ApiDeleteCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -637,8 +636,8 @@ func (a *EntitlementsAPIService) DeleteCompanyOverrideExecute(r ApiDeleteCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -656,8 +655,8 @@ func (a *EntitlementsAPIService) DeleteCompanyOverrideExecute(r ApiDeleteCompany
 }
 
 type ApiDeletePlanEntitlementRequest struct {
-	ctx context.Context
-	ApiService EntitlementsAPI
+	ctx               context.Context
+	ApiService        EntitlementsAPI
 	planEntitlementId string
 }
 
@@ -668,26 +667,27 @@ func (r ApiDeletePlanEntitlementRequest) Execute() (*DeletePlanEntitlementRespon
 /*
 DeletePlanEntitlement Delete plan entitlement
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param planEntitlementId plan_entitlement_id
- @return ApiDeletePlanEntitlementRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param planEntitlementId plan_entitlement_id
+	@return ApiDeletePlanEntitlementRequest
 */
 func (a *EntitlementsAPIService) DeletePlanEntitlement(ctx context.Context, planEntitlementId string) ApiDeletePlanEntitlementRequest {
 	return ApiDeletePlanEntitlementRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:        a,
+		ctx:               ctx,
 		planEntitlementId: planEntitlementId,
 	}
 }
 
 // Execute executes the request
-//  @return DeletePlanEntitlementResponse
+//
+//	@return DeletePlanEntitlementResponse
 func (a *EntitlementsAPIService) DeletePlanEntitlementExecute(r ApiDeletePlanEntitlementRequest) (*DeletePlanEntitlementResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeletePlanEntitlementResponse
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeletePlanEntitlementResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.DeletePlanEntitlement")
@@ -719,11 +719,11 @@ func (a *EntitlementsAPIService) DeletePlanEntitlementExecute(r ApiDeletePlanEnt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -733,14 +733,13 @@ func (a *EntitlementsAPIService) DeletePlanEntitlementExecute(r ApiDeletePlanEnt
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -767,8 +766,8 @@ func (a *EntitlementsAPIService) DeletePlanEntitlementExecute(r ApiDeletePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -778,8 +777,8 @@ func (a *EntitlementsAPIService) DeletePlanEntitlementExecute(r ApiDeletePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -789,8 +788,8 @@ func (a *EntitlementsAPIService) DeletePlanEntitlementExecute(r ApiDeletePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -800,8 +799,8 @@ func (a *EntitlementsAPIService) DeletePlanEntitlementExecute(r ApiDeletePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -819,8 +818,8 @@ func (a *EntitlementsAPIService) DeletePlanEntitlementExecute(r ApiDeletePlanEnt
 }
 
 type ApiGetCompanyOverrideRequest struct {
-	ctx context.Context
-	ApiService EntitlementsAPI
+	ctx               context.Context
+	ApiService        EntitlementsAPI
 	companyOverrideId string
 }
 
@@ -831,26 +830,27 @@ func (r ApiGetCompanyOverrideRequest) Execute() (*GetCompanyOverrideResponse, *h
 /*
 GetCompanyOverride Get company override
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param companyOverrideId company_override_id
- @return ApiGetCompanyOverrideRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param companyOverrideId company_override_id
+	@return ApiGetCompanyOverrideRequest
 */
 func (a *EntitlementsAPIService) GetCompanyOverride(ctx context.Context, companyOverrideId string) ApiGetCompanyOverrideRequest {
 	return ApiGetCompanyOverrideRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:        a,
+		ctx:               ctx,
 		companyOverrideId: companyOverrideId,
 	}
 }
 
 // Execute executes the request
-//  @return GetCompanyOverrideResponse
+//
+//	@return GetCompanyOverrideResponse
 func (a *EntitlementsAPIService) GetCompanyOverrideExecute(r ApiGetCompanyOverrideRequest) (*GetCompanyOverrideResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetCompanyOverrideResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetCompanyOverrideResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.GetCompanyOverride")
@@ -882,11 +882,11 @@ func (a *EntitlementsAPIService) GetCompanyOverrideExecute(r ApiGetCompanyOverri
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -896,14 +896,13 @@ func (a *EntitlementsAPIService) GetCompanyOverrideExecute(r ApiGetCompanyOverri
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -930,8 +929,8 @@ func (a *EntitlementsAPIService) GetCompanyOverrideExecute(r ApiGetCompanyOverri
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -941,8 +940,8 @@ func (a *EntitlementsAPIService) GetCompanyOverrideExecute(r ApiGetCompanyOverri
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -952,8 +951,8 @@ func (a *EntitlementsAPIService) GetCompanyOverrideExecute(r ApiGetCompanyOverri
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -963,8 +962,8 @@ func (a *EntitlementsAPIService) GetCompanyOverrideExecute(r ApiGetCompanyOverri
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -982,8 +981,8 @@ func (a *EntitlementsAPIService) GetCompanyOverrideExecute(r ApiGetCompanyOverri
 }
 
 type ApiGetPlanEntitlementRequest struct {
-	ctx context.Context
-	ApiService EntitlementsAPI
+	ctx               context.Context
+	ApiService        EntitlementsAPI
 	planEntitlementId string
 }
 
@@ -994,26 +993,27 @@ func (r ApiGetPlanEntitlementRequest) Execute() (*GetPlanEntitlementResponse, *h
 /*
 GetPlanEntitlement Get plan entitlement
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param planEntitlementId plan_entitlement_id
- @return ApiGetPlanEntitlementRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param planEntitlementId plan_entitlement_id
+	@return ApiGetPlanEntitlementRequest
 */
 func (a *EntitlementsAPIService) GetPlanEntitlement(ctx context.Context, planEntitlementId string) ApiGetPlanEntitlementRequest {
 	return ApiGetPlanEntitlementRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:        a,
+		ctx:               ctx,
 		planEntitlementId: planEntitlementId,
 	}
 }
 
 // Execute executes the request
-//  @return GetPlanEntitlementResponse
+//
+//	@return GetPlanEntitlementResponse
 func (a *EntitlementsAPIService) GetPlanEntitlementExecute(r ApiGetPlanEntitlementRequest) (*GetPlanEntitlementResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetPlanEntitlementResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetPlanEntitlementResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.GetPlanEntitlement")
@@ -1045,11 +1045,11 @@ func (a *EntitlementsAPIService) GetPlanEntitlementExecute(r ApiGetPlanEntitleme
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1059,14 +1059,13 @@ func (a *EntitlementsAPIService) GetPlanEntitlementExecute(r ApiGetPlanEntitleme
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1093,8 +1092,8 @@ func (a *EntitlementsAPIService) GetPlanEntitlementExecute(r ApiGetPlanEntitleme
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1104,8 +1103,8 @@ func (a *EntitlementsAPIService) GetPlanEntitlementExecute(r ApiGetPlanEntitleme
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1115,8 +1114,8 @@ func (a *EntitlementsAPIService) GetPlanEntitlementExecute(r ApiGetPlanEntitleme
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1126,8 +1125,8 @@ func (a *EntitlementsAPIService) GetPlanEntitlementExecute(r ApiGetPlanEntitleme
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1145,12 +1144,12 @@ func (a *EntitlementsAPIService) GetPlanEntitlementExecute(r ApiGetPlanEntitleme
 }
 
 type ApiListCompanyOverridesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService EntitlementsAPI
-	companyId *string
-	featureId *string
-	limit *int32
-	offset *int32
+	companyId  *string
+	featureId  *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiListCompanyOverridesRequest) CompanyId(companyId string) ApiListCompanyOverridesRequest {
@@ -1182,24 +1181,25 @@ func (r ApiListCompanyOverridesRequest) Execute() (*ListCompanyOverridesResponse
 /*
 ListCompanyOverrides List company overrides
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListCompanyOverridesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListCompanyOverridesRequest
 */
 func (a *EntitlementsAPIService) ListCompanyOverrides(ctx context.Context) ApiListCompanyOverridesRequest {
 	return ApiListCompanyOverridesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListCompanyOverridesResponse
+//
+//	@return ListCompanyOverridesResponse
 func (a *EntitlementsAPIService) ListCompanyOverridesExecute(r ApiListCompanyOverridesRequest) (*ListCompanyOverridesResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListCompanyOverridesResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListCompanyOverridesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.ListCompanyOverrides")
@@ -1242,11 +1242,11 @@ func (a *EntitlementsAPIService) ListCompanyOverridesExecute(r ApiListCompanyOve
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1256,14 +1256,13 @@ func (a *EntitlementsAPIService) ListCompanyOverridesExecute(r ApiListCompanyOve
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1290,8 +1289,8 @@ func (a *EntitlementsAPIService) ListCompanyOverridesExecute(r ApiListCompanyOve
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1301,8 +1300,8 @@ func (a *EntitlementsAPIService) ListCompanyOverridesExecute(r ApiListCompanyOve
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1312,8 +1311,8 @@ func (a *EntitlementsAPIService) ListCompanyOverridesExecute(r ApiListCompanyOve
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1323,8 +1322,8 @@ func (a *EntitlementsAPIService) ListCompanyOverridesExecute(r ApiListCompanyOve
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1342,12 +1341,12 @@ func (a *EntitlementsAPIService) ListCompanyOverridesExecute(r ApiListCompanyOve
 }
 
 type ApiListPlanEntitlementsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService EntitlementsAPI
-	planId *string
-	featureId *string
-	limit *int32
-	offset *int32
+	planId     *string
+	featureId  *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiListPlanEntitlementsRequest) PlanId(planId string) ApiListPlanEntitlementsRequest {
@@ -1379,24 +1378,25 @@ func (r ApiListPlanEntitlementsRequest) Execute() (*ListPlanEntitlementsResponse
 /*
 ListPlanEntitlements List plan entitlements
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListPlanEntitlementsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListPlanEntitlementsRequest
 */
 func (a *EntitlementsAPIService) ListPlanEntitlements(ctx context.Context) ApiListPlanEntitlementsRequest {
 	return ApiListPlanEntitlementsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListPlanEntitlementsResponse
+//
+//	@return ListPlanEntitlementsResponse
 func (a *EntitlementsAPIService) ListPlanEntitlementsExecute(r ApiListPlanEntitlementsRequest) (*ListPlanEntitlementsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListPlanEntitlementsResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListPlanEntitlementsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.ListPlanEntitlements")
@@ -1439,11 +1439,11 @@ func (a *EntitlementsAPIService) ListPlanEntitlementsExecute(r ApiListPlanEntitl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1453,14 +1453,13 @@ func (a *EntitlementsAPIService) ListPlanEntitlementsExecute(r ApiListPlanEntitl
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1487,8 +1486,8 @@ func (a *EntitlementsAPIService) ListPlanEntitlementsExecute(r ApiListPlanEntitl
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1498,8 +1497,8 @@ func (a *EntitlementsAPIService) ListPlanEntitlementsExecute(r ApiListPlanEntitl
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1509,8 +1508,8 @@ func (a *EntitlementsAPIService) ListPlanEntitlementsExecute(r ApiListPlanEntitl
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1520,8 +1519,8 @@ func (a *EntitlementsAPIService) ListPlanEntitlementsExecute(r ApiListPlanEntitl
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1539,9 +1538,9 @@ func (a *EntitlementsAPIService) ListPlanEntitlementsExecute(r ApiListPlanEntitl
 }
 
 type ApiUpdateCompanyOverrideRequest struct {
-	ctx context.Context
-	ApiService EntitlementsAPI
-	companyOverrideId string
+	ctx                              context.Context
+	ApiService                       EntitlementsAPI
+	companyOverrideId                string
 	updateCompanyOverrideRequestBody *UpdateCompanyOverrideRequestBody
 }
 
@@ -1557,26 +1556,27 @@ func (r ApiUpdateCompanyOverrideRequest) Execute() (*UpdateCompanyOverrideRespon
 /*
 UpdateCompanyOverride Update company override
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param companyOverrideId company_override_id
- @return ApiUpdateCompanyOverrideRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param companyOverrideId company_override_id
+	@return ApiUpdateCompanyOverrideRequest
 */
 func (a *EntitlementsAPIService) UpdateCompanyOverride(ctx context.Context, companyOverrideId string) ApiUpdateCompanyOverrideRequest {
 	return ApiUpdateCompanyOverrideRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:        a,
+		ctx:               ctx,
 		companyOverrideId: companyOverrideId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdateCompanyOverrideResponse
+//
+//	@return UpdateCompanyOverrideResponse
 func (a *EntitlementsAPIService) UpdateCompanyOverrideExecute(r ApiUpdateCompanyOverrideRequest) (*UpdateCompanyOverrideResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpdateCompanyOverrideResponse
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpdateCompanyOverrideResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.UpdateCompanyOverride")
@@ -1613,11 +1613,11 @@ func (a *EntitlementsAPIService) UpdateCompanyOverrideExecute(r ApiUpdateCompany
 	}
 	// body params
 	localVarPostBody = r.updateCompanyOverrideRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1627,14 +1627,13 @@ func (a *EntitlementsAPIService) UpdateCompanyOverrideExecute(r ApiUpdateCompany
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1661,8 +1660,8 @@ func (a *EntitlementsAPIService) UpdateCompanyOverrideExecute(r ApiUpdateCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1672,8 +1671,8 @@ func (a *EntitlementsAPIService) UpdateCompanyOverrideExecute(r ApiUpdateCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1683,8 +1682,8 @@ func (a *EntitlementsAPIService) UpdateCompanyOverrideExecute(r ApiUpdateCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1694,8 +1693,8 @@ func (a *EntitlementsAPIService) UpdateCompanyOverrideExecute(r ApiUpdateCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1705,8 +1704,8 @@ func (a *EntitlementsAPIService) UpdateCompanyOverrideExecute(r ApiUpdateCompany
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1724,9 +1723,9 @@ func (a *EntitlementsAPIService) UpdateCompanyOverrideExecute(r ApiUpdateCompany
 }
 
 type ApiUpdatePlanEntitlementRequest struct {
-	ctx context.Context
-	ApiService EntitlementsAPI
-	planEntitlementId string
+	ctx                              context.Context
+	ApiService                       EntitlementsAPI
+	planEntitlementId                string
 	updatePlanEntitlementRequestBody *UpdatePlanEntitlementRequestBody
 }
 
@@ -1742,26 +1741,27 @@ func (r ApiUpdatePlanEntitlementRequest) Execute() (*UpdatePlanEntitlementRespon
 /*
 UpdatePlanEntitlement Update plan entitlement
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param planEntitlementId plan_entitlement_id
- @return ApiUpdatePlanEntitlementRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param planEntitlementId plan_entitlement_id
+	@return ApiUpdatePlanEntitlementRequest
 */
 func (a *EntitlementsAPIService) UpdatePlanEntitlement(ctx context.Context, planEntitlementId string) ApiUpdatePlanEntitlementRequest {
 	return ApiUpdatePlanEntitlementRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:        a,
+		ctx:               ctx,
 		planEntitlementId: planEntitlementId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdatePlanEntitlementResponse
+//
+//	@return UpdatePlanEntitlementResponse
 func (a *EntitlementsAPIService) UpdatePlanEntitlementExecute(r ApiUpdatePlanEntitlementRequest) (*UpdatePlanEntitlementResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpdatePlanEntitlementResponse
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpdatePlanEntitlementResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EntitlementsAPIService.UpdatePlanEntitlement")
@@ -1798,11 +1798,11 @@ func (a *EntitlementsAPIService) UpdatePlanEntitlementExecute(r ApiUpdatePlanEnt
 	}
 	// body params
 	localVarPostBody = r.updatePlanEntitlementRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1812,14 +1812,13 @@ func (a *EntitlementsAPIService) UpdatePlanEntitlementExecute(r ApiUpdatePlanEnt
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1846,8 +1845,8 @@ func (a *EntitlementsAPIService) UpdatePlanEntitlementExecute(r ApiUpdatePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1857,8 +1856,8 @@ func (a *EntitlementsAPIService) UpdatePlanEntitlementExecute(r ApiUpdatePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1868,8 +1867,8 @@ func (a *EntitlementsAPIService) UpdatePlanEntitlementExecute(r ApiUpdatePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1879,8 +1878,8 @@ func (a *EntitlementsAPIService) UpdatePlanEntitlementExecute(r ApiUpdatePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1890,8 +1889,8 @@ func (a *EntitlementsAPIService) UpdatePlanEntitlementExecute(r ApiUpdatePlanEnt
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

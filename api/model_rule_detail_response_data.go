@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the RuleDetailResponseData type satisfies the MappedNullable interface at compile time
@@ -23,17 +23,17 @@ var _ MappedNullable = &RuleDetailResponseData{}
 // RuleDetailResponseData struct for RuleDetailResponseData
 type RuleDetailResponseData struct {
 	ConditionGroups []RuleConditionGroupDetailResponseData `json:"condition_groups"`
-	Conditions []RuleConditionResponseData `json:"conditions"`
-	CreatedAt time.Time `json:"created_at"`
-	EnvironmentId string `json:"environment_id"`
-	FlagId NullableString `json:"flag_id,omitempty"`
-	Id string `json:"id"`
-	Name string `json:"name"`
-	PlanId NullableString `json:"plan_id,omitempty"`
-	Priority int32 `json:"priority"`
-	RuleType string `json:"rule_type"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Value bool `json:"value"`
+	Conditions      []RuleConditionResponseData            `json:"conditions"`
+	CreatedAt       time.Time                              `json:"created_at"`
+	EnvironmentId   string                                 `json:"environment_id"`
+	FlagId          NullableString                         `json:"flag_id,omitempty"`
+	Id              string                                 `json:"id"`
+	Name            string                                 `json:"name"`
+	PlanId          NullableString                         `json:"plan_id,omitempty"`
+	Priority        int32                                  `json:"priority"`
+	RuleType        string                                 `json:"rule_type"`
+	UpdatedAt       time.Time                              `json:"updated_at"`
+	Value           bool                                   `json:"value"`
 }
 
 type _RuleDetailResponseData RuleDetailResponseData
@@ -193,6 +193,7 @@ func (o *RuleDetailResponseData) HasFlagId() bool {
 func (o *RuleDetailResponseData) SetFlagId(v string) {
 	o.FlagId.Set(&v)
 }
+
 // SetFlagIdNil sets the value for FlagId to be an explicit nil
 func (o *RuleDetailResponseData) SetFlagIdNil() {
 	o.FlagId.Set(nil)
@@ -283,6 +284,7 @@ func (o *RuleDetailResponseData) HasPlanId() bool {
 func (o *RuleDetailResponseData) SetPlanId(v string) {
 	o.PlanId.Set(&v)
 }
+
 // SetPlanIdNil sets the value for PlanId to be an explicit nil
 func (o *RuleDetailResponseData) SetPlanIdNil() {
 	o.PlanId.Set(nil)
@@ -390,7 +392,7 @@ func (o *RuleDetailResponseData) SetValue(v bool) {
 }
 
 func (o RuleDetailResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -440,10 +442,10 @@ func (o *RuleDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -499,5 +501,3 @@ func (v *NullableRuleDetailResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

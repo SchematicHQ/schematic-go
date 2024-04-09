@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the MetricCountsHourlyResponseData type satisfies the MappedNullable interface at compile time
@@ -22,13 +22,13 @@ var _ MappedNullable = &MetricCountsHourlyResponseData{}
 
 // MetricCountsHourlyResponseData struct for MetricCountsHourlyResponseData
 type MetricCountsHourlyResponseData struct {
-	CompanyId NullableString `json:"company_id,omitempty"`
-	CreatedAt time.Time `json:"created_at"`
-	EnvironmentId string `json:"environment_id"`
-	EventSubtype string `json:"event_subtype"`
-	StartTime time.Time `json:"start_time"`
-	UserId NullableString `json:"user_id,omitempty"`
-	Value int32 `json:"value"`
+	CompanyId     NullableString `json:"company_id,omitempty"`
+	CreatedAt     time.Time      `json:"created_at"`
+	EnvironmentId string         `json:"environment_id"`
+	EventSubtype  string         `json:"event_subtype"`
+	StartTime     time.Time      `json:"start_time"`
+	UserId        NullableString `json:"user_id,omitempty"`
+	Value         int32          `json:"value"`
 }
 
 type _MetricCountsHourlyResponseData MetricCountsHourlyResponseData
@@ -87,6 +87,7 @@ func (o *MetricCountsHourlyResponseData) HasCompanyId() bool {
 func (o *MetricCountsHourlyResponseData) SetCompanyId(v string) {
 	o.CompanyId.Set(&v)
 }
+
 // SetCompanyIdNil sets the value for CompanyId to be an explicit nil
 func (o *MetricCountsHourlyResponseData) SetCompanyIdNil() {
 	o.CompanyId.Set(nil)
@@ -225,6 +226,7 @@ func (o *MetricCountsHourlyResponseData) HasUserId() bool {
 func (o *MetricCountsHourlyResponseData) SetUserId(v string) {
 	o.UserId.Set(&v)
 }
+
 // SetUserIdNil sets the value for UserId to be an explicit nil
 func (o *MetricCountsHourlyResponseData) SetUserIdNil() {
 	o.UserId.Set(nil)
@@ -260,7 +262,7 @@ func (o *MetricCountsHourlyResponseData) SetValue(v int32) {
 }
 
 func (o MetricCountsHourlyResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -300,10 +302,10 @@ func (o *MetricCountsHourlyResponseData) UnmarshalJSON(data []byte) (err error) 
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -359,5 +361,3 @@ func (v *NullableMetricCountsHourlyResponseData) UnmarshalJSON(src []byte) error
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

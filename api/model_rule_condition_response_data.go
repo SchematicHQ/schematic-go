@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the RuleConditionResponseData type satisfies the MappedNullable interface at compile time
@@ -23,23 +23,23 @@ var _ MappedNullable = &RuleConditionResponseData{}
 // RuleConditionResponseData struct for RuleConditionResponseData
 type RuleConditionResponseData struct {
 	ComparisonTraitId NullableString `json:"comparison_trait_id,omitempty"`
-	ConditionGroupId NullableString `json:"condition_group_id,omitempty"`
-	ConditionType string `json:"condition_type"`
-	CreatedAt time.Time `json:"created_at"`
-	EnvironmentId string `json:"environment_id"`
-	EventSubtype NullableString `json:"event_subtype,omitempty"`
-	FlagId NullableString `json:"flag_id,omitempty"`
-	Id string `json:"id"`
-	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	MetricValue int32 `json:"metric_value"`
-	Operator string `json:"operator"`
-	PlanId NullableString `json:"plan_id,omitempty"`
-	ResourceIds []string `json:"resource_ids"`
-	RuleId string `json:"rule_id"`
-	TraitEntityType NullableString `json:"trait_entity_type,omitempty"`
-	TraitId NullableString `json:"trait_id,omitempty"`
-	TraitValue string `json:"trait_value"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ConditionGroupId  NullableString `json:"condition_group_id,omitempty"`
+	ConditionType     string         `json:"condition_type"`
+	CreatedAt         time.Time      `json:"created_at"`
+	EnvironmentId     string         `json:"environment_id"`
+	EventSubtype      NullableString `json:"event_subtype,omitempty"`
+	FlagId            NullableString `json:"flag_id,omitempty"`
+	Id                string         `json:"id"`
+	MetricPeriod      NullableString `json:"metric_period,omitempty"`
+	MetricValue       int32          `json:"metric_value"`
+	Operator          string         `json:"operator"`
+	PlanId            NullableString `json:"plan_id,omitempty"`
+	ResourceIds       []string       `json:"resource_ids"`
+	RuleId            string         `json:"rule_id"`
+	TraitEntityType   NullableString `json:"trait_entity_type,omitempty"`
+	TraitId           NullableString `json:"trait_id,omitempty"`
+	TraitValue        string         `json:"trait_value"`
+	UpdatedAt         time.Time      `json:"updated_at"`
 }
 
 type _RuleConditionResponseData RuleConditionResponseData
@@ -103,6 +103,7 @@ func (o *RuleConditionResponseData) HasComparisonTraitId() bool {
 func (o *RuleConditionResponseData) SetComparisonTraitId(v string) {
 	o.ComparisonTraitId.Set(&v)
 }
+
 // SetComparisonTraitIdNil sets the value for ComparisonTraitId to be an explicit nil
 func (o *RuleConditionResponseData) SetComparisonTraitIdNil() {
 	o.ComparisonTraitId.Set(nil)
@@ -145,6 +146,7 @@ func (o *RuleConditionResponseData) HasConditionGroupId() bool {
 func (o *RuleConditionResponseData) SetConditionGroupId(v string) {
 	o.ConditionGroupId.Set(&v)
 }
+
 // SetConditionGroupIdNil sets the value for ConditionGroupId to be an explicit nil
 func (o *RuleConditionResponseData) SetConditionGroupIdNil() {
 	o.ConditionGroupId.Set(nil)
@@ -259,6 +261,7 @@ func (o *RuleConditionResponseData) HasEventSubtype() bool {
 func (o *RuleConditionResponseData) SetEventSubtype(v string) {
 	o.EventSubtype.Set(&v)
 }
+
 // SetEventSubtypeNil sets the value for EventSubtype to be an explicit nil
 func (o *RuleConditionResponseData) SetEventSubtypeNil() {
 	o.EventSubtype.Set(nil)
@@ -301,6 +304,7 @@ func (o *RuleConditionResponseData) HasFlagId() bool {
 func (o *RuleConditionResponseData) SetFlagId(v string) {
 	o.FlagId.Set(&v)
 }
+
 // SetFlagIdNil sets the value for FlagId to be an explicit nil
 func (o *RuleConditionResponseData) SetFlagIdNil() {
 	o.FlagId.Set(nil)
@@ -367,6 +371,7 @@ func (o *RuleConditionResponseData) HasMetricPeriod() bool {
 func (o *RuleConditionResponseData) SetMetricPeriod(v string) {
 	o.MetricPeriod.Set(&v)
 }
+
 // SetMetricPeriodNil sets the value for MetricPeriod to be an explicit nil
 func (o *RuleConditionResponseData) SetMetricPeriodNil() {
 	o.MetricPeriod.Set(nil)
@@ -457,6 +462,7 @@ func (o *RuleConditionResponseData) HasPlanId() bool {
 func (o *RuleConditionResponseData) SetPlanId(v string) {
 	o.PlanId.Set(&v)
 }
+
 // SetPlanIdNil sets the value for PlanId to be an explicit nil
 func (o *RuleConditionResponseData) SetPlanIdNil() {
 	o.PlanId.Set(nil)
@@ -547,6 +553,7 @@ func (o *RuleConditionResponseData) HasTraitEntityType() bool {
 func (o *RuleConditionResponseData) SetTraitEntityType(v string) {
 	o.TraitEntityType.Set(&v)
 }
+
 // SetTraitEntityTypeNil sets the value for TraitEntityType to be an explicit nil
 func (o *RuleConditionResponseData) SetTraitEntityTypeNil() {
 	o.TraitEntityType.Set(nil)
@@ -589,6 +596,7 @@ func (o *RuleConditionResponseData) HasTraitId() bool {
 func (o *RuleConditionResponseData) SetTraitId(v string) {
 	o.TraitId.Set(&v)
 }
+
 // SetTraitIdNil sets the value for TraitId to be an explicit nil
 func (o *RuleConditionResponseData) SetTraitIdNil() {
 	o.TraitId.Set(nil)
@@ -648,7 +656,7 @@ func (o *RuleConditionResponseData) SetUpdatedAt(v time.Time) {
 }
 
 func (o RuleConditionResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -716,10 +724,10 @@ func (o *RuleConditionResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -775,5 +783,3 @@ func (v *NullableRuleConditionResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

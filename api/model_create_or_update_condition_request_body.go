@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -23,15 +23,15 @@ var _ MappedNullable = &CreateOrUpdateConditionRequestBody{}
 type CreateOrUpdateConditionRequestBody struct {
 	// Optionally provide a trait ID to compare a metric or trait value against instead of a value
 	ComparisonTraitId NullableString `json:"comparison_trait_id,omitempty"`
-	ConditionType string `json:"condition_type"`
+	ConditionType     string         `json:"condition_type"`
 	// Name of track event type used to measure this condition
 	EventSubtype NullableString `json:"event_subtype,omitempty"`
-	Id NullableString `json:"id,omitempty"`
+	Id           NullableString `json:"id,omitempty"`
 	// Period of time over which to measure the track event metric
 	MetricPeriod NullableString `json:"metric_period,omitempty"`
 	// Value to compare the track event metric against
-	MetricValue int32 `json:"metric_value"`
-	Operator string `json:"operator"`
+	MetricValue int32  `json:"metric_value"`
+	Operator    string `json:"operator"`
 	// List of resource IDs (companies, users, or plans) targeted by this condition
 	ResourceIds []string `json:"resource_ids"`
 	// ID of trait to use to measure this condition
@@ -95,6 +95,7 @@ func (o *CreateOrUpdateConditionRequestBody) HasComparisonTraitId() bool {
 func (o *CreateOrUpdateConditionRequestBody) SetComparisonTraitId(v string) {
 	o.ComparisonTraitId.Set(&v)
 }
+
 // SetComparisonTraitIdNil sets the value for ComparisonTraitId to be an explicit nil
 func (o *CreateOrUpdateConditionRequestBody) SetComparisonTraitIdNil() {
 	o.ComparisonTraitId.Set(nil)
@@ -161,6 +162,7 @@ func (o *CreateOrUpdateConditionRequestBody) HasEventSubtype() bool {
 func (o *CreateOrUpdateConditionRequestBody) SetEventSubtype(v string) {
 	o.EventSubtype.Set(&v)
 }
+
 // SetEventSubtypeNil sets the value for EventSubtype to be an explicit nil
 func (o *CreateOrUpdateConditionRequestBody) SetEventSubtypeNil() {
 	o.EventSubtype.Set(nil)
@@ -203,6 +205,7 @@ func (o *CreateOrUpdateConditionRequestBody) HasId() bool {
 func (o *CreateOrUpdateConditionRequestBody) SetId(v string) {
 	o.Id.Set(&v)
 }
+
 // SetIdNil sets the value for Id to be an explicit nil
 func (o *CreateOrUpdateConditionRequestBody) SetIdNil() {
 	o.Id.Set(nil)
@@ -245,6 +248,7 @@ func (o *CreateOrUpdateConditionRequestBody) HasMetricPeriod() bool {
 func (o *CreateOrUpdateConditionRequestBody) SetMetricPeriod(v string) {
 	o.MetricPeriod.Set(&v)
 }
+
 // SetMetricPeriodNil sets the value for MetricPeriod to be an explicit nil
 func (o *CreateOrUpdateConditionRequestBody) SetMetricPeriodNil() {
 	o.MetricPeriod.Set(nil)
@@ -359,6 +363,7 @@ func (o *CreateOrUpdateConditionRequestBody) HasTraitId() bool {
 func (o *CreateOrUpdateConditionRequestBody) SetTraitId(v string) {
 	o.TraitId.Set(&v)
 }
+
 // SetTraitIdNil sets the value for TraitId to be an explicit nil
 func (o *CreateOrUpdateConditionRequestBody) SetTraitIdNil() {
 	o.TraitId.Set(nil)
@@ -401,6 +406,7 @@ func (o *CreateOrUpdateConditionRequestBody) HasTraitValue() bool {
 func (o *CreateOrUpdateConditionRequestBody) SetTraitValue(v string) {
 	o.TraitValue.Set(&v)
 }
+
 // SetTraitValueNil sets the value for TraitValue to be an explicit nil
 func (o *CreateOrUpdateConditionRequestBody) SetTraitValueNil() {
 	o.TraitValue.Set(nil)
@@ -412,7 +418,7 @@ func (o *CreateOrUpdateConditionRequestBody) UnsetTraitValue() {
 }
 
 func (o CreateOrUpdateConditionRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -462,10 +468,10 @@ func (o *CreateOrUpdateConditionRequestBody) UnmarshalJSON(data []byte) (err err
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -521,5 +527,3 @@ func (v *NullableCreateOrUpdateConditionRequestBody) UnmarshalJSON(src []byte) e
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,13 +21,13 @@ var _ MappedNullable = &CreateCompanyOverrideRequestBody{}
 
 // CreateCompanyOverrideRequestBody struct for CreateCompanyOverrideRequestBody
 type CreateCompanyOverrideRequestBody struct {
-	CompanyId string `json:"company_id"`
-	FeatureId string `json:"feature_id"`
+	CompanyId    string         `json:"company_id"`
+	FeatureId    string         `json:"feature_id"`
 	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	ValueBool NullableBool `json:"value_bool,omitempty"`
-	ValueNumeric NullableInt32 `json:"value_numeric,omitempty"`
+	ValueBool    NullableBool   `json:"value_bool,omitempty"`
+	ValueNumeric NullableInt32  `json:"value_numeric,omitempty"`
 	ValueTraitId NullableString `json:"value_trait_id,omitempty"`
-	ValueType string `json:"value_type"`
+	ValueType    string         `json:"value_type"`
 }
 
 type _CreateCompanyOverrideRequestBody CreateCompanyOverrideRequestBody
@@ -132,6 +132,7 @@ func (o *CreateCompanyOverrideRequestBody) HasMetricPeriod() bool {
 func (o *CreateCompanyOverrideRequestBody) SetMetricPeriod(v string) {
 	o.MetricPeriod.Set(&v)
 }
+
 // SetMetricPeriodNil sets the value for MetricPeriod to be an explicit nil
 func (o *CreateCompanyOverrideRequestBody) SetMetricPeriodNil() {
 	o.MetricPeriod.Set(nil)
@@ -174,6 +175,7 @@ func (o *CreateCompanyOverrideRequestBody) HasValueBool() bool {
 func (o *CreateCompanyOverrideRequestBody) SetValueBool(v bool) {
 	o.ValueBool.Set(&v)
 }
+
 // SetValueBoolNil sets the value for ValueBool to be an explicit nil
 func (o *CreateCompanyOverrideRequestBody) SetValueBoolNil() {
 	o.ValueBool.Set(nil)
@@ -216,6 +218,7 @@ func (o *CreateCompanyOverrideRequestBody) HasValueNumeric() bool {
 func (o *CreateCompanyOverrideRequestBody) SetValueNumeric(v int32) {
 	o.ValueNumeric.Set(&v)
 }
+
 // SetValueNumericNil sets the value for ValueNumeric to be an explicit nil
 func (o *CreateCompanyOverrideRequestBody) SetValueNumericNil() {
 	o.ValueNumeric.Set(nil)
@@ -258,6 +261,7 @@ func (o *CreateCompanyOverrideRequestBody) HasValueTraitId() bool {
 func (o *CreateCompanyOverrideRequestBody) SetValueTraitId(v string) {
 	o.ValueTraitId.Set(&v)
 }
+
 // SetValueTraitIdNil sets the value for ValueTraitId to be an explicit nil
 func (o *CreateCompanyOverrideRequestBody) SetValueTraitIdNil() {
 	o.ValueTraitId.Set(nil)
@@ -293,7 +297,7 @@ func (o *CreateCompanyOverrideRequestBody) SetValueType(v string) {
 }
 
 func (o CreateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -335,10 +339,10 @@ func (o *CreateCompanyOverrideRequestBody) UnmarshalJSON(data []byte) (err error
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -394,5 +398,3 @@ func (v *NullableCreateCompanyOverrideRequestBody) UnmarshalJSON(src []byte) err
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the PlanEntitlementResponseData type satisfies the MappedNullable interface at compile time
@@ -22,20 +22,20 @@ var _ MappedNullable = &PlanEntitlementResponseData{}
 
 // PlanEntitlementResponseData The updated resource
 type PlanEntitlementResponseData struct {
-	CreatedAt time.Time `json:"created_at"`
-	EnvironmentId string `json:"environment_id"`
-	Feature *FeatureResponseData `json:"feature,omitempty"`
-	FeatureId string `json:"feature_id"`
-	Id string `json:"id"`
-	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	Plan *PlanResponseData `json:"plan,omitempty"`
-	PlanId string `json:"plan_id"`
-	RuleId string `json:"rule_id"`
-	UpdatedAt time.Time `json:"updated_at"`
-	ValueBool NullableBool `json:"value_bool,omitempty"`
-	ValueNumeric NullableInt32 `json:"value_numeric,omitempty"`
-	ValueTraitId NullableString `json:"value_trait_id,omitempty"`
-	ValueType string `json:"value_type"`
+	CreatedAt     time.Time            `json:"created_at"`
+	EnvironmentId string               `json:"environment_id"`
+	Feature       *FeatureResponseData `json:"feature,omitempty"`
+	FeatureId     string               `json:"feature_id"`
+	Id            string               `json:"id"`
+	MetricPeriod  NullableString       `json:"metric_period,omitempty"`
+	Plan          *PlanResponseData    `json:"plan,omitempty"`
+	PlanId        string               `json:"plan_id"`
+	RuleId        string               `json:"rule_id"`
+	UpdatedAt     time.Time            `json:"updated_at"`
+	ValueBool     NullableBool         `json:"value_bool,omitempty"`
+	ValueNumeric  NullableInt32        `json:"value_numeric,omitempty"`
+	ValueTraitId  NullableString       `json:"value_trait_id,omitempty"`
+	ValueType     string               `json:"value_type"`
 }
 
 type _PlanEntitlementResponseData PlanEntitlementResponseData
@@ -225,6 +225,7 @@ func (o *PlanEntitlementResponseData) HasMetricPeriod() bool {
 func (o *PlanEntitlementResponseData) SetMetricPeriod(v string) {
 	o.MetricPeriod.Set(&v)
 }
+
 // SetMetricPeriodNil sets the value for MetricPeriod to be an explicit nil
 func (o *PlanEntitlementResponseData) SetMetricPeriodNil() {
 	o.MetricPeriod.Set(nil)
@@ -371,6 +372,7 @@ func (o *PlanEntitlementResponseData) HasValueBool() bool {
 func (o *PlanEntitlementResponseData) SetValueBool(v bool) {
 	o.ValueBool.Set(&v)
 }
+
 // SetValueBoolNil sets the value for ValueBool to be an explicit nil
 func (o *PlanEntitlementResponseData) SetValueBoolNil() {
 	o.ValueBool.Set(nil)
@@ -413,6 +415,7 @@ func (o *PlanEntitlementResponseData) HasValueNumeric() bool {
 func (o *PlanEntitlementResponseData) SetValueNumeric(v int32) {
 	o.ValueNumeric.Set(&v)
 }
+
 // SetValueNumericNil sets the value for ValueNumeric to be an explicit nil
 func (o *PlanEntitlementResponseData) SetValueNumericNil() {
 	o.ValueNumeric.Set(nil)
@@ -455,6 +458,7 @@ func (o *PlanEntitlementResponseData) HasValueTraitId() bool {
 func (o *PlanEntitlementResponseData) SetValueTraitId(v string) {
 	o.ValueTraitId.Set(&v)
 }
+
 // SetValueTraitIdNil sets the value for ValueTraitId to be an explicit nil
 func (o *PlanEntitlementResponseData) SetValueTraitIdNil() {
 	o.ValueTraitId.Set(nil)
@@ -490,7 +494,7 @@ func (o *PlanEntitlementResponseData) SetValueType(v string) {
 }
 
 func (o PlanEntitlementResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -548,10 +552,10 @@ func (o *PlanEntitlementResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -607,5 +611,3 @@ func (v *NullablePlanEntitlementResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

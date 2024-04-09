@@ -16,19 +16,18 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strings"
 	"time"
-	"reflect"
 )
-
 
 type EventsAPI interface {
 
 	/*
-	CountEventSummaries Count event summaries
+		CountEventSummaries Count event summaries
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountEventSummariesRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountEventSummariesRequest
 	*/
 	CountEventSummaries(ctx context.Context) ApiCountEventSummariesRequest
 
@@ -37,10 +36,10 @@ type EventsAPI interface {
 	CountEventSummariesExecute(r ApiCountEventSummariesRequest) (*CountEventSummariesResponse, *http.Response, error)
 
 	/*
-	CountEvents Count events
+		CountEvents Count events
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountEventsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountEventsRequest
 	*/
 	CountEvents(ctx context.Context) ApiCountEventsRequest
 
@@ -49,10 +48,10 @@ type EventsAPI interface {
 	CountEventsExecute(r ApiCountEventsRequest) (*CountEventsResponse, *http.Response, error)
 
 	/*
-	CreateEvent Create event
+		CreateEvent Create event
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreateEventRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreateEventRequest
 	*/
 	CreateEvent(ctx context.Context) ApiCreateEventRequest
 
@@ -61,10 +60,10 @@ type EventsAPI interface {
 	CreateEventExecute(r ApiCreateEventRequest) (*CreateEventResponse, *http.Response, error)
 
 	/*
-	CreateEventBatch Create event batch
+		CreateEventBatch Create event batch
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreateEventBatchRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreateEventBatchRequest
 	*/
 	CreateEventBatch(ctx context.Context) ApiCreateEventBatchRequest
 
@@ -73,11 +72,11 @@ type EventsAPI interface {
 	CreateEventBatchExecute(r ApiCreateEventBatchRequest) (*CreateEventBatchResponse, *http.Response, error)
 
 	/*
-	GetEvent Get event
+		GetEvent Get event
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param eventId event_id
-	@return ApiGetEventRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param eventId event_id
+		@return ApiGetEventRequest
 	*/
 	GetEvent(ctx context.Context, eventId string) ApiGetEventRequest
 
@@ -86,10 +85,10 @@ type EventsAPI interface {
 	GetEventExecute(r ApiGetEventRequest) (*GetEventResponse, *http.Response, error)
 
 	/*
-	GetEventSummaries Get event summaries
+		GetEventSummaries Get event summaries
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiGetEventSummariesRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiGetEventSummariesRequest
 	*/
 	GetEventSummaries(ctx context.Context) ApiGetEventSummariesRequest
 
@@ -98,11 +97,11 @@ type EventsAPI interface {
 	GetEventSummariesExecute(r ApiGetEventSummariesRequest) (*GetEventSummariesResponse, *http.Response, error)
 
 	/*
-	GetEventSummaryBySubtype Get event summary by subtype
+		GetEventSummaryBySubtype Get event summary by subtype
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param key key
-	@return ApiGetEventSummaryBySubtypeRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param key key
+		@return ApiGetEventSummaryBySubtypeRequest
 	*/
 	GetEventSummaryBySubtype(ctx context.Context, key string) ApiGetEventSummaryBySubtypeRequest
 
@@ -111,10 +110,10 @@ type EventsAPI interface {
 	GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryBySubtypeRequest) (*GetEventSummaryBySubtypeResponse, *http.Response, error)
 
 	/*
-	ListEvents List events
+		ListEvents List events
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListEventsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListEventsRequest
 	*/
 	ListEvents(ctx context.Context) ApiListEventsRequest
 
@@ -123,10 +122,10 @@ type EventsAPI interface {
 	ListEventsExecute(r ApiListEventsRequest) (*ListEventsResponse, *http.Response, error)
 
 	/*
-	ListMetricCounts List metric counts
+		ListMetricCounts List metric counts
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListMetricCountsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListMetricCountsRequest
 	*/
 	ListMetricCounts(ctx context.Context) ApiListMetricCountsRequest
 
@@ -139,11 +138,11 @@ type EventsAPI interface {
 type EventsAPIService service
 
 type ApiCountEventSummariesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService EventsAPI
-	q *string
-	limit *int32
-	offset *int32
+	q          *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiCountEventSummariesRequest) Q(q string) ApiCountEventSummariesRequest {
@@ -170,24 +169,25 @@ func (r ApiCountEventSummariesRequest) Execute() (*CountEventSummariesResponse, 
 /*
 CountEventSummaries Count event summaries
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountEventSummariesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountEventSummariesRequest
 */
 func (a *EventsAPIService) CountEventSummaries(ctx context.Context) ApiCountEventSummariesRequest {
 	return ApiCountEventSummariesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CountEventSummariesResponse
+//
+//	@return CountEventSummariesResponse
 func (a *EventsAPIService) CountEventSummariesExecute(r ApiCountEventSummariesRequest) (*CountEventSummariesResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CountEventSummariesResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountEventSummariesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.CountEventSummaries")
@@ -227,11 +227,11 @@ func (a *EventsAPIService) CountEventSummariesExecute(r ApiCountEventSummariesRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -241,14 +241,13 @@ func (a *EventsAPIService) CountEventSummariesExecute(r ApiCountEventSummariesRe
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -275,8 +274,8 @@ func (a *EventsAPIService) CountEventSummariesExecute(r ApiCountEventSummariesRe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -286,8 +285,8 @@ func (a *EventsAPIService) CountEventSummariesExecute(r ApiCountEventSummariesRe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -297,8 +296,8 @@ func (a *EventsAPIService) CountEventSummariesExecute(r ApiCountEventSummariesRe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -308,8 +307,8 @@ func (a *EventsAPIService) CountEventSummariesExecute(r ApiCountEventSummariesRe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -327,13 +326,13 @@ func (a *EventsAPIService) CountEventSummariesExecute(r ApiCountEventSummariesRe
 }
 
 type ApiCountEventsRequest struct {
-	ctx context.Context
-	ApiService EventsAPI
-	companyId *string
-	userId *string
+	ctx          context.Context
+	ApiService   EventsAPI
+	companyId    *string
+	userId       *string
 	eventSubtype *string
-	limit *int32
-	offset *int32
+	limit        *int32
+	offset       *int32
 }
 
 func (r ApiCountEventsRequest) CompanyId(companyId string) ApiCountEventsRequest {
@@ -370,24 +369,25 @@ func (r ApiCountEventsRequest) Execute() (*CountEventsResponse, *http.Response, 
 /*
 CountEvents Count events
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountEventsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountEventsRequest
 */
 func (a *EventsAPIService) CountEvents(ctx context.Context) ApiCountEventsRequest {
 	return ApiCountEventsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CountEventsResponse
+//
+//	@return CountEventsResponse
 func (a *EventsAPIService) CountEventsExecute(r ApiCountEventsRequest) (*CountEventsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CountEventsResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountEventsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.CountEvents")
@@ -433,11 +433,11 @@ func (a *EventsAPIService) CountEventsExecute(r ApiCountEventsRequest) (*CountEv
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -447,14 +447,13 @@ func (a *EventsAPIService) CountEventsExecute(r ApiCountEventsRequest) (*CountEv
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -481,8 +480,8 @@ func (a *EventsAPIService) CountEventsExecute(r ApiCountEventsRequest) (*CountEv
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -492,8 +491,8 @@ func (a *EventsAPIService) CountEventsExecute(r ApiCountEventsRequest) (*CountEv
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -503,8 +502,8 @@ func (a *EventsAPIService) CountEventsExecute(r ApiCountEventsRequest) (*CountEv
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -514,8 +513,8 @@ func (a *EventsAPIService) CountEventsExecute(r ApiCountEventsRequest) (*CountEv
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -533,8 +532,8 @@ func (a *EventsAPIService) CountEventsExecute(r ApiCountEventsRequest) (*CountEv
 }
 
 type ApiCreateEventRequest struct {
-	ctx context.Context
-	ApiService EventsAPI
+	ctx                    context.Context
+	ApiService             EventsAPI
 	createEventRequestBody *CreateEventRequestBody
 }
 
@@ -550,24 +549,25 @@ func (r ApiCreateEventRequest) Execute() (*CreateEventResponse, *http.Response, 
 /*
 CreateEvent Create event
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateEventRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreateEventRequest
 */
 func (a *EventsAPIService) CreateEvent(ctx context.Context) ApiCreateEventRequest {
 	return ApiCreateEventRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreateEventResponse
+//
+//	@return CreateEventResponse
 func (a *EventsAPIService) CreateEventExecute(r ApiCreateEventRequest) (*CreateEventResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateEventResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateEventResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.CreateEvent")
@@ -603,11 +603,11 @@ func (a *EventsAPIService) CreateEventExecute(r ApiCreateEventRequest) (*CreateE
 	}
 	// body params
 	localVarPostBody = r.createEventRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -617,14 +617,13 @@ func (a *EventsAPIService) CreateEventExecute(r ApiCreateEventRequest) (*CreateE
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -651,8 +650,8 @@ func (a *EventsAPIService) CreateEventExecute(r ApiCreateEventRequest) (*CreateE
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -662,8 +661,8 @@ func (a *EventsAPIService) CreateEventExecute(r ApiCreateEventRequest) (*CreateE
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -673,8 +672,8 @@ func (a *EventsAPIService) CreateEventExecute(r ApiCreateEventRequest) (*CreateE
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -684,8 +683,8 @@ func (a *EventsAPIService) CreateEventExecute(r ApiCreateEventRequest) (*CreateE
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -703,8 +702,8 @@ func (a *EventsAPIService) CreateEventExecute(r ApiCreateEventRequest) (*CreateE
 }
 
 type ApiCreateEventBatchRequest struct {
-	ctx context.Context
-	ApiService EventsAPI
+	ctx                         context.Context
+	ApiService                  EventsAPI
 	createEventBatchRequestBody *CreateEventBatchRequestBody
 }
 
@@ -720,24 +719,25 @@ func (r ApiCreateEventBatchRequest) Execute() (*CreateEventBatchResponse, *http.
 /*
 CreateEventBatch Create event batch
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateEventBatchRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreateEventBatchRequest
 */
 func (a *EventsAPIService) CreateEventBatch(ctx context.Context) ApiCreateEventBatchRequest {
 	return ApiCreateEventBatchRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreateEventBatchResponse
+//
+//	@return CreateEventBatchResponse
 func (a *EventsAPIService) CreateEventBatchExecute(r ApiCreateEventBatchRequest) (*CreateEventBatchResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateEventBatchResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateEventBatchResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.CreateEventBatch")
@@ -773,11 +773,11 @@ func (a *EventsAPIService) CreateEventBatchExecute(r ApiCreateEventBatchRequest)
 	}
 	// body params
 	localVarPostBody = r.createEventBatchRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -787,14 +787,13 @@ func (a *EventsAPIService) CreateEventBatchExecute(r ApiCreateEventBatchRequest)
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -821,8 +820,8 @@ func (a *EventsAPIService) CreateEventBatchExecute(r ApiCreateEventBatchRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -832,8 +831,8 @@ func (a *EventsAPIService) CreateEventBatchExecute(r ApiCreateEventBatchRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -843,8 +842,8 @@ func (a *EventsAPIService) CreateEventBatchExecute(r ApiCreateEventBatchRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -854,8 +853,8 @@ func (a *EventsAPIService) CreateEventBatchExecute(r ApiCreateEventBatchRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -873,9 +872,9 @@ func (a *EventsAPIService) CreateEventBatchExecute(r ApiCreateEventBatchRequest)
 }
 
 type ApiGetEventRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService EventsAPI
-	eventId string
+	eventId    string
 }
 
 func (r ApiGetEventRequest) Execute() (*GetEventResponse, *http.Response, error) {
@@ -885,26 +884,27 @@ func (r ApiGetEventRequest) Execute() (*GetEventResponse, *http.Response, error)
 /*
 GetEvent Get event
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param eventId event_id
- @return ApiGetEventRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param eventId event_id
+	@return ApiGetEventRequest
 */
 func (a *EventsAPIService) GetEvent(ctx context.Context, eventId string) ApiGetEventRequest {
 	return ApiGetEventRequest{
 		ApiService: a,
-		ctx: ctx,
-		eventId: eventId,
+		ctx:        ctx,
+		eventId:    eventId,
 	}
 }
 
 // Execute executes the request
-//  @return GetEventResponse
+//
+//	@return GetEventResponse
 func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetEventResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetEventResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.GetEvent")
@@ -936,11 +936,11 @@ func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -950,14 +950,13 @@ func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -984,8 +983,8 @@ func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -995,8 +994,8 @@ func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1006,8 +1005,8 @@ func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1017,8 +1016,8 @@ func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1036,11 +1035,11 @@ func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 }
 
 type ApiGetEventSummariesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService EventsAPI
-	q *string
-	limit *int32
-	offset *int32
+	q          *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiGetEventSummariesRequest) Q(q string) ApiGetEventSummariesRequest {
@@ -1067,24 +1066,25 @@ func (r ApiGetEventSummariesRequest) Execute() (*GetEventSummariesResponse, *htt
 /*
 GetEventSummaries Get event summaries
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetEventSummariesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetEventSummariesRequest
 */
 func (a *EventsAPIService) GetEventSummaries(ctx context.Context) ApiGetEventSummariesRequest {
 	return ApiGetEventSummariesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return GetEventSummariesResponse
+//
+//	@return GetEventSummariesResponse
 func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesRequest) (*GetEventSummariesResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetEventSummariesResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetEventSummariesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.GetEventSummaries")
@@ -1124,11 +1124,11 @@ func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesReques
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1138,14 +1138,13 @@ func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesReques
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1172,8 +1171,8 @@ func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1183,8 +1182,8 @@ func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1194,8 +1193,8 @@ func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1205,8 +1204,8 @@ func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1224,9 +1223,9 @@ func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesReques
 }
 
 type ApiGetEventSummaryBySubtypeRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService EventsAPI
-	key string
+	key        string
 }
 
 func (r ApiGetEventSummaryBySubtypeRequest) Execute() (*GetEventSummaryBySubtypeResponse, *http.Response, error) {
@@ -1236,26 +1235,27 @@ func (r ApiGetEventSummaryBySubtypeRequest) Execute() (*GetEventSummaryBySubtype
 /*
 GetEventSummaryBySubtype Get event summary by subtype
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param key key
- @return ApiGetEventSummaryBySubtypeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param key key
+	@return ApiGetEventSummaryBySubtypeRequest
 */
 func (a *EventsAPIService) GetEventSummaryBySubtype(ctx context.Context, key string) ApiGetEventSummaryBySubtypeRequest {
 	return ApiGetEventSummaryBySubtypeRequest{
 		ApiService: a,
-		ctx: ctx,
-		key: key,
+		ctx:        ctx,
+		key:        key,
 	}
 }
 
 // Execute executes the request
-//  @return GetEventSummaryBySubtypeResponse
+//
+//	@return GetEventSummaryBySubtypeResponse
 func (a *EventsAPIService) GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryBySubtypeRequest) (*GetEventSummaryBySubtypeResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetEventSummaryBySubtypeResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetEventSummaryBySubtypeResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.GetEventSummaryBySubtype")
@@ -1287,11 +1287,11 @@ func (a *EventsAPIService) GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryB
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1301,14 +1301,13 @@ func (a *EventsAPIService) GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryB
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1335,8 +1334,8 @@ func (a *EventsAPIService) GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryB
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1346,8 +1345,8 @@ func (a *EventsAPIService) GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryB
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1357,8 +1356,8 @@ func (a *EventsAPIService) GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryB
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1368,8 +1367,8 @@ func (a *EventsAPIService) GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryB
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1387,13 +1386,13 @@ func (a *EventsAPIService) GetEventSummaryBySubtypeExecute(r ApiGetEventSummaryB
 }
 
 type ApiListEventsRequest struct {
-	ctx context.Context
-	ApiService EventsAPI
-	companyId *string
-	userId *string
+	ctx          context.Context
+	ApiService   EventsAPI
+	companyId    *string
+	userId       *string
 	eventSubtype *string
-	limit *int32
-	offset *int32
+	limit        *int32
+	offset       *int32
 }
 
 func (r ApiListEventsRequest) CompanyId(companyId string) ApiListEventsRequest {
@@ -1430,24 +1429,25 @@ func (r ApiListEventsRequest) Execute() (*ListEventsResponse, *http.Response, er
 /*
 ListEvents List events
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListEventsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListEventsRequest
 */
 func (a *EventsAPIService) ListEvents(ctx context.Context) ApiListEventsRequest {
 	return ApiListEventsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListEventsResponse
+//
+//	@return ListEventsResponse
 func (a *EventsAPIService) ListEventsExecute(r ApiListEventsRequest) (*ListEventsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListEventsResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListEventsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.ListEvents")
@@ -1493,11 +1493,11 @@ func (a *EventsAPIService) ListEventsExecute(r ApiListEventsRequest) (*ListEvent
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1507,14 +1507,13 @@ func (a *EventsAPIService) ListEventsExecute(r ApiListEventsRequest) (*ListEvent
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1541,8 +1540,8 @@ func (a *EventsAPIService) ListEventsExecute(r ApiListEventsRequest) (*ListEvent
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1552,8 +1551,8 @@ func (a *EventsAPIService) ListEventsExecute(r ApiListEventsRequest) (*ListEvent
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1563,8 +1562,8 @@ func (a *EventsAPIService) ListEventsExecute(r ApiListEventsRequest) (*ListEvent
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1574,8 +1573,8 @@ func (a *EventsAPIService) ListEventsExecute(r ApiListEventsRequest) (*ListEvent
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1593,18 +1592,18 @@ func (a *EventsAPIService) ListEventsExecute(r ApiListEventsRequest) (*ListEvent
 }
 
 type ApiListMetricCountsRequest struct {
-	ctx context.Context
-	ApiService EventsAPI
-	startTime *time.Time
-	endTime *time.Time
-	eventSubtype *string
+	ctx           context.Context
+	ApiService    EventsAPI
+	startTime     *time.Time
+	endTime       *time.Time
+	eventSubtype  *string
 	eventSubtypes *[]string
-	companyId *string
-	companyIds *[]string
-	userId *string
-	limit *int32
-	offset *int32
-	grouping *string
+	companyId     *string
+	companyIds    *[]string
+	userId        *string
+	limit         *int32
+	offset        *int32
+	grouping      *string
 }
 
 func (r ApiListMetricCountsRequest) StartTime(startTime time.Time) ApiListMetricCountsRequest {
@@ -1666,24 +1665,25 @@ func (r ApiListMetricCountsRequest) Execute() (*ListMetricCountsResponse, *http.
 /*
 ListMetricCounts List metric counts
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListMetricCountsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListMetricCountsRequest
 */
 func (a *EventsAPIService) ListMetricCounts(ctx context.Context) ApiListMetricCountsRequest {
 	return ApiListMetricCountsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListMetricCountsResponse
+//
+//	@return ListMetricCountsResponse
 func (a *EventsAPIService) ListMetricCountsExecute(r ApiListMetricCountsRequest) (*ListMetricCountsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListMetricCountsResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListMetricCountsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.ListMetricCounts")
@@ -1760,11 +1760,11 @@ func (a *EventsAPIService) ListMetricCountsExecute(r ApiListMetricCountsRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1774,14 +1774,13 @@ func (a *EventsAPIService) ListMetricCountsExecute(r ApiListMetricCountsRequest)
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1808,8 +1807,8 @@ func (a *EventsAPIService) ListMetricCountsExecute(r ApiListMetricCountsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1819,8 +1818,8 @@ func (a *EventsAPIService) ListMetricCountsExecute(r ApiListMetricCountsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1830,8 +1829,8 @@ func (a *EventsAPIService) ListMetricCountsExecute(r ApiListMetricCountsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1841,8 +1840,8 @@ func (a *EventsAPIService) ListMetricCountsExecute(r ApiListMetricCountsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

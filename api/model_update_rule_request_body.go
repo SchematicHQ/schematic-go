@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,10 +22,10 @@ var _ MappedNullable = &UpdateRuleRequestBody{}
 // UpdateRuleRequestBody struct for UpdateRuleRequestBody
 type UpdateRuleRequestBody struct {
 	ConditionGroups []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
-	Conditions []CreateOrUpdateConditionRequestBody `json:"conditions"`
-	Name string `json:"name"`
-	Priority int32 `json:"priority"`
-	Value bool `json:"value"`
+	Conditions      []CreateOrUpdateConditionRequestBody      `json:"conditions"`
+	Name            string                                    `json:"name"`
+	Priority        int32                                     `json:"priority"`
+	Value           bool                                      `json:"value"`
 }
 
 type _UpdateRuleRequestBody UpdateRuleRequestBody
@@ -173,7 +173,7 @@ func (o *UpdateRuleRequestBody) SetValue(v bool) {
 }
 
 func (o UpdateRuleRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -207,10 +207,10 @@ func (o *UpdateRuleRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -266,5 +266,3 @@ func (v *NullableUpdateRuleRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

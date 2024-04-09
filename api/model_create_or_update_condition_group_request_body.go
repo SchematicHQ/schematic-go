@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,9 +22,9 @@ var _ MappedNullable = &CreateOrUpdateConditionGroupRequestBody{}
 // CreateOrUpdateConditionGroupRequestBody struct for CreateOrUpdateConditionGroupRequestBody
 type CreateOrUpdateConditionGroupRequestBody struct {
 	Conditions []CreateOrUpdateConditionRequestBody `json:"conditions"`
-	FlagId NullableString `json:"flag_id,omitempty"`
-	Id NullableString `json:"id,omitempty"`
-	PlanId NullableString `json:"plan_id,omitempty"`
+	FlagId     NullableString                       `json:"flag_id,omitempty"`
+	Id         NullableString                       `json:"id,omitempty"`
+	PlanId     NullableString                       `json:"plan_id,omitempty"`
 }
 
 type _CreateOrUpdateConditionGroupRequestBody CreateOrUpdateConditionGroupRequestBody
@@ -103,6 +103,7 @@ func (o *CreateOrUpdateConditionGroupRequestBody) HasFlagId() bool {
 func (o *CreateOrUpdateConditionGroupRequestBody) SetFlagId(v string) {
 	o.FlagId.Set(&v)
 }
+
 // SetFlagIdNil sets the value for FlagId to be an explicit nil
 func (o *CreateOrUpdateConditionGroupRequestBody) SetFlagIdNil() {
 	o.FlagId.Set(nil)
@@ -145,6 +146,7 @@ func (o *CreateOrUpdateConditionGroupRequestBody) HasId() bool {
 func (o *CreateOrUpdateConditionGroupRequestBody) SetId(v string) {
 	o.Id.Set(&v)
 }
+
 // SetIdNil sets the value for Id to be an explicit nil
 func (o *CreateOrUpdateConditionGroupRequestBody) SetIdNil() {
 	o.Id.Set(nil)
@@ -187,6 +189,7 @@ func (o *CreateOrUpdateConditionGroupRequestBody) HasPlanId() bool {
 func (o *CreateOrUpdateConditionGroupRequestBody) SetPlanId(v string) {
 	o.PlanId.Set(&v)
 }
+
 // SetPlanIdNil sets the value for PlanId to be an explicit nil
 func (o *CreateOrUpdateConditionGroupRequestBody) SetPlanIdNil() {
 	o.PlanId.Set(nil)
@@ -198,7 +201,7 @@ func (o *CreateOrUpdateConditionGroupRequestBody) UnsetPlanId() {
 }
 
 func (o CreateOrUpdateConditionGroupRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -233,10 +236,10 @@ func (o *CreateOrUpdateConditionGroupRequestBody) UnmarshalJSON(data []byte) (er
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -292,5 +295,3 @@ func (v *NullableCreateOrUpdateConditionGroupRequestBody) UnmarshalJSON(src []by
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

@@ -19,7 +19,7 @@ var _ MappedNullable = &ListPlansParams{}
 
 // ListPlansParams Input parameters
 type ListPlansParams struct {
-	Limit *int32 `json:"limit,omitempty"`
+	Limit  *int32 `json:"limit,omitempty"`
 	Offset *int32 `json:"offset,omitempty"`
 }
 
@@ -105,7 +105,7 @@ func (o *ListPlansParams) SetOffset(v int32) {
 }
 
 func (o ListPlansParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -158,5 +158,3 @@ func (v *NullableListPlansParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

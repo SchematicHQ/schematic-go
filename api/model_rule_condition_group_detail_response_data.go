@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the RuleConditionGroupDetailResponseData type satisfies the MappedNullable interface at compile time
@@ -22,14 +22,14 @@ var _ MappedNullable = &RuleConditionGroupDetailResponseData{}
 
 // RuleConditionGroupDetailResponseData struct for RuleConditionGroupDetailResponseData
 type RuleConditionGroupDetailResponseData struct {
-	Conditions []RuleConditionResponseData `json:"conditions"`
-	CreatedAt time.Time `json:"created_at"`
-	EnvironmentId string `json:"environment_id"`
-	FlagId NullableString `json:"flag_id,omitempty"`
-	Id string `json:"id"`
-	PlanId NullableString `json:"plan_id,omitempty"`
-	RuleId string `json:"rule_id"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Conditions    []RuleConditionResponseData `json:"conditions"`
+	CreatedAt     time.Time                   `json:"created_at"`
+	EnvironmentId string                      `json:"environment_id"`
+	FlagId        NullableString              `json:"flag_id,omitempty"`
+	Id            string                      `json:"id"`
+	PlanId        NullableString              `json:"plan_id,omitempty"`
+	RuleId        string                      `json:"rule_id"`
+	UpdatedAt     time.Time                   `json:"updated_at"`
 }
 
 type _RuleConditionGroupDetailResponseData RuleConditionGroupDetailResponseData
@@ -161,6 +161,7 @@ func (o *RuleConditionGroupDetailResponseData) HasFlagId() bool {
 func (o *RuleConditionGroupDetailResponseData) SetFlagId(v string) {
 	o.FlagId.Set(&v)
 }
+
 // SetFlagIdNil sets the value for FlagId to be an explicit nil
 func (o *RuleConditionGroupDetailResponseData) SetFlagIdNil() {
 	o.FlagId.Set(nil)
@@ -227,6 +228,7 @@ func (o *RuleConditionGroupDetailResponseData) HasPlanId() bool {
 func (o *RuleConditionGroupDetailResponseData) SetPlanId(v string) {
 	o.PlanId.Set(&v)
 }
+
 // SetPlanIdNil sets the value for PlanId to be an explicit nil
 func (o *RuleConditionGroupDetailResponseData) SetPlanIdNil() {
 	o.PlanId.Set(nil)
@@ -286,7 +288,7 @@ func (o *RuleConditionGroupDetailResponseData) SetUpdatedAt(v time.Time) {
 }
 
 func (o RuleConditionGroupDetailResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -328,10 +330,10 @@ func (o *RuleConditionGroupDetailResponseData) UnmarshalJSON(data []byte) (err e
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -387,5 +389,3 @@ func (v *NullableRuleConditionGroupDetailResponseData) UnmarshalJSON(src []byte)
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

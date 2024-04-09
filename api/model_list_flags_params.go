@@ -19,10 +19,10 @@ var _ MappedNullable = &ListFlagsParams{}
 
 // ListFlagsParams Input parameters
 type ListFlagsParams struct {
-	FeatureId *string `json:"feature_id,omitempty"`
-	FlagIds []string `json:"flag_ids,omitempty"`
-	Limit *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
+	FeatureId *string  `json:"feature_id,omitempty"`
+	FlagIds   []string `json:"flag_ids,omitempty"`
+	Limit     *int32   `json:"limit,omitempty"`
+	Offset    *int32   `json:"offset,omitempty"`
 }
 
 // NewListFlagsParams instantiates a new ListFlagsParams object
@@ -171,7 +171,7 @@ func (o *ListFlagsParams) SetOffset(v int32) {
 }
 
 func (o ListFlagsParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -230,5 +230,3 @@ func (v *NullableListFlagsParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

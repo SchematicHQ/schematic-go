@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,8 +21,8 @@ var _ MappedNullable = &LookupCompanyResponse{}
 
 // LookupCompanyResponse struct for LookupCompanyResponse
 type LookupCompanyResponse struct {
-	Data CompanyDetailResponseData `json:"data"`
-	Params LookupCompanyParams `json:"params"`
+	Data   CompanyDetailResponseData `json:"data"`
+	Params LookupCompanyParams       `json:"params"`
 }
 
 type _LookupCompanyResponse LookupCompanyResponse
@@ -95,7 +95,7 @@ func (o *LookupCompanyResponse) SetParams(v LookupCompanyParams) {
 }
 
 func (o LookupCompanyResponse) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -123,10 +123,10 @@ func (o *LookupCompanyResponse) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -182,5 +182,3 @@ func (v *NullableLookupCompanyResponse) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

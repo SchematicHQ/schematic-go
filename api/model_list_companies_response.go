@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,8 +22,8 @@ var _ MappedNullable = &ListCompaniesResponse{}
 // ListCompaniesResponse struct for ListCompaniesResponse
 type ListCompaniesResponse struct {
 	// The returned resources
-	Data []CompanyResponseData `json:"data"`
-	Params ListCompaniesParams `json:"params"`
+	Data   []CompanyResponseData `json:"data"`
+	Params ListCompaniesParams   `json:"params"`
 }
 
 type _ListCompaniesResponse ListCompaniesResponse
@@ -96,7 +96,7 @@ func (o *ListCompaniesResponse) SetParams(v ListCompaniesParams) {
 }
 
 func (o ListCompaniesResponse) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -124,10 +124,10 @@ func (o *ListCompaniesResponse) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -183,5 +183,3 @@ func (v *NullableListCompaniesResponse) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

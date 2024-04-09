@@ -19,9 +19,9 @@ var _ MappedNullable = &GetEventSummariesParams{}
 
 // GetEventSummariesParams Input parameters
 type GetEventSummariesParams struct {
-	Limit *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
-	Q *string `json:"q,omitempty"`
+	Limit  *int32  `json:"limit,omitempty"`
+	Offset *int32  `json:"offset,omitempty"`
+	Q      *string `json:"q,omitempty"`
 }
 
 // NewGetEventSummariesParams instantiates a new GetEventSummariesParams object
@@ -138,7 +138,7 @@ func (o *GetEventSummariesParams) SetQ(v string) {
 }
 
 func (o GetEventSummariesParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -194,5 +194,3 @@ func (v *NullableGetEventSummariesParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

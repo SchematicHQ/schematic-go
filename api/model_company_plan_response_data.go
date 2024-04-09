@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the CompanyPlanResponseData type satisfies the MappedNullable interface at compile time
@@ -22,12 +22,12 @@ var _ MappedNullable = &CompanyPlanResponseData{}
 
 // CompanyPlanResponseData struct for CompanyPlanResponseData
 type CompanyPlanResponseData struct {
-	CompanyId string `json:"company_id"`
-	CreatedAt time.Time `json:"created_at"`
-	EnvironmentId string `json:"environment_id"`
-	Id string `json:"id"`
-	PlanId string `json:"plan_id"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CompanyId     string    `json:"company_id"`
+	CreatedAt     time.Time `json:"created_at"`
+	EnvironmentId string    `json:"environment_id"`
+	Id            string    `json:"id"`
+	PlanId        string    `json:"plan_id"`
+	UpdatedAt     time.Time `json:"updated_at"`
 }
 
 type _CompanyPlanResponseData CompanyPlanResponseData
@@ -200,7 +200,7 @@ func (o *CompanyPlanResponseData) SetUpdatedAt(v time.Time) {
 }
 
 func (o CompanyPlanResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -236,10 +236,10 @@ func (o *CompanyPlanResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -295,5 +295,3 @@ func (v *NullableCompanyPlanResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

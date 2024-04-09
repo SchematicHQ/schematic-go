@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,7 +21,7 @@ var _ MappedNullable = &CountApiRequestsResponse{}
 
 // CountApiRequestsResponse struct for CountApiRequestsResponse
 type CountApiRequestsResponse struct {
-	Data CountResponse `json:"data"`
+	Data   CountResponse          `json:"data"`
 	Params CountApiRequestsParams `json:"params"`
 }
 
@@ -95,7 +95,7 @@ func (o *CountApiRequestsResponse) SetParams(v CountApiRequestsParams) {
 }
 
 func (o CountApiRequestsResponse) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -123,10 +123,10 @@ func (o *CountApiRequestsResponse) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -182,5 +182,3 @@ func (v *NullableCountApiRequestsResponse) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

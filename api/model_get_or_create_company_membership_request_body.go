@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,7 +22,7 @@ var _ MappedNullable = &GetOrCreateCompanyMembershipRequestBody{}
 // GetOrCreateCompanyMembershipRequestBody struct for GetOrCreateCompanyMembershipRequestBody
 type GetOrCreateCompanyMembershipRequestBody struct {
 	CompanyId string `json:"company_id"`
-	UserId string `json:"user_id"`
+	UserId    string `json:"user_id"`
 }
 
 type _GetOrCreateCompanyMembershipRequestBody GetOrCreateCompanyMembershipRequestBody
@@ -95,7 +95,7 @@ func (o *GetOrCreateCompanyMembershipRequestBody) SetUserId(v string) {
 }
 
 func (o GetOrCreateCompanyMembershipRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -123,10 +123,10 @@ func (o *GetOrCreateCompanyMembershipRequestBody) UnmarshalJSON(data []byte) (er
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -182,5 +182,3 @@ func (v *NullableGetOrCreateCompanyMembershipRequestBody) UnmarshalJSON(src []by
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

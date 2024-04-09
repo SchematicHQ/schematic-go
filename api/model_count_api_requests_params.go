@@ -19,9 +19,9 @@ var _ MappedNullable = &CountApiRequestsParams{}
 
 // CountApiRequestsParams Input parameters
 type CountApiRequestsParams struct {
-	Limit *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
-	Q *string `json:"q,omitempty"`
+	Limit       *int32  `json:"limit,omitempty"`
+	Offset      *int32  `json:"offset,omitempty"`
+	Q           *string `json:"q,omitempty"`
 	RequestType *string `json:"request_type,omitempty"`
 }
 
@@ -171,7 +171,7 @@ func (o *CountApiRequestsParams) SetRequestType(v string) {
 }
 
 func (o CountApiRequestsParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -230,5 +230,3 @@ func (v *NullableCountApiRequestsParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

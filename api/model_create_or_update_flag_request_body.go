@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,13 +21,13 @@ var _ MappedNullable = &CreateOrUpdateFlagRequestBody{}
 
 // CreateOrUpdateFlagRequestBody struct for CreateOrUpdateFlagRequestBody
 type CreateOrUpdateFlagRequestBody struct {
-	DefaultValue bool `json:"default_value"`
-	Description string `json:"description"`
-	FeatureId NullableString `json:"feature_id,omitempty"`
-	FlagType string `json:"flag_type"`
-	Id NullableString `json:"id,omitempty"`
-	Key string `json:"key"`
-	Name string `json:"name"`
+	DefaultValue bool           `json:"default_value"`
+	Description  string         `json:"description"`
+	FeatureId    NullableString `json:"feature_id,omitempty"`
+	FlagType     string         `json:"flag_type"`
+	Id           NullableString `json:"id,omitempty"`
+	Key          string         `json:"key"`
+	Name         string         `json:"name"`
 }
 
 type _CreateOrUpdateFlagRequestBody CreateOrUpdateFlagRequestBody
@@ -134,6 +134,7 @@ func (o *CreateOrUpdateFlagRequestBody) HasFeatureId() bool {
 func (o *CreateOrUpdateFlagRequestBody) SetFeatureId(v string) {
 	o.FeatureId.Set(&v)
 }
+
 // SetFeatureIdNil sets the value for FeatureId to be an explicit nil
 func (o *CreateOrUpdateFlagRequestBody) SetFeatureIdNil() {
 	o.FeatureId.Set(nil)
@@ -200,6 +201,7 @@ func (o *CreateOrUpdateFlagRequestBody) HasId() bool {
 func (o *CreateOrUpdateFlagRequestBody) SetId(v string) {
 	o.Id.Set(&v)
 }
+
 // SetIdNil sets the value for Id to be an explicit nil
 func (o *CreateOrUpdateFlagRequestBody) SetIdNil() {
 	o.Id.Set(nil)
@@ -259,7 +261,7 @@ func (o *CreateOrUpdateFlagRequestBody) SetName(v string) {
 }
 
 func (o CreateOrUpdateFlagRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -299,10 +301,10 @@ func (o *CreateOrUpdateFlagRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -358,5 +360,3 @@ func (v *NullableCreateOrUpdateFlagRequestBody) UnmarshalJSON(src []byte) error 
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

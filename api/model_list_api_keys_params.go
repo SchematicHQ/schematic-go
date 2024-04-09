@@ -19,10 +19,10 @@ var _ MappedNullable = &ListApiKeysParams{}
 
 // ListApiKeysParams Input parameters
 type ListApiKeysParams struct {
-	EnvironmentId *string `json:"environment_id,omitempty"`
-	Limit *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
-	RequireEnvironment *bool `json:"require_environment,omitempty"`
+	EnvironmentId      *string `json:"environment_id,omitempty"`
+	Limit              *int32  `json:"limit,omitempty"`
+	Offset             *int32  `json:"offset,omitempty"`
+	RequireEnvironment *bool   `json:"require_environment,omitempty"`
 }
 
 // NewListApiKeysParams instantiates a new ListApiKeysParams object
@@ -171,7 +171,7 @@ func (o *ListApiKeysParams) SetRequireEnvironment(v bool) {
 }
 
 func (o ListApiKeysParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -230,5 +230,3 @@ func (v *NullableListApiKeysParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

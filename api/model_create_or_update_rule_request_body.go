@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,12 +22,12 @@ var _ MappedNullable = &CreateOrUpdateRuleRequestBody{}
 // CreateOrUpdateRuleRequestBody struct for CreateOrUpdateRuleRequestBody
 type CreateOrUpdateRuleRequestBody struct {
 	ConditionGroups []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
-	Conditions []CreateOrUpdateConditionRequestBody `json:"conditions"`
-	Id NullableString `json:"id,omitempty"`
-	Name string `json:"name"`
-	Priority int32 `json:"priority"`
-	RuleType NullableString `json:"rule_type,omitempty"`
-	Value bool `json:"value"`
+	Conditions      []CreateOrUpdateConditionRequestBody      `json:"conditions"`
+	Id              NullableString                            `json:"id,omitempty"`
+	Name            string                                    `json:"name"`
+	Priority        int32                                     `json:"priority"`
+	RuleType        NullableString                            `json:"rule_type,omitempty"`
+	Value           bool                                      `json:"value"`
 }
 
 type _CreateOrUpdateRuleRequestBody CreateOrUpdateRuleRequestBody
@@ -134,6 +134,7 @@ func (o *CreateOrUpdateRuleRequestBody) HasId() bool {
 func (o *CreateOrUpdateRuleRequestBody) SetId(v string) {
 	o.Id.Set(&v)
 }
+
 // SetIdNil sets the value for Id to be an explicit nil
 func (o *CreateOrUpdateRuleRequestBody) SetIdNil() {
 	o.Id.Set(nil)
@@ -224,6 +225,7 @@ func (o *CreateOrUpdateRuleRequestBody) HasRuleType() bool {
 func (o *CreateOrUpdateRuleRequestBody) SetRuleType(v string) {
 	o.RuleType.Set(&v)
 }
+
 // SetRuleTypeNil sets the value for RuleType to be an explicit nil
 func (o *CreateOrUpdateRuleRequestBody) SetRuleTypeNil() {
 	o.RuleType.Set(nil)
@@ -259,7 +261,7 @@ func (o *CreateOrUpdateRuleRequestBody) SetValue(v bool) {
 }
 
 func (o CreateOrUpdateRuleRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -299,10 +301,10 @@ func (o *CreateOrUpdateRuleRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -358,5 +360,3 @@ func (v *NullableCreateOrUpdateRuleRequestBody) UnmarshalJSON(src []byte) error 
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

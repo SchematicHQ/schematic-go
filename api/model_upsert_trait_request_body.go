@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -86,6 +86,7 @@ func (o *UpsertTraitRequestBody) HasIncr() bool {
 func (o *UpsertTraitRequestBody) SetIncr(v int32) {
 	o.Incr.Set(&v)
 }
+
 // SetIncrNil sets the value for Incr to be an explicit nil
 func (o *UpsertTraitRequestBody) SetIncrNil() {
 	o.Incr.Set(nil)
@@ -152,6 +153,7 @@ func (o *UpsertTraitRequestBody) HasSet() bool {
 func (o *UpsertTraitRequestBody) SetSet(v string) {
 	o.Set.Set(&v)
 }
+
 // SetSetNil sets the value for Set to be an explicit nil
 func (o *UpsertTraitRequestBody) SetSetNil() {
 	o.Set.Set(nil)
@@ -218,6 +220,7 @@ func (o *UpsertTraitRequestBody) HasUpdateOnly() bool {
 func (o *UpsertTraitRequestBody) SetUpdateOnly(v bool) {
 	o.UpdateOnly.Set(&v)
 }
+
 // SetUpdateOnlyNil sets the value for UpdateOnly to be an explicit nil
 func (o *UpsertTraitRequestBody) SetUpdateOnlyNil() {
 	o.UpdateOnly.Set(nil)
@@ -229,7 +232,7 @@ func (o *UpsertTraitRequestBody) UnsetUpdateOnly() {
 }
 
 func (o UpsertTraitRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -266,10 +269,10 @@ func (o *UpsertTraitRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -325,5 +328,3 @@ func (v *NullableUpsertTraitRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

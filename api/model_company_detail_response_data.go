@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the CompanyDetailResponseData type satisfies the MappedNullable interface at compile time
@@ -22,15 +22,15 @@ var _ MappedNullable = &CompanyDetailResponseData{}
 
 // CompanyDetailResponseData struct for CompanyDetailResponseData
 type CompanyDetailResponseData struct {
-	CreatedAt time.Time `json:"created_at"`
-	EnvironmentId string `json:"environment_id"`
-	Id string `json:"id"`
-	Keys []EntityKeyResponseData `json:"keys"`
-	LastSeenAt NullableTime `json:"last_seen_at,omitempty"`
-	Name string `json:"name"`
+	CreatedAt     time.Time               `json:"created_at"`
+	EnvironmentId string                  `json:"environment_id"`
+	Id            string                  `json:"id"`
+	Keys          []EntityKeyResponseData `json:"keys"`
+	LastSeenAt    NullableTime            `json:"last_seen_at,omitempty"`
+	Name          string                  `json:"name"`
 	// A map of trait names to trait values
-	Traits map[string]interface{} `json:"traits,omitempty"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Traits    map[string]interface{} `json:"traits,omitempty"`
+	UpdatedAt time.Time              `json:"updated_at"`
 }
 
 type _CompanyDetailResponseData CompanyDetailResponseData
@@ -186,6 +186,7 @@ func (o *CompanyDetailResponseData) HasLastSeenAt() bool {
 func (o *CompanyDetailResponseData) SetLastSeenAt(v time.Time) {
 	o.LastSeenAt.Set(&v)
 }
+
 // SetLastSeenAtNil sets the value for LastSeenAt to be an explicit nil
 func (o *CompanyDetailResponseData) SetLastSeenAtNil() {
 	o.LastSeenAt.Set(nil)
@@ -277,7 +278,7 @@ func (o *CompanyDetailResponseData) SetUpdatedAt(v time.Time) {
 }
 
 func (o CompanyDetailResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -319,10 +320,10 @@ func (o *CompanyDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -378,5 +379,3 @@ func (v *NullableCompanyDetailResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

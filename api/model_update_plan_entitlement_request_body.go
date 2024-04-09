@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,10 +22,10 @@ var _ MappedNullable = &UpdatePlanEntitlementRequestBody{}
 // UpdatePlanEntitlementRequestBody struct for UpdatePlanEntitlementRequestBody
 type UpdatePlanEntitlementRequestBody struct {
 	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	ValueBool NullableBool `json:"value_bool,omitempty"`
-	ValueNumeric NullableInt32 `json:"value_numeric,omitempty"`
+	ValueBool    NullableBool   `json:"value_bool,omitempty"`
+	ValueNumeric NullableInt32  `json:"value_numeric,omitempty"`
 	ValueTraitId NullableString `json:"value_trait_id,omitempty"`
-	ValueType string `json:"value_type"`
+	ValueType    string         `json:"value_type"`
 }
 
 type _UpdatePlanEntitlementRequestBody UpdatePlanEntitlementRequestBody
@@ -80,6 +80,7 @@ func (o *UpdatePlanEntitlementRequestBody) HasMetricPeriod() bool {
 func (o *UpdatePlanEntitlementRequestBody) SetMetricPeriod(v string) {
 	o.MetricPeriod.Set(&v)
 }
+
 // SetMetricPeriodNil sets the value for MetricPeriod to be an explicit nil
 func (o *UpdatePlanEntitlementRequestBody) SetMetricPeriodNil() {
 	o.MetricPeriod.Set(nil)
@@ -122,6 +123,7 @@ func (o *UpdatePlanEntitlementRequestBody) HasValueBool() bool {
 func (o *UpdatePlanEntitlementRequestBody) SetValueBool(v bool) {
 	o.ValueBool.Set(&v)
 }
+
 // SetValueBoolNil sets the value for ValueBool to be an explicit nil
 func (o *UpdatePlanEntitlementRequestBody) SetValueBoolNil() {
 	o.ValueBool.Set(nil)
@@ -164,6 +166,7 @@ func (o *UpdatePlanEntitlementRequestBody) HasValueNumeric() bool {
 func (o *UpdatePlanEntitlementRequestBody) SetValueNumeric(v int32) {
 	o.ValueNumeric.Set(&v)
 }
+
 // SetValueNumericNil sets the value for ValueNumeric to be an explicit nil
 func (o *UpdatePlanEntitlementRequestBody) SetValueNumericNil() {
 	o.ValueNumeric.Set(nil)
@@ -206,6 +209,7 @@ func (o *UpdatePlanEntitlementRequestBody) HasValueTraitId() bool {
 func (o *UpdatePlanEntitlementRequestBody) SetValueTraitId(v string) {
 	o.ValueTraitId.Set(&v)
 }
+
 // SetValueTraitIdNil sets the value for ValueTraitId to be an explicit nil
 func (o *UpdatePlanEntitlementRequestBody) SetValueTraitIdNil() {
 	o.ValueTraitId.Set(nil)
@@ -241,7 +245,7 @@ func (o *UpdatePlanEntitlementRequestBody) SetValueType(v string) {
 }
 
 func (o UpdatePlanEntitlementRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -279,10 +283,10 @@ func (o *UpdatePlanEntitlementRequestBody) UnmarshalJSON(data []byte) (err error
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -338,5 +342,3 @@ func (v *NullableUpdatePlanEntitlementRequestBody) UnmarshalJSON(src []byte) err
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

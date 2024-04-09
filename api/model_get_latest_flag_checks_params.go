@@ -19,11 +19,11 @@ var _ MappedNullable = &GetLatestFlagChecksParams{}
 
 // GetLatestFlagChecksParams Input parameters
 type GetLatestFlagChecksParams struct {
-	FlagId *string `json:"flag_id,omitempty"`
+	FlagId  *string  `json:"flag_id,omitempty"`
 	FlagIds []string `json:"flag_ids,omitempty"`
-	Id *string `json:"id,omitempty"`
-	Limit *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
+	Id      *string  `json:"id,omitempty"`
+	Limit   *int32   `json:"limit,omitempty"`
+	Offset  *int32   `json:"offset,omitempty"`
 }
 
 // NewGetLatestFlagChecksParams instantiates a new GetLatestFlagChecksParams object
@@ -204,7 +204,7 @@ func (o *GetLatestFlagChecksParams) SetOffset(v int32) {
 }
 
 func (o GetLatestFlagChecksParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -266,5 +266,3 @@ func (v *NullableGetLatestFlagChecksParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

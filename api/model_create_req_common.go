@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,12 +21,12 @@ var _ MappedNullable = &CreateReqCommon{}
 
 // CreateReqCommon struct for CreateReqCommon
 type CreateReqCommon struct {
-	FeatureId string `json:"feature_id"`
+	FeatureId    string         `json:"feature_id"`
 	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	ValueBool NullableBool `json:"value_bool,omitempty"`
-	ValueNumeric NullableInt32 `json:"value_numeric,omitempty"`
+	ValueBool    NullableBool   `json:"value_bool,omitempty"`
+	ValueNumeric NullableInt32  `json:"value_numeric,omitempty"`
 	ValueTraitId NullableString `json:"value_trait_id,omitempty"`
-	ValueType string `json:"value_type"`
+	ValueType    string         `json:"value_type"`
 }
 
 type _CreateReqCommon CreateReqCommon
@@ -106,6 +106,7 @@ func (o *CreateReqCommon) HasMetricPeriod() bool {
 func (o *CreateReqCommon) SetMetricPeriod(v string) {
 	o.MetricPeriod.Set(&v)
 }
+
 // SetMetricPeriodNil sets the value for MetricPeriod to be an explicit nil
 func (o *CreateReqCommon) SetMetricPeriodNil() {
 	o.MetricPeriod.Set(nil)
@@ -148,6 +149,7 @@ func (o *CreateReqCommon) HasValueBool() bool {
 func (o *CreateReqCommon) SetValueBool(v bool) {
 	o.ValueBool.Set(&v)
 }
+
 // SetValueBoolNil sets the value for ValueBool to be an explicit nil
 func (o *CreateReqCommon) SetValueBoolNil() {
 	o.ValueBool.Set(nil)
@@ -190,6 +192,7 @@ func (o *CreateReqCommon) HasValueNumeric() bool {
 func (o *CreateReqCommon) SetValueNumeric(v int32) {
 	o.ValueNumeric.Set(&v)
 }
+
 // SetValueNumericNil sets the value for ValueNumeric to be an explicit nil
 func (o *CreateReqCommon) SetValueNumericNil() {
 	o.ValueNumeric.Set(nil)
@@ -232,6 +235,7 @@ func (o *CreateReqCommon) HasValueTraitId() bool {
 func (o *CreateReqCommon) SetValueTraitId(v string) {
 	o.ValueTraitId.Set(&v)
 }
+
 // SetValueTraitIdNil sets the value for ValueTraitId to be an explicit nil
 func (o *CreateReqCommon) SetValueTraitIdNil() {
 	o.ValueTraitId.Set(nil)
@@ -267,7 +271,7 @@ func (o *CreateReqCommon) SetValueType(v string) {
 }
 
 func (o CreateReqCommon) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -307,10 +311,10 @@ func (o *CreateReqCommon) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -366,5 +370,3 @@ func (v *NullableCreateReqCommon) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

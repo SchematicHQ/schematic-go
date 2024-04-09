@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the FlagDetailResponseData type satisfies the MappedNullable interface at compile time
@@ -22,16 +22,16 @@ var _ MappedNullable = &FlagDetailResponseData{}
 
 // FlagDetailResponseData The updated resource
 type FlagDetailResponseData struct {
-	CreatedAt time.Time `json:"created_at"`
-	DefaultValue bool `json:"default_value"`
-	Description string `json:"description"`
-	FeatureId NullableString `json:"feature_id,omitempty"`
-	FlagType string `json:"flag_type"`
-	Id string `json:"id"`
-	Key string `json:"key"`
-	Name string `json:"name"`
-	Rules []RuleDetailResponseData `json:"rules"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt    time.Time                `json:"created_at"`
+	DefaultValue bool                     `json:"default_value"`
+	Description  string                   `json:"description"`
+	FeatureId    NullableString           `json:"feature_id,omitempty"`
+	FlagType     string                   `json:"flag_type"`
+	Id           string                   `json:"id"`
+	Key          string                   `json:"key"`
+	Name         string                   `json:"name"`
+	Rules        []RuleDetailResponseData `json:"rules"`
+	UpdatedAt    time.Time                `json:"updated_at"`
 }
 
 type _FlagDetailResponseData FlagDetailResponseData
@@ -166,6 +166,7 @@ func (o *FlagDetailResponseData) HasFeatureId() bool {
 func (o *FlagDetailResponseData) SetFeatureId(v string) {
 	o.FeatureId.Set(&v)
 }
+
 // SetFeatureIdNil sets the value for FeatureId to be an explicit nil
 func (o *FlagDetailResponseData) SetFeatureIdNil() {
 	o.FeatureId.Set(nil)
@@ -321,7 +322,7 @@ func (o *FlagDetailResponseData) SetUpdatedAt(v time.Time) {
 }
 
 func (o FlagDetailResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -366,10 +367,10 @@ func (o *FlagDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -425,5 +426,3 @@ func (v *NullableFlagDetailResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

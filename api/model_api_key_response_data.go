@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the ApiKeyResponseData type satisfies the MappedNullable interface at compile time
@@ -22,14 +22,14 @@ var _ MappedNullable = &ApiKeyResponseData{}
 
 // ApiKeyResponseData The updated resource
 type ApiKeyResponseData struct {
-	CreatedAt time.Time `json:"created_at"`
-	Description NullableString `json:"description,omitempty"`
+	CreatedAt     time.Time      `json:"created_at"`
+	Description   NullableString `json:"description,omitempty"`
 	EnvironmentId NullableString `json:"environment_id,omitempty"`
-	Id string `json:"id"`
-	LastUsedAt NullableTime `json:"last_used_at,omitempty"`
-	Name string `json:"name"`
-	Scopes []string `json:"scopes"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Id            string         `json:"id"`
+	LastUsedAt    NullableTime   `json:"last_used_at,omitempty"`
+	Name          string         `json:"name"`
+	Scopes        []string       `json:"scopes"`
+	UpdatedAt     time.Time      `json:"updated_at"`
 }
 
 type _ApiKeyResponseData ApiKeyResponseData
@@ -112,6 +112,7 @@ func (o *ApiKeyResponseData) HasDescription() bool {
 func (o *ApiKeyResponseData) SetDescription(v string) {
 	o.Description.Set(&v)
 }
+
 // SetDescriptionNil sets the value for Description to be an explicit nil
 func (o *ApiKeyResponseData) SetDescriptionNil() {
 	o.Description.Set(nil)
@@ -154,6 +155,7 @@ func (o *ApiKeyResponseData) HasEnvironmentId() bool {
 func (o *ApiKeyResponseData) SetEnvironmentId(v string) {
 	o.EnvironmentId.Set(&v)
 }
+
 // SetEnvironmentIdNil sets the value for EnvironmentId to be an explicit nil
 func (o *ApiKeyResponseData) SetEnvironmentIdNil() {
 	o.EnvironmentId.Set(nil)
@@ -220,6 +222,7 @@ func (o *ApiKeyResponseData) HasLastUsedAt() bool {
 func (o *ApiKeyResponseData) SetLastUsedAt(v time.Time) {
 	o.LastUsedAt.Set(&v)
 }
+
 // SetLastUsedAtNil sets the value for LastUsedAt to be an explicit nil
 func (o *ApiKeyResponseData) SetLastUsedAtNil() {
 	o.LastUsedAt.Set(nil)
@@ -303,7 +306,7 @@ func (o *ApiKeyResponseData) SetUpdatedAt(v time.Time) {
 }
 
 func (o ApiKeyResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -346,10 +349,10 @@ func (o *ApiKeyResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -405,5 +408,3 @@ func (v *NullableApiKeyResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

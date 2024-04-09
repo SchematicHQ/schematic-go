@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the EntityKeyResponseData type satisfies the MappedNullable interface at compile time
@@ -22,15 +22,15 @@ var _ MappedNullable = &EntityKeyResponseData{}
 
 // EntityKeyResponseData struct for EntityKeyResponseData
 type EntityKeyResponseData struct {
-	CreatedAt time.Time `json:"created_at"`
-	DefinitionId string `json:"definition_id"`
-	EntityId string `json:"entity_id"`
-	EntityType string `json:"entity_type"`
-	EnvironmentId string `json:"environment_id"`
-	Id string `json:"id"`
-	Key string `json:"key"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Value string `json:"value"`
+	CreatedAt     time.Time `json:"created_at"`
+	DefinitionId  string    `json:"definition_id"`
+	EntityId      string    `json:"entity_id"`
+	EntityType    string    `json:"entity_type"`
+	EnvironmentId string    `json:"environment_id"`
+	Id            string    `json:"id"`
+	Key           string    `json:"key"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	Value         string    `json:"value"`
 }
 
 type _EntityKeyResponseData EntityKeyResponseData
@@ -278,7 +278,7 @@ func (o *EntityKeyResponseData) SetValue(v string) {
 }
 
 func (o EntityKeyResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -320,10 +320,10 @@ func (o *EntityKeyResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -379,5 +379,3 @@ func (v *NullableEntityKeyResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

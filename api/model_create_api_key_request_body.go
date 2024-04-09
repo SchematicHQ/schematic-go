@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,9 +21,9 @@ var _ MappedNullable = &CreateApiKeyRequestBody{}
 
 // CreateApiKeyRequestBody struct for CreateApiKeyRequestBody
 type CreateApiKeyRequestBody struct {
-	Description NullableString `json:"description,omitempty"`
+	Description   NullableString `json:"description,omitempty"`
 	EnvironmentId NullableString `json:"environment_id,omitempty"`
-	Name string `json:"name"`
+	Name          string         `json:"name"`
 }
 
 type _CreateApiKeyRequestBody CreateApiKeyRequestBody
@@ -78,6 +78,7 @@ func (o *CreateApiKeyRequestBody) HasDescription() bool {
 func (o *CreateApiKeyRequestBody) SetDescription(v string) {
 	o.Description.Set(&v)
 }
+
 // SetDescriptionNil sets the value for Description to be an explicit nil
 func (o *CreateApiKeyRequestBody) SetDescriptionNil() {
 	o.Description.Set(nil)
@@ -120,6 +121,7 @@ func (o *CreateApiKeyRequestBody) HasEnvironmentId() bool {
 func (o *CreateApiKeyRequestBody) SetEnvironmentId(v string) {
 	o.EnvironmentId.Set(&v)
 }
+
 // SetEnvironmentIdNil sets the value for EnvironmentId to be an explicit nil
 func (o *CreateApiKeyRequestBody) SetEnvironmentIdNil() {
 	o.EnvironmentId.Set(nil)
@@ -155,7 +157,7 @@ func (o *CreateApiKeyRequestBody) SetName(v string) {
 }
 
 func (o CreateApiKeyRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -187,10 +189,10 @@ func (o *CreateApiKeyRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -246,5 +248,3 @@ func (v *NullableCreateApiKeyRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

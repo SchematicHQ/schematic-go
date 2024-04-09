@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,7 +22,7 @@ var _ MappedNullable = &CreateEnvironmentRequestBody{}
 // CreateEnvironmentRequestBody struct for CreateEnvironmentRequestBody
 type CreateEnvironmentRequestBody struct {
 	EnvironmentType string `json:"environment_type"`
-	Name string `json:"name"`
+	Name            string `json:"name"`
 }
 
 type _CreateEnvironmentRequestBody CreateEnvironmentRequestBody
@@ -95,7 +95,7 @@ func (o *CreateEnvironmentRequestBody) SetName(v string) {
 }
 
 func (o CreateEnvironmentRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -123,10 +123,10 @@ func (o *CreateEnvironmentRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -182,5 +182,3 @@ func (v *NullableCreateEnvironmentRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

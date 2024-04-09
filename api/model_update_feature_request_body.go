@@ -19,13 +19,13 @@ var _ MappedNullable = &UpdateFeatureRequestBody{}
 
 // UpdateFeatureRequestBody struct for UpdateFeatureRequestBody
 type UpdateFeatureRequestBody struct {
-	Description NullableString `json:"description,omitempty"`
-	EventSubtype NullableString `json:"event_subtype,omitempty"`
-	FeatureType NullableString `json:"feature_type,omitempty"`
-	Flag *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
-	LifecyclePhase NullableString `json:"lifecycle_phase,omitempty"`
-	Name NullableString `json:"name,omitempty"`
-	TraitId NullableString `json:"trait_id,omitempty"`
+	Description    NullableString                 `json:"description,omitempty"`
+	EventSubtype   NullableString                 `json:"event_subtype,omitempty"`
+	FeatureType    NullableString                 `json:"feature_type,omitempty"`
+	Flag           *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
+	LifecyclePhase NullableString                 `json:"lifecycle_phase,omitempty"`
+	Name           NullableString                 `json:"name,omitempty"`
+	TraitId        NullableString                 `json:"trait_id,omitempty"`
 }
 
 // NewUpdateFeatureRequestBody instantiates a new UpdateFeatureRequestBody object
@@ -77,6 +77,7 @@ func (o *UpdateFeatureRequestBody) HasDescription() bool {
 func (o *UpdateFeatureRequestBody) SetDescription(v string) {
 	o.Description.Set(&v)
 }
+
 // SetDescriptionNil sets the value for Description to be an explicit nil
 func (o *UpdateFeatureRequestBody) SetDescriptionNil() {
 	o.Description.Set(nil)
@@ -119,6 +120,7 @@ func (o *UpdateFeatureRequestBody) HasEventSubtype() bool {
 func (o *UpdateFeatureRequestBody) SetEventSubtype(v string) {
 	o.EventSubtype.Set(&v)
 }
+
 // SetEventSubtypeNil sets the value for EventSubtype to be an explicit nil
 func (o *UpdateFeatureRequestBody) SetEventSubtypeNil() {
 	o.EventSubtype.Set(nil)
@@ -161,6 +163,7 @@ func (o *UpdateFeatureRequestBody) HasFeatureType() bool {
 func (o *UpdateFeatureRequestBody) SetFeatureType(v string) {
 	o.FeatureType.Set(&v)
 }
+
 // SetFeatureTypeNil sets the value for FeatureType to be an explicit nil
 func (o *UpdateFeatureRequestBody) SetFeatureTypeNil() {
 	o.FeatureType.Set(nil)
@@ -235,6 +238,7 @@ func (o *UpdateFeatureRequestBody) HasLifecyclePhase() bool {
 func (o *UpdateFeatureRequestBody) SetLifecyclePhase(v string) {
 	o.LifecyclePhase.Set(&v)
 }
+
 // SetLifecyclePhaseNil sets the value for LifecyclePhase to be an explicit nil
 func (o *UpdateFeatureRequestBody) SetLifecyclePhaseNil() {
 	o.LifecyclePhase.Set(nil)
@@ -277,6 +281,7 @@ func (o *UpdateFeatureRequestBody) HasName() bool {
 func (o *UpdateFeatureRequestBody) SetName(v string) {
 	o.Name.Set(&v)
 }
+
 // SetNameNil sets the value for Name to be an explicit nil
 func (o *UpdateFeatureRequestBody) SetNameNil() {
 	o.Name.Set(nil)
@@ -319,6 +324,7 @@ func (o *UpdateFeatureRequestBody) HasTraitId() bool {
 func (o *UpdateFeatureRequestBody) SetTraitId(v string) {
 	o.TraitId.Set(&v)
 }
+
 // SetTraitIdNil sets the value for TraitId to be an explicit nil
 func (o *UpdateFeatureRequestBody) SetTraitIdNil() {
 	o.TraitId.Set(nil)
@@ -330,7 +336,7 @@ func (o *UpdateFeatureRequestBody) UnsetTraitId() {
 }
 
 func (o UpdateFeatureRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -398,5 +404,3 @@ func (v *NullableUpdateFeatureRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

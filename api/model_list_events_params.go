@@ -19,11 +19,11 @@ var _ MappedNullable = &ListEventsParams{}
 
 // ListEventsParams Input parameters
 type ListEventsParams struct {
-	CompanyId *string `json:"company_id,omitempty"`
+	CompanyId    *string `json:"company_id,omitempty"`
 	EventSubtype *string `json:"event_subtype,omitempty"`
-	Limit *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
-	UserId *string `json:"user_id,omitempty"`
+	Limit        *int32  `json:"limit,omitempty"`
+	Offset       *int32  `json:"offset,omitempty"`
+	UserId       *string `json:"user_id,omitempty"`
 }
 
 // NewListEventsParams instantiates a new ListEventsParams object
@@ -204,7 +204,7 @@ func (o *ListEventsParams) SetUserId(v string) {
 }
 
 func (o ListEventsParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -266,5 +266,3 @@ func (v *NullableListEventsParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

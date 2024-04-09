@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,8 +22,8 @@ var _ MappedNullable = &GetLatestFlagChecksResponse{}
 // GetLatestFlagChecksResponse struct for GetLatestFlagChecksResponse
 type GetLatestFlagChecksResponse struct {
 	// The returned resources
-	Data []FlagCheckLogResponseData `json:"data"`
-	Params GetLatestFlagChecksParams `json:"params"`
+	Data   []FlagCheckLogResponseData `json:"data"`
+	Params GetLatestFlagChecksParams  `json:"params"`
 }
 
 type _GetLatestFlagChecksResponse GetLatestFlagChecksResponse
@@ -96,7 +96,7 @@ func (o *GetLatestFlagChecksResponse) SetParams(v GetLatestFlagChecksParams) {
 }
 
 func (o GetLatestFlagChecksResponse) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -124,10 +124,10 @@ func (o *GetLatestFlagChecksResponse) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -183,5 +183,3 @@ func (v *NullableGetLatestFlagChecksResponse) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the UpsertUserSubRequestBody type satisfies the MappedNullable interface at compile time
@@ -23,13 +23,13 @@ var _ MappedNullable = &UpsertUserSubRequestBody{}
 // UpsertUserSubRequestBody struct for UpsertUserSubRequestBody
 type UpsertUserSubRequestBody struct {
 	// Optionally specify company using Schematic company ID
-	CompanyId NullableString `json:"company_id,omitempty"`
-	Keys map[string]interface{} `json:"keys"`
-	LastSeenAt NullableTime `json:"last_seen_at,omitempty"`
-	Name NullableString `json:"name,omitempty"`
+	CompanyId  NullableString         `json:"company_id,omitempty"`
+	Keys       map[string]interface{} `json:"keys"`
+	LastSeenAt NullableTime           `json:"last_seen_at,omitempty"`
+	Name       NullableString         `json:"name,omitempty"`
 	// A map of trait names to trait values
-	Traits map[string]interface{} `json:"traits,omitempty"`
-	UpdateOnly NullableBool `json:"update_only,omitempty"`
+	Traits     map[string]interface{} `json:"traits,omitempty"`
+	UpdateOnly NullableBool           `json:"update_only,omitempty"`
 }
 
 type _UpsertUserSubRequestBody UpsertUserSubRequestBody
@@ -84,6 +84,7 @@ func (o *UpsertUserSubRequestBody) HasCompanyId() bool {
 func (o *UpsertUserSubRequestBody) SetCompanyId(v string) {
 	o.CompanyId.Set(&v)
 }
+
 // SetCompanyIdNil sets the value for CompanyId to be an explicit nil
 func (o *UpsertUserSubRequestBody) SetCompanyIdNil() {
 	o.CompanyId.Set(nil)
@@ -150,6 +151,7 @@ func (o *UpsertUserSubRequestBody) HasLastSeenAt() bool {
 func (o *UpsertUserSubRequestBody) SetLastSeenAt(v time.Time) {
 	o.LastSeenAt.Set(&v)
 }
+
 // SetLastSeenAtNil sets the value for LastSeenAt to be an explicit nil
 func (o *UpsertUserSubRequestBody) SetLastSeenAtNil() {
 	o.LastSeenAt.Set(nil)
@@ -192,6 +194,7 @@ func (o *UpsertUserSubRequestBody) HasName() bool {
 func (o *UpsertUserSubRequestBody) SetName(v string) {
 	o.Name.Set(&v)
 }
+
 // SetNameNil sets the value for Name to be an explicit nil
 func (o *UpsertUserSubRequestBody) SetNameNil() {
 	o.Name.Set(nil)
@@ -266,6 +269,7 @@ func (o *UpsertUserSubRequestBody) HasUpdateOnly() bool {
 func (o *UpsertUserSubRequestBody) SetUpdateOnly(v bool) {
 	o.UpdateOnly.Set(&v)
 }
+
 // SetUpdateOnlyNil sets the value for UpdateOnly to be an explicit nil
 func (o *UpsertUserSubRequestBody) SetUpdateOnlyNil() {
 	o.UpdateOnly.Set(nil)
@@ -277,7 +281,7 @@ func (o *UpsertUserSubRequestBody) UnsetUpdateOnly() {
 }
 
 func (o UpsertUserSubRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -318,10 +322,10 @@ func (o *UpsertUserSubRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -377,5 +381,3 @@ func (v *NullableUpsertUserSubRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

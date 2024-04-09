@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,12 +22,12 @@ var _ MappedNullable = &AudienceRequestBody{}
 // AudienceRequestBody struct for AudienceRequestBody
 type AudienceRequestBody struct {
 	ConditionGroups []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
-	Conditions []CreateOrUpdateConditionRequestBody `json:"conditions"`
+	Conditions      []CreateOrUpdateConditionRequestBody      `json:"conditions"`
 	// Page limit (default 100)
 	Limit NullableInt32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset NullableInt32 `json:"offset,omitempty"`
-	Q NullableString `json:"q,omitempty"`
+	Offset NullableInt32  `json:"offset,omitempty"`
+	Q      NullableString `json:"q,omitempty"`
 }
 
 type _AudienceRequestBody AudienceRequestBody
@@ -131,6 +131,7 @@ func (o *AudienceRequestBody) HasLimit() bool {
 func (o *AudienceRequestBody) SetLimit(v int32) {
 	o.Limit.Set(&v)
 }
+
 // SetLimitNil sets the value for Limit to be an explicit nil
 func (o *AudienceRequestBody) SetLimitNil() {
 	o.Limit.Set(nil)
@@ -173,6 +174,7 @@ func (o *AudienceRequestBody) HasOffset() bool {
 func (o *AudienceRequestBody) SetOffset(v int32) {
 	o.Offset.Set(&v)
 }
+
 // SetOffsetNil sets the value for Offset to be an explicit nil
 func (o *AudienceRequestBody) SetOffsetNil() {
 	o.Offset.Set(nil)
@@ -215,6 +217,7 @@ func (o *AudienceRequestBody) HasQ() bool {
 func (o *AudienceRequestBody) SetQ(v string) {
 	o.Q.Set(&v)
 }
+
 // SetQNil sets the value for Q to be an explicit nil
 func (o *AudienceRequestBody) SetQNil() {
 	o.Q.Set(nil)
@@ -226,7 +229,7 @@ func (o *AudienceRequestBody) UnsetQ() {
 }
 
 func (o AudienceRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -263,10 +266,10 @@ func (o *AudienceRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -322,5 +325,3 @@ func (v *NullableAudienceRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

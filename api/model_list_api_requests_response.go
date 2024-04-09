@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,8 +22,8 @@ var _ MappedNullable = &ListApiRequestsResponse{}
 // ListApiRequestsResponse struct for ListApiRequestsResponse
 type ListApiRequestsResponse struct {
 	// The returned resources
-	Data []ApiKeyRequestListResponseData `json:"data"`
-	Params ListApiRequestsParams `json:"params"`
+	Data   []ApiKeyRequestListResponseData `json:"data"`
+	Params ListApiRequestsParams           `json:"params"`
 }
 
 type _ListApiRequestsResponse ListApiRequestsResponse
@@ -96,7 +96,7 @@ func (o *ListApiRequestsResponse) SetParams(v ListApiRequestsParams) {
 }
 
 func (o ListApiRequestsResponse) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -124,10 +124,10 @@ func (o *ListApiRequestsResponse) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -183,5 +183,3 @@ func (v *NullableListApiRequestsResponse) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

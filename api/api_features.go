@@ -16,19 +16,18 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strings"
 	"reflect"
+	"strings"
 )
-
 
 type FeaturesAPI interface {
 
 	/*
-	CheckFlag Check flag
+		CheckFlag Check flag
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param key key
-	@return ApiCheckFlagRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param key key
+		@return ApiCheckFlagRequest
 	*/
 	CheckFlag(ctx context.Context, key string) ApiCheckFlagRequest
 
@@ -37,10 +36,10 @@ type FeaturesAPI interface {
 	CheckFlagExecute(r ApiCheckFlagRequest) (*CheckFlagResponse, *http.Response, error)
 
 	/*
-	CheckFlags Check flags
+		CheckFlags Check flags
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCheckFlagsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCheckFlagsRequest
 	*/
 	CheckFlags(ctx context.Context) ApiCheckFlagsRequest
 
@@ -49,10 +48,10 @@ type FeaturesAPI interface {
 	CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFlagsResponse, *http.Response, error)
 
 	/*
-	CountAudienceCompanies Count audience companies
+		CountAudienceCompanies Count audience companies
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountAudienceCompaniesRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountAudienceCompaniesRequest
 	*/
 	CountAudienceCompanies(ctx context.Context) ApiCountAudienceCompaniesRequest
 
@@ -61,10 +60,10 @@ type FeaturesAPI interface {
 	CountAudienceCompaniesExecute(r ApiCountAudienceCompaniesRequest) (*CountAudienceCompaniesResponse, *http.Response, error)
 
 	/*
-	CountAudienceUsers Count audience users
+		CountAudienceUsers Count audience users
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountAudienceUsersRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountAudienceUsersRequest
 	*/
 	CountAudienceUsers(ctx context.Context) ApiCountAudienceUsersRequest
 
@@ -73,10 +72,10 @@ type FeaturesAPI interface {
 	CountAudienceUsersExecute(r ApiCountAudienceUsersRequest) (*CountAudienceUsersResponse, *http.Response, error)
 
 	/*
-	CountFlagChecks Count flag checks
+		CountFlagChecks Count flag checks
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCountFlagChecksRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountFlagChecksRequest
 	*/
 	CountFlagChecks(ctx context.Context) ApiCountFlagChecksRequest
 
@@ -85,10 +84,10 @@ type FeaturesAPI interface {
 	CountFlagChecksExecute(r ApiCountFlagChecksRequest) (*CountFlagChecksResponse, *http.Response, error)
 
 	/*
-	CreateFeature Create feature
+		CreateFeature Create feature
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreateFeatureRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreateFeatureRequest
 	*/
 	CreateFeature(ctx context.Context) ApiCreateFeatureRequest
 
@@ -97,10 +96,10 @@ type FeaturesAPI interface {
 	CreateFeatureExecute(r ApiCreateFeatureRequest) (*CreateFeatureResponse, *http.Response, error)
 
 	/*
-	CreateFlag Create flag
+		CreateFlag Create flag
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreateFlagRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreateFlagRequest
 	*/
 	CreateFlag(ctx context.Context) ApiCreateFlagRequest
 
@@ -109,11 +108,11 @@ type FeaturesAPI interface {
 	CreateFlagExecute(r ApiCreateFlagRequest) (*CreateFlagResponse, *http.Response, error)
 
 	/*
-	DeleteFeature Delete feature
+		DeleteFeature Delete feature
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param featureId feature_id
-	@return ApiDeleteFeatureRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param featureId feature_id
+		@return ApiDeleteFeatureRequest
 	*/
 	DeleteFeature(ctx context.Context, featureId string) ApiDeleteFeatureRequest
 
@@ -122,11 +121,11 @@ type FeaturesAPI interface {
 	DeleteFeatureExecute(r ApiDeleteFeatureRequest) (*DeleteFeatureResponse, *http.Response, error)
 
 	/*
-	DeleteFlag Delete flag
+		DeleteFlag Delete flag
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param flagId flag_id
-	@return ApiDeleteFlagRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param flagId flag_id
+		@return ApiDeleteFlagRequest
 	*/
 	DeleteFlag(ctx context.Context, flagId string) ApiDeleteFlagRequest
 
@@ -135,11 +134,11 @@ type FeaturesAPI interface {
 	DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteFlagResponse, *http.Response, error)
 
 	/*
-	GetFeature Get feature
+		GetFeature Get feature
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param featureId feature_id
-	@return ApiGetFeatureRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param featureId feature_id
+		@return ApiGetFeatureRequest
 	*/
 	GetFeature(ctx context.Context, featureId string) ApiGetFeatureRequest
 
@@ -148,11 +147,11 @@ type FeaturesAPI interface {
 	GetFeatureExecute(r ApiGetFeatureRequest) (*GetFeatureResponse, *http.Response, error)
 
 	/*
-	GetFlag Get flag
+		GetFlag Get flag
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param flagId flag_id
-	@return ApiGetFlagRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param flagId flag_id
+		@return ApiGetFlagRequest
 	*/
 	GetFlag(ctx context.Context, flagId string) ApiGetFlagRequest
 
@@ -161,11 +160,11 @@ type FeaturesAPI interface {
 	GetFlagExecute(r ApiGetFlagRequest) (*GetFlagResponse, *http.Response, error)
 
 	/*
-	GetFlagCheck Get flag check
+		GetFlagCheck Get flag check
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param flagCheckId flag_check_id
-	@return ApiGetFlagCheckRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param flagCheckId flag_check_id
+		@return ApiGetFlagCheckRequest
 	*/
 	GetFlagCheck(ctx context.Context, flagCheckId string) ApiGetFlagCheckRequest
 
@@ -174,10 +173,10 @@ type FeaturesAPI interface {
 	GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*GetFlagCheckResponse, *http.Response, error)
 
 	/*
-	GetLatestFlagChecks Get latest flag checks
+		GetLatestFlagChecks Get latest flag checks
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiGetLatestFlagChecksRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiGetLatestFlagChecksRequest
 	*/
 	GetLatestFlagChecks(ctx context.Context) ApiGetLatestFlagChecksRequest
 
@@ -186,10 +185,10 @@ type FeaturesAPI interface {
 	GetLatestFlagChecksExecute(r ApiGetLatestFlagChecksRequest) (*GetLatestFlagChecksResponse, *http.Response, error)
 
 	/*
-	ListAudienceCompanies List audience companies
+		ListAudienceCompanies List audience companies
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListAudienceCompaniesRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListAudienceCompaniesRequest
 	*/
 	ListAudienceCompanies(ctx context.Context) ApiListAudienceCompaniesRequest
 
@@ -198,10 +197,10 @@ type FeaturesAPI interface {
 	ListAudienceCompaniesExecute(r ApiListAudienceCompaniesRequest) (*ListAudienceCompaniesResponse, *http.Response, error)
 
 	/*
-	ListAudienceUsers List audience users
+		ListAudienceUsers List audience users
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListAudienceUsersRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListAudienceUsersRequest
 	*/
 	ListAudienceUsers(ctx context.Context) ApiListAudienceUsersRequest
 
@@ -210,10 +209,10 @@ type FeaturesAPI interface {
 	ListAudienceUsersExecute(r ApiListAudienceUsersRequest) (*ListAudienceUsersResponse, *http.Response, error)
 
 	/*
-	ListFeatures List features
+		ListFeatures List features
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListFeaturesRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListFeaturesRequest
 	*/
 	ListFeatures(ctx context.Context) ApiListFeaturesRequest
 
@@ -222,10 +221,10 @@ type FeaturesAPI interface {
 	ListFeaturesExecute(r ApiListFeaturesRequest) (*ListFeaturesResponse, *http.Response, error)
 
 	/*
-	ListFlagChecks List flag checks
+		ListFlagChecks List flag checks
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListFlagChecksRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListFlagChecksRequest
 	*/
 	ListFlagChecks(ctx context.Context) ApiListFlagChecksRequest
 
@@ -234,10 +233,10 @@ type FeaturesAPI interface {
 	ListFlagChecksExecute(r ApiListFlagChecksRequest) (*ListFlagChecksResponse, *http.Response, error)
 
 	/*
-	ListFlags List flags
+		ListFlags List flags
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListFlagsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListFlagsRequest
 	*/
 	ListFlags(ctx context.Context) ApiListFlagsRequest
 
@@ -246,11 +245,11 @@ type FeaturesAPI interface {
 	ListFlagsExecute(r ApiListFlagsRequest) (*ListFlagsResponse, *http.Response, error)
 
 	/*
-	UpdateFeature Update feature
+		UpdateFeature Update feature
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param featureId feature_id
-	@return ApiUpdateFeatureRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param featureId feature_id
+		@return ApiUpdateFeatureRequest
 	*/
 	UpdateFeature(ctx context.Context, featureId string) ApiUpdateFeatureRequest
 
@@ -259,11 +258,11 @@ type FeaturesAPI interface {
 	UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*UpdateFeatureResponse, *http.Response, error)
 
 	/*
-	UpdateFlag Update flag
+		UpdateFlag Update flag
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param flagId flag_id
-	@return ApiUpdateFlagRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param flagId flag_id
+		@return ApiUpdateFlagRequest
 	*/
 	UpdateFlag(ctx context.Context, flagId string) ApiUpdateFlagRequest
 
@@ -272,11 +271,11 @@ type FeaturesAPI interface {
 	UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateFlagResponse, *http.Response, error)
 
 	/*
-	UpdateFlagRules Update flag rules
+		UpdateFlagRules Update flag rules
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param flagId flag_id
-	@return ApiUpdateFlagRulesRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param flagId flag_id
+		@return ApiUpdateFlagRulesRequest
 	*/
 	UpdateFlagRules(ctx context.Context, flagId string) ApiUpdateFlagRulesRequest
 
@@ -289,9 +288,9 @@ type FeaturesAPI interface {
 type FeaturesAPIService service
 
 type ApiCheckFlagRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
-	key string
+	ctx                  context.Context
+	ApiService           FeaturesAPI
+	key                  string
 	checkFlagRequestBody *CheckFlagRequestBody
 }
 
@@ -307,26 +306,27 @@ func (r ApiCheckFlagRequest) Execute() (*CheckFlagResponse, *http.Response, erro
 /*
 CheckFlag Check flag
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param key key
- @return ApiCheckFlagRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param key key
+	@return ApiCheckFlagRequest
 */
 func (a *FeaturesAPIService) CheckFlag(ctx context.Context, key string) ApiCheckFlagRequest {
 	return ApiCheckFlagRequest{
 		ApiService: a,
-		ctx: ctx,
-		key: key,
+		ctx:        ctx,
+		key:        key,
 	}
 }
 
 // Execute executes the request
-//  @return CheckFlagResponse
+//
+//	@return CheckFlagResponse
 func (a *FeaturesAPIService) CheckFlagExecute(r ApiCheckFlagRequest) (*CheckFlagResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CheckFlagResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CheckFlagResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CheckFlag")
@@ -363,11 +363,11 @@ func (a *FeaturesAPIService) CheckFlagExecute(r ApiCheckFlagRequest) (*CheckFlag
 	}
 	// body params
 	localVarPostBody = r.checkFlagRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -377,14 +377,13 @@ func (a *FeaturesAPIService) CheckFlagExecute(r ApiCheckFlagRequest) (*CheckFlag
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -411,8 +410,8 @@ func (a *FeaturesAPIService) CheckFlagExecute(r ApiCheckFlagRequest) (*CheckFlag
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -422,8 +421,8 @@ func (a *FeaturesAPIService) CheckFlagExecute(r ApiCheckFlagRequest) (*CheckFlag
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -433,8 +432,8 @@ func (a *FeaturesAPIService) CheckFlagExecute(r ApiCheckFlagRequest) (*CheckFlag
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -444,8 +443,8 @@ func (a *FeaturesAPIService) CheckFlagExecute(r ApiCheckFlagRequest) (*CheckFlag
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -463,8 +462,8 @@ func (a *FeaturesAPIService) CheckFlagExecute(r ApiCheckFlagRequest) (*CheckFlag
 }
 
 type ApiCheckFlagsRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
+	ctx                  context.Context
+	ApiService           FeaturesAPI
 	checkFlagRequestBody *CheckFlagRequestBody
 }
 
@@ -480,24 +479,25 @@ func (r ApiCheckFlagsRequest) Execute() (*CheckFlagsResponse, *http.Response, er
 /*
 CheckFlags Check flags
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCheckFlagsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCheckFlagsRequest
 */
 func (a *FeaturesAPIService) CheckFlags(ctx context.Context) ApiCheckFlagsRequest {
 	return ApiCheckFlagsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CheckFlagsResponse
+//
+//	@return CheckFlagsResponse
 func (a *FeaturesAPIService) CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFlagsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CheckFlagsResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CheckFlagsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CheckFlags")
@@ -533,11 +533,11 @@ func (a *FeaturesAPIService) CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFl
 	}
 	// body params
 	localVarPostBody = r.checkFlagRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -547,14 +547,13 @@ func (a *FeaturesAPIService) CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFl
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -581,8 +580,8 @@ func (a *FeaturesAPIService) CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFl
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -592,8 +591,8 @@ func (a *FeaturesAPIService) CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFl
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -603,8 +602,8 @@ func (a *FeaturesAPIService) CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFl
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -614,8 +613,8 @@ func (a *FeaturesAPIService) CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFl
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -633,8 +632,8 @@ func (a *FeaturesAPIService) CheckFlagsExecute(r ApiCheckFlagsRequest) (*CheckFl
 }
 
 type ApiCountAudienceCompaniesRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
+	ctx                 context.Context
+	ApiService          FeaturesAPI
 	audienceRequestBody *AudienceRequestBody
 }
 
@@ -650,24 +649,25 @@ func (r ApiCountAudienceCompaniesRequest) Execute() (*CountAudienceCompaniesResp
 /*
 CountAudienceCompanies Count audience companies
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountAudienceCompaniesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountAudienceCompaniesRequest
 */
 func (a *FeaturesAPIService) CountAudienceCompanies(ctx context.Context) ApiCountAudienceCompaniesRequest {
 	return ApiCountAudienceCompaniesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CountAudienceCompaniesResponse
+//
+//	@return CountAudienceCompaniesResponse
 func (a *FeaturesAPIService) CountAudienceCompaniesExecute(r ApiCountAudienceCompaniesRequest) (*CountAudienceCompaniesResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CountAudienceCompaniesResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountAudienceCompaniesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CountAudienceCompanies")
@@ -703,11 +703,11 @@ func (a *FeaturesAPIService) CountAudienceCompaniesExecute(r ApiCountAudienceCom
 	}
 	// body params
 	localVarPostBody = r.audienceRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -717,14 +717,13 @@ func (a *FeaturesAPIService) CountAudienceCompaniesExecute(r ApiCountAudienceCom
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -751,8 +750,8 @@ func (a *FeaturesAPIService) CountAudienceCompaniesExecute(r ApiCountAudienceCom
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -762,8 +761,8 @@ func (a *FeaturesAPIService) CountAudienceCompaniesExecute(r ApiCountAudienceCom
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -773,8 +772,8 @@ func (a *FeaturesAPIService) CountAudienceCompaniesExecute(r ApiCountAudienceCom
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -784,8 +783,8 @@ func (a *FeaturesAPIService) CountAudienceCompaniesExecute(r ApiCountAudienceCom
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -803,8 +802,8 @@ func (a *FeaturesAPIService) CountAudienceCompaniesExecute(r ApiCountAudienceCom
 }
 
 type ApiCountAudienceUsersRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
+	ctx                 context.Context
+	ApiService          FeaturesAPI
 	audienceRequestBody *AudienceRequestBody
 }
 
@@ -820,24 +819,25 @@ func (r ApiCountAudienceUsersRequest) Execute() (*CountAudienceUsersResponse, *h
 /*
 CountAudienceUsers Count audience users
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountAudienceUsersRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountAudienceUsersRequest
 */
 func (a *FeaturesAPIService) CountAudienceUsers(ctx context.Context) ApiCountAudienceUsersRequest {
 	return ApiCountAudienceUsersRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CountAudienceUsersResponse
+//
+//	@return CountAudienceUsersResponse
 func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRequest) (*CountAudienceUsersResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CountAudienceUsersResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountAudienceUsersResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CountAudienceUsers")
@@ -873,11 +873,11 @@ func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRe
 	}
 	// body params
 	localVarPostBody = r.audienceRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -887,14 +887,13 @@ func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRe
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -921,8 +920,8 @@ func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -932,8 +931,8 @@ func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -943,8 +942,8 @@ func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -954,8 +953,8 @@ func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -973,13 +972,13 @@ func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRe
 }
 
 type ApiCountFlagChecksRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService FeaturesAPI
-	flagId *string
-	flagIds *[]string
-	id *string
-	limit *int32
-	offset *int32
+	flagId     *string
+	flagIds    *[]string
+	id         *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiCountFlagChecksRequest) FlagId(flagId string) ApiCountFlagChecksRequest {
@@ -1016,24 +1015,25 @@ func (r ApiCountFlagChecksRequest) Execute() (*CountFlagChecksResponse, *http.Re
 /*
 CountFlagChecks Count flag checks
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCountFlagChecksRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountFlagChecksRequest
 */
 func (a *FeaturesAPIService) CountFlagChecks(ctx context.Context) ApiCountFlagChecksRequest {
 	return ApiCountFlagChecksRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CountFlagChecksResponse
+//
+//	@return CountFlagChecksResponse
 func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest) (*CountFlagChecksResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CountFlagChecksResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountFlagChecksResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CountFlagChecks")
@@ -1087,11 +1087,11 @@ func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1101,14 +1101,13 @@ func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest)
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1135,8 +1134,8 @@ func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1146,8 +1145,8 @@ func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1157,8 +1156,8 @@ func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1168,8 +1167,8 @@ func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1187,8 +1186,8 @@ func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest)
 }
 
 type ApiCreateFeatureRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
+	ctx                      context.Context
+	ApiService               FeaturesAPI
 	createFeatureRequestBody *CreateFeatureRequestBody
 }
 
@@ -1204,24 +1203,25 @@ func (r ApiCreateFeatureRequest) Execute() (*CreateFeatureResponse, *http.Respon
 /*
 CreateFeature Create feature
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateFeatureRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreateFeatureRequest
 */
 func (a *FeaturesAPIService) CreateFeature(ctx context.Context) ApiCreateFeatureRequest {
 	return ApiCreateFeatureRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreateFeatureResponse
+//
+//	@return CreateFeatureResponse
 func (a *FeaturesAPIService) CreateFeatureExecute(r ApiCreateFeatureRequest) (*CreateFeatureResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateFeatureResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateFeatureResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CreateFeature")
@@ -1257,11 +1257,11 @@ func (a *FeaturesAPIService) CreateFeatureExecute(r ApiCreateFeatureRequest) (*C
 	}
 	// body params
 	localVarPostBody = r.createFeatureRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1271,14 +1271,13 @@ func (a *FeaturesAPIService) CreateFeatureExecute(r ApiCreateFeatureRequest) (*C
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1305,8 +1304,8 @@ func (a *FeaturesAPIService) CreateFeatureExecute(r ApiCreateFeatureRequest) (*C
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1316,8 +1315,8 @@ func (a *FeaturesAPIService) CreateFeatureExecute(r ApiCreateFeatureRequest) (*C
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1327,8 +1326,8 @@ func (a *FeaturesAPIService) CreateFeatureExecute(r ApiCreateFeatureRequest) (*C
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1338,8 +1337,8 @@ func (a *FeaturesAPIService) CreateFeatureExecute(r ApiCreateFeatureRequest) (*C
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1357,8 +1356,8 @@ func (a *FeaturesAPIService) CreateFeatureExecute(r ApiCreateFeatureRequest) (*C
 }
 
 type ApiCreateFlagRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
+	ctx                   context.Context
+	ApiService            FeaturesAPI
 	createFlagRequestBody *CreateFlagRequestBody
 }
 
@@ -1374,24 +1373,25 @@ func (r ApiCreateFlagRequest) Execute() (*CreateFlagResponse, *http.Response, er
 /*
 CreateFlag Create flag
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateFlagRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreateFlagRequest
 */
 func (a *FeaturesAPIService) CreateFlag(ctx context.Context) ApiCreateFlagRequest {
 	return ApiCreateFlagRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreateFlagResponse
+//
+//	@return CreateFlagResponse
 func (a *FeaturesAPIService) CreateFlagExecute(r ApiCreateFlagRequest) (*CreateFlagResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateFlagResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateFlagResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CreateFlag")
@@ -1427,11 +1427,11 @@ func (a *FeaturesAPIService) CreateFlagExecute(r ApiCreateFlagRequest) (*CreateF
 	}
 	// body params
 	localVarPostBody = r.createFlagRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1441,14 +1441,13 @@ func (a *FeaturesAPIService) CreateFlagExecute(r ApiCreateFlagRequest) (*CreateF
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1475,8 +1474,8 @@ func (a *FeaturesAPIService) CreateFlagExecute(r ApiCreateFlagRequest) (*CreateF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1486,8 +1485,8 @@ func (a *FeaturesAPIService) CreateFlagExecute(r ApiCreateFlagRequest) (*CreateF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1497,8 +1496,8 @@ func (a *FeaturesAPIService) CreateFlagExecute(r ApiCreateFlagRequest) (*CreateF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1508,8 +1507,8 @@ func (a *FeaturesAPIService) CreateFlagExecute(r ApiCreateFlagRequest) (*CreateF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1527,9 +1526,9 @@ func (a *FeaturesAPIService) CreateFlagExecute(r ApiCreateFlagRequest) (*CreateF
 }
 
 type ApiDeleteFeatureRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService FeaturesAPI
-	featureId string
+	featureId  string
 }
 
 func (r ApiDeleteFeatureRequest) Execute() (*DeleteFeatureResponse, *http.Response, error) {
@@ -1539,26 +1538,27 @@ func (r ApiDeleteFeatureRequest) Execute() (*DeleteFeatureResponse, *http.Respon
 /*
 DeleteFeature Delete feature
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param featureId feature_id
- @return ApiDeleteFeatureRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param featureId feature_id
+	@return ApiDeleteFeatureRequest
 */
 func (a *FeaturesAPIService) DeleteFeature(ctx context.Context, featureId string) ApiDeleteFeatureRequest {
 	return ApiDeleteFeatureRequest{
 		ApiService: a,
-		ctx: ctx,
-		featureId: featureId,
+		ctx:        ctx,
+		featureId:  featureId,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteFeatureResponse
+//
+//	@return DeleteFeatureResponse
 func (a *FeaturesAPIService) DeleteFeatureExecute(r ApiDeleteFeatureRequest) (*DeleteFeatureResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteFeatureResponse
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteFeatureResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.DeleteFeature")
@@ -1590,11 +1590,11 @@ func (a *FeaturesAPIService) DeleteFeatureExecute(r ApiDeleteFeatureRequest) (*D
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1604,14 +1604,13 @@ func (a *FeaturesAPIService) DeleteFeatureExecute(r ApiDeleteFeatureRequest) (*D
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1638,8 +1637,8 @@ func (a *FeaturesAPIService) DeleteFeatureExecute(r ApiDeleteFeatureRequest) (*D
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1649,8 +1648,8 @@ func (a *FeaturesAPIService) DeleteFeatureExecute(r ApiDeleteFeatureRequest) (*D
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1660,8 +1659,8 @@ func (a *FeaturesAPIService) DeleteFeatureExecute(r ApiDeleteFeatureRequest) (*D
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1671,8 +1670,8 @@ func (a *FeaturesAPIService) DeleteFeatureExecute(r ApiDeleteFeatureRequest) (*D
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1690,9 +1689,9 @@ func (a *FeaturesAPIService) DeleteFeatureExecute(r ApiDeleteFeatureRequest) (*D
 }
 
 type ApiDeleteFlagRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService FeaturesAPI
-	flagId string
+	flagId     string
 }
 
 func (r ApiDeleteFlagRequest) Execute() (*DeleteFlagResponse, *http.Response, error) {
@@ -1702,26 +1701,27 @@ func (r ApiDeleteFlagRequest) Execute() (*DeleteFlagResponse, *http.Response, er
 /*
 DeleteFlag Delete flag
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param flagId flag_id
- @return ApiDeleteFlagRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param flagId flag_id
+	@return ApiDeleteFlagRequest
 */
 func (a *FeaturesAPIService) DeleteFlag(ctx context.Context, flagId string) ApiDeleteFlagRequest {
 	return ApiDeleteFlagRequest{
 		ApiService: a,
-		ctx: ctx,
-		flagId: flagId,
+		ctx:        ctx,
+		flagId:     flagId,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteFlagResponse
+//
+//	@return DeleteFlagResponse
 func (a *FeaturesAPIService) DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteFlagResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteFlagResponse
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteFlagResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.DeleteFlag")
@@ -1753,11 +1753,11 @@ func (a *FeaturesAPIService) DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteF
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1767,14 +1767,13 @@ func (a *FeaturesAPIService) DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteF
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1801,8 +1800,8 @@ func (a *FeaturesAPIService) DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1812,8 +1811,8 @@ func (a *FeaturesAPIService) DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1823,8 +1822,8 @@ func (a *FeaturesAPIService) DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1834,8 +1833,8 @@ func (a *FeaturesAPIService) DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1853,9 +1852,9 @@ func (a *FeaturesAPIService) DeleteFlagExecute(r ApiDeleteFlagRequest) (*DeleteF
 }
 
 type ApiGetFeatureRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService FeaturesAPI
-	featureId string
+	featureId  string
 }
 
 func (r ApiGetFeatureRequest) Execute() (*GetFeatureResponse, *http.Response, error) {
@@ -1865,26 +1864,27 @@ func (r ApiGetFeatureRequest) Execute() (*GetFeatureResponse, *http.Response, er
 /*
 GetFeature Get feature
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param featureId feature_id
- @return ApiGetFeatureRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param featureId feature_id
+	@return ApiGetFeatureRequest
 */
 func (a *FeaturesAPIService) GetFeature(ctx context.Context, featureId string) ApiGetFeatureRequest {
 	return ApiGetFeatureRequest{
 		ApiService: a,
-		ctx: ctx,
-		featureId: featureId,
+		ctx:        ctx,
+		featureId:  featureId,
 	}
 }
 
 // Execute executes the request
-//  @return GetFeatureResponse
+//
+//	@return GetFeatureResponse
 func (a *FeaturesAPIService) GetFeatureExecute(r ApiGetFeatureRequest) (*GetFeatureResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetFeatureResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetFeatureResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.GetFeature")
@@ -1916,11 +1916,11 @@ func (a *FeaturesAPIService) GetFeatureExecute(r ApiGetFeatureRequest) (*GetFeat
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1930,14 +1930,13 @@ func (a *FeaturesAPIService) GetFeatureExecute(r ApiGetFeatureRequest) (*GetFeat
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1964,8 +1963,8 @@ func (a *FeaturesAPIService) GetFeatureExecute(r ApiGetFeatureRequest) (*GetFeat
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1975,8 +1974,8 @@ func (a *FeaturesAPIService) GetFeatureExecute(r ApiGetFeatureRequest) (*GetFeat
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1986,8 +1985,8 @@ func (a *FeaturesAPIService) GetFeatureExecute(r ApiGetFeatureRequest) (*GetFeat
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1997,8 +1996,8 @@ func (a *FeaturesAPIService) GetFeatureExecute(r ApiGetFeatureRequest) (*GetFeat
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2016,9 +2015,9 @@ func (a *FeaturesAPIService) GetFeatureExecute(r ApiGetFeatureRequest) (*GetFeat
 }
 
 type ApiGetFlagRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService FeaturesAPI
-	flagId string
+	flagId     string
 }
 
 func (r ApiGetFlagRequest) Execute() (*GetFlagResponse, *http.Response, error) {
@@ -2028,26 +2027,27 @@ func (r ApiGetFlagRequest) Execute() (*GetFlagResponse, *http.Response, error) {
 /*
 GetFlag Get flag
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param flagId flag_id
- @return ApiGetFlagRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param flagId flag_id
+	@return ApiGetFlagRequest
 */
 func (a *FeaturesAPIService) GetFlag(ctx context.Context, flagId string) ApiGetFlagRequest {
 	return ApiGetFlagRequest{
 		ApiService: a,
-		ctx: ctx,
-		flagId: flagId,
+		ctx:        ctx,
+		flagId:     flagId,
 	}
 }
 
 // Execute executes the request
-//  @return GetFlagResponse
+//
+//	@return GetFlagResponse
 func (a *FeaturesAPIService) GetFlagExecute(r ApiGetFlagRequest) (*GetFlagResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetFlagResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetFlagResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.GetFlag")
@@ -2079,11 +2079,11 @@ func (a *FeaturesAPIService) GetFlagExecute(r ApiGetFlagRequest) (*GetFlagRespon
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2093,14 +2093,13 @@ func (a *FeaturesAPIService) GetFlagExecute(r ApiGetFlagRequest) (*GetFlagRespon
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2127,8 +2126,8 @@ func (a *FeaturesAPIService) GetFlagExecute(r ApiGetFlagRequest) (*GetFlagRespon
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2138,8 +2137,8 @@ func (a *FeaturesAPIService) GetFlagExecute(r ApiGetFlagRequest) (*GetFlagRespon
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -2149,8 +2148,8 @@ func (a *FeaturesAPIService) GetFlagExecute(r ApiGetFlagRequest) (*GetFlagRespon
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2160,8 +2159,8 @@ func (a *FeaturesAPIService) GetFlagExecute(r ApiGetFlagRequest) (*GetFlagRespon
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2179,8 +2178,8 @@ func (a *FeaturesAPIService) GetFlagExecute(r ApiGetFlagRequest) (*GetFlagRespon
 }
 
 type ApiGetFlagCheckRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
+	ctx         context.Context
+	ApiService  FeaturesAPI
 	flagCheckId string
 }
 
@@ -2191,26 +2190,27 @@ func (r ApiGetFlagCheckRequest) Execute() (*GetFlagCheckResponse, *http.Response
 /*
 GetFlagCheck Get flag check
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param flagCheckId flag_check_id
- @return ApiGetFlagCheckRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param flagCheckId flag_check_id
+	@return ApiGetFlagCheckRequest
 */
 func (a *FeaturesAPIService) GetFlagCheck(ctx context.Context, flagCheckId string) ApiGetFlagCheckRequest {
 	return ApiGetFlagCheckRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:  a,
+		ctx:         ctx,
 		flagCheckId: flagCheckId,
 	}
 }
 
 // Execute executes the request
-//  @return GetFlagCheckResponse
+//
+//	@return GetFlagCheckResponse
 func (a *FeaturesAPIService) GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*GetFlagCheckResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetFlagCheckResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetFlagCheckResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.GetFlagCheck")
@@ -2242,11 +2242,11 @@ func (a *FeaturesAPIService) GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*Get
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2256,14 +2256,13 @@ func (a *FeaturesAPIService) GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*Get
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2290,8 +2289,8 @@ func (a *FeaturesAPIService) GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*Get
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2301,8 +2300,8 @@ func (a *FeaturesAPIService) GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*Get
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -2312,8 +2311,8 @@ func (a *FeaturesAPIService) GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*Get
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2323,8 +2322,8 @@ func (a *FeaturesAPIService) GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*Get
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2342,13 +2341,13 @@ func (a *FeaturesAPIService) GetFlagCheckExecute(r ApiGetFlagCheckRequest) (*Get
 }
 
 type ApiGetLatestFlagChecksRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService FeaturesAPI
-	flagId *string
-	flagIds *[]string
-	id *string
-	limit *int32
-	offset *int32
+	flagId     *string
+	flagIds    *[]string
+	id         *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiGetLatestFlagChecksRequest) FlagId(flagId string) ApiGetLatestFlagChecksRequest {
@@ -2385,24 +2384,25 @@ func (r ApiGetLatestFlagChecksRequest) Execute() (*GetLatestFlagChecksResponse, 
 /*
 GetLatestFlagChecks Get latest flag checks
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetLatestFlagChecksRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetLatestFlagChecksRequest
 */
 func (a *FeaturesAPIService) GetLatestFlagChecks(ctx context.Context) ApiGetLatestFlagChecksRequest {
 	return ApiGetLatestFlagChecksRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return GetLatestFlagChecksResponse
+//
+//	@return GetLatestFlagChecksResponse
 func (a *FeaturesAPIService) GetLatestFlagChecksExecute(r ApiGetLatestFlagChecksRequest) (*GetLatestFlagChecksResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetLatestFlagChecksResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetLatestFlagChecksResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.GetLatestFlagChecks")
@@ -2456,11 +2456,11 @@ func (a *FeaturesAPIService) GetLatestFlagChecksExecute(r ApiGetLatestFlagChecks
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2470,14 +2470,13 @@ func (a *FeaturesAPIService) GetLatestFlagChecksExecute(r ApiGetLatestFlagChecks
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2504,8 +2503,8 @@ func (a *FeaturesAPIService) GetLatestFlagChecksExecute(r ApiGetLatestFlagChecks
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2515,8 +2514,8 @@ func (a *FeaturesAPIService) GetLatestFlagChecksExecute(r ApiGetLatestFlagChecks
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2526,8 +2525,8 @@ func (a *FeaturesAPIService) GetLatestFlagChecksExecute(r ApiGetLatestFlagChecks
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2537,8 +2536,8 @@ func (a *FeaturesAPIService) GetLatestFlagChecksExecute(r ApiGetLatestFlagChecks
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2556,8 +2555,8 @@ func (a *FeaturesAPIService) GetLatestFlagChecksExecute(r ApiGetLatestFlagChecks
 }
 
 type ApiListAudienceCompaniesRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
+	ctx                 context.Context
+	ApiService          FeaturesAPI
 	audienceRequestBody *AudienceRequestBody
 }
 
@@ -2573,24 +2572,25 @@ func (r ApiListAudienceCompaniesRequest) Execute() (*ListAudienceCompaniesRespon
 /*
 ListAudienceCompanies List audience companies
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListAudienceCompaniesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListAudienceCompaniesRequest
 */
 func (a *FeaturesAPIService) ListAudienceCompanies(ctx context.Context) ApiListAudienceCompaniesRequest {
 	return ApiListAudienceCompaniesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListAudienceCompaniesResponse
+//
+//	@return ListAudienceCompaniesResponse
 func (a *FeaturesAPIService) ListAudienceCompaniesExecute(r ApiListAudienceCompaniesRequest) (*ListAudienceCompaniesResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListAudienceCompaniesResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListAudienceCompaniesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.ListAudienceCompanies")
@@ -2626,11 +2626,11 @@ func (a *FeaturesAPIService) ListAudienceCompaniesExecute(r ApiListAudienceCompa
 	}
 	// body params
 	localVarPostBody = r.audienceRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2640,14 +2640,13 @@ func (a *FeaturesAPIService) ListAudienceCompaniesExecute(r ApiListAudienceCompa
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2674,8 +2673,8 @@ func (a *FeaturesAPIService) ListAudienceCompaniesExecute(r ApiListAudienceCompa
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2685,8 +2684,8 @@ func (a *FeaturesAPIService) ListAudienceCompaniesExecute(r ApiListAudienceCompa
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2696,8 +2695,8 @@ func (a *FeaturesAPIService) ListAudienceCompaniesExecute(r ApiListAudienceCompa
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2707,8 +2706,8 @@ func (a *FeaturesAPIService) ListAudienceCompaniesExecute(r ApiListAudienceCompa
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2726,8 +2725,8 @@ func (a *FeaturesAPIService) ListAudienceCompaniesExecute(r ApiListAudienceCompa
 }
 
 type ApiListAudienceUsersRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
+	ctx                 context.Context
+	ApiService          FeaturesAPI
 	audienceRequestBody *AudienceRequestBody
 }
 
@@ -2743,24 +2742,25 @@ func (r ApiListAudienceUsersRequest) Execute() (*ListAudienceUsersResponse, *htt
 /*
 ListAudienceUsers List audience users
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListAudienceUsersRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListAudienceUsersRequest
 */
 func (a *FeaturesAPIService) ListAudienceUsers(ctx context.Context) ApiListAudienceUsersRequest {
 	return ApiListAudienceUsersRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListAudienceUsersResponse
+//
+//	@return ListAudienceUsersResponse
 func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequest) (*ListAudienceUsersResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListAudienceUsersResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListAudienceUsersResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.ListAudienceUsers")
@@ -2796,11 +2796,11 @@ func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequ
 	}
 	// body params
 	localVarPostBody = r.audienceRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2810,14 +2810,13 @@ func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequ
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2844,8 +2843,8 @@ func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2855,8 +2854,8 @@ func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2866,8 +2865,8 @@ func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2877,8 +2876,8 @@ func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequ
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2896,10 +2895,10 @@ func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequ
 }
 
 type ApiListFeaturesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService FeaturesAPI
-	limit *int32
-	offset *int32
+	limit      *int32
+	offset     *int32
 }
 
 // Page limit (default 100)
@@ -2921,24 +2920,25 @@ func (r ApiListFeaturesRequest) Execute() (*ListFeaturesResponse, *http.Response
 /*
 ListFeatures List features
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListFeaturesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListFeaturesRequest
 */
 func (a *FeaturesAPIService) ListFeatures(ctx context.Context) ApiListFeaturesRequest {
 	return ApiListFeaturesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListFeaturesResponse
+//
+//	@return ListFeaturesResponse
 func (a *FeaturesAPIService) ListFeaturesExecute(r ApiListFeaturesRequest) (*ListFeaturesResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListFeaturesResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListFeaturesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.ListFeatures")
@@ -2975,11 +2975,11 @@ func (a *FeaturesAPIService) ListFeaturesExecute(r ApiListFeaturesRequest) (*Lis
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2989,14 +2989,13 @@ func (a *FeaturesAPIService) ListFeaturesExecute(r ApiListFeaturesRequest) (*Lis
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3023,8 +3022,8 @@ func (a *FeaturesAPIService) ListFeaturesExecute(r ApiListFeaturesRequest) (*Lis
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3034,8 +3033,8 @@ func (a *FeaturesAPIService) ListFeaturesExecute(r ApiListFeaturesRequest) (*Lis
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3045,8 +3044,8 @@ func (a *FeaturesAPIService) ListFeaturesExecute(r ApiListFeaturesRequest) (*Lis
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3056,8 +3055,8 @@ func (a *FeaturesAPIService) ListFeaturesExecute(r ApiListFeaturesRequest) (*Lis
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3075,13 +3074,13 @@ func (a *FeaturesAPIService) ListFeaturesExecute(r ApiListFeaturesRequest) (*Lis
 }
 
 type ApiListFlagChecksRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService FeaturesAPI
-	flagId *string
-	flagIds *[]string
-	id *string
-	limit *int32
-	offset *int32
+	flagId     *string
+	flagIds    *[]string
+	id         *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiListFlagChecksRequest) FlagId(flagId string) ApiListFlagChecksRequest {
@@ -3118,24 +3117,25 @@ func (r ApiListFlagChecksRequest) Execute() (*ListFlagChecksResponse, *http.Resp
 /*
 ListFlagChecks List flag checks
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListFlagChecksRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListFlagChecksRequest
 */
 func (a *FeaturesAPIService) ListFlagChecks(ctx context.Context) ApiListFlagChecksRequest {
 	return ApiListFlagChecksRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListFlagChecksResponse
+//
+//	@return ListFlagChecksResponse
 func (a *FeaturesAPIService) ListFlagChecksExecute(r ApiListFlagChecksRequest) (*ListFlagChecksResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListFlagChecksResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListFlagChecksResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.ListFlagChecks")
@@ -3189,11 +3189,11 @@ func (a *FeaturesAPIService) ListFlagChecksExecute(r ApiListFlagChecksRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3203,14 +3203,13 @@ func (a *FeaturesAPIService) ListFlagChecksExecute(r ApiListFlagChecksRequest) (
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3237,8 +3236,8 @@ func (a *FeaturesAPIService) ListFlagChecksExecute(r ApiListFlagChecksRequest) (
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3248,8 +3247,8 @@ func (a *FeaturesAPIService) ListFlagChecksExecute(r ApiListFlagChecksRequest) (
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3259,8 +3258,8 @@ func (a *FeaturesAPIService) ListFlagChecksExecute(r ApiListFlagChecksRequest) (
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3270,8 +3269,8 @@ func (a *FeaturesAPIService) ListFlagChecksExecute(r ApiListFlagChecksRequest) (
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3289,12 +3288,12 @@ func (a *FeaturesAPIService) ListFlagChecksExecute(r ApiListFlagChecksRequest) (
 }
 
 type ApiListFlagsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService FeaturesAPI
-	featureId *string
-	flagIds *[]string
-	limit *int32
-	offset *int32
+	featureId  *string
+	flagIds    *[]string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiListFlagsRequest) FeatureId(featureId string) ApiListFlagsRequest {
@@ -3326,24 +3325,25 @@ func (r ApiListFlagsRequest) Execute() (*ListFlagsResponse, *http.Response, erro
 /*
 ListFlags List flags
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListFlagsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListFlagsRequest
 */
 func (a *FeaturesAPIService) ListFlags(ctx context.Context) ApiListFlagsRequest {
 	return ApiListFlagsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListFlagsResponse
+//
+//	@return ListFlagsResponse
 func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlagsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListFlagsResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListFlagsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.ListFlags")
@@ -3394,11 +3394,11 @@ func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlags
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3408,14 +3408,13 @@ func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlags
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3442,8 +3441,8 @@ func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlags
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3453,8 +3452,8 @@ func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlags
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3464,8 +3463,8 @@ func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlags
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3475,8 +3474,8 @@ func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlags
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3494,9 +3493,9 @@ func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlags
 }
 
 type ApiUpdateFeatureRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
-	featureId string
+	ctx                      context.Context
+	ApiService               FeaturesAPI
+	featureId                string
 	updateFeatureRequestBody *UpdateFeatureRequestBody
 }
 
@@ -3512,26 +3511,27 @@ func (r ApiUpdateFeatureRequest) Execute() (*UpdateFeatureResponse, *http.Respon
 /*
 UpdateFeature Update feature
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param featureId feature_id
- @return ApiUpdateFeatureRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param featureId feature_id
+	@return ApiUpdateFeatureRequest
 */
 func (a *FeaturesAPIService) UpdateFeature(ctx context.Context, featureId string) ApiUpdateFeatureRequest {
 	return ApiUpdateFeatureRequest{
 		ApiService: a,
-		ctx: ctx,
-		featureId: featureId,
+		ctx:        ctx,
+		featureId:  featureId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdateFeatureResponse
+//
+//	@return UpdateFeatureResponse
 func (a *FeaturesAPIService) UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*UpdateFeatureResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpdateFeatureResponse
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpdateFeatureResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.UpdateFeature")
@@ -3568,11 +3568,11 @@ func (a *FeaturesAPIService) UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*U
 	}
 	// body params
 	localVarPostBody = r.updateFeatureRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3582,14 +3582,13 @@ func (a *FeaturesAPIService) UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*U
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3616,8 +3615,8 @@ func (a *FeaturesAPIService) UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*U
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3627,8 +3626,8 @@ func (a *FeaturesAPIService) UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*U
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3638,8 +3637,8 @@ func (a *FeaturesAPIService) UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*U
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -3649,8 +3648,8 @@ func (a *FeaturesAPIService) UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*U
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3660,8 +3659,8 @@ func (a *FeaturesAPIService) UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*U
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3679,9 +3678,9 @@ func (a *FeaturesAPIService) UpdateFeatureExecute(r ApiUpdateFeatureRequest) (*U
 }
 
 type ApiUpdateFlagRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
-	flagId string
+	ctx                   context.Context
+	ApiService            FeaturesAPI
+	flagId                string
 	createFlagRequestBody *CreateFlagRequestBody
 }
 
@@ -3697,26 +3696,27 @@ func (r ApiUpdateFlagRequest) Execute() (*UpdateFlagResponse, *http.Response, er
 /*
 UpdateFlag Update flag
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param flagId flag_id
- @return ApiUpdateFlagRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param flagId flag_id
+	@return ApiUpdateFlagRequest
 */
 func (a *FeaturesAPIService) UpdateFlag(ctx context.Context, flagId string) ApiUpdateFlagRequest {
 	return ApiUpdateFlagRequest{
 		ApiService: a,
-		ctx: ctx,
-		flagId: flagId,
+		ctx:        ctx,
+		flagId:     flagId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdateFlagResponse
+//
+//	@return UpdateFlagResponse
 func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateFlagResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpdateFlagResponse
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpdateFlagResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.UpdateFlag")
@@ -3753,11 +3753,11 @@ func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateF
 	}
 	// body params
 	localVarPostBody = r.createFlagRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3767,14 +3767,13 @@ func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateF
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3801,8 +3800,8 @@ func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3812,8 +3811,8 @@ func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3823,8 +3822,8 @@ func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -3834,8 +3833,8 @@ func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3845,8 +3844,8 @@ func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateF
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3864,9 +3863,9 @@ func (a *FeaturesAPIService) UpdateFlagExecute(r ApiUpdateFlagRequest) (*UpdateF
 }
 
 type ApiUpdateFlagRulesRequest struct {
-	ctx context.Context
-	ApiService FeaturesAPI
-	flagId string
+	ctx                        context.Context
+	ApiService                 FeaturesAPI
+	flagId                     string
 	updateFlagRulesRequestBody *UpdateFlagRulesRequestBody
 }
 
@@ -3882,26 +3881,27 @@ func (r ApiUpdateFlagRulesRequest) Execute() (*UpdateFlagRulesResponse, *http.Re
 /*
 UpdateFlagRules Update flag rules
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param flagId flag_id
- @return ApiUpdateFlagRulesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param flagId flag_id
+	@return ApiUpdateFlagRulesRequest
 */
 func (a *FeaturesAPIService) UpdateFlagRules(ctx context.Context, flagId string) ApiUpdateFlagRulesRequest {
 	return ApiUpdateFlagRulesRequest{
 		ApiService: a,
-		ctx: ctx,
-		flagId: flagId,
+		ctx:        ctx,
+		flagId:     flagId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdateFlagRulesResponse
+//
+//	@return UpdateFlagRulesResponse
 func (a *FeaturesAPIService) UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest) (*UpdateFlagRulesResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpdateFlagRulesResponse
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpdateFlagRulesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.UpdateFlagRules")
@@ -3938,11 +3938,11 @@ func (a *FeaturesAPIService) UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest)
 	}
 	// body params
 	localVarPostBody = r.updateFlagRulesRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3952,14 +3952,13 @@ func (a *FeaturesAPIService) UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest)
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3986,8 +3985,8 @@ func (a *FeaturesAPIService) UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3997,8 +3996,8 @@ func (a *FeaturesAPIService) UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -4008,8 +4007,8 @@ func (a *FeaturesAPIService) UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -4019,8 +4018,8 @@ func (a *FeaturesAPIService) UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -4030,8 +4029,8 @@ func (a *FeaturesAPIService) UpdateFlagRulesExecute(r ApiUpdateFlagRulesRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

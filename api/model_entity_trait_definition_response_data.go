@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the EntityTraitDefinitionResponseData type satisfies the MappedNullable interface at compile time
@@ -22,12 +22,12 @@ var _ MappedNullable = &EntityTraitDefinitionResponseData{}
 
 // EntityTraitDefinitionResponseData The updated resource
 type EntityTraitDefinitionResponseData struct {
-	CreatedAt time.Time `json:"created_at"`
-	EntityType string `json:"entity_type"`
-	Hierarchy []string `json:"hierarchy"`
-	Id string `json:"id"`
-	TraitType string `json:"trait_type"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt  time.Time `json:"created_at"`
+	EntityType string    `json:"entity_type"`
+	Hierarchy  []string  `json:"hierarchy"`
+	Id         string    `json:"id"`
+	TraitType  string    `json:"trait_type"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 type _EntityTraitDefinitionResponseData EntityTraitDefinitionResponseData
@@ -200,7 +200,7 @@ func (o *EntityTraitDefinitionResponseData) SetUpdatedAt(v time.Time) {
 }
 
 func (o EntityTraitDefinitionResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -236,10 +236,10 @@ func (o *EntityTraitDefinitionResponseData) UnmarshalJSON(data []byte) (err erro
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -295,5 +295,3 @@ func (v *NullableEntityTraitDefinitionResponseData) UnmarshalJSON(src []byte) er
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

@@ -16,18 +16,17 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strings"
 	"reflect"
+	"strings"
 )
-
 
 type CompaniesAPI interface {
 
 	/*
-	CreateCompany Create company
+		CreateCompany Create company
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreateCompanyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreateCompanyRequest
 	*/
 	CreateCompany(ctx context.Context) ApiCreateCompanyRequest
 
@@ -36,10 +35,10 @@ type CompaniesAPI interface {
 	CreateCompanyExecute(r ApiCreateCompanyRequest) (*CreateCompanyResponse, *http.Response, error)
 
 	/*
-	CreateUser Create user
+		CreateUser Create user
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCreateUserRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCreateUserRequest
 	*/
 	CreateUser(ctx context.Context) ApiCreateUserRequest
 
@@ -48,11 +47,11 @@ type CompaniesAPI interface {
 	CreateUserExecute(r ApiCreateUserRequest) (*CreateUserResponse, *http.Response, error)
 
 	/*
-	DeleteCompany Delete company
+		DeleteCompany Delete company
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param companyId company_id
-	@return ApiDeleteCompanyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param companyId company_id
+		@return ApiDeleteCompanyRequest
 	*/
 	DeleteCompany(ctx context.Context, companyId string) ApiDeleteCompanyRequest
 
@@ -61,10 +60,10 @@ type CompaniesAPI interface {
 	DeleteCompanyExecute(r ApiDeleteCompanyRequest) (*DeleteCompanyResponse, *http.Response, error)
 
 	/*
-	DeleteCompanyByKeys Delete company by keys
+		DeleteCompanyByKeys Delete company by keys
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiDeleteCompanyByKeysRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiDeleteCompanyByKeysRequest
 	*/
 	DeleteCompanyByKeys(ctx context.Context) ApiDeleteCompanyByKeysRequest
 
@@ -73,11 +72,11 @@ type CompaniesAPI interface {
 	DeleteCompanyByKeysExecute(r ApiDeleteCompanyByKeysRequest) (*DeleteCompanyByKeysResponse, *http.Response, error)
 
 	/*
-	DeleteCompanyMembership Delete company membership
+		DeleteCompanyMembership Delete company membership
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param companyMembershipId company_membership_id
-	@return ApiDeleteCompanyMembershipRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param companyMembershipId company_membership_id
+		@return ApiDeleteCompanyMembershipRequest
 	*/
 	DeleteCompanyMembership(ctx context.Context, companyMembershipId string) ApiDeleteCompanyMembershipRequest
 
@@ -86,11 +85,11 @@ type CompaniesAPI interface {
 	DeleteCompanyMembershipExecute(r ApiDeleteCompanyMembershipRequest) (*DeleteCompanyMembershipResponse, *http.Response, error)
 
 	/*
-	DeleteUser Delete user
+		DeleteUser Delete user
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param userId user_id
-	@return ApiDeleteUserRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param userId user_id
+		@return ApiDeleteUserRequest
 	*/
 	DeleteUser(ctx context.Context, userId string) ApiDeleteUserRequest
 
@@ -99,10 +98,10 @@ type CompaniesAPI interface {
 	DeleteUserExecute(r ApiDeleteUserRequest) (*DeleteUserResponse, *http.Response, error)
 
 	/*
-	DeleteUserByKeys Delete user by keys
+		DeleteUserByKeys Delete user by keys
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiDeleteUserByKeysRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiDeleteUserByKeysRequest
 	*/
 	DeleteUserByKeys(ctx context.Context) ApiDeleteUserByKeysRequest
 
@@ -111,11 +110,11 @@ type CompaniesAPI interface {
 	DeleteUserByKeysExecute(r ApiDeleteUserByKeysRequest) (*DeleteUserByKeysResponse, *http.Response, error)
 
 	/*
-	GetCompany Get company
+		GetCompany Get company
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param companyId company_id
-	@return ApiGetCompanyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param companyId company_id
+		@return ApiGetCompanyRequest
 	*/
 	GetCompany(ctx context.Context, companyId string) ApiGetCompanyRequest
 
@@ -124,10 +123,10 @@ type CompaniesAPI interface {
 	GetCompanyExecute(r ApiGetCompanyRequest) (*GetCompanyResponse, *http.Response, error)
 
 	/*
-	GetOrCreateCompanyMembership Get or create company membership
+		GetOrCreateCompanyMembership Get or create company membership
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiGetOrCreateCompanyMembershipRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiGetOrCreateCompanyMembershipRequest
 	*/
 	GetOrCreateCompanyMembership(ctx context.Context) ApiGetOrCreateCompanyMembershipRequest
 
@@ -136,10 +135,10 @@ type CompaniesAPI interface {
 	GetOrCreateCompanyMembershipExecute(r ApiGetOrCreateCompanyMembershipRequest) (*GetOrCreateCompanyMembershipResponse, *http.Response, error)
 
 	/*
-	GetOrCreateEntityTraitDefinition Get or create entity trait definition
+		GetOrCreateEntityTraitDefinition Get or create entity trait definition
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiGetOrCreateEntityTraitDefinitionRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiGetOrCreateEntityTraitDefinitionRequest
 	*/
 	GetOrCreateEntityTraitDefinition(ctx context.Context) ApiGetOrCreateEntityTraitDefinitionRequest
 
@@ -148,11 +147,11 @@ type CompaniesAPI interface {
 	GetOrCreateEntityTraitDefinitionExecute(r ApiGetOrCreateEntityTraitDefinitionRequest) (*GetOrCreateEntityTraitDefinitionResponse, *http.Response, error)
 
 	/*
-	GetUser Get user
+		GetUser Get user
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param userId user_id
-	@return ApiGetUserRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param userId user_id
+		@return ApiGetUserRequest
 	*/
 	GetUser(ctx context.Context, userId string) ApiGetUserRequest
 
@@ -161,10 +160,10 @@ type CompaniesAPI interface {
 	GetUserExecute(r ApiGetUserRequest) (*GetUserResponse, *http.Response, error)
 
 	/*
-	ListCompanies List companies
+		ListCompanies List companies
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListCompaniesRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListCompaniesRequest
 	*/
 	ListCompanies(ctx context.Context) ApiListCompaniesRequest
 
@@ -173,10 +172,10 @@ type CompaniesAPI interface {
 	ListCompaniesExecute(r ApiListCompaniesRequest) (*ListCompaniesResponse, *http.Response, error)
 
 	/*
-	ListCompanyMemberships List company memberships
+		ListCompanyMemberships List company memberships
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListCompanyMembershipsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListCompanyMembershipsRequest
 	*/
 	ListCompanyMemberships(ctx context.Context) ApiListCompanyMembershipsRequest
 
@@ -185,10 +184,10 @@ type CompaniesAPI interface {
 	ListCompanyMembershipsExecute(r ApiListCompanyMembershipsRequest) (*ListCompanyMembershipsResponse, *http.Response, error)
 
 	/*
-	ListCompanyPlans List company plans
+		ListCompanyPlans List company plans
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListCompanyPlansRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListCompanyPlansRequest
 	*/
 	ListCompanyPlans(ctx context.Context) ApiListCompanyPlansRequest
 
@@ -197,10 +196,10 @@ type CompaniesAPI interface {
 	ListCompanyPlansExecute(r ApiListCompanyPlansRequest) (*ListCompanyPlansResponse, *http.Response, error)
 
 	/*
-	ListUsers List users
+		ListUsers List users
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListUsersRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListUsersRequest
 	*/
 	ListUsers(ctx context.Context) ApiListUsersRequest
 
@@ -209,10 +208,10 @@ type CompaniesAPI interface {
 	ListUsersExecute(r ApiListUsersRequest) (*ListUsersResponse, *http.Response, error)
 
 	/*
-	LookupCompany Lookup company
+		LookupCompany Lookup company
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiLookupCompanyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiLookupCompanyRequest
 	*/
 	LookupCompany(ctx context.Context) ApiLookupCompanyRequest
 
@@ -221,10 +220,10 @@ type CompaniesAPI interface {
 	LookupCompanyExecute(r ApiLookupCompanyRequest) (*LookupCompanyResponse, *http.Response, error)
 
 	/*
-	LookupUser Lookup user
+		LookupUser Lookup user
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiLookupUserRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiLookupUserRequest
 	*/
 	LookupUser(ctx context.Context) ApiLookupUserRequest
 
@@ -233,11 +232,11 @@ type CompaniesAPI interface {
 	LookupUserExecute(r ApiLookupUserRequest) (*LookupUserResponse, *http.Response, error)
 
 	/*
-	UpdateEntityTraitDefinition Update entity trait definition
+		UpdateEntityTraitDefinition Update entity trait definition
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param entityTraitDefinitionId entity_trait_definition_id
-	@return ApiUpdateEntityTraitDefinitionRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param entityTraitDefinitionId entity_trait_definition_id
+		@return ApiUpdateEntityTraitDefinitionRequest
 	*/
 	UpdateEntityTraitDefinition(ctx context.Context, entityTraitDefinitionId string) ApiUpdateEntityTraitDefinitionRequest
 
@@ -246,10 +245,10 @@ type CompaniesAPI interface {
 	UpdateEntityTraitDefinitionExecute(r ApiUpdateEntityTraitDefinitionRequest) (*UpdateEntityTraitDefinitionResponse, *http.Response, error)
 
 	/*
-	UpsertCompany Upsert company
+		UpsertCompany Upsert company
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiUpsertCompanyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiUpsertCompanyRequest
 	*/
 	UpsertCompany(ctx context.Context) ApiUpsertCompanyRequest
 
@@ -258,10 +257,10 @@ type CompaniesAPI interface {
 	UpsertCompanyExecute(r ApiUpsertCompanyRequest) (*UpsertCompanyResponse, *http.Response, error)
 
 	/*
-	UpsertCompanyTrait Upsert company trait
+		UpsertCompanyTrait Upsert company trait
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiUpsertCompanyTraitRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiUpsertCompanyTraitRequest
 	*/
 	UpsertCompanyTrait(ctx context.Context) ApiUpsertCompanyTraitRequest
 
@@ -270,10 +269,10 @@ type CompaniesAPI interface {
 	UpsertCompanyTraitExecute(r ApiUpsertCompanyTraitRequest) (*UpsertCompanyTraitResponse, *http.Response, error)
 
 	/*
-	UpsertUser Upsert user
+		UpsertUser Upsert user
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiUpsertUserRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiUpsertUserRequest
 	*/
 	UpsertUser(ctx context.Context) ApiUpsertUserRequest
 
@@ -282,10 +281,10 @@ type CompaniesAPI interface {
 	UpsertUserExecute(r ApiUpsertUserRequest) (*UpsertUserResponse, *http.Response, error)
 
 	/*
-	UpsertUserTrait Upsert user trait
+		UpsertUserTrait Upsert user trait
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiUpsertUserTraitRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiUpsertUserTraitRequest
 	*/
 	UpsertUserTrait(ctx context.Context) ApiUpsertUserTraitRequest
 
@@ -298,8 +297,8 @@ type CompaniesAPI interface {
 type CompaniesAPIService service
 
 type ApiCreateCompanyRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx                      context.Context
+	ApiService               CompaniesAPI
 	upsertCompanyRequestBody *UpsertCompanyRequestBody
 }
 
@@ -315,24 +314,25 @@ func (r ApiCreateCompanyRequest) Execute() (*CreateCompanyResponse, *http.Respon
 /*
 CreateCompany Create company
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateCompanyRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreateCompanyRequest
 */
 func (a *CompaniesAPIService) CreateCompany(ctx context.Context) ApiCreateCompanyRequest {
 	return ApiCreateCompanyRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreateCompanyResponse
+//
+//	@return CreateCompanyResponse
 func (a *CompaniesAPIService) CreateCompanyExecute(r ApiCreateCompanyRequest) (*CreateCompanyResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateCompanyResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateCompanyResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.CreateCompany")
@@ -368,11 +368,11 @@ func (a *CompaniesAPIService) CreateCompanyExecute(r ApiCreateCompanyRequest) (*
 	}
 	// body params
 	localVarPostBody = r.upsertCompanyRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -382,14 +382,13 @@ func (a *CompaniesAPIService) CreateCompanyExecute(r ApiCreateCompanyRequest) (*
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -416,8 +415,8 @@ func (a *CompaniesAPIService) CreateCompanyExecute(r ApiCreateCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -427,8 +426,8 @@ func (a *CompaniesAPIService) CreateCompanyExecute(r ApiCreateCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -438,8 +437,8 @@ func (a *CompaniesAPIService) CreateCompanyExecute(r ApiCreateCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -449,8 +448,8 @@ func (a *CompaniesAPIService) CreateCompanyExecute(r ApiCreateCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -468,8 +467,8 @@ func (a *CompaniesAPIService) CreateCompanyExecute(r ApiCreateCompanyRequest) (*
 }
 
 type ApiCreateUserRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx                   context.Context
+	ApiService            CompaniesAPI
 	upsertUserRequestBody *UpsertUserRequestBody
 }
 
@@ -485,24 +484,25 @@ func (r ApiCreateUserRequest) Execute() (*CreateUserResponse, *http.Response, er
 /*
 CreateUser Create user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCreateUserRequest
 */
 func (a *CompaniesAPIService) CreateUser(ctx context.Context) ApiCreateUserRequest {
 	return ApiCreateUserRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CreateUserResponse
+//
+//	@return CreateUserResponse
 func (a *CompaniesAPIService) CreateUserExecute(r ApiCreateUserRequest) (*CreateUserResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CreateUserResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateUserResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.CreateUser")
@@ -538,11 +538,11 @@ func (a *CompaniesAPIService) CreateUserExecute(r ApiCreateUserRequest) (*Create
 	}
 	// body params
 	localVarPostBody = r.upsertUserRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -552,14 +552,13 @@ func (a *CompaniesAPIService) CreateUserExecute(r ApiCreateUserRequest) (*Create
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -586,8 +585,8 @@ func (a *CompaniesAPIService) CreateUserExecute(r ApiCreateUserRequest) (*Create
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -597,8 +596,8 @@ func (a *CompaniesAPIService) CreateUserExecute(r ApiCreateUserRequest) (*Create
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -608,8 +607,8 @@ func (a *CompaniesAPIService) CreateUserExecute(r ApiCreateUserRequest) (*Create
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -619,8 +618,8 @@ func (a *CompaniesAPIService) CreateUserExecute(r ApiCreateUserRequest) (*Create
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -638,9 +637,9 @@ func (a *CompaniesAPIService) CreateUserExecute(r ApiCreateUserRequest) (*Create
 }
 
 type ApiDeleteCompanyRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	companyId string
+	companyId  string
 }
 
 func (r ApiDeleteCompanyRequest) Execute() (*DeleteCompanyResponse, *http.Response, error) {
@@ -650,26 +649,27 @@ func (r ApiDeleteCompanyRequest) Execute() (*DeleteCompanyResponse, *http.Respon
 /*
 DeleteCompany Delete company
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param companyId company_id
- @return ApiDeleteCompanyRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param companyId company_id
+	@return ApiDeleteCompanyRequest
 */
 func (a *CompaniesAPIService) DeleteCompany(ctx context.Context, companyId string) ApiDeleteCompanyRequest {
 	return ApiDeleteCompanyRequest{
 		ApiService: a,
-		ctx: ctx,
-		companyId: companyId,
+		ctx:        ctx,
+		companyId:  companyId,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteCompanyResponse
+//
+//	@return DeleteCompanyResponse
 func (a *CompaniesAPIService) DeleteCompanyExecute(r ApiDeleteCompanyRequest) (*DeleteCompanyResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteCompanyResponse
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteCompanyResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.DeleteCompany")
@@ -701,11 +701,11 @@ func (a *CompaniesAPIService) DeleteCompanyExecute(r ApiDeleteCompanyRequest) (*
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -715,14 +715,13 @@ func (a *CompaniesAPIService) DeleteCompanyExecute(r ApiDeleteCompanyRequest) (*
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -749,8 +748,8 @@ func (a *CompaniesAPIService) DeleteCompanyExecute(r ApiDeleteCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -760,8 +759,8 @@ func (a *CompaniesAPIService) DeleteCompanyExecute(r ApiDeleteCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -771,8 +770,8 @@ func (a *CompaniesAPIService) DeleteCompanyExecute(r ApiDeleteCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -782,8 +781,8 @@ func (a *CompaniesAPIService) DeleteCompanyExecute(r ApiDeleteCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -801,8 +800,8 @@ func (a *CompaniesAPIService) DeleteCompanyExecute(r ApiDeleteCompanyRequest) (*
 }
 
 type ApiDeleteCompanyByKeysRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx             context.Context
+	ApiService      CompaniesAPI
 	keysRequestBody *KeysRequestBody
 }
 
@@ -818,24 +817,25 @@ func (r ApiDeleteCompanyByKeysRequest) Execute() (*DeleteCompanyByKeysResponse, 
 /*
 DeleteCompanyByKeys Delete company by keys
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiDeleteCompanyByKeysRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiDeleteCompanyByKeysRequest
 */
 func (a *CompaniesAPIService) DeleteCompanyByKeys(ctx context.Context) ApiDeleteCompanyByKeysRequest {
 	return ApiDeleteCompanyByKeysRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteCompanyByKeysResponse
+//
+//	@return DeleteCompanyByKeysResponse
 func (a *CompaniesAPIService) DeleteCompanyByKeysExecute(r ApiDeleteCompanyByKeysRequest) (*DeleteCompanyByKeysResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteCompanyByKeysResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteCompanyByKeysResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.DeleteCompanyByKeys")
@@ -871,11 +871,11 @@ func (a *CompaniesAPIService) DeleteCompanyByKeysExecute(r ApiDeleteCompanyByKey
 	}
 	// body params
 	localVarPostBody = r.keysRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -885,14 +885,13 @@ func (a *CompaniesAPIService) DeleteCompanyByKeysExecute(r ApiDeleteCompanyByKey
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -919,8 +918,8 @@ func (a *CompaniesAPIService) DeleteCompanyByKeysExecute(r ApiDeleteCompanyByKey
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -930,8 +929,8 @@ func (a *CompaniesAPIService) DeleteCompanyByKeysExecute(r ApiDeleteCompanyByKey
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -941,8 +940,8 @@ func (a *CompaniesAPIService) DeleteCompanyByKeysExecute(r ApiDeleteCompanyByKey
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -952,8 +951,8 @@ func (a *CompaniesAPIService) DeleteCompanyByKeysExecute(r ApiDeleteCompanyByKey
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -971,8 +970,8 @@ func (a *CompaniesAPIService) DeleteCompanyByKeysExecute(r ApiDeleteCompanyByKey
 }
 
 type ApiDeleteCompanyMembershipRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx                 context.Context
+	ApiService          CompaniesAPI
 	companyMembershipId string
 }
 
@@ -983,26 +982,27 @@ func (r ApiDeleteCompanyMembershipRequest) Execute() (*DeleteCompanyMembershipRe
 /*
 DeleteCompanyMembership Delete company membership
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param companyMembershipId company_membership_id
- @return ApiDeleteCompanyMembershipRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param companyMembershipId company_membership_id
+	@return ApiDeleteCompanyMembershipRequest
 */
 func (a *CompaniesAPIService) DeleteCompanyMembership(ctx context.Context, companyMembershipId string) ApiDeleteCompanyMembershipRequest {
 	return ApiDeleteCompanyMembershipRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:          a,
+		ctx:                 ctx,
 		companyMembershipId: companyMembershipId,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteCompanyMembershipResponse
+//
+//	@return DeleteCompanyMembershipResponse
 func (a *CompaniesAPIService) DeleteCompanyMembershipExecute(r ApiDeleteCompanyMembershipRequest) (*DeleteCompanyMembershipResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteCompanyMembershipResponse
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteCompanyMembershipResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.DeleteCompanyMembership")
@@ -1034,11 +1034,11 @@ func (a *CompaniesAPIService) DeleteCompanyMembershipExecute(r ApiDeleteCompanyM
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1048,14 +1048,13 @@ func (a *CompaniesAPIService) DeleteCompanyMembershipExecute(r ApiDeleteCompanyM
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1082,8 +1081,8 @@ func (a *CompaniesAPIService) DeleteCompanyMembershipExecute(r ApiDeleteCompanyM
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1093,8 +1092,8 @@ func (a *CompaniesAPIService) DeleteCompanyMembershipExecute(r ApiDeleteCompanyM
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1104,8 +1103,8 @@ func (a *CompaniesAPIService) DeleteCompanyMembershipExecute(r ApiDeleteCompanyM
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1115,8 +1114,8 @@ func (a *CompaniesAPIService) DeleteCompanyMembershipExecute(r ApiDeleteCompanyM
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1134,9 +1133,9 @@ func (a *CompaniesAPIService) DeleteCompanyMembershipExecute(r ApiDeleteCompanyM
 }
 
 type ApiDeleteUserRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	userId string
+	userId     string
 }
 
 func (r ApiDeleteUserRequest) Execute() (*DeleteUserResponse, *http.Response, error) {
@@ -1146,26 +1145,27 @@ func (r ApiDeleteUserRequest) Execute() (*DeleteUserResponse, *http.Response, er
 /*
 DeleteUser Delete user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userId user_id
- @return ApiDeleteUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userId user_id
+	@return ApiDeleteUserRequest
 */
 func (a *CompaniesAPIService) DeleteUser(ctx context.Context, userId string) ApiDeleteUserRequest {
 	return ApiDeleteUserRequest{
 		ApiService: a,
-		ctx: ctx,
-		userId: userId,
+		ctx:        ctx,
+		userId:     userId,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteUserResponse
+//
+//	@return DeleteUserResponse
 func (a *CompaniesAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*DeleteUserResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteUserResponse
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteUserResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.DeleteUser")
@@ -1197,11 +1197,11 @@ func (a *CompaniesAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*Delete
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1211,14 +1211,13 @@ func (a *CompaniesAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*Delete
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1245,8 +1244,8 @@ func (a *CompaniesAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*Delete
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1256,8 +1255,8 @@ func (a *CompaniesAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*Delete
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1267,8 +1266,8 @@ func (a *CompaniesAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*Delete
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1278,8 +1277,8 @@ func (a *CompaniesAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*Delete
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1297,8 +1296,8 @@ func (a *CompaniesAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*Delete
 }
 
 type ApiDeleteUserByKeysRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx             context.Context
+	ApiService      CompaniesAPI
 	keysRequestBody *KeysRequestBody
 }
 
@@ -1314,24 +1313,25 @@ func (r ApiDeleteUserByKeysRequest) Execute() (*DeleteUserByKeysResponse, *http.
 /*
 DeleteUserByKeys Delete user by keys
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiDeleteUserByKeysRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiDeleteUserByKeysRequest
 */
 func (a *CompaniesAPIService) DeleteUserByKeys(ctx context.Context) ApiDeleteUserByKeysRequest {
 	return ApiDeleteUserByKeysRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return DeleteUserByKeysResponse
+//
+//	@return DeleteUserByKeysResponse
 func (a *CompaniesAPIService) DeleteUserByKeysExecute(r ApiDeleteUserByKeysRequest) (*DeleteUserByKeysResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *DeleteUserByKeysResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteUserByKeysResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.DeleteUserByKeys")
@@ -1367,11 +1367,11 @@ func (a *CompaniesAPIService) DeleteUserByKeysExecute(r ApiDeleteUserByKeysReque
 	}
 	// body params
 	localVarPostBody = r.keysRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1381,14 +1381,13 @@ func (a *CompaniesAPIService) DeleteUserByKeysExecute(r ApiDeleteUserByKeysReque
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1415,8 +1414,8 @@ func (a *CompaniesAPIService) DeleteUserByKeysExecute(r ApiDeleteUserByKeysReque
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1426,8 +1425,8 @@ func (a *CompaniesAPIService) DeleteUserByKeysExecute(r ApiDeleteUserByKeysReque
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1437,8 +1436,8 @@ func (a *CompaniesAPIService) DeleteUserByKeysExecute(r ApiDeleteUserByKeysReque
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1448,8 +1447,8 @@ func (a *CompaniesAPIService) DeleteUserByKeysExecute(r ApiDeleteUserByKeysReque
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1467,9 +1466,9 @@ func (a *CompaniesAPIService) DeleteUserByKeysExecute(r ApiDeleteUserByKeysReque
 }
 
 type ApiGetCompanyRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	companyId string
+	companyId  string
 }
 
 func (r ApiGetCompanyRequest) Execute() (*GetCompanyResponse, *http.Response, error) {
@@ -1479,26 +1478,27 @@ func (r ApiGetCompanyRequest) Execute() (*GetCompanyResponse, *http.Response, er
 /*
 GetCompany Get company
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param companyId company_id
- @return ApiGetCompanyRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param companyId company_id
+	@return ApiGetCompanyRequest
 */
 func (a *CompaniesAPIService) GetCompany(ctx context.Context, companyId string) ApiGetCompanyRequest {
 	return ApiGetCompanyRequest{
 		ApiService: a,
-		ctx: ctx,
-		companyId: companyId,
+		ctx:        ctx,
+		companyId:  companyId,
 	}
 }
 
 // Execute executes the request
-//  @return GetCompanyResponse
+//
+//	@return GetCompanyResponse
 func (a *CompaniesAPIService) GetCompanyExecute(r ApiGetCompanyRequest) (*GetCompanyResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetCompanyResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetCompanyResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.GetCompany")
@@ -1530,11 +1530,11 @@ func (a *CompaniesAPIService) GetCompanyExecute(r ApiGetCompanyRequest) (*GetCom
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1544,14 +1544,13 @@ func (a *CompaniesAPIService) GetCompanyExecute(r ApiGetCompanyRequest) (*GetCom
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1578,8 +1577,8 @@ func (a *CompaniesAPIService) GetCompanyExecute(r ApiGetCompanyRequest) (*GetCom
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1589,8 +1588,8 @@ func (a *CompaniesAPIService) GetCompanyExecute(r ApiGetCompanyRequest) (*GetCom
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1600,8 +1599,8 @@ func (a *CompaniesAPIService) GetCompanyExecute(r ApiGetCompanyRequest) (*GetCom
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1611,8 +1610,8 @@ func (a *CompaniesAPIService) GetCompanyExecute(r ApiGetCompanyRequest) (*GetCom
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1630,8 +1629,8 @@ func (a *CompaniesAPIService) GetCompanyExecute(r ApiGetCompanyRequest) (*GetCom
 }
 
 type ApiGetOrCreateCompanyMembershipRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx                                     context.Context
+	ApiService                              CompaniesAPI
 	getOrCreateCompanyMembershipRequestBody *GetOrCreateCompanyMembershipRequestBody
 }
 
@@ -1647,24 +1646,25 @@ func (r ApiGetOrCreateCompanyMembershipRequest) Execute() (*GetOrCreateCompanyMe
 /*
 GetOrCreateCompanyMembership Get or create company membership
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetOrCreateCompanyMembershipRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetOrCreateCompanyMembershipRequest
 */
 func (a *CompaniesAPIService) GetOrCreateCompanyMembership(ctx context.Context) ApiGetOrCreateCompanyMembershipRequest {
 	return ApiGetOrCreateCompanyMembershipRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return GetOrCreateCompanyMembershipResponse
+//
+//	@return GetOrCreateCompanyMembershipResponse
 func (a *CompaniesAPIService) GetOrCreateCompanyMembershipExecute(r ApiGetOrCreateCompanyMembershipRequest) (*GetOrCreateCompanyMembershipResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetOrCreateCompanyMembershipResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetOrCreateCompanyMembershipResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.GetOrCreateCompanyMembership")
@@ -1700,11 +1700,11 @@ func (a *CompaniesAPIService) GetOrCreateCompanyMembershipExecute(r ApiGetOrCrea
 	}
 	// body params
 	localVarPostBody = r.getOrCreateCompanyMembershipRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1714,14 +1714,13 @@ func (a *CompaniesAPIService) GetOrCreateCompanyMembershipExecute(r ApiGetOrCrea
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1748,8 +1747,8 @@ func (a *CompaniesAPIService) GetOrCreateCompanyMembershipExecute(r ApiGetOrCrea
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1759,8 +1758,8 @@ func (a *CompaniesAPIService) GetOrCreateCompanyMembershipExecute(r ApiGetOrCrea
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1770,8 +1769,8 @@ func (a *CompaniesAPIService) GetOrCreateCompanyMembershipExecute(r ApiGetOrCrea
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1781,8 +1780,8 @@ func (a *CompaniesAPIService) GetOrCreateCompanyMembershipExecute(r ApiGetOrCrea
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1800,8 +1799,8 @@ func (a *CompaniesAPIService) GetOrCreateCompanyMembershipExecute(r ApiGetOrCrea
 }
 
 type ApiGetOrCreateEntityTraitDefinitionRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx                                    context.Context
+	ApiService                             CompaniesAPI
 	createEntityTraitDefinitionRequestBody *CreateEntityTraitDefinitionRequestBody
 }
 
@@ -1817,24 +1816,25 @@ func (r ApiGetOrCreateEntityTraitDefinitionRequest) Execute() (*GetOrCreateEntit
 /*
 GetOrCreateEntityTraitDefinition Get or create entity trait definition
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetOrCreateEntityTraitDefinitionRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetOrCreateEntityTraitDefinitionRequest
 */
 func (a *CompaniesAPIService) GetOrCreateEntityTraitDefinition(ctx context.Context) ApiGetOrCreateEntityTraitDefinitionRequest {
 	return ApiGetOrCreateEntityTraitDefinitionRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return GetOrCreateEntityTraitDefinitionResponse
+//
+//	@return GetOrCreateEntityTraitDefinitionResponse
 func (a *CompaniesAPIService) GetOrCreateEntityTraitDefinitionExecute(r ApiGetOrCreateEntityTraitDefinitionRequest) (*GetOrCreateEntityTraitDefinitionResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetOrCreateEntityTraitDefinitionResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetOrCreateEntityTraitDefinitionResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.GetOrCreateEntityTraitDefinition")
@@ -1870,11 +1870,11 @@ func (a *CompaniesAPIService) GetOrCreateEntityTraitDefinitionExecute(r ApiGetOr
 	}
 	// body params
 	localVarPostBody = r.createEntityTraitDefinitionRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -1884,14 +1884,13 @@ func (a *CompaniesAPIService) GetOrCreateEntityTraitDefinitionExecute(r ApiGetOr
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -1918,8 +1917,8 @@ func (a *CompaniesAPIService) GetOrCreateEntityTraitDefinitionExecute(r ApiGetOr
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1929,8 +1928,8 @@ func (a *CompaniesAPIService) GetOrCreateEntityTraitDefinitionExecute(r ApiGetOr
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1940,8 +1939,8 @@ func (a *CompaniesAPIService) GetOrCreateEntityTraitDefinitionExecute(r ApiGetOr
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -1951,8 +1950,8 @@ func (a *CompaniesAPIService) GetOrCreateEntityTraitDefinitionExecute(r ApiGetOr
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1970,9 +1969,9 @@ func (a *CompaniesAPIService) GetOrCreateEntityTraitDefinitionExecute(r ApiGetOr
 }
 
 type ApiGetUserRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	userId string
+	userId     string
 }
 
 func (r ApiGetUserRequest) Execute() (*GetUserResponse, *http.Response, error) {
@@ -1982,26 +1981,27 @@ func (r ApiGetUserRequest) Execute() (*GetUserResponse, *http.Response, error) {
 /*
 GetUser Get user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userId user_id
- @return ApiGetUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userId user_id
+	@return ApiGetUserRequest
 */
 func (a *CompaniesAPIService) GetUser(ctx context.Context, userId string) ApiGetUserRequest {
 	return ApiGetUserRequest{
 		ApiService: a,
-		ctx: ctx,
-		userId: userId,
+		ctx:        ctx,
+		userId:     userId,
 	}
 }
 
 // Execute executes the request
-//  @return GetUserResponse
+//
+//	@return GetUserResponse
 func (a *CompaniesAPIService) GetUserExecute(r ApiGetUserRequest) (*GetUserResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetUserResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetUserResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.GetUser")
@@ -2033,11 +2033,11 @@ func (a *CompaniesAPIService) GetUserExecute(r ApiGetUserRequest) (*GetUserRespo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2047,14 +2047,13 @@ func (a *CompaniesAPIService) GetUserExecute(r ApiGetUserRequest) (*GetUserRespo
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2081,8 +2080,8 @@ func (a *CompaniesAPIService) GetUserExecute(r ApiGetUserRequest) (*GetUserRespo
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2092,8 +2091,8 @@ func (a *CompaniesAPIService) GetUserExecute(r ApiGetUserRequest) (*GetUserRespo
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -2103,8 +2102,8 @@ func (a *CompaniesAPIService) GetUserExecute(r ApiGetUserRequest) (*GetUserRespo
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2114,8 +2113,8 @@ func (a *CompaniesAPIService) GetUserExecute(r ApiGetUserRequest) (*GetUserRespo
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2133,11 +2132,11 @@ func (a *CompaniesAPIService) GetUserExecute(r ApiGetUserRequest) (*GetUserRespo
 }
 
 type ApiListCompaniesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	ids *[]string
-	limit *int32
-	offset *int32
+	ids        *[]string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiListCompaniesRequest) Ids(ids []string) ApiListCompaniesRequest {
@@ -2164,24 +2163,25 @@ func (r ApiListCompaniesRequest) Execute() (*ListCompaniesResponse, *http.Respon
 /*
 ListCompanies List companies
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListCompaniesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListCompaniesRequest
 */
 func (a *CompaniesAPIService) ListCompanies(ctx context.Context) ApiListCompaniesRequest {
 	return ApiListCompaniesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListCompaniesResponse
+//
+//	@return ListCompaniesResponse
 func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*ListCompaniesResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListCompaniesResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListCompaniesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.ListCompanies")
@@ -2229,11 +2229,11 @@ func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2243,14 +2243,13 @@ func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2277,8 +2276,8 @@ func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2288,8 +2287,8 @@ func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2299,8 +2298,8 @@ func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2310,8 +2309,8 @@ func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2329,12 +2328,12 @@ func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*
 }
 
 type ApiListCompanyMembershipsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	companyId *string
-	userId *string
-	limit *int32
-	offset *int32
+	companyId  *string
+	userId     *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiListCompanyMembershipsRequest) CompanyId(companyId string) ApiListCompanyMembershipsRequest {
@@ -2366,24 +2365,25 @@ func (r ApiListCompanyMembershipsRequest) Execute() (*ListCompanyMembershipsResp
 /*
 ListCompanyMemberships List company memberships
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListCompanyMembershipsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListCompanyMembershipsRequest
 */
 func (a *CompaniesAPIService) ListCompanyMemberships(ctx context.Context) ApiListCompanyMembershipsRequest {
 	return ApiListCompanyMembershipsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListCompanyMembershipsResponse
+//
+//	@return ListCompanyMembershipsResponse
 func (a *CompaniesAPIService) ListCompanyMembershipsExecute(r ApiListCompanyMembershipsRequest) (*ListCompanyMembershipsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListCompanyMembershipsResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListCompanyMembershipsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.ListCompanyMemberships")
@@ -2426,11 +2426,11 @@ func (a *CompaniesAPIService) ListCompanyMembershipsExecute(r ApiListCompanyMemb
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2440,14 +2440,13 @@ func (a *CompaniesAPIService) ListCompanyMembershipsExecute(r ApiListCompanyMemb
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2474,8 +2473,8 @@ func (a *CompaniesAPIService) ListCompanyMembershipsExecute(r ApiListCompanyMemb
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2485,8 +2484,8 @@ func (a *CompaniesAPIService) ListCompanyMembershipsExecute(r ApiListCompanyMemb
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2496,8 +2495,8 @@ func (a *CompaniesAPIService) ListCompanyMembershipsExecute(r ApiListCompanyMemb
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2507,8 +2506,8 @@ func (a *CompaniesAPIService) ListCompanyMembershipsExecute(r ApiListCompanyMemb
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2526,12 +2525,12 @@ func (a *CompaniesAPIService) ListCompanyMembershipsExecute(r ApiListCompanyMemb
 }
 
 type ApiListCompanyPlansRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	companyId *string
-	planId *string
-	limit *int32
-	offset *int32
+	companyId  *string
+	planId     *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiListCompanyPlansRequest) CompanyId(companyId string) ApiListCompanyPlansRequest {
@@ -2563,24 +2562,25 @@ func (r ApiListCompanyPlansRequest) Execute() (*ListCompanyPlansResponse, *http.
 /*
 ListCompanyPlans List company plans
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListCompanyPlansRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListCompanyPlansRequest
 */
 func (a *CompaniesAPIService) ListCompanyPlans(ctx context.Context) ApiListCompanyPlansRequest {
 	return ApiListCompanyPlansRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListCompanyPlansResponse
+//
+//	@return ListCompanyPlansResponse
 func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansRequest) (*ListCompanyPlansResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListCompanyPlansResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListCompanyPlansResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.ListCompanyPlans")
@@ -2623,11 +2623,11 @@ func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansReque
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2637,14 +2637,13 @@ func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansReque
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2671,8 +2670,8 @@ func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansReque
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2682,8 +2681,8 @@ func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansReque
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2693,8 +2692,8 @@ func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansReque
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2704,8 +2703,8 @@ func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansReque
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2723,11 +2722,11 @@ func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansReque
 }
 
 type ApiListUsersRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	ids *[]string
-	limit *int32
-	offset *int32
+	ids        *[]string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiListUsersRequest) Ids(ids []string) ApiListUsersRequest {
@@ -2754,24 +2753,25 @@ func (r ApiListUsersRequest) Execute() (*ListUsersResponse, *http.Response, erro
 /*
 ListUsers List users
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListUsersRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListUsersRequest
 */
 func (a *CompaniesAPIService) ListUsers(ctx context.Context) ApiListUsersRequest {
 	return ApiListUsersRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListUsersResponse
+//
+//	@return ListUsersResponse
 func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUsersResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListUsersResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListUsersResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.ListUsers")
@@ -2819,11 +2819,11 @@ func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUser
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -2833,14 +2833,13 @@ func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUser
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -2867,8 +2866,8 @@ func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUser
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2878,8 +2877,8 @@ func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUser
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2889,8 +2888,8 @@ func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUser
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -2900,8 +2899,8 @@ func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUser
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -2919,9 +2918,9 @@ func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUser
 }
 
 type ApiLookupCompanyRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	keys *map[string]interface{}
+	keys       *map[string]interface{}
 }
 
 // Key/value pairs
@@ -2937,24 +2936,25 @@ func (r ApiLookupCompanyRequest) Execute() (*LookupCompanyResponse, *http.Respon
 /*
 LookupCompany Lookup company
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiLookupCompanyRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiLookupCompanyRequest
 */
 func (a *CompaniesAPIService) LookupCompany(ctx context.Context) ApiLookupCompanyRequest {
 	return ApiLookupCompanyRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return LookupCompanyResponse
+//
+//	@return LookupCompanyResponse
 func (a *CompaniesAPIService) LookupCompanyExecute(r ApiLookupCompanyRequest) (*LookupCompanyResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *LookupCompanyResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *LookupCompanyResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.LookupCompany")
@@ -2989,11 +2989,11 @@ func (a *CompaniesAPIService) LookupCompanyExecute(r ApiLookupCompanyRequest) (*
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3003,14 +3003,13 @@ func (a *CompaniesAPIService) LookupCompanyExecute(r ApiLookupCompanyRequest) (*
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3037,8 +3036,8 @@ func (a *CompaniesAPIService) LookupCompanyExecute(r ApiLookupCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3048,8 +3047,8 @@ func (a *CompaniesAPIService) LookupCompanyExecute(r ApiLookupCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -3059,8 +3058,8 @@ func (a *CompaniesAPIService) LookupCompanyExecute(r ApiLookupCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3070,8 +3069,8 @@ func (a *CompaniesAPIService) LookupCompanyExecute(r ApiLookupCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3089,9 +3088,9 @@ func (a *CompaniesAPIService) LookupCompanyExecute(r ApiLookupCompanyRequest) (*
 }
 
 type ApiLookupUserRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService CompaniesAPI
-	keys *map[string]interface{}
+	keys       *map[string]interface{}
 }
 
 // Key/value pairs
@@ -3107,24 +3106,25 @@ func (r ApiLookupUserRequest) Execute() (*LookupUserResponse, *http.Response, er
 /*
 LookupUser Lookup user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiLookupUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiLookupUserRequest
 */
 func (a *CompaniesAPIService) LookupUser(ctx context.Context) ApiLookupUserRequest {
 	return ApiLookupUserRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return LookupUserResponse
+//
+//	@return LookupUserResponse
 func (a *CompaniesAPIService) LookupUserExecute(r ApiLookupUserRequest) (*LookupUserResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *LookupUserResponse
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *LookupUserResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.LookupUser")
@@ -3159,11 +3159,11 @@ func (a *CompaniesAPIService) LookupUserExecute(r ApiLookupUserRequest) (*Lookup
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3173,14 +3173,13 @@ func (a *CompaniesAPIService) LookupUserExecute(r ApiLookupUserRequest) (*Lookup
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3207,8 +3206,8 @@ func (a *CompaniesAPIService) LookupUserExecute(r ApiLookupUserRequest) (*Lookup
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3218,8 +3217,8 @@ func (a *CompaniesAPIService) LookupUserExecute(r ApiLookupUserRequest) (*Lookup
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -3229,8 +3228,8 @@ func (a *CompaniesAPIService) LookupUserExecute(r ApiLookupUserRequest) (*Lookup
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3240,8 +3239,8 @@ func (a *CompaniesAPIService) LookupUserExecute(r ApiLookupUserRequest) (*Lookup
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3259,9 +3258,9 @@ func (a *CompaniesAPIService) LookupUserExecute(r ApiLookupUserRequest) (*Lookup
 }
 
 type ApiUpdateEntityTraitDefinitionRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
-	entityTraitDefinitionId string
+	ctx                                    context.Context
+	ApiService                             CompaniesAPI
+	entityTraitDefinitionId                string
 	updateEntityTraitDefinitionRequestBody *UpdateEntityTraitDefinitionRequestBody
 }
 
@@ -3277,26 +3276,27 @@ func (r ApiUpdateEntityTraitDefinitionRequest) Execute() (*UpdateEntityTraitDefi
 /*
 UpdateEntityTraitDefinition Update entity trait definition
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param entityTraitDefinitionId entity_trait_definition_id
- @return ApiUpdateEntityTraitDefinitionRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param entityTraitDefinitionId entity_trait_definition_id
+	@return ApiUpdateEntityTraitDefinitionRequest
 */
 func (a *CompaniesAPIService) UpdateEntityTraitDefinition(ctx context.Context, entityTraitDefinitionId string) ApiUpdateEntityTraitDefinitionRequest {
 	return ApiUpdateEntityTraitDefinitionRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:              a,
+		ctx:                     ctx,
 		entityTraitDefinitionId: entityTraitDefinitionId,
 	}
 }
 
 // Execute executes the request
-//  @return UpdateEntityTraitDefinitionResponse
+//
+//	@return UpdateEntityTraitDefinitionResponse
 func (a *CompaniesAPIService) UpdateEntityTraitDefinitionExecute(r ApiUpdateEntityTraitDefinitionRequest) (*UpdateEntityTraitDefinitionResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpdateEntityTraitDefinitionResponse
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpdateEntityTraitDefinitionResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.UpdateEntityTraitDefinition")
@@ -3333,11 +3333,11 @@ func (a *CompaniesAPIService) UpdateEntityTraitDefinitionExecute(r ApiUpdateEnti
 	}
 	// body params
 	localVarPostBody = r.updateEntityTraitDefinitionRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3347,14 +3347,13 @@ func (a *CompaniesAPIService) UpdateEntityTraitDefinitionExecute(r ApiUpdateEnti
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3381,8 +3380,8 @@ func (a *CompaniesAPIService) UpdateEntityTraitDefinitionExecute(r ApiUpdateEnti
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3392,8 +3391,8 @@ func (a *CompaniesAPIService) UpdateEntityTraitDefinitionExecute(r ApiUpdateEnti
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3403,8 +3402,8 @@ func (a *CompaniesAPIService) UpdateEntityTraitDefinitionExecute(r ApiUpdateEnti
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -3414,8 +3413,8 @@ func (a *CompaniesAPIService) UpdateEntityTraitDefinitionExecute(r ApiUpdateEnti
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3425,8 +3424,8 @@ func (a *CompaniesAPIService) UpdateEntityTraitDefinitionExecute(r ApiUpdateEnti
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3444,8 +3443,8 @@ func (a *CompaniesAPIService) UpdateEntityTraitDefinitionExecute(r ApiUpdateEnti
 }
 
 type ApiUpsertCompanyRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx                      context.Context
+	ApiService               CompaniesAPI
 	upsertCompanyRequestBody *UpsertCompanyRequestBody
 }
 
@@ -3461,24 +3460,25 @@ func (r ApiUpsertCompanyRequest) Execute() (*UpsertCompanyResponse, *http.Respon
 /*
 UpsertCompany Upsert company
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpsertCompanyRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpsertCompanyRequest
 */
 func (a *CompaniesAPIService) UpsertCompany(ctx context.Context) ApiUpsertCompanyRequest {
 	return ApiUpsertCompanyRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return UpsertCompanyResponse
+//
+//	@return UpsertCompanyResponse
 func (a *CompaniesAPIService) UpsertCompanyExecute(r ApiUpsertCompanyRequest) (*UpsertCompanyResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpsertCompanyResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpsertCompanyResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.UpsertCompany")
@@ -3514,11 +3514,11 @@ func (a *CompaniesAPIService) UpsertCompanyExecute(r ApiUpsertCompanyRequest) (*
 	}
 	// body params
 	localVarPostBody = r.upsertCompanyRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3528,14 +3528,13 @@ func (a *CompaniesAPIService) UpsertCompanyExecute(r ApiUpsertCompanyRequest) (*
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3562,8 +3561,8 @@ func (a *CompaniesAPIService) UpsertCompanyExecute(r ApiUpsertCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3573,8 +3572,8 @@ func (a *CompaniesAPIService) UpsertCompanyExecute(r ApiUpsertCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3584,8 +3583,8 @@ func (a *CompaniesAPIService) UpsertCompanyExecute(r ApiUpsertCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3595,8 +3594,8 @@ func (a *CompaniesAPIService) UpsertCompanyExecute(r ApiUpsertCompanyRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3614,8 +3613,8 @@ func (a *CompaniesAPIService) UpsertCompanyExecute(r ApiUpsertCompanyRequest) (*
 }
 
 type ApiUpsertCompanyTraitRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx                    context.Context
+	ApiService             CompaniesAPI
 	upsertTraitRequestBody *UpsertTraitRequestBody
 }
 
@@ -3631,24 +3630,25 @@ func (r ApiUpsertCompanyTraitRequest) Execute() (*UpsertCompanyTraitResponse, *h
 /*
 UpsertCompanyTrait Upsert company trait
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpsertCompanyTraitRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpsertCompanyTraitRequest
 */
 func (a *CompaniesAPIService) UpsertCompanyTrait(ctx context.Context) ApiUpsertCompanyTraitRequest {
 	return ApiUpsertCompanyTraitRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return UpsertCompanyTraitResponse
+//
+//	@return UpsertCompanyTraitResponse
 func (a *CompaniesAPIService) UpsertCompanyTraitExecute(r ApiUpsertCompanyTraitRequest) (*UpsertCompanyTraitResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpsertCompanyTraitResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpsertCompanyTraitResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.UpsertCompanyTrait")
@@ -3684,11 +3684,11 @@ func (a *CompaniesAPIService) UpsertCompanyTraitExecute(r ApiUpsertCompanyTraitR
 	}
 	// body params
 	localVarPostBody = r.upsertTraitRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3698,14 +3698,13 @@ func (a *CompaniesAPIService) UpsertCompanyTraitExecute(r ApiUpsertCompanyTraitR
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3732,8 +3731,8 @@ func (a *CompaniesAPIService) UpsertCompanyTraitExecute(r ApiUpsertCompanyTraitR
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3743,8 +3742,8 @@ func (a *CompaniesAPIService) UpsertCompanyTraitExecute(r ApiUpsertCompanyTraitR
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3754,8 +3753,8 @@ func (a *CompaniesAPIService) UpsertCompanyTraitExecute(r ApiUpsertCompanyTraitR
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3765,8 +3764,8 @@ func (a *CompaniesAPIService) UpsertCompanyTraitExecute(r ApiUpsertCompanyTraitR
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3784,8 +3783,8 @@ func (a *CompaniesAPIService) UpsertCompanyTraitExecute(r ApiUpsertCompanyTraitR
 }
 
 type ApiUpsertUserRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx                   context.Context
+	ApiService            CompaniesAPI
 	upsertUserRequestBody *UpsertUserRequestBody
 }
 
@@ -3801,24 +3800,25 @@ func (r ApiUpsertUserRequest) Execute() (*UpsertUserResponse, *http.Response, er
 /*
 UpsertUser Upsert user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpsertUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpsertUserRequest
 */
 func (a *CompaniesAPIService) UpsertUser(ctx context.Context) ApiUpsertUserRequest {
 	return ApiUpsertUserRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return UpsertUserResponse
+//
+//	@return UpsertUserResponse
 func (a *CompaniesAPIService) UpsertUserExecute(r ApiUpsertUserRequest) (*UpsertUserResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpsertUserResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpsertUserResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.UpsertUser")
@@ -3854,11 +3854,11 @@ func (a *CompaniesAPIService) UpsertUserExecute(r ApiUpsertUserRequest) (*Upsert
 	}
 	// body params
 	localVarPostBody = r.upsertUserRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -3868,14 +3868,13 @@ func (a *CompaniesAPIService) UpsertUserExecute(r ApiUpsertUserRequest) (*Upsert
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -3902,8 +3901,8 @@ func (a *CompaniesAPIService) UpsertUserExecute(r ApiUpsertUserRequest) (*Upsert
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -3913,8 +3912,8 @@ func (a *CompaniesAPIService) UpsertUserExecute(r ApiUpsertUserRequest) (*Upsert
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -3924,8 +3923,8 @@ func (a *CompaniesAPIService) UpsertUserExecute(r ApiUpsertUserRequest) (*Upsert
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -3935,8 +3934,8 @@ func (a *CompaniesAPIService) UpsertUserExecute(r ApiUpsertUserRequest) (*Upsert
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -3954,8 +3953,8 @@ func (a *CompaniesAPIService) UpsertUserExecute(r ApiUpsertUserRequest) (*Upsert
 }
 
 type ApiUpsertUserTraitRequest struct {
-	ctx context.Context
-	ApiService CompaniesAPI
+	ctx                    context.Context
+	ApiService             CompaniesAPI
 	upsertTraitRequestBody *UpsertTraitRequestBody
 }
 
@@ -3971,24 +3970,25 @@ func (r ApiUpsertUserTraitRequest) Execute() (*UpsertUserTraitResponse, *http.Re
 /*
 UpsertUserTrait Upsert user trait
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpsertUserTraitRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpsertUserTraitRequest
 */
 func (a *CompaniesAPIService) UpsertUserTrait(ctx context.Context) ApiUpsertUserTraitRequest {
 	return ApiUpsertUserTraitRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return UpsertUserTraitResponse
+//
+//	@return UpsertUserTraitResponse
 func (a *CompaniesAPIService) UpsertUserTraitExecute(r ApiUpsertUserTraitRequest) (*UpsertUserTraitResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpsertUserTraitResponse
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpsertUserTraitResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.UpsertUserTrait")
@@ -4024,11 +4024,11 @@ func (a *CompaniesAPIService) UpsertUserTraitExecute(r ApiUpsertUserTraitRequest
 	}
 	// body params
 	localVarPostBody = r.upsertTraitRequestBody
-  var key string
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -4038,14 +4038,13 @@ func (a *CompaniesAPIService) UpsertUserTraitExecute(r ApiUpsertUserTraitRequest
 			}
 		}
 	}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -4072,8 +4071,8 @@ func (a *CompaniesAPIService) UpsertUserTraitExecute(r ApiUpsertUserTraitRequest
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -4083,8 +4082,8 @@ func (a *CompaniesAPIService) UpsertUserTraitExecute(r ApiUpsertUserTraitRequest
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -4094,8 +4093,8 @@ func (a *CompaniesAPIService) UpsertUserTraitExecute(r ApiUpsertUserTraitRequest
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -4105,8 +4104,8 @@ func (a *CompaniesAPIService) UpsertUserTraitExecute(r ApiUpsertUserTraitRequest
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

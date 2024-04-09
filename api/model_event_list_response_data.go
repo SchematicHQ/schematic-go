@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the EventListResponseData type satisfies the MappedNullable interface at compile time
@@ -22,23 +22,23 @@ var _ MappedNullable = &EventListResponseData{}
 
 // EventListResponseData struct for EventListResponseData
 type EventListResponseData struct {
-	ApiKey NullableString `json:"api_key,omitempty"`
-	BodyPreview string `json:"body_preview"`
-	CapturedAt time.Time `json:"captured_at"`
-	CompanyId NullableString `json:"company_id,omitempty"`
-	EnrichedAt NullableTime `json:"enriched_at,omitempty"`
+	ApiKey        NullableString `json:"api_key,omitempty"`
+	BodyPreview   string         `json:"body_preview"`
+	CapturedAt    time.Time      `json:"captured_at"`
+	CompanyId     NullableString `json:"company_id,omitempty"`
+	EnrichedAt    NullableTime   `json:"enriched_at,omitempty"`
 	EnvironmentId NullableString `json:"environment_id,omitempty"`
-	ErrorMessage NullableString `json:"error_message,omitempty"`
-	FeatureIds []string `json:"feature_ids"`
-	Id string `json:"id"`
-	LoadedAt NullableTime `json:"loaded_at,omitempty"`
-	ProcessedAt NullableTime `json:"processed_at,omitempty"`
-	SentAt NullableTime `json:"sent_at,omitempty"`
-	Status string `json:"status"`
-	Subtype NullableString `json:"subtype,omitempty"`
-	Type string `json:"type"`
-	UpdatedAt time.Time `json:"updated_at"`
-	UserId NullableString `json:"user_id,omitempty"`
+	ErrorMessage  NullableString `json:"error_message,omitempty"`
+	FeatureIds    []string       `json:"feature_ids"`
+	Id            string         `json:"id"`
+	LoadedAt      NullableTime   `json:"loaded_at,omitempty"`
+	ProcessedAt   NullableTime   `json:"processed_at,omitempty"`
+	SentAt        NullableTime   `json:"sent_at,omitempty"`
+	Status        string         `json:"status"`
+	Subtype       NullableString `json:"subtype,omitempty"`
+	Type          string         `json:"type"`
+	UpdatedAt     time.Time      `json:"updated_at"`
+	UserId        NullableString `json:"user_id,omitempty"`
 }
 
 type _EventListResponseData EventListResponseData
@@ -99,6 +99,7 @@ func (o *EventListResponseData) HasApiKey() bool {
 func (o *EventListResponseData) SetApiKey(v string) {
 	o.ApiKey.Set(&v)
 }
+
 // SetApiKeyNil sets the value for ApiKey to be an explicit nil
 func (o *EventListResponseData) SetApiKeyNil() {
 	o.ApiKey.Set(nil)
@@ -189,6 +190,7 @@ func (o *EventListResponseData) HasCompanyId() bool {
 func (o *EventListResponseData) SetCompanyId(v string) {
 	o.CompanyId.Set(&v)
 }
+
 // SetCompanyIdNil sets the value for CompanyId to be an explicit nil
 func (o *EventListResponseData) SetCompanyIdNil() {
 	o.CompanyId.Set(nil)
@@ -231,6 +233,7 @@ func (o *EventListResponseData) HasEnrichedAt() bool {
 func (o *EventListResponseData) SetEnrichedAt(v time.Time) {
 	o.EnrichedAt.Set(&v)
 }
+
 // SetEnrichedAtNil sets the value for EnrichedAt to be an explicit nil
 func (o *EventListResponseData) SetEnrichedAtNil() {
 	o.EnrichedAt.Set(nil)
@@ -273,6 +276,7 @@ func (o *EventListResponseData) HasEnvironmentId() bool {
 func (o *EventListResponseData) SetEnvironmentId(v string) {
 	o.EnvironmentId.Set(&v)
 }
+
 // SetEnvironmentIdNil sets the value for EnvironmentId to be an explicit nil
 func (o *EventListResponseData) SetEnvironmentIdNil() {
 	o.EnvironmentId.Set(nil)
@@ -315,6 +319,7 @@ func (o *EventListResponseData) HasErrorMessage() bool {
 func (o *EventListResponseData) SetErrorMessage(v string) {
 	o.ErrorMessage.Set(&v)
 }
+
 // SetErrorMessageNil sets the value for ErrorMessage to be an explicit nil
 func (o *EventListResponseData) SetErrorMessageNil() {
 	o.ErrorMessage.Set(nil)
@@ -405,6 +410,7 @@ func (o *EventListResponseData) HasLoadedAt() bool {
 func (o *EventListResponseData) SetLoadedAt(v time.Time) {
 	o.LoadedAt.Set(&v)
 }
+
 // SetLoadedAtNil sets the value for LoadedAt to be an explicit nil
 func (o *EventListResponseData) SetLoadedAtNil() {
 	o.LoadedAt.Set(nil)
@@ -447,6 +453,7 @@ func (o *EventListResponseData) HasProcessedAt() bool {
 func (o *EventListResponseData) SetProcessedAt(v time.Time) {
 	o.ProcessedAt.Set(&v)
 }
+
 // SetProcessedAtNil sets the value for ProcessedAt to be an explicit nil
 func (o *EventListResponseData) SetProcessedAtNil() {
 	o.ProcessedAt.Set(nil)
@@ -489,6 +496,7 @@ func (o *EventListResponseData) HasSentAt() bool {
 func (o *EventListResponseData) SetSentAt(v time.Time) {
 	o.SentAt.Set(&v)
 }
+
 // SetSentAtNil sets the value for SentAt to be an explicit nil
 func (o *EventListResponseData) SetSentAtNil() {
 	o.SentAt.Set(nil)
@@ -555,6 +563,7 @@ func (o *EventListResponseData) HasSubtype() bool {
 func (o *EventListResponseData) SetSubtype(v string) {
 	o.Subtype.Set(&v)
 }
+
 // SetSubtypeNil sets the value for Subtype to be an explicit nil
 func (o *EventListResponseData) SetSubtypeNil() {
 	o.Subtype.Set(nil)
@@ -645,6 +654,7 @@ func (o *EventListResponseData) HasUserId() bool {
 func (o *EventListResponseData) SetUserId(v string) {
 	o.UserId.Set(&v)
 }
+
 // SetUserIdNil sets the value for UserId to be an explicit nil
 func (o *EventListResponseData) SetUserIdNil() {
 	o.UserId.Set(nil)
@@ -656,7 +666,7 @@ func (o *EventListResponseData) UnsetUserId() {
 }
 
 func (o EventListResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -724,10 +734,10 @@ func (o *EventListResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -783,5 +793,3 @@ func (v *NullableEventListResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

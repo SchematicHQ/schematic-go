@@ -20,7 +20,7 @@ var _ MappedNullable = &UpdateEnvironmentRequestBody{}
 // UpdateEnvironmentRequestBody struct for UpdateEnvironmentRequestBody
 type UpdateEnvironmentRequestBody struct {
 	EnvironmentType NullableString `json:"environment_type,omitempty"`
-	Name NullableString `json:"name,omitempty"`
+	Name            NullableString `json:"name,omitempty"`
 }
 
 // NewUpdateEnvironmentRequestBody instantiates a new UpdateEnvironmentRequestBody object
@@ -72,6 +72,7 @@ func (o *UpdateEnvironmentRequestBody) HasEnvironmentType() bool {
 func (o *UpdateEnvironmentRequestBody) SetEnvironmentType(v string) {
 	o.EnvironmentType.Set(&v)
 }
+
 // SetEnvironmentTypeNil sets the value for EnvironmentType to be an explicit nil
 func (o *UpdateEnvironmentRequestBody) SetEnvironmentTypeNil() {
 	o.EnvironmentType.Set(nil)
@@ -114,6 +115,7 @@ func (o *UpdateEnvironmentRequestBody) HasName() bool {
 func (o *UpdateEnvironmentRequestBody) SetName(v string) {
 	o.Name.Set(&v)
 }
+
 // SetNameNil sets the value for Name to be an explicit nil
 func (o *UpdateEnvironmentRequestBody) SetNameNil() {
 	o.Name.Set(nil)
@@ -125,7 +127,7 @@ func (o *UpdateEnvironmentRequestBody) UnsetName() {
 }
 
 func (o UpdateEnvironmentRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -178,5 +180,3 @@ func (v *NullableUpdateEnvironmentRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

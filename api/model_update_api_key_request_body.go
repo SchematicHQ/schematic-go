@@ -20,7 +20,7 @@ var _ MappedNullable = &UpdateApiKeyRequestBody{}
 // UpdateApiKeyRequestBody struct for UpdateApiKeyRequestBody
 type UpdateApiKeyRequestBody struct {
 	Description NullableString `json:"description,omitempty"`
-	Name NullableString `json:"name,omitempty"`
+	Name        NullableString `json:"name,omitempty"`
 }
 
 // NewUpdateApiKeyRequestBody instantiates a new UpdateApiKeyRequestBody object
@@ -72,6 +72,7 @@ func (o *UpdateApiKeyRequestBody) HasDescription() bool {
 func (o *UpdateApiKeyRequestBody) SetDescription(v string) {
 	o.Description.Set(&v)
 }
+
 // SetDescriptionNil sets the value for Description to be an explicit nil
 func (o *UpdateApiKeyRequestBody) SetDescriptionNil() {
 	o.Description.Set(nil)
@@ -114,6 +115,7 @@ func (o *UpdateApiKeyRequestBody) HasName() bool {
 func (o *UpdateApiKeyRequestBody) SetName(v string) {
 	o.Name.Set(&v)
 }
+
 // SetNameNil sets the value for Name to be an explicit nil
 func (o *UpdateApiKeyRequestBody) SetNameNil() {
 	o.Name.Set(nil)
@@ -125,7 +127,7 @@ func (o *UpdateApiKeyRequestBody) UnsetName() {
 }
 
 func (o UpdateApiKeyRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -178,5 +180,3 @@ func (v *NullableUpdateApiKeyRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

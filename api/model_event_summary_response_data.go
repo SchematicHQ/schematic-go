@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,11 +21,11 @@ var _ MappedNullable = &EventSummaryResponseData{}
 
 // EventSummaryResponseData struct for EventSummaryResponseData
 type EventSummaryResponseData struct {
-	EnvironmentId string `json:"environment_id"`
-	EventSubtype string `json:"event_subtype"`
-	Last30CompanyCount int32 `json:"last_30_company_count"`
-	Last30Count int32 `json:"last_30_count"`
-	Last30UserCount int32 `json:"last_30_user_count"`
+	EnvironmentId      string `json:"environment_id"`
+	EventSubtype       string `json:"event_subtype"`
+	Last30CompanyCount int32  `json:"last_30_company_count"`
+	Last30Count        int32  `json:"last_30_count"`
+	Last30UserCount    int32  `json:"last_30_user_count"`
 }
 
 type _EventSummaryResponseData EventSummaryResponseData
@@ -173,7 +173,7 @@ func (o *EventSummaryResponseData) SetLast30UserCount(v int32) {
 }
 
 func (o EventSummaryResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -207,10 +207,10 @@ func (o *EventSummaryResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -266,5 +266,3 @@ func (v *NullableEventSummaryResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

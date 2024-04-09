@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the FlagResponseData type satisfies the MappedNullable interface at compile time
@@ -22,15 +22,15 @@ var _ MappedNullable = &FlagResponseData{}
 
 // FlagResponseData struct for FlagResponseData
 type FlagResponseData struct {
-	CreatedAt time.Time `json:"created_at"`
-	DefaultValue bool `json:"default_value"`
-	Description string `json:"description"`
-	FeatureId NullableString `json:"feature_id,omitempty"`
-	FlagType string `json:"flag_type"`
-	Id string `json:"id"`
-	Key string `json:"key"`
-	Name string `json:"name"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt    time.Time      `json:"created_at"`
+	DefaultValue bool           `json:"default_value"`
+	Description  string         `json:"description"`
+	FeatureId    NullableString `json:"feature_id,omitempty"`
+	FlagType     string         `json:"flag_type"`
+	Id           string         `json:"id"`
+	Key          string         `json:"key"`
+	Name         string         `json:"name"`
+	UpdatedAt    time.Time      `json:"updated_at"`
 }
 
 type _FlagResponseData FlagResponseData
@@ -164,6 +164,7 @@ func (o *FlagResponseData) HasFeatureId() bool {
 func (o *FlagResponseData) SetFeatureId(v string) {
 	o.FeatureId.Set(&v)
 }
+
 // SetFeatureIdNil sets the value for FeatureId to be an explicit nil
 func (o *FlagResponseData) SetFeatureIdNil() {
 	o.FeatureId.Set(nil)
@@ -295,7 +296,7 @@ func (o *FlagResponseData) SetUpdatedAt(v time.Time) {
 }
 
 func (o FlagResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -338,10 +339,10 @@ func (o *FlagResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -397,5 +398,3 @@ func (v *NullableFlagResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

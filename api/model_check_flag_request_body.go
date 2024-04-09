@@ -20,7 +20,7 @@ var _ MappedNullable = &CheckFlagRequestBody{}
 // CheckFlagRequestBody struct for CheckFlagRequestBody
 type CheckFlagRequestBody struct {
 	Company map[string]interface{} `json:"company,omitempty"`
-	User map[string]interface{} `json:"user,omitempty"`
+	User    map[string]interface{} `json:"user,omitempty"`
 }
 
 // NewCheckFlagRequestBody instantiates a new CheckFlagRequestBody object
@@ -107,7 +107,7 @@ func (o *CheckFlagRequestBody) SetUser(v map[string]interface{}) {
 }
 
 func (o CheckFlagRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -160,5 +160,3 @@ func (v *NullableCheckFlagRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

@@ -19,11 +19,11 @@ var _ MappedNullable = &CountFlagChecksParams{}
 
 // CountFlagChecksParams Input parameters
 type CountFlagChecksParams struct {
-	FlagId *string `json:"flag_id,omitempty"`
+	FlagId  *string  `json:"flag_id,omitempty"`
 	FlagIds []string `json:"flag_ids,omitempty"`
-	Id *string `json:"id,omitempty"`
-	Limit *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
+	Id      *string  `json:"id,omitempty"`
+	Limit   *int32   `json:"limit,omitempty"`
+	Offset  *int32   `json:"offset,omitempty"`
 }
 
 // NewCountFlagChecksParams instantiates a new CountFlagChecksParams object
@@ -204,7 +204,7 @@ func (o *CountFlagChecksParams) SetOffset(v int32) {
 }
 
 func (o CountFlagChecksParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -266,5 +266,3 @@ func (v *NullableCountFlagChecksParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

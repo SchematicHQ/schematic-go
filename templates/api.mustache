@@ -321,13 +321,13 @@ func (a *{{{classname}}}Service) {{nickname}}Execute(r {{#structPrefix}}{{&class
 {{/bodyParams}}
 {{#authMethods}}
 {{#isApiKey}}
-  var key string
 {{^isKeyInCookie}}
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			{{#vendorExtensions.x-auth-id-alias}}
 			if apiKey, ok := auth["{{.}}"]; ok {
+				var key string
 				if prefix, ok := auth["{{name}}"]; ok && prefix.Prefix != "" {
 					key = prefix.Prefix + " " + apiKey.Key
 				} else {
@@ -336,6 +336,7 @@ func (a *{{{classname}}}Service) {{nickname}}Execute(r {{#structPrefix}}{{&class
 			{{/vendorExtensions.x-auth-id-alias}}
 			{{^vendorExtensions.x-auth-id-alias}}
 			if apiKey, ok := auth["{{name}}"]; ok {
+				var key string
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
@@ -352,17 +353,16 @@ func (a *{{{classname}}}Service) {{nickname}}Execute(r {{#structPrefix}}{{&class
 		}
 	}
 {{/isKeyInCookie}}
-	if key == "" {
-		// No-op if no API key provided
-    return nil, nil, nil
-  }
-
 {{/isApiKey}}
 {{/authMethods}}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return {{#returnType}}localVarReturnValue, {{/returnType}}nil, err
 	}
+	if req == nil {
+		// Offline mode no-op
+    return nil, nil, nil
+  }
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {

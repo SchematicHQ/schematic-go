@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,13 +21,13 @@ var _ MappedNullable = &CreatePlanEntitlementRequestBody{}
 
 // CreatePlanEntitlementRequestBody struct for CreatePlanEntitlementRequestBody
 type CreatePlanEntitlementRequestBody struct {
-	FeatureId string `json:"feature_id"`
+	FeatureId    string         `json:"feature_id"`
 	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	PlanId string `json:"plan_id"`
-	ValueBool NullableBool `json:"value_bool,omitempty"`
-	ValueNumeric NullableInt32 `json:"value_numeric,omitempty"`
+	PlanId       string         `json:"plan_id"`
+	ValueBool    NullableBool   `json:"value_bool,omitempty"`
+	ValueNumeric NullableInt32  `json:"value_numeric,omitempty"`
 	ValueTraitId NullableString `json:"value_trait_id,omitempty"`
-	ValueType string `json:"value_type"`
+	ValueType    string         `json:"value_type"`
 }
 
 type _CreatePlanEntitlementRequestBody CreatePlanEntitlementRequestBody
@@ -108,6 +108,7 @@ func (o *CreatePlanEntitlementRequestBody) HasMetricPeriod() bool {
 func (o *CreatePlanEntitlementRequestBody) SetMetricPeriod(v string) {
 	o.MetricPeriod.Set(&v)
 }
+
 // SetMetricPeriodNil sets the value for MetricPeriod to be an explicit nil
 func (o *CreatePlanEntitlementRequestBody) SetMetricPeriodNil() {
 	o.MetricPeriod.Set(nil)
@@ -174,6 +175,7 @@ func (o *CreatePlanEntitlementRequestBody) HasValueBool() bool {
 func (o *CreatePlanEntitlementRequestBody) SetValueBool(v bool) {
 	o.ValueBool.Set(&v)
 }
+
 // SetValueBoolNil sets the value for ValueBool to be an explicit nil
 func (o *CreatePlanEntitlementRequestBody) SetValueBoolNil() {
 	o.ValueBool.Set(nil)
@@ -216,6 +218,7 @@ func (o *CreatePlanEntitlementRequestBody) HasValueNumeric() bool {
 func (o *CreatePlanEntitlementRequestBody) SetValueNumeric(v int32) {
 	o.ValueNumeric.Set(&v)
 }
+
 // SetValueNumericNil sets the value for ValueNumeric to be an explicit nil
 func (o *CreatePlanEntitlementRequestBody) SetValueNumericNil() {
 	o.ValueNumeric.Set(nil)
@@ -258,6 +261,7 @@ func (o *CreatePlanEntitlementRequestBody) HasValueTraitId() bool {
 func (o *CreatePlanEntitlementRequestBody) SetValueTraitId(v string) {
 	o.ValueTraitId.Set(&v)
 }
+
 // SetValueTraitIdNil sets the value for ValueTraitId to be an explicit nil
 func (o *CreatePlanEntitlementRequestBody) SetValueTraitIdNil() {
 	o.ValueTraitId.Set(nil)
@@ -293,7 +297,7 @@ func (o *CreatePlanEntitlementRequestBody) SetValueType(v string) {
 }
 
 func (o CreatePlanEntitlementRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -335,10 +339,10 @@ func (o *CreatePlanEntitlementRequestBody) UnmarshalJSON(data []byte) (err error
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -394,5 +398,3 @@ func (v *NullableCreatePlanEntitlementRequestBody) UnmarshalJSON(src []byte) err
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

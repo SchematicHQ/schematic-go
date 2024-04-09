@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,9 +21,9 @@ var _ MappedNullable = &CreateEntityTraitDefinitionRequestBody{}
 
 // CreateEntityTraitDefinitionRequestBody struct for CreateEntityTraitDefinitionRequestBody
 type CreateEntityTraitDefinitionRequestBody struct {
-	EntityType string `json:"entity_type"`
-	Hierarchy []string `json:"hierarchy"`
-	TraitType string `json:"trait_type"`
+	EntityType string   `json:"entity_type"`
+	Hierarchy  []string `json:"hierarchy"`
+	TraitType  string   `json:"trait_type"`
 }
 
 type _CreateEntityTraitDefinitionRequestBody CreateEntityTraitDefinitionRequestBody
@@ -121,7 +121,7 @@ func (o *CreateEntityTraitDefinitionRequestBody) SetTraitType(v string) {
 }
 
 func (o CreateEntityTraitDefinitionRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -151,10 +151,10 @@ func (o *CreateEntityTraitDefinitionRequestBody) UnmarshalJSON(data []byte) (err
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -210,5 +210,3 @@ func (v *NullableCreateEntityTraitDefinitionRequestBody) UnmarshalJSON(src []byt
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

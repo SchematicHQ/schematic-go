@@ -21,8 +21,8 @@ var _ MappedNullable = &ListCompanyOverridesParams{}
 type ListCompanyOverridesParams struct {
 	CompanyId *string `json:"company_id,omitempty"`
 	FeatureId *string `json:"feature_id,omitempty"`
-	Limit *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
+	Limit     *int32  `json:"limit,omitempty"`
+	Offset    *int32  `json:"offset,omitempty"`
 }
 
 // NewListCompanyOverridesParams instantiates a new ListCompanyOverridesParams object
@@ -171,7 +171,7 @@ func (o *ListCompanyOverridesParams) SetOffset(v int32) {
 }
 
 func (o ListCompanyOverridesParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -230,5 +230,3 @@ func (v *NullableListCompanyOverridesParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

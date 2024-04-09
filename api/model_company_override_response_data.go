@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the CompanyOverrideResponseData type satisfies the MappedNullable interface at compile time
@@ -22,20 +22,20 @@ var _ MappedNullable = &CompanyOverrideResponseData{}
 
 // CompanyOverrideResponseData The updated resource
 type CompanyOverrideResponseData struct {
-	Company *CompanyResponseData `json:"company,omitempty"`
-	CompanyId string `json:"company_id"`
-	CreatedAt time.Time `json:"created_at"`
-	EnvironmentId string `json:"environment_id"`
-	Feature *FeatureResponseData `json:"feature,omitempty"`
-	FeatureId string `json:"feature_id"`
-	Id string `json:"id"`
-	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	RuleId string `json:"rule_id"`
-	UpdatedAt time.Time `json:"updated_at"`
-	ValueBool NullableBool `json:"value_bool,omitempty"`
-	ValueNumeric NullableInt32 `json:"value_numeric,omitempty"`
-	ValueTraitId NullableString `json:"value_trait_id,omitempty"`
-	ValueType string `json:"value_type"`
+	Company       *CompanyResponseData `json:"company,omitempty"`
+	CompanyId     string               `json:"company_id"`
+	CreatedAt     time.Time            `json:"created_at"`
+	EnvironmentId string               `json:"environment_id"`
+	Feature       *FeatureResponseData `json:"feature,omitempty"`
+	FeatureId     string               `json:"feature_id"`
+	Id            string               `json:"id"`
+	MetricPeriod  NullableString       `json:"metric_period,omitempty"`
+	RuleId        string               `json:"rule_id"`
+	UpdatedAt     time.Time            `json:"updated_at"`
+	ValueBool     NullableBool         `json:"value_bool,omitempty"`
+	ValueNumeric  NullableInt32        `json:"value_numeric,omitempty"`
+	ValueTraitId  NullableString       `json:"value_trait_id,omitempty"`
+	ValueType     string               `json:"value_type"`
 }
 
 type _CompanyOverrideResponseData CompanyOverrideResponseData
@@ -281,6 +281,7 @@ func (o *CompanyOverrideResponseData) HasMetricPeriod() bool {
 func (o *CompanyOverrideResponseData) SetMetricPeriod(v string) {
 	o.MetricPeriod.Set(&v)
 }
+
 // SetMetricPeriodNil sets the value for MetricPeriod to be an explicit nil
 func (o *CompanyOverrideResponseData) SetMetricPeriodNil() {
 	o.MetricPeriod.Set(nil)
@@ -371,6 +372,7 @@ func (o *CompanyOverrideResponseData) HasValueBool() bool {
 func (o *CompanyOverrideResponseData) SetValueBool(v bool) {
 	o.ValueBool.Set(&v)
 }
+
 // SetValueBoolNil sets the value for ValueBool to be an explicit nil
 func (o *CompanyOverrideResponseData) SetValueBoolNil() {
 	o.ValueBool.Set(nil)
@@ -413,6 +415,7 @@ func (o *CompanyOverrideResponseData) HasValueNumeric() bool {
 func (o *CompanyOverrideResponseData) SetValueNumeric(v int32) {
 	o.ValueNumeric.Set(&v)
 }
+
 // SetValueNumericNil sets the value for ValueNumeric to be an explicit nil
 func (o *CompanyOverrideResponseData) SetValueNumericNil() {
 	o.ValueNumeric.Set(nil)
@@ -455,6 +458,7 @@ func (o *CompanyOverrideResponseData) HasValueTraitId() bool {
 func (o *CompanyOverrideResponseData) SetValueTraitId(v string) {
 	o.ValueTraitId.Set(&v)
 }
+
 // SetValueTraitIdNil sets the value for ValueTraitId to be an explicit nil
 func (o *CompanyOverrideResponseData) SetValueTraitIdNil() {
 	o.ValueTraitId.Set(nil)
@@ -490,7 +494,7 @@ func (o *CompanyOverrideResponseData) SetValueType(v string) {
 }
 
 func (o CompanyOverrideResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -548,10 +552,10 @@ func (o *CompanyOverrideResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -607,5 +611,3 @@ func (v *NullableCompanyOverrideResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

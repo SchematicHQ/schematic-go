@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,13 +21,13 @@ var _ MappedNullable = &CreateFeatureRequestBody{}
 
 // CreateFeatureRequestBody struct for CreateFeatureRequestBody
 type CreateFeatureRequestBody struct {
-	Description string `json:"description"`
-	EventSubtype NullableString `json:"event_subtype,omitempty"`
-	FeatureType string `json:"feature_type"`
-	Flag *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
-	LifecyclePhase NullableString `json:"lifecycle_phase,omitempty"`
-	Name string `json:"name"`
-	TraitId NullableString `json:"trait_id,omitempty"`
+	Description    string                         `json:"description"`
+	EventSubtype   NullableString                 `json:"event_subtype,omitempty"`
+	FeatureType    string                         `json:"feature_type"`
+	Flag           *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
+	LifecyclePhase NullableString                 `json:"lifecycle_phase,omitempty"`
+	Name           string                         `json:"name"`
+	TraitId        NullableString                 `json:"trait_id,omitempty"`
 }
 
 type _CreateFeatureRequestBody CreateFeatureRequestBody
@@ -108,6 +108,7 @@ func (o *CreateFeatureRequestBody) HasEventSubtype() bool {
 func (o *CreateFeatureRequestBody) SetEventSubtype(v string) {
 	o.EventSubtype.Set(&v)
 }
+
 // SetEventSubtypeNil sets the value for EventSubtype to be an explicit nil
 func (o *CreateFeatureRequestBody) SetEventSubtypeNil() {
 	o.EventSubtype.Set(nil)
@@ -206,6 +207,7 @@ func (o *CreateFeatureRequestBody) HasLifecyclePhase() bool {
 func (o *CreateFeatureRequestBody) SetLifecyclePhase(v string) {
 	o.LifecyclePhase.Set(&v)
 }
+
 // SetLifecyclePhaseNil sets the value for LifecyclePhase to be an explicit nil
 func (o *CreateFeatureRequestBody) SetLifecyclePhaseNil() {
 	o.LifecyclePhase.Set(nil)
@@ -272,6 +274,7 @@ func (o *CreateFeatureRequestBody) HasTraitId() bool {
 func (o *CreateFeatureRequestBody) SetTraitId(v string) {
 	o.TraitId.Set(&v)
 }
+
 // SetTraitIdNil sets the value for TraitId to be an explicit nil
 func (o *CreateFeatureRequestBody) SetTraitIdNil() {
 	o.TraitId.Set(nil)
@@ -283,7 +286,7 @@ func (o *CreateFeatureRequestBody) UnsetTraitId() {
 }
 
 func (o CreateFeatureRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -325,10 +328,10 @@ func (o *CreateFeatureRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -384,5 +387,3 @@ func (v *NullableCreateFeatureRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

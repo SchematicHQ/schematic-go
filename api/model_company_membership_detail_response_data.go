@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the CompanyMembershipDetailResponseData type satisfies the MappedNullable interface at compile time
@@ -22,12 +22,12 @@ var _ MappedNullable = &CompanyMembershipDetailResponseData{}
 
 // CompanyMembershipDetailResponseData struct for CompanyMembershipDetailResponseData
 type CompanyMembershipDetailResponseData struct {
-	Company *CompanyResponseData `json:"company,omitempty"`
-	CompanyId string `json:"company_id"`
-	CreatedAt time.Time `json:"created_at"`
-	Id string `json:"id"`
-	UpdatedAt time.Time `json:"updated_at"`
-	UserId string `json:"user_id"`
+	Company   *CompanyResponseData `json:"company,omitempty"`
+	CompanyId string               `json:"company_id"`
+	CreatedAt time.Time            `json:"created_at"`
+	Id        string               `json:"id"`
+	UpdatedAt time.Time            `json:"updated_at"`
+	UserId    string               `json:"user_id"`
 }
 
 type _CompanyMembershipDetailResponseData CompanyMembershipDetailResponseData
@@ -207,7 +207,7 @@ func (o *CompanyMembershipDetailResponseData) SetUserId(v string) {
 }
 
 func (o CompanyMembershipDetailResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -244,10 +244,10 @@ func (o *CompanyMembershipDetailResponseData) UnmarshalJSON(data []byte) (err er
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -303,5 +303,3 @@ func (v *NullableCompanyMembershipDetailResponseData) UnmarshalJSON(src []byte) 
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

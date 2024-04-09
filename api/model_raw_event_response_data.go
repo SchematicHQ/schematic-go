@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the RawEventResponseData type satisfies the MappedNullable interface at compile time
@@ -22,11 +22,11 @@ var _ MappedNullable = &RawEventResponseData{}
 
 // RawEventResponseData struct for RawEventResponseData
 type RawEventResponseData struct {
-	CapturedAt time.Time `json:"captured_at"`
-	EventId NullableString `json:"event_id,omitempty"`
-	RemoteAddr string `json:"remote_addr"`
-	RemoteIp string `json:"remote_ip"`
-	UserAgent string `json:"user_agent"`
+	CapturedAt time.Time      `json:"captured_at"`
+	EventId    NullableString `json:"event_id,omitempty"`
+	RemoteAddr string         `json:"remote_addr"`
+	RemoteIp   string         `json:"remote_ip"`
+	UserAgent  string         `json:"user_agent"`
 }
 
 type _RawEventResponseData RawEventResponseData
@@ -108,6 +108,7 @@ func (o *RawEventResponseData) HasEventId() bool {
 func (o *RawEventResponseData) SetEventId(v string) {
 	o.EventId.Set(&v)
 }
+
 // SetEventIdNil sets the value for EventId to be an explicit nil
 func (o *RawEventResponseData) SetEventIdNil() {
 	o.EventId.Set(nil)
@@ -191,7 +192,7 @@ func (o *RawEventResponseData) SetUserAgent(v string) {
 }
 
 func (o RawEventResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -226,10 +227,10 @@ func (o *RawEventResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -285,5 +286,3 @@ func (v *NullableRawEventResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

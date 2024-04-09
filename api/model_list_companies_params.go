@@ -19,9 +19,9 @@ var _ MappedNullable = &ListCompaniesParams{}
 
 // ListCompaniesParams Input parameters
 type ListCompaniesParams struct {
-	Ids []string `json:"ids,omitempty"`
-	Limit *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
+	Ids    []string `json:"ids,omitempty"`
+	Limit  *int32   `json:"limit,omitempty"`
+	Offset *int32   `json:"offset,omitempty"`
 }
 
 // NewListCompaniesParams instantiates a new ListCompaniesParams object
@@ -138,7 +138,7 @@ func (o *ListCompaniesParams) SetOffset(v int32) {
 }
 
 func (o ListCompaniesParams) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -194,5 +194,3 @@ func (v *NullableListCompaniesParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

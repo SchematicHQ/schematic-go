@@ -74,6 +74,7 @@ func (o *PaginationFilter) HasLimit() bool {
 func (o *PaginationFilter) SetLimit(v int32) {
 	o.Limit.Set(&v)
 }
+
 // SetLimitNil sets the value for Limit to be an explicit nil
 func (o *PaginationFilter) SetLimitNil() {
 	o.Limit.Set(nil)
@@ -116,6 +117,7 @@ func (o *PaginationFilter) HasOffset() bool {
 func (o *PaginationFilter) SetOffset(v int32) {
 	o.Offset.Set(&v)
 }
+
 // SetOffsetNil sets the value for Offset to be an explicit nil
 func (o *PaginationFilter) SetOffsetNil() {
 	o.Offset.Set(nil)
@@ -127,7 +129,7 @@ func (o *PaginationFilter) UnsetOffset() {
 }
 
 func (o PaginationFilter) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -180,5 +182,3 @@ func (v *NullablePaginationFilter) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

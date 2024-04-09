@@ -11,10 +11,10 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
-	"time"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the ApiKeyRequestListResponseData type satisfies the MappedNullable interface at compile time
@@ -22,22 +22,22 @@ var _ MappedNullable = &ApiKeyRequestListResponseData{}
 
 // ApiKeyRequestListResponseData struct for ApiKeyRequestListResponseData
 type ApiKeyRequestListResponseData struct {
-	ApiKeyId string `json:"api_key_id"`
-	EndedAt NullableTime `json:"ended_at,omitempty"`
-	EnvironmentId NullableString `json:"environment_id,omitempty"`
-	Id string `json:"id"`
-	Method string `json:"method"`
-	ReqBody NullableString `json:"req_body,omitempty"`
-	RequestType NullableString `json:"request_type,omitempty"`
-	ResourceId NullableInt32 `json:"resource_id,omitempty"`
-	ResourceIdString NullableString `json:"resource_id_string,omitempty"`
-	ResourceName NullableString `json:"resource_name,omitempty"`
-	ResourceType NullableString `json:"resource_type,omitempty"`
-	RespCode NullableInt32 `json:"resp_code,omitempty"`
+	ApiKeyId          string         `json:"api_key_id"`
+	EndedAt           NullableTime   `json:"ended_at,omitempty"`
+	EnvironmentId     NullableString `json:"environment_id,omitempty"`
+	Id                string         `json:"id"`
+	Method            string         `json:"method"`
+	ReqBody           NullableString `json:"req_body,omitempty"`
+	RequestType       NullableString `json:"request_type,omitempty"`
+	ResourceId        NullableInt32  `json:"resource_id,omitempty"`
+	ResourceIdString  NullableString `json:"resource_id_string,omitempty"`
+	ResourceName      NullableString `json:"resource_name,omitempty"`
+	ResourceType      NullableString `json:"resource_type,omitempty"`
+	RespCode          NullableInt32  `json:"resp_code,omitempty"`
 	SecondaryResource NullableString `json:"secondary_resource,omitempty"`
-	StartedAt time.Time `json:"started_at"`
-	Url string `json:"url"`
-	UserName NullableString `json:"user_name,omitempty"`
+	StartedAt         time.Time      `json:"started_at"`
+	Url               string         `json:"url"`
+	UserName          NullableString `json:"user_name,omitempty"`
 }
 
 type _ApiKeyRequestListResponseData ApiKeyRequestListResponseData
@@ -120,6 +120,7 @@ func (o *ApiKeyRequestListResponseData) HasEndedAt() bool {
 func (o *ApiKeyRequestListResponseData) SetEndedAt(v time.Time) {
 	o.EndedAt.Set(&v)
 }
+
 // SetEndedAtNil sets the value for EndedAt to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetEndedAtNil() {
 	o.EndedAt.Set(nil)
@@ -162,6 +163,7 @@ func (o *ApiKeyRequestListResponseData) HasEnvironmentId() bool {
 func (o *ApiKeyRequestListResponseData) SetEnvironmentId(v string) {
 	o.EnvironmentId.Set(&v)
 }
+
 // SetEnvironmentIdNil sets the value for EnvironmentId to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetEnvironmentIdNil() {
 	o.EnvironmentId.Set(nil)
@@ -252,6 +254,7 @@ func (o *ApiKeyRequestListResponseData) HasReqBody() bool {
 func (o *ApiKeyRequestListResponseData) SetReqBody(v string) {
 	o.ReqBody.Set(&v)
 }
+
 // SetReqBodyNil sets the value for ReqBody to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetReqBodyNil() {
 	o.ReqBody.Set(nil)
@@ -294,6 +297,7 @@ func (o *ApiKeyRequestListResponseData) HasRequestType() bool {
 func (o *ApiKeyRequestListResponseData) SetRequestType(v string) {
 	o.RequestType.Set(&v)
 }
+
 // SetRequestTypeNil sets the value for RequestType to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetRequestTypeNil() {
 	o.RequestType.Set(nil)
@@ -336,6 +340,7 @@ func (o *ApiKeyRequestListResponseData) HasResourceId() bool {
 func (o *ApiKeyRequestListResponseData) SetResourceId(v int32) {
 	o.ResourceId.Set(&v)
 }
+
 // SetResourceIdNil sets the value for ResourceId to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetResourceIdNil() {
 	o.ResourceId.Set(nil)
@@ -378,6 +383,7 @@ func (o *ApiKeyRequestListResponseData) HasResourceIdString() bool {
 func (o *ApiKeyRequestListResponseData) SetResourceIdString(v string) {
 	o.ResourceIdString.Set(&v)
 }
+
 // SetResourceIdStringNil sets the value for ResourceIdString to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetResourceIdStringNil() {
 	o.ResourceIdString.Set(nil)
@@ -420,6 +426,7 @@ func (o *ApiKeyRequestListResponseData) HasResourceName() bool {
 func (o *ApiKeyRequestListResponseData) SetResourceName(v string) {
 	o.ResourceName.Set(&v)
 }
+
 // SetResourceNameNil sets the value for ResourceName to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetResourceNameNil() {
 	o.ResourceName.Set(nil)
@@ -462,6 +469,7 @@ func (o *ApiKeyRequestListResponseData) HasResourceType() bool {
 func (o *ApiKeyRequestListResponseData) SetResourceType(v string) {
 	o.ResourceType.Set(&v)
 }
+
 // SetResourceTypeNil sets the value for ResourceType to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetResourceTypeNil() {
 	o.ResourceType.Set(nil)
@@ -504,6 +512,7 @@ func (o *ApiKeyRequestListResponseData) HasRespCode() bool {
 func (o *ApiKeyRequestListResponseData) SetRespCode(v int32) {
 	o.RespCode.Set(&v)
 }
+
 // SetRespCodeNil sets the value for RespCode to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetRespCodeNil() {
 	o.RespCode.Set(nil)
@@ -546,6 +555,7 @@ func (o *ApiKeyRequestListResponseData) HasSecondaryResource() bool {
 func (o *ApiKeyRequestListResponseData) SetSecondaryResource(v string) {
 	o.SecondaryResource.Set(&v)
 }
+
 // SetSecondaryResourceNil sets the value for SecondaryResource to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetSecondaryResourceNil() {
 	o.SecondaryResource.Set(nil)
@@ -636,6 +646,7 @@ func (o *ApiKeyRequestListResponseData) HasUserName() bool {
 func (o *ApiKeyRequestListResponseData) SetUserName(v string) {
 	o.UserName.Set(&v)
 }
+
 // SetUserNameNil sets the value for UserName to be an explicit nil
 func (o *ApiKeyRequestListResponseData) SetUserNameNil() {
 	o.UserName.Set(nil)
@@ -647,7 +658,7 @@ func (o *ApiKeyRequestListResponseData) UnsetUserName() {
 }
 
 func (o ApiKeyRequestListResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -714,10 +725,10 @@ func (o *ApiKeyRequestListResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -773,5 +784,3 @@ func (v *NullableApiKeyRequestListResponseData) UnmarshalJSON(src []byte) error 
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

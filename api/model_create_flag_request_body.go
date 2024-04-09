@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,12 +21,12 @@ var _ MappedNullable = &CreateFlagRequestBody{}
 
 // CreateFlagRequestBody struct for CreateFlagRequestBody
 type CreateFlagRequestBody struct {
-	DefaultValue bool `json:"default_value"`
-	Description string `json:"description"`
-	FeatureId NullableString `json:"feature_id,omitempty"`
-	FlagType string `json:"flag_type"`
-	Key string `json:"key"`
-	Name string `json:"name"`
+	DefaultValue bool           `json:"default_value"`
+	Description  string         `json:"description"`
+	FeatureId    NullableString `json:"feature_id,omitempty"`
+	FlagType     string         `json:"flag_type"`
+	Key          string         `json:"key"`
+	Name         string         `json:"name"`
 }
 
 type _CreateFlagRequestBody CreateFlagRequestBody
@@ -133,6 +133,7 @@ func (o *CreateFlagRequestBody) HasFeatureId() bool {
 func (o *CreateFlagRequestBody) SetFeatureId(v string) {
 	o.FeatureId.Set(&v)
 }
+
 // SetFeatureIdNil sets the value for FeatureId to be an explicit nil
 func (o *CreateFlagRequestBody) SetFeatureIdNil() {
 	o.FeatureId.Set(nil)
@@ -216,7 +217,7 @@ func (o *CreateFlagRequestBody) SetName(v string) {
 }
 
 func (o CreateFlagRequestBody) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -253,10 +254,10 @@ func (o *CreateFlagRequestBody) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -312,5 +313,3 @@ func (v *NullableCreateFlagRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

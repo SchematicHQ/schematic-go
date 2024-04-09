@@ -11,8 +11,8 @@ API version: 0.1
 package api
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -22,11 +22,11 @@ var _ MappedNullable = &CheckFlagResponseData{}
 // CheckFlagResponseData The returned resource
 type CheckFlagResponseData struct {
 	CompanyId NullableString `json:"company_id,omitempty"`
-	Error NullableString `json:"error,omitempty"`
-	Reason string `json:"reason"`
-	RuleId NullableString `json:"rule_id,omitempty"`
-	UserId NullableString `json:"user_id,omitempty"`
-	Value bool `json:"value"`
+	Error     NullableString `json:"error,omitempty"`
+	Reason    string         `json:"reason"`
+	RuleId    NullableString `json:"rule_id,omitempty"`
+	UserId    NullableString `json:"user_id,omitempty"`
+	Value     bool           `json:"value"`
 }
 
 type _CheckFlagResponseData CheckFlagResponseData
@@ -82,6 +82,7 @@ func (o *CheckFlagResponseData) HasCompanyId() bool {
 func (o *CheckFlagResponseData) SetCompanyId(v string) {
 	o.CompanyId.Set(&v)
 }
+
 // SetCompanyIdNil sets the value for CompanyId to be an explicit nil
 func (o *CheckFlagResponseData) SetCompanyIdNil() {
 	o.CompanyId.Set(nil)
@@ -124,6 +125,7 @@ func (o *CheckFlagResponseData) HasError() bool {
 func (o *CheckFlagResponseData) SetError(v string) {
 	o.Error.Set(&v)
 }
+
 // SetErrorNil sets the value for Error to be an explicit nil
 func (o *CheckFlagResponseData) SetErrorNil() {
 	o.Error.Set(nil)
@@ -190,6 +192,7 @@ func (o *CheckFlagResponseData) HasRuleId() bool {
 func (o *CheckFlagResponseData) SetRuleId(v string) {
 	o.RuleId.Set(&v)
 }
+
 // SetRuleIdNil sets the value for RuleId to be an explicit nil
 func (o *CheckFlagResponseData) SetRuleIdNil() {
 	o.RuleId.Set(nil)
@@ -232,6 +235,7 @@ func (o *CheckFlagResponseData) HasUserId() bool {
 func (o *CheckFlagResponseData) SetUserId(v string) {
 	o.UserId.Set(&v)
 }
+
 // SetUserIdNil sets the value for UserId to be an explicit nil
 func (o *CheckFlagResponseData) SetUserIdNil() {
 	o.UserId.Set(nil)
@@ -267,7 +271,7 @@ func (o *CheckFlagResponseData) SetValue(v bool) {
 }
 
 func (o CheckFlagResponseData) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -307,10 +311,10 @@ func (o *CheckFlagResponseData) UnmarshalJSON(data []byte) (err error) {
 	err = json.Unmarshal(data, &allProperties)
 
 	if err != nil {
-		return err;
+		return err
 	}
 
-	for _, requiredProperty := range(requiredProperties) {
+	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
@@ -366,5 +370,3 @@ func (v *NullableCheckFlagResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

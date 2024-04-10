@@ -1,7 +1,11 @@
 package schematic_test
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"io"
+	"net/http"
 	"testing"
 	"time"
 
@@ -136,16 +140,35 @@ func TestMultipleEventBatches(t *testing.T) {
 	client.Track(ctx, &schematic.EventBodyTrack{Event: "foo", Company: map[string]any{"foo": "bar"}})
 	client.Track(ctx, &schematic.EventBodyTrack{Event: "bar", Company: map[string]any{"foo": "bar"}})
 	// Wait for event buffer to flush and start submitting second batch
-	time.Sleep(11 * time.Millisecond)
+	time.Sleep(20 * time.Millisecond)
 	client.Identify(ctx, &schematic.EventBodyIdentify{Keys: map[string]any{"foo": "bar"}})
 	client.Track(ctx, &schematic.EventBodyTrack{Event: "baz", Company: map[string]any{"foo": "bar"}})
 	// Wait for event buffer to flush
-	time.Sleep(11 * time.Millisecond)
+	time.Sleep(20 * time.Millisecond)
 }
 
 func TestCheckFlagOfflineMode(t *testing.T) {
-	client := schematic.NewClient("", schematic.WithDefaultFlagValues(map[string]bool{"test-flag": true}))
+	client, _ := mocks.NewClientWithMockHTTP("", gomock.NewController(t))
+	client.SetFlagDefault("test-flag", true)
 	defer client.Close()
+
+	assert.True(t, client.CheckFlag(context.Background(), &schematic.CheckFlagRequestBody{}, "test-flag"))
+}
+
+func TestCheckFlagLiveMode(t *testing.T) {
+	client, mockObjs := mocks.NewClientWithMockHTTP("api_foo", gomock.NewController(t))
+	defer client.Close()
+
+	respBody, err := json.Marshal(&api.CheckFlagResponse{
+		Data:   api.CheckFlagResponseData{Value: true},
+		Params: map[string]any{},
+	})
+	assert.Nil(t, err)
+	mockObjs.HTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Body:       io.NopCloser(bytes.NewReader(respBody)),
+		StatusCode: 200,
+    Header:     http.Header{"Content-Type": []string{"application/json"}},
+	}, nil).Times(1)
 
 	assert.True(t, client.CheckFlag(context.Background(), &schematic.CheckFlagRequestBody{}, "test-flag"))
 }

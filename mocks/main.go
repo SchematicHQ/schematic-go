@@ -8,12 +8,12 @@ import (
 
 // Type containing all mock objects; for use in tests to set up expectations
 type mockObjects struct {
-	ctrl            *gomock.Controller
 	AccountsAPI     *MockAccountsAPI
 	CompaniesAPI    *MockCompaniesAPI
 	EntitlementsAPI *MockEntitlementsAPI
 	EventsAPI       *MockEventsAPI
 	FeaturesAPI     *MockFeaturesAPI
+	HTTPClient      *MockHTTPClient
 	PlansAPI        *MockPlansAPI
 }
 
@@ -22,7 +22,6 @@ type mockObjects struct {
 func NewMockAPIClient(ctrl *gomock.Controller) (*api.APIClient, *mockObjects) {
 	// Set up mocks
 	mocks := &mockObjects{
-		ctrl:            ctrl,
 		AccountsAPI:     NewMockAccountsAPI(ctrl),
 		CompaniesAPI:    NewMockCompaniesAPI(ctrl),
 		EntitlementsAPI: NewMockEntitlementsAPI(ctrl),
@@ -44,7 +43,7 @@ func NewMockAPIClient(ctrl *gomock.Controller) (*api.APIClient, *mockObjects) {
 	return apiClient, mocks
 }
 
-// Create a schematic client instance with a mock API client
+// Create a Schematic client instance with a mock API client
 func NewMockClientWithAPI(ctrl *gomock.Controller) (schematic.Client, *mockObjects) {
 	client := NewMockClient(ctrl)
 
@@ -53,4 +52,18 @@ func NewMockClientWithAPI(ctrl *gomock.Controller) (schematic.Client, *mockObjec
 	client.EXPECT().API().Return(mockAPI).AnyTimes()
 
 	return client, mocks
+}
+
+// Create a Schematic client instance with an API client that has a mock HTTP client
+func NewClientWithMockHTTP(apiKey string, ctrl *gomock.Controller) (schematic.Client, *mockObjects) {
+	client := schematic.NewClient(apiKey)
+
+	cfg := api.NewConfiguration()
+	cfg.AddDefaultHeader("X-Schematic-Api-Key", apiKey)
+	mockHTTPClient := NewMockHTTPClient(ctrl)
+	cfg.HTTPClient = mockHTTPClient
+	api := api.NewAPIClient(cfg)
+	client.SetAPIClient(api)
+
+	return client, &mockObjects{HTTPClient: mockHTTPClient}
 }

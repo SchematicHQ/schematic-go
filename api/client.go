@@ -298,7 +298,7 @@ func (c *APIClient) prepareRequest(
 	formParams url.Values,
 	formFiles []formFile) (localVarRequest *http.Request, err error) {
 
-	if _, hasApiKey := c.cfg.DefaultHeader["X-Schematic-Api-Key"]; !hasApiKey {
+	if apiKey, hasApiKey := c.cfg.DefaultHeader["X-Schematic-Api-Key"]; !hasApiKey || apiKey == "" {
 		// No API key provided; offline mode
     return nil, nil
 	}

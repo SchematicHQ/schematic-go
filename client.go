@@ -115,7 +115,7 @@ func (c *client) CheckFlag(ctx context.Context, evalCtx *CheckFlagRequestBody, f
 	}
 
 	if resp == nil {
-		// if the client was not initialized with an API key, we'll have a no-op here whcih returns an empty response
+		// if the client was not initialized with an API key, we'll have a no-op here which returns an empty response
 		return c.getFlagDefault(flagKey)
 	}
 

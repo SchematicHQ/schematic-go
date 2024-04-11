@@ -35,8 +35,8 @@ jobs:
           args: --timeout=5m
           version: v1.54
 
-  check-mocks:
-    name: Check Mocks
+  check-generate:
+    name: Check Generated Code
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -56,8 +56,8 @@ jobs:
           go generate ./...
           git diff --exit-code
 
-      - name: Confirm mocks are up to date
+      - name: Confirm generated code is up to date
         if: failure()
         run: |
-          echo "::error ::Mocks are out of date. Please update them with `go generate ./...` and commit the changes."
+          echo "::error ::Generated code (mocks or OpenAPI) are out of date. Please update them with `go generate ./...` and commit the changes."
           exit 1

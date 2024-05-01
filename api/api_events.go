@@ -617,21 +617,15 @@ func (a *EventsAPIService) GetEventExecute(r ApiGetEventRequest) (*GetEventRespo
 }
 
 type ApiGetEventSummariesRequest struct {
-	ctx           context.Context
-	ApiService    EventsAPI
-	q             *string
-	eventSubtypes *[]string
-	limit         *int32
-	offset        *int32
+	ctx        context.Context
+	ApiService EventsAPI
+	q          *string
+	limit      *int32
+	offset     *int32
 }
 
 func (r ApiGetEventSummariesRequest) Q(q string) ApiGetEventSummariesRequest {
 	r.q = &q
-	return r
-}
-
-func (r ApiGetEventSummariesRequest) EventSubtypes(eventSubtypes []string) ApiGetEventSummariesRequest {
-	r.eventSubtypes = &eventSubtypes
 	return r
 }
 
@@ -688,17 +682,6 @@ func (a *EventsAPIService) GetEventSummariesExecute(r ApiGetEventSummariesReques
 
 	if r.q != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
-	}
-	if r.eventSubtypes != nil {
-		t := *r.eventSubtypes
-		if reflect.TypeOf(t).Kind() == reflect.Slice {
-			s := reflect.ValueOf(t)
-			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "event_subtypes", s.Index(i).Interface(), "multi")
-			}
-		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "event_subtypes", t, "multi")
-		}
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")

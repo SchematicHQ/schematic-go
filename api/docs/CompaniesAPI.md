@@ -15,6 +15,7 @@ Method | HTTP request | Description
 [**DeleteCompanyMembership**](CompaniesAPI.md#DeleteCompanyMembership) | **Delete** /company-memberships/{company_membership_id} | Delete company membership
 [**DeleteUser**](CompaniesAPI.md#DeleteUser) | **Delete** /users/{user_id} | Delete user
 [**DeleteUserByKeys**](CompaniesAPI.md#DeleteUserByKeys) | **Post** /users/delete | Delete user by keys
+[**GetActiveCompanySubscription**](CompaniesAPI.md#GetActiveCompanySubscription) | **Get** /company-subscriptions | Get active company subscription
 [**GetCompany**](CompaniesAPI.md#GetCompany) | **Get** /companies/{company_id} | Get company
 [**GetEntityTraitDefinition**](CompaniesAPI.md#GetEntityTraitDefinition) | **Get** /entity-trait-definitions/{entity_trait_definition_id} | Get entity trait definition
 [**GetEntityTraitValues**](CompaniesAPI.md#GetEntityTraitValues) | **Get** /entity-trait-values | Get entity trait values
@@ -817,6 +818,77 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetActiveCompanySubscription
+
+> GetActiveCompanySubscriptionResponse GetActiveCompanySubscription(ctx).CompanyId(companyId).Limit(limit).Offset(offset).Execute()
+
+Get active company subscription
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	companyId := "companyId_example" // string | 
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().CompaniesAPI.GetActiveCompanySubscription(context.Background()).CompanyId(companyId).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.GetActiveCompanySubscription``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetActiveCompanySubscription`: GetActiveCompanySubscriptionResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.GetActiveCompanySubscription`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetActiveCompanySubscriptionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **companyId** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**GetActiveCompanySubscriptionResponse**](GetActiveCompanySubscriptionResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

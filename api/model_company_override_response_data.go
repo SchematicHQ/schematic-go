@@ -22,7 +22,7 @@ var _ MappedNullable = &CompanyOverrideResponseData{}
 
 // CompanyOverrideResponseData The updated resource
 type CompanyOverrideResponseData struct {
-	Company       *CompanyDetailResponseData         `json:"company,omitempty"`
+	Company       *CompanyResponseData               `json:"company,omitempty"`
 	CompanyId     string                             `json:"company_id"`
 	CreatedAt     time.Time                          `json:"created_at"`
 	EnvironmentId string                             `json:"environment_id"`
@@ -67,9 +67,9 @@ func NewCompanyOverrideResponseDataWithDefaults() *CompanyOverrideResponseData {
 }
 
 // GetCompany returns the Company field value if set, zero value otherwise.
-func (o *CompanyOverrideResponseData) GetCompany() CompanyDetailResponseData {
+func (o *CompanyOverrideResponseData) GetCompany() CompanyResponseData {
 	if o == nil || IsNil(o.Company) {
-		var ret CompanyDetailResponseData
+		var ret CompanyResponseData
 		return ret
 	}
 	return *o.Company
@@ -77,7 +77,7 @@ func (o *CompanyOverrideResponseData) GetCompany() CompanyDetailResponseData {
 
 // GetCompanyOk returns a tuple with the Company field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CompanyOverrideResponseData) GetCompanyOk() (*CompanyDetailResponseData, bool) {
+func (o *CompanyOverrideResponseData) GetCompanyOk() (*CompanyResponseData, bool) {
 	if o == nil || IsNil(o.Company) {
 		return nil, false
 	}
@@ -93,8 +93,8 @@ func (o *CompanyOverrideResponseData) HasCompany() bool {
 	return false
 }
 
-// SetCompany gets a reference to the given CompanyDetailResponseData and assigns it to the Company field.
-func (o *CompanyOverrideResponseData) SetCompany(v CompanyDetailResponseData) {
+// SetCompany gets a reference to the given CompanyResponseData and assigns it to the Company field.
+func (o *CompanyOverrideResponseData) SetCompany(v CompanyResponseData) {
 	o.Company = &v
 }
 

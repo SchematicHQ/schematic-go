@@ -14,6 +14,7 @@ tags:
 - name: features
 - name: plans
 - name: entitlements
+- name: billing
 paths:
   /api-keys:
     get:
@@ -717,6 +718,164 @@ paths:
       summary: List audience users
       tags:
       - features
+  /billing/product/upsert:
+    post:
+      operationId: upsertBillingProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBillingProductRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertBillingProductResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Upsert billing product
+      tags:
+      - billing
+  /billing/products:
+    get:
+      operationId: listProducts
+      parameters:
+      - explode: true
+        in: query
+        name: ids
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListProductsResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: List products
+      tags:
+      - billing
+  /billing/subscription/upsert:
+    post:
+      operationId: upsertBillingSubscription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBillingSubscriptionsRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertBillingSubscriptionResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Upsert billing subscription
+      tags:
+      - billing
   /companies:
     get:
       operationId: listCompanies
@@ -1772,6 +1931,69 @@ paths:
       summary: List company plans
       tags:
       - companies
+  /company-subscriptions:
+    get:
+      operationId: getActiveCompanySubscription
+      parameters:
+      - explode: true
+        in: query
+        name: company_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetActiveCompanySubscriptionResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Get active company subscription
+      tags:
+      - companies
   /company-traits:
     post:
       operationId: upsertCompanyTrait
@@ -2604,15 +2826,6 @@ paths:
         required: false
         schema:
           type: string
-        style: form
-      - explode: true
-        in: query
-        name: event_subtypes
-        required: false
-        schema:
-          items:
-            type: string
-          type: array
         style: form
       - description: Page limit (default 100)
         explode: true
@@ -6447,6 +6660,93 @@ components:
       - conditions
       title: AudienceRequestBody
       type: object
+    BillingProductResponseData:
+      example:
+        account_id: account_id
+        quantity: 6.027456183070403
+        environment_id: environment_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        price: 0.8008281904610115
+        product_id: product_id
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        external_id: external_id
+        currency: currency
+        deleted_at: 2000-01-23T04:56:07.000+00:00
+      properties:
+        account_id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          nullable: true
+          type: string
+        environment_id:
+          type: string
+        external_id:
+          type: string
+        name:
+          type: string
+        currency:
+          type: string
+        price:
+          type: number
+        product_id:
+          type: string
+        quantity:
+          type: number
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - account_id
+      - created_at
+      - environment_id
+      - external_id
+      - name
+      - price
+      - product_id
+      - quantity
+      - updated_at
+      title: BillingProductResponseData
+      type: object
+    BillingSubscriptionResponseData:
+      description: The created resource
+      example:
+        ExpiredAt: 2000-01-23T04:56:07.000+00:00
+        CreatedAt: 2000-01-23T04:56:07.000+00:00
+        ExternalId: ExternalId
+        ID: 0
+        DeletedAt: 2000-01-23T04:56:07.000+00:00
+        UpdatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        CreatedAt:
+          format: date-time
+          type: string
+        DeletedAt:
+          format: date-time
+          nullable: true
+          type: string
+        ExpiredAt:
+          format: date-time
+          nullable: true
+          type: string
+        ExternalId:
+          type: string
+        ID:
+          type: integer
+        UpdatedAt:
+          format: date-time
+          type: string
+      required:
+      - CreatedAt
+      - ExternalId
+      - ID
+      - UpdatedAt
+      title: BillingSubscriptionResponseData
+      type: object
     CheckFlagOutputWithFlagKey:
       example:
         rule_id: rule_id
@@ -6776,92 +7076,19 @@ components:
           trait_id: trait_id
         updated_at: 2000-01-23T04:56:07.000+00:00
         company:
-          traits: "{}"
           environment_id: environment_id
           updated_at: 2000-01-23T04:56:07.000+00:00
-          user_count: 0
           logo_url: logo_url
-          keys:
-          - definition_id: definition_id
-            entity_type: entity_type
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            created_at: 2000-01-23T04:56:07.000+00:00
-            definition:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              key: key
-            id: id
-            entity_id: entity_id
-            value: value
-            key: key
-          - definition_id: definition_id
-            entity_type: entity_type
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            created_at: 2000-01-23T04:56:07.000+00:00
-            definition:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              key: key
-            id: id
-            entity_id: entity_id
-            value: value
-            key: key
-          plans:
-          - image_url: image_url
-            name: name
-            id: id
-          - image_url: image_url
-            name: name
-            id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           id: id
-          entity_traits:
-          - definition_id: definition_id
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            created_at: 2000-01-23T04:56:07.000+00:00
-            definition:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
-            id: id
-            value: value
-          - definition_id: definition_id
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            created_at: 2000-01-23T04:56:07.000+00:00
-            definition:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
-            id: id
-            value: value
           last_seen_at: 2000-01-23T04:56:07.000+00:00
         value_bool: true
         id: id
         metric_period: metric_period
       properties:
         company:
-          $ref: '#/components/schemas/CompanyDetailResponseData'
+          $ref: '#/components/schemas/CompanyResponseData'
         company_id:
           type: string
         created_at:
@@ -6976,6 +7203,53 @@ components:
       - updated_at
       title: CompanyResponseData
       type: object
+    CompanySubscriptionResponseData:
+      example:
+        customer_external_id: customer_external_id
+        expired_at: 2000-01-23T04:56:07.000+00:00
+        products:
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          external_id: external_id
+          currency: currency
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          external_id: external_id
+          currency: currency
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        subscription_external_id: subscription_external_id
+      properties:
+        customer_external_id:
+          type: string
+        expired_at:
+          format: date-time
+          nullable: true
+          type: string
+        products:
+          items:
+            $ref: '#/components/schemas/BillingProductResponseData'
+          type: array
+        subscription_external_id:
+          type: string
+      required:
+      - customer_external_id
+      - products
+      - subscription_external_id
+      title: CompanySubscriptionResponseData
+      type: object
     CountResponse:
       description: The created resource
       example:
@@ -7004,6 +7278,59 @@ components:
       required:
       - name
       title: CreateApiKeyRequestBody
+      type: object
+    CreateBillingProductRequestBody:
+      example:
+        quantity: 6
+        price: 0.8008281904610115
+        name: name
+        currency: currency
+        external_id: external_id
+      properties:
+        currency:
+          type: string
+        external_id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+      required:
+      - currency
+      - external_id
+      - name
+      - price
+      - quantity
+      title: CreateBillingProductRequestBody
+      type: object
+    CreateBillingSubscriptionsRequestBody:
+      example:
+        product_external_ids:
+        - product_external_ids
+        - product_external_ids
+        customer_external_id: customer_external_id
+        expired_at: 2000-01-23T04:56:07.000+00:00
+        subscription_external_id: subscription_external_id
+      properties:
+        customer_external_id:
+          type: string
+        expired_at:
+          format: date-time
+          type: string
+        product_external_ids:
+          items:
+            type: string
+          type: array
+        subscription_external_id:
+          type: string
+      required:
+      - customer_external_id
+      - expired_at
+      - product_external_ids
+      - subscription_external_id
+      title: CreateBillingSubscriptionsRequestBody
       type: object
     CreateCompanyOverrideRequestBody:
       example:
@@ -7305,6 +7632,7 @@ components:
           - trait
           - user
           - plan
+          - billing_product
           type: string
         event_subtype:
           description: Name of track event type used to measure this condition
@@ -9434,16 +9762,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -10783,16 +11101,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -12137,16 +12445,6 @@ components:
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
-        trait:
-          entity_type: entity_type
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          hierarchy:
-          - hierarchy
-          - hierarchy
-          created_at: 2000-01-23T04:56:07.000+00:00
-          id: id
-          display_name: display_name
-          trait_type: trait_type
         event_subtype: event_subtype
         id: id
         lifecycle_phase: lifecycle_phase
@@ -12175,8 +12473,6 @@ components:
           type: string
         name:
           type: string
-        trait:
-          $ref: '#/components/schemas/EntityTraitDefinitionResponseData'
         trait_id:
           nullable: true
           type: string
@@ -13522,16 +13818,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -14827,16 +15113,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -16143,16 +16419,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -18844,16 +19110,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -20135,16 +20391,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -23358,6 +23604,125 @@ components:
       - params
       title: ListAudienceUsersResponse
       type: object
+    UpsertBillingProductResponse:
+      example:
+        data:
+          account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          external_id: external_id
+          currency: currency
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/BillingProductResponseData'
+        params:
+          description: Input parameters
+          title: UpsertBillingProductParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpsertBillingProductResponse
+      type: object
+    ListProductsParams:
+      description: Input parameters
+      example:
+        offset: 0
+        limit: 100
+        name: name
+        ids:
+        - ids
+        - ids
+      properties:
+        ids:
+          items:
+            type: string
+          type: array
+        limit:
+          example: 100
+          type: integer
+        name:
+          type: string
+        offset:
+          example: 0
+          type: integer
+      title: ListProductsParams
+      type: object
+    ListProductsResponse:
+      example:
+        data:
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          external_id: external_id
+          currency: currency
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          external_id: external_id
+          currency: currency
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        params:
+          offset: 0
+          limit: 100
+          name: name
+          ids:
+          - ids
+          - ids
+      properties:
+        data:
+          description: The returned resources
+          items:
+            $ref: '#/components/schemas/BillingProductResponseData'
+          title: ListProductsResponseData
+          type: array
+        params:
+          $ref: '#/components/schemas/ListProductsParams'
+      required:
+      - data
+      - params
+      title: ListProductsResponse
+      type: object
+    UpsertBillingSubscriptionResponse:
+      example:
+        data:
+          ExpiredAt: 2000-01-23T04:56:07.000+00:00
+          CreatedAt: 2000-01-23T04:56:07.000+00:00
+          ExternalId: ExternalId
+          ID: 0
+          DeletedAt: 2000-01-23T04:56:07.000+00:00
+          UpdatedAt: 2000-01-23T04:56:07.000+00:00
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/BillingSubscriptionResponseData'
+        params:
+          description: Input parameters
+          title: UpsertBillingSubscriptionParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpsertBillingSubscriptionResponse
+      type: object
     ListCompaniesParams:
       description: Input parameters
       example:
@@ -24247,85 +24612,12 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
-            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
-            user_count: 0
             logo_url: logo_url
-            keys:
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            plans:
-            - image_url: image_url
-              name: name
-              id: id
-            - image_url: image_url
-              name: name
-              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
-            entity_traits:
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -24360,85 +24652,12 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
-            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
-            user_count: 0
             logo_url: logo_url
-            keys:
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            plans:
-            - image_url: image_url
-              name: name
-              id: id
-            - image_url: image_url
-              name: name
-              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
-            entity_traits:
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -24504,85 +24723,12 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
-            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
-            user_count: 0
             logo_url: logo_url
-            keys:
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            plans:
-            - image_url: image_url
-              name: name
-              id: id
-            - image_url: image_url
-              name: name
-              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
-            entity_traits:
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -24633,85 +24779,12 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
-            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
-            user_count: 0
             logo_url: logo_url
-            keys:
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            plans:
-            - image_url: image_url
-              name: name
-              id: id
-            - image_url: image_url
-              name: name
-              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
-            entity_traits:
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -24762,85 +24835,12 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
-            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
-            user_count: 0
             logo_url: logo_url
-            keys:
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            - definition_id: definition_id
-              entity_type: entity_type
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                key: key
-              id: id
-              entity_id: entity_id
-              value: value
-              key: key
-            plans:
-            - image_url: image_url
-              name: name
-              id: id
-            - image_url: image_url
-              name: name
-              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
-            entity_traits:
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
-            - definition_id: definition_id
-              environment_id: environment_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              created_at: 2000-01-23T04:56:07.000+00:00
-              definition:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
-              id: id
-              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -24997,6 +24997,96 @@ components:
       - data
       - params
       title: ListCompanyPlansResponse
+      type: object
+    GetActiveCompanySubscriptionParams:
+      description: Input parameters
+      example:
+        company_id: company_id
+        offset: 0
+        limit: 100
+      properties:
+        company_id:
+          type: string
+        limit:
+          example: 100
+          type: integer
+        offset:
+          example: 0
+          type: integer
+      title: GetActiveCompanySubscriptionParams
+      type: object
+    GetActiveCompanySubscriptionResponse:
+      example:
+        data:
+        - customer_external_id: customer_external_id
+          expired_at: 2000-01-23T04:56:07.000+00:00
+          products:
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            external_id: external_id
+            currency: currency
+            deleted_at: 2000-01-23T04:56:07.000+00:00
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            external_id: external_id
+            currency: currency
+            deleted_at: 2000-01-23T04:56:07.000+00:00
+          subscription_external_id: subscription_external_id
+        - customer_external_id: customer_external_id
+          expired_at: 2000-01-23T04:56:07.000+00:00
+          products:
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            external_id: external_id
+            currency: currency
+            deleted_at: 2000-01-23T04:56:07.000+00:00
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            external_id: external_id
+            currency: currency
+            deleted_at: 2000-01-23T04:56:07.000+00:00
+          subscription_external_id: subscription_external_id
+        params:
+          company_id: company_id
+          offset: 0
+          limit: 100
+      properties:
+        data:
+          description: The returned resources
+          items:
+            $ref: '#/components/schemas/CompanySubscriptionResponseData'
+          title: GetActiveCompanySubscriptionResponseData
+          type: array
+        params:
+          $ref: '#/components/schemas/GetActiveCompanySubscriptionParams'
+      required:
+      - data
+      - params
+      title: GetActiveCompanySubscriptionResponse
       type: object
     UpsertCompanyTraitResponse:
       example:
@@ -25587,14 +25677,7 @@ components:
         q: q
         offset: 0
         limit: 100
-        event_subtypes:
-        - event_subtypes
-        - event_subtypes
       properties:
-        event_subtypes:
-          items:
-            type: string
-          type: array
         limit:
           example: 100
           type: integer
@@ -25624,9 +25707,6 @@ components:
           q: q
           offset: 0
           limit: 100
-          event_subtypes:
-          - event_subtypes
-          - event_subtypes
       properties:
         data:
           description: The returned resources
@@ -27155,16 +27235,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -28468,16 +28538,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -29872,16 +29932,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -31177,16 +31227,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -32581,16 +32621,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -33901,16 +33931,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -35308,16 +35328,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -36599,16 +36609,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -37916,16 +37916,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -39223,16 +39213,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -40530,16 +40510,6 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          trait:
-            entity_type: entity_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            hierarchy:
-            - hierarchy
-            - hierarchy
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            display_name: display_name
-            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -47450,16 +47420,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -48741,16 +48701,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -50040,16 +49990,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -51331,16 +51271,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -52656,16 +52586,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -53947,16 +53867,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -55262,16 +55172,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -56553,16 +56453,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -57868,16 +57758,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -59159,16 +59039,6 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            trait:
-              entity_type: entity_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              hierarchy:
-              - hierarchy
-              - hierarchy
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: id
-              display_name: display_name
-              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -60557,16 +60427,6 @@ components:
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              trait:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
               event_subtype: event_subtype
               id: id
               lifecycle_phase: lifecycle_phase
@@ -61862,16 +61722,6 @@ components:
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              trait:
-                entity_type: entity_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                hierarchy:
-                - hierarchy
-                - hierarchy
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: id
-                display_name: display_name
-                trait_type: trait_type
               event_subtype: event_subtype
               id: id
               lifecycle_phase: lifecycle_phase

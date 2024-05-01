@@ -19,6 +19,9 @@ Class | Method | HTTP request | Description
 *AccountsAPI* | [**ListApiRequests**](docs/AccountsAPI.md#listapirequests) | **Get** /api-requests | List api requests
 *AccountsAPI* | [**UpdateApiKey**](docs/AccountsAPI.md#updateapikey) | **Put** /api-keys/{api_key_id} | Update api key
 *AccountsAPI* | [**UpdateEnvironment**](docs/AccountsAPI.md#updateenvironment) | **Put** /environments/{environment_id} | Update environment
+*BillingAPI* | [**ListProducts**](docs/BillingAPI.md#listproducts) | **Get** /billing/products | List products
+*BillingAPI* | [**UpsertBillingProduct**](docs/BillingAPI.md#upsertbillingproduct) | **Post** /billing/product/upsert | Upsert billing product
+*BillingAPI* | [**UpsertBillingSubscription**](docs/BillingAPI.md#upsertbillingsubscription) | **Post** /billing/subscription/upsert | Upsert billing subscription
 *CompaniesAPI* | [**CountCompanies**](docs/CompaniesAPI.md#countcompanies) | **Get** /companies/count | Count companies
 *CompaniesAPI* | [**CountEntityKeyDefinitions**](docs/CompaniesAPI.md#countentitykeydefinitions) | **Get** /entity-key-definitions/count | Count entity key definitions
 *CompaniesAPI* | [**CountEntityTraitDefinitions**](docs/CompaniesAPI.md#countentitytraitdefinitions) | **Get** /entity-trait-definitions/count | Count entity trait definitions
@@ -30,6 +33,7 @@ Class | Method | HTTP request | Description
 *CompaniesAPI* | [**DeleteCompanyMembership**](docs/CompaniesAPI.md#deletecompanymembership) | **Delete** /company-memberships/{company_membership_id} | Delete company membership
 *CompaniesAPI* | [**DeleteUser**](docs/CompaniesAPI.md#deleteuser) | **Delete** /users/{user_id} | Delete user
 *CompaniesAPI* | [**DeleteUserByKeys**](docs/CompaniesAPI.md#deleteuserbykeys) | **Post** /users/delete | Delete user by keys
+*CompaniesAPI* | [**GetActiveCompanySubscription**](docs/CompaniesAPI.md#getactivecompanysubscription) | **Get** /company-subscriptions | Get active company subscription
 *CompaniesAPI* | [**GetCompany**](docs/CompaniesAPI.md#getcompany) | **Get** /companies/{company_id} | Get company
 *CompaniesAPI* | [**GetEntityTraitDefinition**](docs/CompaniesAPI.md#getentitytraitdefinition) | **Get** /entity-trait-definitions/{entity_trait_definition_id} | Get entity trait definition
 *CompaniesAPI* | [**GetEntityTraitValues**](docs/CompaniesAPI.md#getentitytraitvalues) | **Get** /entity-trait-values | Get entity trait values
@@ -117,6 +121,8 @@ Class | Method | HTTP request | Description
  - [ApiKeyRequestResponseData](docs/ApiKeyRequestResponseData.md)
  - [ApiKeyResponseData](docs/ApiKeyResponseData.md)
  - [AudienceRequestBody](docs/AudienceRequestBody.md)
+ - [BillingProductResponseData](docs/BillingProductResponseData.md)
+ - [BillingSubscriptionResponseData](docs/BillingSubscriptionResponseData.md)
  - [CheckFlagOutputWithFlagKey](docs/CheckFlagOutputWithFlagKey.md)
  - [CheckFlagRequestBody](docs/CheckFlagRequestBody.md)
  - [CheckFlagResponse](docs/CheckFlagResponse.md)
@@ -129,6 +135,7 @@ Class | Method | HTTP request | Description
  - [CompanyOverrideResponseData](docs/CompanyOverrideResponseData.md)
  - [CompanyPlanResponseData](docs/CompanyPlanResponseData.md)
  - [CompanyResponseData](docs/CompanyResponseData.md)
+ - [CompanySubscriptionResponseData](docs/CompanySubscriptionResponseData.md)
  - [CountApiKeysParams](docs/CountApiKeysParams.md)
  - [CountApiKeysResponse](docs/CountApiKeysResponse.md)
  - [CountApiRequestsParams](docs/CountApiRequestsParams.md)
@@ -164,6 +171,8 @@ Class | Method | HTTP request | Description
  - [CountUsersResponse](docs/CountUsersResponse.md)
  - [CreateApiKeyRequestBody](docs/CreateApiKeyRequestBody.md)
  - [CreateApiKeyResponse](docs/CreateApiKeyResponse.md)
+ - [CreateBillingProductRequestBody](docs/CreateBillingProductRequestBody.md)
+ - [CreateBillingSubscriptionsRequestBody](docs/CreateBillingSubscriptionsRequestBody.md)
  - [CreateCompanyOverrideRequestBody](docs/CreateCompanyOverrideRequestBody.md)
  - [CreateCompanyOverrideResponse](docs/CreateCompanyOverrideResponse.md)
  - [CreateCompanyResponse](docs/CreateCompanyResponse.md)
@@ -228,6 +237,8 @@ Class | Method | HTTP request | Description
  - [FlagCheckLogResponseData](docs/FlagCheckLogResponseData.md)
  - [FlagDetailResponseData](docs/FlagDetailResponseData.md)
  - [FlagResponseData](docs/FlagResponseData.md)
+ - [GetActiveCompanySubscriptionParams](docs/GetActiveCompanySubscriptionParams.md)
+ - [GetActiveCompanySubscriptionResponse](docs/GetActiveCompanySubscriptionResponse.md)
  - [GetApiKeyResponse](docs/GetApiKeyResponse.md)
  - [GetApiRequestResponse](docs/GetApiRequestResponse.md)
  - [GetAudienceResponse](docs/GetAudienceResponse.md)
@@ -293,6 +304,8 @@ Class | Method | HTTP request | Description
  - [ListPlanEntitlementsResponse](docs/ListPlanEntitlementsResponse.md)
  - [ListPlansParams](docs/ListPlansParams.md)
  - [ListPlansResponse](docs/ListPlansResponse.md)
+ - [ListProductsParams](docs/ListProductsParams.md)
+ - [ListProductsResponse](docs/ListProductsResponse.md)
  - [ListUsersParams](docs/ListUsersParams.md)
  - [ListUsersResponse](docs/ListUsersResponse.md)
  - [LookupCompanyParams](docs/LookupCompanyParams.md)
@@ -338,6 +351,8 @@ Class | Method | HTTP request | Description
  - [UpdatePlanResponse](docs/UpdatePlanResponse.md)
  - [UpdateReqCommon](docs/UpdateReqCommon.md)
  - [UpdateRuleRequestBody](docs/UpdateRuleRequestBody.md)
+ - [UpsertBillingProductResponse](docs/UpsertBillingProductResponse.md)
+ - [UpsertBillingSubscriptionResponse](docs/UpsertBillingSubscriptionResponse.md)
  - [UpsertCompanyRequestBody](docs/UpsertCompanyRequestBody.md)
  - [UpsertCompanyResponse](docs/UpsertCompanyResponse.md)
  - [UpsertCompanyTraitResponse](docs/UpsertCompanyTraitResponse.md)

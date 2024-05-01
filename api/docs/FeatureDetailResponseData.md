@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **Id** | **string** |  | 
 **LifecyclePhase** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
+**Trait** | Pointer to [**EntityTraitDefinitionResponseData**](EntityTraitDefinitionResponseData.md) |  | [optional] 
 **TraitId** | Pointer to **NullableString** |  | [optional] 
 **UpdatedAt** | **time.Time** |  | 
 
@@ -249,6 +250,31 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
+
+### GetTrait
+
+`func (o *FeatureDetailResponseData) GetTrait() EntityTraitDefinitionResponseData`
+
+GetTrait returns the Trait field if non-nil, zero value otherwise.
+
+### GetTraitOk
+
+`func (o *FeatureDetailResponseData) GetTraitOk() (*EntityTraitDefinitionResponseData, bool)`
+
+GetTraitOk returns a tuple with the Trait field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTrait
+
+`func (o *FeatureDetailResponseData) SetTrait(v EntityTraitDefinitionResponseData)`
+
+SetTrait sets Trait field to given value.
+
+### HasTrait
+
+`func (o *FeatureDetailResponseData) HasTrait() bool`
+
+HasTrait returns a boolean if a field has been set.
 
 ### GetTraitId
 

@@ -19,9 +19,12 @@ var _ MappedNullable = &ListUsersParams{}
 
 // ListUsersParams Input parameters
 type ListUsersParams struct {
-	Ids    []string `json:"ids,omitempty"`
-	Limit  *int32   `json:"limit,omitempty"`
-	Offset *int32   `json:"offset,omitempty"`
+	CompanyId *string  `json:"company_id,omitempty"`
+	Ids       []string `json:"ids,omitempty"`
+	Limit     *int32   `json:"limit,omitempty"`
+	Offset    *int32   `json:"offset,omitempty"`
+	PlanId    *string  `json:"plan_id,omitempty"`
+	Q         *string  `json:"q,omitempty"`
 }
 
 // NewListUsersParams instantiates a new ListUsersParams object
@@ -39,6 +42,38 @@ func NewListUsersParams() *ListUsersParams {
 func NewListUsersParamsWithDefaults() *ListUsersParams {
 	this := ListUsersParams{}
 	return &this
+}
+
+// GetCompanyId returns the CompanyId field value if set, zero value otherwise.
+func (o *ListUsersParams) GetCompanyId() string {
+	if o == nil || IsNil(o.CompanyId) {
+		var ret string
+		return ret
+	}
+	return *o.CompanyId
+}
+
+// GetCompanyIdOk returns a tuple with the CompanyId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListUsersParams) GetCompanyIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompanyId) {
+		return nil, false
+	}
+	return o.CompanyId, true
+}
+
+// HasCompanyId returns a boolean if a field has been set.
+func (o *ListUsersParams) HasCompanyId() bool {
+	if o != nil && !IsNil(o.CompanyId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompanyId gets a reference to the given string and assigns it to the CompanyId field.
+func (o *ListUsersParams) SetCompanyId(v string) {
+	o.CompanyId = &v
 }
 
 // GetIds returns the Ids field value if set, zero value otherwise.
@@ -137,6 +172,70 @@ func (o *ListUsersParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetPlanId returns the PlanId field value if set, zero value otherwise.
+func (o *ListUsersParams) GetPlanId() string {
+	if o == nil || IsNil(o.PlanId) {
+		var ret string
+		return ret
+	}
+	return *o.PlanId
+}
+
+// GetPlanIdOk returns a tuple with the PlanId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListUsersParams) GetPlanIdOk() (*string, bool) {
+	if o == nil || IsNil(o.PlanId) {
+		return nil, false
+	}
+	return o.PlanId, true
+}
+
+// HasPlanId returns a boolean if a field has been set.
+func (o *ListUsersParams) HasPlanId() bool {
+	if o != nil && !IsNil(o.PlanId) {
+		return true
+	}
+
+	return false
+}
+
+// SetPlanId gets a reference to the given string and assigns it to the PlanId field.
+func (o *ListUsersParams) SetPlanId(v string) {
+	o.PlanId = &v
+}
+
+// GetQ returns the Q field value if set, zero value otherwise.
+func (o *ListUsersParams) GetQ() string {
+	if o == nil || IsNil(o.Q) {
+		var ret string
+		return ret
+	}
+	return *o.Q
+}
+
+// GetQOk returns a tuple with the Q field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListUsersParams) GetQOk() (*string, bool) {
+	if o == nil || IsNil(o.Q) {
+		return nil, false
+	}
+	return o.Q, true
+}
+
+// HasQ returns a boolean if a field has been set.
+func (o *ListUsersParams) HasQ() bool {
+	if o != nil && !IsNil(o.Q) {
+		return true
+	}
+
+	return false
+}
+
+// SetQ gets a reference to the given string and assigns it to the Q field.
+func (o *ListUsersParams) SetQ(v string) {
+	o.Q = &v
+}
+
 func (o ListUsersParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -147,6 +246,9 @@ func (o ListUsersParams) MarshalJSON() ([]byte, error) {
 
 func (o ListUsersParams) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.CompanyId) {
+		toSerialize["company_id"] = o.CompanyId
+	}
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
@@ -155,6 +257,12 @@ func (o ListUsersParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.PlanId) {
+		toSerialize["plan_id"] = o.PlanId
+	}
+	if !IsNil(o.Q) {
+		toSerialize["q"] = o.Q
 	}
 	return toSerialize, nil
 }

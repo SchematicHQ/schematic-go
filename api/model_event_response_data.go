@@ -20,10 +20,11 @@ import (
 // checks if the EventResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &EventResponseData{}
 
-// EventResponseData The returned resource
+// EventResponseData struct for EventResponseData
 type EventResponseData struct {
 	ApiKey        NullableString         `json:"api_key,omitempty"`
 	Body          map[string]interface{} `json:"body"`
+	BodyPreview   string                 `json:"body_preview"`
 	CapturedAt    time.Time              `json:"captured_at"`
 	CompanyId     NullableString         `json:"company_id,omitempty"`
 	EnrichedAt    NullableTime           `json:"enriched_at,omitempty"`
@@ -47,9 +48,10 @@ type _EventResponseData EventResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEventResponseData(body map[string]interface{}, capturedAt time.Time, featureIds []string, id string, status string, type_ string, updatedAt time.Time) *EventResponseData {
+func NewEventResponseData(body map[string]interface{}, bodyPreview string, capturedAt time.Time, featureIds []string, id string, status string, type_ string, updatedAt time.Time) *EventResponseData {
 	this := EventResponseData{}
 	this.Body = body
+	this.BodyPreview = bodyPreview
 	this.CapturedAt = capturedAt
 	this.FeatureIds = featureIds
 	this.Id = id
@@ -132,6 +134,30 @@ func (o *EventResponseData) GetBodyOk() (map[string]interface{}, bool) {
 // SetBody sets field value
 func (o *EventResponseData) SetBody(v map[string]interface{}) {
 	o.Body = v
+}
+
+// GetBodyPreview returns the BodyPreview field value
+func (o *EventResponseData) GetBodyPreview() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.BodyPreview
+}
+
+// GetBodyPreviewOk returns a tuple with the BodyPreview field value
+// and a boolean to check if the value has been set.
+func (o *EventResponseData) GetBodyPreviewOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.BodyPreview, true
+}
+
+// SetBodyPreview sets field value
+func (o *EventResponseData) SetBodyPreview(v string) {
+	o.BodyPreview = v
 }
 
 // GetCapturedAt returns the CapturedAt field value
@@ -679,6 +705,7 @@ func (o EventResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["api_key"] = o.ApiKey.Get()
 	}
 	toSerialize["body"] = o.Body
+	toSerialize["body_preview"] = o.BodyPreview
 	toSerialize["captured_at"] = o.CapturedAt
 	if o.CompanyId.IsSet() {
 		toSerialize["company_id"] = o.CompanyId.Get()
@@ -721,6 +748,7 @@ func (o *EventResponseData) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"body",
+		"body_preview",
 		"captured_at",
 		"feature_ids",
 		"id",

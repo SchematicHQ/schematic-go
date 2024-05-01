@@ -11,10 +11,10 @@ package api
 
 import (
 	"context"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
 )
 
 func Test_api_AccountsAPIService(t *testing.T) {
@@ -24,7 +24,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService CountApiKeys", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.AccountsAPI.CountApiKeys(context.Background()).Execute()
 
@@ -36,7 +36,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService CountApiRequests", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.AccountsAPI.CountApiRequests(context.Background()).Execute()
 
@@ -48,7 +48,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService CreateApiKey", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.AccountsAPI.CreateApiKey(context.Background()).Execute()
 
@@ -60,7 +60,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService CreateEnvironment", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.AccountsAPI.CreateEnvironment(context.Background()).Execute()
 
@@ -72,7 +72,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService DeleteApiKey", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var apiKeyId string
 
@@ -86,7 +86,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService DeleteEnvironment", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var environmentId string
 
@@ -100,7 +100,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService GetApiKey", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var apiKeyId string
 
@@ -114,7 +114,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService GetApiRequest", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var apiRequestId string
 
@@ -128,7 +128,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService GetEnvironment", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var environmentId string
 
@@ -142,7 +142,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService ListApiKeys", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.AccountsAPI.ListApiKeys(context.Background()).Execute()
 
@@ -154,7 +154,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService ListApiRequests", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.AccountsAPI.ListApiRequests(context.Background()).Execute()
 
@@ -166,7 +166,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService UpdateApiKey", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var apiKeyId string
 
@@ -180,7 +180,7 @@ func Test_api_AccountsAPIService(t *testing.T) {
 
 	t.Run("Test AccountsAPIService UpdateEnvironment", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var environmentId string
 

@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]CompanyResponseData**](CompanyResponseData.md) | The returned resources | 
+**Data** | [**[]CompanyDetailResponseData**](CompanyDetailResponseData.md) | The returned resources | 
 **Params** | [**ListCompaniesParams**](ListCompaniesParams.md) |  | 
 
 ## Methods
 
 ### NewListCompaniesResponse
 
-`func NewListCompaniesResponse(data []CompanyResponseData, params ListCompaniesParams, ) *ListCompaniesResponse`
+`func NewListCompaniesResponse(data []CompanyDetailResponseData, params ListCompaniesParams, ) *ListCompaniesResponse`
 
 NewListCompaniesResponse instantiates a new ListCompaniesResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *ListCompaniesResponse) GetData() []CompanyResponseData`
+`func (o *ListCompaniesResponse) GetData() []CompanyDetailResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *ListCompaniesResponse) GetDataOk() (*[]CompanyResponseData, bool)`
+`func (o *ListCompaniesResponse) GetDataOk() (*[]CompanyDetailResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *ListCompaniesResponse) SetData(v []CompanyResponseData)`
+`func (o *ListCompaniesResponse) SetData(v []CompanyDetailResponseData)`
 
 SetData sets Data field to given value.
 

@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ConditionGroups** | [**[]RuleConditionGroupDetailResponseData**](RuleConditionGroupDetailResponseData.md) |  | 
-**Conditions** | [**[]RuleConditionResponseData**](RuleConditionResponseData.md) |  | 
+**Conditions** | [**[]RuleConditionDetailResponseData**](RuleConditionDetailResponseData.md) |  | 
 **CreatedAt** | **time.Time** |  | 
 **EnvironmentId** | **string** |  | 
 **FlagId** | Pointer to **NullableString** |  | [optional] 
@@ -21,7 +21,7 @@ Name | Type | Description | Notes
 
 ### NewRuleDetailResponseData
 
-`func NewRuleDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, ruleType string, updatedAt time.Time, value bool, ) *RuleDetailResponseData`
+`func NewRuleDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionDetailResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, ruleType string, updatedAt time.Time, value bool, ) *RuleDetailResponseData`
 
 NewRuleDetailResponseData instantiates a new RuleDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -58,20 +58,20 @@ SetConditionGroups sets ConditionGroups field to given value.
 
 ### GetConditions
 
-`func (o *RuleDetailResponseData) GetConditions() []RuleConditionResponseData`
+`func (o *RuleDetailResponseData) GetConditions() []RuleConditionDetailResponseData`
 
 GetConditions returns the Conditions field if non-nil, zero value otherwise.
 
 ### GetConditionsOk
 
-`func (o *RuleDetailResponseData) GetConditionsOk() (*[]RuleConditionResponseData, bool)`
+`func (o *RuleDetailResponseData) GetConditionsOk() (*[]RuleConditionDetailResponseData, bool)`
 
 GetConditionsOk returns a tuple with the Conditions field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetConditions
 
-`func (o *RuleDetailResponseData) SetConditions(v []RuleConditionResponseData)`
+`func (o *RuleDetailResponseData) SetConditions(v []RuleConditionDetailResponseData)`
 
 SetConditions sets Conditions field to given value.
 

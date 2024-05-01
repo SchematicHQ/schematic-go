@@ -20,9 +20,10 @@ var _ MappedNullable = &ListFlagsParams{}
 // ListFlagsParams Input parameters
 type ListFlagsParams struct {
 	FeatureId *string  `json:"feature_id,omitempty"`
-	FlagIds   []string `json:"flag_ids,omitempty"`
+	Ids       []string `json:"ids,omitempty"`
 	Limit     *int32   `json:"limit,omitempty"`
 	Offset    *int32   `json:"offset,omitempty"`
+	Q         *string  `json:"q,omitempty"`
 }
 
 // NewListFlagsParams instantiates a new ListFlagsParams object
@@ -74,36 +75,36 @@ func (o *ListFlagsParams) SetFeatureId(v string) {
 	o.FeatureId = &v
 }
 
-// GetFlagIds returns the FlagIds field value if set, zero value otherwise.
-func (o *ListFlagsParams) GetFlagIds() []string {
-	if o == nil || IsNil(o.FlagIds) {
+// GetIds returns the Ids field value if set, zero value otherwise.
+func (o *ListFlagsParams) GetIds() []string {
+	if o == nil || IsNil(o.Ids) {
 		var ret []string
 		return ret
 	}
-	return o.FlagIds
+	return o.Ids
 }
 
-// GetFlagIdsOk returns a tuple with the FlagIds field value if set, nil otherwise
+// GetIdsOk returns a tuple with the Ids field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListFlagsParams) GetFlagIdsOk() ([]string, bool) {
-	if o == nil || IsNil(o.FlagIds) {
+func (o *ListFlagsParams) GetIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Ids) {
 		return nil, false
 	}
-	return o.FlagIds, true
+	return o.Ids, true
 }
 
-// HasFlagIds returns a boolean if a field has been set.
-func (o *ListFlagsParams) HasFlagIds() bool {
-	if o != nil && !IsNil(o.FlagIds) {
+// HasIds returns a boolean if a field has been set.
+func (o *ListFlagsParams) HasIds() bool {
+	if o != nil && !IsNil(o.Ids) {
 		return true
 	}
 
 	return false
 }
 
-// SetFlagIds gets a reference to the given []string and assigns it to the FlagIds field.
-func (o *ListFlagsParams) SetFlagIds(v []string) {
-	o.FlagIds = v
+// SetIds gets a reference to the given []string and assigns it to the Ids field.
+func (o *ListFlagsParams) SetIds(v []string) {
+	o.Ids = v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -170,6 +171,38 @@ func (o *ListFlagsParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetQ returns the Q field value if set, zero value otherwise.
+func (o *ListFlagsParams) GetQ() string {
+	if o == nil || IsNil(o.Q) {
+		var ret string
+		return ret
+	}
+	return *o.Q
+}
+
+// GetQOk returns a tuple with the Q field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListFlagsParams) GetQOk() (*string, bool) {
+	if o == nil || IsNil(o.Q) {
+		return nil, false
+	}
+	return o.Q, true
+}
+
+// HasQ returns a boolean if a field has been set.
+func (o *ListFlagsParams) HasQ() bool {
+	if o != nil && !IsNil(o.Q) {
+		return true
+	}
+
+	return false
+}
+
+// SetQ gets a reference to the given string and assigns it to the Q field.
+func (o *ListFlagsParams) SetQ(v string) {
+	o.Q = &v
+}
+
 func (o ListFlagsParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -183,14 +216,17 @@ func (o ListFlagsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FeatureId) {
 		toSerialize["feature_id"] = o.FeatureId
 	}
-	if !IsNil(o.FlagIds) {
-		toSerialize["flag_ids"] = o.FlagIds
+	if !IsNil(o.Ids) {
+		toSerialize["ids"] = o.Ids
 	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.Q) {
+		toSerialize["q"] = o.Q
 	}
 	return toSerialize, nil
 }

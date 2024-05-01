@@ -14,6 +14,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the EventSummaryResponseData type satisfies the MappedNullable interface at compile time
@@ -21,11 +22,12 @@ var _ MappedNullable = &EventSummaryResponseData{}
 
 // EventSummaryResponseData struct for EventSummaryResponseData
 type EventSummaryResponseData struct {
-	EnvironmentId      string `json:"environment_id"`
-	EventSubtype       string `json:"event_subtype"`
-	Last30CompanyCount int32  `json:"last_30_company_count"`
-	Last30Count        int32  `json:"last_30_count"`
-	Last30UserCount    int32  `json:"last_30_user_count"`
+	CompanyCount  int32        `json:"company_count"`
+	EnvironmentId string       `json:"environment_id"`
+	EventCount    int32        `json:"event_count"`
+	EventSubtype  string       `json:"event_subtype"`
+	LastSeenAt    NullableTime `json:"last_seen_at,omitempty"`
+	UserCount     int32        `json:"user_count"`
 }
 
 type _EventSummaryResponseData EventSummaryResponseData
@@ -34,13 +36,13 @@ type _EventSummaryResponseData EventSummaryResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEventSummaryResponseData(environmentId string, eventSubtype string, last30CompanyCount int32, last30Count int32, last30UserCount int32) *EventSummaryResponseData {
+func NewEventSummaryResponseData(companyCount int32, environmentId string, eventCount int32, eventSubtype string, userCount int32) *EventSummaryResponseData {
 	this := EventSummaryResponseData{}
+	this.CompanyCount = companyCount
 	this.EnvironmentId = environmentId
+	this.EventCount = eventCount
 	this.EventSubtype = eventSubtype
-	this.Last30CompanyCount = last30CompanyCount
-	this.Last30Count = last30Count
-	this.Last30UserCount = last30UserCount
+	this.UserCount = userCount
 	return &this
 }
 
@@ -50,6 +52,30 @@ func NewEventSummaryResponseData(environmentId string, eventSubtype string, last
 func NewEventSummaryResponseDataWithDefaults() *EventSummaryResponseData {
 	this := EventSummaryResponseData{}
 	return &this
+}
+
+// GetCompanyCount returns the CompanyCount field value
+func (o *EventSummaryResponseData) GetCompanyCount() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.CompanyCount
+}
+
+// GetCompanyCountOk returns a tuple with the CompanyCount field value
+// and a boolean to check if the value has been set.
+func (o *EventSummaryResponseData) GetCompanyCountOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.CompanyCount, true
+}
+
+// SetCompanyCount sets field value
+func (o *EventSummaryResponseData) SetCompanyCount(v int32) {
+	o.CompanyCount = v
 }
 
 // GetEnvironmentId returns the EnvironmentId field value
@@ -76,6 +102,30 @@ func (o *EventSummaryResponseData) SetEnvironmentId(v string) {
 	o.EnvironmentId = v
 }
 
+// GetEventCount returns the EventCount field value
+func (o *EventSummaryResponseData) GetEventCount() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.EventCount
+}
+
+// GetEventCountOk returns a tuple with the EventCount field value
+// and a boolean to check if the value has been set.
+func (o *EventSummaryResponseData) GetEventCountOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EventCount, true
+}
+
+// SetEventCount sets field value
+func (o *EventSummaryResponseData) SetEventCount(v int32) {
+	o.EventCount = v
+}
+
 // GetEventSubtype returns the EventSubtype field value
 func (o *EventSummaryResponseData) GetEventSubtype() string {
 	if o == nil {
@@ -100,76 +150,71 @@ func (o *EventSummaryResponseData) SetEventSubtype(v string) {
 	o.EventSubtype = v
 }
 
-// GetLast30CompanyCount returns the Last30CompanyCount field value
-func (o *EventSummaryResponseData) GetLast30CompanyCount() int32 {
+// GetLastSeenAt returns the LastSeenAt field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *EventSummaryResponseData) GetLastSeenAt() time.Time {
+	if o == nil || IsNil(o.LastSeenAt.Get()) {
+		var ret time.Time
+		return ret
+	}
+	return *o.LastSeenAt.Get()
+}
+
+// GetLastSeenAtOk returns a tuple with the LastSeenAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *EventSummaryResponseData) GetLastSeenAtOk() (*time.Time, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastSeenAt.Get(), o.LastSeenAt.IsSet()
+}
+
+// HasLastSeenAt returns a boolean if a field has been set.
+func (o *EventSummaryResponseData) HasLastSeenAt() bool {
+	if o != nil && o.LastSeenAt.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetLastSeenAt gets a reference to the given NullableTime and assigns it to the LastSeenAt field.
+func (o *EventSummaryResponseData) SetLastSeenAt(v time.Time) {
+	o.LastSeenAt.Set(&v)
+}
+
+// SetLastSeenAtNil sets the value for LastSeenAt to be an explicit nil
+func (o *EventSummaryResponseData) SetLastSeenAtNil() {
+	o.LastSeenAt.Set(nil)
+}
+
+// UnsetLastSeenAt ensures that no value is present for LastSeenAt, not even an explicit nil
+func (o *EventSummaryResponseData) UnsetLastSeenAt() {
+	o.LastSeenAt.Unset()
+}
+
+// GetUserCount returns the UserCount field value
+func (o *EventSummaryResponseData) GetUserCount() int32 {
 	if o == nil {
 		var ret int32
 		return ret
 	}
 
-	return o.Last30CompanyCount
+	return o.UserCount
 }
 
-// GetLast30CompanyCountOk returns a tuple with the Last30CompanyCount field value
+// GetUserCountOk returns a tuple with the UserCount field value
 // and a boolean to check if the value has been set.
-func (o *EventSummaryResponseData) GetLast30CompanyCountOk() (*int32, bool) {
+func (o *EventSummaryResponseData) GetUserCountOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.Last30CompanyCount, true
+	return &o.UserCount, true
 }
 
-// SetLast30CompanyCount sets field value
-func (o *EventSummaryResponseData) SetLast30CompanyCount(v int32) {
-	o.Last30CompanyCount = v
-}
-
-// GetLast30Count returns the Last30Count field value
-func (o *EventSummaryResponseData) GetLast30Count() int32 {
-	if o == nil {
-		var ret int32
-		return ret
-	}
-
-	return o.Last30Count
-}
-
-// GetLast30CountOk returns a tuple with the Last30Count field value
-// and a boolean to check if the value has been set.
-func (o *EventSummaryResponseData) GetLast30CountOk() (*int32, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Last30Count, true
-}
-
-// SetLast30Count sets field value
-func (o *EventSummaryResponseData) SetLast30Count(v int32) {
-	o.Last30Count = v
-}
-
-// GetLast30UserCount returns the Last30UserCount field value
-func (o *EventSummaryResponseData) GetLast30UserCount() int32 {
-	if o == nil {
-		var ret int32
-		return ret
-	}
-
-	return o.Last30UserCount
-}
-
-// GetLast30UserCountOk returns a tuple with the Last30UserCount field value
-// and a boolean to check if the value has been set.
-func (o *EventSummaryResponseData) GetLast30UserCountOk() (*int32, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Last30UserCount, true
-}
-
-// SetLast30UserCount sets field value
-func (o *EventSummaryResponseData) SetLast30UserCount(v int32) {
-	o.Last30UserCount = v
+// SetUserCount sets field value
+func (o *EventSummaryResponseData) SetUserCount(v int32) {
+	o.UserCount = v
 }
 
 func (o EventSummaryResponseData) MarshalJSON() ([]byte, error) {
@@ -182,11 +227,14 @@ func (o EventSummaryResponseData) MarshalJSON() ([]byte, error) {
 
 func (o EventSummaryResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	toSerialize["company_count"] = o.CompanyCount
 	toSerialize["environment_id"] = o.EnvironmentId
+	toSerialize["event_count"] = o.EventCount
 	toSerialize["event_subtype"] = o.EventSubtype
-	toSerialize["last_30_company_count"] = o.Last30CompanyCount
-	toSerialize["last_30_count"] = o.Last30Count
-	toSerialize["last_30_user_count"] = o.Last30UserCount
+	if o.LastSeenAt.IsSet() {
+		toSerialize["last_seen_at"] = o.LastSeenAt.Get()
+	}
+	toSerialize["user_count"] = o.UserCount
 	return toSerialize, nil
 }
 
@@ -195,11 +243,11 @@ func (o *EventSummaryResponseData) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
+		"company_count",
 		"environment_id",
+		"event_count",
 		"event_subtype",
-		"last_30_company_count",
-		"last_30_count",
-		"last_30_user_count",
+		"user_count",
 	}
 
 	allProperties := make(map[string]interface{})

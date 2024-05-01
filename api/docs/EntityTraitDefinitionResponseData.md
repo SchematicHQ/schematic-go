@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CreatedAt** | **time.Time** |  | 
+**DisplayName** | **string** |  | 
 **EntityType** | **string** |  | 
 **Hierarchy** | **[]string** |  | 
 **Id** | **string** |  | 
@@ -15,7 +16,7 @@ Name | Type | Description | Notes
 
 ### NewEntityTraitDefinitionResponseData
 
-`func NewEntityTraitDefinitionResponseData(createdAt time.Time, entityType string, hierarchy []string, id string, traitType string, updatedAt time.Time, ) *EntityTraitDefinitionResponseData`
+`func NewEntityTraitDefinitionResponseData(createdAt time.Time, displayName string, entityType string, hierarchy []string, id string, traitType string, updatedAt time.Time, ) *EntityTraitDefinitionResponseData`
 
 NewEntityTraitDefinitionResponseData instantiates a new EntityTraitDefinitionResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -48,6 +49,26 @@ and a boolean to check if the value has been set.
 `func (o *EntityTraitDefinitionResponseData) SetCreatedAt(v time.Time)`
 
 SetCreatedAt sets CreatedAt field to given value.
+
+
+### GetDisplayName
+
+`func (o *EntityTraitDefinitionResponseData) GetDisplayName() string`
+
+GetDisplayName returns the DisplayName field if non-nil, zero value otherwise.
+
+### GetDisplayNameOk
+
+`func (o *EntityTraitDefinitionResponseData) GetDisplayNameOk() (*string, bool)`
+
+GetDisplayNameOk returns a tuple with the DisplayName field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDisplayName
+
+`func (o *EntityTraitDefinitionResponseData) SetDisplayName(v string)`
+
+SetDisplayName sets DisplayName field to given value.
 
 
 ### GetEntityType

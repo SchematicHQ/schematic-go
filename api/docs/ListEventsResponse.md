@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]EventListResponseData**](EventListResponseData.md) | The returned resources | 
+**Data** | [**[]EventDetailResponseData**](EventDetailResponseData.md) | The returned resources | 
 **Params** | [**ListEventsParams**](ListEventsParams.md) |  | 
 
 ## Methods
 
 ### NewListEventsResponse
 
-`func NewListEventsResponse(data []EventListResponseData, params ListEventsParams, ) *ListEventsResponse`
+`func NewListEventsResponse(data []EventDetailResponseData, params ListEventsParams, ) *ListEventsResponse`
 
 NewListEventsResponse instantiates a new ListEventsResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *ListEventsResponse) GetData() []EventListResponseData`
+`func (o *ListEventsResponse) GetData() []EventDetailResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *ListEventsResponse) GetDataOk() (*[]EventListResponseData, bool)`
+`func (o *ListEventsResponse) GetDataOk() (*[]EventDetailResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *ListEventsResponse) SetData(v []EventListResponseData)`
+`func (o *ListEventsResponse) SetData(v []EventDetailResponseData)`
 
 SetData sets Data field to given value.
 

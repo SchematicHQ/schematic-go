@@ -5,9 +5,12 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **FeatureId** | Pointer to **string** |  | [optional] 
+**FeatureIds** | Pointer to **[]string** |  | [optional] 
+**Ids** | Pointer to **[]string** |  | [optional] 
 **Limit** | Pointer to **int32** |  | [optional] 
 **Offset** | Pointer to **int32** |  | [optional] 
 **PlanId** | Pointer to **string** |  | [optional] 
+**PlanIds** | Pointer to **[]string** |  | [optional] 
 
 ## Methods
 
@@ -52,6 +55,56 @@ SetFeatureId sets FeatureId field to given value.
 `func (o *ListPlanEntitlementsParams) HasFeatureId() bool`
 
 HasFeatureId returns a boolean if a field has been set.
+
+### GetFeatureIds
+
+`func (o *ListPlanEntitlementsParams) GetFeatureIds() []string`
+
+GetFeatureIds returns the FeatureIds field if non-nil, zero value otherwise.
+
+### GetFeatureIdsOk
+
+`func (o *ListPlanEntitlementsParams) GetFeatureIdsOk() (*[]string, bool)`
+
+GetFeatureIdsOk returns a tuple with the FeatureIds field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFeatureIds
+
+`func (o *ListPlanEntitlementsParams) SetFeatureIds(v []string)`
+
+SetFeatureIds sets FeatureIds field to given value.
+
+### HasFeatureIds
+
+`func (o *ListPlanEntitlementsParams) HasFeatureIds() bool`
+
+HasFeatureIds returns a boolean if a field has been set.
+
+### GetIds
+
+`func (o *ListPlanEntitlementsParams) GetIds() []string`
+
+GetIds returns the Ids field if non-nil, zero value otherwise.
+
+### GetIdsOk
+
+`func (o *ListPlanEntitlementsParams) GetIdsOk() (*[]string, bool)`
+
+GetIdsOk returns a tuple with the Ids field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIds
+
+`func (o *ListPlanEntitlementsParams) SetIds(v []string)`
+
+SetIds sets Ids field to given value.
+
+### HasIds
+
+`func (o *ListPlanEntitlementsParams) HasIds() bool`
+
+HasIds returns a boolean if a field has been set.
 
 ### GetLimit
 
@@ -127,6 +180,31 @@ SetPlanId sets PlanId field to given value.
 `func (o *ListPlanEntitlementsParams) HasPlanId() bool`
 
 HasPlanId returns a boolean if a field has been set.
+
+### GetPlanIds
+
+`func (o *ListPlanEntitlementsParams) GetPlanIds() []string`
+
+GetPlanIds returns the PlanIds field if non-nil, zero value otherwise.
+
+### GetPlanIdsOk
+
+`func (o *ListPlanEntitlementsParams) GetPlanIdsOk() (*[]string, bool)`
+
+GetPlanIdsOk returns a tuple with the PlanIds field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPlanIds
+
+`func (o *ListPlanEntitlementsParams) SetPlanIds(v []string)`
+
+SetPlanIds sets PlanIds field to given value.
+
+### HasPlanIds
+
+`func (o *ListPlanEntitlementsParams) HasPlanIds() bool`
+
+HasPlanIds returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

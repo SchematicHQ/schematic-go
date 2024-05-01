@@ -19,8 +19,12 @@ var _ MappedNullable = &ListPlansParams{}
 
 // ListPlansParams Input parameters
 type ListPlansParams struct {
-	Limit  *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
+	CompanyId             *string  `json:"company_id,omitempty"`
+	Ids                   []string `json:"ids,omitempty"`
+	Limit                 *int32   `json:"limit,omitempty"`
+	Offset                *int32   `json:"offset,omitempty"`
+	Q                     *string  `json:"q,omitempty"`
+	WithoutEntitlementFor *string  `json:"without_entitlement_for,omitempty"`
 }
 
 // NewListPlansParams instantiates a new ListPlansParams object
@@ -38,6 +42,70 @@ func NewListPlansParams() *ListPlansParams {
 func NewListPlansParamsWithDefaults() *ListPlansParams {
 	this := ListPlansParams{}
 	return &this
+}
+
+// GetCompanyId returns the CompanyId field value if set, zero value otherwise.
+func (o *ListPlansParams) GetCompanyId() string {
+	if o == nil || IsNil(o.CompanyId) {
+		var ret string
+		return ret
+	}
+	return *o.CompanyId
+}
+
+// GetCompanyIdOk returns a tuple with the CompanyId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListPlansParams) GetCompanyIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompanyId) {
+		return nil, false
+	}
+	return o.CompanyId, true
+}
+
+// HasCompanyId returns a boolean if a field has been set.
+func (o *ListPlansParams) HasCompanyId() bool {
+	if o != nil && !IsNil(o.CompanyId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompanyId gets a reference to the given string and assigns it to the CompanyId field.
+func (o *ListPlansParams) SetCompanyId(v string) {
+	o.CompanyId = &v
+}
+
+// GetIds returns the Ids field value if set, zero value otherwise.
+func (o *ListPlansParams) GetIds() []string {
+	if o == nil || IsNil(o.Ids) {
+		var ret []string
+		return ret
+	}
+	return o.Ids
+}
+
+// GetIdsOk returns a tuple with the Ids field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListPlansParams) GetIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Ids) {
+		return nil, false
+	}
+	return o.Ids, true
+}
+
+// HasIds returns a boolean if a field has been set.
+func (o *ListPlansParams) HasIds() bool {
+	if o != nil && !IsNil(o.Ids) {
+		return true
+	}
+
+	return false
+}
+
+// SetIds gets a reference to the given []string and assigns it to the Ids field.
+func (o *ListPlansParams) SetIds(v []string) {
+	o.Ids = v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -104,6 +172,70 @@ func (o *ListPlansParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetQ returns the Q field value if set, zero value otherwise.
+func (o *ListPlansParams) GetQ() string {
+	if o == nil || IsNil(o.Q) {
+		var ret string
+		return ret
+	}
+	return *o.Q
+}
+
+// GetQOk returns a tuple with the Q field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListPlansParams) GetQOk() (*string, bool) {
+	if o == nil || IsNil(o.Q) {
+		return nil, false
+	}
+	return o.Q, true
+}
+
+// HasQ returns a boolean if a field has been set.
+func (o *ListPlansParams) HasQ() bool {
+	if o != nil && !IsNil(o.Q) {
+		return true
+	}
+
+	return false
+}
+
+// SetQ gets a reference to the given string and assigns it to the Q field.
+func (o *ListPlansParams) SetQ(v string) {
+	o.Q = &v
+}
+
+// GetWithoutEntitlementFor returns the WithoutEntitlementFor field value if set, zero value otherwise.
+func (o *ListPlansParams) GetWithoutEntitlementFor() string {
+	if o == nil || IsNil(o.WithoutEntitlementFor) {
+		var ret string
+		return ret
+	}
+	return *o.WithoutEntitlementFor
+}
+
+// GetWithoutEntitlementForOk returns a tuple with the WithoutEntitlementFor field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListPlansParams) GetWithoutEntitlementForOk() (*string, bool) {
+	if o == nil || IsNil(o.WithoutEntitlementFor) {
+		return nil, false
+	}
+	return o.WithoutEntitlementFor, true
+}
+
+// HasWithoutEntitlementFor returns a boolean if a field has been set.
+func (o *ListPlansParams) HasWithoutEntitlementFor() bool {
+	if o != nil && !IsNil(o.WithoutEntitlementFor) {
+		return true
+	}
+
+	return false
+}
+
+// SetWithoutEntitlementFor gets a reference to the given string and assigns it to the WithoutEntitlementFor field.
+func (o *ListPlansParams) SetWithoutEntitlementFor(v string) {
+	o.WithoutEntitlementFor = &v
+}
+
 func (o ListPlansParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -114,11 +246,23 @@ func (o ListPlansParams) MarshalJSON() ([]byte, error) {
 
 func (o ListPlansParams) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.CompanyId) {
+		toSerialize["company_id"] = o.CompanyId
+	}
+	if !IsNil(o.Ids) {
+		toSerialize["ids"] = o.Ids
+	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.Q) {
+		toSerialize["q"] = o.Q
+	}
+	if !IsNil(o.WithoutEntitlementFor) {
+		toSerialize["without_entitlement_for"] = o.WithoutEntitlementFor
 	}
 	return toSerialize, nil
 }

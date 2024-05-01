@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ConditionGroups** | [**[]RuleConditionGroupDetailResponseData**](RuleConditionGroupDetailResponseData.md) |  | 
-**Conditions** | [**[]RuleConditionResponseData**](RuleConditionResponseData.md) |  | 
+**Conditions** | [**[]RuleConditionDetailResponseData**](RuleConditionDetailResponseData.md) |  | 
 **CreatedAt** | **time.Time** |  | 
 **EnvironmentId** | **string** |  | 
 **FlagId** | Pointer to **NullableString** |  | [optional] 
@@ -21,7 +21,7 @@ Name | Type | Description | Notes
 
 ### NewPlanAudienceDetailResponseData
 
-`func NewPlanAudienceDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, ruleType string, updatedAt time.Time, value bool, ) *PlanAudienceDetailResponseData`
+`func NewPlanAudienceDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionDetailResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, ruleType string, updatedAt time.Time, value bool, ) *PlanAudienceDetailResponseData`
 
 NewPlanAudienceDetailResponseData instantiates a new PlanAudienceDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -58,20 +58,20 @@ SetConditionGroups sets ConditionGroups field to given value.
 
 ### GetConditions
 
-`func (o *PlanAudienceDetailResponseData) GetConditions() []RuleConditionResponseData`
+`func (o *PlanAudienceDetailResponseData) GetConditions() []RuleConditionDetailResponseData`
 
 GetConditions returns the Conditions field if non-nil, zero value otherwise.
 
 ### GetConditionsOk
 
-`func (o *PlanAudienceDetailResponseData) GetConditionsOk() (*[]RuleConditionResponseData, bool)`
+`func (o *PlanAudienceDetailResponseData) GetConditionsOk() (*[]RuleConditionDetailResponseData, bool)`
 
 GetConditionsOk returns a tuple with the Conditions field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetConditions
 
-`func (o *PlanAudienceDetailResponseData) SetConditions(v []RuleConditionResponseData)`
+`func (o *PlanAudienceDetailResponseData) SetConditions(v []RuleConditionDetailResponseData)`
 
 SetConditions sets Conditions field to given value.
 

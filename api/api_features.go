@@ -72,6 +72,18 @@ type FeaturesAPI interface {
 	CountAudienceUsersExecute(r ApiCountAudienceUsersRequest) (*CountAudienceUsersResponse, *http.Response, error)
 
 	/*
+		CountFeatures Count features
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountFeaturesRequest
+	*/
+	CountFeatures(ctx context.Context) ApiCountFeaturesRequest
+
+	// CountFeaturesExecute executes the request
+	//  @return CountFeaturesResponse
+	CountFeaturesExecute(r ApiCountFeaturesRequest) (*CountFeaturesResponse, *http.Response, error)
+
+	/*
 		CountFlagChecks Count flag checks
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -82,6 +94,18 @@ type FeaturesAPI interface {
 	// CountFlagChecksExecute executes the request
 	//  @return CountFlagChecksResponse
 	CountFlagChecksExecute(r ApiCountFlagChecksRequest) (*CountFlagChecksResponse, *http.Response, error)
+
+	/*
+		CountFlags Count flags
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountFlagsRequest
+	*/
+	CountFlags(ctx context.Context) ApiCountFlagsRequest
+
+	// CountFlagsExecute executes the request
+	//  @return CountFlagsResponse
+	CountFlagsExecute(r ApiCountFlagsRequest) (*CountFlagsResponse, *http.Response, error)
 
 	/*
 		CreateFeature Create feature
@@ -971,6 +995,231 @@ func (a *FeaturesAPIService) CountAudienceUsersExecute(r ApiCountAudienceUsersRe
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiCountFeaturesRequest struct {
+	ctx                       context.Context
+	ApiService                FeaturesAPI
+	ids                       *[]string
+	q                         *string
+	withoutCompanyOverrideFor *string
+	withoutPlanEntitlementFor *string
+	limit                     *int32
+	offset                    *int32
+}
+
+func (r ApiCountFeaturesRequest) Ids(ids []string) ApiCountFeaturesRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiCountFeaturesRequest) Q(q string) ApiCountFeaturesRequest {
+	r.q = &q
+	return r
+}
+
+// Filter out features that already have a company override for the specified company ID
+func (r ApiCountFeaturesRequest) WithoutCompanyOverrideFor(withoutCompanyOverrideFor string) ApiCountFeaturesRequest {
+	r.withoutCompanyOverrideFor = &withoutCompanyOverrideFor
+	return r
+}
+
+// Filter out features that already have a plan entitlement for the specified plan ID
+func (r ApiCountFeaturesRequest) WithoutPlanEntitlementFor(withoutPlanEntitlementFor string) ApiCountFeaturesRequest {
+	r.withoutPlanEntitlementFor = &withoutPlanEntitlementFor
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiCountFeaturesRequest) Limit(limit int32) ApiCountFeaturesRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiCountFeaturesRequest) Offset(offset int32) ApiCountFeaturesRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiCountFeaturesRequest) Execute() (*CountFeaturesResponse, *http.Response, error) {
+	return r.ApiService.CountFeaturesExecute(r)
+}
+
+/*
+CountFeatures Count features
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountFeaturesRequest
+*/
+func (a *FeaturesAPIService) CountFeatures(ctx context.Context) ApiCountFeaturesRequest {
+	return ApiCountFeaturesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CountFeaturesResponse
+func (a *FeaturesAPIService) CountFeaturesExecute(r ApiCountFeaturesRequest) (*CountFeaturesResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountFeaturesResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CountFeatures")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/features/count"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.withoutCompanyOverrideFor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "without_company_override_for", r.withoutCompanyOverrideFor, "")
+	}
+	if r.withoutPlanEntitlementFor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "without_plan_entitlement_for", r.withoutPlanEntitlementFor, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiCountFlagChecksRequest struct {
 	ctx        context.Context
 	ApiService FeaturesAPI
@@ -1063,6 +1312,220 @@ func (a *FeaturesAPIService) CountFlagChecksExecute(r ApiCountFlagChecksRequest)
 	}
 	if r.id != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCountFlagsRequest struct {
+	ctx        context.Context
+	ApiService FeaturesAPI
+	featureId  *string
+	ids        *[]string
+	q          *string
+	limit      *int32
+	offset     *int32
+}
+
+func (r ApiCountFlagsRequest) FeatureId(featureId string) ApiCountFlagsRequest {
+	r.featureId = &featureId
+	return r
+}
+
+func (r ApiCountFlagsRequest) Ids(ids []string) ApiCountFlagsRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiCountFlagsRequest) Q(q string) ApiCountFlagsRequest {
+	r.q = &q
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiCountFlagsRequest) Limit(limit int32) ApiCountFlagsRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiCountFlagsRequest) Offset(offset int32) ApiCountFlagsRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiCountFlagsRequest) Execute() (*CountFlagsResponse, *http.Response, error) {
+	return r.ApiService.CountFlagsExecute(r)
+}
+
+/*
+CountFlags Count flags
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountFlagsRequest
+*/
+func (a *FeaturesAPIService) CountFlags(ctx context.Context) ApiCountFlagsRequest {
+	return ApiCountFlagsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CountFlagsResponse
+func (a *FeaturesAPIService) CountFlagsExecute(r ApiCountFlagsRequest) (*CountFlagsResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountFlagsResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FeaturesAPIService.CountFlags")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flags/count"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.featureId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "feature_id", r.featureId, "")
+	}
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -2895,10 +3358,36 @@ func (a *FeaturesAPIService) ListAudienceUsersExecute(r ApiListAudienceUsersRequ
 }
 
 type ApiListFeaturesRequest struct {
-	ctx        context.Context
-	ApiService FeaturesAPI
-	limit      *int32
-	offset     *int32
+	ctx                       context.Context
+	ApiService                FeaturesAPI
+	ids                       *[]string
+	q                         *string
+	withoutCompanyOverrideFor *string
+	withoutPlanEntitlementFor *string
+	limit                     *int32
+	offset                    *int32
+}
+
+func (r ApiListFeaturesRequest) Ids(ids []string) ApiListFeaturesRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiListFeaturesRequest) Q(q string) ApiListFeaturesRequest {
+	r.q = &q
+	return r
+}
+
+// Filter out features that already have a company override for the specified company ID
+func (r ApiListFeaturesRequest) WithoutCompanyOverrideFor(withoutCompanyOverrideFor string) ApiListFeaturesRequest {
+	r.withoutCompanyOverrideFor = &withoutCompanyOverrideFor
+	return r
+}
+
+// Filter out features that already have a plan entitlement for the specified plan ID
+func (r ApiListFeaturesRequest) WithoutPlanEntitlementFor(withoutPlanEntitlementFor string) ApiListFeaturesRequest {
+	r.withoutPlanEntitlementFor = &withoutPlanEntitlementFor
+	return r
 }
 
 // Page limit (default 100)
@@ -2952,6 +3441,26 @@ func (a *FeaturesAPIService) ListFeaturesExecute(r ApiListFeaturesRequest) (*Lis
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.withoutCompanyOverrideFor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "without_company_override_for", r.withoutCompanyOverrideFor, "")
+	}
+	if r.withoutPlanEntitlementFor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "without_plan_entitlement_for", r.withoutPlanEntitlementFor, "")
+	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
 	}
@@ -3291,7 +3800,8 @@ type ApiListFlagsRequest struct {
 	ctx        context.Context
 	ApiService FeaturesAPI
 	featureId  *string
-	flagIds    *[]string
+	ids        *[]string
+	q          *string
 	limit      *int32
 	offset     *int32
 }
@@ -3301,8 +3811,13 @@ func (r ApiListFlagsRequest) FeatureId(featureId string) ApiListFlagsRequest {
 	return r
 }
 
-func (r ApiListFlagsRequest) FlagIds(flagIds []string) ApiListFlagsRequest {
-	r.flagIds = &flagIds
+func (r ApiListFlagsRequest) Ids(ids []string) ApiListFlagsRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiListFlagsRequest) Q(q string) ApiListFlagsRequest {
+	r.q = &q
 	return r
 }
 
@@ -3360,16 +3875,19 @@ func (a *FeaturesAPIService) ListFlagsExecute(r ApiListFlagsRequest) (*ListFlags
 	if r.featureId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "feature_id", r.featureId, "")
 	}
-	if r.flagIds != nil {
-		t := *r.flagIds
+	if r.ids != nil {
+		t := *r.ids
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
 			s := reflect.ValueOf(t)
 			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "flag_ids", s.Index(i).Interface(), "multi")
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
 			}
 		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "flag_ids", t, "multi")
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
 		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")

@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **EnvironmentId** | **string** |  | 
 **Id** | **string** |  | 
 **LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
+**LogoUrl** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
 **UpdatedAt** | **time.Time** |  | 
 
@@ -125,6 +126,41 @@ HasLastSeenAt returns a boolean if a field has been set.
 `func (o *CompanyResponseData) UnsetLastSeenAt()`
 
 UnsetLastSeenAt ensures that no value is present for LastSeenAt, not even an explicit nil
+### GetLogoUrl
+
+`func (o *CompanyResponseData) GetLogoUrl() string`
+
+GetLogoUrl returns the LogoUrl field if non-nil, zero value otherwise.
+
+### GetLogoUrlOk
+
+`func (o *CompanyResponseData) GetLogoUrlOk() (*string, bool)`
+
+GetLogoUrlOk returns a tuple with the LogoUrl field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLogoUrl
+
+`func (o *CompanyResponseData) SetLogoUrl(v string)`
+
+SetLogoUrl sets LogoUrl field to given value.
+
+### HasLogoUrl
+
+`func (o *CompanyResponseData) HasLogoUrl() bool`
+
+HasLogoUrl returns a boolean if a field has been set.
+
+### SetLogoUrlNil
+
+`func (o *CompanyResponseData) SetLogoUrlNil(b bool)`
+
+ SetLogoUrlNil sets the value for LogoUrl to be an explicit nil
+
+### UnsetLogoUrl
+`func (o *CompanyResponseData) UnsetLogoUrl()`
+
+UnsetLogoUrl ensures that no value is present for LogoUrl, not even an explicit nil
 ### GetName
 
 `func (o *CompanyResponseData) GetName() string`

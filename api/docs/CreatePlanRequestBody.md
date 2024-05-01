@@ -4,13 +4,15 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**Description** | **string** |  | 
 **Name** | **string** |  | 
+**PlanType** | **string** |  | 
 
 ## Methods
 
 ### NewCreatePlanRequestBody
 
-`func NewCreatePlanRequestBody(name string, ) *CreatePlanRequestBody`
+`func NewCreatePlanRequestBody(description string, name string, planType string, ) *CreatePlanRequestBody`
 
 NewCreatePlanRequestBody instantiates a new CreatePlanRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -24,6 +26,26 @@ will change when the set of required properties is changed
 NewCreatePlanRequestBodyWithDefaults instantiates a new CreatePlanRequestBody object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetDescription
+
+`func (o *CreatePlanRequestBody) GetDescription() string`
+
+GetDescription returns the Description field if non-nil, zero value otherwise.
+
+### GetDescriptionOk
+
+`func (o *CreatePlanRequestBody) GetDescriptionOk() (*string, bool)`
+
+GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDescription
+
+`func (o *CreatePlanRequestBody) SetDescription(v string)`
+
+SetDescription sets Description field to given value.
+
 
 ### GetName
 
@@ -43,6 +65,26 @@ and a boolean to check if the value has been set.
 `func (o *CreatePlanRequestBody) SetName(v string)`
 
 SetName sets Name field to given value.
+
+
+### GetPlanType
+
+`func (o *CreatePlanRequestBody) GetPlanType() string`
+
+GetPlanType returns the PlanType field if non-nil, zero value otherwise.
+
+### GetPlanTypeOk
+
+`func (o *CreatePlanRequestBody) GetPlanTypeOk() (*string, bool)`
+
+GetPlanTypeOk returns a tuple with the PlanType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPlanType
+
+`func (o *CreatePlanRequestBody) SetPlanType(v string)`
+
+SetPlanType sets PlanType field to given value.
 
 
 

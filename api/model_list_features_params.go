@@ -19,8 +19,12 @@ var _ MappedNullable = &ListFeaturesParams{}
 
 // ListFeaturesParams Input parameters
 type ListFeaturesParams struct {
-	Limit  *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
+	Ids                       []string `json:"ids,omitempty"`
+	Limit                     *int32   `json:"limit,omitempty"`
+	Offset                    *int32   `json:"offset,omitempty"`
+	Q                         *string  `json:"q,omitempty"`
+	WithoutCompanyOverrideFor *string  `json:"without_company_override_for,omitempty"`
+	WithoutPlanEntitlementFor *string  `json:"without_plan_entitlement_for,omitempty"`
 }
 
 // NewListFeaturesParams instantiates a new ListFeaturesParams object
@@ -38,6 +42,38 @@ func NewListFeaturesParams() *ListFeaturesParams {
 func NewListFeaturesParamsWithDefaults() *ListFeaturesParams {
 	this := ListFeaturesParams{}
 	return &this
+}
+
+// GetIds returns the Ids field value if set, zero value otherwise.
+func (o *ListFeaturesParams) GetIds() []string {
+	if o == nil || IsNil(o.Ids) {
+		var ret []string
+		return ret
+	}
+	return o.Ids
+}
+
+// GetIdsOk returns a tuple with the Ids field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListFeaturesParams) GetIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Ids) {
+		return nil, false
+	}
+	return o.Ids, true
+}
+
+// HasIds returns a boolean if a field has been set.
+func (o *ListFeaturesParams) HasIds() bool {
+	if o != nil && !IsNil(o.Ids) {
+		return true
+	}
+
+	return false
+}
+
+// SetIds gets a reference to the given []string and assigns it to the Ids field.
+func (o *ListFeaturesParams) SetIds(v []string) {
+	o.Ids = v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -104,6 +140,102 @@ func (o *ListFeaturesParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetQ returns the Q field value if set, zero value otherwise.
+func (o *ListFeaturesParams) GetQ() string {
+	if o == nil || IsNil(o.Q) {
+		var ret string
+		return ret
+	}
+	return *o.Q
+}
+
+// GetQOk returns a tuple with the Q field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListFeaturesParams) GetQOk() (*string, bool) {
+	if o == nil || IsNil(o.Q) {
+		return nil, false
+	}
+	return o.Q, true
+}
+
+// HasQ returns a boolean if a field has been set.
+func (o *ListFeaturesParams) HasQ() bool {
+	if o != nil && !IsNil(o.Q) {
+		return true
+	}
+
+	return false
+}
+
+// SetQ gets a reference to the given string and assigns it to the Q field.
+func (o *ListFeaturesParams) SetQ(v string) {
+	o.Q = &v
+}
+
+// GetWithoutCompanyOverrideFor returns the WithoutCompanyOverrideFor field value if set, zero value otherwise.
+func (o *ListFeaturesParams) GetWithoutCompanyOverrideFor() string {
+	if o == nil || IsNil(o.WithoutCompanyOverrideFor) {
+		var ret string
+		return ret
+	}
+	return *o.WithoutCompanyOverrideFor
+}
+
+// GetWithoutCompanyOverrideForOk returns a tuple with the WithoutCompanyOverrideFor field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListFeaturesParams) GetWithoutCompanyOverrideForOk() (*string, bool) {
+	if o == nil || IsNil(o.WithoutCompanyOverrideFor) {
+		return nil, false
+	}
+	return o.WithoutCompanyOverrideFor, true
+}
+
+// HasWithoutCompanyOverrideFor returns a boolean if a field has been set.
+func (o *ListFeaturesParams) HasWithoutCompanyOverrideFor() bool {
+	if o != nil && !IsNil(o.WithoutCompanyOverrideFor) {
+		return true
+	}
+
+	return false
+}
+
+// SetWithoutCompanyOverrideFor gets a reference to the given string and assigns it to the WithoutCompanyOverrideFor field.
+func (o *ListFeaturesParams) SetWithoutCompanyOverrideFor(v string) {
+	o.WithoutCompanyOverrideFor = &v
+}
+
+// GetWithoutPlanEntitlementFor returns the WithoutPlanEntitlementFor field value if set, zero value otherwise.
+func (o *ListFeaturesParams) GetWithoutPlanEntitlementFor() string {
+	if o == nil || IsNil(o.WithoutPlanEntitlementFor) {
+		var ret string
+		return ret
+	}
+	return *o.WithoutPlanEntitlementFor
+}
+
+// GetWithoutPlanEntitlementForOk returns a tuple with the WithoutPlanEntitlementFor field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListFeaturesParams) GetWithoutPlanEntitlementForOk() (*string, bool) {
+	if o == nil || IsNil(o.WithoutPlanEntitlementFor) {
+		return nil, false
+	}
+	return o.WithoutPlanEntitlementFor, true
+}
+
+// HasWithoutPlanEntitlementFor returns a boolean if a field has been set.
+func (o *ListFeaturesParams) HasWithoutPlanEntitlementFor() bool {
+	if o != nil && !IsNil(o.WithoutPlanEntitlementFor) {
+		return true
+	}
+
+	return false
+}
+
+// SetWithoutPlanEntitlementFor gets a reference to the given string and assigns it to the WithoutPlanEntitlementFor field.
+func (o *ListFeaturesParams) SetWithoutPlanEntitlementFor(v string) {
+	o.WithoutPlanEntitlementFor = &v
+}
+
 func (o ListFeaturesParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -114,11 +246,23 @@ func (o ListFeaturesParams) MarshalJSON() ([]byte, error) {
 
 func (o ListFeaturesParams) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Ids) {
+		toSerialize["ids"] = o.Ids
+	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.Q) {
+		toSerialize["q"] = o.Q
+	}
+	if !IsNil(o.WithoutCompanyOverrideFor) {
+		toSerialize["without_company_override_for"] = o.WithoutCompanyOverrideFor
+	}
+	if !IsNil(o.WithoutPlanEntitlementFor) {
+		toSerialize["without_plan_entitlement_for"] = o.WithoutPlanEntitlementFor
 	}
 	return toSerialize, nil
 }

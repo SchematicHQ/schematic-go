@@ -19,10 +19,13 @@ var _ MappedNullable = &ListPlanEntitlementsParams{}
 
 // ListPlanEntitlementsParams Input parameters
 type ListPlanEntitlementsParams struct {
-	FeatureId *string `json:"feature_id,omitempty"`
-	Limit     *int32  `json:"limit,omitempty"`
-	Offset    *int32  `json:"offset,omitempty"`
-	PlanId    *string `json:"plan_id,omitempty"`
+	FeatureId  *string  `json:"feature_id,omitempty"`
+	FeatureIds []string `json:"feature_ids,omitempty"`
+	Ids        []string `json:"ids,omitempty"`
+	Limit      *int32   `json:"limit,omitempty"`
+	Offset     *int32   `json:"offset,omitempty"`
+	PlanId     *string  `json:"plan_id,omitempty"`
+	PlanIds    []string `json:"plan_ids,omitempty"`
 }
 
 // NewListPlanEntitlementsParams instantiates a new ListPlanEntitlementsParams object
@@ -72,6 +75,70 @@ func (o *ListPlanEntitlementsParams) HasFeatureId() bool {
 // SetFeatureId gets a reference to the given string and assigns it to the FeatureId field.
 func (o *ListPlanEntitlementsParams) SetFeatureId(v string) {
 	o.FeatureId = &v
+}
+
+// GetFeatureIds returns the FeatureIds field value if set, zero value otherwise.
+func (o *ListPlanEntitlementsParams) GetFeatureIds() []string {
+	if o == nil || IsNil(o.FeatureIds) {
+		var ret []string
+		return ret
+	}
+	return o.FeatureIds
+}
+
+// GetFeatureIdsOk returns a tuple with the FeatureIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListPlanEntitlementsParams) GetFeatureIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.FeatureIds) {
+		return nil, false
+	}
+	return o.FeatureIds, true
+}
+
+// HasFeatureIds returns a boolean if a field has been set.
+func (o *ListPlanEntitlementsParams) HasFeatureIds() bool {
+	if o != nil && !IsNil(o.FeatureIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetFeatureIds gets a reference to the given []string and assigns it to the FeatureIds field.
+func (o *ListPlanEntitlementsParams) SetFeatureIds(v []string) {
+	o.FeatureIds = v
+}
+
+// GetIds returns the Ids field value if set, zero value otherwise.
+func (o *ListPlanEntitlementsParams) GetIds() []string {
+	if o == nil || IsNil(o.Ids) {
+		var ret []string
+		return ret
+	}
+	return o.Ids
+}
+
+// GetIdsOk returns a tuple with the Ids field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListPlanEntitlementsParams) GetIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Ids) {
+		return nil, false
+	}
+	return o.Ids, true
+}
+
+// HasIds returns a boolean if a field has been set.
+func (o *ListPlanEntitlementsParams) HasIds() bool {
+	if o != nil && !IsNil(o.Ids) {
+		return true
+	}
+
+	return false
+}
+
+// SetIds gets a reference to the given []string and assigns it to the Ids field.
+func (o *ListPlanEntitlementsParams) SetIds(v []string) {
+	o.Ids = v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -170,6 +237,38 @@ func (o *ListPlanEntitlementsParams) SetPlanId(v string) {
 	o.PlanId = &v
 }
 
+// GetPlanIds returns the PlanIds field value if set, zero value otherwise.
+func (o *ListPlanEntitlementsParams) GetPlanIds() []string {
+	if o == nil || IsNil(o.PlanIds) {
+		var ret []string
+		return ret
+	}
+	return o.PlanIds
+}
+
+// GetPlanIdsOk returns a tuple with the PlanIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListPlanEntitlementsParams) GetPlanIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.PlanIds) {
+		return nil, false
+	}
+	return o.PlanIds, true
+}
+
+// HasPlanIds returns a boolean if a field has been set.
+func (o *ListPlanEntitlementsParams) HasPlanIds() bool {
+	if o != nil && !IsNil(o.PlanIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetPlanIds gets a reference to the given []string and assigns it to the PlanIds field.
+func (o *ListPlanEntitlementsParams) SetPlanIds(v []string) {
+	o.PlanIds = v
+}
+
 func (o ListPlanEntitlementsParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -183,6 +282,12 @@ func (o ListPlanEntitlementsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FeatureId) {
 		toSerialize["feature_id"] = o.FeatureId
 	}
+	if !IsNil(o.FeatureIds) {
+		toSerialize["feature_ids"] = o.FeatureIds
+	}
+	if !IsNil(o.Ids) {
+		toSerialize["ids"] = o.Ids
+	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit
 	}
@@ -191,6 +296,9 @@ func (o ListPlanEntitlementsParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PlanId) {
 		toSerialize["plan_id"] = o.PlanId
+	}
+	if !IsNil(o.PlanIds) {
+		toSerialize["plan_ids"] = o.PlanIds
 	}
 	return toSerialize, nil
 }

@@ -24,9 +24,10 @@ var _ MappedNullable = &UserDetailResponseData{}
 type UserDetailResponseData struct {
 	CompanyMemberships []CompanyMembershipDetailResponseData `json:"company_memberships"`
 	CreatedAt          time.Time                             `json:"created_at"`
+	EntityTraits       []EntityTraitDetailResponseData       `json:"entity_traits"`
 	EnvironmentId      string                                `json:"environment_id"`
 	Id                 string                                `json:"id"`
-	Keys               []EntityKeyResponseData               `json:"keys"`
+	Keys               []EntityKeyDetailResponseData         `json:"keys"`
 	LastSeenAt         NullableTime                          `json:"last_seen_at,omitempty"`
 	Name               string                                `json:"name"`
 	// A map of trait names to trait values
@@ -40,10 +41,11 @@ type _UserDetailResponseData UserDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUserDetailResponseData(companyMemberships []CompanyMembershipDetailResponseData, createdAt time.Time, environmentId string, id string, keys []EntityKeyResponseData, name string, updatedAt time.Time) *UserDetailResponseData {
+func NewUserDetailResponseData(companyMemberships []CompanyMembershipDetailResponseData, createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, updatedAt time.Time) *UserDetailResponseData {
 	this := UserDetailResponseData{}
 	this.CompanyMemberships = companyMemberships
 	this.CreatedAt = createdAt
+	this.EntityTraits = entityTraits
 	this.EnvironmentId = environmentId
 	this.Id = id
 	this.Keys = keys
@@ -108,6 +110,30 @@ func (o *UserDetailResponseData) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
 }
 
+// GetEntityTraits returns the EntityTraits field value
+func (o *UserDetailResponseData) GetEntityTraits() []EntityTraitDetailResponseData {
+	if o == nil {
+		var ret []EntityTraitDetailResponseData
+		return ret
+	}
+
+	return o.EntityTraits
+}
+
+// GetEntityTraitsOk returns a tuple with the EntityTraits field value
+// and a boolean to check if the value has been set.
+func (o *UserDetailResponseData) GetEntityTraitsOk() ([]EntityTraitDetailResponseData, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.EntityTraits, true
+}
+
+// SetEntityTraits sets field value
+func (o *UserDetailResponseData) SetEntityTraits(v []EntityTraitDetailResponseData) {
+	o.EntityTraits = v
+}
+
 // GetEnvironmentId returns the EnvironmentId field value
 func (o *UserDetailResponseData) GetEnvironmentId() string {
 	if o == nil {
@@ -157,9 +183,9 @@ func (o *UserDetailResponseData) SetId(v string) {
 }
 
 // GetKeys returns the Keys field value
-func (o *UserDetailResponseData) GetKeys() []EntityKeyResponseData {
+func (o *UserDetailResponseData) GetKeys() []EntityKeyDetailResponseData {
 	if o == nil {
-		var ret []EntityKeyResponseData
+		var ret []EntityKeyDetailResponseData
 		return ret
 	}
 
@@ -168,7 +194,7 @@ func (o *UserDetailResponseData) GetKeys() []EntityKeyResponseData {
 
 // GetKeysOk returns a tuple with the Keys field value
 // and a boolean to check if the value has been set.
-func (o *UserDetailResponseData) GetKeysOk() ([]EntityKeyResponseData, bool) {
+func (o *UserDetailResponseData) GetKeysOk() ([]EntityKeyDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -176,7 +202,7 @@ func (o *UserDetailResponseData) GetKeysOk() ([]EntityKeyResponseData, bool) {
 }
 
 // SetKeys sets field value
-func (o *UserDetailResponseData) SetKeys(v []EntityKeyResponseData) {
+func (o *UserDetailResponseData) SetKeys(v []EntityKeyDetailResponseData) {
 	o.Keys = v
 }
 
@@ -315,6 +341,7 @@ func (o UserDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["company_memberships"] = o.CompanyMemberships
 	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["entity_traits"] = o.EntityTraits
 	toSerialize["environment_id"] = o.EnvironmentId
 	toSerialize["id"] = o.Id
 	toSerialize["keys"] = o.Keys
@@ -336,6 +363,7 @@ func (o *UserDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"company_memberships",
 		"created_at",
+		"entity_traits",
 		"environment_id",
 		"id",
 		"keys",

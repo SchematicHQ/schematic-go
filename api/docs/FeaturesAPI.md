@@ -8,7 +8,9 @@ Method | HTTP request | Description
 [**CheckFlags**](FeaturesAPI.md#CheckFlags) | **Post** /flags/check | Check flags
 [**CountAudienceCompanies**](FeaturesAPI.md#CountAudienceCompanies) | **Post** /audience/count-companies | Count audience companies
 [**CountAudienceUsers**](FeaturesAPI.md#CountAudienceUsers) | **Post** /audience/count-users | Count audience users
+[**CountFeatures**](FeaturesAPI.md#CountFeatures) | **Get** /features/count | Count features
 [**CountFlagChecks**](FeaturesAPI.md#CountFlagChecks) | **Get** /flag-checks/count | Count flag checks
+[**CountFlags**](FeaturesAPI.md#CountFlags) | **Get** /flags/count | Count flags
 [**CreateFeature**](FeaturesAPI.md#CreateFeature) | **Post** /features | Create feature
 [**CreateFlag**](FeaturesAPI.md#CreateFlag) | **Post** /flags | Create flag
 [**DeleteFeature**](FeaturesAPI.md#DeleteFeature) | **Delete** /features/{feature_id} | Delete feature
@@ -302,6 +304,83 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## CountFeatures
+
+> CountFeaturesResponse CountFeatures(ctx).Ids(ids).Q(q).WithoutCompanyOverrideFor(withoutCompanyOverrideFor).WithoutPlanEntitlementFor(withoutPlanEntitlementFor).Limit(limit).Offset(offset).Execute()
+
+Count features
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	ids := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
+	withoutCompanyOverrideFor := "withoutCompanyOverrideFor_example" // string | Filter out features that already have a company override for the specified company ID (optional)
+	withoutPlanEntitlementFor := "withoutPlanEntitlementFor_example" // string | Filter out features that already have a plan entitlement for the specified plan ID (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().FeaturesAPI.CountFeatures(context.Background()).Ids(ids).Q(q).WithoutCompanyOverrideFor(withoutCompanyOverrideFor).WithoutPlanEntitlementFor(withoutPlanEntitlementFor).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.CountFeatures``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountFeatures`: CountFeaturesResponse
+	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.CountFeatures`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountFeaturesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ids** | **[]string** |  | 
+ **q** | **string** |  | 
+ **withoutCompanyOverrideFor** | **string** | Filter out features that already have a company override for the specified company ID | 
+ **withoutPlanEntitlementFor** | **string** | Filter out features that already have a plan entitlement for the specified plan ID | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountFeaturesResponse**](CountFeaturesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## CountFlagChecks
 
 > CountFlagChecksResponse CountFlagChecks(ctx).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
@@ -362,6 +441,81 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CountFlagChecksResponse**](CountFlagChecksResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CountFlags
+
+> CountFlagsResponse CountFlags(ctx).FeatureId(featureId).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
+
+Count flags
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	featureId := "featureId_example" // string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().FeaturesAPI.CountFlags(context.Background()).FeatureId(featureId).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.CountFlags``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountFlags`: CountFlagsResponse
+	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.CountFlags`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountFlagsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **featureId** | **string** |  | 
+ **ids** | **[]string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountFlagsResponse**](CountFlagsResponse.md)
 
 ### Authorization
 
@@ -1077,7 +1231,7 @@ Name | Type | Description  | Notes
 
 ## ListFeatures
 
-> ListFeaturesResponse ListFeatures(ctx).Limit(limit).Offset(offset).Execute()
+> ListFeaturesResponse ListFeatures(ctx).Ids(ids).Q(q).WithoutCompanyOverrideFor(withoutCompanyOverrideFor).WithoutPlanEntitlementFor(withoutPlanEntitlementFor).Limit(limit).Offset(offset).Execute()
 
 List features
 
@@ -1099,10 +1253,14 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
+	ids := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
+	withoutCompanyOverrideFor := "withoutCompanyOverrideFor_example" // string | Filter out features that already have a company override for the specified company ID (optional)
+	withoutPlanEntitlementFor := "withoutPlanEntitlementFor_example" // string | Filter out features that already have a plan entitlement for the specified plan ID (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().FeaturesAPI.ListFeatures(context.Background()).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().FeaturesAPI.ListFeatures(context.Background()).Ids(ids).Q(q).WithoutCompanyOverrideFor(withoutCompanyOverrideFor).WithoutPlanEntitlementFor(withoutPlanEntitlementFor).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.ListFeatures``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1123,6 +1281,10 @@ Other parameters are passed through a pointer to a apiListFeaturesRequest struct
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **ids** | **[]string** |  | 
+ **q** | **string** |  | 
+ **withoutCompanyOverrideFor** | **string** | Filter out features that already have a company override for the specified company ID | 
+ **withoutPlanEntitlementFor** | **string** | Filter out features that already have a plan entitlement for the specified plan ID | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -1221,7 +1383,7 @@ Name | Type | Description  | Notes
 
 ## ListFlags
 
-> ListFlagsResponse ListFlags(ctx).FeatureId(featureId).FlagIds(flagIds).Limit(limit).Offset(offset).Execute()
+> ListFlagsResponse ListFlags(ctx).FeatureId(featureId).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 
 List flags
 
@@ -1244,11 +1406,12 @@ func main() {
 	defer client.Close()
 
 	featureId := "featureId_example" // string |  (optional)
-	flagIds := []string{"Inner_example"} // []string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().FeaturesAPI.ListFlags(context.Background()).FeatureId(featureId).FlagIds(flagIds).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().FeaturesAPI.ListFlags(context.Background()).FeatureId(featureId).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.ListFlags``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1270,7 +1433,8 @@ Other parameters are passed through a pointer to a apiListFlagsRequest struct vi
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **featureId** | **string** |  | 
- **flagIds** | **[]string** |  | 
+ **ids** | **[]string** |  | 
+ **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

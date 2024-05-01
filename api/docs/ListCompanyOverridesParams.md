@@ -5,7 +5,10 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CompanyId** | Pointer to **string** |  | [optional] 
+**CompanyIds** | Pointer to **[]string** |  | [optional] 
 **FeatureId** | Pointer to **string** |  | [optional] 
+**FeatureIds** | Pointer to **[]string** |  | [optional] 
+**Ids** | Pointer to **[]string** |  | [optional] 
 **Limit** | Pointer to **int32** |  | [optional] 
 **Offset** | Pointer to **int32** |  | [optional] 
 
@@ -53,6 +56,31 @@ SetCompanyId sets CompanyId field to given value.
 
 HasCompanyId returns a boolean if a field has been set.
 
+### GetCompanyIds
+
+`func (o *ListCompanyOverridesParams) GetCompanyIds() []string`
+
+GetCompanyIds returns the CompanyIds field if non-nil, zero value otherwise.
+
+### GetCompanyIdsOk
+
+`func (o *ListCompanyOverridesParams) GetCompanyIdsOk() (*[]string, bool)`
+
+GetCompanyIdsOk returns a tuple with the CompanyIds field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCompanyIds
+
+`func (o *ListCompanyOverridesParams) SetCompanyIds(v []string)`
+
+SetCompanyIds sets CompanyIds field to given value.
+
+### HasCompanyIds
+
+`func (o *ListCompanyOverridesParams) HasCompanyIds() bool`
+
+HasCompanyIds returns a boolean if a field has been set.
+
 ### GetFeatureId
 
 `func (o *ListCompanyOverridesParams) GetFeatureId() string`
@@ -77,6 +105,56 @@ SetFeatureId sets FeatureId field to given value.
 `func (o *ListCompanyOverridesParams) HasFeatureId() bool`
 
 HasFeatureId returns a boolean if a field has been set.
+
+### GetFeatureIds
+
+`func (o *ListCompanyOverridesParams) GetFeatureIds() []string`
+
+GetFeatureIds returns the FeatureIds field if non-nil, zero value otherwise.
+
+### GetFeatureIdsOk
+
+`func (o *ListCompanyOverridesParams) GetFeatureIdsOk() (*[]string, bool)`
+
+GetFeatureIdsOk returns a tuple with the FeatureIds field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFeatureIds
+
+`func (o *ListCompanyOverridesParams) SetFeatureIds(v []string)`
+
+SetFeatureIds sets FeatureIds field to given value.
+
+### HasFeatureIds
+
+`func (o *ListCompanyOverridesParams) HasFeatureIds() bool`
+
+HasFeatureIds returns a boolean if a field has been set.
+
+### GetIds
+
+`func (o *ListCompanyOverridesParams) GetIds() []string`
+
+GetIds returns the Ids field if non-nil, zero value otherwise.
+
+### GetIdsOk
+
+`func (o *ListCompanyOverridesParams) GetIdsOk() (*[]string, bool)`
+
+GetIdsOk returns a tuple with the Ids field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIds
+
+`func (o *ListCompanyOverridesParams) SetIds(v []string)`
+
+SetIds sets Ids field to given value.
+
+### HasIds
+
+`func (o *ListCompanyOverridesParams) HasIds() bool`
+
+HasIds returns a boolean if a field has been set.
 
 ### GetLimit
 

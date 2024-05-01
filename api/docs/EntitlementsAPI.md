@@ -4,17 +4,407 @@ All URIs are relative to *https://api.schematichq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**CountCompanyOverrides**](EntitlementsAPI.md#CountCompanyOverrides) | **Get** /company-overrides/count | Count company overrides
+[**CountFeatureCompanies**](EntitlementsAPI.md#CountFeatureCompanies) | **Get** /feature-companies/count | Count feature companies
+[**CountFeatureUsage**](EntitlementsAPI.md#CountFeatureUsage) | **Get** /feature-usage/count | Count feature usage
+[**CountFeatureUsers**](EntitlementsAPI.md#CountFeatureUsers) | **Get** /feature-users/count | Count feature users
+[**CountPlanEntitlements**](EntitlementsAPI.md#CountPlanEntitlements) | **Get** /plan-entitlements/count | Count plan entitlements
 [**CreateCompanyOverride**](EntitlementsAPI.md#CreateCompanyOverride) | **Post** /company-overrides | Create company override
 [**CreatePlanEntitlement**](EntitlementsAPI.md#CreatePlanEntitlement) | **Post** /plan-entitlements | Create plan entitlement
 [**DeleteCompanyOverride**](EntitlementsAPI.md#DeleteCompanyOverride) | **Delete** /company-overrides/{company_override_id} | Delete company override
 [**DeletePlanEntitlement**](EntitlementsAPI.md#DeletePlanEntitlement) | **Delete** /plan-entitlements/{plan_entitlement_id} | Delete plan entitlement
 [**GetCompanyOverride**](EntitlementsAPI.md#GetCompanyOverride) | **Get** /company-overrides/{company_override_id} | Get company override
+[**GetFeatureUsageByCompany**](EntitlementsAPI.md#GetFeatureUsageByCompany) | **Get** /usage-by-company | Get feature usage by company
 [**GetPlanEntitlement**](EntitlementsAPI.md#GetPlanEntitlement) | **Get** /plan-entitlements/{plan_entitlement_id} | Get plan entitlement
 [**ListCompanyOverrides**](EntitlementsAPI.md#ListCompanyOverrides) | **Get** /company-overrides | List company overrides
+[**ListFeatureCompanies**](EntitlementsAPI.md#ListFeatureCompanies) | **Get** /feature-companies | List feature companies
+[**ListFeatureUsage**](EntitlementsAPI.md#ListFeatureUsage) | **Get** /feature-usage | List feature usage
+[**ListFeatureUsers**](EntitlementsAPI.md#ListFeatureUsers) | **Get** /feature-users | List feature users
 [**ListPlanEntitlements**](EntitlementsAPI.md#ListPlanEntitlements) | **Get** /plan-entitlements | List plan entitlements
 [**UpdateCompanyOverride**](EntitlementsAPI.md#UpdateCompanyOverride) | **Put** /company-overrides/{company_override_id} | Update company override
 [**UpdatePlanEntitlement**](EntitlementsAPI.md#UpdatePlanEntitlement) | **Put** /plan-entitlements/{plan_entitlement_id} | Update plan entitlement
 
+
+
+## CountCompanyOverrides
+
+> CountCompanyOverridesResponse CountCompanyOverrides(ctx).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Limit(limit).Offset(offset).Execute()
+
+Count company overrides
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	companyId := "companyId_example" // string |  (optional)
+	companyIds := []string{"Inner_example"} // []string |  (optional)
+	featureId := "featureId_example" // string |  (optional)
+	featureIds := []string{"Inner_example"} // []string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().EntitlementsAPI.CountCompanyOverrides(context.Background()).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.CountCompanyOverrides``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountCompanyOverrides`: CountCompanyOverridesResponse
+	fmt.Fprintf(os.Stdout, "Response from `EntitlementsAPI.CountCompanyOverrides`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountCompanyOverridesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **companyId** | **string** |  | 
+ **companyIds** | **[]string** |  | 
+ **featureId** | **string** |  | 
+ **featureIds** | **[]string** |  | 
+ **ids** | **[]string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountCompanyOverridesResponse**](CountCompanyOverridesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CountFeatureCompanies
+
+> CountFeatureCompaniesResponse CountFeatureCompanies(ctx).FeatureId(featureId).Q(q).Limit(limit).Offset(offset).Execute()
+
+Count feature companies
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	featureId := "featureId_example" // string | 
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().EntitlementsAPI.CountFeatureCompanies(context.Background()).FeatureId(featureId).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.CountFeatureCompanies``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountFeatureCompanies`: CountFeatureCompaniesResponse
+	fmt.Fprintf(os.Stdout, "Response from `EntitlementsAPI.CountFeatureCompanies`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountFeatureCompaniesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **featureId** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountFeatureCompaniesResponse**](CountFeatureCompaniesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CountFeatureUsage
+
+> CountFeatureUsageResponse CountFeatureUsage(ctx).CompanyId(companyId).CompanyKeys(companyKeys).FeatureIds(featureIds).Q(q).Limit(limit).Offset(offset).Execute()
+
+Count feature usage
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	companyId := "companyId_example" // string |  (optional)
+	companyKeys := map[string]interface{}{ ... } // map[string]interface{} |  (optional)
+	featureIds := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().EntitlementsAPI.CountFeatureUsage(context.Background()).CompanyId(companyId).CompanyKeys(companyKeys).FeatureIds(featureIds).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.CountFeatureUsage``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountFeatureUsage`: CountFeatureUsageResponse
+	fmt.Fprintf(os.Stdout, "Response from `EntitlementsAPI.CountFeatureUsage`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountFeatureUsageRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **companyId** | **string** |  | 
+ **companyKeys** | [**map[string]interface{}**](map[string]interface{}.md) |  | 
+ **featureIds** | **[]string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountFeatureUsageResponse**](CountFeatureUsageResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CountFeatureUsers
+
+> CountFeatureUsersResponse CountFeatureUsers(ctx).FeatureId(featureId).Q(q).Limit(limit).Offset(offset).Execute()
+
+Count feature users
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	featureId := "featureId_example" // string | 
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().EntitlementsAPI.CountFeatureUsers(context.Background()).FeatureId(featureId).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.CountFeatureUsers``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountFeatureUsers`: CountFeatureUsersResponse
+	fmt.Fprintf(os.Stdout, "Response from `EntitlementsAPI.CountFeatureUsers`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountFeatureUsersRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **featureId** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountFeatureUsersResponse**](CountFeatureUsersResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CountPlanEntitlements
+
+> CountPlanEntitlementsResponse CountPlanEntitlements(ctx).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Limit(limit).Offset(offset).Execute()
+
+Count plan entitlements
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	featureId := "featureId_example" // string |  (optional)
+	featureIds := []string{"Inner_example"} // []string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	planId := "planId_example" // string |  (optional)
+	planIds := []string{"Inner_example"} // []string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().EntitlementsAPI.CountPlanEntitlements(context.Background()).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.CountPlanEntitlements``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountPlanEntitlements`: CountPlanEntitlementsResponse
+	fmt.Fprintf(os.Stdout, "Response from `EntitlementsAPI.CountPlanEntitlements`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountPlanEntitlementsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **featureId** | **string** |  | 
+ **featureIds** | **[]string** |  | 
+ **ids** | **[]string** |  | 
+ **planId** | **string** |  | 
+ **planIds** | **[]string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountPlanEntitlementsResponse**](CountPlanEntitlementsResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
 
 ## CreateCompanyOverride
@@ -364,6 +754,73 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## GetFeatureUsageByCompany
+
+> GetFeatureUsageByCompanyResponse GetFeatureUsageByCompany(ctx).Keys(keys).Execute()
+
+Get feature usage by company
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	keys := map[string]interface{}{ ... } // map[string]interface{} | Key/value pairs
+
+	resp, r, err := client.API().EntitlementsAPI.GetFeatureUsageByCompany(context.Background()).Keys(keys).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.GetFeatureUsageByCompany``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetFeatureUsageByCompany`: GetFeatureUsageByCompanyResponse
+	fmt.Fprintf(os.Stdout, "Response from `EntitlementsAPI.GetFeatureUsageByCompany`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetFeatureUsageByCompanyRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **keys** | [**map[string]interface{}**](map[string]interface{}.md) | Key/value pairs | 
+
+### Return type
+
+[**GetFeatureUsageByCompanyResponse**](GetFeatureUsageByCompanyResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetPlanEntitlement
 
 > GetPlanEntitlementResponse GetPlanEntitlement(ctx, planEntitlementId).Execute()
@@ -437,7 +894,7 @@ Name | Type | Description  | Notes
 
 ## ListCompanyOverrides
 
-> ListCompanyOverridesResponse ListCompanyOverrides(ctx).CompanyId(companyId).FeatureId(featureId).Limit(limit).Offset(offset).Execute()
+> ListCompanyOverridesResponse ListCompanyOverrides(ctx).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Limit(limit).Offset(offset).Execute()
 
 List company overrides
 
@@ -460,11 +917,14 @@ func main() {
 	defer client.Close()
 
 	companyId := "companyId_example" // string |  (optional)
+	companyIds := []string{"Inner_example"} // []string |  (optional)
 	featureId := "featureId_example" // string |  (optional)
+	featureIds := []string{"Inner_example"} // []string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EntitlementsAPI.ListCompanyOverrides(context.Background()).CompanyId(companyId).FeatureId(featureId).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EntitlementsAPI.ListCompanyOverrides(context.Background()).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.ListCompanyOverrides``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -486,7 +946,10 @@ Other parameters are passed through a pointer to a apiListCompanyOverridesReques
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **companyId** | **string** |  | 
+ **companyIds** | **[]string** |  | 
  **featureId** | **string** |  | 
+ **featureIds** | **[]string** |  | 
+ **ids** | **[]string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -508,9 +971,232 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## ListFeatureCompanies
+
+> ListFeatureCompaniesResponse ListFeatureCompanies(ctx).FeatureId(featureId).Q(q).Limit(limit).Offset(offset).Execute()
+
+List feature companies
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	featureId := "featureId_example" // string | 
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().EntitlementsAPI.ListFeatureCompanies(context.Background()).FeatureId(featureId).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.ListFeatureCompanies``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListFeatureCompanies`: ListFeatureCompaniesResponse
+	fmt.Fprintf(os.Stdout, "Response from `EntitlementsAPI.ListFeatureCompanies`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListFeatureCompaniesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **featureId** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListFeatureCompaniesResponse**](ListFeatureCompaniesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListFeatureUsage
+
+> ListFeatureUsageResponse ListFeatureUsage(ctx).CompanyId(companyId).CompanyKeys(companyKeys).FeatureIds(featureIds).Q(q).Limit(limit).Offset(offset).Execute()
+
+List feature usage
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	companyId := "companyId_example" // string |  (optional)
+	companyKeys := map[string]interface{}{ ... } // map[string]interface{} |  (optional)
+	featureIds := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().EntitlementsAPI.ListFeatureUsage(context.Background()).CompanyId(companyId).CompanyKeys(companyKeys).FeatureIds(featureIds).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.ListFeatureUsage``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListFeatureUsage`: ListFeatureUsageResponse
+	fmt.Fprintf(os.Stdout, "Response from `EntitlementsAPI.ListFeatureUsage`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListFeatureUsageRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **companyId** | **string** |  | 
+ **companyKeys** | [**map[string]interface{}**](map[string]interface{}.md) |  | 
+ **featureIds** | **[]string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListFeatureUsageResponse**](ListFeatureUsageResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListFeatureUsers
+
+> ListFeatureUsersResponse ListFeatureUsers(ctx).FeatureId(featureId).Q(q).Limit(limit).Offset(offset).Execute()
+
+List feature users
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	featureId := "featureId_example" // string | 
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().EntitlementsAPI.ListFeatureUsers(context.Background()).FeatureId(featureId).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.ListFeatureUsers``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListFeatureUsers`: ListFeatureUsersResponse
+	fmt.Fprintf(os.Stdout, "Response from `EntitlementsAPI.ListFeatureUsers`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListFeatureUsersRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **featureId** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListFeatureUsersResponse**](ListFeatureUsersResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## ListPlanEntitlements
 
-> ListPlanEntitlementsResponse ListPlanEntitlements(ctx).PlanId(planId).FeatureId(featureId).Limit(limit).Offset(offset).Execute()
+> ListPlanEntitlementsResponse ListPlanEntitlements(ctx).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Limit(limit).Offset(offset).Execute()
 
 List plan entitlements
 
@@ -532,12 +1218,15 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	planId := "planId_example" // string |  (optional)
 	featureId := "featureId_example" // string |  (optional)
+	featureIds := []string{"Inner_example"} // []string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	planId := "planId_example" // string |  (optional)
+	planIds := []string{"Inner_example"} // []string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EntitlementsAPI.ListPlanEntitlements(context.Background()).PlanId(planId).FeatureId(featureId).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EntitlementsAPI.ListPlanEntitlements(context.Background()).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.ListPlanEntitlements``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -558,8 +1247,11 @@ Other parameters are passed through a pointer to a apiListPlanEntitlementsReques
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **planId** | **string** |  | 
  **featureId** | **string** |  | 
+ **featureIds** | **[]string** |  | 
+ **ids** | **[]string** |  | 
+ **planId** | **string** |  | 
+ **planIds** | **[]string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

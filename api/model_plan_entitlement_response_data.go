@@ -22,20 +22,21 @@ var _ MappedNullable = &PlanEntitlementResponseData{}
 
 // PlanEntitlementResponseData The updated resource
 type PlanEntitlementResponseData struct {
-	CreatedAt     time.Time            `json:"created_at"`
-	EnvironmentId string               `json:"environment_id"`
-	Feature       *FeatureResponseData `json:"feature,omitempty"`
-	FeatureId     string               `json:"feature_id"`
-	Id            string               `json:"id"`
-	MetricPeriod  NullableString       `json:"metric_period,omitempty"`
-	Plan          *PlanResponseData    `json:"plan,omitempty"`
-	PlanId        string               `json:"plan_id"`
-	RuleId        string               `json:"rule_id"`
-	UpdatedAt     time.Time            `json:"updated_at"`
-	ValueBool     NullableBool         `json:"value_bool,omitempty"`
-	ValueNumeric  NullableInt32        `json:"value_numeric,omitempty"`
-	ValueTraitId  NullableString       `json:"value_trait_id,omitempty"`
-	ValueType     string               `json:"value_type"`
+	CreatedAt     time.Time                          `json:"created_at"`
+	EnvironmentId string                             `json:"environment_id"`
+	Feature       *FeatureResponseData               `json:"feature,omitempty"`
+	FeatureId     string                             `json:"feature_id"`
+	Id            string                             `json:"id"`
+	MetricPeriod  NullableString                     `json:"metric_period,omitempty"`
+	Plan          *PlanResponseData                  `json:"plan,omitempty"`
+	PlanId        string                             `json:"plan_id"`
+	RuleId        string                             `json:"rule_id"`
+	UpdatedAt     time.Time                          `json:"updated_at"`
+	ValueBool     NullableBool                       `json:"value_bool,omitempty"`
+	ValueNumeric  NullableInt32                      `json:"value_numeric,omitempty"`
+	ValueTrait    *EntityTraitDefinitionResponseData `json:"value_trait,omitempty"`
+	ValueTraitId  NullableString                     `json:"value_trait_id,omitempty"`
+	ValueType     string                             `json:"value_type"`
 }
 
 type _PlanEntitlementResponseData PlanEntitlementResponseData
@@ -426,6 +427,38 @@ func (o *PlanEntitlementResponseData) UnsetValueNumeric() {
 	o.ValueNumeric.Unset()
 }
 
+// GetValueTrait returns the ValueTrait field value if set, zero value otherwise.
+func (o *PlanEntitlementResponseData) GetValueTrait() EntityTraitDefinitionResponseData {
+	if o == nil || IsNil(o.ValueTrait) {
+		var ret EntityTraitDefinitionResponseData
+		return ret
+	}
+	return *o.ValueTrait
+}
+
+// GetValueTraitOk returns a tuple with the ValueTrait field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PlanEntitlementResponseData) GetValueTraitOk() (*EntityTraitDefinitionResponseData, bool) {
+	if o == nil || IsNil(o.ValueTrait) {
+		return nil, false
+	}
+	return o.ValueTrait, true
+}
+
+// HasValueTrait returns a boolean if a field has been set.
+func (o *PlanEntitlementResponseData) HasValueTrait() bool {
+	if o != nil && !IsNil(o.ValueTrait) {
+		return true
+	}
+
+	return false
+}
+
+// SetValueTrait gets a reference to the given EntityTraitDefinitionResponseData and assigns it to the ValueTrait field.
+func (o *PlanEntitlementResponseData) SetValueTrait(v EntityTraitDefinitionResponseData) {
+	o.ValueTrait = &v
+}
+
 // GetValueTraitId returns the ValueTraitId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *PlanEntitlementResponseData) GetValueTraitId() string {
 	if o == nil || IsNil(o.ValueTraitId.Get()) {
@@ -524,6 +557,9 @@ func (o PlanEntitlementResponseData) ToMap() (map[string]interface{}, error) {
 	}
 	if o.ValueNumeric.IsSet() {
 		toSerialize["value_numeric"] = o.ValueNumeric.Get()
+	}
+	if !IsNil(o.ValueTrait) {
+		toSerialize["value_trait"] = o.ValueTrait
 	}
 	if o.ValueTraitId.IsSet() {
 		toSerialize["value_trait_id"] = o.ValueTraitId.Get()

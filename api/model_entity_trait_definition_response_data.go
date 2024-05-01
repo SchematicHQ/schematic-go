@@ -20,14 +20,15 @@ import (
 // checks if the EntityTraitDefinitionResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &EntityTraitDefinitionResponseData{}
 
-// EntityTraitDefinitionResponseData The updated resource
+// EntityTraitDefinitionResponseData struct for EntityTraitDefinitionResponseData
 type EntityTraitDefinitionResponseData struct {
-	CreatedAt  time.Time `json:"created_at"`
-	EntityType string    `json:"entity_type"`
-	Hierarchy  []string  `json:"hierarchy"`
-	Id         string    `json:"id"`
-	TraitType  string    `json:"trait_type"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	CreatedAt   time.Time `json:"created_at"`
+	DisplayName string    `json:"display_name"`
+	EntityType  string    `json:"entity_type"`
+	Hierarchy   []string  `json:"hierarchy"`
+	Id          string    `json:"id"`
+	TraitType   string    `json:"trait_type"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type _EntityTraitDefinitionResponseData EntityTraitDefinitionResponseData
@@ -36,9 +37,10 @@ type _EntityTraitDefinitionResponseData EntityTraitDefinitionResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEntityTraitDefinitionResponseData(createdAt time.Time, entityType string, hierarchy []string, id string, traitType string, updatedAt time.Time) *EntityTraitDefinitionResponseData {
+func NewEntityTraitDefinitionResponseData(createdAt time.Time, displayName string, entityType string, hierarchy []string, id string, traitType string, updatedAt time.Time) *EntityTraitDefinitionResponseData {
 	this := EntityTraitDefinitionResponseData{}
 	this.CreatedAt = createdAt
+	this.DisplayName = displayName
 	this.EntityType = entityType
 	this.Hierarchy = hierarchy
 	this.Id = id
@@ -77,6 +79,30 @@ func (o *EntityTraitDefinitionResponseData) GetCreatedAtOk() (*time.Time, bool) 
 // SetCreatedAt sets field value
 func (o *EntityTraitDefinitionResponseData) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
+}
+
+// GetDisplayName returns the DisplayName field value
+func (o *EntityTraitDefinitionResponseData) GetDisplayName() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.DisplayName
+}
+
+// GetDisplayNameOk returns a tuple with the DisplayName field value
+// and a boolean to check if the value has been set.
+func (o *EntityTraitDefinitionResponseData) GetDisplayNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.DisplayName, true
+}
+
+// SetDisplayName sets field value
+func (o *EntityTraitDefinitionResponseData) SetDisplayName(v string) {
+	o.DisplayName = v
 }
 
 // GetEntityType returns the EntityType field value
@@ -210,6 +236,7 @@ func (o EntityTraitDefinitionResponseData) MarshalJSON() ([]byte, error) {
 func (o EntityTraitDefinitionResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["display_name"] = o.DisplayName
 	toSerialize["entity_type"] = o.EntityType
 	toSerialize["hierarchy"] = o.Hierarchy
 	toSerialize["id"] = o.Id
@@ -224,6 +251,7 @@ func (o *EntityTraitDefinitionResponseData) UnmarshalJSON(data []byte) (err erro
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"created_at",
+		"display_name",
 		"entity_type",
 		"hierarchy",
 		"id",

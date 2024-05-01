@@ -20,19 +20,20 @@ import (
 // checks if the FeatureDetailResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &FeatureDetailResponseData{}
 
-// FeatureDetailResponseData The updated resource
+// FeatureDetailResponseData struct for FeatureDetailResponseData
 type FeatureDetailResponseData struct {
-	CreatedAt      time.Time                 `json:"created_at"`
-	Description    string                    `json:"description"`
-	EventSubtype   NullableString            `json:"event_subtype,omitempty"`
-	EventSummary   *EventSummaryResponseData `json:"event_summary,omitempty"`
-	FeatureType    string                    `json:"feature_type"`
-	Flags          []FlagDetailResponseData  `json:"flags"`
-	Id             string                    `json:"id"`
-	LifecyclePhase NullableString            `json:"lifecycle_phase,omitempty"`
-	Name           string                    `json:"name"`
-	TraitId        NullableString            `json:"trait_id,omitempty"`
-	UpdatedAt      time.Time                 `json:"updated_at"`
+	CreatedAt      time.Time                          `json:"created_at"`
+	Description    string                             `json:"description"`
+	EventSubtype   NullableString                     `json:"event_subtype,omitempty"`
+	EventSummary   *EventSummaryResponseData          `json:"event_summary,omitempty"`
+	FeatureType    string                             `json:"feature_type"`
+	Flags          []FlagDetailResponseData           `json:"flags"`
+	Id             string                             `json:"id"`
+	LifecyclePhase NullableString                     `json:"lifecycle_phase,omitempty"`
+	Name           string                             `json:"name"`
+	Trait          *EntityTraitDefinitionResponseData `json:"trait,omitempty"`
+	TraitId        NullableString                     `json:"trait_id,omitempty"`
+	UpdatedAt      time.Time                          `json:"updated_at"`
 }
 
 type _FeatureDetailResponseData FeatureDetailResponseData
@@ -323,6 +324,38 @@ func (o *FeatureDetailResponseData) SetName(v string) {
 	o.Name = v
 }
 
+// GetTrait returns the Trait field value if set, zero value otherwise.
+func (o *FeatureDetailResponseData) GetTrait() EntityTraitDefinitionResponseData {
+	if o == nil || IsNil(o.Trait) {
+		var ret EntityTraitDefinitionResponseData
+		return ret
+	}
+	return *o.Trait
+}
+
+// GetTraitOk returns a tuple with the Trait field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FeatureDetailResponseData) GetTraitOk() (*EntityTraitDefinitionResponseData, bool) {
+	if o == nil || IsNil(o.Trait) {
+		return nil, false
+	}
+	return o.Trait, true
+}
+
+// HasTrait returns a boolean if a field has been set.
+func (o *FeatureDetailResponseData) HasTrait() bool {
+	if o != nil && !IsNil(o.Trait) {
+		return true
+	}
+
+	return false
+}
+
+// SetTrait gets a reference to the given EntityTraitDefinitionResponseData and assigns it to the Trait field.
+func (o *FeatureDetailResponseData) SetTrait(v EntityTraitDefinitionResponseData) {
+	o.Trait = &v
+}
+
 // GetTraitId returns the TraitId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *FeatureDetailResponseData) GetTraitId() string {
 	if o == nil || IsNil(o.TraitId.Get()) {
@@ -415,6 +448,9 @@ func (o FeatureDetailResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["lifecycle_phase"] = o.LifecyclePhase.Get()
 	}
 	toSerialize["name"] = o.Name
+	if !IsNil(o.Trait) {
+		toSerialize["trait"] = o.Trait
+	}
 	if o.TraitId.IsSet() {
 		toSerialize["trait_id"] = o.TraitId.Get()
 	}

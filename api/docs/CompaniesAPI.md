@@ -4,6 +4,10 @@ All URIs are relative to *https://api.schematichq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**CountCompanies**](CompaniesAPI.md#CountCompanies) | **Get** /companies/count | Count companies
+[**CountEntityKeyDefinitions**](CompaniesAPI.md#CountEntityKeyDefinitions) | **Get** /entity-key-definitions/count | Count entity key definitions
+[**CountEntityTraitDefinitions**](CompaniesAPI.md#CountEntityTraitDefinitions) | **Get** /entity-trait-definitions/count | Count entity trait definitions
+[**CountUsers**](CompaniesAPI.md#CountUsers) | **Get** /users/count | Count users
 [**CreateCompany**](CompaniesAPI.md#CreateCompany) | **Post** /companies/create | Create company
 [**CreateUser**](CompaniesAPI.md#CreateUser) | **Post** /users/create | Create user
 [**DeleteCompany**](CompaniesAPI.md#DeleteCompany) | **Delete** /companies/{company_id} | Delete company
@@ -11,13 +15,18 @@ Method | HTTP request | Description
 [**DeleteCompanyMembership**](CompaniesAPI.md#DeleteCompanyMembership) | **Delete** /company-memberships/{company_membership_id} | Delete company membership
 [**DeleteUser**](CompaniesAPI.md#DeleteUser) | **Delete** /users/{user_id} | Delete user
 [**DeleteUserByKeys**](CompaniesAPI.md#DeleteUserByKeys) | **Post** /users/delete | Delete user by keys
+[**GetActiveCompanySubscription**](CompaniesAPI.md#GetActiveCompanySubscription) | **Get** /company-subscriptions | Get active company subscription
 [**GetCompany**](CompaniesAPI.md#GetCompany) | **Get** /companies/{company_id} | Get company
+[**GetEntityTraitDefinition**](CompaniesAPI.md#GetEntityTraitDefinition) | **Get** /entity-trait-definitions/{entity_trait_definition_id} | Get entity trait definition
+[**GetEntityTraitValues**](CompaniesAPI.md#GetEntityTraitValues) | **Get** /entity-trait-values | Get entity trait values
 [**GetOrCreateCompanyMembership**](CompaniesAPI.md#GetOrCreateCompanyMembership) | **Post** /company-memberships | Get or create company membership
 [**GetOrCreateEntityTraitDefinition**](CompaniesAPI.md#GetOrCreateEntityTraitDefinition) | **Post** /entity-trait-definitions | Get or create entity trait definition
 [**GetUser**](CompaniesAPI.md#GetUser) | **Get** /users/{user_id} | Get user
 [**ListCompanies**](CompaniesAPI.md#ListCompanies) | **Get** /companies | List companies
 [**ListCompanyMemberships**](CompaniesAPI.md#ListCompanyMemberships) | **Get** /company-memberships | List company memberships
 [**ListCompanyPlans**](CompaniesAPI.md#ListCompanyPlans) | **Get** /company-plans | List company plans
+[**ListEntityKeyDefinitions**](CompaniesAPI.md#ListEntityKeyDefinitions) | **Get** /entity-key-definitions | List entity key definitions
+[**ListEntityTraitDefinitions**](CompaniesAPI.md#ListEntityTraitDefinitions) | **Get** /entity-trait-definitions | List entity trait definitions
 [**ListUsers**](CompaniesAPI.md#ListUsers) | **Get** /users | List users
 [**LookupCompany**](CompaniesAPI.md#LookupCompany) | **Get** /companies/lookup | Lookup company
 [**LookupUser**](CompaniesAPI.md#LookupUser) | **Get** /users/lookup | Lookup user
@@ -27,6 +36,312 @@ Method | HTTP request | Description
 [**UpsertUser**](CompaniesAPI.md#UpsertUser) | **Post** /users | Upsert user
 [**UpsertUserTrait**](CompaniesAPI.md#UpsertUserTrait) | **Post** /user-traits | Upsert user trait
 
+
+
+## CountCompanies
+
+> CountCompaniesResponse CountCompanies(ctx).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).Limit(limit).Offset(offset).Execute()
+
+Count companies
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	ids := []string{"Inner_example"} // []string |  (optional)
+	planId := "planId_example" // string |  (optional)
+	q := "q_example" // string | Search filter (optional)
+	withoutFeatureOverrideFor := "withoutFeatureOverrideFor_example" // string | Filter out companies that already have a company override for the specified feature ID (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().CompaniesAPI.CountCompanies(context.Background()).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CountCompanies``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountCompanies`: CountCompaniesResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.CountCompanies`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountCompaniesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ids** | **[]string** |  | 
+ **planId** | **string** |  | 
+ **q** | **string** | Search filter | 
+ **withoutFeatureOverrideFor** | **string** | Filter out companies that already have a company override for the specified feature ID | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountCompaniesResponse**](CountCompaniesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CountEntityKeyDefinitions
+
+> CountEntityKeyDefinitionsResponse CountEntityKeyDefinitions(ctx).EntityType(entityType).Ids(ids).Key(key).Limit(limit).Offset(offset).Execute()
+
+Count entity key definitions
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	entityType := "entityType_example" // string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	key := "key_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().CompaniesAPI.CountEntityKeyDefinitions(context.Background()).EntityType(entityType).Ids(ids).Key(key).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CountEntityKeyDefinitions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountEntityKeyDefinitions`: CountEntityKeyDefinitionsResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.CountEntityKeyDefinitions`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountEntityKeyDefinitionsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **entityType** | **string** |  | 
+ **ids** | **[]string** |  | 
+ **key** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountEntityKeyDefinitionsResponse**](CountEntityKeyDefinitionsResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CountEntityTraitDefinitions
+
+> CountEntityTraitDefinitionsResponse CountEntityTraitDefinitions(ctx).EntityType(entityType).Ids(ids).TraitType(traitType).Q(q).Limit(limit).Offset(offset).Execute()
+
+Count entity trait definitions
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	entityType := "entityType_example" // string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	traitType := "traitType_example" // string |  (optional)
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().CompaniesAPI.CountEntityTraitDefinitions(context.Background()).EntityType(entityType).Ids(ids).TraitType(traitType).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CountEntityTraitDefinitions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountEntityTraitDefinitions`: CountEntityTraitDefinitionsResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.CountEntityTraitDefinitions`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountEntityTraitDefinitionsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **entityType** | **string** |  | 
+ **ids** | **[]string** |  | 
+ **traitType** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountEntityTraitDefinitionsResponse**](CountEntityTraitDefinitionsResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CountUsers
+
+> CountUsersResponse CountUsers(ctx).CompanyId(companyId).Ids(ids).PlanId(planId).Q(q).Limit(limit).Offset(offset).Execute()
+
+Count users
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	companyId := "companyId_example" // string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	planId := "planId_example" // string |  (optional)
+	q := "q_example" // string | Search filter (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().CompaniesAPI.CountUsers(context.Background()).CompanyId(companyId).Ids(ids).PlanId(planId).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CountUsers``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountUsers`: CountUsersResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.CountUsers`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountUsersRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **companyId** | **string** |  | 
+ **ids** | **[]string** |  | 
+ **planId** | **string** |  | 
+ **q** | **string** | Search filter | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountUsersResponse**](CountUsersResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
 
 ## CreateCompany
@@ -510,6 +825,77 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## GetActiveCompanySubscription
+
+> GetActiveCompanySubscriptionResponse GetActiveCompanySubscription(ctx).CompanyId(companyId).Limit(limit).Offset(offset).Execute()
+
+Get active company subscription
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	companyId := "companyId_example" // string | 
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().CompaniesAPI.GetActiveCompanySubscription(context.Background()).CompanyId(companyId).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.GetActiveCompanySubscription``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetActiveCompanySubscription`: GetActiveCompanySubscriptionResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.GetActiveCompanySubscription`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetActiveCompanySubscriptionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **companyId** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**GetActiveCompanySubscriptionResponse**](GetActiveCompanySubscriptionResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetCompany
 
 > GetCompanyResponse GetCompany(ctx, companyId).Execute()
@@ -566,6 +952,150 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**GetCompanyResponse**](GetCompanyResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetEntityTraitDefinition
+
+> GetEntityTraitDefinitionResponse GetEntityTraitDefinition(ctx, entityTraitDefinitionId).Execute()
+
+Get entity trait definition
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	entityTraitDefinitionId := "entityTraitDefinitionId_example" // string | entity_trait_definition_id
+
+	resp, r, err := client.API().CompaniesAPI.GetEntityTraitDefinition(context.Background(), entityTraitDefinitionId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.GetEntityTraitDefinition``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetEntityTraitDefinition`: GetEntityTraitDefinitionResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.GetEntityTraitDefinition`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**entityTraitDefinitionId** | **string** | entity_trait_definition_id | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetEntityTraitDefinitionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**GetEntityTraitDefinitionResponse**](GetEntityTraitDefinitionResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetEntityTraitValues
+
+> GetEntityTraitValuesResponse GetEntityTraitValues(ctx).DefinitionId(definitionId).Q(q).Limit(limit).Offset(offset).Execute()
+
+Get entity trait values
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	definitionId := "definitionId_example" // string | 
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().CompaniesAPI.GetEntityTraitValues(context.Background()).DefinitionId(definitionId).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.GetEntityTraitValues``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetEntityTraitValues`: GetEntityTraitValuesResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.GetEntityTraitValues`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetEntityTraitValuesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **definitionId** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**GetEntityTraitValuesResponse**](GetEntityTraitValuesResponse.md)
 
 ### Authorization
 
@@ -788,7 +1318,7 @@ Name | Type | Description  | Notes
 
 ## ListCompanies
 
-> ListCompaniesResponse ListCompanies(ctx).Ids(ids).Limit(limit).Offset(offset).Execute()
+> ListCompaniesResponse ListCompanies(ctx).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).Limit(limit).Offset(offset).Execute()
 
 List companies
 
@@ -811,10 +1341,13 @@ func main() {
 	defer client.Close()
 
 	ids := []string{"Inner_example"} // []string |  (optional)
+	planId := "planId_example" // string |  (optional)
+	q := "q_example" // string | Search filter (optional)
+	withoutFeatureOverrideFor := "withoutFeatureOverrideFor_example" // string | Filter out companies that already have a company override for the specified feature ID (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().CompaniesAPI.ListCompanies(context.Background()).Ids(ids).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().CompaniesAPI.ListCompanies(context.Background()).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.ListCompanies``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -836,6 +1369,9 @@ Other parameters are passed through a pointer to a apiListCompaniesRequest struc
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ids** | **[]string** |  | 
+ **planId** | **string** |  | 
+ **q** | **string** | Search filter | 
+ **withoutFeatureOverrideFor** | **string** | Filter out companies that already have a company override for the specified feature ID | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -1003,9 +1539,161 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## ListEntityKeyDefinitions
+
+> ListEntityKeyDefinitionsResponse ListEntityKeyDefinitions(ctx).EntityType(entityType).Ids(ids).Key(key).Limit(limit).Offset(offset).Execute()
+
+List entity key definitions
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	entityType := "entityType_example" // string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	key := "key_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().CompaniesAPI.ListEntityKeyDefinitions(context.Background()).EntityType(entityType).Ids(ids).Key(key).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.ListEntityKeyDefinitions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListEntityKeyDefinitions`: ListEntityKeyDefinitionsResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.ListEntityKeyDefinitions`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListEntityKeyDefinitionsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **entityType** | **string** |  | 
+ **ids** | **[]string** |  | 
+ **key** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListEntityKeyDefinitionsResponse**](ListEntityKeyDefinitionsResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListEntityTraitDefinitions
+
+> ListEntityTraitDefinitionsResponse ListEntityTraitDefinitions(ctx).EntityType(entityType).Ids(ids).TraitType(traitType).Q(q).Limit(limit).Offset(offset).Execute()
+
+List entity trait definitions
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	entityType := "entityType_example" // string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	traitType := "traitType_example" // string |  (optional)
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().CompaniesAPI.ListEntityTraitDefinitions(context.Background()).EntityType(entityType).Ids(ids).TraitType(traitType).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.ListEntityTraitDefinitions``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListEntityTraitDefinitions`: ListEntityTraitDefinitionsResponse
+	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.ListEntityTraitDefinitions`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListEntityTraitDefinitionsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **entityType** | **string** |  | 
+ **ids** | **[]string** |  | 
+ **traitType** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListEntityTraitDefinitionsResponse**](ListEntityTraitDefinitionsResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## ListUsers
 
-> ListUsersResponse ListUsers(ctx).Ids(ids).Limit(limit).Offset(offset).Execute()
+> ListUsersResponse ListUsers(ctx).CompanyId(companyId).Ids(ids).PlanId(planId).Q(q).Limit(limit).Offset(offset).Execute()
 
 List users
 
@@ -1027,11 +1715,14 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
+	companyId := "companyId_example" // string |  (optional)
 	ids := []string{"Inner_example"} // []string |  (optional)
+	planId := "planId_example" // string |  (optional)
+	q := "q_example" // string | Search filter (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().CompaniesAPI.ListUsers(context.Background()).Ids(ids).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().CompaniesAPI.ListUsers(context.Background()).CompanyId(companyId).Ids(ids).PlanId(planId).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.ListUsers``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1052,7 +1743,10 @@ Other parameters are passed through a pointer to a apiListUsersRequest struct vi
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **companyId** | **string** |  | 
  **ids** | **[]string** |  | 
+ **planId** | **string** |  | 
+ **q** | **string** | Search filter | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

@@ -22,15 +22,19 @@ var _ MappedNullable = &CompanyDetailResponseData{}
 
 // CompanyDetailResponseData struct for CompanyDetailResponseData
 type CompanyDetailResponseData struct {
-	CreatedAt     time.Time               `json:"created_at"`
-	EnvironmentId string                  `json:"environment_id"`
-	Id            string                  `json:"id"`
-	Keys          []EntityKeyResponseData `json:"keys"`
-	LastSeenAt    NullableTime            `json:"last_seen_at,omitempty"`
-	Name          string                  `json:"name"`
+	CreatedAt     time.Time                       `json:"created_at"`
+	EntityTraits  []EntityTraitDetailResponseData `json:"entity_traits"`
+	EnvironmentId string                          `json:"environment_id"`
+	Id            string                          `json:"id"`
+	Keys          []EntityKeyDetailResponseData   `json:"keys"`
+	LastSeenAt    NullableTime                    `json:"last_seen_at,omitempty"`
+	LogoUrl       NullableString                  `json:"logo_url,omitempty"`
+	Name          string                          `json:"name"`
+	Plans         []PreviewObject                 `json:"plans"`
 	// A map of trait names to trait values
 	Traits    map[string]interface{} `json:"traits,omitempty"`
 	UpdatedAt time.Time              `json:"updated_at"`
+	UserCount int32                  `json:"user_count"`
 }
 
 type _CompanyDetailResponseData CompanyDetailResponseData
@@ -39,14 +43,17 @@ type _CompanyDetailResponseData CompanyDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCompanyDetailResponseData(createdAt time.Time, environmentId string, id string, keys []EntityKeyResponseData, name string, updatedAt time.Time) *CompanyDetailResponseData {
+func NewCompanyDetailResponseData(createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, plans []PreviewObject, updatedAt time.Time, userCount int32) *CompanyDetailResponseData {
 	this := CompanyDetailResponseData{}
 	this.CreatedAt = createdAt
+	this.EntityTraits = entityTraits
 	this.EnvironmentId = environmentId
 	this.Id = id
 	this.Keys = keys
 	this.Name = name
+	this.Plans = plans
 	this.UpdatedAt = updatedAt
+	this.UserCount = userCount
 	return &this
 }
 
@@ -80,6 +87,30 @@ func (o *CompanyDetailResponseData) GetCreatedAtOk() (*time.Time, bool) {
 // SetCreatedAt sets field value
 func (o *CompanyDetailResponseData) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
+}
+
+// GetEntityTraits returns the EntityTraits field value
+func (o *CompanyDetailResponseData) GetEntityTraits() []EntityTraitDetailResponseData {
+	if o == nil {
+		var ret []EntityTraitDetailResponseData
+		return ret
+	}
+
+	return o.EntityTraits
+}
+
+// GetEntityTraitsOk returns a tuple with the EntityTraits field value
+// and a boolean to check if the value has been set.
+func (o *CompanyDetailResponseData) GetEntityTraitsOk() ([]EntityTraitDetailResponseData, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.EntityTraits, true
+}
+
+// SetEntityTraits sets field value
+func (o *CompanyDetailResponseData) SetEntityTraits(v []EntityTraitDetailResponseData) {
+	o.EntityTraits = v
 }
 
 // GetEnvironmentId returns the EnvironmentId field value
@@ -131,9 +162,9 @@ func (o *CompanyDetailResponseData) SetId(v string) {
 }
 
 // GetKeys returns the Keys field value
-func (o *CompanyDetailResponseData) GetKeys() []EntityKeyResponseData {
+func (o *CompanyDetailResponseData) GetKeys() []EntityKeyDetailResponseData {
 	if o == nil {
-		var ret []EntityKeyResponseData
+		var ret []EntityKeyDetailResponseData
 		return ret
 	}
 
@@ -142,7 +173,7 @@ func (o *CompanyDetailResponseData) GetKeys() []EntityKeyResponseData {
 
 // GetKeysOk returns a tuple with the Keys field value
 // and a boolean to check if the value has been set.
-func (o *CompanyDetailResponseData) GetKeysOk() ([]EntityKeyResponseData, bool) {
+func (o *CompanyDetailResponseData) GetKeysOk() ([]EntityKeyDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -150,7 +181,7 @@ func (o *CompanyDetailResponseData) GetKeysOk() ([]EntityKeyResponseData, bool) 
 }
 
 // SetKeys sets field value
-func (o *CompanyDetailResponseData) SetKeys(v []EntityKeyResponseData) {
+func (o *CompanyDetailResponseData) SetKeys(v []EntityKeyDetailResponseData) {
 	o.Keys = v
 }
 
@@ -197,6 +228,49 @@ func (o *CompanyDetailResponseData) UnsetLastSeenAt() {
 	o.LastSeenAt.Unset()
 }
 
+// GetLogoUrl returns the LogoUrl field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CompanyDetailResponseData) GetLogoUrl() string {
+	if o == nil || IsNil(o.LogoUrl.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.LogoUrl.Get()
+}
+
+// GetLogoUrlOk returns a tuple with the LogoUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CompanyDetailResponseData) GetLogoUrlOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LogoUrl.Get(), o.LogoUrl.IsSet()
+}
+
+// HasLogoUrl returns a boolean if a field has been set.
+func (o *CompanyDetailResponseData) HasLogoUrl() bool {
+	if o != nil && o.LogoUrl.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetLogoUrl gets a reference to the given NullableString and assigns it to the LogoUrl field.
+func (o *CompanyDetailResponseData) SetLogoUrl(v string) {
+	o.LogoUrl.Set(&v)
+}
+
+// SetLogoUrlNil sets the value for LogoUrl to be an explicit nil
+func (o *CompanyDetailResponseData) SetLogoUrlNil() {
+	o.LogoUrl.Set(nil)
+}
+
+// UnsetLogoUrl ensures that no value is present for LogoUrl, not even an explicit nil
+func (o *CompanyDetailResponseData) UnsetLogoUrl() {
+	o.LogoUrl.Unset()
+}
+
 // GetName returns the Name field value
 func (o *CompanyDetailResponseData) GetName() string {
 	if o == nil {
@@ -219,6 +293,30 @@ func (o *CompanyDetailResponseData) GetNameOk() (*string, bool) {
 // SetName sets field value
 func (o *CompanyDetailResponseData) SetName(v string) {
 	o.Name = v
+}
+
+// GetPlans returns the Plans field value
+func (o *CompanyDetailResponseData) GetPlans() []PreviewObject {
+	if o == nil {
+		var ret []PreviewObject
+		return ret
+	}
+
+	return o.Plans
+}
+
+// GetPlansOk returns a tuple with the Plans field value
+// and a boolean to check if the value has been set.
+func (o *CompanyDetailResponseData) GetPlansOk() ([]PreviewObject, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Plans, true
+}
+
+// SetPlans sets field value
+func (o *CompanyDetailResponseData) SetPlans(v []PreviewObject) {
+	o.Plans = v
 }
 
 // GetTraits returns the Traits field value if set, zero value otherwise.
@@ -277,6 +375,30 @@ func (o *CompanyDetailResponseData) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
+// GetUserCount returns the UserCount field value
+func (o *CompanyDetailResponseData) GetUserCount() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.UserCount
+}
+
+// GetUserCountOk returns a tuple with the UserCount field value
+// and a boolean to check if the value has been set.
+func (o *CompanyDetailResponseData) GetUserCountOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.UserCount, true
+}
+
+// SetUserCount sets field value
+func (o *CompanyDetailResponseData) SetUserCount(v int32) {
+	o.UserCount = v
+}
+
 func (o CompanyDetailResponseData) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -288,17 +410,23 @@ func (o CompanyDetailResponseData) MarshalJSON() ([]byte, error) {
 func (o CompanyDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["entity_traits"] = o.EntityTraits
 	toSerialize["environment_id"] = o.EnvironmentId
 	toSerialize["id"] = o.Id
 	toSerialize["keys"] = o.Keys
 	if o.LastSeenAt.IsSet() {
 		toSerialize["last_seen_at"] = o.LastSeenAt.Get()
 	}
+	if o.LogoUrl.IsSet() {
+		toSerialize["logo_url"] = o.LogoUrl.Get()
+	}
 	toSerialize["name"] = o.Name
+	toSerialize["plans"] = o.Plans
 	if !IsNil(o.Traits) {
 		toSerialize["traits"] = o.Traits
 	}
 	toSerialize["updated_at"] = o.UpdatedAt
+	toSerialize["user_count"] = o.UserCount
 	return toSerialize, nil
 }
 
@@ -308,11 +436,14 @@ func (o *CompanyDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"created_at",
+		"entity_traits",
 		"environment_id",
 		"id",
 		"keys",
 		"name",
+		"plans",
 		"updated_at",
+		"user_count",
 	}
 
 	allProperties := make(map[string]interface{})

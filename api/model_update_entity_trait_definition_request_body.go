@@ -21,7 +21,8 @@ var _ MappedNullable = &UpdateEntityTraitDefinitionRequestBody{}
 
 // UpdateEntityTraitDefinitionRequestBody struct for UpdateEntityTraitDefinitionRequestBody
 type UpdateEntityTraitDefinitionRequestBody struct {
-	TraitType string `json:"trait_type"`
+	DisplayName NullableString `json:"display_name,omitempty"`
+	TraitType   string         `json:"trait_type"`
 }
 
 type _UpdateEntityTraitDefinitionRequestBody UpdateEntityTraitDefinitionRequestBody
@@ -42,6 +43,49 @@ func NewUpdateEntityTraitDefinitionRequestBody(traitType string) *UpdateEntityTr
 func NewUpdateEntityTraitDefinitionRequestBodyWithDefaults() *UpdateEntityTraitDefinitionRequestBody {
 	this := UpdateEntityTraitDefinitionRequestBody{}
 	return &this
+}
+
+// GetDisplayName returns the DisplayName field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateEntityTraitDefinitionRequestBody) GetDisplayName() string {
+	if o == nil || IsNil(o.DisplayName.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.DisplayName.Get()
+}
+
+// GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateEntityTraitDefinitionRequestBody) GetDisplayNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.DisplayName.Get(), o.DisplayName.IsSet()
+}
+
+// HasDisplayName returns a boolean if a field has been set.
+func (o *UpdateEntityTraitDefinitionRequestBody) HasDisplayName() bool {
+	if o != nil && o.DisplayName.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetDisplayName gets a reference to the given NullableString and assigns it to the DisplayName field.
+func (o *UpdateEntityTraitDefinitionRequestBody) SetDisplayName(v string) {
+	o.DisplayName.Set(&v)
+}
+
+// SetDisplayNameNil sets the value for DisplayName to be an explicit nil
+func (o *UpdateEntityTraitDefinitionRequestBody) SetDisplayNameNil() {
+	o.DisplayName.Set(nil)
+}
+
+// UnsetDisplayName ensures that no value is present for DisplayName, not even an explicit nil
+func (o *UpdateEntityTraitDefinitionRequestBody) UnsetDisplayName() {
+	o.DisplayName.Unset()
 }
 
 // GetTraitType returns the TraitType field value
@@ -78,6 +122,9 @@ func (o UpdateEntityTraitDefinitionRequestBody) MarshalJSON() ([]byte, error) {
 
 func (o UpdateEntityTraitDefinitionRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if o.DisplayName.IsSet() {
+		toSerialize["display_name"] = o.DisplayName.Get()
+	}
 	toSerialize["trait_type"] = o.TraitType
 	return toSerialize, nil
 }

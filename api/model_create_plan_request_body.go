@@ -21,7 +21,9 @@ var _ MappedNullable = &CreatePlanRequestBody{}
 
 // CreatePlanRequestBody struct for CreatePlanRequestBody
 type CreatePlanRequestBody struct {
-	Name string `json:"name"`
+	Description string `json:"description"`
+	Name        string `json:"name"`
+	PlanType    string `json:"plan_type"`
 }
 
 type _CreatePlanRequestBody CreatePlanRequestBody
@@ -30,9 +32,11 @@ type _CreatePlanRequestBody CreatePlanRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreatePlanRequestBody(name string) *CreatePlanRequestBody {
+func NewCreatePlanRequestBody(description string, name string, planType string) *CreatePlanRequestBody {
 	this := CreatePlanRequestBody{}
+	this.Description = description
 	this.Name = name
+	this.PlanType = planType
 	return &this
 }
 
@@ -42,6 +46,30 @@ func NewCreatePlanRequestBody(name string) *CreatePlanRequestBody {
 func NewCreatePlanRequestBodyWithDefaults() *CreatePlanRequestBody {
 	this := CreatePlanRequestBody{}
 	return &this
+}
+
+// GetDescription returns the Description field value
+func (o *CreatePlanRequestBody) GetDescription() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value
+// and a boolean to check if the value has been set.
+func (o *CreatePlanRequestBody) GetDescriptionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Description, true
+}
+
+// SetDescription sets field value
+func (o *CreatePlanRequestBody) SetDescription(v string) {
+	o.Description = v
 }
 
 // GetName returns the Name field value
@@ -68,6 +96,30 @@ func (o *CreatePlanRequestBody) SetName(v string) {
 	o.Name = v
 }
 
+// GetPlanType returns the PlanType field value
+func (o *CreatePlanRequestBody) GetPlanType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.PlanType
+}
+
+// GetPlanTypeOk returns a tuple with the PlanType field value
+// and a boolean to check if the value has been set.
+func (o *CreatePlanRequestBody) GetPlanTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.PlanType, true
+}
+
+// SetPlanType sets field value
+func (o *CreatePlanRequestBody) SetPlanType(v string) {
+	o.PlanType = v
+}
+
 func (o CreatePlanRequestBody) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -78,7 +130,9 @@ func (o CreatePlanRequestBody) MarshalJSON() ([]byte, error) {
 
 func (o CreatePlanRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	toSerialize["description"] = o.Description
 	toSerialize["name"] = o.Name
+	toSerialize["plan_type"] = o.PlanType
 	return toSerialize, nil
 }
 
@@ -87,7 +141,9 @@ func (o *CreatePlanRequestBody) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
+		"description",
 		"name",
+		"plan_type",
 	}
 
 	allProperties := make(map[string]interface{})

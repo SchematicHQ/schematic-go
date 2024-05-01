@@ -11,10 +11,10 @@ package api
 
 import (
 	"context"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
 )
 
 func Test_api_EntitlementsAPIService(t *testing.T) {
@@ -22,9 +22,69 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 	configuration := schematicapi.NewConfiguration()
 	apiClient := schematicapi.NewAPIClient(configuration)
 
+	t.Run("Test EntitlementsAPIService CountCompanyOverrides", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EntitlementsAPI.CountCompanyOverrides(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test EntitlementsAPIService CountFeatureCompanies", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EntitlementsAPI.CountFeatureCompanies(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test EntitlementsAPIService CountFeatureUsage", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EntitlementsAPI.CountFeatureUsage(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test EntitlementsAPIService CountFeatureUsers", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EntitlementsAPI.CountFeatureUsers(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test EntitlementsAPIService CountPlanEntitlements", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EntitlementsAPI.CountPlanEntitlements(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test EntitlementsAPIService CreateCompanyOverride", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EntitlementsAPI.CreateCompanyOverride(context.Background()).Execute()
 
@@ -36,7 +96,7 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 
 	t.Run("Test EntitlementsAPIService CreatePlanEntitlement", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EntitlementsAPI.CreatePlanEntitlement(context.Background()).Execute()
 
@@ -48,7 +108,7 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 
 	t.Run("Test EntitlementsAPIService DeleteCompanyOverride", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var companyOverrideId string
 
@@ -62,7 +122,7 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 
 	t.Run("Test EntitlementsAPIService DeletePlanEntitlement", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var planEntitlementId string
 
@@ -76,7 +136,7 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 
 	t.Run("Test EntitlementsAPIService GetCompanyOverride", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var companyOverrideId string
 
@@ -88,9 +148,21 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test EntitlementsAPIService GetFeatureUsageByCompany", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EntitlementsAPI.GetFeatureUsageByCompany(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test EntitlementsAPIService GetPlanEntitlement", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var planEntitlementId string
 
@@ -104,7 +176,7 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 
 	t.Run("Test EntitlementsAPIService ListCompanyOverrides", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EntitlementsAPI.ListCompanyOverrides(context.Background()).Execute()
 
@@ -114,9 +186,45 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test EntitlementsAPIService ListFeatureCompanies", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EntitlementsAPI.ListFeatureCompanies(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test EntitlementsAPIService ListFeatureUsage", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EntitlementsAPI.ListFeatureUsage(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test EntitlementsAPIService ListFeatureUsers", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EntitlementsAPI.ListFeatureUsers(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test EntitlementsAPIService ListPlanEntitlements", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EntitlementsAPI.ListPlanEntitlements(context.Background()).Execute()
 
@@ -128,7 +236,7 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 
 	t.Run("Test EntitlementsAPIService UpdateCompanyOverride", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var companyOverrideId string
 
@@ -142,7 +250,7 @@ func Test_api_EntitlementsAPIService(t *testing.T) {
 
 	t.Run("Test EntitlementsAPIService UpdatePlanEntitlement", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var planEntitlementId string
 

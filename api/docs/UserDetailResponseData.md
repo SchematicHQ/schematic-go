@@ -6,9 +6,10 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CompanyMemberships** | [**[]CompanyMembershipDetailResponseData**](CompanyMembershipDetailResponseData.md) |  | 
 **CreatedAt** | **time.Time** |  | 
+**EntityTraits** | [**[]EntityTraitDetailResponseData**](EntityTraitDetailResponseData.md) |  | 
 **EnvironmentId** | **string** |  | 
 **Id** | **string** |  | 
-**Keys** | [**[]EntityKeyResponseData**](EntityKeyResponseData.md) |  | 
+**Keys** | [**[]EntityKeyDetailResponseData**](EntityKeyDetailResponseData.md) |  | 
 **LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
 **Name** | **string** |  | 
 **Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
@@ -18,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewUserDetailResponseData
 
-`func NewUserDetailResponseData(companyMemberships []CompanyMembershipDetailResponseData, createdAt time.Time, environmentId string, id string, keys []EntityKeyResponseData, name string, updatedAt time.Time, ) *UserDetailResponseData`
+`func NewUserDetailResponseData(companyMemberships []CompanyMembershipDetailResponseData, createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, updatedAt time.Time, ) *UserDetailResponseData`
 
 NewUserDetailResponseData instantiates a new UserDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -73,6 +74,26 @@ and a boolean to check if the value has been set.
 SetCreatedAt sets CreatedAt field to given value.
 
 
+### GetEntityTraits
+
+`func (o *UserDetailResponseData) GetEntityTraits() []EntityTraitDetailResponseData`
+
+GetEntityTraits returns the EntityTraits field if non-nil, zero value otherwise.
+
+### GetEntityTraitsOk
+
+`func (o *UserDetailResponseData) GetEntityTraitsOk() (*[]EntityTraitDetailResponseData, bool)`
+
+GetEntityTraitsOk returns a tuple with the EntityTraits field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEntityTraits
+
+`func (o *UserDetailResponseData) SetEntityTraits(v []EntityTraitDetailResponseData)`
+
+SetEntityTraits sets EntityTraits field to given value.
+
+
 ### GetEnvironmentId
 
 `func (o *UserDetailResponseData) GetEnvironmentId() string`
@@ -115,20 +136,20 @@ SetId sets Id field to given value.
 
 ### GetKeys
 
-`func (o *UserDetailResponseData) GetKeys() []EntityKeyResponseData`
+`func (o *UserDetailResponseData) GetKeys() []EntityKeyDetailResponseData`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *UserDetailResponseData) GetKeysOk() (*[]EntityKeyResponseData, bool)`
+`func (o *UserDetailResponseData) GetKeysOk() (*[]EntityKeyDetailResponseData, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *UserDetailResponseData) SetKeys(v []EntityKeyResponseData)`
+`func (o *UserDetailResponseData) SetKeys(v []EntityKeyDetailResponseData)`
 
 SetKeys sets Keys field to given value.
 

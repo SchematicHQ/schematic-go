@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ApiKey** | Pointer to **NullableString** |  | [optional] 
 **Body** | **map[string]interface{}** |  | 
+**BodyPreview** | **string** |  | 
 **CapturedAt** | **time.Time** |  | 
 **CompanyId** | Pointer to **NullableString** |  | [optional] 
 **EnrichedAt** | Pointer to **NullableTime** |  | [optional] 
@@ -26,7 +27,7 @@ Name | Type | Description | Notes
 
 ### NewEventResponseData
 
-`func NewEventResponseData(body map[string]interface{}, capturedAt time.Time, featureIds []string, id string, status string, type_ string, updatedAt time.Time, ) *EventResponseData`
+`func NewEventResponseData(body map[string]interface{}, bodyPreview string, capturedAt time.Time, featureIds []string, id string, status string, type_ string, updatedAt time.Time, ) *EventResponseData`
 
 NewEventResponseData instantiates a new EventResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -94,6 +95,26 @@ and a boolean to check if the value has been set.
 `func (o *EventResponseData) SetBody(v map[string]interface{})`
 
 SetBody sets Body field to given value.
+
+
+### GetBodyPreview
+
+`func (o *EventResponseData) GetBodyPreview() string`
+
+GetBodyPreview returns the BodyPreview field if non-nil, zero value otherwise.
+
+### GetBodyPreviewOk
+
+`func (o *EventResponseData) GetBodyPreviewOk() (*string, bool)`
+
+GetBodyPreviewOk returns a tuple with the BodyPreview field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetBodyPreview
+
+`func (o *EventResponseData) SetBodyPreview(v string)`
+
+SetBodyPreview sets BodyPreview field to given value.
 
 
 ### GetCapturedAt

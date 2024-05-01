@@ -95,7 +95,7 @@ Name | Type | Description  | Notes
 
 ## CountApiRequests
 
-> CountApiRequestsResponse CountApiRequests(ctx).Q(q).RequestType(requestType).Limit(limit).Offset(offset).Execute()
+> CountApiRequestsResponse CountApiRequests(ctx).Q(q).RequestType(requestType).EnvironmentId(environmentId).Limit(limit).Offset(offset).Execute()
 
 Count api requests
 
@@ -119,10 +119,11 @@ func main() {
 
 	q := "q_example" // string |  (optional)
 	requestType := "requestType_example" // string |  (optional)
+	environmentId := "environmentId_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().AccountsAPI.CountApiRequests(context.Background()).Q(q).RequestType(requestType).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().AccountsAPI.CountApiRequests(context.Background()).Q(q).RequestType(requestType).EnvironmentId(environmentId).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `AccountsAPI.CountApiRequests``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -145,6 +146,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **q** | **string** |  | 
  **requestType** | **string** |  | 
+ **environmentId** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -730,7 +732,7 @@ Name | Type | Description  | Notes
 
 ## ListApiRequests
 
-> ListApiRequestsResponse ListApiRequests(ctx).Q(q).RequestType(requestType).Limit(limit).Offset(offset).Execute()
+> ListApiRequestsResponse ListApiRequests(ctx).Q(q).RequestType(requestType).EnvironmentId(environmentId).Limit(limit).Offset(offset).Execute()
 
 List api requests
 
@@ -754,10 +756,11 @@ func main() {
 
 	q := "q_example" // string |  (optional)
 	requestType := "requestType_example" // string |  (optional)
+	environmentId := "environmentId_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().AccountsAPI.ListApiRequests(context.Background()).Q(q).RequestType(requestType).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().AccountsAPI.ListApiRequests(context.Background()).Q(q).RequestType(requestType).EnvironmentId(environmentId).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `AccountsAPI.ListApiRequests``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -780,6 +783,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **q** | **string** |  | 
  **requestType** | **string** |  | 
+ **environmentId** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

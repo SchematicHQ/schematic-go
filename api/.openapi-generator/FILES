@@ -3,7 +3,6 @@
 README.md
 api/openapi.yaml
 api_accounts.go
-api_billing.go
 api_companies.go
 api_entitlements.go
 api_events.go
@@ -18,9 +17,6 @@ docs/ApiKeyRequestListResponseData.md
 docs/ApiKeyRequestResponseData.md
 docs/ApiKeyResponseData.md
 docs/AudienceRequestBody.md
-docs/BillingAPI.md
-docs/BillingProductResponseData.md
-docs/BillingSubscriptionResponseData.md
 docs/CheckFlagOutputWithFlagKey.md
 docs/CheckFlagRequestBody.md
 docs/CheckFlagResponse.md
@@ -34,7 +30,6 @@ docs/CompanyMembershipResponseData.md
 docs/CompanyOverrideResponseData.md
 docs/CompanyPlanResponseData.md
 docs/CompanyResponseData.md
-docs/CompanySubscriptionResponseData.md
 docs/CountApiKeysParams.md
 docs/CountApiKeysResponse.md
 docs/CountApiRequestsParams.md
@@ -70,8 +65,6 @@ docs/CountUsersParams.md
 docs/CountUsersResponse.md
 docs/CreateApiKeyRequestBody.md
 docs/CreateApiKeyResponse.md
-docs/CreateBillingProductRequestBody.md
-docs/CreateBillingSubscriptionsRequestBody.md
 docs/CreateCompanyOverrideRequestBody.md
 docs/CreateCompanyOverrideResponse.md
 docs/CreateCompanyResponse.md
@@ -139,8 +132,6 @@ docs/FlagCheckLogDetailResponseData.md
 docs/FlagCheckLogResponseData.md
 docs/FlagDetailResponseData.md
 docs/FlagResponseData.md
-docs/GetActiveCompanySubscriptionParams.md
-docs/GetActiveCompanySubscriptionResponse.md
 docs/GetApiKeyResponse.md
 docs/GetApiRequestResponse.md
 docs/GetAudienceResponse.md
@@ -206,8 +197,6 @@ docs/ListPlanEntitlementsParams.md
 docs/ListPlanEntitlementsResponse.md
 docs/ListPlansParams.md
 docs/ListPlansResponse.md
-docs/ListProductsParams.md
-docs/ListProductsResponse.md
 docs/ListUsersParams.md
 docs/ListUsersResponse.md
 docs/LookupCompanyParams.md
@@ -254,8 +243,6 @@ docs/UpdatePlanRequestBody.md
 docs/UpdatePlanResponse.md
 docs/UpdateReqCommon.md
 docs/UpdateRuleRequestBody.md
-docs/UpsertBillingProductResponse.md
-docs/UpsertBillingSubscriptionResponse.md
 docs/UpsertCompanyRequestBody.md
 docs/UpsertCompanyResponse.md
 docs/UpsertCompanyTraitResponse.md
@@ -273,8 +260,6 @@ model_api_key_request_list_response_data.go
 model_api_key_request_response_data.go
 model_api_key_response_data.go
 model_audience_request_body.go
-model_billing_product_response_data.go
-model_billing_subscription_response_data.go
 model_check_flag_output_with_flag_key.go
 model_check_flag_request_body.go
 model_check_flag_response.go
@@ -287,7 +272,6 @@ model_company_membership_response_data.go
 model_company_override_response_data.go
 model_company_plan_response_data.go
 model_company_response_data.go
-model_company_subscription_response_data.go
 model_count_api_keys_params.go
 model_count_api_keys_response.go
 model_count_api_requests_params.go
@@ -323,8 +307,6 @@ model_count_users_params.go
 model_count_users_response.go
 model_create_api_key_request_body.go
 model_create_api_key_response.go
-model_create_billing_product_request_body.go
-model_create_billing_subscriptions_request_body.go
 model_create_company_override_request_body.go
 model_create_company_override_response.go
 model_create_company_response.go
@@ -389,8 +371,6 @@ model_flag_check_log_detail_response_data.go
 model_flag_check_log_response_data.go
 model_flag_detail_response_data.go
 model_flag_response_data.go
-model_get_active_company_subscription_params.go
-model_get_active_company_subscription_response.go
 model_get_api_key_response.go
 model_get_api_request_response.go
 model_get_audience_response.go
@@ -456,8 +436,6 @@ model_list_plan_entitlements_params.go
 model_list_plan_entitlements_response.go
 model_list_plans_params.go
 model_list_plans_response.go
-model_list_products_params.go
-model_list_products_response.go
 model_list_users_params.go
 model_list_users_response.go
 model_lookup_company_params.go
@@ -503,8 +481,6 @@ model_update_plan_request_body.go
 model_update_plan_response.go
 model_update_req_common.go
 model_update_rule_request_body.go
-model_upsert_billing_product_response.go
-model_upsert_billing_subscription_response.go
 model_upsert_company_request_body.go
 model_upsert_company_response.go
 model_upsert_company_trait_response.go
@@ -516,5 +492,4 @@ model_upsert_user_trait_response.go
 model_user_detail_response_data.go
 model_user_response_data.go
 response.go
-test/api_billing_test.go
 utils.go

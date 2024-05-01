@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Company** | Pointer to [**CompanyResponseData**](CompanyResponseData.md) |  | [optional] 
+**Company** | Pointer to [**CompanyDetailResponseData**](CompanyDetailResponseData.md) |  | [optional] 
 **CompanyId** | **string** |  | 
 **CreatedAt** | **time.Time** |  | 
 **EnvironmentId** | **string** |  | 
@@ -41,20 +41,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetCompany
 
-`func (o *CompanyOverrideResponseData) GetCompany() CompanyResponseData`
+`func (o *CompanyOverrideResponseData) GetCompany() CompanyDetailResponseData`
 
 GetCompany returns the Company field if non-nil, zero value otherwise.
 
 ### GetCompanyOk
 
-`func (o *CompanyOverrideResponseData) GetCompanyOk() (*CompanyResponseData, bool)`
+`func (o *CompanyOverrideResponseData) GetCompanyOk() (*CompanyDetailResponseData, bool)`
 
 GetCompanyOk returns a tuple with the Company field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCompany
 
-`func (o *CompanyOverrideResponseData) SetCompany(v CompanyResponseData)`
+`func (o *CompanyOverrideResponseData) SetCompany(v CompanyDetailResponseData)`
 
 SetCompany sets Company field to given value.
 

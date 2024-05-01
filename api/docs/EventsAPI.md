@@ -221,7 +221,7 @@ Name | Type | Description  | Notes
 
 ## GetEventSummaries
 
-> GetEventSummariesResponse GetEventSummaries(ctx).Q(q).Limit(limit).Offset(offset).Execute()
+> GetEventSummariesResponse GetEventSummaries(ctx).Q(q).EventSubtypes(eventSubtypes).Limit(limit).Offset(offset).Execute()
 
 Get event summaries
 
@@ -244,10 +244,11 @@ func main() {
 	defer client.Close()
 
 	q := "q_example" // string |  (optional)
+	eventSubtypes := []string{"Inner_example"} // []string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EventsAPI.GetEventSummaries(context.Background()).Q(q).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EventsAPI.GetEventSummaries(context.Background()).Q(q).EventSubtypes(eventSubtypes).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.GetEventSummaries``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -269,6 +270,7 @@ Other parameters are passed through a pointer to a apiGetEventSummariesRequest s
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **q** | **string** |  | 
+ **eventSubtypes** | **[]string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

@@ -51,8 +51,6 @@ type APIClient struct {
 
 	AccountsAPI AccountsAPI
 
-	BillingAPI BillingAPI
-
 	CompaniesAPI CompaniesAPI
 
 	EntitlementsAPI EntitlementsAPI
@@ -81,7 +79,6 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 
 	// API Services
 	c.AccountsAPI = (*AccountsAPIService)(&c.common)
-	c.BillingAPI = (*BillingAPIService)(&c.common)
 	c.CompaniesAPI = (*CompaniesAPIService)(&c.common)
 	c.EntitlementsAPI = (*EntitlementsAPIService)(&c.common)
 	c.EventsAPI = (*EventsAPIService)(&c.common)

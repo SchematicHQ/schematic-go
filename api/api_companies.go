@@ -23,6 +23,54 @@ import (
 type CompaniesAPI interface {
 
 	/*
+		CountCompanies Count companies
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountCompaniesRequest
+	*/
+	CountCompanies(ctx context.Context) ApiCountCompaniesRequest
+
+	// CountCompaniesExecute executes the request
+	//  @return CountCompaniesResponse
+	CountCompaniesExecute(r ApiCountCompaniesRequest) (*CountCompaniesResponse, *http.Response, error)
+
+	/*
+		CountEntityKeyDefinitions Count entity key definitions
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountEntityKeyDefinitionsRequest
+	*/
+	CountEntityKeyDefinitions(ctx context.Context) ApiCountEntityKeyDefinitionsRequest
+
+	// CountEntityKeyDefinitionsExecute executes the request
+	//  @return CountEntityKeyDefinitionsResponse
+	CountEntityKeyDefinitionsExecute(r ApiCountEntityKeyDefinitionsRequest) (*CountEntityKeyDefinitionsResponse, *http.Response, error)
+
+	/*
+		CountEntityTraitDefinitions Count entity trait definitions
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountEntityTraitDefinitionsRequest
+	*/
+	CountEntityTraitDefinitions(ctx context.Context) ApiCountEntityTraitDefinitionsRequest
+
+	// CountEntityTraitDefinitionsExecute executes the request
+	//  @return CountEntityTraitDefinitionsResponse
+	CountEntityTraitDefinitionsExecute(r ApiCountEntityTraitDefinitionsRequest) (*CountEntityTraitDefinitionsResponse, *http.Response, error)
+
+	/*
+		CountUsers Count users
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiCountUsersRequest
+	*/
+	CountUsers(ctx context.Context) ApiCountUsersRequest
+
+	// CountUsersExecute executes the request
+	//  @return CountUsersResponse
+	CountUsersExecute(r ApiCountUsersRequest) (*CountUsersResponse, *http.Response, error)
+
+	/*
 		CreateCompany Create company
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -110,6 +158,18 @@ type CompaniesAPI interface {
 	DeleteUserByKeysExecute(r ApiDeleteUserByKeysRequest) (*DeleteUserByKeysResponse, *http.Response, error)
 
 	/*
+		GetActiveCompanySubscription Get active company subscription
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiGetActiveCompanySubscriptionRequest
+	*/
+	GetActiveCompanySubscription(ctx context.Context) ApiGetActiveCompanySubscriptionRequest
+
+	// GetActiveCompanySubscriptionExecute executes the request
+	//  @return GetActiveCompanySubscriptionResponse
+	GetActiveCompanySubscriptionExecute(r ApiGetActiveCompanySubscriptionRequest) (*GetActiveCompanySubscriptionResponse, *http.Response, error)
+
+	/*
 		GetCompany Get company
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -121,6 +181,31 @@ type CompaniesAPI interface {
 	// GetCompanyExecute executes the request
 	//  @return GetCompanyResponse
 	GetCompanyExecute(r ApiGetCompanyRequest) (*GetCompanyResponse, *http.Response, error)
+
+	/*
+		GetEntityTraitDefinition Get entity trait definition
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param entityTraitDefinitionId entity_trait_definition_id
+		@return ApiGetEntityTraitDefinitionRequest
+	*/
+	GetEntityTraitDefinition(ctx context.Context, entityTraitDefinitionId string) ApiGetEntityTraitDefinitionRequest
+
+	// GetEntityTraitDefinitionExecute executes the request
+	//  @return GetEntityTraitDefinitionResponse
+	GetEntityTraitDefinitionExecute(r ApiGetEntityTraitDefinitionRequest) (*GetEntityTraitDefinitionResponse, *http.Response, error)
+
+	/*
+		GetEntityTraitValues Get entity trait values
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiGetEntityTraitValuesRequest
+	*/
+	GetEntityTraitValues(ctx context.Context) ApiGetEntityTraitValuesRequest
+
+	// GetEntityTraitValuesExecute executes the request
+	//  @return GetEntityTraitValuesResponse
+	GetEntityTraitValuesExecute(r ApiGetEntityTraitValuesRequest) (*GetEntityTraitValuesResponse, *http.Response, error)
 
 	/*
 		GetOrCreateCompanyMembership Get or create company membership
@@ -194,6 +279,30 @@ type CompaniesAPI interface {
 	// ListCompanyPlansExecute executes the request
 	//  @return ListCompanyPlansResponse
 	ListCompanyPlansExecute(r ApiListCompanyPlansRequest) (*ListCompanyPlansResponse, *http.Response, error)
+
+	/*
+		ListEntityKeyDefinitions List entity key definitions
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListEntityKeyDefinitionsRequest
+	*/
+	ListEntityKeyDefinitions(ctx context.Context) ApiListEntityKeyDefinitionsRequest
+
+	// ListEntityKeyDefinitionsExecute executes the request
+	//  @return ListEntityKeyDefinitionsResponse
+	ListEntityKeyDefinitionsExecute(r ApiListEntityKeyDefinitionsRequest) (*ListEntityKeyDefinitionsResponse, *http.Response, error)
+
+	/*
+		ListEntityTraitDefinitions List entity trait definitions
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiListEntityTraitDefinitionsRequest
+	*/
+	ListEntityTraitDefinitions(ctx context.Context) ApiListEntityTraitDefinitionsRequest
+
+	// ListEntityTraitDefinitionsExecute executes the request
+	//  @return ListEntityTraitDefinitionsResponse
+	ListEntityTraitDefinitionsExecute(r ApiListEntityTraitDefinitionsRequest) (*ListEntityTraitDefinitionsResponse, *http.Response, error)
 
 	/*
 		ListUsers List users
@@ -295,6 +404,892 @@ type CompaniesAPI interface {
 
 // CompaniesAPIService CompaniesAPI service
 type CompaniesAPIService service
+
+type ApiCountCompaniesRequest struct {
+	ctx                       context.Context
+	ApiService                CompaniesAPI
+	ids                       *[]string
+	planId                    *string
+	q                         *string
+	withoutFeatureOverrideFor *string
+	limit                     *int32
+	offset                    *int32
+}
+
+func (r ApiCountCompaniesRequest) Ids(ids []string) ApiCountCompaniesRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiCountCompaniesRequest) PlanId(planId string) ApiCountCompaniesRequest {
+	r.planId = &planId
+	return r
+}
+
+// Search filter
+func (r ApiCountCompaniesRequest) Q(q string) ApiCountCompaniesRequest {
+	r.q = &q
+	return r
+}
+
+// Filter out companies that already have a company override for the specified feature ID
+func (r ApiCountCompaniesRequest) WithoutFeatureOverrideFor(withoutFeatureOverrideFor string) ApiCountCompaniesRequest {
+	r.withoutFeatureOverrideFor = &withoutFeatureOverrideFor
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiCountCompaniesRequest) Limit(limit int32) ApiCountCompaniesRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiCountCompaniesRequest) Offset(offset int32) ApiCountCompaniesRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiCountCompaniesRequest) Execute() (*CountCompaniesResponse, *http.Response, error) {
+	return r.ApiService.CountCompaniesExecute(r)
+}
+
+/*
+CountCompanies Count companies
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountCompaniesRequest
+*/
+func (a *CompaniesAPIService) CountCompanies(ctx context.Context) ApiCountCompaniesRequest {
+	return ApiCountCompaniesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CountCompaniesResponse
+func (a *CompaniesAPIService) CountCompaniesExecute(r ApiCountCompaniesRequest) (*CountCompaniesResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountCompaniesResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.CountCompanies")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/companies/count"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.planId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "plan_id", r.planId, "")
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.withoutFeatureOverrideFor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "without_feature_override_for", r.withoutFeatureOverrideFor, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCountEntityKeyDefinitionsRequest struct {
+	ctx        context.Context
+	ApiService CompaniesAPI
+	entityType *string
+	ids        *[]string
+	key        *string
+	limit      *int32
+	offset     *int32
+}
+
+func (r ApiCountEntityKeyDefinitionsRequest) EntityType(entityType string) ApiCountEntityKeyDefinitionsRequest {
+	r.entityType = &entityType
+	return r
+}
+
+func (r ApiCountEntityKeyDefinitionsRequest) Ids(ids []string) ApiCountEntityKeyDefinitionsRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiCountEntityKeyDefinitionsRequest) Key(key string) ApiCountEntityKeyDefinitionsRequest {
+	r.key = &key
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiCountEntityKeyDefinitionsRequest) Limit(limit int32) ApiCountEntityKeyDefinitionsRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiCountEntityKeyDefinitionsRequest) Offset(offset int32) ApiCountEntityKeyDefinitionsRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiCountEntityKeyDefinitionsRequest) Execute() (*CountEntityKeyDefinitionsResponse, *http.Response, error) {
+	return r.ApiService.CountEntityKeyDefinitionsExecute(r)
+}
+
+/*
+CountEntityKeyDefinitions Count entity key definitions
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountEntityKeyDefinitionsRequest
+*/
+func (a *CompaniesAPIService) CountEntityKeyDefinitions(ctx context.Context) ApiCountEntityKeyDefinitionsRequest {
+	return ApiCountEntityKeyDefinitionsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CountEntityKeyDefinitionsResponse
+func (a *CompaniesAPIService) CountEntityKeyDefinitionsExecute(r ApiCountEntityKeyDefinitionsRequest) (*CountEntityKeyDefinitionsResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountEntityKeyDefinitionsResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.CountEntityKeyDefinitions")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/entity-key-definitions/count"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.entityType != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "entity_type", r.entityType, "")
+	}
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.key != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "key", r.key, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCountEntityTraitDefinitionsRequest struct {
+	ctx        context.Context
+	ApiService CompaniesAPI
+	entityType *string
+	ids        *[]string
+	traitType  *string
+	q          *string
+	limit      *int32
+	offset     *int32
+}
+
+func (r ApiCountEntityTraitDefinitionsRequest) EntityType(entityType string) ApiCountEntityTraitDefinitionsRequest {
+	r.entityType = &entityType
+	return r
+}
+
+func (r ApiCountEntityTraitDefinitionsRequest) Ids(ids []string) ApiCountEntityTraitDefinitionsRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiCountEntityTraitDefinitionsRequest) TraitType(traitType string) ApiCountEntityTraitDefinitionsRequest {
+	r.traitType = &traitType
+	return r
+}
+
+func (r ApiCountEntityTraitDefinitionsRequest) Q(q string) ApiCountEntityTraitDefinitionsRequest {
+	r.q = &q
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiCountEntityTraitDefinitionsRequest) Limit(limit int32) ApiCountEntityTraitDefinitionsRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiCountEntityTraitDefinitionsRequest) Offset(offset int32) ApiCountEntityTraitDefinitionsRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiCountEntityTraitDefinitionsRequest) Execute() (*CountEntityTraitDefinitionsResponse, *http.Response, error) {
+	return r.ApiService.CountEntityTraitDefinitionsExecute(r)
+}
+
+/*
+CountEntityTraitDefinitions Count entity trait definitions
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountEntityTraitDefinitionsRequest
+*/
+func (a *CompaniesAPIService) CountEntityTraitDefinitions(ctx context.Context) ApiCountEntityTraitDefinitionsRequest {
+	return ApiCountEntityTraitDefinitionsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CountEntityTraitDefinitionsResponse
+func (a *CompaniesAPIService) CountEntityTraitDefinitionsExecute(r ApiCountEntityTraitDefinitionsRequest) (*CountEntityTraitDefinitionsResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountEntityTraitDefinitionsResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.CountEntityTraitDefinitions")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/entity-trait-definitions/count"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.entityType != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "entity_type", r.entityType, "")
+	}
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.traitType != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "trait_type", r.traitType, "")
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCountUsersRequest struct {
+	ctx        context.Context
+	ApiService CompaniesAPI
+	companyId  *string
+	ids        *[]string
+	planId     *string
+	q          *string
+	limit      *int32
+	offset     *int32
+}
+
+func (r ApiCountUsersRequest) CompanyId(companyId string) ApiCountUsersRequest {
+	r.companyId = &companyId
+	return r
+}
+
+func (r ApiCountUsersRequest) Ids(ids []string) ApiCountUsersRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiCountUsersRequest) PlanId(planId string) ApiCountUsersRequest {
+	r.planId = &planId
+	return r
+}
+
+// Search filter
+func (r ApiCountUsersRequest) Q(q string) ApiCountUsersRequest {
+	r.q = &q
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiCountUsersRequest) Limit(limit int32) ApiCountUsersRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiCountUsersRequest) Offset(offset int32) ApiCountUsersRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiCountUsersRequest) Execute() (*CountUsersResponse, *http.Response, error) {
+	return r.ApiService.CountUsersExecute(r)
+}
+
+/*
+CountUsers Count users
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCountUsersRequest
+*/
+func (a *CompaniesAPIService) CountUsers(ctx context.Context) ApiCountUsersRequest {
+	return ApiCountUsersRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CountUsersResponse
+func (a *CompaniesAPIService) CountUsersExecute(r ApiCountUsersRequest) (*CountUsersResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CountUsersResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.CountUsers")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/users/count"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.companyId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "company_id", r.companyId, "")
+	}
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.planId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "plan_id", r.planId, "")
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
 
 type ApiCreateCompanyRequest struct {
 	ctx                      context.Context
@@ -1465,6 +2460,195 @@ func (a *CompaniesAPIService) DeleteUserByKeysExecute(r ApiDeleteUserByKeysReque
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiGetActiveCompanySubscriptionRequest struct {
+	ctx        context.Context
+	ApiService CompaniesAPI
+	companyId  *string
+	limit      *int32
+	offset     *int32
+}
+
+func (r ApiGetActiveCompanySubscriptionRequest) CompanyId(companyId string) ApiGetActiveCompanySubscriptionRequest {
+	r.companyId = &companyId
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiGetActiveCompanySubscriptionRequest) Limit(limit int32) ApiGetActiveCompanySubscriptionRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiGetActiveCompanySubscriptionRequest) Offset(offset int32) ApiGetActiveCompanySubscriptionRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiGetActiveCompanySubscriptionRequest) Execute() (*GetActiveCompanySubscriptionResponse, *http.Response, error) {
+	return r.ApiService.GetActiveCompanySubscriptionExecute(r)
+}
+
+/*
+GetActiveCompanySubscription Get active company subscription
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetActiveCompanySubscriptionRequest
+*/
+func (a *CompaniesAPIService) GetActiveCompanySubscription(ctx context.Context) ApiGetActiveCompanySubscriptionRequest {
+	return ApiGetActiveCompanySubscriptionRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return GetActiveCompanySubscriptionResponse
+func (a *CompaniesAPIService) GetActiveCompanySubscriptionExecute(r ApiGetActiveCompanySubscriptionRequest) (*GetActiveCompanySubscriptionResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetActiveCompanySubscriptionResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.GetActiveCompanySubscription")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/company-subscriptions"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.companyId == nil {
+		return localVarReturnValue, nil, reportError("companyId is required and must be specified")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "company_id", r.companyId, "")
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGetCompanyRequest struct {
 	ctx        context.Context
 	ApiService CompaniesAPI
@@ -1593,6 +2777,367 @@ func (a *CompaniesAPIService) GetCompanyExecute(r ApiGetCompanyRequest) (*GetCom
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetEntityTraitDefinitionRequest struct {
+	ctx                     context.Context
+	ApiService              CompaniesAPI
+	entityTraitDefinitionId string
+}
+
+func (r ApiGetEntityTraitDefinitionRequest) Execute() (*GetEntityTraitDefinitionResponse, *http.Response, error) {
+	return r.ApiService.GetEntityTraitDefinitionExecute(r)
+}
+
+/*
+GetEntityTraitDefinition Get entity trait definition
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param entityTraitDefinitionId entity_trait_definition_id
+	@return ApiGetEntityTraitDefinitionRequest
+*/
+func (a *CompaniesAPIService) GetEntityTraitDefinition(ctx context.Context, entityTraitDefinitionId string) ApiGetEntityTraitDefinitionRequest {
+	return ApiGetEntityTraitDefinitionRequest{
+		ApiService:              a,
+		ctx:                     ctx,
+		entityTraitDefinitionId: entityTraitDefinitionId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return GetEntityTraitDefinitionResponse
+func (a *CompaniesAPIService) GetEntityTraitDefinitionExecute(r ApiGetEntityTraitDefinitionRequest) (*GetEntityTraitDefinitionResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetEntityTraitDefinitionResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.GetEntityTraitDefinition")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/entity-trait-definitions/{entity_trait_definition_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"entity_trait_definition_id"+"}", url.PathEscape(parameterValueToString(r.entityTraitDefinitionId, "entityTraitDefinitionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetEntityTraitValuesRequest struct {
+	ctx          context.Context
+	ApiService   CompaniesAPI
+	definitionId *string
+	q            *string
+	limit        *int32
+	offset       *int32
+}
+
+func (r ApiGetEntityTraitValuesRequest) DefinitionId(definitionId string) ApiGetEntityTraitValuesRequest {
+	r.definitionId = &definitionId
+	return r
+}
+
+func (r ApiGetEntityTraitValuesRequest) Q(q string) ApiGetEntityTraitValuesRequest {
+	r.q = &q
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiGetEntityTraitValuesRequest) Limit(limit int32) ApiGetEntityTraitValuesRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiGetEntityTraitValuesRequest) Offset(offset int32) ApiGetEntityTraitValuesRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiGetEntityTraitValuesRequest) Execute() (*GetEntityTraitValuesResponse, *http.Response, error) {
+	return r.ApiService.GetEntityTraitValuesExecute(r)
+}
+
+/*
+GetEntityTraitValues Get entity trait values
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetEntityTraitValuesRequest
+*/
+func (a *CompaniesAPIService) GetEntityTraitValues(ctx context.Context) ApiGetEntityTraitValuesRequest {
+	return ApiGetEntityTraitValuesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return GetEntityTraitValuesResponse
+func (a *CompaniesAPIService) GetEntityTraitValuesExecute(r ApiGetEntityTraitValuesRequest) (*GetEntityTraitValuesResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetEntityTraitValuesResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.GetEntityTraitValues")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/entity-trait-values"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.definitionId == nil {
+		return localVarReturnValue, nil, reportError("definitionId is required and must be specified")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "definition_id", r.definitionId, "")
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
 			var v ApiError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -2132,15 +3677,35 @@ func (a *CompaniesAPIService) GetUserExecute(r ApiGetUserRequest) (*GetUserRespo
 }
 
 type ApiListCompaniesRequest struct {
-	ctx        context.Context
-	ApiService CompaniesAPI
-	ids        *[]string
-	limit      *int32
-	offset     *int32
+	ctx                       context.Context
+	ApiService                CompaniesAPI
+	ids                       *[]string
+	planId                    *string
+	q                         *string
+	withoutFeatureOverrideFor *string
+	limit                     *int32
+	offset                    *int32
 }
 
 func (r ApiListCompaniesRequest) Ids(ids []string) ApiListCompaniesRequest {
 	r.ids = &ids
+	return r
+}
+
+func (r ApiListCompaniesRequest) PlanId(planId string) ApiListCompaniesRequest {
+	r.planId = &planId
+	return r
+}
+
+// Search filter
+func (r ApiListCompaniesRequest) Q(q string) ApiListCompaniesRequest {
+	r.q = &q
+	return r
+}
+
+// Filter out companies that already have a company override for the specified feature ID
+func (r ApiListCompaniesRequest) WithoutFeatureOverrideFor(withoutFeatureOverrideFor string) ApiListCompaniesRequest {
+	r.withoutFeatureOverrideFor = &withoutFeatureOverrideFor
 	return r
 }
 
@@ -2205,6 +3770,15 @@ func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
 		}
+	}
+	if r.planId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "plan_id", r.planId, "")
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.withoutFeatureOverrideFor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "without_feature_override_for", r.withoutFeatureOverrideFor, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -2721,16 +4295,472 @@ func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansReque
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiListUsersRequest struct {
+type ApiListEntityKeyDefinitionsRequest struct {
 	ctx        context.Context
 	ApiService CompaniesAPI
+	entityType *string
 	ids        *[]string
+	key        *string
 	limit      *int32
 	offset     *int32
 }
 
+func (r ApiListEntityKeyDefinitionsRequest) EntityType(entityType string) ApiListEntityKeyDefinitionsRequest {
+	r.entityType = &entityType
+	return r
+}
+
+func (r ApiListEntityKeyDefinitionsRequest) Ids(ids []string) ApiListEntityKeyDefinitionsRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiListEntityKeyDefinitionsRequest) Key(key string) ApiListEntityKeyDefinitionsRequest {
+	r.key = &key
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiListEntityKeyDefinitionsRequest) Limit(limit int32) ApiListEntityKeyDefinitionsRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiListEntityKeyDefinitionsRequest) Offset(offset int32) ApiListEntityKeyDefinitionsRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiListEntityKeyDefinitionsRequest) Execute() (*ListEntityKeyDefinitionsResponse, *http.Response, error) {
+	return r.ApiService.ListEntityKeyDefinitionsExecute(r)
+}
+
+/*
+ListEntityKeyDefinitions List entity key definitions
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListEntityKeyDefinitionsRequest
+*/
+func (a *CompaniesAPIService) ListEntityKeyDefinitions(ctx context.Context) ApiListEntityKeyDefinitionsRequest {
+	return ApiListEntityKeyDefinitionsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ListEntityKeyDefinitionsResponse
+func (a *CompaniesAPIService) ListEntityKeyDefinitionsExecute(r ApiListEntityKeyDefinitionsRequest) (*ListEntityKeyDefinitionsResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListEntityKeyDefinitionsResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.ListEntityKeyDefinitions")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/entity-key-definitions"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.entityType != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "entity_type", r.entityType, "")
+	}
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.key != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "key", r.key, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListEntityTraitDefinitionsRequest struct {
+	ctx        context.Context
+	ApiService CompaniesAPI
+	entityType *string
+	ids        *[]string
+	traitType  *string
+	q          *string
+	limit      *int32
+	offset     *int32
+}
+
+func (r ApiListEntityTraitDefinitionsRequest) EntityType(entityType string) ApiListEntityTraitDefinitionsRequest {
+	r.entityType = &entityType
+	return r
+}
+
+func (r ApiListEntityTraitDefinitionsRequest) Ids(ids []string) ApiListEntityTraitDefinitionsRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiListEntityTraitDefinitionsRequest) TraitType(traitType string) ApiListEntityTraitDefinitionsRequest {
+	r.traitType = &traitType
+	return r
+}
+
+func (r ApiListEntityTraitDefinitionsRequest) Q(q string) ApiListEntityTraitDefinitionsRequest {
+	r.q = &q
+	return r
+}
+
+// Page limit (default 100)
+func (r ApiListEntityTraitDefinitionsRequest) Limit(limit int32) ApiListEntityTraitDefinitionsRequest {
+	r.limit = &limit
+	return r
+}
+
+// Page offset (default 0)
+func (r ApiListEntityTraitDefinitionsRequest) Offset(offset int32) ApiListEntityTraitDefinitionsRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiListEntityTraitDefinitionsRequest) Execute() (*ListEntityTraitDefinitionsResponse, *http.Response, error) {
+	return r.ApiService.ListEntityTraitDefinitionsExecute(r)
+}
+
+/*
+ListEntityTraitDefinitions List entity trait definitions
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListEntityTraitDefinitionsRequest
+*/
+func (a *CompaniesAPIService) ListEntityTraitDefinitions(ctx context.Context) ApiListEntityTraitDefinitionsRequest {
+	return ApiListEntityTraitDefinitionsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ListEntityTraitDefinitionsResponse
+func (a *CompaniesAPIService) ListEntityTraitDefinitionsExecute(r ApiListEntityTraitDefinitionsRequest) (*ListEntityTraitDefinitionsResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListEntityTraitDefinitionsResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.ListEntityTraitDefinitions")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/entity-trait-definitions"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.entityType != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "entity_type", r.entityType, "")
+	}
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.traitType != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "trait_type", r.traitType, "")
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListUsersRequest struct {
+	ctx        context.Context
+	ApiService CompaniesAPI
+	companyId  *string
+	ids        *[]string
+	planId     *string
+	q          *string
+	limit      *int32
+	offset     *int32
+}
+
+func (r ApiListUsersRequest) CompanyId(companyId string) ApiListUsersRequest {
+	r.companyId = &companyId
+	return r
+}
+
 func (r ApiListUsersRequest) Ids(ids []string) ApiListUsersRequest {
 	r.ids = &ids
+	return r
+}
+
+func (r ApiListUsersRequest) PlanId(planId string) ApiListUsersRequest {
+	r.planId = &planId
+	return r
+}
+
+// Search filter
+func (r ApiListUsersRequest) Q(q string) ApiListUsersRequest {
+	r.q = &q
 	return r
 }
 
@@ -2785,6 +4815,9 @@ func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUser
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.companyId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "company_id", r.companyId, "")
+	}
 	if r.ids != nil {
 		t := *r.ids
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
@@ -2795,6 +4828,12 @@ func (a *CompaniesAPIService) ListUsersExecute(r ApiListUsersRequest) (*ListUser
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
 		}
+	}
+	if r.planId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "plan_id", r.planId, "")
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")

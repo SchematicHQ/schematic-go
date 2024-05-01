@@ -4,17 +4,18 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**CompanyCount** | **int32** |  | 
 **EnvironmentId** | **string** |  | 
+**EventCount** | **int32** |  | 
 **EventSubtype** | **string** |  | 
-**Last30CompanyCount** | **int32** |  | 
-**Last30Count** | **int32** |  | 
-**Last30UserCount** | **int32** |  | 
+**LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
+**UserCount** | **int32** |  | 
 
 ## Methods
 
 ### NewEventSummaryResponseData
 
-`func NewEventSummaryResponseData(environmentId string, eventSubtype string, last30CompanyCount int32, last30Count int32, last30UserCount int32, ) *EventSummaryResponseData`
+`func NewEventSummaryResponseData(companyCount int32, environmentId string, eventCount int32, eventSubtype string, userCount int32, ) *EventSummaryResponseData`
 
 NewEventSummaryResponseData instantiates a new EventSummaryResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -28,6 +29,26 @@ will change when the set of required properties is changed
 NewEventSummaryResponseDataWithDefaults instantiates a new EventSummaryResponseData object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetCompanyCount
+
+`func (o *EventSummaryResponseData) GetCompanyCount() int32`
+
+GetCompanyCount returns the CompanyCount field if non-nil, zero value otherwise.
+
+### GetCompanyCountOk
+
+`func (o *EventSummaryResponseData) GetCompanyCountOk() (*int32, bool)`
+
+GetCompanyCountOk returns a tuple with the CompanyCount field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCompanyCount
+
+`func (o *EventSummaryResponseData) SetCompanyCount(v int32)`
+
+SetCompanyCount sets CompanyCount field to given value.
+
 
 ### GetEnvironmentId
 
@@ -47,6 +68,26 @@ and a boolean to check if the value has been set.
 `func (o *EventSummaryResponseData) SetEnvironmentId(v string)`
 
 SetEnvironmentId sets EnvironmentId field to given value.
+
+
+### GetEventCount
+
+`func (o *EventSummaryResponseData) GetEventCount() int32`
+
+GetEventCount returns the EventCount field if non-nil, zero value otherwise.
+
+### GetEventCountOk
+
+`func (o *EventSummaryResponseData) GetEventCountOk() (*int32, bool)`
+
+GetEventCountOk returns a tuple with the EventCount field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEventCount
+
+`func (o *EventSummaryResponseData) SetEventCount(v int32)`
+
+SetEventCount sets EventCount field to given value.
 
 
 ### GetEventSubtype
@@ -69,64 +110,59 @@ and a boolean to check if the value has been set.
 SetEventSubtype sets EventSubtype field to given value.
 
 
-### GetLast30CompanyCount
+### GetLastSeenAt
 
-`func (o *EventSummaryResponseData) GetLast30CompanyCount() int32`
+`func (o *EventSummaryResponseData) GetLastSeenAt() time.Time`
 
-GetLast30CompanyCount returns the Last30CompanyCount field if non-nil, zero value otherwise.
+GetLastSeenAt returns the LastSeenAt field if non-nil, zero value otherwise.
 
-### GetLast30CompanyCountOk
+### GetLastSeenAtOk
 
-`func (o *EventSummaryResponseData) GetLast30CompanyCountOk() (*int32, bool)`
+`func (o *EventSummaryResponseData) GetLastSeenAtOk() (*time.Time, bool)`
 
-GetLast30CompanyCountOk returns a tuple with the Last30CompanyCount field if it's non-nil, zero value otherwise
+GetLastSeenAtOk returns a tuple with the LastSeenAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetLast30CompanyCount
+### SetLastSeenAt
 
-`func (o *EventSummaryResponseData) SetLast30CompanyCount(v int32)`
+`func (o *EventSummaryResponseData) SetLastSeenAt(v time.Time)`
 
-SetLast30CompanyCount sets Last30CompanyCount field to given value.
+SetLastSeenAt sets LastSeenAt field to given value.
 
+### HasLastSeenAt
 
-### GetLast30Count
+`func (o *EventSummaryResponseData) HasLastSeenAt() bool`
 
-`func (o *EventSummaryResponseData) GetLast30Count() int32`
+HasLastSeenAt returns a boolean if a field has been set.
 
-GetLast30Count returns the Last30Count field if non-nil, zero value otherwise.
+### SetLastSeenAtNil
 
-### GetLast30CountOk
+`func (o *EventSummaryResponseData) SetLastSeenAtNil(b bool)`
 
-`func (o *EventSummaryResponseData) GetLast30CountOk() (*int32, bool)`
+ SetLastSeenAtNil sets the value for LastSeenAt to be an explicit nil
 
-GetLast30CountOk returns a tuple with the Last30Count field if it's non-nil, zero value otherwise
+### UnsetLastSeenAt
+`func (o *EventSummaryResponseData) UnsetLastSeenAt()`
+
+UnsetLastSeenAt ensures that no value is present for LastSeenAt, not even an explicit nil
+### GetUserCount
+
+`func (o *EventSummaryResponseData) GetUserCount() int32`
+
+GetUserCount returns the UserCount field if non-nil, zero value otherwise.
+
+### GetUserCountOk
+
+`func (o *EventSummaryResponseData) GetUserCountOk() (*int32, bool)`
+
+GetUserCountOk returns a tuple with the UserCount field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetLast30Count
+### SetUserCount
 
-`func (o *EventSummaryResponseData) SetLast30Count(v int32)`
+`func (o *EventSummaryResponseData) SetUserCount(v int32)`
 
-SetLast30Count sets Last30Count field to given value.
-
-
-### GetLast30UserCount
-
-`func (o *EventSummaryResponseData) GetLast30UserCount() int32`
-
-GetLast30UserCount returns the Last30UserCount field if non-nil, zero value otherwise.
-
-### GetLast30UserCountOk
-
-`func (o *EventSummaryResponseData) GetLast30UserCountOk() (*int32, bool)`
-
-GetLast30UserCountOk returns a tuple with the Last30UserCount field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetLast30UserCount
-
-`func (o *EventSummaryResponseData) SetLast30UserCount(v int32)`
-
-SetLast30UserCount sets Last30UserCount field to given value.
+SetUserCount sets UserCount field to given value.
 
 
 

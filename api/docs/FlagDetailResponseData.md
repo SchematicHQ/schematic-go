@@ -7,10 +7,12 @@ Name | Type | Description | Notes
 **CreatedAt** | **time.Time** |  | 
 **DefaultValue** | **bool** |  | 
 **Description** | **string** |  | 
+**Feature** | Pointer to [**FeatureResponseData**](FeatureResponseData.md) |  | [optional] 
 **FeatureId** | Pointer to **NullableString** |  | [optional] 
 **FlagType** | **string** |  | 
 **Id** | **string** |  | 
 **Key** | **string** |  | 
+**LatestCheck** | Pointer to [**FlagCheckLogResponseData**](FlagCheckLogResponseData.md) |  | [optional] 
 **Name** | **string** |  | 
 **Rules** | [**[]RuleDetailResponseData**](RuleDetailResponseData.md) |  | 
 **UpdatedAt** | **time.Time** |  | 
@@ -93,6 +95,31 @@ and a boolean to check if the value has been set.
 
 SetDescription sets Description field to given value.
 
+
+### GetFeature
+
+`func (o *FlagDetailResponseData) GetFeature() FeatureResponseData`
+
+GetFeature returns the Feature field if non-nil, zero value otherwise.
+
+### GetFeatureOk
+
+`func (o *FlagDetailResponseData) GetFeatureOk() (*FeatureResponseData, bool)`
+
+GetFeatureOk returns a tuple with the Feature field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFeature
+
+`func (o *FlagDetailResponseData) SetFeature(v FeatureResponseData)`
+
+SetFeature sets Feature field to given value.
+
+### HasFeature
+
+`func (o *FlagDetailResponseData) HasFeature() bool`
+
+HasFeature returns a boolean if a field has been set.
 
 ### GetFeatureId
 
@@ -188,6 +215,31 @@ and a boolean to check if the value has been set.
 
 SetKey sets Key field to given value.
 
+
+### GetLatestCheck
+
+`func (o *FlagDetailResponseData) GetLatestCheck() FlagCheckLogResponseData`
+
+GetLatestCheck returns the LatestCheck field if non-nil, zero value otherwise.
+
+### GetLatestCheckOk
+
+`func (o *FlagDetailResponseData) GetLatestCheckOk() (*FlagCheckLogResponseData, bool)`
+
+GetLatestCheckOk returns a tuple with the LatestCheck field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLatestCheck
+
+`func (o *FlagDetailResponseData) SetLatestCheck(v FlagCheckLogResponseData)`
+
+SetLatestCheck sets LatestCheck field to given value.
+
+### HasLatestCheck
+
+`func (o *FlagDetailResponseData) HasLatestCheck() bool`
+
+HasLatestCheck returns a boolean if a field has been set.
 
 ### GetName
 

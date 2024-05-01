@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Conditions** | [**[]RuleConditionResponseData**](RuleConditionResponseData.md) |  | 
+**Conditions** | [**[]RuleConditionDetailResponseData**](RuleConditionDetailResponseData.md) |  | 
 **CreatedAt** | **time.Time** |  | 
 **EnvironmentId** | **string** |  | 
 **FlagId** | Pointer to **NullableString** |  | [optional] 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewRuleConditionGroupDetailResponseData
 
-`func NewRuleConditionGroupDetailResponseData(conditions []RuleConditionResponseData, createdAt time.Time, environmentId string, id string, ruleId string, updatedAt time.Time, ) *RuleConditionGroupDetailResponseData`
+`func NewRuleConditionGroupDetailResponseData(conditions []RuleConditionDetailResponseData, createdAt time.Time, environmentId string, id string, ruleId string, updatedAt time.Time, ) *RuleConditionGroupDetailResponseData`
 
 NewRuleConditionGroupDetailResponseData instantiates a new RuleConditionGroupDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -34,20 +34,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetConditions
 
-`func (o *RuleConditionGroupDetailResponseData) GetConditions() []RuleConditionResponseData`
+`func (o *RuleConditionGroupDetailResponseData) GetConditions() []RuleConditionDetailResponseData`
 
 GetConditions returns the Conditions field if non-nil, zero value otherwise.
 
 ### GetConditionsOk
 
-`func (o *RuleConditionGroupDetailResponseData) GetConditionsOk() (*[]RuleConditionResponseData, bool)`
+`func (o *RuleConditionGroupDetailResponseData) GetConditionsOk() (*[]RuleConditionDetailResponseData, bool)`
 
 GetConditionsOk returns a tuple with the Conditions field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetConditions
 
-`func (o *RuleConditionGroupDetailResponseData) SetConditions(v []RuleConditionResponseData)`
+`func (o *RuleConditionGroupDetailResponseData) SetConditions(v []RuleConditionDetailResponseData)`
 
 SetConditions sets Conditions field to given value.
 

@@ -387,12 +387,13 @@ func (a *AccountsAPIService) CountApiKeysExecute(r ApiCountApiKeysRequest) (*Cou
 }
 
 type ApiCountApiRequestsRequest struct {
-	ctx         context.Context
-	ApiService  AccountsAPI
-	q           *string
-	requestType *string
-	limit       *int32
-	offset      *int32
+	ctx           context.Context
+	ApiService    AccountsAPI
+	q             *string
+	requestType   *string
+	environmentId *string
+	limit         *int32
+	offset        *int32
 }
 
 func (r ApiCountApiRequestsRequest) Q(q string) ApiCountApiRequestsRequest {
@@ -402,6 +403,11 @@ func (r ApiCountApiRequestsRequest) Q(q string) ApiCountApiRequestsRequest {
 
 func (r ApiCountApiRequestsRequest) RequestType(requestType string) ApiCountApiRequestsRequest {
 	r.requestType = &requestType
+	return r
+}
+
+func (r ApiCountApiRequestsRequest) EnvironmentId(environmentId string) ApiCountApiRequestsRequest {
+	r.environmentId = &environmentId
 	return r
 }
 
@@ -461,6 +467,9 @@ func (a *AccountsAPIService) CountApiRequestsExecute(r ApiCountApiRequestsReques
 	}
 	if r.requestType != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "request_type", r.requestType, "")
+	}
+	if r.environmentId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "environment_id", r.environmentId, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -1937,12 +1946,13 @@ func (a *AccountsAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) (*ListA
 }
 
 type ApiListApiRequestsRequest struct {
-	ctx         context.Context
-	ApiService  AccountsAPI
-	q           *string
-	requestType *string
-	limit       *int32
-	offset      *int32
+	ctx           context.Context
+	ApiService    AccountsAPI
+	q             *string
+	requestType   *string
+	environmentId *string
+	limit         *int32
+	offset        *int32
 }
 
 func (r ApiListApiRequestsRequest) Q(q string) ApiListApiRequestsRequest {
@@ -1952,6 +1962,11 @@ func (r ApiListApiRequestsRequest) Q(q string) ApiListApiRequestsRequest {
 
 func (r ApiListApiRequestsRequest) RequestType(requestType string) ApiListApiRequestsRequest {
 	r.requestType = &requestType
+	return r
+}
+
+func (r ApiListApiRequestsRequest) EnvironmentId(environmentId string) ApiListApiRequestsRequest {
+	r.environmentId = &environmentId
 	return r
 }
 
@@ -2011,6 +2026,9 @@ func (a *AccountsAPIService) ListApiRequestsExecute(r ApiListApiRequestsRequest)
 	}
 	if r.requestType != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "request_type", r.requestType, "")
+	}
+	if r.environmentId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "environment_id", r.environmentId, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")

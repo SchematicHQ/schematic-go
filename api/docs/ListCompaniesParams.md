@@ -7,6 +7,9 @@ Name | Type | Description | Notes
 **Ids** | Pointer to **[]string** |  | [optional] 
 **Limit** | Pointer to **int32** |  | [optional] 
 **Offset** | Pointer to **int32** |  | [optional] 
+**PlanId** | Pointer to **string** |  | [optional] 
+**Q** | Pointer to **string** |  | [optional] 
+**WithoutFeatureOverrideFor** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -101,6 +104,81 @@ SetOffset sets Offset field to given value.
 `func (o *ListCompaniesParams) HasOffset() bool`
 
 HasOffset returns a boolean if a field has been set.
+
+### GetPlanId
+
+`func (o *ListCompaniesParams) GetPlanId() string`
+
+GetPlanId returns the PlanId field if non-nil, zero value otherwise.
+
+### GetPlanIdOk
+
+`func (o *ListCompaniesParams) GetPlanIdOk() (*string, bool)`
+
+GetPlanIdOk returns a tuple with the PlanId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPlanId
+
+`func (o *ListCompaniesParams) SetPlanId(v string)`
+
+SetPlanId sets PlanId field to given value.
+
+### HasPlanId
+
+`func (o *ListCompaniesParams) HasPlanId() bool`
+
+HasPlanId returns a boolean if a field has been set.
+
+### GetQ
+
+`func (o *ListCompaniesParams) GetQ() string`
+
+GetQ returns the Q field if non-nil, zero value otherwise.
+
+### GetQOk
+
+`func (o *ListCompaniesParams) GetQOk() (*string, bool)`
+
+GetQOk returns a tuple with the Q field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetQ
+
+`func (o *ListCompaniesParams) SetQ(v string)`
+
+SetQ sets Q field to given value.
+
+### HasQ
+
+`func (o *ListCompaniesParams) HasQ() bool`
+
+HasQ returns a boolean if a field has been set.
+
+### GetWithoutFeatureOverrideFor
+
+`func (o *ListCompaniesParams) GetWithoutFeatureOverrideFor() string`
+
+GetWithoutFeatureOverrideFor returns the WithoutFeatureOverrideFor field if non-nil, zero value otherwise.
+
+### GetWithoutFeatureOverrideForOk
+
+`func (o *ListCompaniesParams) GetWithoutFeatureOverrideForOk() (*string, bool)`
+
+GetWithoutFeatureOverrideForOk returns a tuple with the WithoutFeatureOverrideFor field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetWithoutFeatureOverrideFor
+
+`func (o *ListCompaniesParams) SetWithoutFeatureOverrideFor(v string)`
+
+SetWithoutFeatureOverrideFor sets WithoutFeatureOverrideFor field to given value.
+
+### HasWithoutFeatureOverrideFor
+
+`func (o *ListCompaniesParams) HasWithoutFeatureOverrideFor() bool`
+
+HasWithoutFeatureOverrideFor returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

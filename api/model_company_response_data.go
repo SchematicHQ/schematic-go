@@ -22,12 +22,13 @@ var _ MappedNullable = &CompanyResponseData{}
 
 // CompanyResponseData struct for CompanyResponseData
 type CompanyResponseData struct {
-	CreatedAt     time.Time    `json:"created_at"`
-	EnvironmentId string       `json:"environment_id"`
-	Id            string       `json:"id"`
-	LastSeenAt    NullableTime `json:"last_seen_at,omitempty"`
-	Name          string       `json:"name"`
-	UpdatedAt     time.Time    `json:"updated_at"`
+	CreatedAt     time.Time      `json:"created_at"`
+	EnvironmentId string         `json:"environment_id"`
+	Id            string         `json:"id"`
+	LastSeenAt    NullableTime   `json:"last_seen_at,omitempty"`
+	LogoUrl       NullableString `json:"logo_url,omitempty"`
+	Name          string         `json:"name"`
+	UpdatedAt     time.Time      `json:"updated_at"`
 }
 
 type _CompanyResponseData CompanyResponseData
@@ -169,6 +170,49 @@ func (o *CompanyResponseData) UnsetLastSeenAt() {
 	o.LastSeenAt.Unset()
 }
 
+// GetLogoUrl returns the LogoUrl field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CompanyResponseData) GetLogoUrl() string {
+	if o == nil || IsNil(o.LogoUrl.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.LogoUrl.Get()
+}
+
+// GetLogoUrlOk returns a tuple with the LogoUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CompanyResponseData) GetLogoUrlOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LogoUrl.Get(), o.LogoUrl.IsSet()
+}
+
+// HasLogoUrl returns a boolean if a field has been set.
+func (o *CompanyResponseData) HasLogoUrl() bool {
+	if o != nil && o.LogoUrl.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetLogoUrl gets a reference to the given NullableString and assigns it to the LogoUrl field.
+func (o *CompanyResponseData) SetLogoUrl(v string) {
+	o.LogoUrl.Set(&v)
+}
+
+// SetLogoUrlNil sets the value for LogoUrl to be an explicit nil
+func (o *CompanyResponseData) SetLogoUrlNil() {
+	o.LogoUrl.Set(nil)
+}
+
+// UnsetLogoUrl ensures that no value is present for LogoUrl, not even an explicit nil
+func (o *CompanyResponseData) UnsetLogoUrl() {
+	o.LogoUrl.Unset()
+}
+
 // GetName returns the Name field value
 func (o *CompanyResponseData) GetName() string {
 	if o == nil {
@@ -232,6 +276,9 @@ func (o CompanyResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	if o.LastSeenAt.IsSet() {
 		toSerialize["last_seen_at"] = o.LastSeenAt.Get()
+	}
+	if o.LogoUrl.IsSet() {
+		toSerialize["logo_url"] = o.LogoUrl.Get()
 	}
 	toSerialize["name"] = o.Name
 	toSerialize["updated_at"] = o.UpdatedAt

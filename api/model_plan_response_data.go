@@ -22,10 +22,12 @@ var _ MappedNullable = &PlanResponseData{}
 
 // PlanResponseData struct for PlanResponseData
 type PlanResponseData struct {
-	CreatedAt time.Time `json:"created_at"`
-	Id        string    `json:"id"`
-	Name      string    `json:"name"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt   time.Time `json:"created_at"`
+	Description string    `json:"description"`
+	Id          string    `json:"id"`
+	Name        string    `json:"name"`
+	PlanType    string    `json:"plan_type"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type _PlanResponseData PlanResponseData
@@ -34,11 +36,13 @@ type _PlanResponseData PlanResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPlanResponseData(createdAt time.Time, id string, name string, updatedAt time.Time) *PlanResponseData {
+func NewPlanResponseData(createdAt time.Time, description string, id string, name string, planType string, updatedAt time.Time) *PlanResponseData {
 	this := PlanResponseData{}
 	this.CreatedAt = createdAt
+	this.Description = description
 	this.Id = id
 	this.Name = name
+	this.PlanType = planType
 	this.UpdatedAt = updatedAt
 	return &this
 }
@@ -73,6 +77,30 @@ func (o *PlanResponseData) GetCreatedAtOk() (*time.Time, bool) {
 // SetCreatedAt sets field value
 func (o *PlanResponseData) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
+}
+
+// GetDescription returns the Description field value
+func (o *PlanResponseData) GetDescription() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value
+// and a boolean to check if the value has been set.
+func (o *PlanResponseData) GetDescriptionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Description, true
+}
+
+// SetDescription sets field value
+func (o *PlanResponseData) SetDescription(v string) {
+	o.Description = v
 }
 
 // GetId returns the Id field value
@@ -123,6 +151,30 @@ func (o *PlanResponseData) SetName(v string) {
 	o.Name = v
 }
 
+// GetPlanType returns the PlanType field value
+func (o *PlanResponseData) GetPlanType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.PlanType
+}
+
+// GetPlanTypeOk returns a tuple with the PlanType field value
+// and a boolean to check if the value has been set.
+func (o *PlanResponseData) GetPlanTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.PlanType, true
+}
+
+// SetPlanType sets field value
+func (o *PlanResponseData) SetPlanType(v string) {
+	o.PlanType = v
+}
+
 // GetUpdatedAt returns the UpdatedAt field value
 func (o *PlanResponseData) GetUpdatedAt() time.Time {
 	if o == nil {
@@ -158,8 +210,10 @@ func (o PlanResponseData) MarshalJSON() ([]byte, error) {
 func (o PlanResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["description"] = o.Description
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
+	toSerialize["plan_type"] = o.PlanType
 	toSerialize["updated_at"] = o.UpdatedAt
 	return toSerialize, nil
 }
@@ -170,8 +224,10 @@ func (o *PlanResponseData) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"created_at",
+		"description",
 		"id",
 		"name",
+		"plan_type",
 		"updated_at",
 	}
 

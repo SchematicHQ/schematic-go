@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]FeatureResponseData**](FeatureResponseData.md) | The returned resources | 
+**Data** | [**[]FeatureDetailResponseData**](FeatureDetailResponseData.md) | The returned resources | 
 **Params** | [**ListFeaturesParams**](ListFeaturesParams.md) |  | 
 
 ## Methods
 
 ### NewListFeaturesResponse
 
-`func NewListFeaturesResponse(data []FeatureResponseData, params ListFeaturesParams, ) *ListFeaturesResponse`
+`func NewListFeaturesResponse(data []FeatureDetailResponseData, params ListFeaturesParams, ) *ListFeaturesResponse`
 
 NewListFeaturesResponse instantiates a new ListFeaturesResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *ListFeaturesResponse) GetData() []FeatureResponseData`
+`func (o *ListFeaturesResponse) GetData() []FeatureDetailResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *ListFeaturesResponse) GetDataOk() (*[]FeatureResponseData, bool)`
+`func (o *ListFeaturesResponse) GetDataOk() (*[]FeatureDetailResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *ListFeaturesResponse) SetData(v []FeatureResponseData)`
+`func (o *ListFeaturesResponse) SetData(v []FeatureDetailResponseData)`
 
 SetData sets Data field to given value.
 

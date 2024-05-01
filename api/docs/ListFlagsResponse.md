@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]FlagResponseData**](FlagResponseData.md) | The returned resources | 
+**Data** | [**[]FlagDetailResponseData**](FlagDetailResponseData.md) | The returned resources | 
 **Params** | [**ListFlagsParams**](ListFlagsParams.md) |  | 
 
 ## Methods
 
 ### NewListFlagsResponse
 
-`func NewListFlagsResponse(data []FlagResponseData, params ListFlagsParams, ) *ListFlagsResponse`
+`func NewListFlagsResponse(data []FlagDetailResponseData, params ListFlagsParams, ) *ListFlagsResponse`
 
 NewListFlagsResponse instantiates a new ListFlagsResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *ListFlagsResponse) GetData() []FlagResponseData`
+`func (o *ListFlagsResponse) GetData() []FlagDetailResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *ListFlagsResponse) GetDataOk() (*[]FlagResponseData, bool)`
+`func (o *ListFlagsResponse) GetDataOk() (*[]FlagDetailResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *ListFlagsResponse) SetData(v []FlagResponseData)`
+`func (o *ListFlagsResponse) SetData(v []FlagDetailResponseData)`
 
 SetData sets Data field to given value.
 

@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**DisplayName** | Pointer to **NullableString** |  | [optional] 
 **TraitType** | **string** |  | 
 
 ## Methods
@@ -25,6 +26,41 @@ NewUpdateEntityTraitDefinitionRequestBodyWithDefaults instantiates a new UpdateE
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
+### GetDisplayName
+
+`func (o *UpdateEntityTraitDefinitionRequestBody) GetDisplayName() string`
+
+GetDisplayName returns the DisplayName field if non-nil, zero value otherwise.
+
+### GetDisplayNameOk
+
+`func (o *UpdateEntityTraitDefinitionRequestBody) GetDisplayNameOk() (*string, bool)`
+
+GetDisplayNameOk returns a tuple with the DisplayName field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDisplayName
+
+`func (o *UpdateEntityTraitDefinitionRequestBody) SetDisplayName(v string)`
+
+SetDisplayName sets DisplayName field to given value.
+
+### HasDisplayName
+
+`func (o *UpdateEntityTraitDefinitionRequestBody) HasDisplayName() bool`
+
+HasDisplayName returns a boolean if a field has been set.
+
+### SetDisplayNameNil
+
+`func (o *UpdateEntityTraitDefinitionRequestBody) SetDisplayNameNil(b bool)`
+
+ SetDisplayNameNil sets the value for DisplayName to be an explicit nil
+
+### UnsetDisplayName
+`func (o *UpdateEntityTraitDefinitionRequestBody) UnsetDisplayName()`
+
+UnsetDisplayName ensures that no value is present for DisplayName, not even an explicit nil
 ### GetTraitType
 
 `func (o *UpdateEntityTraitDefinitionRequestBody) GetTraitType() string`

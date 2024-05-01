@@ -22,8 +22,8 @@ var _ MappedNullable = &ListFlagsResponse{}
 // ListFlagsResponse struct for ListFlagsResponse
 type ListFlagsResponse struct {
 	// The returned resources
-	Data   []FlagResponseData `json:"data"`
-	Params ListFlagsParams    `json:"params"`
+	Data   []FlagDetailResponseData `json:"data"`
+	Params ListFlagsParams          `json:"params"`
 }
 
 type _ListFlagsResponse ListFlagsResponse
@@ -32,7 +32,7 @@ type _ListFlagsResponse ListFlagsResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListFlagsResponse(data []FlagResponseData, params ListFlagsParams) *ListFlagsResponse {
+func NewListFlagsResponse(data []FlagDetailResponseData, params ListFlagsParams) *ListFlagsResponse {
 	this := ListFlagsResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewListFlagsResponseWithDefaults() *ListFlagsResponse {
 }
 
 // GetData returns the Data field value
-func (o *ListFlagsResponse) GetData() []FlagResponseData {
+func (o *ListFlagsResponse) GetData() []FlagDetailResponseData {
 	if o == nil {
-		var ret []FlagResponseData
+		var ret []FlagDetailResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *ListFlagsResponse) GetData() []FlagResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *ListFlagsResponse) GetDataOk() ([]FlagResponseData, bool) {
+func (o *ListFlagsResponse) GetDataOk() ([]FlagDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *ListFlagsResponse) GetDataOk() ([]FlagResponseData, bool) {
 }
 
 // SetData sets field value
-func (o *ListFlagsResponse) SetData(v []FlagResponseData) {
+func (o *ListFlagsResponse) SetData(v []FlagDetailResponseData) {
 	o.Data = v
 }
 

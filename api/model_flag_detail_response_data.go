@@ -20,18 +20,20 @@ import (
 // checks if the FlagDetailResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &FlagDetailResponseData{}
 
-// FlagDetailResponseData The updated resource
+// FlagDetailResponseData struct for FlagDetailResponseData
 type FlagDetailResponseData struct {
-	CreatedAt    time.Time                `json:"created_at"`
-	DefaultValue bool                     `json:"default_value"`
-	Description  string                   `json:"description"`
-	FeatureId    NullableString           `json:"feature_id,omitempty"`
-	FlagType     string                   `json:"flag_type"`
-	Id           string                   `json:"id"`
-	Key          string                   `json:"key"`
-	Name         string                   `json:"name"`
-	Rules        []RuleDetailResponseData `json:"rules"`
-	UpdatedAt    time.Time                `json:"updated_at"`
+	CreatedAt    time.Time                 `json:"created_at"`
+	DefaultValue bool                      `json:"default_value"`
+	Description  string                    `json:"description"`
+	Feature      *FeatureResponseData      `json:"feature,omitempty"`
+	FeatureId    NullableString            `json:"feature_id,omitempty"`
+	FlagType     string                    `json:"flag_type"`
+	Id           string                    `json:"id"`
+	Key          string                    `json:"key"`
+	LatestCheck  *FlagCheckLogResponseData `json:"latest_check,omitempty"`
+	Name         string                    `json:"name"`
+	Rules        []RuleDetailResponseData  `json:"rules"`
+	UpdatedAt    time.Time                 `json:"updated_at"`
 }
 
 type _FlagDetailResponseData FlagDetailResponseData
@@ -132,6 +134,38 @@ func (o *FlagDetailResponseData) GetDescriptionOk() (*string, bool) {
 // SetDescription sets field value
 func (o *FlagDetailResponseData) SetDescription(v string) {
 	o.Description = v
+}
+
+// GetFeature returns the Feature field value if set, zero value otherwise.
+func (o *FlagDetailResponseData) GetFeature() FeatureResponseData {
+	if o == nil || IsNil(o.Feature) {
+		var ret FeatureResponseData
+		return ret
+	}
+	return *o.Feature
+}
+
+// GetFeatureOk returns a tuple with the Feature field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlagDetailResponseData) GetFeatureOk() (*FeatureResponseData, bool) {
+	if o == nil || IsNil(o.Feature) {
+		return nil, false
+	}
+	return o.Feature, true
+}
+
+// HasFeature returns a boolean if a field has been set.
+func (o *FlagDetailResponseData) HasFeature() bool {
+	if o != nil && !IsNil(o.Feature) {
+		return true
+	}
+
+	return false
+}
+
+// SetFeature gets a reference to the given FeatureResponseData and assigns it to the Feature field.
+func (o *FlagDetailResponseData) SetFeature(v FeatureResponseData) {
+	o.Feature = &v
 }
 
 // GetFeatureId returns the FeatureId field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -249,6 +283,38 @@ func (o *FlagDetailResponseData) SetKey(v string) {
 	o.Key = v
 }
 
+// GetLatestCheck returns the LatestCheck field value if set, zero value otherwise.
+func (o *FlagDetailResponseData) GetLatestCheck() FlagCheckLogResponseData {
+	if o == nil || IsNil(o.LatestCheck) {
+		var ret FlagCheckLogResponseData
+		return ret
+	}
+	return *o.LatestCheck
+}
+
+// GetLatestCheckOk returns a tuple with the LatestCheck field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlagDetailResponseData) GetLatestCheckOk() (*FlagCheckLogResponseData, bool) {
+	if o == nil || IsNil(o.LatestCheck) {
+		return nil, false
+	}
+	return o.LatestCheck, true
+}
+
+// HasLatestCheck returns a boolean if a field has been set.
+func (o *FlagDetailResponseData) HasLatestCheck() bool {
+	if o != nil && !IsNil(o.LatestCheck) {
+		return true
+	}
+
+	return false
+}
+
+// SetLatestCheck gets a reference to the given FlagCheckLogResponseData and assigns it to the LatestCheck field.
+func (o *FlagDetailResponseData) SetLatestCheck(v FlagCheckLogResponseData) {
+	o.LatestCheck = &v
+}
+
 // GetName returns the Name field value
 func (o *FlagDetailResponseData) GetName() string {
 	if o == nil {
@@ -334,12 +400,18 @@ func (o FlagDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["default_value"] = o.DefaultValue
 	toSerialize["description"] = o.Description
+	if !IsNil(o.Feature) {
+		toSerialize["feature"] = o.Feature
+	}
 	if o.FeatureId.IsSet() {
 		toSerialize["feature_id"] = o.FeatureId.Get()
 	}
 	toSerialize["flag_type"] = o.FlagType
 	toSerialize["id"] = o.Id
 	toSerialize["key"] = o.Key
+	if !IsNil(o.LatestCheck) {
+		toSerialize["latest_check"] = o.LatestCheck
+	}
 	toSerialize["name"] = o.Name
 	toSerialize["rules"] = o.Rules
 	toSerialize["updated_at"] = o.UpdatedAt

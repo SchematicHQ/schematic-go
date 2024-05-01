@@ -20,7 +20,7 @@ import (
 // checks if the FeatureDetailResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &FeatureDetailResponseData{}
 
-// FeatureDetailResponseData The updated resource
+// FeatureDetailResponseData struct for FeatureDetailResponseData
 type FeatureDetailResponseData struct {
 	CreatedAt      time.Time                 `json:"created_at"`
 	Description    string                    `json:"description"`

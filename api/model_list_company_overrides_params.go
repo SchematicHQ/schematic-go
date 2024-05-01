@@ -19,10 +19,13 @@ var _ MappedNullable = &ListCompanyOverridesParams{}
 
 // ListCompanyOverridesParams Input parameters
 type ListCompanyOverridesParams struct {
-	CompanyId *string `json:"company_id,omitempty"`
-	FeatureId *string `json:"feature_id,omitempty"`
-	Limit     *int32  `json:"limit,omitempty"`
-	Offset    *int32  `json:"offset,omitempty"`
+	CompanyId  *string  `json:"company_id,omitempty"`
+	CompanyIds []string `json:"company_ids,omitempty"`
+	FeatureId  *string  `json:"feature_id,omitempty"`
+	FeatureIds []string `json:"feature_ids,omitempty"`
+	Ids        []string `json:"ids,omitempty"`
+	Limit      *int32   `json:"limit,omitempty"`
+	Offset     *int32   `json:"offset,omitempty"`
 }
 
 // NewListCompanyOverridesParams instantiates a new ListCompanyOverridesParams object
@@ -74,6 +77,38 @@ func (o *ListCompanyOverridesParams) SetCompanyId(v string) {
 	o.CompanyId = &v
 }
 
+// GetCompanyIds returns the CompanyIds field value if set, zero value otherwise.
+func (o *ListCompanyOverridesParams) GetCompanyIds() []string {
+	if o == nil || IsNil(o.CompanyIds) {
+		var ret []string
+		return ret
+	}
+	return o.CompanyIds
+}
+
+// GetCompanyIdsOk returns a tuple with the CompanyIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListCompanyOverridesParams) GetCompanyIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.CompanyIds) {
+		return nil, false
+	}
+	return o.CompanyIds, true
+}
+
+// HasCompanyIds returns a boolean if a field has been set.
+func (o *ListCompanyOverridesParams) HasCompanyIds() bool {
+	if o != nil && !IsNil(o.CompanyIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompanyIds gets a reference to the given []string and assigns it to the CompanyIds field.
+func (o *ListCompanyOverridesParams) SetCompanyIds(v []string) {
+	o.CompanyIds = v
+}
+
 // GetFeatureId returns the FeatureId field value if set, zero value otherwise.
 func (o *ListCompanyOverridesParams) GetFeatureId() string {
 	if o == nil || IsNil(o.FeatureId) {
@@ -104,6 +139,70 @@ func (o *ListCompanyOverridesParams) HasFeatureId() bool {
 // SetFeatureId gets a reference to the given string and assigns it to the FeatureId field.
 func (o *ListCompanyOverridesParams) SetFeatureId(v string) {
 	o.FeatureId = &v
+}
+
+// GetFeatureIds returns the FeatureIds field value if set, zero value otherwise.
+func (o *ListCompanyOverridesParams) GetFeatureIds() []string {
+	if o == nil || IsNil(o.FeatureIds) {
+		var ret []string
+		return ret
+	}
+	return o.FeatureIds
+}
+
+// GetFeatureIdsOk returns a tuple with the FeatureIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListCompanyOverridesParams) GetFeatureIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.FeatureIds) {
+		return nil, false
+	}
+	return o.FeatureIds, true
+}
+
+// HasFeatureIds returns a boolean if a field has been set.
+func (o *ListCompanyOverridesParams) HasFeatureIds() bool {
+	if o != nil && !IsNil(o.FeatureIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetFeatureIds gets a reference to the given []string and assigns it to the FeatureIds field.
+func (o *ListCompanyOverridesParams) SetFeatureIds(v []string) {
+	o.FeatureIds = v
+}
+
+// GetIds returns the Ids field value if set, zero value otherwise.
+func (o *ListCompanyOverridesParams) GetIds() []string {
+	if o == nil || IsNil(o.Ids) {
+		var ret []string
+		return ret
+	}
+	return o.Ids
+}
+
+// GetIdsOk returns a tuple with the Ids field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListCompanyOverridesParams) GetIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Ids) {
+		return nil, false
+	}
+	return o.Ids, true
+}
+
+// HasIds returns a boolean if a field has been set.
+func (o *ListCompanyOverridesParams) HasIds() bool {
+	if o != nil && !IsNil(o.Ids) {
+		return true
+	}
+
+	return false
+}
+
+// SetIds gets a reference to the given []string and assigns it to the Ids field.
+func (o *ListCompanyOverridesParams) SetIds(v []string) {
+	o.Ids = v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -183,8 +282,17 @@ func (o ListCompanyOverridesParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CompanyId) {
 		toSerialize["company_id"] = o.CompanyId
 	}
+	if !IsNil(o.CompanyIds) {
+		toSerialize["company_ids"] = o.CompanyIds
+	}
 	if !IsNil(o.FeatureId) {
 		toSerialize["feature_id"] = o.FeatureId
+	}
+	if !IsNil(o.FeatureIds) {
+		toSerialize["feature_ids"] = o.FeatureIds
+	}
+	if !IsNil(o.Ids) {
+		toSerialize["ids"] = o.Ids
 	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit

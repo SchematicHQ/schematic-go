@@ -5,15 +5,17 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CreatedAt** | **time.Time** |  | 
+**Description** | **string** |  | 
 **Id** | **string** |  | 
 **Name** | **string** |  | 
+**PlanType** | **string** |  | 
 **UpdatedAt** | **time.Time** |  | 
 
 ## Methods
 
 ### NewPlanResponseData
 
-`func NewPlanResponseData(createdAt time.Time, id string, name string, updatedAt time.Time, ) *PlanResponseData`
+`func NewPlanResponseData(createdAt time.Time, description string, id string, name string, planType string, updatedAt time.Time, ) *PlanResponseData`
 
 NewPlanResponseData instantiates a new PlanResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -46,6 +48,26 @@ and a boolean to check if the value has been set.
 `func (o *PlanResponseData) SetCreatedAt(v time.Time)`
 
 SetCreatedAt sets CreatedAt field to given value.
+
+
+### GetDescription
+
+`func (o *PlanResponseData) GetDescription() string`
+
+GetDescription returns the Description field if non-nil, zero value otherwise.
+
+### GetDescriptionOk
+
+`func (o *PlanResponseData) GetDescriptionOk() (*string, bool)`
+
+GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDescription
+
+`func (o *PlanResponseData) SetDescription(v string)`
+
+SetDescription sets Description field to given value.
 
 
 ### GetId
@@ -86,6 +108,26 @@ and a boolean to check if the value has been set.
 `func (o *PlanResponseData) SetName(v string)`
 
 SetName sets Name field to given value.
+
+
+### GetPlanType
+
+`func (o *PlanResponseData) GetPlanType() string`
+
+GetPlanType returns the PlanType field if non-nil, zero value otherwise.
+
+### GetPlanTypeOk
+
+`func (o *PlanResponseData) GetPlanTypeOk() (*string, bool)`
+
+GetPlanTypeOk returns a tuple with the PlanType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPlanType
+
+`func (o *PlanResponseData) SetPlanType(v string)`
+
+SetPlanType sets PlanType field to given value.
 
 
 ### GetUpdatedAt

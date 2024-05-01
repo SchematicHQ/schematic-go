@@ -22,8 +22,8 @@ var _ MappedNullable = &ListCompaniesResponse{}
 // ListCompaniesResponse struct for ListCompaniesResponse
 type ListCompaniesResponse struct {
 	// The returned resources
-	Data   []CompanyResponseData `json:"data"`
-	Params ListCompaniesParams   `json:"params"`
+	Data   []CompanyDetailResponseData `json:"data"`
+	Params ListCompaniesParams         `json:"params"`
 }
 
 type _ListCompaniesResponse ListCompaniesResponse
@@ -32,7 +32,7 @@ type _ListCompaniesResponse ListCompaniesResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListCompaniesResponse(data []CompanyResponseData, params ListCompaniesParams) *ListCompaniesResponse {
+func NewListCompaniesResponse(data []CompanyDetailResponseData, params ListCompaniesParams) *ListCompaniesResponse {
 	this := ListCompaniesResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewListCompaniesResponseWithDefaults() *ListCompaniesResponse {
 }
 
 // GetData returns the Data field value
-func (o *ListCompaniesResponse) GetData() []CompanyResponseData {
+func (o *ListCompaniesResponse) GetData() []CompanyDetailResponseData {
 	if o == nil {
-		var ret []CompanyResponseData
+		var ret []CompanyDetailResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *ListCompaniesResponse) GetData() []CompanyResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *ListCompaniesResponse) GetDataOk() ([]CompanyResponseData, bool) {
+func (o *ListCompaniesResponse) GetDataOk() ([]CompanyDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *ListCompaniesResponse) GetDataOk() ([]CompanyResponseData, bool) {
 }
 
 // SetData sets field value
-func (o *ListCompaniesResponse) SetData(v []CompanyResponseData) {
+func (o *ListCompaniesResponse) SetData(v []CompanyDetailResponseData) {
 	o.Data = v
 }
 

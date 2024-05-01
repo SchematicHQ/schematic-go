@@ -5,9 +5,10 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **FeatureId** | Pointer to **string** |  | [optional] 
-**FlagIds** | Pointer to **[]string** |  | [optional] 
+**Ids** | Pointer to **[]string** |  | [optional] 
 **Limit** | Pointer to **int32** |  | [optional] 
 **Offset** | Pointer to **int32** |  | [optional] 
+**Q** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -53,30 +54,30 @@ SetFeatureId sets FeatureId field to given value.
 
 HasFeatureId returns a boolean if a field has been set.
 
-### GetFlagIds
+### GetIds
 
-`func (o *ListFlagsParams) GetFlagIds() []string`
+`func (o *ListFlagsParams) GetIds() []string`
 
-GetFlagIds returns the FlagIds field if non-nil, zero value otherwise.
+GetIds returns the Ids field if non-nil, zero value otherwise.
 
-### GetFlagIdsOk
+### GetIdsOk
 
-`func (o *ListFlagsParams) GetFlagIdsOk() (*[]string, bool)`
+`func (o *ListFlagsParams) GetIdsOk() (*[]string, bool)`
 
-GetFlagIdsOk returns a tuple with the FlagIds field if it's non-nil, zero value otherwise
+GetIdsOk returns a tuple with the Ids field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetFlagIds
+### SetIds
 
-`func (o *ListFlagsParams) SetFlagIds(v []string)`
+`func (o *ListFlagsParams) SetIds(v []string)`
 
-SetFlagIds sets FlagIds field to given value.
+SetIds sets Ids field to given value.
 
-### HasFlagIds
+### HasIds
 
-`func (o *ListFlagsParams) HasFlagIds() bool`
+`func (o *ListFlagsParams) HasIds() bool`
 
-HasFlagIds returns a boolean if a field has been set.
+HasIds returns a boolean if a field has been set.
 
 ### GetLimit
 
@@ -127,6 +128,31 @@ SetOffset sets Offset field to given value.
 `func (o *ListFlagsParams) HasOffset() bool`
 
 HasOffset returns a boolean if a field has been set.
+
+### GetQ
+
+`func (o *ListFlagsParams) GetQ() string`
+
+GetQ returns the Q field if non-nil, zero value otherwise.
+
+### GetQOk
+
+`func (o *ListFlagsParams) GetQOk() (*string, bool)`
+
+GetQOk returns a tuple with the Q field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetQ
+
+`func (o *ListFlagsParams) SetQ(v string)`
+
+SetQ sets Q field to given value.
+
+### HasQ
+
+`func (o *ListFlagsParams) HasQ() bool`
+
+HasQ returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

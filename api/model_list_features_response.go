@@ -22,8 +22,8 @@ var _ MappedNullable = &ListFeaturesResponse{}
 // ListFeaturesResponse struct for ListFeaturesResponse
 type ListFeaturesResponse struct {
 	// The returned resources
-	Data   []FeatureResponseData `json:"data"`
-	Params ListFeaturesParams    `json:"params"`
+	Data   []FeatureDetailResponseData `json:"data"`
+	Params ListFeaturesParams          `json:"params"`
 }
 
 type _ListFeaturesResponse ListFeaturesResponse
@@ -32,7 +32,7 @@ type _ListFeaturesResponse ListFeaturesResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListFeaturesResponse(data []FeatureResponseData, params ListFeaturesParams) *ListFeaturesResponse {
+func NewListFeaturesResponse(data []FeatureDetailResponseData, params ListFeaturesParams) *ListFeaturesResponse {
 	this := ListFeaturesResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewListFeaturesResponseWithDefaults() *ListFeaturesResponse {
 }
 
 // GetData returns the Data field value
-func (o *ListFeaturesResponse) GetData() []FeatureResponseData {
+func (o *ListFeaturesResponse) GetData() []FeatureDetailResponseData {
 	if o == nil {
-		var ret []FeatureResponseData
+		var ret []FeatureDetailResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *ListFeaturesResponse) GetData() []FeatureResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *ListFeaturesResponse) GetDataOk() ([]FeatureResponseData, bool) {
+func (o *ListFeaturesResponse) GetDataOk() ([]FeatureDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *ListFeaturesResponse) GetDataOk() ([]FeatureResponseData, bool) {
 }
 
 // SetData sets field value
-func (o *ListFeaturesResponse) SetData(v []FeatureResponseData) {
+func (o *ListFeaturesResponse) SetData(v []FeatureDetailResponseData) {
 	o.Data = v
 }
 

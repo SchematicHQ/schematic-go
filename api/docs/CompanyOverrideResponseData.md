@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **UpdatedAt** | **time.Time** |  | 
 **ValueBool** | Pointer to **NullableBool** |  | [optional] 
 **ValueNumeric** | Pointer to **NullableInt32** |  | [optional] 
+**ValueTrait** | Pointer to [**EntityTraitDefinitionResponseData**](EntityTraitDefinitionResponseData.md) |  | [optional] 
 **ValueTraitId** | Pointer to **NullableString** |  | [optional] 
 **ValueType** | **string** |  | 
 
@@ -333,6 +334,31 @@ HasValueNumeric returns a boolean if a field has been set.
 `func (o *CompanyOverrideResponseData) UnsetValueNumeric()`
 
 UnsetValueNumeric ensures that no value is present for ValueNumeric, not even an explicit nil
+### GetValueTrait
+
+`func (o *CompanyOverrideResponseData) GetValueTrait() EntityTraitDefinitionResponseData`
+
+GetValueTrait returns the ValueTrait field if non-nil, zero value otherwise.
+
+### GetValueTraitOk
+
+`func (o *CompanyOverrideResponseData) GetValueTraitOk() (*EntityTraitDefinitionResponseData, bool)`
+
+GetValueTraitOk returns a tuple with the ValueTrait field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetValueTrait
+
+`func (o *CompanyOverrideResponseData) SetValueTrait(v EntityTraitDefinitionResponseData)`
+
+SetValueTrait sets ValueTrait field to given value.
+
+### HasValueTrait
+
+`func (o *CompanyOverrideResponseData) HasValueTrait() bool`
+
+HasValueTrait returns a boolean if a field has been set.
+
 ### GetValueTraitId
 
 `func (o *CompanyOverrideResponseData) GetValueTraitId() string`

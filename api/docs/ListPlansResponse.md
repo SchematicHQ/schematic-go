@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]PlanResponseData**](PlanResponseData.md) | The returned resources | 
+**Data** | [**[]PlanDetailResponseData**](PlanDetailResponseData.md) | The returned resources | 
 **Params** | [**ListPlansParams**](ListPlansParams.md) |  | 
 
 ## Methods
 
 ### NewListPlansResponse
 
-`func NewListPlansResponse(data []PlanResponseData, params ListPlansParams, ) *ListPlansResponse`
+`func NewListPlansResponse(data []PlanDetailResponseData, params ListPlansParams, ) *ListPlansResponse`
 
 NewListPlansResponse instantiates a new ListPlansResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *ListPlansResponse) GetData() []PlanResponseData`
+`func (o *ListPlansResponse) GetData() []PlanDetailResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *ListPlansResponse) GetDataOk() (*[]PlanResponseData, bool)`
+`func (o *ListPlansResponse) GetDataOk() (*[]PlanDetailResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *ListPlansResponse) SetData(v []PlanResponseData)`
+`func (o *ListPlansResponse) SetData(v []PlanDetailResponseData)`
 
 SetData sets Data field to given value.
 

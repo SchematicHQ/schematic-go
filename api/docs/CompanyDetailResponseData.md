@@ -5,19 +5,23 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CreatedAt** | **time.Time** |  | 
+**EntityTraits** | [**[]EntityTraitDetailResponseData**](EntityTraitDetailResponseData.md) |  | 
 **EnvironmentId** | **string** |  | 
 **Id** | **string** |  | 
-**Keys** | [**[]EntityKeyResponseData**](EntityKeyResponseData.md) |  | 
+**Keys** | [**[]EntityKeyDetailResponseData**](EntityKeyDetailResponseData.md) |  | 
 **LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
+**LogoUrl** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
+**Plans** | [**[]PreviewObject**](PreviewObject.md) |  | 
 **Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
 **UpdatedAt** | **time.Time** |  | 
+**UserCount** | **int32** |  | 
 
 ## Methods
 
 ### NewCompanyDetailResponseData
 
-`func NewCompanyDetailResponseData(createdAt time.Time, environmentId string, id string, keys []EntityKeyResponseData, name string, updatedAt time.Time, ) *CompanyDetailResponseData`
+`func NewCompanyDetailResponseData(createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, plans []PreviewObject, updatedAt time.Time, userCount int32, ) *CompanyDetailResponseData`
 
 NewCompanyDetailResponseData instantiates a new CompanyDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -50,6 +54,26 @@ and a boolean to check if the value has been set.
 `func (o *CompanyDetailResponseData) SetCreatedAt(v time.Time)`
 
 SetCreatedAt sets CreatedAt field to given value.
+
+
+### GetEntityTraits
+
+`func (o *CompanyDetailResponseData) GetEntityTraits() []EntityTraitDetailResponseData`
+
+GetEntityTraits returns the EntityTraits field if non-nil, zero value otherwise.
+
+### GetEntityTraitsOk
+
+`func (o *CompanyDetailResponseData) GetEntityTraitsOk() (*[]EntityTraitDetailResponseData, bool)`
+
+GetEntityTraitsOk returns a tuple with the EntityTraits field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEntityTraits
+
+`func (o *CompanyDetailResponseData) SetEntityTraits(v []EntityTraitDetailResponseData)`
+
+SetEntityTraits sets EntityTraits field to given value.
 
 
 ### GetEnvironmentId
@@ -94,20 +118,20 @@ SetId sets Id field to given value.
 
 ### GetKeys
 
-`func (o *CompanyDetailResponseData) GetKeys() []EntityKeyResponseData`
+`func (o *CompanyDetailResponseData) GetKeys() []EntityKeyDetailResponseData`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *CompanyDetailResponseData) GetKeysOk() (*[]EntityKeyResponseData, bool)`
+`func (o *CompanyDetailResponseData) GetKeysOk() (*[]EntityKeyDetailResponseData, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *CompanyDetailResponseData) SetKeys(v []EntityKeyResponseData)`
+`func (o *CompanyDetailResponseData) SetKeys(v []EntityKeyDetailResponseData)`
 
 SetKeys sets Keys field to given value.
 
@@ -147,6 +171,41 @@ HasLastSeenAt returns a boolean if a field has been set.
 `func (o *CompanyDetailResponseData) UnsetLastSeenAt()`
 
 UnsetLastSeenAt ensures that no value is present for LastSeenAt, not even an explicit nil
+### GetLogoUrl
+
+`func (o *CompanyDetailResponseData) GetLogoUrl() string`
+
+GetLogoUrl returns the LogoUrl field if non-nil, zero value otherwise.
+
+### GetLogoUrlOk
+
+`func (o *CompanyDetailResponseData) GetLogoUrlOk() (*string, bool)`
+
+GetLogoUrlOk returns a tuple with the LogoUrl field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLogoUrl
+
+`func (o *CompanyDetailResponseData) SetLogoUrl(v string)`
+
+SetLogoUrl sets LogoUrl field to given value.
+
+### HasLogoUrl
+
+`func (o *CompanyDetailResponseData) HasLogoUrl() bool`
+
+HasLogoUrl returns a boolean if a field has been set.
+
+### SetLogoUrlNil
+
+`func (o *CompanyDetailResponseData) SetLogoUrlNil(b bool)`
+
+ SetLogoUrlNil sets the value for LogoUrl to be an explicit nil
+
+### UnsetLogoUrl
+`func (o *CompanyDetailResponseData) UnsetLogoUrl()`
+
+UnsetLogoUrl ensures that no value is present for LogoUrl, not even an explicit nil
 ### GetName
 
 `func (o *CompanyDetailResponseData) GetName() string`
@@ -165,6 +224,26 @@ and a boolean to check if the value has been set.
 `func (o *CompanyDetailResponseData) SetName(v string)`
 
 SetName sets Name field to given value.
+
+
+### GetPlans
+
+`func (o *CompanyDetailResponseData) GetPlans() []PreviewObject`
+
+GetPlans returns the Plans field if non-nil, zero value otherwise.
+
+### GetPlansOk
+
+`func (o *CompanyDetailResponseData) GetPlansOk() (*[]PreviewObject, bool)`
+
+GetPlansOk returns a tuple with the Plans field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPlans
+
+`func (o *CompanyDetailResponseData) SetPlans(v []PreviewObject)`
+
+SetPlans sets Plans field to given value.
 
 
 ### GetTraits
@@ -210,6 +289,26 @@ and a boolean to check if the value has been set.
 `func (o *CompanyDetailResponseData) SetUpdatedAt(v time.Time)`
 
 SetUpdatedAt sets UpdatedAt field to given value.
+
+
+### GetUserCount
+
+`func (o *CompanyDetailResponseData) GetUserCount() int32`
+
+GetUserCount returns the UserCount field if non-nil, zero value otherwise.
+
+### GetUserCountOk
+
+`func (o *CompanyDetailResponseData) GetUserCountOk() (*int32, bool)`
+
+GetUserCountOk returns a tuple with the UserCount field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUserCount
+
+`func (o *CompanyDetailResponseData) SetUserCount(v int32)`
+
+SetUserCount sets UserCount field to given value.
 
 
 

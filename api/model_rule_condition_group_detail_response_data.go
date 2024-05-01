@@ -22,14 +22,14 @@ var _ MappedNullable = &RuleConditionGroupDetailResponseData{}
 
 // RuleConditionGroupDetailResponseData struct for RuleConditionGroupDetailResponseData
 type RuleConditionGroupDetailResponseData struct {
-	Conditions    []RuleConditionResponseData `json:"conditions"`
-	CreatedAt     time.Time                   `json:"created_at"`
-	EnvironmentId string                      `json:"environment_id"`
-	FlagId        NullableString              `json:"flag_id,omitempty"`
-	Id            string                      `json:"id"`
-	PlanId        NullableString              `json:"plan_id,omitempty"`
-	RuleId        string                      `json:"rule_id"`
-	UpdatedAt     time.Time                   `json:"updated_at"`
+	Conditions    []RuleConditionDetailResponseData `json:"conditions"`
+	CreatedAt     time.Time                         `json:"created_at"`
+	EnvironmentId string                            `json:"environment_id"`
+	FlagId        NullableString                    `json:"flag_id,omitempty"`
+	Id            string                            `json:"id"`
+	PlanId        NullableString                    `json:"plan_id,omitempty"`
+	RuleId        string                            `json:"rule_id"`
+	UpdatedAt     time.Time                         `json:"updated_at"`
 }
 
 type _RuleConditionGroupDetailResponseData RuleConditionGroupDetailResponseData
@@ -38,7 +38,7 @@ type _RuleConditionGroupDetailResponseData RuleConditionGroupDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRuleConditionGroupDetailResponseData(conditions []RuleConditionResponseData, createdAt time.Time, environmentId string, id string, ruleId string, updatedAt time.Time) *RuleConditionGroupDetailResponseData {
+func NewRuleConditionGroupDetailResponseData(conditions []RuleConditionDetailResponseData, createdAt time.Time, environmentId string, id string, ruleId string, updatedAt time.Time) *RuleConditionGroupDetailResponseData {
 	this := RuleConditionGroupDetailResponseData{}
 	this.Conditions = conditions
 	this.CreatedAt = createdAt
@@ -58,9 +58,9 @@ func NewRuleConditionGroupDetailResponseDataWithDefaults() *RuleConditionGroupDe
 }
 
 // GetConditions returns the Conditions field value
-func (o *RuleConditionGroupDetailResponseData) GetConditions() []RuleConditionResponseData {
+func (o *RuleConditionGroupDetailResponseData) GetConditions() []RuleConditionDetailResponseData {
 	if o == nil {
-		var ret []RuleConditionResponseData
+		var ret []RuleConditionDetailResponseData
 		return ret
 	}
 
@@ -69,7 +69,7 @@ func (o *RuleConditionGroupDetailResponseData) GetConditions() []RuleConditionRe
 
 // GetConditionsOk returns a tuple with the Conditions field value
 // and a boolean to check if the value has been set.
-func (o *RuleConditionGroupDetailResponseData) GetConditionsOk() ([]RuleConditionResponseData, bool) {
+func (o *RuleConditionGroupDetailResponseData) GetConditionsOk() ([]RuleConditionDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -77,7 +77,7 @@ func (o *RuleConditionGroupDetailResponseData) GetConditionsOk() ([]RuleConditio
 }
 
 // SetConditions sets field value
-func (o *RuleConditionGroupDetailResponseData) SetConditions(v []RuleConditionResponseData) {
+func (o *RuleConditionGroupDetailResponseData) SetConditions(v []RuleConditionDetailResponseData) {
 	o.Conditions = v
 }
 

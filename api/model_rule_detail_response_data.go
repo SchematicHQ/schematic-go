@@ -23,7 +23,7 @@ var _ MappedNullable = &RuleDetailResponseData{}
 // RuleDetailResponseData struct for RuleDetailResponseData
 type RuleDetailResponseData struct {
 	ConditionGroups []RuleConditionGroupDetailResponseData `json:"condition_groups"`
-	Conditions      []RuleConditionResponseData            `json:"conditions"`
+	Conditions      []RuleConditionDetailResponseData      `json:"conditions"`
 	CreatedAt       time.Time                              `json:"created_at"`
 	EnvironmentId   string                                 `json:"environment_id"`
 	FlagId          NullableString                         `json:"flag_id,omitempty"`
@@ -42,7 +42,7 @@ type _RuleDetailResponseData RuleDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRuleDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, ruleType string, updatedAt time.Time, value bool) *RuleDetailResponseData {
+func NewRuleDetailResponseData(conditionGroups []RuleConditionGroupDetailResponseData, conditions []RuleConditionDetailResponseData, createdAt time.Time, environmentId string, id string, name string, priority int32, ruleType string, updatedAt time.Time, value bool) *RuleDetailResponseData {
 	this := RuleDetailResponseData{}
 	this.ConditionGroups = conditionGroups
 	this.Conditions = conditions
@@ -90,9 +90,9 @@ func (o *RuleDetailResponseData) SetConditionGroups(v []RuleConditionGroupDetail
 }
 
 // GetConditions returns the Conditions field value
-func (o *RuleDetailResponseData) GetConditions() []RuleConditionResponseData {
+func (o *RuleDetailResponseData) GetConditions() []RuleConditionDetailResponseData {
 	if o == nil {
-		var ret []RuleConditionResponseData
+		var ret []RuleConditionDetailResponseData
 		return ret
 	}
 
@@ -101,7 +101,7 @@ func (o *RuleDetailResponseData) GetConditions() []RuleConditionResponseData {
 
 // GetConditionsOk returns a tuple with the Conditions field value
 // and a boolean to check if the value has been set.
-func (o *RuleDetailResponseData) GetConditionsOk() ([]RuleConditionResponseData, bool) {
+func (o *RuleDetailResponseData) GetConditionsOk() ([]RuleConditionDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -109,7 +109,7 @@ func (o *RuleDetailResponseData) GetConditionsOk() ([]RuleConditionResponseData,
 }
 
 // SetConditions sets field value
-func (o *RuleDetailResponseData) SetConditions(v []RuleConditionResponseData) {
+func (o *RuleDetailResponseData) SetConditions(v []RuleConditionDetailResponseData) {
 	o.Conditions = v
 }
 

@@ -22,8 +22,8 @@ var _ MappedNullable = &ListPlansResponse{}
 // ListPlansResponse struct for ListPlansResponse
 type ListPlansResponse struct {
 	// The returned resources
-	Data   []PlanResponseData `json:"data"`
-	Params ListPlansParams    `json:"params"`
+	Data   []PlanDetailResponseData `json:"data"`
+	Params ListPlansParams          `json:"params"`
 }
 
 type _ListPlansResponse ListPlansResponse
@@ -32,7 +32,7 @@ type _ListPlansResponse ListPlansResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListPlansResponse(data []PlanResponseData, params ListPlansParams) *ListPlansResponse {
+func NewListPlansResponse(data []PlanDetailResponseData, params ListPlansParams) *ListPlansResponse {
 	this := ListPlansResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewListPlansResponseWithDefaults() *ListPlansResponse {
 }
 
 // GetData returns the Data field value
-func (o *ListPlansResponse) GetData() []PlanResponseData {
+func (o *ListPlansResponse) GetData() []PlanDetailResponseData {
 	if o == nil {
-		var ret []PlanResponseData
+		var ret []PlanDetailResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *ListPlansResponse) GetData() []PlanResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *ListPlansResponse) GetDataOk() ([]PlanResponseData, bool) {
+func (o *ListPlansResponse) GetDataOk() ([]PlanDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *ListPlansResponse) GetDataOk() ([]PlanResponseData, bool) {
 }
 
 // SetData sets field value
-func (o *ListPlansResponse) SetData(v []PlanResponseData) {
+func (o *ListPlansResponse) SetData(v []PlanDetailResponseData) {
 	o.Data = v
 }
 

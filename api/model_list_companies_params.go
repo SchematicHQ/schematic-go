@@ -19,9 +19,12 @@ var _ MappedNullable = &ListCompaniesParams{}
 
 // ListCompaniesParams Input parameters
 type ListCompaniesParams struct {
-	Ids    []string `json:"ids,omitempty"`
-	Limit  *int32   `json:"limit,omitempty"`
-	Offset *int32   `json:"offset,omitempty"`
+	Ids                       []string `json:"ids,omitempty"`
+	Limit                     *int32   `json:"limit,omitempty"`
+	Offset                    *int32   `json:"offset,omitempty"`
+	PlanId                    *string  `json:"plan_id,omitempty"`
+	Q                         *string  `json:"q,omitempty"`
+	WithoutFeatureOverrideFor *string  `json:"without_feature_override_for,omitempty"`
 }
 
 // NewListCompaniesParams instantiates a new ListCompaniesParams object
@@ -137,6 +140,102 @@ func (o *ListCompaniesParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetPlanId returns the PlanId field value if set, zero value otherwise.
+func (o *ListCompaniesParams) GetPlanId() string {
+	if o == nil || IsNil(o.PlanId) {
+		var ret string
+		return ret
+	}
+	return *o.PlanId
+}
+
+// GetPlanIdOk returns a tuple with the PlanId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListCompaniesParams) GetPlanIdOk() (*string, bool) {
+	if o == nil || IsNil(o.PlanId) {
+		return nil, false
+	}
+	return o.PlanId, true
+}
+
+// HasPlanId returns a boolean if a field has been set.
+func (o *ListCompaniesParams) HasPlanId() bool {
+	if o != nil && !IsNil(o.PlanId) {
+		return true
+	}
+
+	return false
+}
+
+// SetPlanId gets a reference to the given string and assigns it to the PlanId field.
+func (o *ListCompaniesParams) SetPlanId(v string) {
+	o.PlanId = &v
+}
+
+// GetQ returns the Q field value if set, zero value otherwise.
+func (o *ListCompaniesParams) GetQ() string {
+	if o == nil || IsNil(o.Q) {
+		var ret string
+		return ret
+	}
+	return *o.Q
+}
+
+// GetQOk returns a tuple with the Q field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListCompaniesParams) GetQOk() (*string, bool) {
+	if o == nil || IsNil(o.Q) {
+		return nil, false
+	}
+	return o.Q, true
+}
+
+// HasQ returns a boolean if a field has been set.
+func (o *ListCompaniesParams) HasQ() bool {
+	if o != nil && !IsNil(o.Q) {
+		return true
+	}
+
+	return false
+}
+
+// SetQ gets a reference to the given string and assigns it to the Q field.
+func (o *ListCompaniesParams) SetQ(v string) {
+	o.Q = &v
+}
+
+// GetWithoutFeatureOverrideFor returns the WithoutFeatureOverrideFor field value if set, zero value otherwise.
+func (o *ListCompaniesParams) GetWithoutFeatureOverrideFor() string {
+	if o == nil || IsNil(o.WithoutFeatureOverrideFor) {
+		var ret string
+		return ret
+	}
+	return *o.WithoutFeatureOverrideFor
+}
+
+// GetWithoutFeatureOverrideForOk returns a tuple with the WithoutFeatureOverrideFor field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListCompaniesParams) GetWithoutFeatureOverrideForOk() (*string, bool) {
+	if o == nil || IsNil(o.WithoutFeatureOverrideFor) {
+		return nil, false
+	}
+	return o.WithoutFeatureOverrideFor, true
+}
+
+// HasWithoutFeatureOverrideFor returns a boolean if a field has been set.
+func (o *ListCompaniesParams) HasWithoutFeatureOverrideFor() bool {
+	if o != nil && !IsNil(o.WithoutFeatureOverrideFor) {
+		return true
+	}
+
+	return false
+}
+
+// SetWithoutFeatureOverrideFor gets a reference to the given string and assigns it to the WithoutFeatureOverrideFor field.
+func (o *ListCompaniesParams) SetWithoutFeatureOverrideFor(v string) {
+	o.WithoutFeatureOverrideFor = &v
+}
+
 func (o ListCompaniesParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -155,6 +254,15 @@ func (o ListCompaniesParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.PlanId) {
+		toSerialize["plan_id"] = o.PlanId
+	}
+	if !IsNil(o.Q) {
+		toSerialize["q"] = o.Q
+	}
+	if !IsNil(o.WithoutFeatureOverrideFor) {
+		toSerialize["without_feature_override_for"] = o.WithoutFeatureOverrideFor
 	}
 	return toSerialize, nil
 }

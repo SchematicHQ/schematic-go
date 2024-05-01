@@ -19,9 +19,10 @@ var _ MappedNullable = &GetEventSummariesParams{}
 
 // GetEventSummariesParams Input parameters
 type GetEventSummariesParams struct {
-	Limit  *int32  `json:"limit,omitempty"`
-	Offset *int32  `json:"offset,omitempty"`
-	Q      *string `json:"q,omitempty"`
+	EventSubtypes []string `json:"event_subtypes,omitempty"`
+	Limit         *int32   `json:"limit,omitempty"`
+	Offset        *int32   `json:"offset,omitempty"`
+	Q             *string  `json:"q,omitempty"`
 }
 
 // NewGetEventSummariesParams instantiates a new GetEventSummariesParams object
@@ -39,6 +40,38 @@ func NewGetEventSummariesParams() *GetEventSummariesParams {
 func NewGetEventSummariesParamsWithDefaults() *GetEventSummariesParams {
 	this := GetEventSummariesParams{}
 	return &this
+}
+
+// GetEventSubtypes returns the EventSubtypes field value if set, zero value otherwise.
+func (o *GetEventSummariesParams) GetEventSubtypes() []string {
+	if o == nil || IsNil(o.EventSubtypes) {
+		var ret []string
+		return ret
+	}
+	return o.EventSubtypes
+}
+
+// GetEventSubtypesOk returns a tuple with the EventSubtypes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GetEventSummariesParams) GetEventSubtypesOk() ([]string, bool) {
+	if o == nil || IsNil(o.EventSubtypes) {
+		return nil, false
+	}
+	return o.EventSubtypes, true
+}
+
+// HasEventSubtypes returns a boolean if a field has been set.
+func (o *GetEventSummariesParams) HasEventSubtypes() bool {
+	if o != nil && !IsNil(o.EventSubtypes) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventSubtypes gets a reference to the given []string and assigns it to the EventSubtypes field.
+func (o *GetEventSummariesParams) SetEventSubtypes(v []string) {
+	o.EventSubtypes = v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -147,6 +180,9 @@ func (o GetEventSummariesParams) MarshalJSON() ([]byte, error) {
 
 func (o GetEventSummariesParams) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.EventSubtypes) {
+		toSerialize["event_subtypes"] = o.EventSubtypes
+	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit
 	}

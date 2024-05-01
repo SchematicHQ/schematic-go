@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**EventSubtypes** | Pointer to **[]string** |  | [optional] 
 **Limit** | Pointer to **int32** |  | [optional] 
 **Offset** | Pointer to **int32** |  | [optional] 
 **Q** | Pointer to **string** |  | [optional] 
@@ -26,6 +27,31 @@ will change when the set of required properties is changed
 NewGetEventSummariesParamsWithDefaults instantiates a new GetEventSummariesParams object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetEventSubtypes
+
+`func (o *GetEventSummariesParams) GetEventSubtypes() []string`
+
+GetEventSubtypes returns the EventSubtypes field if non-nil, zero value otherwise.
+
+### GetEventSubtypesOk
+
+`func (o *GetEventSummariesParams) GetEventSubtypesOk() (*[]string, bool)`
+
+GetEventSubtypesOk returns a tuple with the EventSubtypes field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEventSubtypes
+
+`func (o *GetEventSummariesParams) SetEventSubtypes(v []string)`
+
+SetEventSubtypes sets EventSubtypes field to given value.
+
+### HasEventSubtypes
+
+`func (o *GetEventSummariesParams) HasEventSubtypes() bool`
+
+HasEventSubtypes returns a boolean if a field has been set.
 
 ### GetLimit
 

@@ -11,10 +11,10 @@ package api
 
 import (
 	"context"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
 )
 
 func Test_api_EventsAPIService(t *testing.T) {
@@ -22,33 +22,9 @@ func Test_api_EventsAPIService(t *testing.T) {
 	configuration := schematicapi.NewConfiguration()
 	apiClient := schematicapi.NewAPIClient(configuration)
 
-	t.Run("Test EventsAPIService CountEventSummaries", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.EventsAPI.CountEventSummaries(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test EventsAPIService CountEvents", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.EventsAPI.CountEvents(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
 	t.Run("Test EventsAPIService CreateEvent", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EventsAPI.CreateEvent(context.Background()).Execute()
 
@@ -60,7 +36,7 @@ func Test_api_EventsAPIService(t *testing.T) {
 
 	t.Run("Test EventsAPIService CreateEventBatch", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EventsAPI.CreateEventBatch(context.Background()).Execute()
 
@@ -72,7 +48,7 @@ func Test_api_EventsAPIService(t *testing.T) {
 
 	t.Run("Test EventsAPIService GetEvent", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var eventId string
 
@@ -86,7 +62,7 @@ func Test_api_EventsAPIService(t *testing.T) {
 
 	t.Run("Test EventsAPIService GetEventSummaries", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EventsAPI.GetEventSummaries(context.Background()).Execute()
 
@@ -98,7 +74,7 @@ func Test_api_EventsAPIService(t *testing.T) {
 
 	t.Run("Test EventsAPIService GetEventSummaryBySubtype", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var key string
 
@@ -112,7 +88,7 @@ func Test_api_EventsAPIService(t *testing.T) {
 
 	t.Run("Test EventsAPIService ListEvents", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EventsAPI.ListEvents(context.Background()).Execute()
 
@@ -124,7 +100,7 @@ func Test_api_EventsAPIService(t *testing.T) {
 
 	t.Run("Test EventsAPIService ListMetricCounts", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EventsAPI.ListMetricCounts(context.Background()).Execute()
 

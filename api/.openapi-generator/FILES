@@ -516,4 +516,11 @@ model_upsert_user_trait_response.go
 model_user_detail_response_data.go
 model_user_response_data.go
 response.go
+test/api_accounts_test.go
+test/api_billing_test.go
+test/api_companies_test.go
+test/api_entitlements_test.go
+test/api_events_test.go
+test/api_features_test.go
+test/api_plans_test.go
 utils.go

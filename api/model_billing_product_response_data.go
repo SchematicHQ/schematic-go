@@ -28,7 +28,7 @@ type BillingProductResponseData struct {
 	EnvironmentId string       `json:"environment_id"`
 	ExternalId    string       `json:"external_id"`
 	Name          string       `json:"name"`
-	Currency      *string      `json:"currency,omitempty"`
+	Currency      string       `json:"currency"`
 	Price         float32      `json:"price"`
 	ProductId     string       `json:"product_id"`
 	Quantity      float32      `json:"quantity"`
@@ -41,13 +41,14 @@ type _BillingProductResponseData BillingProductResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBillingProductResponseData(accountId string, createdAt time.Time, environmentId string, externalId string, name string, price float32, productId string, quantity float32, updatedAt time.Time) *BillingProductResponseData {
+func NewBillingProductResponseData(accountId string, createdAt time.Time, environmentId string, externalId string, name string, currency string, price float32, productId string, quantity float32, updatedAt time.Time) *BillingProductResponseData {
 	this := BillingProductResponseData{}
 	this.AccountId = accountId
 	this.CreatedAt = createdAt
 	this.EnvironmentId = environmentId
 	this.ExternalId = externalId
 	this.Name = name
+	this.Currency = currency
 	this.Price = price
 	this.ProductId = productId
 	this.Quantity = quantity
@@ -226,36 +227,28 @@ func (o *BillingProductResponseData) SetName(v string) {
 	o.Name = v
 }
 
-// GetCurrency returns the Currency field value if set, zero value otherwise.
+// GetCurrency returns the Currency field value
 func (o *BillingProductResponseData) GetCurrency() string {
-	if o == nil || IsNil(o.Currency) {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.Currency
+
+	return o.Currency
 }
 
-// GetCurrencyOk returns a tuple with the Currency field value if set, nil otherwise
+// GetCurrencyOk returns a tuple with the Currency field value
 // and a boolean to check if the value has been set.
 func (o *BillingProductResponseData) GetCurrencyOk() (*string, bool) {
-	if o == nil || IsNil(o.Currency) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Currency, true
+	return &o.Currency, true
 }
 
-// HasCurrency returns a boolean if a field has been set.
-func (o *BillingProductResponseData) HasCurrency() bool {
-	if o != nil && !IsNil(o.Currency) {
-		return true
-	}
-
-	return false
-}
-
-// SetCurrency gets a reference to the given string and assigns it to the Currency field.
+// SetCurrency sets field value
 func (o *BillingProductResponseData) SetCurrency(v string) {
-	o.Currency = &v
+	o.Currency = v
 }
 
 // GetPrice returns the Price field value
@@ -372,9 +365,7 @@ func (o BillingProductResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["environment_id"] = o.EnvironmentId
 	toSerialize["external_id"] = o.ExternalId
 	toSerialize["name"] = o.Name
-	if !IsNil(o.Currency) {
-		toSerialize["currency"] = o.Currency
-	}
+	toSerialize["currency"] = o.Currency
 	toSerialize["price"] = o.Price
 	toSerialize["product_id"] = o.ProductId
 	toSerialize["quantity"] = o.Quantity
@@ -392,6 +383,7 @@ func (o *BillingProductResponseData) UnmarshalJSON(data []byte) (err error) {
 		"environment_id",
 		"external_id",
 		"name",
+		"currency",
 		"price",
 		"product_id",
 		"quantity",

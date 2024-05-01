@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **EnvironmentId** | **string** |  | 
 **ExternalId** | **string** |  | 
 **Name** | **string** |  | 
-**Currency** | Pointer to **string** |  | [optional] 
+**Currency** | **string** |  | 
 **Price** | **float32** |  | 
 **ProductId** | **string** |  | 
 **Quantity** | **float32** |  | 
@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 
 ### NewBillingProductResponseData
 
-`func NewBillingProductResponseData(accountId string, createdAt time.Time, environmentId string, externalId string, name string, price float32, productId string, quantity float32, updatedAt time.Time, ) *BillingProductResponseData`
+`func NewBillingProductResponseData(accountId string, createdAt time.Time, environmentId string, externalId string, name string, currency string, price float32, productId string, quantity float32, updatedAt time.Time, ) *BillingProductResponseData`
 
 NewBillingProductResponseData instantiates a new BillingProductResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -189,11 +189,6 @@ and a boolean to check if the value has been set.
 
 SetCurrency sets Currency field to given value.
 
-### HasCurrency
-
-`func (o *BillingProductResponseData) HasCurrency() bool`
-
-HasCurrency returns a boolean if a field has been set.
 
 ### GetPrice
 

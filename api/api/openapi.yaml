@@ -2827,6 +2827,15 @@ paths:
         schema:
           type: string
         style: form
+      - explode: true
+        in: query
+        name: event_subtypes
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
       - description: Page limit (default 100)
         explode: true
         in: query
@@ -6703,6 +6712,7 @@ components:
       required:
       - account_id
       - created_at
+      - currency
       - environment_id
       - external_id
       - name
@@ -7076,19 +7086,92 @@ components:
           trait_id: trait_id
         updated_at: 2000-01-23T04:56:07.000+00:00
         company:
+          traits: "{}"
           environment_id: environment_id
           updated_at: 2000-01-23T04:56:07.000+00:00
+          user_count: 0
           logo_url: logo_url
+          keys:
+          - definition_id: definition_id
+            entity_type: entity_type
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            definition:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              key: key
+            id: id
+            entity_id: entity_id
+            value: value
+            key: key
+          - definition_id: definition_id
+            entity_type: entity_type
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            definition:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              key: key
+            id: id
+            entity_id: entity_id
+            value: value
+            key: key
+          plans:
+          - image_url: image_url
+            name: name
+            id: id
+          - image_url: image_url
+            name: name
+            id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           id: id
+          entity_traits:
+          - definition_id: definition_id
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            definition:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
+            id: id
+            value: value
+          - definition_id: definition_id
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            definition:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
+            id: id
+            value: value
           last_seen_at: 2000-01-23T04:56:07.000+00:00
         value_bool: true
         id: id
         metric_period: metric_period
       properties:
         company:
-          $ref: '#/components/schemas/CompanyResponseData'
+          $ref: '#/components/schemas/CompanyDetailResponseData'
         company_id:
           type: string
         created_at:
@@ -9762,6 +9845,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -11101,6 +11194,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -12445,6 +12548,16 @@ components:
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
+        trait:
+          entity_type: entity_type
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          hierarchy:
+          - hierarchy
+          - hierarchy
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          display_name: display_name
+          trait_type: trait_type
         event_subtype: event_subtype
         id: id
         lifecycle_phase: lifecycle_phase
@@ -12473,6 +12586,8 @@ components:
           type: string
         name:
           type: string
+        trait:
+          $ref: '#/components/schemas/EntityTraitDefinitionResponseData'
         trait_id:
           nullable: true
           type: string
@@ -13818,6 +13933,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -15113,6 +15238,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -16419,6 +16554,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -19110,6 +19255,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -20391,6 +20546,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -24612,12 +24777,85 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
+            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            user_count: 0
             logo_url: logo_url
+            keys:
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            plans:
+            - image_url: image_url
+              name: name
+              id: id
+            - image_url: image_url
+              name: name
+              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
+            entity_traits:
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -24652,12 +24890,85 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
+            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            user_count: 0
             logo_url: logo_url
+            keys:
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            plans:
+            - image_url: image_url
+              name: name
+              id: id
+            - image_url: image_url
+              name: name
+              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
+            entity_traits:
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -24723,12 +25034,85 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
+            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            user_count: 0
             logo_url: logo_url
+            keys:
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            plans:
+            - image_url: image_url
+              name: name
+              id: id
+            - image_url: image_url
+              name: name
+              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
+            entity_traits:
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -24779,12 +25163,85 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
+            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            user_count: 0
             logo_url: logo_url
+            keys:
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            plans:
+            - image_url: image_url
+              name: name
+              id: id
+            - image_url: image_url
+              name: name
+              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
+            entity_traits:
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -24835,12 +25292,85 @@ components:
             trait_id: trait_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           company:
+            traits: "{}"
             environment_id: environment_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            user_count: 0
             logo_url: logo_url
+            keys:
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            - definition_id: definition_id
+              entity_type: entity_type
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                key: key
+              id: id
+              entity_id: entity_id
+              value: value
+              key: key
+            plans:
+            - image_url: image_url
+              name: name
+              id: id
+            - image_url: image_url
+              name: name
+              id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             id: id
+            entity_traits:
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
+            - definition_id: definition_id
+              environment_id: environment_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              created_at: 2000-01-23T04:56:07.000+00:00
+              definition:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
+              id: id
+              value: value
             last_seen_at: 2000-01-23T04:56:07.000+00:00
           value_bool: true
           id: id
@@ -25677,7 +26207,14 @@ components:
         q: q
         offset: 0
         limit: 100
+        event_subtypes:
+        - event_subtypes
+        - event_subtypes
       properties:
+        event_subtypes:
+          items:
+            type: string
+          type: array
         limit:
           example: 100
           type: integer
@@ -25707,6 +26244,9 @@ components:
           q: q
           offset: 0
           limit: 100
+          event_subtypes:
+          - event_subtypes
+          - event_subtypes
       properties:
         data:
           description: The returned resources
@@ -27235,6 +27775,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -28538,6 +29088,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -29932,6 +30492,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -31227,6 +31797,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -32621,6 +33201,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -33931,6 +34521,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -35328,6 +35928,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -36609,6 +37219,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -37916,6 +38536,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -39213,6 +39843,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -40510,6 +41150,16 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          trait:
+            entity_type: entity_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            hierarchy:
+            - hierarchy
+            - hierarchy
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            display_name: display_name
+            trait_type: trait_type
           event_subtype: event_subtype
           id: id
           lifecycle_phase: lifecycle_phase
@@ -47420,6 +48070,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -48701,6 +49361,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -49990,6 +50660,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -51271,6 +51951,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -52586,6 +53276,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -53867,6 +54567,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -55172,6 +55882,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -56453,6 +57173,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -57758,6 +58488,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -59039,6 +59779,16 @@ components:
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
+            trait:
+              entity_type: entity_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              hierarchy:
+              - hierarchy
+              - hierarchy
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: id
+              display_name: display_name
+              trait_type: trait_type
             event_subtype: event_subtype
             id: id
             lifecycle_phase: lifecycle_phase
@@ -60427,6 +61177,16 @@ components:
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
+              trait:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
               event_subtype: event_subtype
               id: id
               lifecycle_phase: lifecycle_phase
@@ -61722,6 +62482,16 @@ components:
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
+              trait:
+                entity_type: entity_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                hierarchy:
+                - hierarchy
+                - hierarchy
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: id
+                display_name: display_name
+                trait_type: trait_type
               event_subtype: event_subtype
               id: id
               lifecycle_phase: lifecycle_phase

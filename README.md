@@ -90,25 +90,33 @@ func main() {
 Create or update users and companies using identify events.
 
 ```go
+import (
+  "context"
+  "os"
+
+  "github.com/SchematicHQ/schematic-go"
+)
+
 func main() {
   client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
-  eventBody := NewEventBodyIdentify(map[string]any{
-    "email":   "wcoyote@acme.net",
-    "user-id": "your-user-id",
+  client.Identify(context.Background(), &schematic.EventBodyIdentify{
+    Event: "some-action",
+    Company: map[string]any{
+      "id": "your-company-id",
+    },
+    User: map[string]any{
+      "email":   "wcoyote@acme.net",
+      "user-id": "your-user-id",
+    },
+    Name: "Wile E. Coyote",
+    Traits: map[string]any{
+      "city":        "Atlanta",
+      "login_count": 24,
+      "is_staff":    false,
+    },
   })
-  eventBody.SetCompany(map[string]any{
-    "id": "your-company-id",
-  })
-  eventBody.SetName("Wile E. Coyote")
-  eventBody.SetTraits(map[string]any{
-    "city":        "Atlanta",
-    "login_count": 24,
-    "is_staff":    false,
-  })
-
-  client.Identify(context.Background(), eventBody)
 }
 ```
 
@@ -119,20 +127,27 @@ This call is non-blocking and there is no response to check.
 Track activity in your application using track events; these events can later be used to produce metrics for targeting.
 
 ```go
+import (
+  "context"
+  "os"
+
+  "github.com/SchematicHQ/schematic-go"
+)
+
 func main() {
   client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
-  eventBody := NewEventBodyTrack("some-action")
-  eventBody.SetUser(map[string]any{
-    "email":   "wcoyote@acme.net",
-    "user-id": "your-user-id",
+  client.Track(context.Background(), &schematic.EventBodyTrack{
+    Event: "some-action",
+    Company: map[string]any{
+      "id": "your-company-id",
+    },
+    User: map[string]any{
+      "email":   "wcoyote@acme.net",
+      "user-id": "your-user-id",
+    },
   })
-  eventBody.SetCompany(map[string]any{
-    "id": "your-company-id",
-  })
-
-  client.Track(context.Background(), eventBody)
 }
 ```
 
@@ -143,20 +158,29 @@ This call is non-blocking and there is no response to check.
 Although it is faster to create companies and users via identify events, if you need to handle a response, you can use the companies API to upsert companies. Because you use your own identifiers to identify companies, rather than a Schematic company ID, creating and updating companies are both done via the same upsert operation:
 
 ```go
+import (
+  "context"
+  "os"
+
+  "github.com/SchematicHQ/schematic-go"
+  schematicapi "github.com/SchematicHQ/schematic-go/api"
+)
+
 func main() {
   client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
-  body := schematic.NewUpsertCompanyRequestBody(map[string]any{
-    "id": "your-company-id",
+  body := &schematicapi.UpsertCompanyRequestBody{
+    Keys: map[string]any{
+      "id": "your-company-id",
+    },
+    Name: "Acme Widgets, Inc.",
+    Traits: map[string]any{
+      "city":       "Atlanta",
+      "high_score": 25,
+      "is_active":  true,
+    },
   })
-  body.SetName("Acme Widgets, Inc.")
-  body.SetTraits(map[string]any{
-    "city":       "Atlanta",
-    "high_score": 25,
-    "is_active":  true,
-  })
-
   resp, r, err := client.API().CompaniesAPI.UpsertCompany(context.Background()).UpsertCompanyRequestBody(*body).Execute()
 }
 ```
@@ -170,23 +194,32 @@ You can also define any number of company traits; these can then be used as targ
 Similarly, you can upsert users using the Schematic API, as an alternative to using identify events. Because you use your own identifiers to identify users, rather than a Schematic user ID, creating and updating users are both done via the same upsert operation:
 
 ```go
+import (
+  "context"
+  "os"
+
+  "github.com/SchematicHQ/schematic-go"
+  schematicapi "github.com/SchematicHQ/schematic-go/api"
+)
+
 func main() {
   client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
-  companyKeys := map[string]any{
-    "id": "your-company-id",
-  }
-  userKeys := map[string]any{
-    "email":   "wcoyote@acme.net",
-    "user-id": "your-user-id",
-  }
-  body := schematic.NewUpsertUserRequestBody(companyKeys, userKeys)
-  body.SetName("Wile E. Coyote")
-  body.SetTraits(map[string]any{
-    "city":        "Atlanta",
-    "login_count": 24,
-    "is_staff":    false,
+  body := &schematicapi.UpsertUserRequestBody{
+    Keys: map[string]any{
+      "email":   "wcoyote@acme.net",
+      "user-id": "your-user-id",
+    },
+    Company: map[string]any{
+      "id": "your-company-id",
+    },
+    Name: "Wile E. Coyote",
+    Traits: map[string]any{
+      "city":        "Atlanta",
+      "login_count": 24,
+      "is_staff":    false,
+    },
   })
 
   resp, r, err := client.API().CompaniesAPI.UpsertUser(context.Background()).UpsertUserRequestBody(*body).Execute()
@@ -201,6 +234,13 @@ You can also define any number of user traits; these can then be used as targeti
 When checking a flag, you'll provide keys for a company and/or keys for a user. You can also provide no keys at all, in which case you'll get the default value for the flag.
 
 ```go
+import (
+  "context"
+  "os"
+
+  "github.com/SchematicHQ/schematic-go"
+)
+
 func main() {
   client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
@@ -234,6 +274,10 @@ The Schematic API supports many operations beyond these, accessible via `client.
 In development or testing environments, you may want to avoid making network requests to the Schematic API. You can run Schematic in offline mode by providing an empty API key to the client:
 
 ```go
+import (
+  "github.com/SchematicHQ/schematic-go"
+)
+
 func main() {
   client := schematic.NewClient("")
   defer client.Close()
@@ -243,6 +287,10 @@ func main() {
 Offline mode works well with flag defaults:
 
 ```go
+import (
+  "github.com/SchematicHQ/schematic-go"
+)
+
 func main() {
   client := schematic.NewClient("", schematic.WithDefaultFlagValues(map[string]bool{
     "some-flag-key": true,
@@ -254,6 +302,10 @@ func main() {
 In an automated testing context, you may also want to use offline mode and specify single flag responses for test cases:
 
 ```go
+import (
+  "github.com/SchematicHQ/schematic-go"
+)
+
 func TestSomeFunctionality(t *testing.T) {
   client := schematic.NewClient("")
   defer client.Close()

@@ -25,7 +25,7 @@ type FeatureCompanyResponseData struct {
 	Access bool `json:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
 	Allocation      NullableInt32              `json:"allocation,omitempty"`
-	Company         *CompanyResponseData       `json:"company,omitempty"`
+	Company         *CompanyDetailResponseData `json:"company,omitempty"`
 	EntitlementId   string                     `json:"entitlement_id"`
 	EntitlementType string                     `json:"entitlement_type"`
 	Feature         *FeatureDetailResponseData `json:"feature,omitempty"`
@@ -126,9 +126,9 @@ func (o *FeatureCompanyResponseData) UnsetAllocation() {
 }
 
 // GetCompany returns the Company field value if set, zero value otherwise.
-func (o *FeatureCompanyResponseData) GetCompany() CompanyResponseData {
+func (o *FeatureCompanyResponseData) GetCompany() CompanyDetailResponseData {
 	if o == nil || IsNil(o.Company) {
-		var ret CompanyResponseData
+		var ret CompanyDetailResponseData
 		return ret
 	}
 	return *o.Company
@@ -136,7 +136,7 @@ func (o *FeatureCompanyResponseData) GetCompany() CompanyResponseData {
 
 // GetCompanyOk returns a tuple with the Company field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *FeatureCompanyResponseData) GetCompanyOk() (*CompanyResponseData, bool) {
+func (o *FeatureCompanyResponseData) GetCompanyOk() (*CompanyDetailResponseData, bool) {
 	if o == nil || IsNil(o.Company) {
 		return nil, false
 	}
@@ -152,8 +152,8 @@ func (o *FeatureCompanyResponseData) HasCompany() bool {
 	return false
 }
 
-// SetCompany gets a reference to the given CompanyResponseData and assigns it to the Company field.
-func (o *FeatureCompanyResponseData) SetCompany(v CompanyResponseData) {
+// SetCompany gets a reference to the given CompanyDetailResponseData and assigns it to the Company field.
+func (o *FeatureCompanyResponseData) SetCompany(v CompanyDetailResponseData) {
 	o.Company = &v
 }
 

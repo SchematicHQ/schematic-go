@@ -15,6 +15,7 @@ Method | HTTP request | Description
 [**GetEnvironment**](AccountsAPI.md#GetEnvironment) | **Get** /environments/{environment_id} | Get environment
 [**ListApiKeys**](AccountsAPI.md#ListApiKeys) | **Get** /api-keys | List api keys
 [**ListApiRequests**](AccountsAPI.md#ListApiRequests) | **Get** /api-requests | List api requests
+[**ListEnvironments**](AccountsAPI.md#ListEnvironments) | **Get** /environments | List environments
 [**UpdateApiKey**](AccountsAPI.md#UpdateApiKey) | **Put** /api-keys/{api_key_id} | Update api key
 [**UpdateEnvironment**](AccountsAPI.md#UpdateEnvironment) | **Put** /environments/{environment_id} | Update environment
 
@@ -790,6 +791,77 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ListApiRequestsResponse**](ListApiRequestsResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListEnvironments
+
+> ListEnvironmentsResponse ListEnvironments(ctx).Ids(ids).Limit(limit).Offset(offset).Execute()
+
+List environments
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	ids := []string{"Inner_example"} // []string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().AccountsAPI.ListEnvironments(context.Background()).Ids(ids).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `AccountsAPI.ListEnvironments``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListEnvironments`: ListEnvironmentsResponse
+	fmt.Fprintf(os.Stdout, "Response from `AccountsAPI.ListEnvironments`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListEnvironmentsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ids** | **[]string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListEnvironmentsResponse**](ListEnvironmentsResponse.md)
 
 ### Authorization
 

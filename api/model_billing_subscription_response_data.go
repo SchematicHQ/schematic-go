@@ -22,12 +22,11 @@ var _ MappedNullable = &BillingSubscriptionResponseData{}
 
 // BillingSubscriptionResponseData The created resource
 type BillingSubscriptionResponseData struct {
-	CreatedAt  time.Time    `json:"CreatedAt"`
-	DeletedAt  NullableTime `json:"DeletedAt,omitempty"`
-	ExpiredAt  NullableTime `json:"ExpiredAt,omitempty"`
-	ExternalId string       `json:"ExternalId"`
-	ID         int32        `json:"ID"`
-	UpdatedAt  time.Time    `json:"UpdatedAt"`
+	DeletedAt  NullableTime `json:"deleted_at,omitempty"`
+	ExpiredAt  NullableTime `json:"expired_at,omitempty"`
+	ExternalId string       `json:"external_id"`
+	Id         int32        `json:"id"`
+	UpdatedAt  time.Time    `json:"updated_at"`
 }
 
 type _BillingSubscriptionResponseData BillingSubscriptionResponseData
@@ -36,11 +35,10 @@ type _BillingSubscriptionResponseData BillingSubscriptionResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBillingSubscriptionResponseData(createdAt time.Time, externalId string, iD int32, updatedAt time.Time) *BillingSubscriptionResponseData {
+func NewBillingSubscriptionResponseData(externalId string, id int32, updatedAt time.Time) *BillingSubscriptionResponseData {
 	this := BillingSubscriptionResponseData{}
-	this.CreatedAt = createdAt
 	this.ExternalId = externalId
-	this.ID = iD
+	this.Id = id
 	this.UpdatedAt = updatedAt
 	return &this
 }
@@ -51,30 +49,6 @@ func NewBillingSubscriptionResponseData(createdAt time.Time, externalId string, 
 func NewBillingSubscriptionResponseDataWithDefaults() *BillingSubscriptionResponseData {
 	this := BillingSubscriptionResponseData{}
 	return &this
-}
-
-// GetCreatedAt returns the CreatedAt field value
-func (o *BillingSubscriptionResponseData) GetCreatedAt() time.Time {
-	if o == nil {
-		var ret time.Time
-		return ret
-	}
-
-	return o.CreatedAt
-}
-
-// GetCreatedAtOk returns a tuple with the CreatedAt field value
-// and a boolean to check if the value has been set.
-func (o *BillingSubscriptionResponseData) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.CreatedAt, true
-}
-
-// SetCreatedAt sets field value
-func (o *BillingSubscriptionResponseData) SetCreatedAt(v time.Time) {
-	o.CreatedAt = v
 }
 
 // GetDeletedAt returns the DeletedAt field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -187,28 +161,28 @@ func (o *BillingSubscriptionResponseData) SetExternalId(v string) {
 	o.ExternalId = v
 }
 
-// GetID returns the ID field value
-func (o *BillingSubscriptionResponseData) GetID() int32 {
+// GetId returns the Id field value
+func (o *BillingSubscriptionResponseData) GetId() int32 {
 	if o == nil {
 		var ret int32
 		return ret
 	}
 
-	return o.ID
+	return o.Id
 }
 
-// GetIDOk returns a tuple with the ID field value
+// GetIdOk returns a tuple with the Id field value
 // and a boolean to check if the value has been set.
-func (o *BillingSubscriptionResponseData) GetIDOk() (*int32, bool) {
+func (o *BillingSubscriptionResponseData) GetIdOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.ID, true
+	return &o.Id, true
 }
 
-// SetID sets field value
-func (o *BillingSubscriptionResponseData) SetID(v int32) {
-	o.ID = v
+// SetId sets field value
+func (o *BillingSubscriptionResponseData) SetId(v int32) {
+	o.Id = v
 }
 
 // GetUpdatedAt returns the UpdatedAt field value
@@ -245,16 +219,15 @@ func (o BillingSubscriptionResponseData) MarshalJSON() ([]byte, error) {
 
 func (o BillingSubscriptionResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["CreatedAt"] = o.CreatedAt
 	if o.DeletedAt.IsSet() {
-		toSerialize["DeletedAt"] = o.DeletedAt.Get()
+		toSerialize["deleted_at"] = o.DeletedAt.Get()
 	}
 	if o.ExpiredAt.IsSet() {
-		toSerialize["ExpiredAt"] = o.ExpiredAt.Get()
+		toSerialize["expired_at"] = o.ExpiredAt.Get()
 	}
-	toSerialize["ExternalId"] = o.ExternalId
-	toSerialize["ID"] = o.ID
-	toSerialize["UpdatedAt"] = o.UpdatedAt
+	toSerialize["external_id"] = o.ExternalId
+	toSerialize["id"] = o.Id
+	toSerialize["updated_at"] = o.UpdatedAt
 	return toSerialize, nil
 }
 
@@ -263,10 +236,9 @@ func (o *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) (err error)
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"CreatedAt",
-		"ExternalId",
-		"ID",
-		"UpdatedAt",
+		"external_id",
+		"id",
+		"updated_at",
 	}
 
 	allProperties := make(map[string]interface{})

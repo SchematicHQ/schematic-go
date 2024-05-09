@@ -6,11 +6,11 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **AccountId** | **string** |  | 
 **CreatedAt** | **time.Time** |  | 
+**Currency** | **string** |  | 
 **DeletedAt** | Pointer to **NullableTime** |  | [optional] 
 **EnvironmentId** | **string** |  | 
 **ExternalId** | **string** |  | 
 **Name** | **string** |  | 
-**Currency** | **string** |  | 
 **Price** | **float32** |  | 
 **ProductId** | **string** |  | 
 **Quantity** | **float32** |  | 
@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 
 ### NewBillingProductResponseData
 
-`func NewBillingProductResponseData(accountId string, createdAt time.Time, environmentId string, externalId string, name string, currency string, price float32, productId string, quantity float32, updatedAt time.Time, ) *BillingProductResponseData`
+`func NewBillingProductResponseData(accountId string, createdAt time.Time, currency string, environmentId string, externalId string, name string, price float32, productId string, quantity float32, updatedAt time.Time, ) *BillingProductResponseData`
 
 NewBillingProductResponseData instantiates a new BillingProductResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -73,6 +73,26 @@ and a boolean to check if the value has been set.
 `func (o *BillingProductResponseData) SetCreatedAt(v time.Time)`
 
 SetCreatedAt sets CreatedAt field to given value.
+
+
+### GetCurrency
+
+`func (o *BillingProductResponseData) GetCurrency() string`
+
+GetCurrency returns the Currency field if non-nil, zero value otherwise.
+
+### GetCurrencyOk
+
+`func (o *BillingProductResponseData) GetCurrencyOk() (*string, bool)`
+
+GetCurrencyOk returns a tuple with the Currency field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCurrency
+
+`func (o *BillingProductResponseData) SetCurrency(v string)`
+
+SetCurrency sets Currency field to given value.
 
 
 ### GetDeletedAt
@@ -168,26 +188,6 @@ and a boolean to check if the value has been set.
 `func (o *BillingProductResponseData) SetName(v string)`
 
 SetName sets Name field to given value.
-
-
-### GetCurrency
-
-`func (o *BillingProductResponseData) GetCurrency() string`
-
-GetCurrency returns the Currency field if non-nil, zero value otherwise.
-
-### GetCurrencyOk
-
-`func (o *BillingProductResponseData) GetCurrencyOk() (*string, bool)`
-
-GetCurrencyOk returns a tuple with the Currency field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetCurrency
-
-`func (o *BillingProductResponseData) SetCurrency(v string)`
-
-SetCurrency sets Currency field to given value.
 
 
 ### GetPrice

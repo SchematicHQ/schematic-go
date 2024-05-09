@@ -409,6 +409,36 @@ func (mr *MockAccountsAPIMockRecorder) ListApiRequestsExecute(arg0 any) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListApiRequestsExecute", reflect.TypeOf((*MockAccountsAPI)(nil).ListApiRequestsExecute), arg0)
 }
 
+// ListEnvironments mocks base method.
+func (m *MockAccountsAPI) ListEnvironments(arg0 context.Context) api.ApiListEnvironmentsRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListEnvironments", arg0)
+	ret0, _ := ret[0].(api.ApiListEnvironmentsRequest)
+	return ret0
+}
+
+// ListEnvironments indicates an expected call of ListEnvironments.
+func (mr *MockAccountsAPIMockRecorder) ListEnvironments(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEnvironments", reflect.TypeOf((*MockAccountsAPI)(nil).ListEnvironments), arg0)
+}
+
+// ListEnvironmentsExecute mocks base method.
+func (m *MockAccountsAPI) ListEnvironmentsExecute(arg0 api.ApiListEnvironmentsRequest) (*api.ListEnvironmentsResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListEnvironmentsExecute", arg0)
+	ret0, _ := ret[0].(*api.ListEnvironmentsResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ListEnvironmentsExecute indicates an expected call of ListEnvironmentsExecute.
+func (mr *MockAccountsAPIMockRecorder) ListEnvironmentsExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEnvironmentsExecute", reflect.TypeOf((*MockAccountsAPI)(nil).ListEnvironmentsExecute), arg0)
+}
+
 // UpdateApiKey mocks base method.
 func (m *MockAccountsAPI) UpdateApiKey(arg0 context.Context, arg1 string) api.ApiUpdateApiKeyRequest {
 	m.ctrl.T.Helper()

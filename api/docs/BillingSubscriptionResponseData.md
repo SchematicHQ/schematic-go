@@ -4,18 +4,17 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**CreatedAt** | **time.Time** |  | 
 **DeletedAt** | Pointer to **NullableTime** |  | [optional] 
 **ExpiredAt** | Pointer to **NullableTime** |  | [optional] 
 **ExternalId** | **string** |  | 
-**ID** | **int32** |  | 
+**Id** | **int32** |  | 
 **UpdatedAt** | **time.Time** |  | 
 
 ## Methods
 
 ### NewBillingSubscriptionResponseData
 
-`func NewBillingSubscriptionResponseData(createdAt time.Time, externalId string, iD int32, updatedAt time.Time, ) *BillingSubscriptionResponseData`
+`func NewBillingSubscriptionResponseData(externalId string, id int32, updatedAt time.Time, ) *BillingSubscriptionResponseData`
 
 NewBillingSubscriptionResponseData instantiates a new BillingSubscriptionResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -29,26 +28,6 @@ will change when the set of required properties is changed
 NewBillingSubscriptionResponseDataWithDefaults instantiates a new BillingSubscriptionResponseData object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
-
-### GetCreatedAt
-
-`func (o *BillingSubscriptionResponseData) GetCreatedAt() time.Time`
-
-GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
-
-### GetCreatedAtOk
-
-`func (o *BillingSubscriptionResponseData) GetCreatedAtOk() (*time.Time, bool)`
-
-GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetCreatedAt
-
-`func (o *BillingSubscriptionResponseData) SetCreatedAt(v time.Time)`
-
-SetCreatedAt sets CreatedAt field to given value.
-
 
 ### GetDeletedAt
 
@@ -140,24 +119,24 @@ and a boolean to check if the value has been set.
 SetExternalId sets ExternalId field to given value.
 
 
-### GetID
+### GetId
 
-`func (o *BillingSubscriptionResponseData) GetID() int32`
+`func (o *BillingSubscriptionResponseData) GetId() int32`
 
-GetID returns the ID field if non-nil, zero value otherwise.
+GetId returns the Id field if non-nil, zero value otherwise.
 
-### GetIDOk
+### GetIdOk
 
-`func (o *BillingSubscriptionResponseData) GetIDOk() (*int32, bool)`
+`func (o *BillingSubscriptionResponseData) GetIdOk() (*int32, bool)`
 
-GetIDOk returns a tuple with the ID field if it's non-nil, zero value otherwise
+GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetID
+### SetId
 
-`func (o *BillingSubscriptionResponseData) SetID(v int32)`
+`func (o *BillingSubscriptionResponseData) SetId(v int32)`
 
-SetID sets ID field to given value.
+SetId sets Id field to given value.
 
 
 ### GetUpdatedAt

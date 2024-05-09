@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Access** | **bool** | Whether further usage is permitted. | 
 **Allocation** | Pointer to **NullableInt32** | The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted. | [optional] 
-**Company** | Pointer to [**CompanyResponseData**](CompanyResponseData.md) |  | [optional] 
+**Company** | Pointer to [**CompanyDetailResponseData**](CompanyDetailResponseData.md) |  | [optional] 
 **EntitlementId** | **string** |  | 
 **EntitlementType** | **string** |  | 
 **Feature** | Pointer to [**FeatureDetailResponseData**](FeatureDetailResponseData.md) |  | [optional] 
@@ -91,20 +91,20 @@ HasAllocation returns a boolean if a field has been set.
 UnsetAllocation ensures that no value is present for Allocation, not even an explicit nil
 ### GetCompany
 
-`func (o *FeatureCompanyUserResponseData) GetCompany() CompanyResponseData`
+`func (o *FeatureCompanyUserResponseData) GetCompany() CompanyDetailResponseData`
 
 GetCompany returns the Company field if non-nil, zero value otherwise.
 
 ### GetCompanyOk
 
-`func (o *FeatureCompanyUserResponseData) GetCompanyOk() (*CompanyResponseData, bool)`
+`func (o *FeatureCompanyUserResponseData) GetCompanyOk() (*CompanyDetailResponseData, bool)`
 
 GetCompanyOk returns a tuple with the Company field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCompany
 
-`func (o *FeatureCompanyUserResponseData) SetCompany(v CompanyResponseData)`
+`func (o *FeatureCompanyUserResponseData) SetCompany(v CompanyDetailResponseData)`
 
 SetCompany sets Company field to given value.
 

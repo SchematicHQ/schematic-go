@@ -24,11 +24,11 @@ var _ MappedNullable = &BillingProductResponseData{}
 type BillingProductResponseData struct {
 	AccountId     string       `json:"account_id"`
 	CreatedAt     time.Time    `json:"created_at"`
+	Currency      string       `json:"currency"`
 	DeletedAt     NullableTime `json:"deleted_at,omitempty"`
 	EnvironmentId string       `json:"environment_id"`
 	ExternalId    string       `json:"external_id"`
 	Name          string       `json:"name"`
-	Currency      string       `json:"currency"`
 	Price         float32      `json:"price"`
 	ProductId     string       `json:"product_id"`
 	Quantity      float32      `json:"quantity"`
@@ -41,14 +41,14 @@ type _BillingProductResponseData BillingProductResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBillingProductResponseData(accountId string, createdAt time.Time, environmentId string, externalId string, name string, currency string, price float32, productId string, quantity float32, updatedAt time.Time) *BillingProductResponseData {
+func NewBillingProductResponseData(accountId string, createdAt time.Time, currency string, environmentId string, externalId string, name string, price float32, productId string, quantity float32, updatedAt time.Time) *BillingProductResponseData {
 	this := BillingProductResponseData{}
 	this.AccountId = accountId
 	this.CreatedAt = createdAt
+	this.Currency = currency
 	this.EnvironmentId = environmentId
 	this.ExternalId = externalId
 	this.Name = name
-	this.Currency = currency
 	this.Price = price
 	this.ProductId = productId
 	this.Quantity = quantity
@@ -110,6 +110,30 @@ func (o *BillingProductResponseData) GetCreatedAtOk() (*time.Time, bool) {
 // SetCreatedAt sets field value
 func (o *BillingProductResponseData) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
+}
+
+// GetCurrency returns the Currency field value
+func (o *BillingProductResponseData) GetCurrency() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Currency
+}
+
+// GetCurrencyOk returns a tuple with the Currency field value
+// and a boolean to check if the value has been set.
+func (o *BillingProductResponseData) GetCurrencyOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Currency, true
+}
+
+// SetCurrency sets field value
+func (o *BillingProductResponseData) SetCurrency(v string) {
+	o.Currency = v
 }
 
 // GetDeletedAt returns the DeletedAt field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -227,30 +251,6 @@ func (o *BillingProductResponseData) SetName(v string) {
 	o.Name = v
 }
 
-// GetCurrency returns the Currency field value
-func (o *BillingProductResponseData) GetCurrency() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Currency
-}
-
-// GetCurrencyOk returns a tuple with the Currency field value
-// and a boolean to check if the value has been set.
-func (o *BillingProductResponseData) GetCurrencyOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Currency, true
-}
-
-// SetCurrency sets field value
-func (o *BillingProductResponseData) SetCurrency(v string) {
-	o.Currency = v
-}
-
 // GetPrice returns the Price field value
 func (o *BillingProductResponseData) GetPrice() float32 {
 	if o == nil {
@@ -359,13 +359,13 @@ func (o BillingProductResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["account_id"] = o.AccountId
 	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["currency"] = o.Currency
 	if o.DeletedAt.IsSet() {
 		toSerialize["deleted_at"] = o.DeletedAt.Get()
 	}
 	toSerialize["environment_id"] = o.EnvironmentId
 	toSerialize["external_id"] = o.ExternalId
 	toSerialize["name"] = o.Name
-	toSerialize["currency"] = o.Currency
 	toSerialize["price"] = o.Price
 	toSerialize["product_id"] = o.ProductId
 	toSerialize["quantity"] = o.Quantity
@@ -380,10 +380,10 @@ func (o *BillingProductResponseData) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"account_id",
 		"created_at",
+		"currency",
 		"environment_id",
 		"external_id",
 		"name",
-		"currency",
 		"price",
 		"product_id",
 		"quantity",

@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **Id** | **string** |  | 
 **LifecyclePhase** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
+**Plans** | [**[]PreviewObject**](PreviewObject.md) |  | 
 **Trait** | Pointer to [**EntityTraitDefinitionResponseData**](EntityTraitDefinitionResponseData.md) |  | [optional] 
 **TraitId** | Pointer to **NullableString** |  | [optional] 
 **UpdatedAt** | **time.Time** |  | 
@@ -21,7 +22,7 @@ Name | Type | Description | Notes
 
 ### NewFeatureDetailResponseData
 
-`func NewFeatureDetailResponseData(createdAt time.Time, description string, featureType string, flags []FlagDetailResponseData, id string, name string, updatedAt time.Time, ) *FeatureDetailResponseData`
+`func NewFeatureDetailResponseData(createdAt time.Time, description string, featureType string, flags []FlagDetailResponseData, id string, name string, plans []PreviewObject, updatedAt time.Time, ) *FeatureDetailResponseData`
 
 NewFeatureDetailResponseData instantiates a new FeatureDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -249,6 +250,26 @@ and a boolean to check if the value has been set.
 `func (o *FeatureDetailResponseData) SetName(v string)`
 
 SetName sets Name field to given value.
+
+
+### GetPlans
+
+`func (o *FeatureDetailResponseData) GetPlans() []PreviewObject`
+
+GetPlans returns the Plans field if non-nil, zero value otherwise.
+
+### GetPlansOk
+
+`func (o *FeatureDetailResponseData) GetPlansOk() (*[]PreviewObject, bool)`
+
+GetPlansOk returns a tuple with the Plans field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPlans
+
+`func (o *FeatureDetailResponseData) SetPlans(v []PreviewObject)`
+
+SetPlans sets Plans field to given value.
 
 
 ### GetTrait

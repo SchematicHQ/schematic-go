@@ -31,6 +31,7 @@ type FeatureDetailResponseData struct {
 	Id             string                             `json:"id"`
 	LifecyclePhase NullableString                     `json:"lifecycle_phase,omitempty"`
 	Name           string                             `json:"name"`
+	Plans          []PreviewObject                    `json:"plans"`
 	Trait          *EntityTraitDefinitionResponseData `json:"trait,omitempty"`
 	TraitId        NullableString                     `json:"trait_id,omitempty"`
 	UpdatedAt      time.Time                          `json:"updated_at"`
@@ -42,7 +43,7 @@ type _FeatureDetailResponseData FeatureDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewFeatureDetailResponseData(createdAt time.Time, description string, featureType string, flags []FlagDetailResponseData, id string, name string, updatedAt time.Time) *FeatureDetailResponseData {
+func NewFeatureDetailResponseData(createdAt time.Time, description string, featureType string, flags []FlagDetailResponseData, id string, name string, plans []PreviewObject, updatedAt time.Time) *FeatureDetailResponseData {
 	this := FeatureDetailResponseData{}
 	this.CreatedAt = createdAt
 	this.Description = description
@@ -50,6 +51,7 @@ func NewFeatureDetailResponseData(createdAt time.Time, description string, featu
 	this.Flags = flags
 	this.Id = id
 	this.Name = name
+	this.Plans = plans
 	this.UpdatedAt = updatedAt
 	return &this
 }
@@ -324,6 +326,30 @@ func (o *FeatureDetailResponseData) SetName(v string) {
 	o.Name = v
 }
 
+// GetPlans returns the Plans field value
+func (o *FeatureDetailResponseData) GetPlans() []PreviewObject {
+	if o == nil {
+		var ret []PreviewObject
+		return ret
+	}
+
+	return o.Plans
+}
+
+// GetPlansOk returns a tuple with the Plans field value
+// and a boolean to check if the value has been set.
+func (o *FeatureDetailResponseData) GetPlansOk() ([]PreviewObject, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Plans, true
+}
+
+// SetPlans sets field value
+func (o *FeatureDetailResponseData) SetPlans(v []PreviewObject) {
+	o.Plans = v
+}
+
 // GetTrait returns the Trait field value if set, zero value otherwise.
 func (o *FeatureDetailResponseData) GetTrait() EntityTraitDefinitionResponseData {
 	if o == nil || IsNil(o.Trait) {
@@ -448,6 +474,7 @@ func (o FeatureDetailResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["lifecycle_phase"] = o.LifecyclePhase.Get()
 	}
 	toSerialize["name"] = o.Name
+	toSerialize["plans"] = o.Plans
 	if !IsNil(o.Trait) {
 		toSerialize["trait"] = o.Trait
 	}
@@ -469,6 +496,7 @@ func (o *FeatureDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 		"flags",
 		"id",
 		"name",
+		"plans",
 		"updated_at",
 	}
 

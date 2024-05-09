@@ -17,6 +17,7 @@ Class | Method | HTTP request | Description
 *AccountsAPI* | [**GetEnvironment**](docs/AccountsAPI.md#getenvironment) | **Get** /environments/{environment_id} | Get environment
 *AccountsAPI* | [**ListApiKeys**](docs/AccountsAPI.md#listapikeys) | **Get** /api-keys | List api keys
 *AccountsAPI* | [**ListApiRequests**](docs/AccountsAPI.md#listapirequests) | **Get** /api-requests | List api requests
+*AccountsAPI* | [**ListEnvironments**](docs/AccountsAPI.md#listenvironments) | **Get** /environments | List environments
 *AccountsAPI* | [**UpdateApiKey**](docs/AccountsAPI.md#updateapikey) | **Put** /api-keys/{api_key_id} | Update api key
 *AccountsAPI* | [**UpdateEnvironment**](docs/AccountsAPI.md#updateenvironment) | **Put** /environments/{environment_id} | Update environment
 *BillingAPI* | [**ListProducts**](docs/BillingAPI.md#listproducts) | **Get** /billing/products | List products
@@ -284,6 +285,8 @@ Class | Method | HTTP request | Description
  - [ListEntityKeyDefinitionsResponse](docs/ListEntityKeyDefinitionsResponse.md)
  - [ListEntityTraitDefinitionsParams](docs/ListEntityTraitDefinitionsParams.md)
  - [ListEntityTraitDefinitionsResponse](docs/ListEntityTraitDefinitionsResponse.md)
+ - [ListEnvironmentsParams](docs/ListEnvironmentsParams.md)
+ - [ListEnvironmentsResponse](docs/ListEnvironmentsResponse.md)
  - [ListEventsParams](docs/ListEventsParams.md)
  - [ListEventsResponse](docs/ListEventsResponse.md)
  - [ListFeatureCompaniesParams](docs/ListFeatureCompaniesParams.md)

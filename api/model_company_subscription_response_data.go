@@ -24,6 +24,7 @@ var _ MappedNullable = &CompanySubscriptionResponseData{}
 type CompanySubscriptionResponseData struct {
 	CustomerExternalId     string                       `json:"customer_external_id"`
 	ExpiredAt              NullableTime                 `json:"expired_at,omitempty"`
+	Interval               string                       `json:"interval"`
 	Products               []BillingProductResponseData `json:"products"`
 	SubscriptionExternalId string                       `json:"subscription_external_id"`
 }
@@ -34,9 +35,10 @@ type _CompanySubscriptionResponseData CompanySubscriptionResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCompanySubscriptionResponseData(customerExternalId string, products []BillingProductResponseData, subscriptionExternalId string) *CompanySubscriptionResponseData {
+func NewCompanySubscriptionResponseData(customerExternalId string, interval string, products []BillingProductResponseData, subscriptionExternalId string) *CompanySubscriptionResponseData {
 	this := CompanySubscriptionResponseData{}
 	this.CustomerExternalId = customerExternalId
+	this.Interval = interval
 	this.Products = products
 	this.SubscriptionExternalId = subscriptionExternalId
 	return &this
@@ -117,6 +119,30 @@ func (o *CompanySubscriptionResponseData) UnsetExpiredAt() {
 	o.ExpiredAt.Unset()
 }
 
+// GetInterval returns the Interval field value
+func (o *CompanySubscriptionResponseData) GetInterval() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Interval
+}
+
+// GetIntervalOk returns a tuple with the Interval field value
+// and a boolean to check if the value has been set.
+func (o *CompanySubscriptionResponseData) GetIntervalOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Interval, true
+}
+
+// SetInterval sets field value
+func (o *CompanySubscriptionResponseData) SetInterval(v string) {
+	o.Interval = v
+}
+
 // GetProducts returns the Products field value
 func (o *CompanySubscriptionResponseData) GetProducts() []BillingProductResponseData {
 	if o == nil {
@@ -179,6 +205,7 @@ func (o CompanySubscriptionResponseData) ToMap() (map[string]interface{}, error)
 	if o.ExpiredAt.IsSet() {
 		toSerialize["expired_at"] = o.ExpiredAt.Get()
 	}
+	toSerialize["interval"] = o.Interval
 	toSerialize["products"] = o.Products
 	toSerialize["subscription_external_id"] = o.SubscriptionExternalId
 	return toSerialize, nil
@@ -190,6 +217,7 @@ func (o *CompanySubscriptionResponseData) UnmarshalJSON(data []byte) (err error)
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"customer_external_id",
+		"interval",
 		"products",
 		"subscription_external_id",
 	}

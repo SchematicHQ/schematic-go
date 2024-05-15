@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CustomerExternalId** | **string** |  | 
 **ExpiredAt** | Pointer to **NullableTime** |  | [optional] 
+**Interval** | **string** |  | 
 **Products** | [**[]BillingProductResponseData**](BillingProductResponseData.md) |  | 
 **SubscriptionExternalId** | **string** |  | 
 
@@ -13,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewCompanySubscriptionResponseData
 
-`func NewCompanySubscriptionResponseData(customerExternalId string, products []BillingProductResponseData, subscriptionExternalId string, ) *CompanySubscriptionResponseData`
+`func NewCompanySubscriptionResponseData(customerExternalId string, interval string, products []BillingProductResponseData, subscriptionExternalId string, ) *CompanySubscriptionResponseData`
 
 NewCompanySubscriptionResponseData instantiates a new CompanySubscriptionResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -83,6 +84,26 @@ HasExpiredAt returns a boolean if a field has been set.
 `func (o *CompanySubscriptionResponseData) UnsetExpiredAt()`
 
 UnsetExpiredAt ensures that no value is present for ExpiredAt, not even an explicit nil
+### GetInterval
+
+`func (o *CompanySubscriptionResponseData) GetInterval() string`
+
+GetInterval returns the Interval field if non-nil, zero value otherwise.
+
+### GetIntervalOk
+
+`func (o *CompanySubscriptionResponseData) GetIntervalOk() (*string, bool)`
+
+GetIntervalOk returns a tuple with the Interval field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetInterval
+
+`func (o *CompanySubscriptionResponseData) SetInterval(v string)`
+
+SetInterval sets Interval field to given value.
+
+
 ### GetProducts
 
 `func (o *CompanySubscriptionResponseData) GetProducts() []BillingProductResponseData`

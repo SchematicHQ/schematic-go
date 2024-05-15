@@ -7348,6 +7348,7 @@ components:
     CompanySubscriptionResponseData:
       example:
         customer_external_id: customer_external_id
+        interval: interval
         expired_at: 2000-01-23T04:56:07.000+00:00
         products:
         - account_id: account_id
@@ -7380,6 +7381,8 @@ components:
           format: date-time
           nullable: true
           type: string
+        interval:
+          type: string
         products:
           items:
             $ref: '#/components/schemas/BillingProductResponseData'
@@ -7388,6 +7391,7 @@ components:
           type: string
       required:
       - customer_external_id
+      - interval
       - products
       - subscription_external_id
       title: CompanySubscriptionResponseData
@@ -7453,6 +7457,7 @@ components:
         - product_external_ids
         - product_external_ids
         customer_external_id: customer_external_id
+        interval: interval
         expired_at: 2000-01-23T04:56:07.000+00:00
         subscription_external_id: subscription_external_id
       properties:
@@ -7460,6 +7465,9 @@ components:
           type: string
         expired_at:
           format: date-time
+          type: string
+        interval:
+          nullable: true
           type: string
         product_external_ids:
           items:
@@ -25814,6 +25822,7 @@ components:
       example:
         data:
         - customer_external_id: customer_external_id
+          interval: interval
           expired_at: 2000-01-23T04:56:07.000+00:00
           products:
           - account_id: account_id
@@ -25840,6 +25849,7 @@ components:
             deleted_at: 2000-01-23T04:56:07.000+00:00
           subscription_external_id: subscription_external_id
         - customer_external_id: customer_external_id
+          interval: interval
           expired_at: 2000-01-23T04:56:07.000+00:00
           products:
           - account_id: account_id

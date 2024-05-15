@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CustomerExternalId** | **string** |  | 
 **ExpiredAt** | **time.Time** |  | 
+**Interval** | Pointer to **NullableString** |  | [optional] 
 **ProductExternalIds** | **[]string** |  | 
 **SubscriptionExternalId** | **string** |  | 
 
@@ -68,6 +69,41 @@ and a boolean to check if the value has been set.
 SetExpiredAt sets ExpiredAt field to given value.
 
 
+### GetInterval
+
+`func (o *CreateBillingSubscriptionsRequestBody) GetInterval() string`
+
+GetInterval returns the Interval field if non-nil, zero value otherwise.
+
+### GetIntervalOk
+
+`func (o *CreateBillingSubscriptionsRequestBody) GetIntervalOk() (*string, bool)`
+
+GetIntervalOk returns a tuple with the Interval field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetInterval
+
+`func (o *CreateBillingSubscriptionsRequestBody) SetInterval(v string)`
+
+SetInterval sets Interval field to given value.
+
+### HasInterval
+
+`func (o *CreateBillingSubscriptionsRequestBody) HasInterval() bool`
+
+HasInterval returns a boolean if a field has been set.
+
+### SetIntervalNil
+
+`func (o *CreateBillingSubscriptionsRequestBody) SetIntervalNil(b bool)`
+
+ SetIntervalNil sets the value for Interval to be an explicit nil
+
+### UnsetInterval
+`func (o *CreateBillingSubscriptionsRequestBody) UnsetInterval()`
+
+UnsetInterval ensures that no value is present for Interval, not even an explicit nil
 ### GetProductExternalIds
 
 `func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIds() []string`

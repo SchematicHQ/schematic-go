@@ -22,10 +22,11 @@ var _ MappedNullable = &CreateBillingSubscriptionsRequestBody{}
 
 // CreateBillingSubscriptionsRequestBody struct for CreateBillingSubscriptionsRequestBody
 type CreateBillingSubscriptionsRequestBody struct {
-	CustomerExternalId     string    `json:"customer_external_id"`
-	ExpiredAt              time.Time `json:"expired_at"`
-	ProductExternalIds     []string  `json:"product_external_ids"`
-	SubscriptionExternalId string    `json:"subscription_external_id"`
+	CustomerExternalId     string         `json:"customer_external_id"`
+	ExpiredAt              time.Time      `json:"expired_at"`
+	Interval               NullableString `json:"interval,omitempty"`
+	ProductExternalIds     []string       `json:"product_external_ids"`
+	SubscriptionExternalId string         `json:"subscription_external_id"`
 }
 
 type _CreateBillingSubscriptionsRequestBody CreateBillingSubscriptionsRequestBody
@@ -99,6 +100,49 @@ func (o *CreateBillingSubscriptionsRequestBody) SetExpiredAt(v time.Time) {
 	o.ExpiredAt = v
 }
 
+// GetInterval returns the Interval field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateBillingSubscriptionsRequestBody) GetInterval() string {
+	if o == nil || IsNil(o.Interval.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Interval.Get()
+}
+
+// GetIntervalOk returns a tuple with the Interval field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateBillingSubscriptionsRequestBody) GetIntervalOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Interval.Get(), o.Interval.IsSet()
+}
+
+// HasInterval returns a boolean if a field has been set.
+func (o *CreateBillingSubscriptionsRequestBody) HasInterval() bool {
+	if o != nil && o.Interval.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetInterval gets a reference to the given NullableString and assigns it to the Interval field.
+func (o *CreateBillingSubscriptionsRequestBody) SetInterval(v string) {
+	o.Interval.Set(&v)
+}
+
+// SetIntervalNil sets the value for Interval to be an explicit nil
+func (o *CreateBillingSubscriptionsRequestBody) SetIntervalNil() {
+	o.Interval.Set(nil)
+}
+
+// UnsetInterval ensures that no value is present for Interval, not even an explicit nil
+func (o *CreateBillingSubscriptionsRequestBody) UnsetInterval() {
+	o.Interval.Unset()
+}
+
 // GetProductExternalIds returns the ProductExternalIds field value
 func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIds() []string {
 	if o == nil {
@@ -159,6 +203,9 @@ func (o CreateBillingSubscriptionsRequestBody) ToMap() (map[string]interface{}, 
 	toSerialize := map[string]interface{}{}
 	toSerialize["customer_external_id"] = o.CustomerExternalId
 	toSerialize["expired_at"] = o.ExpiredAt
+	if o.Interval.IsSet() {
+		toSerialize["interval"] = o.Interval.Get()
+	}
 	toSerialize["product_external_ids"] = o.ProductExternalIds
 	toSerialize["subscription_external_id"] = o.SubscriptionExternalId
 	return toSerialize, nil

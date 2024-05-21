@@ -3,6 +3,7 @@ package schematic
 import (
 	"context"
 	"math"
+	"sync"
 	"time"
 )
 
@@ -38,6 +39,9 @@ type localCache[T any] struct {
 
 	// Function to calculate the size of a cached item
 	sizeFunc func(val T) int
+
+	// Mutex to protect concurrent access to the cache
+	mu sync.RWMutex
 }
 
 func newDefaultCache[T any](sizeFunc func(val T) int) *localCache[T] {
@@ -63,22 +67,32 @@ func (c *localCache[T]) Get(ctx context.Context, key string) (T, bool) {
 		return empty, false
 	}
 
+	c.mu.RLock()
 	item, ok := c.cache[key]
+	c.mu.RUnlock()
 	if !ok {
 		return empty, false
 	}
 
 	// Check if the item has expired
 	if time.Now().After(item.expiration) {
-		c.currentSize -= item.size
-		delete(c.cache, key)
+		c.mu.Lock()
+		// Re-check the expiration under write lock
+		item, ok := c.cache[key]
+		if ok && time.Now().After(item.expiration) {
+			c.currentSize -= item.size
+			delete(c.cache, key)
+		}
+		c.mu.Unlock()
 		return empty, false
 	}
 
 	// Update the access counter for LRU eviction
+	c.mu.Lock()
 	c.accessCounter++
 	item.accessCounter = c.accessCounter
 	c.cache[key] = item
+	c.mu.Unlock()
 
 	return item.value, true
 }
@@ -95,6 +109,9 @@ func (c *localCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 	}
 
 	size := c.sizeFunc(val)
+
+	c.mu.Lock()
+	defer c.mu.Unlock()
 
 	// Check if the key already exists in the cache
 	if item, ok := c.cache[key]; ok {

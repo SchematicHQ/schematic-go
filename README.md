@@ -28,7 +28,6 @@ func main() {
 
 By default, the client will do some local caching for flag checks, if you would like to change this behavior, you can do so using an initialization option to specify the max size of the cache (in bytes) and the max age of the cache (in seconds):
 
-
 ```go
 import (
   "os"
@@ -187,7 +186,6 @@ func main() {
 
 You can define any number of company keys; these are used to address the company in the future, for example by updating the company's traits or checking a flag for the company.
 You can also define any number of company traits; these can then be used as targeting parameters.
-
 
 ### Creating and updating users
 

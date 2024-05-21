@@ -6,10 +6,10 @@ enablePostProcessFile: true
 additionalProperties:
   generateInterfaces: true
   goImportAlias: schematicapi
-  httpUserAgent: schematic-go@1.0.0
+  httpUserAgent: schematic-go@1.0.6
   isGoSubmodule: true
   packageName: api
-  packageVersion: 1.0.0
+  packageVersion: 1.0.6
   withGoMod: false
 gitHost: github.com
 gitUserId: SchematicHQ

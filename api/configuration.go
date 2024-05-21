@@ -94,7 +94,7 @@ type Configuration struct {
 func NewConfiguration() *Configuration {
 	cfg := &Configuration{
 		DefaultHeader:    make(map[string]string),
-		UserAgent:        "schematic-go@1.0.0",
+		UserAgent:        "schematic-go@1.0.6",
 		Debug:            false,
 		Servers:          ServerConfigurations{
 			{

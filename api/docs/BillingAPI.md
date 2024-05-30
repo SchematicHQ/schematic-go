@@ -107,7 +107,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createBillingProductRequestBody := *schematicapi.NewCreateBillingProductRequestBody("Currency_example", "ExternalId_example", "Name_example", float32(123), int32(123)) // CreateBillingProductRequestBody | 
+	createBillingProductRequestBody := *schematicapi.NewCreateBillingProductRequestBody("Currency_example", "ExternalId_example", "Interval_example", "Name_example", float32(123), int32(123)) // CreateBillingProductRequestBody | 
 
 	resp, r, err := client.API().BillingAPI.UpsertBillingProduct(context.Background()).CreateBillingProductRequestBody(createBillingProductRequestBody).Execute()
 	if err != nil {

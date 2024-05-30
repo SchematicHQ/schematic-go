@@ -15,6 +15,7 @@ tags:
 - name: plans
 - name: entitlements
 - name: billing
+- name: crm
 paths:
   /api-keys:
     get:
@@ -2037,6 +2038,121 @@ paths:
       summary: Upsert company trait
       tags:
       - companies
+  /crm/products:
+    get:
+      operationId: listCRMProducts
+      parameters:
+      - explode: true
+        in: query
+        name: ids
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCRMProductsResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: List c r m products
+      tags:
+      - crm
+  /crm/products/upsert:
+    post:
+      operationId: upsertCRMProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBillingProductRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertCRMProductResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Upsert c r m product
+      tags:
+      - crm
   /entity-key-definitions:
     get:
       operationId: listEntityKeyDefinitions
@@ -6816,6 +6932,59 @@ components:
       - updated_at
       title: BillingSubscriptionResponseData
       type: object
+    CRMProductResponseData:
+      example:
+        account_id: account_id
+        quantity: 6.027456183070403
+        environment_id: environment_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        price: 0.8008281904610115
+        product_id: product_id
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        currency: currency
+        external_id: external_id
+        deleted_at: 2000-01-23T04:56:07.000+00:00
+      properties:
+        account_id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        currency:
+          type: string
+        deleted_at:
+          format: date-time
+          nullable: true
+          type: string
+        environment_id:
+          type: string
+        external_id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        product_id:
+          type: string
+        quantity:
+          type: number
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - account_id
+      - created_at
+      - currency
+      - environment_id
+      - external_id
+      - name
+      - price
+      - product_id
+      - quantity
+      - updated_at
+      title: CRMProductResponseData
+      type: object
     CheckFlagOutputWithFlagKey:
       example:
         rule_id: rule_id
@@ -7432,10 +7601,13 @@ components:
         name: name
         currency: currency
         external_id: external_id
+        interval: interval
       properties:
         currency:
           type: string
         external_id:
+          type: string
+        interval:
           type: string
         name:
           type: string
@@ -7446,6 +7618,7 @@ components:
       required:
       - currency
       - external_id
+      - interval
       - name
       - price
       - quantity
@@ -25988,6 +26161,103 @@ components:
       - data
       - params
       title: UpsertCompanyTraitResponse
+      type: object
+    ListCRMProductsParams:
+      description: Input parameters
+      example:
+        offset: 0
+        limit: 100
+        name: name
+        ids:
+        - ids
+        - ids
+      properties:
+        ids:
+          items:
+            type: string
+          type: array
+        limit:
+          example: 100
+          type: integer
+        name:
+          type: string
+        offset:
+          example: 0
+          type: integer
+      title: ListCRMProductsParams
+      type: object
+    ListCRMProductsResponse:
+      example:
+        data:
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          external_id: external_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          external_id: external_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        params:
+          offset: 0
+          limit: 100
+          name: name
+          ids:
+          - ids
+          - ids
+      properties:
+        data:
+          description: The returned resources
+          items:
+            $ref: '#/components/schemas/CRMProductResponseData'
+          title: ListCRMProductsResponseData
+          type: array
+        params:
+          $ref: '#/components/schemas/ListCRMProductsParams'
+      required:
+      - data
+      - params
+      title: ListCRMProductsResponse
+      type: object
+    UpsertCRMProductResponse:
+      example:
+        data:
+          account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          external_id: external_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/CRMProductResponseData'
+        params:
+          description: Input parameters
+          title: UpsertCRMProductParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpsertCRMProductResponse
       type: object
     ListEntityKeyDefinitionsParams:
       description: Input parameters

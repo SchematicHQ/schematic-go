@@ -23,6 +23,7 @@ var _ MappedNullable = &CreateBillingProductRequestBody{}
 type CreateBillingProductRequestBody struct {
 	Currency   string  `json:"currency"`
 	ExternalId string  `json:"external_id"`
+	Interval   string  `json:"interval"`
 	Name       string  `json:"name"`
 	Price      float32 `json:"price"`
 	Quantity   int32   `json:"quantity"`
@@ -34,10 +35,11 @@ type _CreateBillingProductRequestBody CreateBillingProductRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateBillingProductRequestBody(currency string, externalId string, name string, price float32, quantity int32) *CreateBillingProductRequestBody {
+func NewCreateBillingProductRequestBody(currency string, externalId string, interval string, name string, price float32, quantity int32) *CreateBillingProductRequestBody {
 	this := CreateBillingProductRequestBody{}
 	this.Currency = currency
 	this.ExternalId = externalId
+	this.Interval = interval
 	this.Name = name
 	this.Price = price
 	this.Quantity = quantity
@@ -98,6 +100,30 @@ func (o *CreateBillingProductRequestBody) GetExternalIdOk() (*string, bool) {
 // SetExternalId sets field value
 func (o *CreateBillingProductRequestBody) SetExternalId(v string) {
 	o.ExternalId = v
+}
+
+// GetInterval returns the Interval field value
+func (o *CreateBillingProductRequestBody) GetInterval() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Interval
+}
+
+// GetIntervalOk returns a tuple with the Interval field value
+// and a boolean to check if the value has been set.
+func (o *CreateBillingProductRequestBody) GetIntervalOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Interval, true
+}
+
+// SetInterval sets field value
+func (o *CreateBillingProductRequestBody) SetInterval(v string) {
+	o.Interval = v
 }
 
 // GetName returns the Name field value
@@ -184,6 +210,7 @@ func (o CreateBillingProductRequestBody) ToMap() (map[string]interface{}, error)
 	toSerialize := map[string]interface{}{}
 	toSerialize["currency"] = o.Currency
 	toSerialize["external_id"] = o.ExternalId
+	toSerialize["interval"] = o.Interval
 	toSerialize["name"] = o.Name
 	toSerialize["price"] = o.Price
 	toSerialize["quantity"] = o.Quantity
@@ -197,6 +224,7 @@ func (o *CreateBillingProductRequestBody) UnmarshalJSON(data []byte) (err error)
 	requiredProperties := []string{
 		"currency",
 		"external_id",
+		"interval",
 		"name",
 		"price",
 		"quantity",

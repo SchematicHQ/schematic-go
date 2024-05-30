@@ -54,6 +54,8 @@ Class | Method | HTTP request | Description
 *CompaniesAPI* | [**UpsertCompanyTrait**](docs/CompaniesAPI.md#upsertcompanytrait) | **Post** /company-traits | Upsert company trait
 *CompaniesAPI* | [**UpsertUser**](docs/CompaniesAPI.md#upsertuser) | **Post** /users | Upsert user
 *CompaniesAPI* | [**UpsertUserTrait**](docs/CompaniesAPI.md#upsertusertrait) | **Post** /user-traits | Upsert user trait
+*CrmAPI* | [**ListCRMProducts**](docs/CrmAPI.md#listcrmproducts) | **Get** /crm/products | List c r m products
+*CrmAPI* | [**UpsertCRMProduct**](docs/CrmAPI.md#upsertcrmproduct) | **Post** /crm/products/upsert | Upsert c r m product
 *EntitlementsAPI* | [**CountCompanyOverrides**](docs/EntitlementsAPI.md#countcompanyoverrides) | **Get** /company-overrides/count | Count company overrides
 *EntitlementsAPI* | [**CountFeatureCompanies**](docs/EntitlementsAPI.md#countfeaturecompanies) | **Get** /feature-companies/count | Count feature companies
 *EntitlementsAPI* | [**CountFeatureUsage**](docs/EntitlementsAPI.md#countfeatureusage) | **Get** /feature-usage/count | Count feature usage
@@ -124,6 +126,7 @@ Class | Method | HTTP request | Description
  - [AudienceRequestBody](docs/AudienceRequestBody.md)
  - [BillingProductResponseData](docs/BillingProductResponseData.md)
  - [BillingSubscriptionResponseData](docs/BillingSubscriptionResponseData.md)
+ - [CRMProductResponseData](docs/CRMProductResponseData.md)
  - [CheckFlagOutputWithFlagKey](docs/CheckFlagOutputWithFlagKey.md)
  - [CheckFlagRequestBody](docs/CheckFlagRequestBody.md)
  - [CheckFlagResponse](docs/CheckFlagResponse.md)
@@ -273,6 +276,8 @@ Class | Method | HTTP request | Description
  - [ListApiRequestsResponse](docs/ListApiRequestsResponse.md)
  - [ListAudienceCompaniesResponse](docs/ListAudienceCompaniesResponse.md)
  - [ListAudienceUsersResponse](docs/ListAudienceUsersResponse.md)
+ - [ListCRMProductsParams](docs/ListCRMProductsParams.md)
+ - [ListCRMProductsResponse](docs/ListCRMProductsResponse.md)
  - [ListCompaniesParams](docs/ListCompaniesParams.md)
  - [ListCompaniesResponse](docs/ListCompaniesResponse.md)
  - [ListCompanyMembershipsParams](docs/ListCompanyMembershipsParams.md)
@@ -356,6 +361,7 @@ Class | Method | HTTP request | Description
  - [UpdateRuleRequestBody](docs/UpdateRuleRequestBody.md)
  - [UpsertBillingProductResponse](docs/UpsertBillingProductResponse.md)
  - [UpsertBillingSubscriptionResponse](docs/UpsertBillingSubscriptionResponse.md)
+ - [UpsertCRMProductResponse](docs/UpsertCRMProductResponse.md)
  - [UpsertCompanyRequestBody](docs/UpsertCompanyRequestBody.md)
  - [UpsertCompanyResponse](docs/UpsertCompanyResponse.md)
  - [UpsertCompanyTraitResponse](docs/UpsertCompanyTraitResponse.md)

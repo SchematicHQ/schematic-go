@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Currency** | **string** |  | 
 **ExternalId** | **string** |  | 
+**Interval** | **string** |  | 
 **Name** | **string** |  | 
 **Price** | **float32** |  | 
 **Quantity** | **int32** |  | 
@@ -14,7 +15,7 @@ Name | Type | Description | Notes
 
 ### NewCreateBillingProductRequestBody
 
-`func NewCreateBillingProductRequestBody(currency string, externalId string, name string, price float32, quantity int32, ) *CreateBillingProductRequestBody`
+`func NewCreateBillingProductRequestBody(currency string, externalId string, interval string, name string, price float32, quantity int32, ) *CreateBillingProductRequestBody`
 
 NewCreateBillingProductRequestBody instantiates a new CreateBillingProductRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -67,6 +68,26 @@ and a boolean to check if the value has been set.
 `func (o *CreateBillingProductRequestBody) SetExternalId(v string)`
 
 SetExternalId sets ExternalId field to given value.
+
+
+### GetInterval
+
+`func (o *CreateBillingProductRequestBody) GetInterval() string`
+
+GetInterval returns the Interval field if non-nil, zero value otherwise.
+
+### GetIntervalOk
+
+`func (o *CreateBillingProductRequestBody) GetIntervalOk() (*string, bool)`
+
+GetIntervalOk returns a tuple with the Interval field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetInterval
+
+`func (o *CreateBillingProductRequestBody) SetInterval(v string)`
+
+SetInterval sets Interval field to given value.
 
 
 ### GetName

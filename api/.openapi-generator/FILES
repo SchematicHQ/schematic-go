@@ -5,6 +5,7 @@ api/openapi.yaml
 api_accounts.go
 api_billing.go
 api_companies.go
+api_crm.go
 api_entitlements.go
 api_events.go
 api_features.go
@@ -21,6 +22,7 @@ docs/AudienceRequestBody.md
 docs/BillingAPI.md
 docs/BillingProductResponseData.md
 docs/BillingSubscriptionResponseData.md
+docs/CRMProductResponseData.md
 docs/CheckFlagOutputWithFlagKey.md
 docs/CheckFlagRequestBody.md
 docs/CheckFlagResponse.md
@@ -96,6 +98,7 @@ docs/CreatePlanRequestBody.md
 docs/CreatePlanResponse.md
 docs/CreateReqCommon.md
 docs/CreateUserResponse.md
+docs/CrmAPI.md
 docs/DeleteApiKeyResponse.md
 docs/DeleteAudienceResponse.md
 docs/DeleteCompanyByKeysResponse.md
@@ -174,6 +177,8 @@ docs/ListApiRequestsParams.md
 docs/ListApiRequestsResponse.md
 docs/ListAudienceCompaniesResponse.md
 docs/ListAudienceUsersResponse.md
+docs/ListCRMProductsParams.md
+docs/ListCRMProductsResponse.md
 docs/ListCompaniesParams.md
 docs/ListCompaniesResponse.md
 docs/ListCompanyMembershipsParams.md
@@ -258,6 +263,7 @@ docs/UpdateReqCommon.md
 docs/UpdateRuleRequestBody.md
 docs/UpsertBillingProductResponse.md
 docs/UpsertBillingSubscriptionResponse.md
+docs/UpsertCRMProductResponse.md
 docs/UpsertCompanyRequestBody.md
 docs/UpsertCompanyResponse.md
 docs/UpsertCompanyTraitResponse.md
@@ -351,6 +357,7 @@ model_create_plan_request_body.go
 model_create_plan_response.go
 model_create_req_common.go
 model_create_user_response.go
+model_crm_product_response_data.go
 model_delete_api_key_response.go
 model_delete_audience_response.go
 model_delete_company_by_keys_response.go
@@ -434,6 +441,8 @@ model_list_company_overrides_params.go
 model_list_company_overrides_response.go
 model_list_company_plans_params.go
 model_list_company_plans_response.go
+model_list_crm_products_params.go
+model_list_crm_products_response.go
 model_list_entity_key_definitions_params.go
 model_list_entity_key_definitions_response.go
 model_list_entity_trait_definitions_params.go
@@ -512,6 +521,7 @@ model_upsert_billing_subscription_response.go
 model_upsert_company_request_body.go
 model_upsert_company_response.go
 model_upsert_company_trait_response.go
+model_upsert_crm_product_response.go
 model_upsert_trait_request_body.go
 model_upsert_user_request_body.go
 model_upsert_user_response.go
@@ -520,4 +530,5 @@ model_upsert_user_trait_response.go
 model_user_detail_response_data.go
 model_user_response_data.go
 response.go
+test/api_crm_test.go
 utils.go

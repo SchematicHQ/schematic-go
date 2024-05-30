@@ -84,7 +84,7 @@ Name | Type | Description  | Notes
 
 ## UpsertCRMProduct
 
-> UpsertCRMProductResponse UpsertCRMProduct(ctx).CreateBillingProductRequestBody(createBillingProductRequestBody).Execute()
+> UpsertCRMProductResponse UpsertCRMProduct(ctx).CreateCRMProductRequestBody(createCRMProductRequestBody).Execute()
 
 Upsert c r m product
 
@@ -106,9 +106,9 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createBillingProductRequestBody := *schematicapi.NewCreateBillingProductRequestBody("Currency_example", "ExternalId_example", "Interval_example", "Name_example", float32(123), int32(123)) // CreateBillingProductRequestBody | 
+	createCRMProductRequestBody := *schematicapi.NewCreateCRMProductRequestBody("Currency_example", "ExternalId_example", "Interval_example", "Name_example", float32(123), int32(123)) // CreateCRMProductRequestBody | 
 
-	resp, r, err := client.API().CrmAPI.UpsertCRMProduct(context.Background()).CreateBillingProductRequestBody(createBillingProductRequestBody).Execute()
+	resp, r, err := client.API().CrmAPI.UpsertCRMProduct(context.Background()).CreateCRMProductRequestBody(createCRMProductRequestBody).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.UpsertCRMProduct``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -129,7 +129,7 @@ Other parameters are passed through a pointer to a apiUpsertCRMProductRequest st
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createBillingProductRequestBody** | [**CreateBillingProductRequestBody**](CreateBillingProductRequestBody.md) |  | 
+ **createCRMProductRequestBody** | [**CreateCRMProductRequestBody**](CreateCRMProductRequestBody.md) |  | 
 
 ### Return type
 

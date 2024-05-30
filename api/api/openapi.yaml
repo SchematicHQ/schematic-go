@@ -2117,7 +2117,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBillingProductRequestBody'
+              $ref: '#/components/schemas/CreateCRMProductRequestBody'
         required: true
       responses:
         "201":
@@ -7601,13 +7601,10 @@ components:
         name: name
         currency: currency
         external_id: external_id
-        interval: interval
       properties:
         currency:
           type: string
         external_id:
-          type: string
-        interval:
           type: string
         name:
           type: string
@@ -7618,7 +7615,6 @@ components:
       required:
       - currency
       - external_id
-      - interval
       - name
       - price
       - quantity
@@ -7654,6 +7650,36 @@ components:
       - product_external_ids
       - subscription_external_id
       title: CreateBillingSubscriptionsRequestBody
+      type: object
+    CreateCRMProductRequestBody:
+      example:
+        quantity: 6
+        price: 0.8008281904610115
+        name: name
+        currency: currency
+        external_id: external_id
+        interval: interval
+      properties:
+        currency:
+          type: string
+        external_id:
+          type: string
+        interval:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+      required:
+      - currency
+      - external_id
+      - interval
+      - name
+      - price
+      - quantity
+      title: CreateCRMProductRequestBody
       type: object
     CreateCompanyOverrideRequestBody:
       example:

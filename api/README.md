@@ -177,6 +177,7 @@ Class | Method | HTTP request | Description
  - [CreateApiKeyResponse](docs/CreateApiKeyResponse.md)
  - [CreateBillingProductRequestBody](docs/CreateBillingProductRequestBody.md)
  - [CreateBillingSubscriptionsRequestBody](docs/CreateBillingSubscriptionsRequestBody.md)
+ - [CreateCRMProductRequestBody](docs/CreateCRMProductRequestBody.md)
  - [CreateCompanyOverrideRequestBody](docs/CreateCompanyOverrideRequestBody.md)
  - [CreateCompanyOverrideResponse](docs/CreateCompanyOverrideResponse.md)
  - [CreateCompanyResponse](docs/CreateCompanyResponse.md)

@@ -16,44 +16,46 @@ import (
 	"fmt"
 )
 
-// checks if the CreateBillingProductRequestBody type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &CreateBillingProductRequestBody{}
+// checks if the CreateCRMProductRequestBody type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &CreateCRMProductRequestBody{}
 
-// CreateBillingProductRequestBody struct for CreateBillingProductRequestBody
-type CreateBillingProductRequestBody struct {
+// CreateCRMProductRequestBody struct for CreateCRMProductRequestBody
+type CreateCRMProductRequestBody struct {
 	Currency   string  `json:"currency"`
 	ExternalId string  `json:"external_id"`
+	Interval   string  `json:"interval"`
 	Name       string  `json:"name"`
 	Price      float32 `json:"price"`
 	Quantity   int32   `json:"quantity"`
 }
 
-type _CreateBillingProductRequestBody CreateBillingProductRequestBody
+type _CreateCRMProductRequestBody CreateCRMProductRequestBody
 
-// NewCreateBillingProductRequestBody instantiates a new CreateBillingProductRequestBody object
+// NewCreateCRMProductRequestBody instantiates a new CreateCRMProductRequestBody object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateBillingProductRequestBody(currency string, externalId string, name string, price float32, quantity int32) *CreateBillingProductRequestBody {
-	this := CreateBillingProductRequestBody{}
+func NewCreateCRMProductRequestBody(currency string, externalId string, interval string, name string, price float32, quantity int32) *CreateCRMProductRequestBody {
+	this := CreateCRMProductRequestBody{}
 	this.Currency = currency
 	this.ExternalId = externalId
+	this.Interval = interval
 	this.Name = name
 	this.Price = price
 	this.Quantity = quantity
 	return &this
 }
 
-// NewCreateBillingProductRequestBodyWithDefaults instantiates a new CreateBillingProductRequestBody object
+// NewCreateCRMProductRequestBodyWithDefaults instantiates a new CreateCRMProductRequestBody object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewCreateBillingProductRequestBodyWithDefaults() *CreateBillingProductRequestBody {
-	this := CreateBillingProductRequestBody{}
+func NewCreateCRMProductRequestBodyWithDefaults() *CreateCRMProductRequestBody {
+	this := CreateCRMProductRequestBody{}
 	return &this
 }
 
 // GetCurrency returns the Currency field value
-func (o *CreateBillingProductRequestBody) GetCurrency() string {
+func (o *CreateCRMProductRequestBody) GetCurrency() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -64,7 +66,7 @@ func (o *CreateBillingProductRequestBody) GetCurrency() string {
 
 // GetCurrencyOk returns a tuple with the Currency field value
 // and a boolean to check if the value has been set.
-func (o *CreateBillingProductRequestBody) GetCurrencyOk() (*string, bool) {
+func (o *CreateCRMProductRequestBody) GetCurrencyOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -72,12 +74,12 @@ func (o *CreateBillingProductRequestBody) GetCurrencyOk() (*string, bool) {
 }
 
 // SetCurrency sets field value
-func (o *CreateBillingProductRequestBody) SetCurrency(v string) {
+func (o *CreateCRMProductRequestBody) SetCurrency(v string) {
 	o.Currency = v
 }
 
 // GetExternalId returns the ExternalId field value
-func (o *CreateBillingProductRequestBody) GetExternalId() string {
+func (o *CreateCRMProductRequestBody) GetExternalId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -88,7 +90,7 @@ func (o *CreateBillingProductRequestBody) GetExternalId() string {
 
 // GetExternalIdOk returns a tuple with the ExternalId field value
 // and a boolean to check if the value has been set.
-func (o *CreateBillingProductRequestBody) GetExternalIdOk() (*string, bool) {
+func (o *CreateCRMProductRequestBody) GetExternalIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -96,12 +98,36 @@ func (o *CreateBillingProductRequestBody) GetExternalIdOk() (*string, bool) {
 }
 
 // SetExternalId sets field value
-func (o *CreateBillingProductRequestBody) SetExternalId(v string) {
+func (o *CreateCRMProductRequestBody) SetExternalId(v string) {
 	o.ExternalId = v
 }
 
+// GetInterval returns the Interval field value
+func (o *CreateCRMProductRequestBody) GetInterval() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Interval
+}
+
+// GetIntervalOk returns a tuple with the Interval field value
+// and a boolean to check if the value has been set.
+func (o *CreateCRMProductRequestBody) GetIntervalOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Interval, true
+}
+
+// SetInterval sets field value
+func (o *CreateCRMProductRequestBody) SetInterval(v string) {
+	o.Interval = v
+}
+
 // GetName returns the Name field value
-func (o *CreateBillingProductRequestBody) GetName() string {
+func (o *CreateCRMProductRequestBody) GetName() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -112,7 +138,7 @@ func (o *CreateBillingProductRequestBody) GetName() string {
 
 // GetNameOk returns a tuple with the Name field value
 // and a boolean to check if the value has been set.
-func (o *CreateBillingProductRequestBody) GetNameOk() (*string, bool) {
+func (o *CreateCRMProductRequestBody) GetNameOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -120,12 +146,12 @@ func (o *CreateBillingProductRequestBody) GetNameOk() (*string, bool) {
 }
 
 // SetName sets field value
-func (o *CreateBillingProductRequestBody) SetName(v string) {
+func (o *CreateCRMProductRequestBody) SetName(v string) {
 	o.Name = v
 }
 
 // GetPrice returns the Price field value
-func (o *CreateBillingProductRequestBody) GetPrice() float32 {
+func (o *CreateCRMProductRequestBody) GetPrice() float32 {
 	if o == nil {
 		var ret float32
 		return ret
@@ -136,7 +162,7 @@ func (o *CreateBillingProductRequestBody) GetPrice() float32 {
 
 // GetPriceOk returns a tuple with the Price field value
 // and a boolean to check if the value has been set.
-func (o *CreateBillingProductRequestBody) GetPriceOk() (*float32, bool) {
+func (o *CreateCRMProductRequestBody) GetPriceOk() (*float32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -144,12 +170,12 @@ func (o *CreateBillingProductRequestBody) GetPriceOk() (*float32, bool) {
 }
 
 // SetPrice sets field value
-func (o *CreateBillingProductRequestBody) SetPrice(v float32) {
+func (o *CreateCRMProductRequestBody) SetPrice(v float32) {
 	o.Price = v
 }
 
 // GetQuantity returns the Quantity field value
-func (o *CreateBillingProductRequestBody) GetQuantity() int32 {
+func (o *CreateCRMProductRequestBody) GetQuantity() int32 {
 	if o == nil {
 		var ret int32
 		return ret
@@ -160,7 +186,7 @@ func (o *CreateBillingProductRequestBody) GetQuantity() int32 {
 
 // GetQuantityOk returns a tuple with the Quantity field value
 // and a boolean to check if the value has been set.
-func (o *CreateBillingProductRequestBody) GetQuantityOk() (*int32, bool) {
+func (o *CreateCRMProductRequestBody) GetQuantityOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -168,11 +194,11 @@ func (o *CreateBillingProductRequestBody) GetQuantityOk() (*int32, bool) {
 }
 
 // SetQuantity sets field value
-func (o *CreateBillingProductRequestBody) SetQuantity(v int32) {
+func (o *CreateCRMProductRequestBody) SetQuantity(v int32) {
 	o.Quantity = v
 }
 
-func (o CreateBillingProductRequestBody) MarshalJSON() ([]byte, error) {
+func (o CreateCRMProductRequestBody) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -180,23 +206,25 @@ func (o CreateBillingProductRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o CreateBillingProductRequestBody) ToMap() (map[string]interface{}, error) {
+func (o CreateCRMProductRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["currency"] = o.Currency
 	toSerialize["external_id"] = o.ExternalId
+	toSerialize["interval"] = o.Interval
 	toSerialize["name"] = o.Name
 	toSerialize["price"] = o.Price
 	toSerialize["quantity"] = o.Quantity
 	return toSerialize, nil
 }
 
-func (o *CreateBillingProductRequestBody) UnmarshalJSON(data []byte) (err error) {
+func (o *CreateCRMProductRequestBody) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"currency",
 		"external_id",
+		"interval",
 		"name",
 		"price",
 		"quantity",
@@ -216,53 +244,53 @@ func (o *CreateBillingProductRequestBody) UnmarshalJSON(data []byte) (err error)
 		}
 	}
 
-	varCreateBillingProductRequestBody := _CreateBillingProductRequestBody{}
+	varCreateCRMProductRequestBody := _CreateCRMProductRequestBody{}
 
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateBillingProductRequestBody)
+	err = decoder.Decode(&varCreateCRMProductRequestBody)
 
 	if err != nil {
 		return err
 	}
 
-	*o = CreateBillingProductRequestBody(varCreateBillingProductRequestBody)
+	*o = CreateCRMProductRequestBody(varCreateCRMProductRequestBody)
 
 	return err
 }
 
-type NullableCreateBillingProductRequestBody struct {
-	value *CreateBillingProductRequestBody
+type NullableCreateCRMProductRequestBody struct {
+	value *CreateCRMProductRequestBody
 	isSet bool
 }
 
-func (v NullableCreateBillingProductRequestBody) Get() *CreateBillingProductRequestBody {
+func (v NullableCreateCRMProductRequestBody) Get() *CreateCRMProductRequestBody {
 	return v.value
 }
 
-func (v *NullableCreateBillingProductRequestBody) Set(val *CreateBillingProductRequestBody) {
+func (v *NullableCreateCRMProductRequestBody) Set(val *CreateCRMProductRequestBody) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableCreateBillingProductRequestBody) IsSet() bool {
+func (v NullableCreateCRMProductRequestBody) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableCreateBillingProductRequestBody) Unset() {
+func (v *NullableCreateCRMProductRequestBody) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableCreateBillingProductRequestBody(val *CreateBillingProductRequestBody) *NullableCreateBillingProductRequestBody {
-	return &NullableCreateBillingProductRequestBody{value: val, isSet: true}
+func NewNullableCreateCRMProductRequestBody(val *CreateCRMProductRequestBody) *NullableCreateCRMProductRequestBody {
+	return &NullableCreateCRMProductRequestBody{value: val, isSet: true}
 }
 
-func (v NullableCreateBillingProductRequestBody) MarshalJSON() ([]byte, error) {
+func (v NullableCreateCRMProductRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableCreateBillingProductRequestBody) UnmarshalJSON(src []byte) error {
+func (v *NullableCreateCRMProductRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

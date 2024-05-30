@@ -255,13 +255,13 @@ func (a *CrmAPIService) ListCRMProductsExecute(r ApiListCRMProductsRequest) (*Li
 }
 
 type ApiUpsertCRMProductRequest struct {
-	ctx                             context.Context
-	ApiService                      CrmAPI
-	createBillingProductRequestBody *CreateBillingProductRequestBody
+	ctx                         context.Context
+	ApiService                  CrmAPI
+	createCRMProductRequestBody *CreateCRMProductRequestBody
 }
 
-func (r ApiUpsertCRMProductRequest) CreateBillingProductRequestBody(createBillingProductRequestBody CreateBillingProductRequestBody) ApiUpsertCRMProductRequest {
-	r.createBillingProductRequestBody = &createBillingProductRequestBody
+func (r ApiUpsertCRMProductRequest) CreateCRMProductRequestBody(createCRMProductRequestBody CreateCRMProductRequestBody) ApiUpsertCRMProductRequest {
+	r.createCRMProductRequestBody = &createCRMProductRequestBody
 	return r
 }
 
@@ -303,8 +303,8 @@ func (a *CrmAPIService) UpsertCRMProductExecute(r ApiUpsertCRMProductRequest) (*
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createBillingProductRequestBody == nil {
-		return localVarReturnValue, nil, reportError("createBillingProductRequestBody is required and must be specified")
+	if r.createCRMProductRequestBody == nil {
+		return localVarReturnValue, nil, reportError("createCRMProductRequestBody is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -325,7 +325,7 @@ func (a *CrmAPIService) UpsertCRMProductExecute(r ApiUpsertCRMProductRequest) (*
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.createBillingProductRequestBody
+	localVarPostBody = r.createCRMProductRequestBody
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {

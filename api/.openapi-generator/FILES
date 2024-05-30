@@ -74,6 +74,7 @@ docs/CreateApiKeyRequestBody.md
 docs/CreateApiKeyResponse.md
 docs/CreateBillingProductRequestBody.md
 docs/CreateBillingSubscriptionsRequestBody.md
+docs/CreateCRMProductRequestBody.md
 docs/CreateCompanyOverrideRequestBody.md
 docs/CreateCompanyOverrideResponse.md
 docs/CreateCompanyResponse.md
@@ -336,6 +337,7 @@ model_create_billing_subscriptions_request_body.go
 model_create_company_override_request_body.go
 model_create_company_override_response.go
 model_create_company_response.go
+model_create_crm_product_request_body.go
 model_create_entity_trait_definition_request_body.go
 model_create_environment_request_body.go
 model_create_environment_response.go
@@ -530,5 +532,4 @@ model_upsert_user_trait_response.go
 model_user_detail_response_data.go
 model_user_response_data.go
 response.go
-test/api_crm_test.go
 utils.go

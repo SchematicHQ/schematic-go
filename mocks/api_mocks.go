@@ -2331,6 +2331,36 @@ func (mr *MockEventsAPIMockRecorder) GetEventSummaryBySubtypeExecute(arg0 any) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventSummaryBySubtypeExecute", reflect.TypeOf((*MockEventsAPI)(nil).GetEventSummaryBySubtypeExecute), arg0)
 }
 
+// GetSegmentIntegrationStatus mocks base method.
+func (m *MockEventsAPI) GetSegmentIntegrationStatus(arg0 context.Context) api.ApiGetSegmentIntegrationStatusRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSegmentIntegrationStatus", arg0)
+	ret0, _ := ret[0].(api.ApiGetSegmentIntegrationStatusRequest)
+	return ret0
+}
+
+// GetSegmentIntegrationStatus indicates an expected call of GetSegmentIntegrationStatus.
+func (mr *MockEventsAPIMockRecorder) GetSegmentIntegrationStatus(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSegmentIntegrationStatus", reflect.TypeOf((*MockEventsAPI)(nil).GetSegmentIntegrationStatus), arg0)
+}
+
+// GetSegmentIntegrationStatusExecute mocks base method.
+func (m *MockEventsAPI) GetSegmentIntegrationStatusExecute(arg0 api.ApiGetSegmentIntegrationStatusRequest) (*api.GetSegmentIntegrationStatusResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSegmentIntegrationStatusExecute", arg0)
+	ret0, _ := ret[0].(*api.GetSegmentIntegrationStatusResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetSegmentIntegrationStatusExecute indicates an expected call of GetSegmentIntegrationStatusExecute.
+func (mr *MockEventsAPIMockRecorder) GetSegmentIntegrationStatusExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSegmentIntegrationStatusExecute", reflect.TypeOf((*MockEventsAPI)(nil).GetSegmentIntegrationStatusExecute), arg0)
+}
+
 // ListEvents mocks base method.
 func (m *MockEventsAPI) ListEvents(arg0 context.Context) api.ApiListEventsRequest {
 	m.ctrl.T.Helper()

@@ -64,6 +64,8 @@ type APIClient struct {
 	FeaturesAPI FeaturesAPI
 
 	PlansAPI PlansAPI
+
+	WebhooksAPI WebhooksAPI
 }
 
 type service struct {
@@ -90,6 +92,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.EventsAPI = (*EventsAPIService)(&c.common)
 	c.FeaturesAPI = (*FeaturesAPIService)(&c.common)
 	c.PlansAPI = (*PlansAPIService)(&c.common)
+	c.WebhooksAPI = (*WebhooksAPIService)(&c.common)
 
 	return c
 }

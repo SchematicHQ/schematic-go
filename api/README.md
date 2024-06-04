@@ -80,6 +80,7 @@ Class | Method | HTTP request | Description
 *EventsAPI* | [**GetEvent**](docs/EventsAPI.md#getevent) | **Get** /events/{event_id} | Get event
 *EventsAPI* | [**GetEventSummaries**](docs/EventsAPI.md#geteventsummaries) | **Get** /event-types | Get event summaries
 *EventsAPI* | [**GetEventSummaryBySubtype**](docs/EventsAPI.md#geteventsummarybysubtype) | **Get** /event-types/{key} | Get event summary by subtype
+*EventsAPI* | [**GetSegmentIntegrationStatus**](docs/EventsAPI.md#getsegmentintegrationstatus) | **Get** /segment-integration | Get segment integration status
 *EventsAPI* | [**ListEvents**](docs/EventsAPI.md#listevents) | **Get** /events | List events
 *EventsAPI* | [**ListMetricCounts**](docs/EventsAPI.md#listmetriccounts) | **Get** /metric-counts | List metric counts
 *FeaturesAPI* | [**CheckFlag**](docs/FeaturesAPI.md#checkflag) | **Post** /flags/{key}/check | Check flag
@@ -114,6 +115,15 @@ Class | Method | HTTP request | Description
 *PlansAPI* | [**ListPlans**](docs/PlansAPI.md#listplans) | **Get** /plans | List plans
 *PlansAPI* | [**UpdateAudience**](docs/PlansAPI.md#updateaudience) | **Put** /plan-audiences/{plan_audience_id} | Update audience
 *PlansAPI* | [**UpdatePlan**](docs/PlansAPI.md#updateplan) | **Put** /plans/{plan_id} | Update plan
+*WebhooksAPI* | [**CountWebhookEvents**](docs/WebhooksAPI.md#countwebhookevents) | **Get** /webhook-events/count | Count webhook events
+*WebhooksAPI* | [**CountWebhooks**](docs/WebhooksAPI.md#countwebhooks) | **Get** /webhooks/count | Count webhooks
+*WebhooksAPI* | [**CreateWebhook**](docs/WebhooksAPI.md#createwebhook) | **Post** /webhooks | Create webhook
+*WebhooksAPI* | [**DeleteWebhook**](docs/WebhooksAPI.md#deletewebhook) | **Delete** /webhooks/{webhook_id} | Delete webhook
+*WebhooksAPI* | [**GetWebhook**](docs/WebhooksAPI.md#getwebhook) | **Get** /webhooks/{webhook_id} | Get webhook
+*WebhooksAPI* | [**GetWebhookEvent**](docs/WebhooksAPI.md#getwebhookevent) | **Get** /webhook-events/{webhook_event_id} | Get webhook event
+*WebhooksAPI* | [**ListWebhookEvents**](docs/WebhooksAPI.md#listwebhookevents) | **Get** /webhook-events | List webhook events
+*WebhooksAPI* | [**ListWebhooks**](docs/WebhooksAPI.md#listwebhooks) | **Get** /webhooks | List webhooks
+*WebhooksAPI* | [**UpdateWebhook**](docs/WebhooksAPI.md#updatewebhook) | **Put** /webhooks/{webhook_id} | Update webhook
 
 
 ## Models
@@ -173,6 +183,10 @@ Class | Method | HTTP request | Description
  - [CountResponse](docs/CountResponse.md)
  - [CountUsersParams](docs/CountUsersParams.md)
  - [CountUsersResponse](docs/CountUsersResponse.md)
+ - [CountWebhookEventsParams](docs/CountWebhookEventsParams.md)
+ - [CountWebhookEventsResponse](docs/CountWebhookEventsResponse.md)
+ - [CountWebhooksParams](docs/CountWebhooksParams.md)
+ - [CountWebhooksResponse](docs/CountWebhooksResponse.md)
  - [CreateApiKeyRequestBody](docs/CreateApiKeyRequestBody.md)
  - [CreateApiKeyResponse](docs/CreateApiKeyResponse.md)
  - [CreateBillingProductRequestBody](docs/CreateBillingProductRequestBody.md)
@@ -202,6 +216,8 @@ Class | Method | HTTP request | Description
  - [CreatePlanResponse](docs/CreatePlanResponse.md)
  - [CreateReqCommon](docs/CreateReqCommon.md)
  - [CreateUserResponse](docs/CreateUserResponse.md)
+ - [CreateWebhookRequestBody](docs/CreateWebhookRequestBody.md)
+ - [CreateWebhookResponse](docs/CreateWebhookResponse.md)
  - [DeleteApiKeyResponse](docs/DeleteApiKeyResponse.md)
  - [DeleteAudienceResponse](docs/DeleteAudienceResponse.md)
  - [DeleteCompanyByKeysResponse](docs/DeleteCompanyByKeysResponse.md)
@@ -216,6 +232,7 @@ Class | Method | HTTP request | Description
  - [DeleteResponse](docs/DeleteResponse.md)
  - [DeleteUserByKeysResponse](docs/DeleteUserByKeysResponse.md)
  - [DeleteUserResponse](docs/DeleteUserResponse.md)
+ - [DeleteWebhookResponse](docs/DeleteWebhookResponse.md)
  - [EntityKeyDefinitionResponseData](docs/EntityKeyDefinitionResponseData.md)
  - [EntityKeyDetailResponseData](docs/EntityKeyDetailResponseData.md)
  - [EntityKeyResponseData](docs/EntityKeyResponseData.md)
@@ -269,7 +286,10 @@ Class | Method | HTTP request | Description
  - [GetOrCreateEntityTraitDefinitionResponse](docs/GetOrCreateEntityTraitDefinitionResponse.md)
  - [GetPlanEntitlementResponse](docs/GetPlanEntitlementResponse.md)
  - [GetPlanResponse](docs/GetPlanResponse.md)
+ - [GetSegmentIntegrationStatusResponse](docs/GetSegmentIntegrationStatusResponse.md)
  - [GetUserResponse](docs/GetUserResponse.md)
+ - [GetWebhookEventResponse](docs/GetWebhookEventResponse.md)
+ - [GetWebhookResponse](docs/GetWebhookResponse.md)
  - [KeysRequestBody](docs/KeysRequestBody.md)
  - [ListApiKeysParams](docs/ListApiKeysParams.md)
  - [ListApiKeysResponse](docs/ListApiKeysResponse.md)
@@ -317,6 +337,10 @@ Class | Method | HTTP request | Description
  - [ListProductsResponse](docs/ListProductsResponse.md)
  - [ListUsersParams](docs/ListUsersParams.md)
  - [ListUsersResponse](docs/ListUsersResponse.md)
+ - [ListWebhookEventsParams](docs/ListWebhookEventsParams.md)
+ - [ListWebhookEventsResponse](docs/ListWebhookEventsResponse.md)
+ - [ListWebhooksParams](docs/ListWebhooksParams.md)
+ - [ListWebhooksResponse](docs/ListWebhooksResponse.md)
  - [LookupCompanyParams](docs/LookupCompanyParams.md)
  - [LookupCompanyResponse](docs/LookupCompanyResponse.md)
  - [LookupUserParams](docs/LookupUserParams.md)
@@ -339,6 +363,7 @@ Class | Method | HTTP request | Description
  - [RuleDetailResponseData](docs/RuleDetailResponseData.md)
  - [RuleResponseData](docs/RuleResponseData.md)
  - [RulesDetailResponseData](docs/RulesDetailResponseData.md)
+ - [SegmentStatusResp](docs/SegmentStatusResp.md)
  - [UpdateApiKeyRequestBody](docs/UpdateApiKeyRequestBody.md)
  - [UpdateApiKeyResponse](docs/UpdateApiKeyResponse.md)
  - [UpdateAudienceRequestBody](docs/UpdateAudienceRequestBody.md)
@@ -360,6 +385,8 @@ Class | Method | HTTP request | Description
  - [UpdatePlanResponse](docs/UpdatePlanResponse.md)
  - [UpdateReqCommon](docs/UpdateReqCommon.md)
  - [UpdateRuleRequestBody](docs/UpdateRuleRequestBody.md)
+ - [UpdateWebhookRequestBody](docs/UpdateWebhookRequestBody.md)
+ - [UpdateWebhookResponse](docs/UpdateWebhookResponse.md)
  - [UpsertBillingProductResponse](docs/UpsertBillingProductResponse.md)
  - [UpsertBillingSubscriptionResponse](docs/UpsertBillingSubscriptionResponse.md)
  - [UpsertCRMProductResponse](docs/UpsertCRMProductResponse.md)
@@ -373,4 +400,6 @@ Class | Method | HTTP request | Description
  - [UpsertUserTraitResponse](docs/UpsertUserTraitResponse.md)
  - [UserDetailResponseData](docs/UserDetailResponseData.md)
  - [UserResponseData](docs/UserResponseData.md)
+ - [WebhookEventResponseData](docs/WebhookEventResponseData.md)
+ - [WebhookResponseData](docs/WebhookResponseData.md)
 

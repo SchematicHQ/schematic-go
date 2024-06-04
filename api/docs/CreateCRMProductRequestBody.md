@@ -5,17 +5,19 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Currency** | **string** |  | 
+**Description** | **string** |  | 
 **ExternalId** | **string** |  | 
 **Interval** | **string** |  | 
 **Name** | **string** |  | 
 **Price** | **float32** |  | 
 **Quantity** | **int32** |  | 
+**Sku** | **string** |  | 
 
 ## Methods
 
 ### NewCreateCRMProductRequestBody
 
-`func NewCreateCRMProductRequestBody(currency string, externalId string, interval string, name string, price float32, quantity int32, ) *CreateCRMProductRequestBody`
+`func NewCreateCRMProductRequestBody(currency string, description string, externalId string, interval string, name string, price float32, quantity int32, sku string, ) *CreateCRMProductRequestBody`
 
 NewCreateCRMProductRequestBody instantiates a new CreateCRMProductRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -48,6 +50,26 @@ and a boolean to check if the value has been set.
 `func (o *CreateCRMProductRequestBody) SetCurrency(v string)`
 
 SetCurrency sets Currency field to given value.
+
+
+### GetDescription
+
+`func (o *CreateCRMProductRequestBody) GetDescription() string`
+
+GetDescription returns the Description field if non-nil, zero value otherwise.
+
+### GetDescriptionOk
+
+`func (o *CreateCRMProductRequestBody) GetDescriptionOk() (*string, bool)`
+
+GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDescription
+
+`func (o *CreateCRMProductRequestBody) SetDescription(v string)`
+
+SetDescription sets Description field to given value.
 
 
 ### GetExternalId
@@ -148,6 +170,26 @@ and a boolean to check if the value has been set.
 `func (o *CreateCRMProductRequestBody) SetQuantity(v int32)`
 
 SetQuantity sets Quantity field to given value.
+
+
+### GetSku
+
+`func (o *CreateCRMProductRequestBody) GetSku() string`
+
+GetSku returns the Sku field if non-nil, zero value otherwise.
+
+### GetSkuOk
+
+`func (o *CreateCRMProductRequestBody) GetSkuOk() (*string, bool)`
+
+GetSkuOk returns a tuple with the Sku field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSku
+
+`func (o *CreateCRMProductRequestBody) SetSku(v string)`
+
+SetSku sets Sku field to given value.
 
 
 

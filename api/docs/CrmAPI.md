@@ -106,7 +106,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createCRMProductRequestBody := *schematicapi.NewCreateCRMProductRequestBody("Currency_example", "ExternalId_example", "Interval_example", "Name_example", float32(123), int32(123)) // CreateCRMProductRequestBody | 
+	createCRMProductRequestBody := *schematicapi.NewCreateCRMProductRequestBody("Currency_example", "Description_example", "ExternalId_example", "Interval_example", "Name_example", float32(123), int32(123), "Sku_example") // CreateCRMProductRequestBody | 
 
 	resp, r, err := client.API().CrmAPI.UpsertCRMProduct(context.Background()).CreateCRMProductRequestBody(createCRMProductRequestBody).Execute()
 	if err != nil {

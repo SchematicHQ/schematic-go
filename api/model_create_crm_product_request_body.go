@@ -21,12 +21,14 @@ var _ MappedNullable = &CreateCRMProductRequestBody{}
 
 // CreateCRMProductRequestBody struct for CreateCRMProductRequestBody
 type CreateCRMProductRequestBody struct {
-	Currency   string  `json:"currency"`
-	ExternalId string  `json:"external_id"`
-	Interval   string  `json:"interval"`
-	Name       string  `json:"name"`
-	Price      float32 `json:"price"`
-	Quantity   int32   `json:"quantity"`
+	Currency    string  `json:"currency"`
+	Description string  `json:"description"`
+	ExternalId  string  `json:"external_id"`
+	Interval    string  `json:"interval"`
+	Name        string  `json:"name"`
+	Price       float32 `json:"price"`
+	Quantity    int32   `json:"quantity"`
+	Sku         string  `json:"sku"`
 }
 
 type _CreateCRMProductRequestBody CreateCRMProductRequestBody
@@ -35,14 +37,16 @@ type _CreateCRMProductRequestBody CreateCRMProductRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateCRMProductRequestBody(currency string, externalId string, interval string, name string, price float32, quantity int32) *CreateCRMProductRequestBody {
+func NewCreateCRMProductRequestBody(currency string, description string, externalId string, interval string, name string, price float32, quantity int32, sku string) *CreateCRMProductRequestBody {
 	this := CreateCRMProductRequestBody{}
 	this.Currency = currency
+	this.Description = description
 	this.ExternalId = externalId
 	this.Interval = interval
 	this.Name = name
 	this.Price = price
 	this.Quantity = quantity
+	this.Sku = sku
 	return &this
 }
 
@@ -76,6 +80,30 @@ func (o *CreateCRMProductRequestBody) GetCurrencyOk() (*string, bool) {
 // SetCurrency sets field value
 func (o *CreateCRMProductRequestBody) SetCurrency(v string) {
 	o.Currency = v
+}
+
+// GetDescription returns the Description field value
+func (o *CreateCRMProductRequestBody) GetDescription() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value
+// and a boolean to check if the value has been set.
+func (o *CreateCRMProductRequestBody) GetDescriptionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Description, true
+}
+
+// SetDescription sets field value
+func (o *CreateCRMProductRequestBody) SetDescription(v string) {
+	o.Description = v
 }
 
 // GetExternalId returns the ExternalId field value
@@ -198,6 +226,30 @@ func (o *CreateCRMProductRequestBody) SetQuantity(v int32) {
 	o.Quantity = v
 }
 
+// GetSku returns the Sku field value
+func (o *CreateCRMProductRequestBody) GetSku() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Sku
+}
+
+// GetSkuOk returns a tuple with the Sku field value
+// and a boolean to check if the value has been set.
+func (o *CreateCRMProductRequestBody) GetSkuOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Sku, true
+}
+
+// SetSku sets field value
+func (o *CreateCRMProductRequestBody) SetSku(v string) {
+	o.Sku = v
+}
+
 func (o CreateCRMProductRequestBody) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -209,11 +261,13 @@ func (o CreateCRMProductRequestBody) MarshalJSON() ([]byte, error) {
 func (o CreateCRMProductRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["currency"] = o.Currency
+	toSerialize["description"] = o.Description
 	toSerialize["external_id"] = o.ExternalId
 	toSerialize["interval"] = o.Interval
 	toSerialize["name"] = o.Name
 	toSerialize["price"] = o.Price
 	toSerialize["quantity"] = o.Quantity
+	toSerialize["sku"] = o.Sku
 	return toSerialize, nil
 }
 
@@ -223,11 +277,13 @@ func (o *CreateCRMProductRequestBody) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"currency",
+		"description",
 		"external_id",
 		"interval",
 		"name",
 		"price",
 		"quantity",
+		"sku",
 	}
 
 	allProperties := make(map[string]interface{})

@@ -10,6 +10,7 @@ api_entitlements.go
 api_events.go
 api_features.go
 api_plans.go
+api_webhooks.go
 client.go
 configuration.go
 docs/AccountsAPI.md
@@ -70,6 +71,10 @@ docs/CountPlansResponse.md
 docs/CountResponse.md
 docs/CountUsersParams.md
 docs/CountUsersResponse.md
+docs/CountWebhookEventsParams.md
+docs/CountWebhookEventsResponse.md
+docs/CountWebhooksParams.md
+docs/CountWebhooksResponse.md
 docs/CreateApiKeyRequestBody.md
 docs/CreateApiKeyResponse.md
 docs/CreateBillingProductRequestBody.md
@@ -99,6 +104,8 @@ docs/CreatePlanRequestBody.md
 docs/CreatePlanResponse.md
 docs/CreateReqCommon.md
 docs/CreateUserResponse.md
+docs/CreateWebhookRequestBody.md
+docs/CreateWebhookResponse.md
 docs/CrmAPI.md
 docs/DeleteApiKeyResponse.md
 docs/DeleteAudienceResponse.md
@@ -114,6 +121,7 @@ docs/DeletePlanResponse.md
 docs/DeleteResponse.md
 docs/DeleteUserByKeysResponse.md
 docs/DeleteUserResponse.md
+docs/DeleteWebhookResponse.md
 docs/EntitlementsAPI.md
 docs/EntityKeyDefinitionResponseData.md
 docs/EntityKeyDetailResponseData.md
@@ -170,7 +178,10 @@ docs/GetOrCreateCompanyMembershipResponse.md
 docs/GetOrCreateEntityTraitDefinitionResponse.md
 docs/GetPlanEntitlementResponse.md
 docs/GetPlanResponse.md
+docs/GetSegmentIntegrationStatusResponse.md
 docs/GetUserResponse.md
+docs/GetWebhookEventResponse.md
+docs/GetWebhookResponse.md
 docs/KeysRequestBody.md
 docs/ListApiKeysParams.md
 docs/ListApiKeysResponse.md
@@ -218,6 +229,10 @@ docs/ListProductsParams.md
 docs/ListProductsResponse.md
 docs/ListUsersParams.md
 docs/ListUsersResponse.md
+docs/ListWebhookEventsParams.md
+docs/ListWebhookEventsResponse.md
+docs/ListWebhooksParams.md
+docs/ListWebhooksResponse.md
 docs/LookupCompanyParams.md
 docs/LookupCompanyResponse.md
 docs/LookupUserParams.md
@@ -241,6 +256,7 @@ docs/RuleConditionResponseData.md
 docs/RuleDetailResponseData.md
 docs/RuleResponseData.md
 docs/RulesDetailResponseData.md
+docs/SegmentStatusResp.md
 docs/UpdateApiKeyRequestBody.md
 docs/UpdateApiKeyResponse.md
 docs/UpdateAudienceRequestBody.md
@@ -262,6 +278,8 @@ docs/UpdatePlanRequestBody.md
 docs/UpdatePlanResponse.md
 docs/UpdateReqCommon.md
 docs/UpdateRuleRequestBody.md
+docs/UpdateWebhookRequestBody.md
+docs/UpdateWebhookResponse.md
 docs/UpsertBillingProductResponse.md
 docs/UpsertBillingSubscriptionResponse.md
 docs/UpsertCRMProductResponse.md
@@ -275,6 +293,9 @@ docs/UpsertUserSubRequestBody.md
 docs/UpsertUserTraitResponse.md
 docs/UserDetailResponseData.md
 docs/UserResponseData.md
+docs/WebhookEventResponseData.md
+docs/WebhookResponseData.md
+docs/WebhooksAPI.md
 git_push.sh
 model_api_error.go
 model_api_key_create_response_data.go
@@ -330,6 +351,10 @@ model_count_plans_response.go
 model_count_response.go
 model_count_users_params.go
 model_count_users_response.go
+model_count_webhook_events_params.go
+model_count_webhook_events_response.go
+model_count_webhooks_params.go
+model_count_webhooks_response.go
 model_create_api_key_request_body.go
 model_create_api_key_response.go
 model_create_billing_product_request_body.go
@@ -359,6 +384,8 @@ model_create_plan_request_body.go
 model_create_plan_response.go
 model_create_req_common.go
 model_create_user_response.go
+model_create_webhook_request_body.go
+model_create_webhook_response.go
 model_crm_product_response_data.go
 model_delete_api_key_response.go
 model_delete_audience_response.go
@@ -374,6 +401,7 @@ model_delete_plan_response.go
 model_delete_response.go
 model_delete_user_by_keys_response.go
 model_delete_user_response.go
+model_delete_webhook_response.go
 model_entity_key_definition_response_data.go
 model_entity_key_detail_response_data.go
 model_entity_key_response_data.go
@@ -427,7 +455,10 @@ model_get_or_create_company_membership_response.go
 model_get_or_create_entity_trait_definition_response.go
 model_get_plan_entitlement_response.go
 model_get_plan_response.go
+model_get_segment_integration_status_response.go
 model_get_user_response.go
+model_get_webhook_event_response.go
+model_get_webhook_response.go
 model_keys_request_body.go
 model_list_api_keys_params.go
 model_list_api_keys_response.go
@@ -475,6 +506,10 @@ model_list_products_params.go
 model_list_products_response.go
 model_list_users_params.go
 model_list_users_response.go
+model_list_webhook_events_params.go
+model_list_webhook_events_response.go
+model_list_webhooks_params.go
+model_list_webhooks_response.go
 model_lookup_company_params.go
 model_lookup_company_response.go
 model_lookup_user_params.go
@@ -497,6 +532,7 @@ model_rule_condition_response_data.go
 model_rule_detail_response_data.go
 model_rule_response_data.go
 model_rules_detail_response_data.go
+model_segment_status_resp.go
 model_update_api_key_request_body.go
 model_update_api_key_response.go
 model_update_audience_request_body.go
@@ -518,6 +554,8 @@ model_update_plan_request_body.go
 model_update_plan_response.go
 model_update_req_common.go
 model_update_rule_request_body.go
+model_update_webhook_request_body.go
+model_update_webhook_response.go
 model_upsert_billing_product_response.go
 model_upsert_billing_subscription_response.go
 model_upsert_company_request_body.go
@@ -531,5 +569,8 @@ model_upsert_user_sub_request_body.go
 model_upsert_user_trait_response.go
 model_user_detail_response_data.go
 model_user_response_data.go
+model_webhook_event_response_data.go
+model_webhook_response_data.go
 response.go
+test/api_webhooks_test.go
 utils.go

@@ -27,7 +27,7 @@ type UpsertTraitRequestBody struct {
 	Keys map[string]interface{} `json:"keys"`
 	// Value to set the trait to
 	Set NullableString `json:"set,omitempty"`
-	// Name of the trait to update
+	// DealName of the trait to update
 	Trait string `json:"trait"`
 	// Unless this is set, the company or user will be created if it does not already exist
 	UpdateOnly NullableBool `json:"update_only,omitempty"`

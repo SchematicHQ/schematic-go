@@ -24,7 +24,7 @@ type CreateOrUpdateConditionRequestBody struct {
 	// Optionally provide a trait ID to compare a metric or trait value against instead of a value
 	ComparisonTraitId NullableString `json:"comparison_trait_id,omitempty"`
 	ConditionType     string         `json:"condition_type"`
-	// Name of track event type used to measure this condition
+	// DealName of track event type used to measure this condition
 	EventSubtype NullableString `json:"event_subtype,omitempty"`
 	Id           NullableString `json:"id,omitempty"`
 	// Period of time over which to measure the track event metric

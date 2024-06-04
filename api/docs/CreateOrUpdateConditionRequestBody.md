@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ComparisonTraitId** | Pointer to **NullableString** | Optionally provide a trait ID to compare a metric or trait value against instead of a value | [optional] 
 **ConditionType** | **string** |  | 
-**EventSubtype** | Pointer to **NullableString** | Name of track event type used to measure this condition | [optional] 
+**EventSubtype** | Pointer to **NullableString** | DealName of track event type used to measure this condition | [optional] 
 **Id** | Pointer to **NullableString** |  | [optional] 
 **MetricPeriod** | Pointer to **NullableString** | Period of time over which to measure the track event metric | [optional] 
 **MetricValue** | **int32** | Value to compare the track event metric against | 

@@ -20,7 +20,7 @@ import (
 // checks if the CRMProductResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CRMProductResponseData{}
 
-// CRMProductResponseData struct for CRMProductResponseData
+// CRMProductResponseData The created resource
 type CRMProductResponseData struct {
 	AccountId     string       `json:"account_id"`
 	CreatedAt     time.Time    `json:"created_at"`

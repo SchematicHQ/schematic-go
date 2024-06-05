@@ -5,6 +5,7 @@ All URIs are relative to *https://api.schematichq.com*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**ListCRMProducts**](CrmAPI.md#ListCRMProducts) | **Get** /crm/products | List c r m products
+[**UpsertCRMDeal**](CrmAPI.md#UpsertCRMDeal) | **Post** /crm/deals/upsert | Upsert c r m deal
 [**UpsertCRMProduct**](CrmAPI.md#UpsertCRMProduct) | **Post** /crm/products/upsert | Upsert c r m product
 
 
@@ -75,6 +76,73 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertCRMDeal
+
+> UpsertCRMDealResponse UpsertCRMDeal(ctx).CreateCRMDealRequestBody(createCRMDealRequestBody).Execute()
+
+Upsert c r m deal
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	createCRMDealRequestBody := *schematicapi.NewCreateCRMDealRequestBody("CrmCompanyKey_example", "DealExternalId_example") // CreateCRMDealRequestBody | 
+
+	resp, r, err := client.API().CrmAPI.UpsertCRMDeal(context.Background()).CreateCRMDealRequestBody(createCRMDealRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.UpsertCRMDeal``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertCRMDeal`: UpsertCRMDealResponse
+	fmt.Fprintf(os.Stdout, "Response from `CrmAPI.UpsertCRMDeal`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertCRMDealRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **createCRMDealRequestBody** | [**CreateCRMDealRequestBody**](CreateCRMDealRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertCRMDealResponse**](UpsertCRMDealResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

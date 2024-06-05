@@ -2039,6 +2039,49 @@ paths:
       summary: Upsert company trait
       tags:
       - companies
+  /crm/deals/upsert:
+    post:
+      operationId: upsertCRMDeal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCRMDealRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertCRMDealResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Upsert c r m deal
+      tags:
+      - crm
   /crm/products:
     get:
       operationId: listCRMProducts
@@ -7444,7 +7487,58 @@ components:
       - updated_at
       title: BillingSubscriptionResponseData
       type: object
+    CRMDealResponseData:
+      description: The created resource
+      example:
+        deal_external_id: deal_external_id
+        account_id: account_id
+        company_external_id: company_external_id
+        environment_id: environment_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        deal_id: deal_id
+        deleted_at: 2000-01-23T04:56:07.000+00:00
+        product_external_id: product_external_id
+      properties:
+        account_id:
+          type: string
+        company_external_id:
+          nullable: true
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        deal_external_id:
+          type: string
+        deal_id:
+          type: string
+        deleted_at:
+          format: date-time
+          nullable: true
+          type: string
+        environment_id:
+          type: string
+        name:
+          nullable: true
+          type: string
+        product_external_id:
+          nullable: true
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - account_id
+      - created_at
+      - deal_external_id
+      - deal_id
+      - environment_id
+      - updated_at
+      title: CRMDealResponseData
+      type: object
     CRMProductResponseData:
+      description: The created resource
       example:
         account_id: account_id
         quantity: 6.027456183070403
@@ -8163,6 +8257,32 @@ components:
       - subscription_external_id
       title: CreateBillingSubscriptionsRequestBody
       type: object
+    CreateCRMDealRequestBody:
+      example:
+        crm_product_id: crm_product_id
+        deal_external_id: deal_external_id
+        deal_name: deal_name
+        crm_company_id: crm_company_id
+        crm_company_key: crm_company_key
+      properties:
+        crm_company_id:
+          nullable: true
+          type: string
+        crm_company_key:
+          type: string
+        crm_product_id:
+          nullable: true
+          type: string
+        deal_external_id:
+          type: string
+        deal_name:
+          nullable: true
+          type: string
+      required:
+      - crm_company_key
+      - deal_external_id
+      title: CreateCRMDealRequestBody
+      type: object
     CreateCRMProductRequestBody:
       example:
         quantity: 6
@@ -8502,6 +8622,7 @@ components:
           - user
           - plan
           - billing_product
+          - crm_product
           type: string
         event_subtype:
           description: DealName of track event type used to measure this condition
@@ -26851,6 +26972,32 @@ components:
       - data
       - params
       title: UpsertCompanyTraitResponse
+      type: object
+    UpsertCRMDealResponse:
+      example:
+        data:
+          deal_external_id: deal_external_id
+          account_id: account_id
+          company_external_id: company_external_id
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          deal_id: deal_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+          product_external_id: product_external_id
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/CRMDealResponseData'
+        params:
+          description: Input parameters
+          title: UpsertCRMDealParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpsertCRMDealResponse
       type: object
     ListCRMProductsParams:
       description: Input parameters

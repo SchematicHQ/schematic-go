@@ -55,6 +55,7 @@ Class | Method | HTTP request | Description
 *CompaniesAPI* | [**UpsertUser**](docs/CompaniesAPI.md#upsertuser) | **Post** /users | Upsert user
 *CompaniesAPI* | [**UpsertUserTrait**](docs/CompaniesAPI.md#upsertusertrait) | **Post** /user-traits | Upsert user trait
 *CrmAPI* | [**ListCRMProducts**](docs/CrmAPI.md#listcrmproducts) | **Get** /crm/products | List c r m products
+*CrmAPI* | [**UpsertCRMDeal**](docs/CrmAPI.md#upsertcrmdeal) | **Post** /crm/deals/upsert | Upsert c r m deal
 *CrmAPI* | [**UpsertCRMProduct**](docs/CrmAPI.md#upsertcrmproduct) | **Post** /crm/products/upsert | Upsert c r m product
 *EntitlementsAPI* | [**CountCompanyOverrides**](docs/EntitlementsAPI.md#countcompanyoverrides) | **Get** /company-overrides/count | Count company overrides
 *EntitlementsAPI* | [**CountFeatureCompanies**](docs/EntitlementsAPI.md#countfeaturecompanies) | **Get** /feature-companies/count | Count feature companies
@@ -136,6 +137,7 @@ Class | Method | HTTP request | Description
  - [AudienceRequestBody](docs/AudienceRequestBody.md)
  - [BillingProductResponseData](docs/BillingProductResponseData.md)
  - [BillingSubscriptionResponseData](docs/BillingSubscriptionResponseData.md)
+ - [CRMDealResponseData](docs/CRMDealResponseData.md)
  - [CRMProductResponseData](docs/CRMProductResponseData.md)
  - [CheckFlagOutputWithFlagKey](docs/CheckFlagOutputWithFlagKey.md)
  - [CheckFlagRequestBody](docs/CheckFlagRequestBody.md)
@@ -191,6 +193,7 @@ Class | Method | HTTP request | Description
  - [CreateApiKeyResponse](docs/CreateApiKeyResponse.md)
  - [CreateBillingProductRequestBody](docs/CreateBillingProductRequestBody.md)
  - [CreateBillingSubscriptionsRequestBody](docs/CreateBillingSubscriptionsRequestBody.md)
+ - [CreateCRMDealRequestBody](docs/CreateCRMDealRequestBody.md)
  - [CreateCRMProductRequestBody](docs/CreateCRMProductRequestBody.md)
  - [CreateCompanyOverrideRequestBody](docs/CreateCompanyOverrideRequestBody.md)
  - [CreateCompanyOverrideResponse](docs/CreateCompanyOverrideResponse.md)
@@ -389,6 +392,7 @@ Class | Method | HTTP request | Description
  - [UpdateWebhookResponse](docs/UpdateWebhookResponse.md)
  - [UpsertBillingProductResponse](docs/UpsertBillingProductResponse.md)
  - [UpsertBillingSubscriptionResponse](docs/UpsertBillingSubscriptionResponse.md)
+ - [UpsertCRMDealResponse](docs/UpsertCRMDealResponse.md)
  - [UpsertCRMProductResponse](docs/UpsertCRMProductResponse.md)
  - [UpsertCompanyRequestBody](docs/UpsertCompanyRequestBody.md)
  - [UpsertCompanyResponse](docs/UpsertCompanyResponse.md)

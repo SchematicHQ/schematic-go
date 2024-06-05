@@ -15,6 +15,8 @@ tags:
 - name: plans
 - name: entitlements
 - name: billing
+- name: crm
+- name: webhooks
 paths:
   /api-keys:
     get:
@@ -2037,6 +2039,164 @@ paths:
       summary: Upsert company trait
       tags:
       - companies
+  /crm/deals/upsert:
+    post:
+      operationId: upsertCRMDeal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCRMDealRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertCRMDealResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Upsert c r m deal
+      tags:
+      - crm
+  /crm/products:
+    get:
+      operationId: listCRMProducts
+      parameters:
+      - explode: true
+        in: query
+        name: ids
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCRMProductsResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: List c r m products
+      tags:
+      - crm
+  /crm/products/upsert:
+    post:
+      operationId: upsertCRMProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCRMProductRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertCRMProductResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Upsert c r m product
+      tags:
+      - crm
   /entity-key-definitions:
     get:
       operationId: listEntityKeyDefinitions
@@ -5785,6 +5945,43 @@ paths:
       summary: Count plans
       tags:
       - plans
+  /segment-integration:
+    get:
+      operationId: getSegmentIntegrationStatus
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSegmentIntegrationStatusResponse'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Get segment integration status
+      tags:
+      - events
   /usage-by-company:
     get:
       operationId: getFeatureUsageByCompany
@@ -6313,6 +6510,480 @@ paths:
       summary: Lookup user
       tags:
       - companies
+  /webhook-events:
+    get:
+      operationId: listWebhookEvents
+      parameters:
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhookEventsResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: List webhook events
+      tags:
+      - webhooks
+  /webhook-events/{webhook_event_id}:
+    get:
+      operationId: getWebhookEvent
+      parameters:
+      - description: webhook_event_id
+        explode: false
+        in: path
+        name: webhook_event_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWebhookEventResponse'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Get webhook event
+      tags:
+      - webhooks
+  /webhook-events/count:
+    get:
+      operationId: countWebhookEvents
+      parameters:
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountWebhookEventsResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Count webhook events
+      tags:
+      - webhooks
+  /webhooks:
+    get:
+      operationId: listWebhooks
+      parameters:
+      - explode: true
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhooksResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: List webhooks
+      tags:
+      - webhooks
+    post:
+      operationId: createWebhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWebhookRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateWebhookResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Create webhook
+      tags:
+      - webhooks
+  /webhooks/{webhook_id}:
+    delete:
+      operationId: deleteWebhook
+      parameters:
+      - description: webhook_id
+        explode: false
+        in: path
+        name: webhook_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteWebhookResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Delete webhook
+      tags:
+      - webhooks
+    get:
+      operationId: getWebhook
+      parameters:
+      - description: webhook_id
+        explode: false
+        in: path
+        name: webhook_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWebhookResponse'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Get webhook
+      tags:
+      - webhooks
+    put:
+      operationId: updateWebhook
+      parameters:
+      - description: webhook_id
+        explode: false
+        in: path
+        name: webhook_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWebhookRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateWebhookResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Update webhook
+      tags:
+      - webhooks
+  /webhooks/count:
+    get:
+      operationId: countWebhooks
+      parameters:
+      - explode: true
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountWebhooksResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Count webhooks
+      tags:
+      - webhooks
 components:
   responses:
     BadRequest:
@@ -6815,6 +7486,110 @@ components:
       - id
       - updated_at
       title: BillingSubscriptionResponseData
+      type: object
+    CRMDealResponseData:
+      description: The created resource
+      example:
+        deal_external_id: deal_external_id
+        account_id: account_id
+        company_external_id: company_external_id
+        environment_id: environment_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        deal_id: deal_id
+        deleted_at: 2000-01-23T04:56:07.000+00:00
+        product_external_id: product_external_id
+      properties:
+        account_id:
+          type: string
+        company_external_id:
+          nullable: true
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        deal_external_id:
+          type: string
+        deal_id:
+          type: string
+        deleted_at:
+          format: date-time
+          nullable: true
+          type: string
+        environment_id:
+          type: string
+        name:
+          nullable: true
+          type: string
+        product_external_id:
+          nullable: true
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - account_id
+      - created_at
+      - deal_external_id
+      - deal_id
+      - environment_id
+      - updated_at
+      title: CRMDealResponseData
+      type: object
+    CRMProductResponseData:
+      description: The created resource
+      example:
+        account_id: account_id
+        quantity: 6.027456183070403
+        environment_id: environment_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        price: 0.8008281904610115
+        product_id: product_id
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        currency: currency
+        external_id: external_id
+        deleted_at: 2000-01-23T04:56:07.000+00:00
+      properties:
+        account_id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        currency:
+          type: string
+        deleted_at:
+          format: date-time
+          nullable: true
+          type: string
+        environment_id:
+          type: string
+        external_id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        product_id:
+          type: string
+        quantity:
+          type: number
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - account_id
+      - created_at
+      - currency
+      - environment_id
+      - external_id
+      - name
+      - price
+      - product_id
+      - quantity
+      - updated_at
+      title: CRMProductResponseData
       type: object
     CheckFlagOutputWithFlagKey:
       example:
@@ -7482,6 +8257,70 @@ components:
       - subscription_external_id
       title: CreateBillingSubscriptionsRequestBody
       type: object
+    CreateCRMDealRequestBody:
+      example:
+        crm_product_id: crm_product_id
+        deal_external_id: deal_external_id
+        deal_name: deal_name
+        crm_company_id: crm_company_id
+        crm_company_key: crm_company_key
+      properties:
+        crm_company_id:
+          nullable: true
+          type: string
+        crm_company_key:
+          type: string
+        crm_product_id:
+          nullable: true
+          type: string
+        deal_external_id:
+          type: string
+        deal_name:
+          nullable: true
+          type: string
+      required:
+      - crm_company_key
+      - deal_external_id
+      title: CreateCRMDealRequestBody
+      type: object
+    CreateCRMProductRequestBody:
+      example:
+        quantity: 6
+        price: 0.8008281904610115
+        name: name
+        description: description
+        currency: currency
+        external_id: external_id
+        interval: interval
+        sku: sku
+      properties:
+        currency:
+          type: string
+        description:
+          type: string
+        external_id:
+          type: string
+        interval:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        sku:
+          type: string
+      required:
+      - currency
+      - description
+      - external_id
+      - interval
+      - name
+      - price
+      - quantity
+      - sku
+      title: CreateCRMProductRequestBody
+      type: object
     CreateCompanyOverrideRequestBody:
       example:
         feature_id: feature_id
@@ -7783,9 +8622,10 @@ components:
           - user
           - plan
           - billing_product
+          - crm_product
           type: string
         event_subtype:
-          description: Name of track event type used to measure this condition
+          description: DealName of track event type used to measure this condition
           nullable: true
           type: string
         id:
@@ -8090,6 +8930,28 @@ components:
       - feature_id
       - value_type
       title: CreateReqCommon
+      type: object
+    CreateWebhookRequestBody:
+      example:
+        name: name
+        request_types:
+        - request_types
+        - request_types
+        url: url
+      properties:
+        name:
+          type: string
+        request_types:
+          items:
+            type: string
+          type: array
+        url:
+          type: string
+      required:
+      - name
+      - request_types
+      - url
+      title: CreateWebhookRequestBody
       type: object
     DeleteResponse:
       example:
@@ -22433,6 +23295,26 @@ components:
       - rules
       title: RulesDetailResponseData
       type: object
+    SegmentStatusResp:
+      description: The returned resource
+      example:
+        connected: true
+        last_event_at: 2000-01-23T04:56:07.000+00:00
+        environment_id: environment_id
+      properties:
+        connected:
+          type: boolean
+        environment_id:
+          type: string
+        last_event_at:
+          format: date-time
+          nullable: true
+          type: string
+      required:
+      - connected
+      - environment_id
+      title: SegmentStatusResp
+      type: object
     UpdateApiKeyRequestBody:
       example:
         name: name
@@ -22959,6 +23841,26 @@ components:
       - value
       title: UpdateRuleRequestBody
       type: object
+    UpdateWebhookRequestBody:
+      example:
+        name: name
+        request_types:
+        - request_types
+        - request_types
+        url: url
+      properties:
+        name:
+          nullable: true
+          type: string
+        request_types:
+          items:
+            type: string
+          type: array
+        url:
+          nullable: true
+          type: string
+      title: UpdateWebhookRequestBody
+      type: object
     UpsertCompanyRequestBody:
       example:
         traits: "{}"
@@ -23010,7 +23912,7 @@ components:
           nullable: true
           type: string
         trait:
-          description: Name of the trait to update
+          description: DealName of the trait to update
           type: string
         update_only:
           description: "Unless this is set, the company or user will be created if\
@@ -23259,6 +24161,88 @@ components:
       - name
       - updated_at
       title: UserResponseData
+      type: object
+    WebhookEventResponseData:
+      example:
+        sent_at: 2000-01-23T04:56:07.000+00:00
+        response_code: 0
+        request_type: request_type
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        webhook_id: webhook_id
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+        status: status
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        id:
+          type: string
+        request_type:
+          type: string
+        response_code:
+          nullable: true
+          type: integer
+        sent_at:
+          format: date-time
+          nullable: true
+          type: string
+        status:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        webhook_id:
+          type: string
+      required:
+      - created_at
+      - id
+      - request_type
+      - status
+      - updated_at
+      - webhook_id
+      title: WebhookEventResponseData
+      type: object
+    WebhookResponseData:
+      description: The updated resource
+      example:
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+        request_types:
+        - request_types
+        - request_types
+        url: url
+        status: status
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        request_types:
+          items:
+            type: string
+          type: array
+        status:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        url:
+          type: string
+      required:
+      - created_at
+      - id
+      - name
+      - request_types
+      - status
+      - updated_at
+      - url
+      title: WebhookResponseData
       type: object
     ListApiKeysParams:
       description: Input parameters
@@ -25988,6 +26972,129 @@ components:
       - data
       - params
       title: UpsertCompanyTraitResponse
+      type: object
+    UpsertCRMDealResponse:
+      example:
+        data:
+          deal_external_id: deal_external_id
+          account_id: account_id
+          company_external_id: company_external_id
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          deal_id: deal_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+          product_external_id: product_external_id
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/CRMDealResponseData'
+        params:
+          description: Input parameters
+          title: UpsertCRMDealParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpsertCRMDealResponse
+      type: object
+    ListCRMProductsParams:
+      description: Input parameters
+      example:
+        offset: 0
+        limit: 100
+        name: name
+        ids:
+        - ids
+        - ids
+      properties:
+        ids:
+          items:
+            type: string
+          type: array
+        limit:
+          example: 100
+          type: integer
+        name:
+          type: string
+        offset:
+          example: 0
+          type: integer
+      title: ListCRMProductsParams
+      type: object
+    ListCRMProductsResponse:
+      example:
+        data:
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          external_id: external_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          external_id: external_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        params:
+          offset: 0
+          limit: 100
+          name: name
+          ids:
+          - ids
+          - ids
+      properties:
+        data:
+          description: The returned resources
+          items:
+            $ref: '#/components/schemas/CRMProductResponseData'
+          title: ListCRMProductsResponseData
+          type: array
+        params:
+          $ref: '#/components/schemas/ListCRMProductsParams'
+      required:
+      - data
+      - params
+      title: ListCRMProductsResponse
+      type: object
+    UpsertCRMProductResponse:
+      example:
+        data:
+          account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          external_id: external_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/CRMProductResponseData'
+        params:
+          description: Input parameters
+          title: UpsertCRMProductParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpsertCRMProductResponse
       type: object
     ListEntityKeyDefinitionsParams:
       description: Input parameters
@@ -60651,6 +61758,25 @@ components:
       - params
       title: CountPlansResponse
       type: object
+    GetSegmentIntegrationStatusResponse:
+      example:
+        data:
+          connected: true
+          last_event_at: 2000-01-23T04:56:07.000+00:00
+          environment_id: environment_id
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/SegmentStatusResp'
+        params:
+          description: Input parameters
+          title: GetSegmentIntegrationStatusParams
+          type: object
+      required:
+      - data
+      - params
+      title: GetSegmentIntegrationStatusResponse
+      type: object
     GetFeatureUsageByCompanyParams:
       description: Input parameters
       example:
@@ -64221,6 +65347,294 @@ components:
       - data
       - params
       title: LookupUserResponse
+      type: object
+    ListWebhookEventsParams:
+      description: Input parameters
+      example:
+        offset: 0
+        limit: 100
+      properties:
+        limit:
+          example: 100
+          type: integer
+        offset:
+          example: 0
+          type: integer
+      title: ListWebhookEventsParams
+      type: object
+    ListWebhookEventsResponse:
+      example:
+        data:
+        - sent_at: 2000-01-23T04:56:07.000+00:00
+          response_code: 0
+          request_type: request_type
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          webhook_id: webhook_id
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          status: status
+        - sent_at: 2000-01-23T04:56:07.000+00:00
+          response_code: 0
+          request_type: request_type
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          webhook_id: webhook_id
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          status: status
+        params:
+          offset: 0
+          limit: 100
+      properties:
+        data:
+          description: The returned resources
+          items:
+            $ref: '#/components/schemas/WebhookEventResponseData'
+          title: ListWebhookEventsResponseData
+          type: array
+        params:
+          $ref: '#/components/schemas/ListWebhookEventsParams'
+      required:
+      - data
+      - params
+      title: ListWebhookEventsResponse
+      type: object
+    GetWebhookEventResponse:
+      example:
+        data:
+          sent_at: 2000-01-23T04:56:07.000+00:00
+          response_code: 0
+          request_type: request_type
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          webhook_id: webhook_id
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          status: status
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/WebhookEventResponseData'
+        params:
+          description: Input parameters
+          title: GetWebhookEventParams
+          type: object
+      required:
+      - data
+      - params
+      title: GetWebhookEventResponse
+      type: object
+    CountWebhookEventsParams:
+      description: Input parameters
+      example:
+        offset: 0
+        limit: 100
+      properties:
+        limit:
+          example: 100
+          type: integer
+        offset:
+          example: 0
+          type: integer
+      title: CountWebhookEventsParams
+      type: object
+    CountWebhookEventsResponse:
+      example:
+        data:
+          count: 0
+        params:
+          offset: 0
+          limit: 100
+      properties:
+        data:
+          $ref: '#/components/schemas/CountResponse'
+        params:
+          $ref: '#/components/schemas/CountWebhookEventsParams'
+      required:
+      - data
+      - params
+      title: CountWebhookEventsResponse
+      type: object
+    ListWebhooksParams:
+      description: Input parameters
+      example:
+        q: q
+        offset: 0
+        limit: 100
+      properties:
+        limit:
+          example: 100
+          type: integer
+        offset:
+          example: 0
+          type: integer
+        q:
+          type: string
+      title: ListWebhooksParams
+      type: object
+    ListWebhooksResponse:
+      example:
+        data:
+        - updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          request_types:
+          - request_types
+          - request_types
+          url: url
+          status: status
+        - updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          request_types:
+          - request_types
+          - request_types
+          url: url
+          status: status
+        params:
+          q: q
+          offset: 0
+          limit: 100
+      properties:
+        data:
+          description: The returned resources
+          items:
+            $ref: '#/components/schemas/WebhookResponseData'
+          title: ListWebhooksResponseData
+          type: array
+        params:
+          $ref: '#/components/schemas/ListWebhooksParams'
+      required:
+      - data
+      - params
+      title: ListWebhooksResponse
+      type: object
+    CreateWebhookResponse:
+      example:
+        data:
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          request_types:
+          - request_types
+          - request_types
+          url: url
+          status: status
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/WebhookResponseData'
+        params:
+          description: Input parameters
+          title: CreateWebhookParams
+          type: object
+      required:
+      - data
+      - params
+      title: CreateWebhookResponse
+      type: object
+    GetWebhookResponse:
+      example:
+        data:
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          request_types:
+          - request_types
+          - request_types
+          url: url
+          status: status
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/WebhookResponseData'
+        params:
+          description: Input parameters
+          title: GetWebhookParams
+          type: object
+      required:
+      - data
+      - params
+      title: GetWebhookResponse
+      type: object
+    UpdateWebhookResponse:
+      example:
+        data:
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          request_types:
+          - request_types
+          - request_types
+          url: url
+          status: status
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/WebhookResponseData'
+        params:
+          description: Input parameters
+          title: UpdateWebhookParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpdateWebhookResponse
+      type: object
+    DeleteWebhookResponse:
+      example:
+        data:
+          deleted: true
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/DeleteResponse'
+        params:
+          description: Input parameters
+          title: DeleteWebhookParams
+          type: object
+      required:
+      - data
+      - params
+      title: DeleteWebhookResponse
+      type: object
+    CountWebhooksParams:
+      description: Input parameters
+      example:
+        q: q
+        offset: 0
+        limit: 100
+      properties:
+        limit:
+          example: 100
+          type: integer
+        offset:
+          example: 0
+          type: integer
+        q:
+          type: string
+      title: CountWebhooksParams
+      type: object
+    CountWebhooksResponse:
+      example:
+        data:
+          count: 0
+        params:
+          q: q
+          offset: 0
+          limit: 100
+      properties:
+        data:
+          $ref: '#/components/schemas/CountResponse'
+        params:
+          $ref: '#/components/schemas/CountWebhooksParams'
+      required:
+      - data
+      - params
+      title: CountWebhooksResponse
       type: object
     EventBodyTrack:
       example:

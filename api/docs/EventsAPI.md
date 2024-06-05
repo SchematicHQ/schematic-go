@@ -9,6 +9,7 @@ Method | HTTP request | Description
 [**GetEvent**](EventsAPI.md#GetEvent) | **Get** /events/{event_id} | Get event
 [**GetEventSummaries**](EventsAPI.md#GetEventSummaries) | **Get** /event-types | Get event summaries
 [**GetEventSummaryBySubtype**](EventsAPI.md#GetEventSummaryBySubtype) | **Get** /event-types/{key} | Get event summary by subtype
+[**GetSegmentIntegrationStatus**](EventsAPI.md#GetSegmentIntegrationStatus) | **Get** /segment-integration | Get segment integration status
 [**ListEvents**](EventsAPI.md#ListEvents) | **Get** /events | List events
 [**ListMetricCounts**](EventsAPI.md#ListMetricCounts) | **Get** /metric-counts | List metric counts
 
@@ -348,6 +349,68 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**GetEventSummaryBySubtypeResponse**](GetEventSummaryBySubtypeResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetSegmentIntegrationStatus
+
+> GetSegmentIntegrationStatusResponse GetSegmentIntegrationStatus(ctx).Execute()
+
+Get segment integration status
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+
+	resp, r, err := client.API().EventsAPI.GetSegmentIntegrationStatus(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.GetSegmentIntegrationStatus``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetSegmentIntegrationStatus`: GetSegmentIntegrationStatusResponse
+	fmt.Fprintf(os.Stdout, "Response from `EventsAPI.GetSegmentIntegrationStatus`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetSegmentIntegrationStatusRequest struct via the builder pattern
+
+
+### Return type
+
+[**GetSegmentIntegrationStatusResponse**](GetSegmentIntegrationStatusResponse.md)
 
 ### Authorization
 

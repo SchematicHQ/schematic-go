@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **Incr** | Pointer to **NullableInt32** | Amount to increment the trait by (positive or negative) | [optional] 
 **Keys** | **map[string]interface{}** | Key/value pairs too identify a company or user | 
 **Set** | Pointer to **NullableString** | Value to set the trait to | [optional] 
-**Trait** | **string** | Name of the trait to update | 
+**Trait** | **string** | DealName of the trait to update | 
 **UpdateOnly** | Pointer to **NullableBool** | Unless this is set, the company or user will be created if it does not already exist | [optional] 
 
 ## Methods

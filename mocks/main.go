@@ -15,6 +15,8 @@ type mockObjects struct {
 	FeaturesAPI     *MockFeaturesAPI
 	HTTPClient      *MockHTTPClient
 	PlansAPI        *MockPlansAPI
+	WebooksAPI      *MockWebhooksAPI
+	CrmApi          *MockCrmAPI
 }
 
 // Create an API client instance with mock instances for all API services
@@ -28,6 +30,8 @@ func NewMockAPIClient(ctrl *gomock.Controller) (*api.APIClient, *mockObjects) {
 		EventsAPI:       NewMockEventsAPI(ctrl),
 		FeaturesAPI:     NewMockFeaturesAPI(ctrl),
 		PlansAPI:        NewMockPlansAPI(ctrl),
+		WebooksAPI:      NewMockWebhooksAPI(ctrl),
+		CrmApi:          NewMockCrmAPI(ctrl),
 	}
 
 	// Set up API client
@@ -38,6 +42,8 @@ func NewMockAPIClient(ctrl *gomock.Controller) (*api.APIClient, *mockObjects) {
 	apiClient.EventsAPI = mocks.EventsAPI
 	apiClient.FeaturesAPI = mocks.FeaturesAPI
 	apiClient.PlansAPI = mocks.PlansAPI
+	apiClient.WebhooksAPI = mocks.WebooksAPI
+	apiClient.CrmAPI = mocks.CrmApi
 
 	// Provide API client instance and mocks
 	return apiClient, mocks

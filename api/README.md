@@ -35,6 +35,7 @@ Class | Method | HTTP request | Description
 *CompaniesAPI* | [**DeleteUser**](docs/CompaniesAPI.md#deleteuser) | **Delete** /users/{user_id} | Delete user
 *CompaniesAPI* | [**DeleteUserByKeys**](docs/CompaniesAPI.md#deleteuserbykeys) | **Post** /users/delete | Delete user by keys
 *CompaniesAPI* | [**GetActiveCompanySubscription**](docs/CompaniesAPI.md#getactivecompanysubscription) | **Get** /company-subscriptions | Get active company subscription
+*CompaniesAPI* | [**GetActiveDeals**](docs/CompaniesAPI.md#getactivedeals) | **Get** /company-crm-deals | Get active deals
 *CompaniesAPI* | [**GetCompany**](docs/CompaniesAPI.md#getcompany) | **Get** /companies/{company_id} | Get company
 *CompaniesAPI* | [**GetEntityTraitDefinition**](docs/CompaniesAPI.md#getentitytraitdefinition) | **Get** /entity-trait-definitions/{entity_trait_definition_id} | Get entity trait definition
 *CompaniesAPI* | [**GetEntityTraitValues**](docs/CompaniesAPI.md#getentitytraitvalues) | **Get** /entity-trait-values | Get entity trait values
@@ -54,9 +55,11 @@ Class | Method | HTTP request | Description
 *CompaniesAPI* | [**UpsertCompanyTrait**](docs/CompaniesAPI.md#upsertcompanytrait) | **Post** /company-traits | Upsert company trait
 *CompaniesAPI* | [**UpsertUser**](docs/CompaniesAPI.md#upsertuser) | **Post** /users | Upsert user
 *CompaniesAPI* | [**UpsertUserTrait**](docs/CompaniesAPI.md#upsertusertrait) | **Post** /user-traits | Upsert user trait
-*CrmAPI* | [**ListCRMProducts**](docs/CrmAPI.md#listcrmproducts) | **Get** /crm/products | List c r m products
-*CrmAPI* | [**UpsertCRMDeal**](docs/CrmAPI.md#upsertcrmdeal) | **Post** /crm/deals/upsert | Upsert c r m deal
-*CrmAPI* | [**UpsertCRMProduct**](docs/CrmAPI.md#upsertcrmproduct) | **Post** /crm/products/upsert | Upsert c r m product
+*CrmAPI* | [**ListCrmProducts**](docs/CrmAPI.md#listcrmproducts) | **Get** /crm/products | List crm products
+*CrmAPI* | [**UpsertCrmDeal**](docs/CrmAPI.md#upsertcrmdeal) | **Post** /crm/deals/upsert | Upsert crm deal
+*CrmAPI* | [**UpsertCrmProduct**](docs/CrmAPI.md#upsertcrmproduct) | **Post** /crm/products/upsert | Upsert crm product
+*CrmAPI* | [**UpsertDealLineItemAssociation**](docs/CrmAPI.md#upsertdeallineitemassociation) | **Post** /crm/associations/deal-line-item | Upsert deal line item association
+*CrmAPI* | [**UpsertLineItem**](docs/CrmAPI.md#upsertlineitem) | **Post** /crm/deal-line-item/upsert | Upsert line item
 *EntitlementsAPI* | [**CountCompanyOverrides**](docs/EntitlementsAPI.md#countcompanyoverrides) | **Get** /company-overrides/count | Count company overrides
 *EntitlementsAPI* | [**CountFeatureCompanies**](docs/EntitlementsAPI.md#countfeaturecompanies) | **Get** /feature-companies/count | Count feature companies
 *EntitlementsAPI* | [**CountFeatureUsage**](docs/EntitlementsAPI.md#countfeatureusage) | **Get** /feature-usage/count | Count feature usage
@@ -137,14 +140,13 @@ Class | Method | HTTP request | Description
  - [AudienceRequestBody](docs/AudienceRequestBody.md)
  - [BillingProductResponseData](docs/BillingProductResponseData.md)
  - [BillingSubscriptionResponseData](docs/BillingSubscriptionResponseData.md)
- - [CRMDealResponseData](docs/CRMDealResponseData.md)
- - [CRMProductResponseData](docs/CRMProductResponseData.md)
  - [CheckFlagOutputWithFlagKey](docs/CheckFlagOutputWithFlagKey.md)
  - [CheckFlagRequestBody](docs/CheckFlagRequestBody.md)
  - [CheckFlagResponse](docs/CheckFlagResponse.md)
  - [CheckFlagResponseData](docs/CheckFlagResponseData.md)
  - [CheckFlagsResponse](docs/CheckFlagsResponse.md)
  - [CheckFlagsResponseData](docs/CheckFlagsResponseData.md)
+ - [CompanyCrmDealsResponseData](docs/CompanyCrmDealsResponseData.md)
  - [CompanyDetailResponseData](docs/CompanyDetailResponseData.md)
  - [CompanyMembershipDetailResponseData](docs/CompanyMembershipDetailResponseData.md)
  - [CompanyMembershipResponseData](docs/CompanyMembershipResponseData.md)
@@ -193,11 +195,13 @@ Class | Method | HTTP request | Description
  - [CreateApiKeyResponse](docs/CreateApiKeyResponse.md)
  - [CreateBillingProductRequestBody](docs/CreateBillingProductRequestBody.md)
  - [CreateBillingSubscriptionsRequestBody](docs/CreateBillingSubscriptionsRequestBody.md)
- - [CreateCRMDealRequestBody](docs/CreateCRMDealRequestBody.md)
- - [CreateCRMProductRequestBody](docs/CreateCRMProductRequestBody.md)
  - [CreateCompanyOverrideRequestBody](docs/CreateCompanyOverrideRequestBody.md)
  - [CreateCompanyOverrideResponse](docs/CreateCompanyOverrideResponse.md)
  - [CreateCompanyResponse](docs/CreateCompanyResponse.md)
+ - [CreateCrmDealLineItemAssociationRequestBody](docs/CreateCrmDealLineItemAssociationRequestBody.md)
+ - [CreateCrmDealRequestBody](docs/CreateCrmDealRequestBody.md)
+ - [CreateCrmLineItemRequestBody](docs/CreateCrmLineItemRequestBody.md)
+ - [CreateCrmProductRequestBody](docs/CreateCrmProductRequestBody.md)
  - [CreateEntityTraitDefinitionRequestBody](docs/CreateEntityTraitDefinitionRequestBody.md)
  - [CreateEnvironmentRequestBody](docs/CreateEnvironmentRequestBody.md)
  - [CreateEnvironmentResponse](docs/CreateEnvironmentResponse.md)
@@ -221,6 +225,10 @@ Class | Method | HTTP request | Description
  - [CreateUserResponse](docs/CreateUserResponse.md)
  - [CreateWebhookRequestBody](docs/CreateWebhookRequestBody.md)
  - [CreateWebhookResponse](docs/CreateWebhookResponse.md)
+ - [CrmDealLineItem](docs/CrmDealLineItem.md)
+ - [CrmDealResponseData](docs/CrmDealResponseData.md)
+ - [CrmLineItemResponseData](docs/CrmLineItemResponseData.md)
+ - [CrmProductResponseData](docs/CrmProductResponseData.md)
  - [DeleteApiKeyResponse](docs/DeleteApiKeyResponse.md)
  - [DeleteAudienceResponse](docs/DeleteAudienceResponse.md)
  - [DeleteCompanyByKeysResponse](docs/DeleteCompanyByKeysResponse.md)
@@ -264,6 +272,8 @@ Class | Method | HTTP request | Description
  - [FlagResponseData](docs/FlagResponseData.md)
  - [GetActiveCompanySubscriptionParams](docs/GetActiveCompanySubscriptionParams.md)
  - [GetActiveCompanySubscriptionResponse](docs/GetActiveCompanySubscriptionResponse.md)
+ - [GetActiveDealsParams](docs/GetActiveDealsParams.md)
+ - [GetActiveDealsResponse](docs/GetActiveDealsResponse.md)
  - [GetApiKeyResponse](docs/GetApiKeyResponse.md)
  - [GetApiRequestResponse](docs/GetApiRequestResponse.md)
  - [GetAudienceResponse](docs/GetAudienceResponse.md)
@@ -300,8 +310,6 @@ Class | Method | HTTP request | Description
  - [ListApiRequestsResponse](docs/ListApiRequestsResponse.md)
  - [ListAudienceCompaniesResponse](docs/ListAudienceCompaniesResponse.md)
  - [ListAudienceUsersResponse](docs/ListAudienceUsersResponse.md)
- - [ListCRMProductsParams](docs/ListCRMProductsParams.md)
- - [ListCRMProductsResponse](docs/ListCRMProductsResponse.md)
  - [ListCompaniesParams](docs/ListCompaniesParams.md)
  - [ListCompaniesResponse](docs/ListCompaniesResponse.md)
  - [ListCompanyMembershipsParams](docs/ListCompanyMembershipsParams.md)
@@ -310,6 +318,8 @@ Class | Method | HTTP request | Description
  - [ListCompanyOverridesResponse](docs/ListCompanyOverridesResponse.md)
  - [ListCompanyPlansParams](docs/ListCompanyPlansParams.md)
  - [ListCompanyPlansResponse](docs/ListCompanyPlansResponse.md)
+ - [ListCrmProductsParams](docs/ListCrmProductsParams.md)
+ - [ListCrmProductsResponse](docs/ListCrmProductsResponse.md)
  - [ListEntityKeyDefinitionsParams](docs/ListEntityKeyDefinitionsParams.md)
  - [ListEntityKeyDefinitionsResponse](docs/ListEntityKeyDefinitionsResponse.md)
  - [ListEntityTraitDefinitionsParams](docs/ListEntityTraitDefinitionsParams.md)
@@ -392,11 +402,13 @@ Class | Method | HTTP request | Description
  - [UpdateWebhookResponse](docs/UpdateWebhookResponse.md)
  - [UpsertBillingProductResponse](docs/UpsertBillingProductResponse.md)
  - [UpsertBillingSubscriptionResponse](docs/UpsertBillingSubscriptionResponse.md)
- - [UpsertCRMDealResponse](docs/UpsertCRMDealResponse.md)
- - [UpsertCRMProductResponse](docs/UpsertCRMProductResponse.md)
  - [UpsertCompanyRequestBody](docs/UpsertCompanyRequestBody.md)
  - [UpsertCompanyResponse](docs/UpsertCompanyResponse.md)
  - [UpsertCompanyTraitResponse](docs/UpsertCompanyTraitResponse.md)
+ - [UpsertCrmDealResponse](docs/UpsertCrmDealResponse.md)
+ - [UpsertCrmProductResponse](docs/UpsertCrmProductResponse.md)
+ - [UpsertDealLineItemAssociationResponse](docs/UpsertDealLineItemAssociationResponse.md)
+ - [UpsertLineItemResponse](docs/UpsertLineItemResponse.md)
  - [UpsertTraitRequestBody](docs/UpsertTraitRequestBody.md)
  - [UpsertUserRequestBody](docs/UpsertUserRequestBody.md)
  - [UpsertUserResponse](docs/UpsertUserResponse.md)

@@ -14,36 +14,36 @@ import (
 	"encoding/json"
 )
 
-// checks if the ListCRMProductsParams type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &ListCRMProductsParams{}
+// checks if the ListCrmProductsParams type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ListCrmProductsParams{}
 
-// ListCRMProductsParams Input parameters
-type ListCRMProductsParams struct {
+// ListCrmProductsParams Input parameters
+type ListCrmProductsParams struct {
 	Ids    []string `json:"ids,omitempty"`
 	Limit  *int32   `json:"limit,omitempty"`
 	Name   *string  `json:"name,omitempty"`
 	Offset *int32   `json:"offset,omitempty"`
 }
 
-// NewListCRMProductsParams instantiates a new ListCRMProductsParams object
+// NewListCrmProductsParams instantiates a new ListCrmProductsParams object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListCRMProductsParams() *ListCRMProductsParams {
-	this := ListCRMProductsParams{}
+func NewListCrmProductsParams() *ListCrmProductsParams {
+	this := ListCrmProductsParams{}
 	return &this
 }
 
-// NewListCRMProductsParamsWithDefaults instantiates a new ListCRMProductsParams object
+// NewListCrmProductsParamsWithDefaults instantiates a new ListCrmProductsParams object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewListCRMProductsParamsWithDefaults() *ListCRMProductsParams {
-	this := ListCRMProductsParams{}
+func NewListCrmProductsParamsWithDefaults() *ListCrmProductsParams {
+	this := ListCrmProductsParams{}
 	return &this
 }
 
 // GetIds returns the Ids field value if set, zero value otherwise.
-func (o *ListCRMProductsParams) GetIds() []string {
+func (o *ListCrmProductsParams) GetIds() []string {
 	if o == nil || IsNil(o.Ids) {
 		var ret []string
 		return ret
@@ -53,7 +53,7 @@ func (o *ListCRMProductsParams) GetIds() []string {
 
 // GetIdsOk returns a tuple with the Ids field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListCRMProductsParams) GetIdsOk() ([]string, bool) {
+func (o *ListCrmProductsParams) GetIdsOk() ([]string, bool) {
 	if o == nil || IsNil(o.Ids) {
 		return nil, false
 	}
@@ -61,7 +61,7 @@ func (o *ListCRMProductsParams) GetIdsOk() ([]string, bool) {
 }
 
 // HasIds returns a boolean if a field has been set.
-func (o *ListCRMProductsParams) HasIds() bool {
+func (o *ListCrmProductsParams) HasIds() bool {
 	if o != nil && !IsNil(o.Ids) {
 		return true
 	}
@@ -70,12 +70,12 @@ func (o *ListCRMProductsParams) HasIds() bool {
 }
 
 // SetIds gets a reference to the given []string and assigns it to the Ids field.
-func (o *ListCRMProductsParams) SetIds(v []string) {
+func (o *ListCrmProductsParams) SetIds(v []string) {
 	o.Ids = v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
-func (o *ListCRMProductsParams) GetLimit() int32 {
+func (o *ListCrmProductsParams) GetLimit() int32 {
 	if o == nil || IsNil(o.Limit) {
 		var ret int32
 		return ret
@@ -85,7 +85,7 @@ func (o *ListCRMProductsParams) GetLimit() int32 {
 
 // GetLimitOk returns a tuple with the Limit field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListCRMProductsParams) GetLimitOk() (*int32, bool) {
+func (o *ListCrmProductsParams) GetLimitOk() (*int32, bool) {
 	if o == nil || IsNil(o.Limit) {
 		return nil, false
 	}
@@ -93,7 +93,7 @@ func (o *ListCRMProductsParams) GetLimitOk() (*int32, bool) {
 }
 
 // HasLimit returns a boolean if a field has been set.
-func (o *ListCRMProductsParams) HasLimit() bool {
+func (o *ListCrmProductsParams) HasLimit() bool {
 	if o != nil && !IsNil(o.Limit) {
 		return true
 	}
@@ -102,12 +102,12 @@ func (o *ListCRMProductsParams) HasLimit() bool {
 }
 
 // SetLimit gets a reference to the given int32 and assigns it to the Limit field.
-func (o *ListCRMProductsParams) SetLimit(v int32) {
+func (o *ListCrmProductsParams) SetLimit(v int32) {
 	o.Limit = &v
 }
 
 // GetName returns the Name field value if set, zero value otherwise.
-func (o *ListCRMProductsParams) GetName() string {
+func (o *ListCrmProductsParams) GetName() string {
 	if o == nil || IsNil(o.Name) {
 		var ret string
 		return ret
@@ -117,7 +117,7 @@ func (o *ListCRMProductsParams) GetName() string {
 
 // GetNameOk returns a tuple with the Name field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListCRMProductsParams) GetNameOk() (*string, bool) {
+func (o *ListCrmProductsParams) GetNameOk() (*string, bool) {
 	if o == nil || IsNil(o.Name) {
 		return nil, false
 	}
@@ -125,7 +125,7 @@ func (o *ListCRMProductsParams) GetNameOk() (*string, bool) {
 }
 
 // HasName returns a boolean if a field has been set.
-func (o *ListCRMProductsParams) HasName() bool {
+func (o *ListCrmProductsParams) HasName() bool {
 	if o != nil && !IsNil(o.Name) {
 		return true
 	}
@@ -134,12 +134,12 @@ func (o *ListCRMProductsParams) HasName() bool {
 }
 
 // SetName gets a reference to the given string and assigns it to the Name field.
-func (o *ListCRMProductsParams) SetName(v string) {
+func (o *ListCrmProductsParams) SetName(v string) {
 	o.Name = &v
 }
 
 // GetOffset returns the Offset field value if set, zero value otherwise.
-func (o *ListCRMProductsParams) GetOffset() int32 {
+func (o *ListCrmProductsParams) GetOffset() int32 {
 	if o == nil || IsNil(o.Offset) {
 		var ret int32
 		return ret
@@ -149,7 +149,7 @@ func (o *ListCRMProductsParams) GetOffset() int32 {
 
 // GetOffsetOk returns a tuple with the Offset field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListCRMProductsParams) GetOffsetOk() (*int32, bool) {
+func (o *ListCrmProductsParams) GetOffsetOk() (*int32, bool) {
 	if o == nil || IsNil(o.Offset) {
 		return nil, false
 	}
@@ -157,7 +157,7 @@ func (o *ListCRMProductsParams) GetOffsetOk() (*int32, bool) {
 }
 
 // HasOffset returns a boolean if a field has been set.
-func (o *ListCRMProductsParams) HasOffset() bool {
+func (o *ListCrmProductsParams) HasOffset() bool {
 	if o != nil && !IsNil(o.Offset) {
 		return true
 	}
@@ -166,11 +166,11 @@ func (o *ListCRMProductsParams) HasOffset() bool {
 }
 
 // SetOffset gets a reference to the given int32 and assigns it to the Offset field.
-func (o *ListCRMProductsParams) SetOffset(v int32) {
+func (o *ListCrmProductsParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
-func (o ListCRMProductsParams) MarshalJSON() ([]byte, error) {
+func (o ListCrmProductsParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -178,7 +178,7 @@ func (o ListCRMProductsParams) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o ListCRMProductsParams) ToMap() (map[string]interface{}, error) {
+func (o ListCrmProductsParams) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
@@ -195,38 +195,38 @@ func (o ListCRMProductsParams) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableListCRMProductsParams struct {
-	value *ListCRMProductsParams
+type NullableListCrmProductsParams struct {
+	value *ListCrmProductsParams
 	isSet bool
 }
 
-func (v NullableListCRMProductsParams) Get() *ListCRMProductsParams {
+func (v NullableListCrmProductsParams) Get() *ListCrmProductsParams {
 	return v.value
 }
 
-func (v *NullableListCRMProductsParams) Set(val *ListCRMProductsParams) {
+func (v *NullableListCrmProductsParams) Set(val *ListCrmProductsParams) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableListCRMProductsParams) IsSet() bool {
+func (v NullableListCrmProductsParams) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableListCRMProductsParams) Unset() {
+func (v *NullableListCrmProductsParams) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableListCRMProductsParams(val *ListCRMProductsParams) *NullableListCRMProductsParams {
-	return &NullableListCRMProductsParams{value: val, isSet: true}
+func NewNullableListCrmProductsParams(val *ListCrmProductsParams) *NullableListCrmProductsParams {
+	return &NullableListCrmProductsParams{value: val, isSet: true}
 }
 
-func (v NullableListCRMProductsParams) MarshalJSON() ([]byte, error) {
+func (v NullableListCrmProductsParams) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableListCRMProductsParams) UnmarshalJSON(src []byte) error {
+func (v *NullableListCrmProductsParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

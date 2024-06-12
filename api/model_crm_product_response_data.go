@@ -17,11 +17,11 @@ import (
 	"time"
 )
 
-// checks if the CRMProductResponseData type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &CRMProductResponseData{}
+// checks if the CrmProductResponseData type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &CrmProductResponseData{}
 
-// CRMProductResponseData The created resource
-type CRMProductResponseData struct {
+// CrmProductResponseData The created resource
+type CrmProductResponseData struct {
 	AccountId     string       `json:"account_id"`
 	CreatedAt     time.Time    `json:"created_at"`
 	Currency      string       `json:"currency"`
@@ -35,14 +35,14 @@ type CRMProductResponseData struct {
 	UpdatedAt     time.Time    `json:"updated_at"`
 }
 
-type _CRMProductResponseData CRMProductResponseData
+type _CrmProductResponseData CrmProductResponseData
 
-// NewCRMProductResponseData instantiates a new CRMProductResponseData object
+// NewCrmProductResponseData instantiates a new CrmProductResponseData object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCRMProductResponseData(accountId string, createdAt time.Time, currency string, environmentId string, externalId string, name string, price float32, productId string, quantity float32, updatedAt time.Time) *CRMProductResponseData {
-	this := CRMProductResponseData{}
+func NewCrmProductResponseData(accountId string, createdAt time.Time, currency string, environmentId string, externalId string, name string, price float32, productId string, quantity float32, updatedAt time.Time) *CrmProductResponseData {
+	this := CrmProductResponseData{}
 	this.AccountId = accountId
 	this.CreatedAt = createdAt
 	this.Currency = currency
@@ -56,16 +56,16 @@ func NewCRMProductResponseData(accountId string, createdAt time.Time, currency s
 	return &this
 }
 
-// NewCRMProductResponseDataWithDefaults instantiates a new CRMProductResponseData object
+// NewCrmProductResponseDataWithDefaults instantiates a new CrmProductResponseData object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewCRMProductResponseDataWithDefaults() *CRMProductResponseData {
-	this := CRMProductResponseData{}
+func NewCrmProductResponseDataWithDefaults() *CrmProductResponseData {
+	this := CrmProductResponseData{}
 	return &this
 }
 
 // GetAccountId returns the AccountId field value
-func (o *CRMProductResponseData) GetAccountId() string {
+func (o *CrmProductResponseData) GetAccountId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -76,7 +76,7 @@ func (o *CRMProductResponseData) GetAccountId() string {
 
 // GetAccountIdOk returns a tuple with the AccountId field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetAccountIdOk() (*string, bool) {
+func (o *CrmProductResponseData) GetAccountIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -84,12 +84,12 @@ func (o *CRMProductResponseData) GetAccountIdOk() (*string, bool) {
 }
 
 // SetAccountId sets field value
-func (o *CRMProductResponseData) SetAccountId(v string) {
+func (o *CrmProductResponseData) SetAccountId(v string) {
 	o.AccountId = v
 }
 
 // GetCreatedAt returns the CreatedAt field value
-func (o *CRMProductResponseData) GetCreatedAt() time.Time {
+func (o *CrmProductResponseData) GetCreatedAt() time.Time {
 	if o == nil {
 		var ret time.Time
 		return ret
@@ -100,7 +100,7 @@ func (o *CRMProductResponseData) GetCreatedAt() time.Time {
 
 // GetCreatedAtOk returns a tuple with the CreatedAt field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetCreatedAtOk() (*time.Time, bool) {
+func (o *CrmProductResponseData) GetCreatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -108,12 +108,12 @@ func (o *CRMProductResponseData) GetCreatedAtOk() (*time.Time, bool) {
 }
 
 // SetCreatedAt sets field value
-func (o *CRMProductResponseData) SetCreatedAt(v time.Time) {
+func (o *CrmProductResponseData) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
 }
 
 // GetCurrency returns the Currency field value
-func (o *CRMProductResponseData) GetCurrency() string {
+func (o *CrmProductResponseData) GetCurrency() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -124,7 +124,7 @@ func (o *CRMProductResponseData) GetCurrency() string {
 
 // GetCurrencyOk returns a tuple with the Currency field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetCurrencyOk() (*string, bool) {
+func (o *CrmProductResponseData) GetCurrencyOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -132,12 +132,12 @@ func (o *CRMProductResponseData) GetCurrencyOk() (*string, bool) {
 }
 
 // SetCurrency sets field value
-func (o *CRMProductResponseData) SetCurrency(v string) {
+func (o *CrmProductResponseData) SetCurrency(v string) {
 	o.Currency = v
 }
 
 // GetDeletedAt returns the DeletedAt field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CRMProductResponseData) GetDeletedAt() time.Time {
+func (o *CrmProductResponseData) GetDeletedAt() time.Time {
 	if o == nil || IsNil(o.DeletedAt.Get()) {
 		var ret time.Time
 		return ret
@@ -148,7 +148,7 @@ func (o *CRMProductResponseData) GetDeletedAt() time.Time {
 // GetDeletedAtOk returns a tuple with the DeletedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CRMProductResponseData) GetDeletedAtOk() (*time.Time, bool) {
+func (o *CrmProductResponseData) GetDeletedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -156,7 +156,7 @@ func (o *CRMProductResponseData) GetDeletedAtOk() (*time.Time, bool) {
 }
 
 // HasDeletedAt returns a boolean if a field has been set.
-func (o *CRMProductResponseData) HasDeletedAt() bool {
+func (o *CrmProductResponseData) HasDeletedAt() bool {
 	if o != nil && o.DeletedAt.IsSet() {
 		return true
 	}
@@ -165,22 +165,22 @@ func (o *CRMProductResponseData) HasDeletedAt() bool {
 }
 
 // SetDeletedAt gets a reference to the given NullableTime and assigns it to the DeletedAt field.
-func (o *CRMProductResponseData) SetDeletedAt(v time.Time) {
+func (o *CrmProductResponseData) SetDeletedAt(v time.Time) {
 	o.DeletedAt.Set(&v)
 }
 
 // SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
-func (o *CRMProductResponseData) SetDeletedAtNil() {
+func (o *CrmProductResponseData) SetDeletedAtNil() {
 	o.DeletedAt.Set(nil)
 }
 
 // UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
-func (o *CRMProductResponseData) UnsetDeletedAt() {
+func (o *CrmProductResponseData) UnsetDeletedAt() {
 	o.DeletedAt.Unset()
 }
 
 // GetEnvironmentId returns the EnvironmentId field value
-func (o *CRMProductResponseData) GetEnvironmentId() string {
+func (o *CrmProductResponseData) GetEnvironmentId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -191,7 +191,7 @@ func (o *CRMProductResponseData) GetEnvironmentId() string {
 
 // GetEnvironmentIdOk returns a tuple with the EnvironmentId field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetEnvironmentIdOk() (*string, bool) {
+func (o *CrmProductResponseData) GetEnvironmentIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -199,12 +199,12 @@ func (o *CRMProductResponseData) GetEnvironmentIdOk() (*string, bool) {
 }
 
 // SetEnvironmentId sets field value
-func (o *CRMProductResponseData) SetEnvironmentId(v string) {
+func (o *CrmProductResponseData) SetEnvironmentId(v string) {
 	o.EnvironmentId = v
 }
 
 // GetExternalId returns the ExternalId field value
-func (o *CRMProductResponseData) GetExternalId() string {
+func (o *CrmProductResponseData) GetExternalId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -215,7 +215,7 @@ func (o *CRMProductResponseData) GetExternalId() string {
 
 // GetExternalIdOk returns a tuple with the ExternalId field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetExternalIdOk() (*string, bool) {
+func (o *CrmProductResponseData) GetExternalIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -223,12 +223,12 @@ func (o *CRMProductResponseData) GetExternalIdOk() (*string, bool) {
 }
 
 // SetExternalId sets field value
-func (o *CRMProductResponseData) SetExternalId(v string) {
+func (o *CrmProductResponseData) SetExternalId(v string) {
 	o.ExternalId = v
 }
 
 // GetName returns the Name field value
-func (o *CRMProductResponseData) GetName() string {
+func (o *CrmProductResponseData) GetName() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -239,7 +239,7 @@ func (o *CRMProductResponseData) GetName() string {
 
 // GetNameOk returns a tuple with the Name field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetNameOk() (*string, bool) {
+func (o *CrmProductResponseData) GetNameOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -247,12 +247,12 @@ func (o *CRMProductResponseData) GetNameOk() (*string, bool) {
 }
 
 // SetName sets field value
-func (o *CRMProductResponseData) SetName(v string) {
+func (o *CrmProductResponseData) SetName(v string) {
 	o.Name = v
 }
 
 // GetPrice returns the Price field value
-func (o *CRMProductResponseData) GetPrice() float32 {
+func (o *CrmProductResponseData) GetPrice() float32 {
 	if o == nil {
 		var ret float32
 		return ret
@@ -263,7 +263,7 @@ func (o *CRMProductResponseData) GetPrice() float32 {
 
 // GetPriceOk returns a tuple with the Price field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetPriceOk() (*float32, bool) {
+func (o *CrmProductResponseData) GetPriceOk() (*float32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -271,12 +271,12 @@ func (o *CRMProductResponseData) GetPriceOk() (*float32, bool) {
 }
 
 // SetPrice sets field value
-func (o *CRMProductResponseData) SetPrice(v float32) {
+func (o *CrmProductResponseData) SetPrice(v float32) {
 	o.Price = v
 }
 
 // GetProductId returns the ProductId field value
-func (o *CRMProductResponseData) GetProductId() string {
+func (o *CrmProductResponseData) GetProductId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -287,7 +287,7 @@ func (o *CRMProductResponseData) GetProductId() string {
 
 // GetProductIdOk returns a tuple with the ProductId field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetProductIdOk() (*string, bool) {
+func (o *CrmProductResponseData) GetProductIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -295,12 +295,12 @@ func (o *CRMProductResponseData) GetProductIdOk() (*string, bool) {
 }
 
 // SetProductId sets field value
-func (o *CRMProductResponseData) SetProductId(v string) {
+func (o *CrmProductResponseData) SetProductId(v string) {
 	o.ProductId = v
 }
 
 // GetQuantity returns the Quantity field value
-func (o *CRMProductResponseData) GetQuantity() float32 {
+func (o *CrmProductResponseData) GetQuantity() float32 {
 	if o == nil {
 		var ret float32
 		return ret
@@ -311,7 +311,7 @@ func (o *CRMProductResponseData) GetQuantity() float32 {
 
 // GetQuantityOk returns a tuple with the Quantity field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetQuantityOk() (*float32, bool) {
+func (o *CrmProductResponseData) GetQuantityOk() (*float32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -319,12 +319,12 @@ func (o *CRMProductResponseData) GetQuantityOk() (*float32, bool) {
 }
 
 // SetQuantity sets field value
-func (o *CRMProductResponseData) SetQuantity(v float32) {
+func (o *CrmProductResponseData) SetQuantity(v float32) {
 	o.Quantity = v
 }
 
 // GetUpdatedAt returns the UpdatedAt field value
-func (o *CRMProductResponseData) GetUpdatedAt() time.Time {
+func (o *CrmProductResponseData) GetUpdatedAt() time.Time {
 	if o == nil {
 		var ret time.Time
 		return ret
@@ -335,7 +335,7 @@ func (o *CRMProductResponseData) GetUpdatedAt() time.Time {
 
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value
 // and a boolean to check if the value has been set.
-func (o *CRMProductResponseData) GetUpdatedAtOk() (*time.Time, bool) {
+func (o *CrmProductResponseData) GetUpdatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -343,11 +343,11 @@ func (o *CRMProductResponseData) GetUpdatedAtOk() (*time.Time, bool) {
 }
 
 // SetUpdatedAt sets field value
-func (o *CRMProductResponseData) SetUpdatedAt(v time.Time) {
+func (o *CrmProductResponseData) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
-func (o CRMProductResponseData) MarshalJSON() ([]byte, error) {
+func (o CrmProductResponseData) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -355,7 +355,7 @@ func (o CRMProductResponseData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o CRMProductResponseData) ToMap() (map[string]interface{}, error) {
+func (o CrmProductResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["account_id"] = o.AccountId
 	toSerialize["created_at"] = o.CreatedAt
@@ -373,7 +373,7 @@ func (o CRMProductResponseData) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-func (o *CRMProductResponseData) UnmarshalJSON(data []byte) (err error) {
+func (o *CrmProductResponseData) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
@@ -404,53 +404,53 @@ func (o *CRMProductResponseData) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varCRMProductResponseData := _CRMProductResponseData{}
+	varCrmProductResponseData := _CrmProductResponseData{}
 
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCRMProductResponseData)
+	err = decoder.Decode(&varCrmProductResponseData)
 
 	if err != nil {
 		return err
 	}
 
-	*o = CRMProductResponseData(varCRMProductResponseData)
+	*o = CrmProductResponseData(varCrmProductResponseData)
 
 	return err
 }
 
-type NullableCRMProductResponseData struct {
-	value *CRMProductResponseData
+type NullableCrmProductResponseData struct {
+	value *CrmProductResponseData
 	isSet bool
 }
 
-func (v NullableCRMProductResponseData) Get() *CRMProductResponseData {
+func (v NullableCrmProductResponseData) Get() *CrmProductResponseData {
 	return v.value
 }
 
-func (v *NullableCRMProductResponseData) Set(val *CRMProductResponseData) {
+func (v *NullableCrmProductResponseData) Set(val *CrmProductResponseData) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableCRMProductResponseData) IsSet() bool {
+func (v NullableCrmProductResponseData) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableCRMProductResponseData) Unset() {
+func (v *NullableCrmProductResponseData) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableCRMProductResponseData(val *CRMProductResponseData) *NullableCRMProductResponseData {
-	return &NullableCRMProductResponseData{value: val, isSet: true}
+func NewNullableCrmProductResponseData(val *CrmProductResponseData) *NullableCrmProductResponseData {
+	return &NullableCrmProductResponseData{value: val, isSet: true}
 }
 
-func (v NullableCRMProductResponseData) MarshalJSON() ([]byte, error) {
+func (v NullableCrmProductResponseData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableCRMProductResponseData) UnmarshalJSON(src []byte) error {
+func (v *NullableCrmProductResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

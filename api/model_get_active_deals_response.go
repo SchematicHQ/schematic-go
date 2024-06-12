@@ -16,41 +16,41 @@ import (
 	"fmt"
 )
 
-// checks if the ListCrmProductsResponse type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &ListCrmProductsResponse{}
+// checks if the GetActiveDealsResponse type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &GetActiveDealsResponse{}
 
-// ListCrmProductsResponse struct for ListCrmProductsResponse
-type ListCrmProductsResponse struct {
+// GetActiveDealsResponse struct for GetActiveDealsResponse
+type GetActiveDealsResponse struct {
 	// The returned resources
-	Data   []CrmProductResponseData `json:"data"`
-	Params ListCrmProductsParams    `json:"params"`
+	Data   []CompanyCrmDealsResponseData `json:"data"`
+	Params GetActiveDealsParams          `json:"params"`
 }
 
-type _ListCrmProductsResponse ListCrmProductsResponse
+type _GetActiveDealsResponse GetActiveDealsResponse
 
-// NewListCrmProductsResponse instantiates a new ListCrmProductsResponse object
+// NewGetActiveDealsResponse instantiates a new GetActiveDealsResponse object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListCrmProductsResponse(data []CrmProductResponseData, params ListCrmProductsParams) *ListCrmProductsResponse {
-	this := ListCrmProductsResponse{}
+func NewGetActiveDealsResponse(data []CompanyCrmDealsResponseData, params GetActiveDealsParams) *GetActiveDealsResponse {
+	this := GetActiveDealsResponse{}
 	this.Data = data
 	this.Params = params
 	return &this
 }
 
-// NewListCrmProductsResponseWithDefaults instantiates a new ListCrmProductsResponse object
+// NewGetActiveDealsResponseWithDefaults instantiates a new GetActiveDealsResponse object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewListCrmProductsResponseWithDefaults() *ListCrmProductsResponse {
-	this := ListCrmProductsResponse{}
+func NewGetActiveDealsResponseWithDefaults() *GetActiveDealsResponse {
+	this := GetActiveDealsResponse{}
 	return &this
 }
 
 // GetData returns the Data field value
-func (o *ListCrmProductsResponse) GetData() []CrmProductResponseData {
+func (o *GetActiveDealsResponse) GetData() []CompanyCrmDealsResponseData {
 	if o == nil {
-		var ret []CrmProductResponseData
+		var ret []CompanyCrmDealsResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *ListCrmProductsResponse) GetData() []CrmProductResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *ListCrmProductsResponse) GetDataOk() ([]CrmProductResponseData, bool) {
+func (o *GetActiveDealsResponse) GetDataOk() ([]CompanyCrmDealsResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,14 +67,14 @@ func (o *ListCrmProductsResponse) GetDataOk() ([]CrmProductResponseData, bool) {
 }
 
 // SetData sets field value
-func (o *ListCrmProductsResponse) SetData(v []CrmProductResponseData) {
+func (o *GetActiveDealsResponse) SetData(v []CompanyCrmDealsResponseData) {
 	o.Data = v
 }
 
 // GetParams returns the Params field value
-func (o *ListCrmProductsResponse) GetParams() ListCrmProductsParams {
+func (o *GetActiveDealsResponse) GetParams() GetActiveDealsParams {
 	if o == nil {
-		var ret ListCrmProductsParams
+		var ret GetActiveDealsParams
 		return ret
 	}
 
@@ -83,7 +83,7 @@ func (o *ListCrmProductsResponse) GetParams() ListCrmProductsParams {
 
 // GetParamsOk returns a tuple with the Params field value
 // and a boolean to check if the value has been set.
-func (o *ListCrmProductsResponse) GetParamsOk() (*ListCrmProductsParams, bool) {
+func (o *GetActiveDealsResponse) GetParamsOk() (*GetActiveDealsParams, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -91,11 +91,11 @@ func (o *ListCrmProductsResponse) GetParamsOk() (*ListCrmProductsParams, bool) {
 }
 
 // SetParams sets field value
-func (o *ListCrmProductsResponse) SetParams(v ListCrmProductsParams) {
+func (o *GetActiveDealsResponse) SetParams(v GetActiveDealsParams) {
 	o.Params = v
 }
 
-func (o ListCrmProductsResponse) MarshalJSON() ([]byte, error) {
+func (o GetActiveDealsResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -103,14 +103,14 @@ func (o ListCrmProductsResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o ListCrmProductsResponse) ToMap() (map[string]interface{}, error) {
+func (o GetActiveDealsResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
 	return toSerialize, nil
 }
 
-func (o *ListCrmProductsResponse) UnmarshalJSON(data []byte) (err error) {
+func (o *GetActiveDealsResponse) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
@@ -133,53 +133,53 @@ func (o *ListCrmProductsResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varListCrmProductsResponse := _ListCrmProductsResponse{}
+	varGetActiveDealsResponse := _GetActiveDealsResponse{}
 
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varListCrmProductsResponse)
+	err = decoder.Decode(&varGetActiveDealsResponse)
 
 	if err != nil {
 		return err
 	}
 
-	*o = ListCrmProductsResponse(varListCrmProductsResponse)
+	*o = GetActiveDealsResponse(varGetActiveDealsResponse)
 
 	return err
 }
 
-type NullableListCrmProductsResponse struct {
-	value *ListCrmProductsResponse
+type NullableGetActiveDealsResponse struct {
+	value *GetActiveDealsResponse
 	isSet bool
 }
 
-func (v NullableListCrmProductsResponse) Get() *ListCrmProductsResponse {
+func (v NullableGetActiveDealsResponse) Get() *GetActiveDealsResponse {
 	return v.value
 }
 
-func (v *NullableListCrmProductsResponse) Set(val *ListCrmProductsResponse) {
+func (v *NullableGetActiveDealsResponse) Set(val *GetActiveDealsResponse) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableListCrmProductsResponse) IsSet() bool {
+func (v NullableGetActiveDealsResponse) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableListCrmProductsResponse) Unset() {
+func (v *NullableGetActiveDealsResponse) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableListCrmProductsResponse(val *ListCrmProductsResponse) *NullableListCrmProductsResponse {
-	return &NullableListCrmProductsResponse{value: val, isSet: true}
+func NewNullableGetActiveDealsResponse(val *GetActiveDealsResponse) *NullableGetActiveDealsResponse {
+	return &NullableGetActiveDealsResponse{value: val, isSet: true}
 }
 
-func (v NullableListCrmProductsResponse) MarshalJSON() ([]byte, error) {
+func (v NullableGetActiveDealsResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableListCrmProductsResponse) UnmarshalJSON(src []byte) error {
+func (v *NullableGetActiveDealsResponse) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

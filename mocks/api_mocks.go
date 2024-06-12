@@ -815,94 +815,154 @@ func (m *MockCrmAPI) EXPECT() *MockCrmAPIMockRecorder {
 	return m.recorder
 }
 
-// ListCRMProducts mocks base method.
-func (m *MockCrmAPI) ListCRMProducts(arg0 context.Context) api.ApiListCRMProductsRequest {
+// ListCrmProducts mocks base method.
+func (m *MockCrmAPI) ListCrmProducts(arg0 context.Context) api.ApiListCrmProductsRequest {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListCRMProducts", arg0)
-	ret0, _ := ret[0].(api.ApiListCRMProductsRequest)
+	ret := m.ctrl.Call(m, "ListCrmProducts", arg0)
+	ret0, _ := ret[0].(api.ApiListCrmProductsRequest)
 	return ret0
 }
 
-// ListCRMProducts indicates an expected call of ListCRMProducts.
-func (mr *MockCrmAPIMockRecorder) ListCRMProducts(arg0 any) *gomock.Call {
+// ListCrmProducts indicates an expected call of ListCrmProducts.
+func (mr *MockCrmAPIMockRecorder) ListCrmProducts(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCRMProducts", reflect.TypeOf((*MockCrmAPI)(nil).ListCRMProducts), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCrmProducts", reflect.TypeOf((*MockCrmAPI)(nil).ListCrmProducts), arg0)
 }
 
-// ListCRMProductsExecute mocks base method.
-func (m *MockCrmAPI) ListCRMProductsExecute(arg0 api.ApiListCRMProductsRequest) (*api.ListCRMProductsResponse, *http.Response, error) {
+// ListCrmProductsExecute mocks base method.
+func (m *MockCrmAPI) ListCrmProductsExecute(arg0 api.ApiListCrmProductsRequest) (*api.ListCrmProductsResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListCRMProductsExecute", arg0)
-	ret0, _ := ret[0].(*api.ListCRMProductsResponse)
+	ret := m.ctrl.Call(m, "ListCrmProductsExecute", arg0)
+	ret0, _ := ret[0].(*api.ListCrmProductsResponse)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// ListCRMProductsExecute indicates an expected call of ListCRMProductsExecute.
-func (mr *MockCrmAPIMockRecorder) ListCRMProductsExecute(arg0 any) *gomock.Call {
+// ListCrmProductsExecute indicates an expected call of ListCrmProductsExecute.
+func (mr *MockCrmAPIMockRecorder) ListCrmProductsExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCRMProductsExecute", reflect.TypeOf((*MockCrmAPI)(nil).ListCRMProductsExecute), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCrmProductsExecute", reflect.TypeOf((*MockCrmAPI)(nil).ListCrmProductsExecute), arg0)
 }
 
-// UpsertCRMDeal mocks base method.
-func (m *MockCrmAPI) UpsertCRMDeal(arg0 context.Context) api.ApiUpsertCRMDealRequest {
+// UpsertCrmDeal mocks base method.
+func (m *MockCrmAPI) UpsertCrmDeal(arg0 context.Context) api.ApiUpsertCrmDealRequest {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpsertCRMDeal", arg0)
-	ret0, _ := ret[0].(api.ApiUpsertCRMDealRequest)
+	ret := m.ctrl.Call(m, "UpsertCrmDeal", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertCrmDealRequest)
 	return ret0
 }
 
-// UpsertCRMDeal indicates an expected call of UpsertCRMDeal.
-func (mr *MockCrmAPIMockRecorder) UpsertCRMDeal(arg0 any) *gomock.Call {
+// UpsertCrmDeal indicates an expected call of UpsertCrmDeal.
+func (mr *MockCrmAPIMockRecorder) UpsertCrmDeal(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCRMDeal", reflect.TypeOf((*MockCrmAPI)(nil).UpsertCRMDeal), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCrmDeal", reflect.TypeOf((*MockCrmAPI)(nil).UpsertCrmDeal), arg0)
 }
 
-// UpsertCRMDealExecute mocks base method.
-func (m *MockCrmAPI) UpsertCRMDealExecute(arg0 api.ApiUpsertCRMDealRequest) (*api.UpsertCRMDealResponse, *http.Response, error) {
+// UpsertCrmDealExecute mocks base method.
+func (m *MockCrmAPI) UpsertCrmDealExecute(arg0 api.ApiUpsertCrmDealRequest) (*api.UpsertCrmDealResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpsertCRMDealExecute", arg0)
-	ret0, _ := ret[0].(*api.UpsertCRMDealResponse)
+	ret := m.ctrl.Call(m, "UpsertCrmDealExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertCrmDealResponse)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// UpsertCRMDealExecute indicates an expected call of UpsertCRMDealExecute.
-func (mr *MockCrmAPIMockRecorder) UpsertCRMDealExecute(arg0 any) *gomock.Call {
+// UpsertCrmDealExecute indicates an expected call of UpsertCrmDealExecute.
+func (mr *MockCrmAPIMockRecorder) UpsertCrmDealExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCRMDealExecute", reflect.TypeOf((*MockCrmAPI)(nil).UpsertCRMDealExecute), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCrmDealExecute", reflect.TypeOf((*MockCrmAPI)(nil).UpsertCrmDealExecute), arg0)
 }
 
-// UpsertCRMProduct mocks base method.
-func (m *MockCrmAPI) UpsertCRMProduct(arg0 context.Context) api.ApiUpsertCRMProductRequest {
+// UpsertCrmProduct mocks base method.
+func (m *MockCrmAPI) UpsertCrmProduct(arg0 context.Context) api.ApiUpsertCrmProductRequest {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpsertCRMProduct", arg0)
-	ret0, _ := ret[0].(api.ApiUpsertCRMProductRequest)
+	ret := m.ctrl.Call(m, "UpsertCrmProduct", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertCrmProductRequest)
 	return ret0
 }
 
-// UpsertCRMProduct indicates an expected call of UpsertCRMProduct.
-func (mr *MockCrmAPIMockRecorder) UpsertCRMProduct(arg0 any) *gomock.Call {
+// UpsertCrmProduct indicates an expected call of UpsertCrmProduct.
+func (mr *MockCrmAPIMockRecorder) UpsertCrmProduct(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCRMProduct", reflect.TypeOf((*MockCrmAPI)(nil).UpsertCRMProduct), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCrmProduct", reflect.TypeOf((*MockCrmAPI)(nil).UpsertCrmProduct), arg0)
 }
 
-// UpsertCRMProductExecute mocks base method.
-func (m *MockCrmAPI) UpsertCRMProductExecute(arg0 api.ApiUpsertCRMProductRequest) (*api.UpsertCRMProductResponse, *http.Response, error) {
+// UpsertCrmProductExecute mocks base method.
+func (m *MockCrmAPI) UpsertCrmProductExecute(arg0 api.ApiUpsertCrmProductRequest) (*api.UpsertCrmProductResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpsertCRMProductExecute", arg0)
-	ret0, _ := ret[0].(*api.UpsertCRMProductResponse)
+	ret := m.ctrl.Call(m, "UpsertCrmProductExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertCrmProductResponse)
 	ret1, _ := ret[1].(*http.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// UpsertCRMProductExecute indicates an expected call of UpsertCRMProductExecute.
-func (mr *MockCrmAPIMockRecorder) UpsertCRMProductExecute(arg0 any) *gomock.Call {
+// UpsertCrmProductExecute indicates an expected call of UpsertCrmProductExecute.
+func (mr *MockCrmAPIMockRecorder) UpsertCrmProductExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCRMProductExecute", reflect.TypeOf((*MockCrmAPI)(nil).UpsertCRMProductExecute), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertCrmProductExecute", reflect.TypeOf((*MockCrmAPI)(nil).UpsertCrmProductExecute), arg0)
+}
+
+// UpsertDealLineItemAssociation mocks base method.
+func (m *MockCrmAPI) UpsertDealLineItemAssociation(arg0 context.Context) api.ApiUpsertDealLineItemAssociationRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertDealLineItemAssociation", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertDealLineItemAssociationRequest)
+	return ret0
+}
+
+// UpsertDealLineItemAssociation indicates an expected call of UpsertDealLineItemAssociation.
+func (mr *MockCrmAPIMockRecorder) UpsertDealLineItemAssociation(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertDealLineItemAssociation", reflect.TypeOf((*MockCrmAPI)(nil).UpsertDealLineItemAssociation), arg0)
+}
+
+// UpsertDealLineItemAssociationExecute mocks base method.
+func (m *MockCrmAPI) UpsertDealLineItemAssociationExecute(arg0 api.ApiUpsertDealLineItemAssociationRequest) (*api.UpsertDealLineItemAssociationResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertDealLineItemAssociationExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertDealLineItemAssociationResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpsertDealLineItemAssociationExecute indicates an expected call of UpsertDealLineItemAssociationExecute.
+func (mr *MockCrmAPIMockRecorder) UpsertDealLineItemAssociationExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertDealLineItemAssociationExecute", reflect.TypeOf((*MockCrmAPI)(nil).UpsertDealLineItemAssociationExecute), arg0)
+}
+
+// UpsertLineItem mocks base method.
+func (m *MockCrmAPI) UpsertLineItem(arg0 context.Context) api.ApiUpsertLineItemRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertLineItem", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertLineItemRequest)
+	return ret0
+}
+
+// UpsertLineItem indicates an expected call of UpsertLineItem.
+func (mr *MockCrmAPIMockRecorder) UpsertLineItem(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertLineItem", reflect.TypeOf((*MockCrmAPI)(nil).UpsertLineItem), arg0)
+}
+
+// UpsertLineItemExecute mocks base method.
+func (m *MockCrmAPI) UpsertLineItemExecute(arg0 api.ApiUpsertLineItemRequest) (*api.UpsertLineItemResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertLineItemExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertLineItemResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpsertLineItemExecute indicates an expected call of UpsertLineItemExecute.
+func (mr *MockCrmAPIMockRecorder) UpsertLineItemExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertLineItemExecute", reflect.TypeOf((*MockCrmAPI)(nil).UpsertLineItemExecute), arg0)
 }
 
 // MockBillingAPI is a mock of BillingAPI interface.
@@ -1399,6 +1459,36 @@ func (m *MockCompaniesAPI) GetActiveCompanySubscriptionExecute(arg0 api.ApiGetAc
 func (mr *MockCompaniesAPIMockRecorder) GetActiveCompanySubscriptionExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActiveCompanySubscriptionExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).GetActiveCompanySubscriptionExecute), arg0)
+}
+
+// GetActiveDeals mocks base method.
+func (m *MockCompaniesAPI) GetActiveDeals(arg0 context.Context) api.ApiGetActiveDealsRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetActiveDeals", arg0)
+	ret0, _ := ret[0].(api.ApiGetActiveDealsRequest)
+	return ret0
+}
+
+// GetActiveDeals indicates an expected call of GetActiveDeals.
+func (mr *MockCompaniesAPIMockRecorder) GetActiveDeals(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActiveDeals", reflect.TypeOf((*MockCompaniesAPI)(nil).GetActiveDeals), arg0)
+}
+
+// GetActiveDealsExecute mocks base method.
+func (m *MockCompaniesAPI) GetActiveDealsExecute(arg0 api.ApiGetActiveDealsRequest) (*api.GetActiveDealsResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetActiveDealsExecute", arg0)
+	ret0, _ := ret[0].(*api.GetActiveDealsResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetActiveDealsExecute indicates an expected call of GetActiveDealsExecute.
+func (mr *MockCompaniesAPIMockRecorder) GetActiveDealsExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActiveDealsExecute", reflect.TypeOf((*MockCompaniesAPI)(nil).GetActiveDealsExecute), arg0)
 }
 
 // GetCompany mocks base method.

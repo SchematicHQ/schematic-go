@@ -1,67 +1,67 @@
-# ListCrmProductsResponse
+# UpsertLineItemResponse
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]CrmProductResponseData**](CrmProductResponseData.md) | The returned resources | 
-**Params** | [**ListCrmProductsParams**](ListCrmProductsParams.md) |  | 
+**Data** | [**CrmLineItemResponseData**](CrmLineItemResponseData.md) |  | 
+**Params** | **map[string]interface{}** | Input parameters | 
 
 ## Methods
 
-### NewListCrmProductsResponse
+### NewUpsertLineItemResponse
 
-`func NewListCrmProductsResponse(data []CrmProductResponseData, params ListCrmProductsParams, ) *ListCrmProductsResponse`
+`func NewUpsertLineItemResponse(data CrmLineItemResponseData, params map[string]interface{}, ) *UpsertLineItemResponse`
 
-NewListCrmProductsResponse instantiates a new ListCrmProductsResponse object
+NewUpsertLineItemResponse instantiates a new UpsertLineItemResponse object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewListCrmProductsResponseWithDefaults
+### NewUpsertLineItemResponseWithDefaults
 
-`func NewListCrmProductsResponseWithDefaults() *ListCrmProductsResponse`
+`func NewUpsertLineItemResponseWithDefaults() *UpsertLineItemResponse`
 
-NewListCrmProductsResponseWithDefaults instantiates a new ListCrmProductsResponse object
+NewUpsertLineItemResponseWithDefaults instantiates a new UpsertLineItemResponse object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *ListCrmProductsResponse) GetData() []CrmProductResponseData`
+`func (o *UpsertLineItemResponse) GetData() CrmLineItemResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *ListCrmProductsResponse) GetDataOk() (*[]CrmProductResponseData, bool)`
+`func (o *UpsertLineItemResponse) GetDataOk() (*CrmLineItemResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *ListCrmProductsResponse) SetData(v []CrmProductResponseData)`
+`func (o *UpsertLineItemResponse) SetData(v CrmLineItemResponseData)`
 
 SetData sets Data field to given value.
 
 
 ### GetParams
 
-`func (o *ListCrmProductsResponse) GetParams() ListCrmProductsParams`
+`func (o *UpsertLineItemResponse) GetParams() map[string]interface{}`
 
 GetParams returns the Params field if non-nil, zero value otherwise.
 
 ### GetParamsOk
 
-`func (o *ListCrmProductsResponse) GetParamsOk() (*ListCrmProductsParams, bool)`
+`func (o *UpsertLineItemResponse) GetParamsOk() (*map[string]interface{}, bool)`
 
 GetParamsOk returns a tuple with the Params field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetParams
 
-`func (o *ListCrmProductsResponse) SetParams(v ListCrmProductsParams)`
+`func (o *UpsertLineItemResponse) SetParams(v map[string]interface{})`
 
 SetParams sets Params field to given value.
 

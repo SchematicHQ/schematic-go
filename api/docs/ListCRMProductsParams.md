@@ -1,4 +1,4 @@
-# ListCRMProductsParams
+# ListCrmProductsParams
 
 ## Properties
 
@@ -11,120 +11,120 @@ Name | Type | Description | Notes
 
 ## Methods
 
-### NewListCRMProductsParams
+### NewListCrmProductsParams
 
-`func NewListCRMProductsParams() *ListCRMProductsParams`
+`func NewListCrmProductsParams() *ListCrmProductsParams`
 
-NewListCRMProductsParams instantiates a new ListCRMProductsParams object
+NewListCrmProductsParams instantiates a new ListCrmProductsParams object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewListCRMProductsParamsWithDefaults
+### NewListCrmProductsParamsWithDefaults
 
-`func NewListCRMProductsParamsWithDefaults() *ListCRMProductsParams`
+`func NewListCrmProductsParamsWithDefaults() *ListCrmProductsParams`
 
-NewListCRMProductsParamsWithDefaults instantiates a new ListCRMProductsParams object
+NewListCrmProductsParamsWithDefaults instantiates a new ListCrmProductsParams object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetIds
 
-`func (o *ListCRMProductsParams) GetIds() []string`
+`func (o *ListCrmProductsParams) GetIds() []string`
 
 GetIds returns the Ids field if non-nil, zero value otherwise.
 
 ### GetIdsOk
 
-`func (o *ListCRMProductsParams) GetIdsOk() (*[]string, bool)`
+`func (o *ListCrmProductsParams) GetIdsOk() (*[]string, bool)`
 
 GetIdsOk returns a tuple with the Ids field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetIds
 
-`func (o *ListCRMProductsParams) SetIds(v []string)`
+`func (o *ListCrmProductsParams) SetIds(v []string)`
 
 SetIds sets Ids field to given value.
 
 ### HasIds
 
-`func (o *ListCRMProductsParams) HasIds() bool`
+`func (o *ListCrmProductsParams) HasIds() bool`
 
 HasIds returns a boolean if a field has been set.
 
 ### GetLimit
 
-`func (o *ListCRMProductsParams) GetLimit() int32`
+`func (o *ListCrmProductsParams) GetLimit() int32`
 
 GetLimit returns the Limit field if non-nil, zero value otherwise.
 
 ### GetLimitOk
 
-`func (o *ListCRMProductsParams) GetLimitOk() (*int32, bool)`
+`func (o *ListCrmProductsParams) GetLimitOk() (*int32, bool)`
 
 GetLimitOk returns a tuple with the Limit field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetLimit
 
-`func (o *ListCRMProductsParams) SetLimit(v int32)`
+`func (o *ListCrmProductsParams) SetLimit(v int32)`
 
 SetLimit sets Limit field to given value.
 
 ### HasLimit
 
-`func (o *ListCRMProductsParams) HasLimit() bool`
+`func (o *ListCrmProductsParams) HasLimit() bool`
 
 HasLimit returns a boolean if a field has been set.
 
 ### GetName
 
-`func (o *ListCRMProductsParams) GetName() string`
+`func (o *ListCrmProductsParams) GetName() string`
 
 GetName returns the Name field if non-nil, zero value otherwise.
 
 ### GetNameOk
 
-`func (o *ListCRMProductsParams) GetNameOk() (*string, bool)`
+`func (o *ListCrmProductsParams) GetNameOk() (*string, bool)`
 
 GetNameOk returns a tuple with the Name field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetName
 
-`func (o *ListCRMProductsParams) SetName(v string)`
+`func (o *ListCrmProductsParams) SetName(v string)`
 
 SetName sets Name field to given value.
 
 ### HasName
 
-`func (o *ListCRMProductsParams) HasName() bool`
+`func (o *ListCrmProductsParams) HasName() bool`
 
 HasName returns a boolean if a field has been set.
 
 ### GetOffset
 
-`func (o *ListCRMProductsParams) GetOffset() int32`
+`func (o *ListCrmProductsParams) GetOffset() int32`
 
 GetOffset returns the Offset field if non-nil, zero value otherwise.
 
 ### GetOffsetOk
 
-`func (o *ListCRMProductsParams) GetOffsetOk() (*int32, bool)`
+`func (o *ListCrmProductsParams) GetOffsetOk() (*int32, bool)`
 
 GetOffsetOk returns a tuple with the Offset field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetOffset
 
-`func (o *ListCRMProductsParams) SetOffset(v int32)`
+`func (o *ListCrmProductsParams) SetOffset(v int32)`
 
 SetOffset sets Offset field to given value.
 
 ### HasOffset
 
-`func (o *ListCRMProductsParams) HasOffset() bool`
+`func (o *ListCrmProductsParams) HasOffset() bool`
 
 HasOffset returns a boolean if a field has been set.
 

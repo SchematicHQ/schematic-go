@@ -1,67 +1,67 @@
-# UpsertCRMDealResponse
+# UpsertCrmDealResponse
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**CRMDealResponseData**](CRMDealResponseData.md) |  | 
+**Data** | [**CrmDealResponseData**](CrmDealResponseData.md) |  | 
 **Params** | **map[string]interface{}** | Input parameters | 
 
 ## Methods
 
-### NewUpsertCRMDealResponse
+### NewUpsertCrmDealResponse
 
-`func NewUpsertCRMDealResponse(data CRMDealResponseData, params map[string]interface{}, ) *UpsertCRMDealResponse`
+`func NewUpsertCrmDealResponse(data CrmDealResponseData, params map[string]interface{}, ) *UpsertCrmDealResponse`
 
-NewUpsertCRMDealResponse instantiates a new UpsertCRMDealResponse object
+NewUpsertCrmDealResponse instantiates a new UpsertCrmDealResponse object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewUpsertCRMDealResponseWithDefaults
+### NewUpsertCrmDealResponseWithDefaults
 
-`func NewUpsertCRMDealResponseWithDefaults() *UpsertCRMDealResponse`
+`func NewUpsertCrmDealResponseWithDefaults() *UpsertCrmDealResponse`
 
-NewUpsertCRMDealResponseWithDefaults instantiates a new UpsertCRMDealResponse object
+NewUpsertCrmDealResponseWithDefaults instantiates a new UpsertCrmDealResponse object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *UpsertCRMDealResponse) GetData() CRMDealResponseData`
+`func (o *UpsertCrmDealResponse) GetData() CrmDealResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *UpsertCRMDealResponse) GetDataOk() (*CRMDealResponseData, bool)`
+`func (o *UpsertCrmDealResponse) GetDataOk() (*CrmDealResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *UpsertCRMDealResponse) SetData(v CRMDealResponseData)`
+`func (o *UpsertCrmDealResponse) SetData(v CrmDealResponseData)`
 
 SetData sets Data field to given value.
 
 
 ### GetParams
 
-`func (o *UpsertCRMDealResponse) GetParams() map[string]interface{}`
+`func (o *UpsertCrmDealResponse) GetParams() map[string]interface{}`
 
 GetParams returns the Params field if non-nil, zero value otherwise.
 
 ### GetParamsOk
 
-`func (o *UpsertCRMDealResponse) GetParamsOk() (*map[string]interface{}, bool)`
+`func (o *UpsertCrmDealResponse) GetParamsOk() (*map[string]interface{}, bool)`
 
 GetParamsOk returns a tuple with the Params field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetParams
 
-`func (o *UpsertCRMDealResponse) SetParams(v map[string]interface{})`
+`func (o *UpsertCrmDealResponse) SetParams(v map[string]interface{})`
 
 SetParams sets Params field to given value.
 

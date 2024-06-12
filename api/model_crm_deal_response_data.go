@@ -17,31 +17,33 @@ import (
 	"time"
 )
 
-// checks if the CRMDealResponseData type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &CRMDealResponseData{}
+// checks if the CrmDealResponseData type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &CrmDealResponseData{}
 
-// CRMDealResponseData The created resource
-type CRMDealResponseData struct {
-	AccountId         string         `json:"account_id"`
-	CompanyExternalId NullableString `json:"company_external_id,omitempty"`
-	CreatedAt         time.Time      `json:"created_at"`
-	DealExternalId    string         `json:"deal_external_id"`
-	DealId            string         `json:"deal_id"`
-	DeletedAt         NullableTime   `json:"deleted_at,omitempty"`
-	EnvironmentId     string         `json:"environment_id"`
-	Name              NullableString `json:"name,omitempty"`
-	ProductExternalId NullableString `json:"product_external_id,omitempty"`
-	UpdatedAt         time.Time      `json:"updated_at"`
+// CrmDealResponseData The created resource
+type CrmDealResponseData struct {
+	AccountId         string          `json:"account_id"`
+	Arr               NullableFloat32 `json:"arr,omitempty"`
+	CompanyExternalId NullableString  `json:"company_external_id,omitempty"`
+	CreatedAt         time.Time       `json:"created_at"`
+	DealExternalId    string          `json:"deal_external_id"`
+	DealId            string          `json:"deal_id"`
+	DeletedAt         NullableTime    `json:"deleted_at,omitempty"`
+	EnvironmentId     string          `json:"environment_id"`
+	Mrr               NullableFloat32 `json:"mrr,omitempty"`
+	Name              NullableString  `json:"name,omitempty"`
+	ProductExternalId NullableString  `json:"product_external_id,omitempty"`
+	UpdatedAt         time.Time       `json:"updated_at"`
 }
 
-type _CRMDealResponseData CRMDealResponseData
+type _CrmDealResponseData CrmDealResponseData
 
-// NewCRMDealResponseData instantiates a new CRMDealResponseData object
+// NewCrmDealResponseData instantiates a new CrmDealResponseData object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCRMDealResponseData(accountId string, createdAt time.Time, dealExternalId string, dealId string, environmentId string, updatedAt time.Time) *CRMDealResponseData {
-	this := CRMDealResponseData{}
+func NewCrmDealResponseData(accountId string, createdAt time.Time, dealExternalId string, dealId string, environmentId string, updatedAt time.Time) *CrmDealResponseData {
+	this := CrmDealResponseData{}
 	this.AccountId = accountId
 	this.CreatedAt = createdAt
 	this.DealExternalId = dealExternalId
@@ -51,16 +53,16 @@ func NewCRMDealResponseData(accountId string, createdAt time.Time, dealExternalI
 	return &this
 }
 
-// NewCRMDealResponseDataWithDefaults instantiates a new CRMDealResponseData object
+// NewCrmDealResponseDataWithDefaults instantiates a new CrmDealResponseData object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewCRMDealResponseDataWithDefaults() *CRMDealResponseData {
-	this := CRMDealResponseData{}
+func NewCrmDealResponseDataWithDefaults() *CrmDealResponseData {
+	this := CrmDealResponseData{}
 	return &this
 }
 
 // GetAccountId returns the AccountId field value
-func (o *CRMDealResponseData) GetAccountId() string {
+func (o *CrmDealResponseData) GetAccountId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -71,7 +73,7 @@ func (o *CRMDealResponseData) GetAccountId() string {
 
 // GetAccountIdOk returns a tuple with the AccountId field value
 // and a boolean to check if the value has been set.
-func (o *CRMDealResponseData) GetAccountIdOk() (*string, bool) {
+func (o *CrmDealResponseData) GetAccountIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -79,12 +81,55 @@ func (o *CRMDealResponseData) GetAccountIdOk() (*string, bool) {
 }
 
 // SetAccountId sets field value
-func (o *CRMDealResponseData) SetAccountId(v string) {
+func (o *CrmDealResponseData) SetAccountId(v string) {
 	o.AccountId = v
 }
 
+// GetArr returns the Arr field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CrmDealResponseData) GetArr() float32 {
+	if o == nil || IsNil(o.Arr.Get()) {
+		var ret float32
+		return ret
+	}
+	return *o.Arr.Get()
+}
+
+// GetArrOk returns a tuple with the Arr field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CrmDealResponseData) GetArrOk() (*float32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Arr.Get(), o.Arr.IsSet()
+}
+
+// HasArr returns a boolean if a field has been set.
+func (o *CrmDealResponseData) HasArr() bool {
+	if o != nil && o.Arr.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetArr gets a reference to the given NullableFloat32 and assigns it to the Arr field.
+func (o *CrmDealResponseData) SetArr(v float32) {
+	o.Arr.Set(&v)
+}
+
+// SetArrNil sets the value for Arr to be an explicit nil
+func (o *CrmDealResponseData) SetArrNil() {
+	o.Arr.Set(nil)
+}
+
+// UnsetArr ensures that no value is present for Arr, not even an explicit nil
+func (o *CrmDealResponseData) UnsetArr() {
+	o.Arr.Unset()
+}
+
 // GetCompanyExternalId returns the CompanyExternalId field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CRMDealResponseData) GetCompanyExternalId() string {
+func (o *CrmDealResponseData) GetCompanyExternalId() string {
 	if o == nil || IsNil(o.CompanyExternalId.Get()) {
 		var ret string
 		return ret
@@ -95,7 +140,7 @@ func (o *CRMDealResponseData) GetCompanyExternalId() string {
 // GetCompanyExternalIdOk returns a tuple with the CompanyExternalId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CRMDealResponseData) GetCompanyExternalIdOk() (*string, bool) {
+func (o *CrmDealResponseData) GetCompanyExternalIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -103,7 +148,7 @@ func (o *CRMDealResponseData) GetCompanyExternalIdOk() (*string, bool) {
 }
 
 // HasCompanyExternalId returns a boolean if a field has been set.
-func (o *CRMDealResponseData) HasCompanyExternalId() bool {
+func (o *CrmDealResponseData) HasCompanyExternalId() bool {
 	if o != nil && o.CompanyExternalId.IsSet() {
 		return true
 	}
@@ -112,22 +157,22 @@ func (o *CRMDealResponseData) HasCompanyExternalId() bool {
 }
 
 // SetCompanyExternalId gets a reference to the given NullableString and assigns it to the CompanyExternalId field.
-func (o *CRMDealResponseData) SetCompanyExternalId(v string) {
+func (o *CrmDealResponseData) SetCompanyExternalId(v string) {
 	o.CompanyExternalId.Set(&v)
 }
 
 // SetCompanyExternalIdNil sets the value for CompanyExternalId to be an explicit nil
-func (o *CRMDealResponseData) SetCompanyExternalIdNil() {
+func (o *CrmDealResponseData) SetCompanyExternalIdNil() {
 	o.CompanyExternalId.Set(nil)
 }
 
 // UnsetCompanyExternalId ensures that no value is present for CompanyExternalId, not even an explicit nil
-func (o *CRMDealResponseData) UnsetCompanyExternalId() {
+func (o *CrmDealResponseData) UnsetCompanyExternalId() {
 	o.CompanyExternalId.Unset()
 }
 
 // GetCreatedAt returns the CreatedAt field value
-func (o *CRMDealResponseData) GetCreatedAt() time.Time {
+func (o *CrmDealResponseData) GetCreatedAt() time.Time {
 	if o == nil {
 		var ret time.Time
 		return ret
@@ -138,7 +183,7 @@ func (o *CRMDealResponseData) GetCreatedAt() time.Time {
 
 // GetCreatedAtOk returns a tuple with the CreatedAt field value
 // and a boolean to check if the value has been set.
-func (o *CRMDealResponseData) GetCreatedAtOk() (*time.Time, bool) {
+func (o *CrmDealResponseData) GetCreatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -146,12 +191,12 @@ func (o *CRMDealResponseData) GetCreatedAtOk() (*time.Time, bool) {
 }
 
 // SetCreatedAt sets field value
-func (o *CRMDealResponseData) SetCreatedAt(v time.Time) {
+func (o *CrmDealResponseData) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
 }
 
 // GetDealExternalId returns the DealExternalId field value
-func (o *CRMDealResponseData) GetDealExternalId() string {
+func (o *CrmDealResponseData) GetDealExternalId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -162,7 +207,7 @@ func (o *CRMDealResponseData) GetDealExternalId() string {
 
 // GetDealExternalIdOk returns a tuple with the DealExternalId field value
 // and a boolean to check if the value has been set.
-func (o *CRMDealResponseData) GetDealExternalIdOk() (*string, bool) {
+func (o *CrmDealResponseData) GetDealExternalIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -170,12 +215,12 @@ func (o *CRMDealResponseData) GetDealExternalIdOk() (*string, bool) {
 }
 
 // SetDealExternalId sets field value
-func (o *CRMDealResponseData) SetDealExternalId(v string) {
+func (o *CrmDealResponseData) SetDealExternalId(v string) {
 	o.DealExternalId = v
 }
 
 // GetDealId returns the DealId field value
-func (o *CRMDealResponseData) GetDealId() string {
+func (o *CrmDealResponseData) GetDealId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -186,7 +231,7 @@ func (o *CRMDealResponseData) GetDealId() string {
 
 // GetDealIdOk returns a tuple with the DealId field value
 // and a boolean to check if the value has been set.
-func (o *CRMDealResponseData) GetDealIdOk() (*string, bool) {
+func (o *CrmDealResponseData) GetDealIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -194,12 +239,12 @@ func (o *CRMDealResponseData) GetDealIdOk() (*string, bool) {
 }
 
 // SetDealId sets field value
-func (o *CRMDealResponseData) SetDealId(v string) {
+func (o *CrmDealResponseData) SetDealId(v string) {
 	o.DealId = v
 }
 
 // GetDeletedAt returns the DeletedAt field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CRMDealResponseData) GetDeletedAt() time.Time {
+func (o *CrmDealResponseData) GetDeletedAt() time.Time {
 	if o == nil || IsNil(o.DeletedAt.Get()) {
 		var ret time.Time
 		return ret
@@ -210,7 +255,7 @@ func (o *CRMDealResponseData) GetDeletedAt() time.Time {
 // GetDeletedAtOk returns a tuple with the DeletedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CRMDealResponseData) GetDeletedAtOk() (*time.Time, bool) {
+func (o *CrmDealResponseData) GetDeletedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -218,7 +263,7 @@ func (o *CRMDealResponseData) GetDeletedAtOk() (*time.Time, bool) {
 }
 
 // HasDeletedAt returns a boolean if a field has been set.
-func (o *CRMDealResponseData) HasDeletedAt() bool {
+func (o *CrmDealResponseData) HasDeletedAt() bool {
 	if o != nil && o.DeletedAt.IsSet() {
 		return true
 	}
@@ -227,22 +272,22 @@ func (o *CRMDealResponseData) HasDeletedAt() bool {
 }
 
 // SetDeletedAt gets a reference to the given NullableTime and assigns it to the DeletedAt field.
-func (o *CRMDealResponseData) SetDeletedAt(v time.Time) {
+func (o *CrmDealResponseData) SetDeletedAt(v time.Time) {
 	o.DeletedAt.Set(&v)
 }
 
 // SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
-func (o *CRMDealResponseData) SetDeletedAtNil() {
+func (o *CrmDealResponseData) SetDeletedAtNil() {
 	o.DeletedAt.Set(nil)
 }
 
 // UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
-func (o *CRMDealResponseData) UnsetDeletedAt() {
+func (o *CrmDealResponseData) UnsetDeletedAt() {
 	o.DeletedAt.Unset()
 }
 
 // GetEnvironmentId returns the EnvironmentId field value
-func (o *CRMDealResponseData) GetEnvironmentId() string {
+func (o *CrmDealResponseData) GetEnvironmentId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -253,7 +298,7 @@ func (o *CRMDealResponseData) GetEnvironmentId() string {
 
 // GetEnvironmentIdOk returns a tuple with the EnvironmentId field value
 // and a boolean to check if the value has been set.
-func (o *CRMDealResponseData) GetEnvironmentIdOk() (*string, bool) {
+func (o *CrmDealResponseData) GetEnvironmentIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -261,12 +306,55 @@ func (o *CRMDealResponseData) GetEnvironmentIdOk() (*string, bool) {
 }
 
 // SetEnvironmentId sets field value
-func (o *CRMDealResponseData) SetEnvironmentId(v string) {
+func (o *CrmDealResponseData) SetEnvironmentId(v string) {
 	o.EnvironmentId = v
 }
 
+// GetMrr returns the Mrr field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CrmDealResponseData) GetMrr() float32 {
+	if o == nil || IsNil(o.Mrr.Get()) {
+		var ret float32
+		return ret
+	}
+	return *o.Mrr.Get()
+}
+
+// GetMrrOk returns a tuple with the Mrr field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CrmDealResponseData) GetMrrOk() (*float32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Mrr.Get(), o.Mrr.IsSet()
+}
+
+// HasMrr returns a boolean if a field has been set.
+func (o *CrmDealResponseData) HasMrr() bool {
+	if o != nil && o.Mrr.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMrr gets a reference to the given NullableFloat32 and assigns it to the Mrr field.
+func (o *CrmDealResponseData) SetMrr(v float32) {
+	o.Mrr.Set(&v)
+}
+
+// SetMrrNil sets the value for Mrr to be an explicit nil
+func (o *CrmDealResponseData) SetMrrNil() {
+	o.Mrr.Set(nil)
+}
+
+// UnsetMrr ensures that no value is present for Mrr, not even an explicit nil
+func (o *CrmDealResponseData) UnsetMrr() {
+	o.Mrr.Unset()
+}
+
 // GetName returns the Name field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CRMDealResponseData) GetName() string {
+func (o *CrmDealResponseData) GetName() string {
 	if o == nil || IsNil(o.Name.Get()) {
 		var ret string
 		return ret
@@ -277,7 +365,7 @@ func (o *CRMDealResponseData) GetName() string {
 // GetNameOk returns a tuple with the Name field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CRMDealResponseData) GetNameOk() (*string, bool) {
+func (o *CrmDealResponseData) GetNameOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -285,7 +373,7 @@ func (o *CRMDealResponseData) GetNameOk() (*string, bool) {
 }
 
 // HasName returns a boolean if a field has been set.
-func (o *CRMDealResponseData) HasName() bool {
+func (o *CrmDealResponseData) HasName() bool {
 	if o != nil && o.Name.IsSet() {
 		return true
 	}
@@ -294,22 +382,22 @@ func (o *CRMDealResponseData) HasName() bool {
 }
 
 // SetName gets a reference to the given NullableString and assigns it to the Name field.
-func (o *CRMDealResponseData) SetName(v string) {
+func (o *CrmDealResponseData) SetName(v string) {
 	o.Name.Set(&v)
 }
 
 // SetNameNil sets the value for Name to be an explicit nil
-func (o *CRMDealResponseData) SetNameNil() {
+func (o *CrmDealResponseData) SetNameNil() {
 	o.Name.Set(nil)
 }
 
 // UnsetName ensures that no value is present for Name, not even an explicit nil
-func (o *CRMDealResponseData) UnsetName() {
+func (o *CrmDealResponseData) UnsetName() {
 	o.Name.Unset()
 }
 
 // GetProductExternalId returns the ProductExternalId field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CRMDealResponseData) GetProductExternalId() string {
+func (o *CrmDealResponseData) GetProductExternalId() string {
 	if o == nil || IsNil(o.ProductExternalId.Get()) {
 		var ret string
 		return ret
@@ -320,7 +408,7 @@ func (o *CRMDealResponseData) GetProductExternalId() string {
 // GetProductExternalIdOk returns a tuple with the ProductExternalId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CRMDealResponseData) GetProductExternalIdOk() (*string, bool) {
+func (o *CrmDealResponseData) GetProductExternalIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -328,7 +416,7 @@ func (o *CRMDealResponseData) GetProductExternalIdOk() (*string, bool) {
 }
 
 // HasProductExternalId returns a boolean if a field has been set.
-func (o *CRMDealResponseData) HasProductExternalId() bool {
+func (o *CrmDealResponseData) HasProductExternalId() bool {
 	if o != nil && o.ProductExternalId.IsSet() {
 		return true
 	}
@@ -337,22 +425,22 @@ func (o *CRMDealResponseData) HasProductExternalId() bool {
 }
 
 // SetProductExternalId gets a reference to the given NullableString and assigns it to the ProductExternalId field.
-func (o *CRMDealResponseData) SetProductExternalId(v string) {
+func (o *CrmDealResponseData) SetProductExternalId(v string) {
 	o.ProductExternalId.Set(&v)
 }
 
 // SetProductExternalIdNil sets the value for ProductExternalId to be an explicit nil
-func (o *CRMDealResponseData) SetProductExternalIdNil() {
+func (o *CrmDealResponseData) SetProductExternalIdNil() {
 	o.ProductExternalId.Set(nil)
 }
 
 // UnsetProductExternalId ensures that no value is present for ProductExternalId, not even an explicit nil
-func (o *CRMDealResponseData) UnsetProductExternalId() {
+func (o *CrmDealResponseData) UnsetProductExternalId() {
 	o.ProductExternalId.Unset()
 }
 
 // GetUpdatedAt returns the UpdatedAt field value
-func (o *CRMDealResponseData) GetUpdatedAt() time.Time {
+func (o *CrmDealResponseData) GetUpdatedAt() time.Time {
 	if o == nil {
 		var ret time.Time
 		return ret
@@ -363,7 +451,7 @@ func (o *CRMDealResponseData) GetUpdatedAt() time.Time {
 
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value
 // and a boolean to check if the value has been set.
-func (o *CRMDealResponseData) GetUpdatedAtOk() (*time.Time, bool) {
+func (o *CrmDealResponseData) GetUpdatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -371,11 +459,11 @@ func (o *CRMDealResponseData) GetUpdatedAtOk() (*time.Time, bool) {
 }
 
 // SetUpdatedAt sets field value
-func (o *CRMDealResponseData) SetUpdatedAt(v time.Time) {
+func (o *CrmDealResponseData) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
-func (o CRMDealResponseData) MarshalJSON() ([]byte, error) {
+func (o CrmDealResponseData) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -383,9 +471,12 @@ func (o CRMDealResponseData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o CRMDealResponseData) ToMap() (map[string]interface{}, error) {
+func (o CrmDealResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["account_id"] = o.AccountId
+	if o.Arr.IsSet() {
+		toSerialize["arr"] = o.Arr.Get()
+	}
 	if o.CompanyExternalId.IsSet() {
 		toSerialize["company_external_id"] = o.CompanyExternalId.Get()
 	}
@@ -396,6 +487,9 @@ func (o CRMDealResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["deleted_at"] = o.DeletedAt.Get()
 	}
 	toSerialize["environment_id"] = o.EnvironmentId
+	if o.Mrr.IsSet() {
+		toSerialize["mrr"] = o.Mrr.Get()
+	}
 	if o.Name.IsSet() {
 		toSerialize["name"] = o.Name.Get()
 	}
@@ -406,7 +500,7 @@ func (o CRMDealResponseData) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-func (o *CRMDealResponseData) UnmarshalJSON(data []byte) (err error) {
+func (o *CrmDealResponseData) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
@@ -433,53 +527,53 @@ func (o *CRMDealResponseData) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varCRMDealResponseData := _CRMDealResponseData{}
+	varCrmDealResponseData := _CrmDealResponseData{}
 
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCRMDealResponseData)
+	err = decoder.Decode(&varCrmDealResponseData)
 
 	if err != nil {
 		return err
 	}
 
-	*o = CRMDealResponseData(varCRMDealResponseData)
+	*o = CrmDealResponseData(varCrmDealResponseData)
 
 	return err
 }
 
-type NullableCRMDealResponseData struct {
-	value *CRMDealResponseData
+type NullableCrmDealResponseData struct {
+	value *CrmDealResponseData
 	isSet bool
 }
 
-func (v NullableCRMDealResponseData) Get() *CRMDealResponseData {
+func (v NullableCrmDealResponseData) Get() *CrmDealResponseData {
 	return v.value
 }
 
-func (v *NullableCRMDealResponseData) Set(val *CRMDealResponseData) {
+func (v *NullableCrmDealResponseData) Set(val *CrmDealResponseData) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableCRMDealResponseData) IsSet() bool {
+func (v NullableCrmDealResponseData) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableCRMDealResponseData) Unset() {
+func (v *NullableCrmDealResponseData) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableCRMDealResponseData(val *CRMDealResponseData) *NullableCRMDealResponseData {
-	return &NullableCRMDealResponseData{value: val, isSet: true}
+func NewNullableCrmDealResponseData(val *CrmDealResponseData) *NullableCrmDealResponseData {
+	return &NullableCrmDealResponseData{value: val, isSet: true}
 }
 
-func (v NullableCRMDealResponseData) MarshalJSON() ([]byte, error) {
+func (v NullableCrmDealResponseData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableCRMDealResponseData) UnmarshalJSON(src []byte) error {
+func (v *NullableCrmDealResponseData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

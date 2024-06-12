@@ -4,17 +4,19 @@ All URIs are relative to *https://api.schematichq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ListCRMProducts**](CrmAPI.md#ListCRMProducts) | **Get** /crm/products | List c r m products
-[**UpsertCRMDeal**](CrmAPI.md#UpsertCRMDeal) | **Post** /crm/deals/upsert | Upsert c r m deal
-[**UpsertCRMProduct**](CrmAPI.md#UpsertCRMProduct) | **Post** /crm/products/upsert | Upsert c r m product
+[**ListCrmProducts**](CrmAPI.md#ListCrmProducts) | **Get** /crm/products | List crm products
+[**UpsertCrmDeal**](CrmAPI.md#UpsertCrmDeal) | **Post** /crm/deals/upsert | Upsert crm deal
+[**UpsertCrmProduct**](CrmAPI.md#UpsertCrmProduct) | **Post** /crm/products/upsert | Upsert crm product
+[**UpsertDealLineItemAssociation**](CrmAPI.md#UpsertDealLineItemAssociation) | **Post** /crm/associations/deal-line-item | Upsert deal line item association
+[**UpsertLineItem**](CrmAPI.md#UpsertLineItem) | **Post** /crm/deal-line-item/upsert | Upsert line item
 
 
 
-## ListCRMProducts
+## ListCrmProducts
 
-> ListCRMProductsResponse ListCRMProducts(ctx).Ids(ids).Name(name).Limit(limit).Offset(offset).Execute()
+> ListCrmProductsResponse ListCrmProducts(ctx).Ids(ids).Name(name).Limit(limit).Offset(offset).Execute()
 
-List c r m products
+List crm products
 
 ### Example
 
@@ -39,13 +41,13 @@ func main() {
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().CrmAPI.ListCRMProducts(context.Background()).Ids(ids).Name(name).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().CrmAPI.ListCrmProducts(context.Background()).Ids(ids).Name(name).Limit(limit).Offset(offset).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.ListCRMProducts``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.ListCrmProducts``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListCRMProducts`: ListCRMProductsResponse
-	fmt.Fprintf(os.Stdout, "Response from `CrmAPI.ListCRMProducts`: %v\n", resp)
+	// response from `ListCrmProducts`: ListCrmProductsResponse
+	fmt.Fprintf(os.Stdout, "Response from `CrmAPI.ListCrmProducts`: %v\n", resp)
 }
 ```
 
@@ -55,7 +57,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiListCRMProductsRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiListCrmProductsRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -67,7 +69,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ListCRMProductsResponse**](ListCRMProductsResponse.md)
+[**ListCrmProductsResponse**](ListCrmProductsResponse.md)
 
 ### Authorization
 
@@ -83,11 +85,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## UpsertCRMDeal
+## UpsertCrmDeal
 
-> UpsertCRMDealResponse UpsertCRMDeal(ctx).CreateCRMDealRequestBody(createCRMDealRequestBody).Execute()
+> UpsertCrmDealResponse UpsertCrmDeal(ctx).CreateCrmDealRequestBody(createCrmDealRequestBody).Execute()
 
-Upsert c r m deal
+Upsert crm deal
 
 ### Example
 
@@ -107,15 +109,15 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createCRMDealRequestBody := *schematicapi.NewCreateCRMDealRequestBody("CrmCompanyKey_example", "DealExternalId_example") // CreateCRMDealRequestBody | 
+	createCrmDealRequestBody := *schematicapi.NewCreateCrmDealRequestBody("CrmCompanyKey_example", "CrmType_example", "DealExternalId_example") // CreateCrmDealRequestBody | 
 
-	resp, r, err := client.API().CrmAPI.UpsertCRMDeal(context.Background()).CreateCRMDealRequestBody(createCRMDealRequestBody).Execute()
+	resp, r, err := client.API().CrmAPI.UpsertCrmDeal(context.Background()).CreateCrmDealRequestBody(createCrmDealRequestBody).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.UpsertCRMDeal``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.UpsertCrmDeal``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `UpsertCRMDeal`: UpsertCRMDealResponse
-	fmt.Fprintf(os.Stdout, "Response from `CrmAPI.UpsertCRMDeal`: %v\n", resp)
+	// response from `UpsertCrmDeal`: UpsertCrmDealResponse
+	fmt.Fprintf(os.Stdout, "Response from `CrmAPI.UpsertCrmDeal`: %v\n", resp)
 }
 ```
 
@@ -125,16 +127,16 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiUpsertCRMDealRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiUpsertCrmDealRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createCRMDealRequestBody** | [**CreateCRMDealRequestBody**](CreateCRMDealRequestBody.md) |  | 
+ **createCrmDealRequestBody** | [**CreateCrmDealRequestBody**](CreateCrmDealRequestBody.md) |  | 
 
 ### Return type
 
-[**UpsertCRMDealResponse**](UpsertCRMDealResponse.md)
+[**UpsertCrmDealResponse**](UpsertCrmDealResponse.md)
 
 ### Authorization
 
@@ -150,11 +152,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## UpsertCRMProduct
+## UpsertCrmProduct
 
-> UpsertCRMProductResponse UpsertCRMProduct(ctx).CreateCRMProductRequestBody(createCRMProductRequestBody).Execute()
+> UpsertCrmProductResponse UpsertCrmProduct(ctx).CreateCrmProductRequestBody(createCrmProductRequestBody).Execute()
 
-Upsert c r m product
+Upsert crm product
 
 ### Example
 
@@ -174,15 +176,15 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createCRMProductRequestBody := *schematicapi.NewCreateCRMProductRequestBody("Currency_example", "Description_example", "ExternalId_example", "Interval_example", "Name_example", float32(123), int32(123), "Sku_example") // CreateCRMProductRequestBody | 
+	createCrmProductRequestBody := *schematicapi.NewCreateCrmProductRequestBody("Currency_example", "Description_example", "ExternalId_example", "Interval_example", "Name_example", float32(123), int32(123), "Sku_example") // CreateCrmProductRequestBody | 
 
-	resp, r, err := client.API().CrmAPI.UpsertCRMProduct(context.Background()).CreateCRMProductRequestBody(createCRMProductRequestBody).Execute()
+	resp, r, err := client.API().CrmAPI.UpsertCrmProduct(context.Background()).CreateCrmProductRequestBody(createCrmProductRequestBody).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.UpsertCRMProduct``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.UpsertCrmProduct``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `UpsertCRMProduct`: UpsertCRMProductResponse
-	fmt.Fprintf(os.Stdout, "Response from `CrmAPI.UpsertCRMProduct`: %v\n", resp)
+	// response from `UpsertCrmProduct`: UpsertCrmProductResponse
+	fmt.Fprintf(os.Stdout, "Response from `CrmAPI.UpsertCrmProduct`: %v\n", resp)
 }
 ```
 
@@ -192,16 +194,150 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiUpsertCRMProductRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiUpsertCrmProductRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createCRMProductRequestBody** | [**CreateCRMProductRequestBody**](CreateCRMProductRequestBody.md) |  | 
+ **createCrmProductRequestBody** | [**CreateCrmProductRequestBody**](CreateCrmProductRequestBody.md) |  | 
 
 ### Return type
 
-[**UpsertCRMProductResponse**](UpsertCRMProductResponse.md)
+[**UpsertCrmProductResponse**](UpsertCrmProductResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertDealLineItemAssociation
+
+> UpsertDealLineItemAssociationResponse UpsertDealLineItemAssociation(ctx).CreateCrmDealLineItemAssociationRequestBody(createCrmDealLineItemAssociationRequestBody).Execute()
+
+Upsert deal line item association
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	createCrmDealLineItemAssociationRequestBody := *schematicapi.NewCreateCrmDealLineItemAssociationRequestBody("DealExternalId_example", "LineItemExternalId_example") // CreateCrmDealLineItemAssociationRequestBody | 
+
+	resp, r, err := client.API().CrmAPI.UpsertDealLineItemAssociation(context.Background()).CreateCrmDealLineItemAssociationRequestBody(createCrmDealLineItemAssociationRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.UpsertDealLineItemAssociation``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertDealLineItemAssociation`: UpsertDealLineItemAssociationResponse
+	fmt.Fprintf(os.Stdout, "Response from `CrmAPI.UpsertDealLineItemAssociation`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertDealLineItemAssociationRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **createCrmDealLineItemAssociationRequestBody** | [**CreateCrmDealLineItemAssociationRequestBody**](CreateCrmDealLineItemAssociationRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertDealLineItemAssociationResponse**](UpsertDealLineItemAssociationResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertLineItem
+
+> UpsertLineItemResponse UpsertLineItem(ctx).CreateCrmLineItemRequestBody(createCrmLineItemRequestBody).Execute()
+
+Upsert line item
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	createCrmLineItemRequestBody := *schematicapi.NewCreateCrmLineItemRequestBody(float32(123), "Interval_example", "LineItemExternalId_example", "ProductExternalId_example", int32(123)) // CreateCrmLineItemRequestBody | 
+
+	resp, r, err := client.API().CrmAPI.UpsertLineItem(context.Background()).CreateCrmLineItemRequestBody(createCrmLineItemRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CrmAPI.UpsertLineItem``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertLineItem`: UpsertLineItemResponse
+	fmt.Fprintf(os.Stdout, "Response from `CrmAPI.UpsertLineItem`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertLineItemRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **createCrmLineItemRequestBody** | [**CreateCrmLineItemRequestBody**](CreateCrmLineItemRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertLineItemResponse**](UpsertLineItemResponse.md)
 
 ### Authorization
 

@@ -1,4 +1,4 @@
-# CreateCRMProductRequestBody
+# CreateCrmProductRequestBody
 
 ## Properties
 
@@ -15,179 +15,179 @@ Name | Type | Description | Notes
 
 ## Methods
 
-### NewCreateCRMProductRequestBody
+### NewCreateCrmProductRequestBody
 
-`func NewCreateCRMProductRequestBody(currency string, description string, externalId string, interval string, name string, price float32, quantity int32, sku string, ) *CreateCRMProductRequestBody`
+`func NewCreateCrmProductRequestBody(currency string, description string, externalId string, interval string, name string, price float32, quantity int32, sku string, ) *CreateCrmProductRequestBody`
 
-NewCreateCRMProductRequestBody instantiates a new CreateCRMProductRequestBody object
+NewCreateCrmProductRequestBody instantiates a new CreateCrmProductRequestBody object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewCreateCRMProductRequestBodyWithDefaults
+### NewCreateCrmProductRequestBodyWithDefaults
 
-`func NewCreateCRMProductRequestBodyWithDefaults() *CreateCRMProductRequestBody`
+`func NewCreateCrmProductRequestBodyWithDefaults() *CreateCrmProductRequestBody`
 
-NewCreateCRMProductRequestBodyWithDefaults instantiates a new CreateCRMProductRequestBody object
+NewCreateCrmProductRequestBodyWithDefaults instantiates a new CreateCrmProductRequestBody object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetCurrency
 
-`func (o *CreateCRMProductRequestBody) GetCurrency() string`
+`func (o *CreateCrmProductRequestBody) GetCurrency() string`
 
 GetCurrency returns the Currency field if non-nil, zero value otherwise.
 
 ### GetCurrencyOk
 
-`func (o *CreateCRMProductRequestBody) GetCurrencyOk() (*string, bool)`
+`func (o *CreateCrmProductRequestBody) GetCurrencyOk() (*string, bool)`
 
 GetCurrencyOk returns a tuple with the Currency field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCurrency
 
-`func (o *CreateCRMProductRequestBody) SetCurrency(v string)`
+`func (o *CreateCrmProductRequestBody) SetCurrency(v string)`
 
 SetCurrency sets Currency field to given value.
 
 
 ### GetDescription
 
-`func (o *CreateCRMProductRequestBody) GetDescription() string`
+`func (o *CreateCrmProductRequestBody) GetDescription() string`
 
 GetDescription returns the Description field if non-nil, zero value otherwise.
 
 ### GetDescriptionOk
 
-`func (o *CreateCRMProductRequestBody) GetDescriptionOk() (*string, bool)`
+`func (o *CreateCrmProductRequestBody) GetDescriptionOk() (*string, bool)`
 
 GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDescription
 
-`func (o *CreateCRMProductRequestBody) SetDescription(v string)`
+`func (o *CreateCrmProductRequestBody) SetDescription(v string)`
 
 SetDescription sets Description field to given value.
 
 
 ### GetExternalId
 
-`func (o *CreateCRMProductRequestBody) GetExternalId() string`
+`func (o *CreateCrmProductRequestBody) GetExternalId() string`
 
 GetExternalId returns the ExternalId field if non-nil, zero value otherwise.
 
 ### GetExternalIdOk
 
-`func (o *CreateCRMProductRequestBody) GetExternalIdOk() (*string, bool)`
+`func (o *CreateCrmProductRequestBody) GetExternalIdOk() (*string, bool)`
 
 GetExternalIdOk returns a tuple with the ExternalId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetExternalId
 
-`func (o *CreateCRMProductRequestBody) SetExternalId(v string)`
+`func (o *CreateCrmProductRequestBody) SetExternalId(v string)`
 
 SetExternalId sets ExternalId field to given value.
 
 
 ### GetInterval
 
-`func (o *CreateCRMProductRequestBody) GetInterval() string`
+`func (o *CreateCrmProductRequestBody) GetInterval() string`
 
 GetInterval returns the Interval field if non-nil, zero value otherwise.
 
 ### GetIntervalOk
 
-`func (o *CreateCRMProductRequestBody) GetIntervalOk() (*string, bool)`
+`func (o *CreateCrmProductRequestBody) GetIntervalOk() (*string, bool)`
 
 GetIntervalOk returns a tuple with the Interval field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetInterval
 
-`func (o *CreateCRMProductRequestBody) SetInterval(v string)`
+`func (o *CreateCrmProductRequestBody) SetInterval(v string)`
 
 SetInterval sets Interval field to given value.
 
 
 ### GetName
 
-`func (o *CreateCRMProductRequestBody) GetName() string`
+`func (o *CreateCrmProductRequestBody) GetName() string`
 
 GetName returns the Name field if non-nil, zero value otherwise.
 
 ### GetNameOk
 
-`func (o *CreateCRMProductRequestBody) GetNameOk() (*string, bool)`
+`func (o *CreateCrmProductRequestBody) GetNameOk() (*string, bool)`
 
 GetNameOk returns a tuple with the Name field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetName
 
-`func (o *CreateCRMProductRequestBody) SetName(v string)`
+`func (o *CreateCrmProductRequestBody) SetName(v string)`
 
 SetName sets Name field to given value.
 
 
 ### GetPrice
 
-`func (o *CreateCRMProductRequestBody) GetPrice() float32`
+`func (o *CreateCrmProductRequestBody) GetPrice() float32`
 
 GetPrice returns the Price field if non-nil, zero value otherwise.
 
 ### GetPriceOk
 
-`func (o *CreateCRMProductRequestBody) GetPriceOk() (*float32, bool)`
+`func (o *CreateCrmProductRequestBody) GetPriceOk() (*float32, bool)`
 
 GetPriceOk returns a tuple with the Price field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPrice
 
-`func (o *CreateCRMProductRequestBody) SetPrice(v float32)`
+`func (o *CreateCrmProductRequestBody) SetPrice(v float32)`
 
 SetPrice sets Price field to given value.
 
 
 ### GetQuantity
 
-`func (o *CreateCRMProductRequestBody) GetQuantity() int32`
+`func (o *CreateCrmProductRequestBody) GetQuantity() int32`
 
 GetQuantity returns the Quantity field if non-nil, zero value otherwise.
 
 ### GetQuantityOk
 
-`func (o *CreateCRMProductRequestBody) GetQuantityOk() (*int32, bool)`
+`func (o *CreateCrmProductRequestBody) GetQuantityOk() (*int32, bool)`
 
 GetQuantityOk returns a tuple with the Quantity field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetQuantity
 
-`func (o *CreateCRMProductRequestBody) SetQuantity(v int32)`
+`func (o *CreateCrmProductRequestBody) SetQuantity(v int32)`
 
 SetQuantity sets Quantity field to given value.
 
 
 ### GetSku
 
-`func (o *CreateCRMProductRequestBody) GetSku() string`
+`func (o *CreateCrmProductRequestBody) GetSku() string`
 
 GetSku returns the Sku field if non-nil, zero value otherwise.
 
 ### GetSkuOk
 
-`func (o *CreateCRMProductRequestBody) GetSkuOk() (*string, bool)`
+`func (o *CreateCrmProductRequestBody) GetSkuOk() (*string, bool)`
 
 GetSkuOk returns a tuple with the Sku field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetSku
 
-`func (o *CreateCRMProductRequestBody) SetSku(v string)`
+`func (o *CreateCrmProductRequestBody) SetSku(v string)`
 
 SetSku sets Sku field to given value.
 

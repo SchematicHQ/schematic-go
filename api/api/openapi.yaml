@@ -1321,6 +1321,76 @@ paths:
       summary: Lookup company
       tags:
       - companies
+  /company-crm-deals:
+    get:
+      operationId: getActiveDeals
+      parameters:
+      - explode: true
+        in: query
+        name: company_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: deal_stage
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetActiveDealsResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Get active deals
+      tags:
+      - companies
   /company-memberships:
     get:
       operationId: listCompanyMemberships
@@ -2039,21 +2109,21 @@ paths:
       summary: Upsert company trait
       tags:
       - companies
-  /crm/deals/upsert:
+  /crm/associations/deal-line-item:
     post:
-      operationId: upsertCRMDeal
+      operationId: upsertDealLineItemAssociation
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCRMDealRequestBody'
+              $ref: '#/components/schemas/CreateCrmDealLineItemAssociationRequestBody'
         required: true
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpsertCRMDealResponse'
+                $ref: '#/components/schemas/UpsertDealLineItemAssociationResponse'
           description: Created
         "400":
           content:
@@ -2079,12 +2149,98 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Upsert c r m deal
+      summary: Upsert deal line item association
+      tags:
+      - crm
+  /crm/deal-line-item/upsert:
+    post:
+      operationId: upsertLineItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCrmLineItemRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertLineItemResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Upsert line item
+      tags:
+      - crm
+  /crm/deals/upsert:
+    post:
+      operationId: upsertCrmDeal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCrmDealRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertCrmDealResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Upsert crm deal
       tags:
       - crm
   /crm/products:
     get:
-      operationId: listCRMProducts
+      operationId: listCrmProducts
       parameters:
       - explode: true
         in: query
@@ -2125,7 +2281,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListCRMProductsResponse'
+                $ref: '#/components/schemas/ListCrmProductsResponse'
           description: OK
         "400":
           content:
@@ -2151,24 +2307,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: List c r m products
+      summary: List crm products
       tags:
       - crm
   /crm/products/upsert:
     post:
-      operationId: upsertCRMProduct
+      operationId: upsertCrmProduct
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCRMProductRequestBody'
+              $ref: '#/components/schemas/CreateCrmProductRequestBody'
         required: true
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpsertCRMProductResponse'
+                $ref: '#/components/schemas/UpsertCrmProductResponse'
           description: Created
         "400":
           content:
@@ -2194,7 +2350,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: Upsert c r m product
+      summary: Upsert crm product
       tags:
       - crm
   /entity-key-definitions:
@@ -7487,110 +7643,6 @@ components:
       - updated_at
       title: BillingSubscriptionResponseData
       type: object
-    CRMDealResponseData:
-      description: The created resource
-      example:
-        deal_external_id: deal_external_id
-        account_id: account_id
-        company_external_id: company_external_id
-        environment_id: environment_id
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        name: name
-        created_at: 2000-01-23T04:56:07.000+00:00
-        deal_id: deal_id
-        deleted_at: 2000-01-23T04:56:07.000+00:00
-        product_external_id: product_external_id
-      properties:
-        account_id:
-          type: string
-        company_external_id:
-          nullable: true
-          type: string
-        created_at:
-          format: date-time
-          type: string
-        deal_external_id:
-          type: string
-        deal_id:
-          type: string
-        deleted_at:
-          format: date-time
-          nullable: true
-          type: string
-        environment_id:
-          type: string
-        name:
-          nullable: true
-          type: string
-        product_external_id:
-          nullable: true
-          type: string
-        updated_at:
-          format: date-time
-          type: string
-      required:
-      - account_id
-      - created_at
-      - deal_external_id
-      - deal_id
-      - environment_id
-      - updated_at
-      title: CRMDealResponseData
-      type: object
-    CRMProductResponseData:
-      description: The created resource
-      example:
-        account_id: account_id
-        quantity: 6.027456183070403
-        environment_id: environment_id
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        price: 0.8008281904610115
-        product_id: product_id
-        name: name
-        created_at: 2000-01-23T04:56:07.000+00:00
-        currency: currency
-        external_id: external_id
-        deleted_at: 2000-01-23T04:56:07.000+00:00
-      properties:
-        account_id:
-          type: string
-        created_at:
-          format: date-time
-          type: string
-        currency:
-          type: string
-        deleted_at:
-          format: date-time
-          nullable: true
-          type: string
-        environment_id:
-          type: string
-        external_id:
-          type: string
-        name:
-          type: string
-        price:
-          type: number
-        product_id:
-          type: string
-        quantity:
-          type: number
-        updated_at:
-          format: date-time
-          type: string
-      required:
-      - account_id
-      - created_at
-      - currency
-      - environment_id
-      - external_id
-      - name
-      - price
-      - product_id
-      - quantity
-      - updated_at
-      title: CRMProductResponseData
-      type: object
     CheckFlagOutputWithFlagKey:
       example:
         rule_id: rule_id
@@ -7695,6 +7747,60 @@ components:
       required:
       - flags
       title: CheckFlagsResponseData
+      type: object
+    CompanyCrmDealsResponseData:
+      example:
+        deal_arr: 0.8008281904610115
+        deal_external_id: deal_external_id
+        deal_mrr: 6.027456183070403
+        deal_name: deal_name
+        line_items:
+        - quantity: 5
+          total_discount: 7.061401241503109
+          created_at: 2000-01-23T04:56:07.000+00:00
+          description: description
+          term_month: 2
+          discount_percentage: 1.4658129805029452
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+          billing_frequency: billing_frequency
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 5.962133916683182
+          name: name
+          currency: currency
+          id: id
+        - quantity: 5
+          total_discount: 7.061401241503109
+          created_at: 2000-01-23T04:56:07.000+00:00
+          description: description
+          term_month: 2
+          discount_percentage: 1.4658129805029452
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+          billing_frequency: billing_frequency
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 5.962133916683182
+          name: name
+          currency: currency
+          id: id
+      properties:
+        deal_arr:
+          nullable: true
+          type: number
+        deal_external_id:
+          type: string
+        deal_mrr:
+          nullable: true
+          type: number
+        deal_name:
+          nullable: true
+          type: string
+        line_items:
+          items:
+            $ref: '#/components/schemas/CrmDealLineItem'
+          type: array
+      required:
+      - deal_external_id
+      - line_items
+      title: CompanyCrmDealsResponseData
       type: object
     CompanyDetailResponseData:
       example:
@@ -8257,70 +8363,6 @@ components:
       - subscription_external_id
       title: CreateBillingSubscriptionsRequestBody
       type: object
-    CreateCRMDealRequestBody:
-      example:
-        crm_product_id: crm_product_id
-        deal_external_id: deal_external_id
-        deal_name: deal_name
-        crm_company_id: crm_company_id
-        crm_company_key: crm_company_key
-      properties:
-        crm_company_id:
-          nullable: true
-          type: string
-        crm_company_key:
-          type: string
-        crm_product_id:
-          nullable: true
-          type: string
-        deal_external_id:
-          type: string
-        deal_name:
-          nullable: true
-          type: string
-      required:
-      - crm_company_key
-      - deal_external_id
-      title: CreateCRMDealRequestBody
-      type: object
-    CreateCRMProductRequestBody:
-      example:
-        quantity: 6
-        price: 0.8008281904610115
-        name: name
-        description: description
-        currency: currency
-        external_id: external_id
-        interval: interval
-        sku: sku
-      properties:
-        currency:
-          type: string
-        description:
-          type: string
-        external_id:
-          type: string
-        interval:
-          type: string
-        name:
-          type: string
-        price:
-          type: number
-        quantity:
-          type: integer
-        sku:
-          type: string
-      required:
-      - currency
-      - description
-      - external_id
-      - interval
-      - name
-      - price
-      - quantity
-      - sku
-      title: CreateCRMProductRequestBody
-      type: object
     CreateCompanyOverrideRequestBody:
       example:
         feature_id: feature_id
@@ -8363,6 +8405,138 @@ components:
       - feature_id
       - value_type
       title: CreateCompanyOverrideRequestBody
+      type: object
+    CreateCrmDealLineItemAssociationRequestBody:
+      example:
+        deal_external_id: deal_external_id
+        line_item_external_id: line_item_external_id
+      properties:
+        deal_external_id:
+          type: string
+        line_item_external_id:
+          type: string
+      required:
+      - deal_external_id
+      - line_item_external_id
+      title: CreateCrmDealLineItemAssociationRequestBody
+      type: object
+    CreateCrmDealRequestBody:
+      example:
+        arr: 0.8008281904610115
+        crm_product_id: crm_product_id
+        deal_external_id: deal_external_id
+        deal_stage: deal_stage
+        deal_name: deal_name
+        crm_company_id: crm_company_id
+        crm_company_key: crm_company_key
+        crm_type: crm_type
+        mrr: 6.027456183070403
+      properties:
+        arr:
+          nullable: true
+          type: number
+        crm_company_id:
+          nullable: true
+          type: string
+        crm_company_key:
+          type: string
+        crm_product_id:
+          nullable: true
+          type: string
+        crm_type:
+          type: string
+        deal_external_id:
+          type: string
+        deal_name:
+          nullable: true
+          type: string
+        deal_stage:
+          nullable: true
+          type: string
+        mrr:
+          nullable: true
+          type: number
+      required:
+      - crm_company_key
+      - crm_type
+      - deal_external_id
+      title: CreateCrmDealRequestBody
+      type: object
+    CreateCrmLineItemRequestBody:
+      example:
+        amount: 6.027456183070403
+        quantity: 5
+        total_discount: 5.637376656633329
+        TermMonth: 0
+        interval: interval
+        discount_percentage: 1.4658129805029452
+        line_item_external_id: line_item_external_id
+        product_external_id: product_external_id
+      properties:
+        TermMonth:
+          nullable: true
+          type: integer
+        amount:
+          type: number
+        discount_percentage:
+          nullable: true
+          type: number
+        interval:
+          type: string
+        line_item_external_id:
+          type: string
+        product_external_id:
+          type: string
+        quantity:
+          type: integer
+        total_discount:
+          nullable: true
+          type: number
+      required:
+      - amount
+      - interval
+      - line_item_external_id
+      - product_external_id
+      - quantity
+      title: CreateCrmLineItemRequestBody
+      type: object
+    CreateCrmProductRequestBody:
+      example:
+        quantity: 6
+        price: 0.8008281904610115
+        name: name
+        description: description
+        currency: currency
+        external_id: external_id
+        interval: interval
+        sku: sku
+      properties:
+        currency:
+          type: string
+        description:
+          type: string
+        external_id:
+          type: string
+        interval:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        sku:
+          type: string
+      required:
+      - currency
+      - description
+      - external_id
+      - interval
+      - name
+      - price
+      - quantity
+      - sku
+      title: CreateCrmProductRequestBody
       type: object
     CreateEntityTraitDefinitionRequestBody:
       example:
@@ -8952,6 +9126,217 @@ components:
       - request_types
       - url
       title: CreateWebhookRequestBody
+      type: object
+    CrmDealLineItem:
+      example:
+        quantity: 5
+        total_discount: 7.061401241503109
+        created_at: 2000-01-23T04:56:07.000+00:00
+        description: description
+        term_month: 2
+        discount_percentage: 1.4658129805029452
+        deleted_at: 2000-01-23T04:56:07.000+00:00
+        billing_frequency: billing_frequency
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        price: 5.962133916683182
+        name: name
+        currency: currency
+        id: id
+      properties:
+        billing_frequency:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        currency:
+          type: string
+        deleted_at:
+          format: date-time
+          nullable: true
+          type: string
+        description:
+          type: string
+        discount_percentage:
+          nullable: true
+          type: number
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        term_month:
+          nullable: true
+          type: integer
+        total_discount:
+          nullable: true
+          type: number
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - billing_frequency
+      - created_at
+      - currency
+      - description
+      - id
+      - name
+      - price
+      - quantity
+      - updated_at
+      title: CrmDealLineItem
+      type: object
+    CrmDealResponseData:
+      description: The created resource
+      example:
+        arr: 0.8008281904610115
+        deal_external_id: deal_external_id
+        account_id: account_id
+        company_external_id: company_external_id
+        environment_id: environment_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        deal_id: deal_id
+        mrr: 6.027456183070403
+        deleted_at: 2000-01-23T04:56:07.000+00:00
+        product_external_id: product_external_id
+      properties:
+        account_id:
+          type: string
+        arr:
+          nullable: true
+          type: number
+        company_external_id:
+          nullable: true
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        deal_external_id:
+          type: string
+        deal_id:
+          type: string
+        deleted_at:
+          format: date-time
+          nullable: true
+          type: string
+        environment_id:
+          type: string
+        mrr:
+          nullable: true
+          type: number
+        name:
+          nullable: true
+          type: string
+        product_external_id:
+          nullable: true
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - account_id
+      - created_at
+      - deal_external_id
+      - deal_id
+      - environment_id
+      - updated_at
+      title: CrmDealResponseData
+      type: object
+    CrmLineItemResponseData:
+      description: The created resource
+      example:
+        account_id: account_id
+        environment_id: environment_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        created_at: 2000-01-23T04:56:07.000+00:00
+        deal_id: deal_id
+        deleted_at: 2000-01-23T04:56:07.000+00:00
+        product_external_id: product_external_id
+      properties:
+        account_id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        deal_id:
+          nullable: true
+          type: string
+        deleted_at:
+          format: date-time
+          nullable: true
+          type: string
+        environment_id:
+          type: string
+        product_external_id:
+          nullable: true
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - account_id
+      - created_at
+      - environment_id
+      - updated_at
+      title: CrmLineItemResponseData
+      type: object
+    CrmProductResponseData:
+      description: The created resource
+      example:
+        account_id: account_id
+        quantity: 6.027456183070403
+        environment_id: environment_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        price: 0.8008281904610115
+        product_id: product_id
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        currency: currency
+        external_id: external_id
+        deleted_at: 2000-01-23T04:56:07.000+00:00
+      properties:
+        account_id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        currency:
+          type: string
+        deleted_at:
+          format: date-time
+          nullable: true
+          type: string
+        environment_id:
+          type: string
+        external_id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        product_id:
+          type: string
+        quantity:
+          type: number
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - account_id
+      - created_at
+      - currency
+      - environment_id
+      - external_id
+      - name
+      - price
+      - product_id
+      - quantity
+      - updated_at
+      title: CrmProductResponseData
       type: object
     DeleteResponse:
       example:
@@ -23912,7 +24297,7 @@ components:
           nullable: true
           type: string
         trait:
-          description: DealName of the trait to update
+          description: Name of the trait to update
           type: string
         update_only:
           description: "Unless this is set, the company or user will be created if\
@@ -25846,6 +26231,110 @@ components:
       - params
       title: LookupCompanyResponse
       type: object
+    GetActiveDealsParams:
+      description: Input parameters
+      example:
+        deal_stage: deal_stage
+        company_id: company_id
+        offset: 0
+        limit: 100
+      properties:
+        company_id:
+          type: string
+        deal_stage:
+          type: string
+        limit:
+          example: 100
+          type: integer
+        offset:
+          example: 0
+          type: integer
+      title: GetActiveDealsParams
+      type: object
+    GetActiveDealsResponse:
+      example:
+        data:
+        - deal_arr: 0.8008281904610115
+          deal_external_id: deal_external_id
+          deal_mrr: 6.027456183070403
+          deal_name: deal_name
+          line_items:
+          - quantity: 5
+            total_discount: 7.061401241503109
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            term_month: 2
+            discount_percentage: 1.4658129805029452
+            deleted_at: 2000-01-23T04:56:07.000+00:00
+            billing_frequency: billing_frequency
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 5.962133916683182
+            name: name
+            currency: currency
+            id: id
+          - quantity: 5
+            total_discount: 7.061401241503109
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            term_month: 2
+            discount_percentage: 1.4658129805029452
+            deleted_at: 2000-01-23T04:56:07.000+00:00
+            billing_frequency: billing_frequency
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 5.962133916683182
+            name: name
+            currency: currency
+            id: id
+        - deal_arr: 0.8008281904610115
+          deal_external_id: deal_external_id
+          deal_mrr: 6.027456183070403
+          deal_name: deal_name
+          line_items:
+          - quantity: 5
+            total_discount: 7.061401241503109
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            term_month: 2
+            discount_percentage: 1.4658129805029452
+            deleted_at: 2000-01-23T04:56:07.000+00:00
+            billing_frequency: billing_frequency
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 5.962133916683182
+            name: name
+            currency: currency
+            id: id
+          - quantity: 5
+            total_discount: 7.061401241503109
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            term_month: 2
+            discount_percentage: 1.4658129805029452
+            deleted_at: 2000-01-23T04:56:07.000+00:00
+            billing_frequency: billing_frequency
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 5.962133916683182
+            name: name
+            currency: currency
+            id: id
+        params:
+          deal_stage: deal_stage
+          company_id: company_id
+          offset: 0
+          limit: 100
+      properties:
+        data:
+          description: The returned resources
+          items:
+            $ref: '#/components/schemas/CompanyCrmDealsResponseData'
+          title: GetActiveDealsResponseData
+          type: array
+        params:
+          $ref: '#/components/schemas/GetActiveDealsParams'
+      required:
+      - data
+      - params
+      title: GetActiveDealsResponse
+      type: object
     ListCompanyMembershipsParams:
       description: Input parameters
       example:
@@ -26973,9 +27462,56 @@ components:
       - params
       title: UpsertCompanyTraitResponse
       type: object
-    UpsertCRMDealResponse:
+    UpsertDealLineItemAssociationResponse:
       example:
         data:
+          account_id: account_id
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          deal_id: deal_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+          product_external_id: product_external_id
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/CrmLineItemResponseData'
+        params:
+          description: Input parameters
+          title: UpsertDealLineItemAssociationParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpsertDealLineItemAssociationResponse
+      type: object
+    UpsertLineItemResponse:
+      example:
+        data:
+          account_id: account_id
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          deal_id: deal_id
+          deleted_at: 2000-01-23T04:56:07.000+00:00
+          product_external_id: product_external_id
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/CrmLineItemResponseData'
+        params:
+          description: Input parameters
+          title: UpsertLineItemParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpsertLineItemResponse
+      type: object
+    UpsertCrmDealResponse:
+      example:
+        data:
+          arr: 0.8008281904610115
           deal_external_id: deal_external_id
           account_id: account_id
           company_external_id: company_external_id
@@ -26984,22 +27520,23 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           deal_id: deal_id
+          mrr: 6.027456183070403
           deleted_at: 2000-01-23T04:56:07.000+00:00
           product_external_id: product_external_id
         params: "{}"
       properties:
         data:
-          $ref: '#/components/schemas/CRMDealResponseData'
+          $ref: '#/components/schemas/CrmDealResponseData'
         params:
           description: Input parameters
-          title: UpsertCRMDealParams
+          title: UpsertCrmDealParams
           type: object
       required:
       - data
       - params
-      title: UpsertCRMDealResponse
+      title: UpsertCrmDealResponse
       type: object
-    ListCRMProductsParams:
+    ListCrmProductsParams:
       description: Input parameters
       example:
         offset: 0
@@ -27021,9 +27558,9 @@ components:
         offset:
           example: 0
           type: integer
-      title: ListCRMProductsParams
+      title: ListCrmProductsParams
       type: object
-    ListCRMProductsResponse:
+    ListCrmProductsResponse:
       example:
         data:
         - account_id: account_id
@@ -27059,17 +27596,17 @@ components:
         data:
           description: The returned resources
           items:
-            $ref: '#/components/schemas/CRMProductResponseData'
-          title: ListCRMProductsResponseData
+            $ref: '#/components/schemas/CrmProductResponseData'
+          title: ListCrmProductsResponseData
           type: array
         params:
-          $ref: '#/components/schemas/ListCRMProductsParams'
+          $ref: '#/components/schemas/ListCrmProductsParams'
       required:
       - data
       - params
-      title: ListCRMProductsResponse
+      title: ListCrmProductsResponse
       type: object
-    UpsertCRMProductResponse:
+    UpsertCrmProductResponse:
       example:
         data:
           account_id: account_id
@@ -27086,15 +27623,15 @@ components:
         params: "{}"
       properties:
         data:
-          $ref: '#/components/schemas/CRMProductResponseData'
+          $ref: '#/components/schemas/CrmProductResponseData'
         params:
           description: Input parameters
-          title: UpsertCRMProductParams
+          title: UpsertCrmProductParams
           type: object
       required:
       - data
       - params
-      title: UpsertCRMProductResponse
+      title: UpsertCrmProductResponse
       type: object
     ListEntityKeyDefinitionsParams:
       description: Input parameters

@@ -1,67 +1,67 @@
-# UpsertCrmProductResponse
+# UpsertDealLineItemAssociationResponse
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**CrmProductResponseData**](CrmProductResponseData.md) |  | 
+**Data** | [**CrmLineItemResponseData**](CrmLineItemResponseData.md) |  | 
 **Params** | **map[string]interface{}** | Input parameters | 
 
 ## Methods
 
-### NewUpsertCrmProductResponse
+### NewUpsertDealLineItemAssociationResponse
 
-`func NewUpsertCrmProductResponse(data CrmProductResponseData, params map[string]interface{}, ) *UpsertCrmProductResponse`
+`func NewUpsertDealLineItemAssociationResponse(data CrmLineItemResponseData, params map[string]interface{}, ) *UpsertDealLineItemAssociationResponse`
 
-NewUpsertCrmProductResponse instantiates a new UpsertCrmProductResponse object
+NewUpsertDealLineItemAssociationResponse instantiates a new UpsertDealLineItemAssociationResponse object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewUpsertCrmProductResponseWithDefaults
+### NewUpsertDealLineItemAssociationResponseWithDefaults
 
-`func NewUpsertCrmProductResponseWithDefaults() *UpsertCrmProductResponse`
+`func NewUpsertDealLineItemAssociationResponseWithDefaults() *UpsertDealLineItemAssociationResponse`
 
-NewUpsertCrmProductResponseWithDefaults instantiates a new UpsertCrmProductResponse object
+NewUpsertDealLineItemAssociationResponseWithDefaults instantiates a new UpsertDealLineItemAssociationResponse object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *UpsertCrmProductResponse) GetData() CrmProductResponseData`
+`func (o *UpsertDealLineItemAssociationResponse) GetData() CrmLineItemResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *UpsertCrmProductResponse) GetDataOk() (*CrmProductResponseData, bool)`
+`func (o *UpsertDealLineItemAssociationResponse) GetDataOk() (*CrmLineItemResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *UpsertCrmProductResponse) SetData(v CrmProductResponseData)`
+`func (o *UpsertDealLineItemAssociationResponse) SetData(v CrmLineItemResponseData)`
 
 SetData sets Data field to given value.
 
 
 ### GetParams
 
-`func (o *UpsertCrmProductResponse) GetParams() map[string]interface{}`
+`func (o *UpsertDealLineItemAssociationResponse) GetParams() map[string]interface{}`
 
 GetParams returns the Params field if non-nil, zero value otherwise.
 
 ### GetParamsOk
 
-`func (o *UpsertCrmProductResponse) GetParamsOk() (*map[string]interface{}, bool)`
+`func (o *UpsertDealLineItemAssociationResponse) GetParamsOk() (*map[string]interface{}, bool)`
 
 GetParamsOk returns a tuple with the Params field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetParams
 
-`func (o *UpsertCrmProductResponse) SetParams(v map[string]interface{})`
+`func (o *UpsertDealLineItemAssociationResponse) SetParams(v map[string]interface{})`
 
 SetParams sets Params field to given value.
 

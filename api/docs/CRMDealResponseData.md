@@ -1,295 +1,367 @@
-# CRMDealResponseData
+# CrmDealResponseData
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **AccountId** | **string** |  | 
+**Arr** | Pointer to **NullableFloat32** |  | [optional] 
 **CompanyExternalId** | Pointer to **NullableString** |  | [optional] 
 **CreatedAt** | **time.Time** |  | 
 **DealExternalId** | **string** |  | 
 **DealId** | **string** |  | 
 **DeletedAt** | Pointer to **NullableTime** |  | [optional] 
 **EnvironmentId** | **string** |  | 
+**Mrr** | Pointer to **NullableFloat32** |  | [optional] 
 **Name** | Pointer to **NullableString** |  | [optional] 
 **ProductExternalId** | Pointer to **NullableString** |  | [optional] 
 **UpdatedAt** | **time.Time** |  | 
 
 ## Methods
 
-### NewCRMDealResponseData
+### NewCrmDealResponseData
 
-`func NewCRMDealResponseData(accountId string, createdAt time.Time, dealExternalId string, dealId string, environmentId string, updatedAt time.Time, ) *CRMDealResponseData`
+`func NewCrmDealResponseData(accountId string, createdAt time.Time, dealExternalId string, dealId string, environmentId string, updatedAt time.Time, ) *CrmDealResponseData`
 
-NewCRMDealResponseData instantiates a new CRMDealResponseData object
+NewCrmDealResponseData instantiates a new CrmDealResponseData object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewCRMDealResponseDataWithDefaults
+### NewCrmDealResponseDataWithDefaults
 
-`func NewCRMDealResponseDataWithDefaults() *CRMDealResponseData`
+`func NewCrmDealResponseDataWithDefaults() *CrmDealResponseData`
 
-NewCRMDealResponseDataWithDefaults instantiates a new CRMDealResponseData object
+NewCrmDealResponseDataWithDefaults instantiates a new CrmDealResponseData object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetAccountId
 
-`func (o *CRMDealResponseData) GetAccountId() string`
+`func (o *CrmDealResponseData) GetAccountId() string`
 
 GetAccountId returns the AccountId field if non-nil, zero value otherwise.
 
 ### GetAccountIdOk
 
-`func (o *CRMDealResponseData) GetAccountIdOk() (*string, bool)`
+`func (o *CrmDealResponseData) GetAccountIdOk() (*string, bool)`
 
 GetAccountIdOk returns a tuple with the AccountId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAccountId
 
-`func (o *CRMDealResponseData) SetAccountId(v string)`
+`func (o *CrmDealResponseData) SetAccountId(v string)`
 
 SetAccountId sets AccountId field to given value.
 
 
+### GetArr
+
+`func (o *CrmDealResponseData) GetArr() float32`
+
+GetArr returns the Arr field if non-nil, zero value otherwise.
+
+### GetArrOk
+
+`func (o *CrmDealResponseData) GetArrOk() (*float32, bool)`
+
+GetArrOk returns a tuple with the Arr field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetArr
+
+`func (o *CrmDealResponseData) SetArr(v float32)`
+
+SetArr sets Arr field to given value.
+
+### HasArr
+
+`func (o *CrmDealResponseData) HasArr() bool`
+
+HasArr returns a boolean if a field has been set.
+
+### SetArrNil
+
+`func (o *CrmDealResponseData) SetArrNil(b bool)`
+
+ SetArrNil sets the value for Arr to be an explicit nil
+
+### UnsetArr
+`func (o *CrmDealResponseData) UnsetArr()`
+
+UnsetArr ensures that no value is present for Arr, not even an explicit nil
 ### GetCompanyExternalId
 
-`func (o *CRMDealResponseData) GetCompanyExternalId() string`
+`func (o *CrmDealResponseData) GetCompanyExternalId() string`
 
 GetCompanyExternalId returns the CompanyExternalId field if non-nil, zero value otherwise.
 
 ### GetCompanyExternalIdOk
 
-`func (o *CRMDealResponseData) GetCompanyExternalIdOk() (*string, bool)`
+`func (o *CrmDealResponseData) GetCompanyExternalIdOk() (*string, bool)`
 
 GetCompanyExternalIdOk returns a tuple with the CompanyExternalId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCompanyExternalId
 
-`func (o *CRMDealResponseData) SetCompanyExternalId(v string)`
+`func (o *CrmDealResponseData) SetCompanyExternalId(v string)`
 
 SetCompanyExternalId sets CompanyExternalId field to given value.
 
 ### HasCompanyExternalId
 
-`func (o *CRMDealResponseData) HasCompanyExternalId() bool`
+`func (o *CrmDealResponseData) HasCompanyExternalId() bool`
 
 HasCompanyExternalId returns a boolean if a field has been set.
 
 ### SetCompanyExternalIdNil
 
-`func (o *CRMDealResponseData) SetCompanyExternalIdNil(b bool)`
+`func (o *CrmDealResponseData) SetCompanyExternalIdNil(b bool)`
 
  SetCompanyExternalIdNil sets the value for CompanyExternalId to be an explicit nil
 
 ### UnsetCompanyExternalId
-`func (o *CRMDealResponseData) UnsetCompanyExternalId()`
+`func (o *CrmDealResponseData) UnsetCompanyExternalId()`
 
 UnsetCompanyExternalId ensures that no value is present for CompanyExternalId, not even an explicit nil
 ### GetCreatedAt
 
-`func (o *CRMDealResponseData) GetCreatedAt() time.Time`
+`func (o *CrmDealResponseData) GetCreatedAt() time.Time`
 
 GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
 
 ### GetCreatedAtOk
 
-`func (o *CRMDealResponseData) GetCreatedAtOk() (*time.Time, bool)`
+`func (o *CrmDealResponseData) GetCreatedAtOk() (*time.Time, bool)`
 
 GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCreatedAt
 
-`func (o *CRMDealResponseData) SetCreatedAt(v time.Time)`
+`func (o *CrmDealResponseData) SetCreatedAt(v time.Time)`
 
 SetCreatedAt sets CreatedAt field to given value.
 
 
 ### GetDealExternalId
 
-`func (o *CRMDealResponseData) GetDealExternalId() string`
+`func (o *CrmDealResponseData) GetDealExternalId() string`
 
 GetDealExternalId returns the DealExternalId field if non-nil, zero value otherwise.
 
 ### GetDealExternalIdOk
 
-`func (o *CRMDealResponseData) GetDealExternalIdOk() (*string, bool)`
+`func (o *CrmDealResponseData) GetDealExternalIdOk() (*string, bool)`
 
 GetDealExternalIdOk returns a tuple with the DealExternalId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDealExternalId
 
-`func (o *CRMDealResponseData) SetDealExternalId(v string)`
+`func (o *CrmDealResponseData) SetDealExternalId(v string)`
 
 SetDealExternalId sets DealExternalId field to given value.
 
 
 ### GetDealId
 
-`func (o *CRMDealResponseData) GetDealId() string`
+`func (o *CrmDealResponseData) GetDealId() string`
 
 GetDealId returns the DealId field if non-nil, zero value otherwise.
 
 ### GetDealIdOk
 
-`func (o *CRMDealResponseData) GetDealIdOk() (*string, bool)`
+`func (o *CrmDealResponseData) GetDealIdOk() (*string, bool)`
 
 GetDealIdOk returns a tuple with the DealId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDealId
 
-`func (o *CRMDealResponseData) SetDealId(v string)`
+`func (o *CrmDealResponseData) SetDealId(v string)`
 
 SetDealId sets DealId field to given value.
 
 
 ### GetDeletedAt
 
-`func (o *CRMDealResponseData) GetDeletedAt() time.Time`
+`func (o *CrmDealResponseData) GetDeletedAt() time.Time`
 
 GetDeletedAt returns the DeletedAt field if non-nil, zero value otherwise.
 
 ### GetDeletedAtOk
 
-`func (o *CRMDealResponseData) GetDeletedAtOk() (*time.Time, bool)`
+`func (o *CrmDealResponseData) GetDeletedAtOk() (*time.Time, bool)`
 
 GetDeletedAtOk returns a tuple with the DeletedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDeletedAt
 
-`func (o *CRMDealResponseData) SetDeletedAt(v time.Time)`
+`func (o *CrmDealResponseData) SetDeletedAt(v time.Time)`
 
 SetDeletedAt sets DeletedAt field to given value.
 
 ### HasDeletedAt
 
-`func (o *CRMDealResponseData) HasDeletedAt() bool`
+`func (o *CrmDealResponseData) HasDeletedAt() bool`
 
 HasDeletedAt returns a boolean if a field has been set.
 
 ### SetDeletedAtNil
 
-`func (o *CRMDealResponseData) SetDeletedAtNil(b bool)`
+`func (o *CrmDealResponseData) SetDeletedAtNil(b bool)`
 
  SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
 
 ### UnsetDeletedAt
-`func (o *CRMDealResponseData) UnsetDeletedAt()`
+`func (o *CrmDealResponseData) UnsetDeletedAt()`
 
 UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
 ### GetEnvironmentId
 
-`func (o *CRMDealResponseData) GetEnvironmentId() string`
+`func (o *CrmDealResponseData) GetEnvironmentId() string`
 
 GetEnvironmentId returns the EnvironmentId field if non-nil, zero value otherwise.
 
 ### GetEnvironmentIdOk
 
-`func (o *CRMDealResponseData) GetEnvironmentIdOk() (*string, bool)`
+`func (o *CrmDealResponseData) GetEnvironmentIdOk() (*string, bool)`
 
 GetEnvironmentIdOk returns a tuple with the EnvironmentId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetEnvironmentId
 
-`func (o *CRMDealResponseData) SetEnvironmentId(v string)`
+`func (o *CrmDealResponseData) SetEnvironmentId(v string)`
 
 SetEnvironmentId sets EnvironmentId field to given value.
 
 
+### GetMrr
+
+`func (o *CrmDealResponseData) GetMrr() float32`
+
+GetMrr returns the Mrr field if non-nil, zero value otherwise.
+
+### GetMrrOk
+
+`func (o *CrmDealResponseData) GetMrrOk() (*float32, bool)`
+
+GetMrrOk returns a tuple with the Mrr field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMrr
+
+`func (o *CrmDealResponseData) SetMrr(v float32)`
+
+SetMrr sets Mrr field to given value.
+
+### HasMrr
+
+`func (o *CrmDealResponseData) HasMrr() bool`
+
+HasMrr returns a boolean if a field has been set.
+
+### SetMrrNil
+
+`func (o *CrmDealResponseData) SetMrrNil(b bool)`
+
+ SetMrrNil sets the value for Mrr to be an explicit nil
+
+### UnsetMrr
+`func (o *CrmDealResponseData) UnsetMrr()`
+
+UnsetMrr ensures that no value is present for Mrr, not even an explicit nil
 ### GetName
 
-`func (o *CRMDealResponseData) GetName() string`
+`func (o *CrmDealResponseData) GetName() string`
 
 GetName returns the Name field if non-nil, zero value otherwise.
 
 ### GetNameOk
 
-`func (o *CRMDealResponseData) GetNameOk() (*string, bool)`
+`func (o *CrmDealResponseData) GetNameOk() (*string, bool)`
 
 GetNameOk returns a tuple with the Name field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetName
 
-`func (o *CRMDealResponseData) SetName(v string)`
+`func (o *CrmDealResponseData) SetName(v string)`
 
 SetName sets Name field to given value.
 
 ### HasName
 
-`func (o *CRMDealResponseData) HasName() bool`
+`func (o *CrmDealResponseData) HasName() bool`
 
 HasName returns a boolean if a field has been set.
 
 ### SetNameNil
 
-`func (o *CRMDealResponseData) SetNameNil(b bool)`
+`func (o *CrmDealResponseData) SetNameNil(b bool)`
 
  SetNameNil sets the value for Name to be an explicit nil
 
 ### UnsetName
-`func (o *CRMDealResponseData) UnsetName()`
+`func (o *CrmDealResponseData) UnsetName()`
 
 UnsetName ensures that no value is present for Name, not even an explicit nil
 ### GetProductExternalId
 
-`func (o *CRMDealResponseData) GetProductExternalId() string`
+`func (o *CrmDealResponseData) GetProductExternalId() string`
 
 GetProductExternalId returns the ProductExternalId field if non-nil, zero value otherwise.
 
 ### GetProductExternalIdOk
 
-`func (o *CRMDealResponseData) GetProductExternalIdOk() (*string, bool)`
+`func (o *CrmDealResponseData) GetProductExternalIdOk() (*string, bool)`
 
 GetProductExternalIdOk returns a tuple with the ProductExternalId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetProductExternalId
 
-`func (o *CRMDealResponseData) SetProductExternalId(v string)`
+`func (o *CrmDealResponseData) SetProductExternalId(v string)`
 
 SetProductExternalId sets ProductExternalId field to given value.
 
 ### HasProductExternalId
 
-`func (o *CRMDealResponseData) HasProductExternalId() bool`
+`func (o *CrmDealResponseData) HasProductExternalId() bool`
 
 HasProductExternalId returns a boolean if a field has been set.
 
 ### SetProductExternalIdNil
 
-`func (o *CRMDealResponseData) SetProductExternalIdNil(b bool)`
+`func (o *CrmDealResponseData) SetProductExternalIdNil(b bool)`
 
  SetProductExternalIdNil sets the value for ProductExternalId to be an explicit nil
 
 ### UnsetProductExternalId
-`func (o *CRMDealResponseData) UnsetProductExternalId()`
+`func (o *CrmDealResponseData) UnsetProductExternalId()`
 
 UnsetProductExternalId ensures that no value is present for ProductExternalId, not even an explicit nil
 ### GetUpdatedAt
 
-`func (o *CRMDealResponseData) GetUpdatedAt() time.Time`
+`func (o *CrmDealResponseData) GetUpdatedAt() time.Time`
 
 GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
 
 ### GetUpdatedAtOk
 
-`func (o *CRMDealResponseData) GetUpdatedAtOk() (*time.Time, bool)`
+`func (o *CrmDealResponseData) GetUpdatedAtOk() (*time.Time, bool)`
 
 GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUpdatedAt
 
-`func (o *CRMDealResponseData) SetUpdatedAt(v time.Time)`
+`func (o *CrmDealResponseData) SetUpdatedAt(v time.Time)`
 
 SetUpdatedAt sets UpdatedAt field to given value.
 

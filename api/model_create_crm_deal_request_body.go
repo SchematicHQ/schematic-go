@@ -16,41 +16,89 @@ import (
 	"fmt"
 )
 
-// checks if the CreateCRMDealRequestBody type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &CreateCRMDealRequestBody{}
+// checks if the CreateCrmDealRequestBody type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &CreateCrmDealRequestBody{}
 
-// CreateCRMDealRequestBody struct for CreateCRMDealRequestBody
-type CreateCRMDealRequestBody struct {
-	CrmCompanyId   NullableString `json:"crm_company_id,omitempty"`
-	CrmCompanyKey  string         `json:"crm_company_key"`
-	CrmProductId   NullableString `json:"crm_product_id,omitempty"`
-	DealExternalId string         `json:"deal_external_id"`
-	DealName       NullableString `json:"deal_name,omitempty"`
+// CreateCrmDealRequestBody struct for CreateCrmDealRequestBody
+type CreateCrmDealRequestBody struct {
+	Arr            NullableFloat32 `json:"arr,omitempty"`
+	CrmCompanyId   NullableString  `json:"crm_company_id,omitempty"`
+	CrmCompanyKey  string          `json:"crm_company_key"`
+	CrmProductId   NullableString  `json:"crm_product_id,omitempty"`
+	CrmType        string          `json:"crm_type"`
+	DealExternalId string          `json:"deal_external_id"`
+	DealName       NullableString  `json:"deal_name,omitempty"`
+	DealStage      NullableString  `json:"deal_stage,omitempty"`
+	Mrr            NullableFloat32 `json:"mrr,omitempty"`
 }
 
-type _CreateCRMDealRequestBody CreateCRMDealRequestBody
+type _CreateCrmDealRequestBody CreateCrmDealRequestBody
 
-// NewCreateCRMDealRequestBody instantiates a new CreateCRMDealRequestBody object
+// NewCreateCrmDealRequestBody instantiates a new CreateCrmDealRequestBody object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateCRMDealRequestBody(crmCompanyKey string, dealExternalId string) *CreateCRMDealRequestBody {
-	this := CreateCRMDealRequestBody{}
+func NewCreateCrmDealRequestBody(crmCompanyKey string, crmType string, dealExternalId string) *CreateCrmDealRequestBody {
+	this := CreateCrmDealRequestBody{}
 	this.CrmCompanyKey = crmCompanyKey
+	this.CrmType = crmType
 	this.DealExternalId = dealExternalId
 	return &this
 }
 
-// NewCreateCRMDealRequestBodyWithDefaults instantiates a new CreateCRMDealRequestBody object
+// NewCreateCrmDealRequestBodyWithDefaults instantiates a new CreateCrmDealRequestBody object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewCreateCRMDealRequestBodyWithDefaults() *CreateCRMDealRequestBody {
-	this := CreateCRMDealRequestBody{}
+func NewCreateCrmDealRequestBodyWithDefaults() *CreateCrmDealRequestBody {
+	this := CreateCrmDealRequestBody{}
 	return &this
 }
 
+// GetArr returns the Arr field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateCrmDealRequestBody) GetArr() float32 {
+	if o == nil || IsNil(o.Arr.Get()) {
+		var ret float32
+		return ret
+	}
+	return *o.Arr.Get()
+}
+
+// GetArrOk returns a tuple with the Arr field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateCrmDealRequestBody) GetArrOk() (*float32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Arr.Get(), o.Arr.IsSet()
+}
+
+// HasArr returns a boolean if a field has been set.
+func (o *CreateCrmDealRequestBody) HasArr() bool {
+	if o != nil && o.Arr.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetArr gets a reference to the given NullableFloat32 and assigns it to the Arr field.
+func (o *CreateCrmDealRequestBody) SetArr(v float32) {
+	o.Arr.Set(&v)
+}
+
+// SetArrNil sets the value for Arr to be an explicit nil
+func (o *CreateCrmDealRequestBody) SetArrNil() {
+	o.Arr.Set(nil)
+}
+
+// UnsetArr ensures that no value is present for Arr, not even an explicit nil
+func (o *CreateCrmDealRequestBody) UnsetArr() {
+	o.Arr.Unset()
+}
+
 // GetCrmCompanyId returns the CrmCompanyId field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreateCRMDealRequestBody) GetCrmCompanyId() string {
+func (o *CreateCrmDealRequestBody) GetCrmCompanyId() string {
 	if o == nil || IsNil(o.CrmCompanyId.Get()) {
 		var ret string
 		return ret
@@ -61,7 +109,7 @@ func (o *CreateCRMDealRequestBody) GetCrmCompanyId() string {
 // GetCrmCompanyIdOk returns a tuple with the CrmCompanyId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreateCRMDealRequestBody) GetCrmCompanyIdOk() (*string, bool) {
+func (o *CreateCrmDealRequestBody) GetCrmCompanyIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -69,7 +117,7 @@ func (o *CreateCRMDealRequestBody) GetCrmCompanyIdOk() (*string, bool) {
 }
 
 // HasCrmCompanyId returns a boolean if a field has been set.
-func (o *CreateCRMDealRequestBody) HasCrmCompanyId() bool {
+func (o *CreateCrmDealRequestBody) HasCrmCompanyId() bool {
 	if o != nil && o.CrmCompanyId.IsSet() {
 		return true
 	}
@@ -78,22 +126,22 @@ func (o *CreateCRMDealRequestBody) HasCrmCompanyId() bool {
 }
 
 // SetCrmCompanyId gets a reference to the given NullableString and assigns it to the CrmCompanyId field.
-func (o *CreateCRMDealRequestBody) SetCrmCompanyId(v string) {
+func (o *CreateCrmDealRequestBody) SetCrmCompanyId(v string) {
 	o.CrmCompanyId.Set(&v)
 }
 
 // SetCrmCompanyIdNil sets the value for CrmCompanyId to be an explicit nil
-func (o *CreateCRMDealRequestBody) SetCrmCompanyIdNil() {
+func (o *CreateCrmDealRequestBody) SetCrmCompanyIdNil() {
 	o.CrmCompanyId.Set(nil)
 }
 
 // UnsetCrmCompanyId ensures that no value is present for CrmCompanyId, not even an explicit nil
-func (o *CreateCRMDealRequestBody) UnsetCrmCompanyId() {
+func (o *CreateCrmDealRequestBody) UnsetCrmCompanyId() {
 	o.CrmCompanyId.Unset()
 }
 
 // GetCrmCompanyKey returns the CrmCompanyKey field value
-func (o *CreateCRMDealRequestBody) GetCrmCompanyKey() string {
+func (o *CreateCrmDealRequestBody) GetCrmCompanyKey() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -104,7 +152,7 @@ func (o *CreateCRMDealRequestBody) GetCrmCompanyKey() string {
 
 // GetCrmCompanyKeyOk returns a tuple with the CrmCompanyKey field value
 // and a boolean to check if the value has been set.
-func (o *CreateCRMDealRequestBody) GetCrmCompanyKeyOk() (*string, bool) {
+func (o *CreateCrmDealRequestBody) GetCrmCompanyKeyOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -112,12 +160,12 @@ func (o *CreateCRMDealRequestBody) GetCrmCompanyKeyOk() (*string, bool) {
 }
 
 // SetCrmCompanyKey sets field value
-func (o *CreateCRMDealRequestBody) SetCrmCompanyKey(v string) {
+func (o *CreateCrmDealRequestBody) SetCrmCompanyKey(v string) {
 	o.CrmCompanyKey = v
 }
 
 // GetCrmProductId returns the CrmProductId field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreateCRMDealRequestBody) GetCrmProductId() string {
+func (o *CreateCrmDealRequestBody) GetCrmProductId() string {
 	if o == nil || IsNil(o.CrmProductId.Get()) {
 		var ret string
 		return ret
@@ -128,7 +176,7 @@ func (o *CreateCRMDealRequestBody) GetCrmProductId() string {
 // GetCrmProductIdOk returns a tuple with the CrmProductId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreateCRMDealRequestBody) GetCrmProductIdOk() (*string, bool) {
+func (o *CreateCrmDealRequestBody) GetCrmProductIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -136,7 +184,7 @@ func (o *CreateCRMDealRequestBody) GetCrmProductIdOk() (*string, bool) {
 }
 
 // HasCrmProductId returns a boolean if a field has been set.
-func (o *CreateCRMDealRequestBody) HasCrmProductId() bool {
+func (o *CreateCrmDealRequestBody) HasCrmProductId() bool {
 	if o != nil && o.CrmProductId.IsSet() {
 		return true
 	}
@@ -145,22 +193,46 @@ func (o *CreateCRMDealRequestBody) HasCrmProductId() bool {
 }
 
 // SetCrmProductId gets a reference to the given NullableString and assigns it to the CrmProductId field.
-func (o *CreateCRMDealRequestBody) SetCrmProductId(v string) {
+func (o *CreateCrmDealRequestBody) SetCrmProductId(v string) {
 	o.CrmProductId.Set(&v)
 }
 
 // SetCrmProductIdNil sets the value for CrmProductId to be an explicit nil
-func (o *CreateCRMDealRequestBody) SetCrmProductIdNil() {
+func (o *CreateCrmDealRequestBody) SetCrmProductIdNil() {
 	o.CrmProductId.Set(nil)
 }
 
 // UnsetCrmProductId ensures that no value is present for CrmProductId, not even an explicit nil
-func (o *CreateCRMDealRequestBody) UnsetCrmProductId() {
+func (o *CreateCrmDealRequestBody) UnsetCrmProductId() {
 	o.CrmProductId.Unset()
 }
 
+// GetCrmType returns the CrmType field value
+func (o *CreateCrmDealRequestBody) GetCrmType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.CrmType
+}
+
+// GetCrmTypeOk returns a tuple with the CrmType field value
+// and a boolean to check if the value has been set.
+func (o *CreateCrmDealRequestBody) GetCrmTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.CrmType, true
+}
+
+// SetCrmType sets field value
+func (o *CreateCrmDealRequestBody) SetCrmType(v string) {
+	o.CrmType = v
+}
+
 // GetDealExternalId returns the DealExternalId field value
-func (o *CreateCRMDealRequestBody) GetDealExternalId() string {
+func (o *CreateCrmDealRequestBody) GetDealExternalId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -171,7 +243,7 @@ func (o *CreateCRMDealRequestBody) GetDealExternalId() string {
 
 // GetDealExternalIdOk returns a tuple with the DealExternalId field value
 // and a boolean to check if the value has been set.
-func (o *CreateCRMDealRequestBody) GetDealExternalIdOk() (*string, bool) {
+func (o *CreateCrmDealRequestBody) GetDealExternalIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -179,12 +251,12 @@ func (o *CreateCRMDealRequestBody) GetDealExternalIdOk() (*string, bool) {
 }
 
 // SetDealExternalId sets field value
-func (o *CreateCRMDealRequestBody) SetDealExternalId(v string) {
+func (o *CreateCrmDealRequestBody) SetDealExternalId(v string) {
 	o.DealExternalId = v
 }
 
 // GetDealName returns the DealName field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreateCRMDealRequestBody) GetDealName() string {
+func (o *CreateCrmDealRequestBody) GetDealName() string {
 	if o == nil || IsNil(o.DealName.Get()) {
 		var ret string
 		return ret
@@ -195,7 +267,7 @@ func (o *CreateCRMDealRequestBody) GetDealName() string {
 // GetDealNameOk returns a tuple with the DealName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreateCRMDealRequestBody) GetDealNameOk() (*string, bool) {
+func (o *CreateCrmDealRequestBody) GetDealNameOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -203,7 +275,7 @@ func (o *CreateCRMDealRequestBody) GetDealNameOk() (*string, bool) {
 }
 
 // HasDealName returns a boolean if a field has been set.
-func (o *CreateCRMDealRequestBody) HasDealName() bool {
+func (o *CreateCrmDealRequestBody) HasDealName() bool {
 	if o != nil && o.DealName.IsSet() {
 		return true
 	}
@@ -212,21 +284,107 @@ func (o *CreateCRMDealRequestBody) HasDealName() bool {
 }
 
 // SetDealName gets a reference to the given NullableString and assigns it to the DealName field.
-func (o *CreateCRMDealRequestBody) SetDealName(v string) {
+func (o *CreateCrmDealRequestBody) SetDealName(v string) {
 	o.DealName.Set(&v)
 }
 
 // SetDealNameNil sets the value for DealName to be an explicit nil
-func (o *CreateCRMDealRequestBody) SetDealNameNil() {
+func (o *CreateCrmDealRequestBody) SetDealNameNil() {
 	o.DealName.Set(nil)
 }
 
 // UnsetDealName ensures that no value is present for DealName, not even an explicit nil
-func (o *CreateCRMDealRequestBody) UnsetDealName() {
+func (o *CreateCrmDealRequestBody) UnsetDealName() {
 	o.DealName.Unset()
 }
 
-func (o CreateCRMDealRequestBody) MarshalJSON() ([]byte, error) {
+// GetDealStage returns the DealStage field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateCrmDealRequestBody) GetDealStage() string {
+	if o == nil || IsNil(o.DealStage.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.DealStage.Get()
+}
+
+// GetDealStageOk returns a tuple with the DealStage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateCrmDealRequestBody) GetDealStageOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.DealStage.Get(), o.DealStage.IsSet()
+}
+
+// HasDealStage returns a boolean if a field has been set.
+func (o *CreateCrmDealRequestBody) HasDealStage() bool {
+	if o != nil && o.DealStage.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetDealStage gets a reference to the given NullableString and assigns it to the DealStage field.
+func (o *CreateCrmDealRequestBody) SetDealStage(v string) {
+	o.DealStage.Set(&v)
+}
+
+// SetDealStageNil sets the value for DealStage to be an explicit nil
+func (o *CreateCrmDealRequestBody) SetDealStageNil() {
+	o.DealStage.Set(nil)
+}
+
+// UnsetDealStage ensures that no value is present for DealStage, not even an explicit nil
+func (o *CreateCrmDealRequestBody) UnsetDealStage() {
+	o.DealStage.Unset()
+}
+
+// GetMrr returns the Mrr field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateCrmDealRequestBody) GetMrr() float32 {
+	if o == nil || IsNil(o.Mrr.Get()) {
+		var ret float32
+		return ret
+	}
+	return *o.Mrr.Get()
+}
+
+// GetMrrOk returns a tuple with the Mrr field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateCrmDealRequestBody) GetMrrOk() (*float32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Mrr.Get(), o.Mrr.IsSet()
+}
+
+// HasMrr returns a boolean if a field has been set.
+func (o *CreateCrmDealRequestBody) HasMrr() bool {
+	if o != nil && o.Mrr.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMrr gets a reference to the given NullableFloat32 and assigns it to the Mrr field.
+func (o *CreateCrmDealRequestBody) SetMrr(v float32) {
+	o.Mrr.Set(&v)
+}
+
+// SetMrrNil sets the value for Mrr to be an explicit nil
+func (o *CreateCrmDealRequestBody) SetMrrNil() {
+	o.Mrr.Set(nil)
+}
+
+// UnsetMrr ensures that no value is present for Mrr, not even an explicit nil
+func (o *CreateCrmDealRequestBody) UnsetMrr() {
+	o.Mrr.Unset()
+}
+
+func (o CreateCrmDealRequestBody) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -234,8 +392,11 @@ func (o CreateCRMDealRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o CreateCRMDealRequestBody) ToMap() (map[string]interface{}, error) {
+func (o CreateCrmDealRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if o.Arr.IsSet() {
+		toSerialize["arr"] = o.Arr.Get()
+	}
 	if o.CrmCompanyId.IsSet() {
 		toSerialize["crm_company_id"] = o.CrmCompanyId.Get()
 	}
@@ -243,19 +404,27 @@ func (o CreateCRMDealRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.CrmProductId.IsSet() {
 		toSerialize["crm_product_id"] = o.CrmProductId.Get()
 	}
+	toSerialize["crm_type"] = o.CrmType
 	toSerialize["deal_external_id"] = o.DealExternalId
 	if o.DealName.IsSet() {
 		toSerialize["deal_name"] = o.DealName.Get()
 	}
+	if o.DealStage.IsSet() {
+		toSerialize["deal_stage"] = o.DealStage.Get()
+	}
+	if o.Mrr.IsSet() {
+		toSerialize["mrr"] = o.Mrr.Get()
+	}
 	return toSerialize, nil
 }
 
-func (o *CreateCRMDealRequestBody) UnmarshalJSON(data []byte) (err error) {
+func (o *CreateCrmDealRequestBody) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"crm_company_key",
+		"crm_type",
 		"deal_external_id",
 	}
 
@@ -273,53 +442,53 @@ func (o *CreateCRMDealRequestBody) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varCreateCRMDealRequestBody := _CreateCRMDealRequestBody{}
+	varCreateCrmDealRequestBody := _CreateCrmDealRequestBody{}
 
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateCRMDealRequestBody)
+	err = decoder.Decode(&varCreateCrmDealRequestBody)
 
 	if err != nil {
 		return err
 	}
 
-	*o = CreateCRMDealRequestBody(varCreateCRMDealRequestBody)
+	*o = CreateCrmDealRequestBody(varCreateCrmDealRequestBody)
 
 	return err
 }
 
-type NullableCreateCRMDealRequestBody struct {
-	value *CreateCRMDealRequestBody
+type NullableCreateCrmDealRequestBody struct {
+	value *CreateCrmDealRequestBody
 	isSet bool
 }
 
-func (v NullableCreateCRMDealRequestBody) Get() *CreateCRMDealRequestBody {
+func (v NullableCreateCrmDealRequestBody) Get() *CreateCrmDealRequestBody {
 	return v.value
 }
 
-func (v *NullableCreateCRMDealRequestBody) Set(val *CreateCRMDealRequestBody) {
+func (v *NullableCreateCrmDealRequestBody) Set(val *CreateCrmDealRequestBody) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableCreateCRMDealRequestBody) IsSet() bool {
+func (v NullableCreateCrmDealRequestBody) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableCreateCRMDealRequestBody) Unset() {
+func (v *NullableCreateCrmDealRequestBody) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableCreateCRMDealRequestBody(val *CreateCRMDealRequestBody) *NullableCreateCRMDealRequestBody {
-	return &NullableCreateCRMDealRequestBody{value: val, isSet: true}
+func NewNullableCreateCrmDealRequestBody(val *CreateCrmDealRequestBody) *NullableCreateCrmDealRequestBody {
+	return &NullableCreateCrmDealRequestBody{value: val, isSet: true}
 }
 
-func (v NullableCreateCRMDealRequestBody) MarshalJSON() ([]byte, error) {
+func (v NullableCreateCrmDealRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableCreateCRMDealRequestBody) UnmarshalJSON(src []byte) error {
+func (v *NullableCreateCrmDealRequestBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

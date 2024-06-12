@@ -16,41 +16,41 @@ import (
 	"fmt"
 )
 
-// checks if the UpsertCRMDealResponse type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &UpsertCRMDealResponse{}
+// checks if the UpsertCrmDealResponse type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &UpsertCrmDealResponse{}
 
-// UpsertCRMDealResponse struct for UpsertCRMDealResponse
-type UpsertCRMDealResponse struct {
-	Data CRMDealResponseData `json:"data"`
+// UpsertCrmDealResponse struct for UpsertCrmDealResponse
+type UpsertCrmDealResponse struct {
+	Data CrmDealResponseData `json:"data"`
 	// Input parameters
 	Params map[string]interface{} `json:"params"`
 }
 
-type _UpsertCRMDealResponse UpsertCRMDealResponse
+type _UpsertCrmDealResponse UpsertCrmDealResponse
 
-// NewUpsertCRMDealResponse instantiates a new UpsertCRMDealResponse object
+// NewUpsertCrmDealResponse instantiates a new UpsertCrmDealResponse object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUpsertCRMDealResponse(data CRMDealResponseData, params map[string]interface{}) *UpsertCRMDealResponse {
-	this := UpsertCRMDealResponse{}
+func NewUpsertCrmDealResponse(data CrmDealResponseData, params map[string]interface{}) *UpsertCrmDealResponse {
+	this := UpsertCrmDealResponse{}
 	this.Data = data
 	this.Params = params
 	return &this
 }
 
-// NewUpsertCRMDealResponseWithDefaults instantiates a new UpsertCRMDealResponse object
+// NewUpsertCrmDealResponseWithDefaults instantiates a new UpsertCrmDealResponse object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewUpsertCRMDealResponseWithDefaults() *UpsertCRMDealResponse {
-	this := UpsertCRMDealResponse{}
+func NewUpsertCrmDealResponseWithDefaults() *UpsertCrmDealResponse {
+	this := UpsertCrmDealResponse{}
 	return &this
 }
 
 // GetData returns the Data field value
-func (o *UpsertCRMDealResponse) GetData() CRMDealResponseData {
+func (o *UpsertCrmDealResponse) GetData() CrmDealResponseData {
 	if o == nil {
-		var ret CRMDealResponseData
+		var ret CrmDealResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *UpsertCRMDealResponse) GetData() CRMDealResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *UpsertCRMDealResponse) GetDataOk() (*CRMDealResponseData, bool) {
+func (o *UpsertCrmDealResponse) GetDataOk() (*CrmDealResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,12 +67,12 @@ func (o *UpsertCRMDealResponse) GetDataOk() (*CRMDealResponseData, bool) {
 }
 
 // SetData sets field value
-func (o *UpsertCRMDealResponse) SetData(v CRMDealResponseData) {
+func (o *UpsertCrmDealResponse) SetData(v CrmDealResponseData) {
 	o.Data = v
 }
 
 // GetParams returns the Params field value
-func (o *UpsertCRMDealResponse) GetParams() map[string]interface{} {
+func (o *UpsertCrmDealResponse) GetParams() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
 		return ret
@@ -83,7 +83,7 @@ func (o *UpsertCRMDealResponse) GetParams() map[string]interface{} {
 
 // GetParamsOk returns a tuple with the Params field value
 // and a boolean to check if the value has been set.
-func (o *UpsertCRMDealResponse) GetParamsOk() (map[string]interface{}, bool) {
+func (o *UpsertCrmDealResponse) GetParamsOk() (map[string]interface{}, bool) {
 	if o == nil {
 		return map[string]interface{}{}, false
 	}
@@ -91,11 +91,11 @@ func (o *UpsertCRMDealResponse) GetParamsOk() (map[string]interface{}, bool) {
 }
 
 // SetParams sets field value
-func (o *UpsertCRMDealResponse) SetParams(v map[string]interface{}) {
+func (o *UpsertCrmDealResponse) SetParams(v map[string]interface{}) {
 	o.Params = v
 }
 
-func (o UpsertCRMDealResponse) MarshalJSON() ([]byte, error) {
+func (o UpsertCrmDealResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -103,14 +103,14 @@ func (o UpsertCRMDealResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o UpsertCRMDealResponse) ToMap() (map[string]interface{}, error) {
+func (o UpsertCrmDealResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
 	return toSerialize, nil
 }
 
-func (o *UpsertCRMDealResponse) UnmarshalJSON(data []byte) (err error) {
+func (o *UpsertCrmDealResponse) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
@@ -133,53 +133,53 @@ func (o *UpsertCRMDealResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varUpsertCRMDealResponse := _UpsertCRMDealResponse{}
+	varUpsertCrmDealResponse := _UpsertCrmDealResponse{}
 
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpsertCRMDealResponse)
+	err = decoder.Decode(&varUpsertCrmDealResponse)
 
 	if err != nil {
 		return err
 	}
 
-	*o = UpsertCRMDealResponse(varUpsertCRMDealResponse)
+	*o = UpsertCrmDealResponse(varUpsertCrmDealResponse)
 
 	return err
 }
 
-type NullableUpsertCRMDealResponse struct {
-	value *UpsertCRMDealResponse
+type NullableUpsertCrmDealResponse struct {
+	value *UpsertCrmDealResponse
 	isSet bool
 }
 
-func (v NullableUpsertCRMDealResponse) Get() *UpsertCRMDealResponse {
+func (v NullableUpsertCrmDealResponse) Get() *UpsertCrmDealResponse {
 	return v.value
 }
 
-func (v *NullableUpsertCRMDealResponse) Set(val *UpsertCRMDealResponse) {
+func (v *NullableUpsertCrmDealResponse) Set(val *UpsertCrmDealResponse) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableUpsertCRMDealResponse) IsSet() bool {
+func (v NullableUpsertCrmDealResponse) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableUpsertCRMDealResponse) Unset() {
+func (v *NullableUpsertCrmDealResponse) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableUpsertCRMDealResponse(val *UpsertCRMDealResponse) *NullableUpsertCRMDealResponse {
-	return &NullableUpsertCRMDealResponse{value: val, isSet: true}
+func NewNullableUpsertCrmDealResponse(val *UpsertCrmDealResponse) *NullableUpsertCrmDealResponse {
+	return &NullableUpsertCrmDealResponse{value: val, isSet: true}
 }
 
-func (v NullableUpsertCRMDealResponse) MarshalJSON() ([]byte, error) {
+func (v NullableUpsertCrmDealResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableUpsertCRMDealResponse) UnmarshalJSON(src []byte) error {
+func (v *NullableUpsertCrmDealResponse) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

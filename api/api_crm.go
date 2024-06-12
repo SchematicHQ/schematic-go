@@ -22,46 +22,70 @@ import (
 type CrmAPI interface {
 
 	/*
-		ListCRMProducts List c r m products
+		ListCrmProducts List crm products
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiListCRMProductsRequest
+		@return ApiListCrmProductsRequest
 	*/
-	ListCRMProducts(ctx context.Context) ApiListCRMProductsRequest
+	ListCrmProducts(ctx context.Context) ApiListCrmProductsRequest
 
-	// ListCRMProductsExecute executes the request
-	//  @return ListCRMProductsResponse
-	ListCRMProductsExecute(r ApiListCRMProductsRequest) (*ListCRMProductsResponse, *http.Response, error)
+	// ListCrmProductsExecute executes the request
+	//  @return ListCrmProductsResponse
+	ListCrmProductsExecute(r ApiListCrmProductsRequest) (*ListCrmProductsResponse, *http.Response, error)
 
 	/*
-		UpsertCRMDeal Upsert c r m deal
+		UpsertCrmDeal Upsert crm deal
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiUpsertCRMDealRequest
+		@return ApiUpsertCrmDealRequest
 	*/
-	UpsertCRMDeal(ctx context.Context) ApiUpsertCRMDealRequest
+	UpsertCrmDeal(ctx context.Context) ApiUpsertCrmDealRequest
 
-	// UpsertCRMDealExecute executes the request
-	//  @return UpsertCRMDealResponse
-	UpsertCRMDealExecute(r ApiUpsertCRMDealRequest) (*UpsertCRMDealResponse, *http.Response, error)
+	// UpsertCrmDealExecute executes the request
+	//  @return UpsertCrmDealResponse
+	UpsertCrmDealExecute(r ApiUpsertCrmDealRequest) (*UpsertCrmDealResponse, *http.Response, error)
 
 	/*
-		UpsertCRMProduct Upsert c r m product
+		UpsertCrmProduct Upsert crm product
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiUpsertCRMProductRequest
+		@return ApiUpsertCrmProductRequest
 	*/
-	UpsertCRMProduct(ctx context.Context) ApiUpsertCRMProductRequest
+	UpsertCrmProduct(ctx context.Context) ApiUpsertCrmProductRequest
 
-	// UpsertCRMProductExecute executes the request
-	//  @return UpsertCRMProductResponse
-	UpsertCRMProductExecute(r ApiUpsertCRMProductRequest) (*UpsertCRMProductResponse, *http.Response, error)
+	// UpsertCrmProductExecute executes the request
+	//  @return UpsertCrmProductResponse
+	UpsertCrmProductExecute(r ApiUpsertCrmProductRequest) (*UpsertCrmProductResponse, *http.Response, error)
+
+	/*
+		UpsertDealLineItemAssociation Upsert deal line item association
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiUpsertDealLineItemAssociationRequest
+	*/
+	UpsertDealLineItemAssociation(ctx context.Context) ApiUpsertDealLineItemAssociationRequest
+
+	// UpsertDealLineItemAssociationExecute executes the request
+	//  @return UpsertDealLineItemAssociationResponse
+	UpsertDealLineItemAssociationExecute(r ApiUpsertDealLineItemAssociationRequest) (*UpsertDealLineItemAssociationResponse, *http.Response, error)
+
+	/*
+		UpsertLineItem Upsert line item
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiUpsertLineItemRequest
+	*/
+	UpsertLineItem(ctx context.Context) ApiUpsertLineItemRequest
+
+	// UpsertLineItemExecute executes the request
+	//  @return UpsertLineItemResponse
+	UpsertLineItemExecute(r ApiUpsertLineItemRequest) (*UpsertLineItemResponse, *http.Response, error)
 }
 
 // CrmAPIService CrmAPI service
 type CrmAPIService service
 
-type ApiListCRMProductsRequest struct {
+type ApiListCrmProductsRequest struct {
 	ctx        context.Context
 	ApiService CrmAPI
 	ids        *[]string
@@ -70,40 +94,40 @@ type ApiListCRMProductsRequest struct {
 	offset     *int32
 }
 
-func (r ApiListCRMProductsRequest) Ids(ids []string) ApiListCRMProductsRequest {
+func (r ApiListCrmProductsRequest) Ids(ids []string) ApiListCrmProductsRequest {
 	r.ids = &ids
 	return r
 }
 
-func (r ApiListCRMProductsRequest) Name(name string) ApiListCRMProductsRequest {
+func (r ApiListCrmProductsRequest) Name(name string) ApiListCrmProductsRequest {
 	r.name = &name
 	return r
 }
 
 // Page limit (default 100)
-func (r ApiListCRMProductsRequest) Limit(limit int32) ApiListCRMProductsRequest {
+func (r ApiListCrmProductsRequest) Limit(limit int32) ApiListCrmProductsRequest {
 	r.limit = &limit
 	return r
 }
 
 // Page offset (default 0)
-func (r ApiListCRMProductsRequest) Offset(offset int32) ApiListCRMProductsRequest {
+func (r ApiListCrmProductsRequest) Offset(offset int32) ApiListCrmProductsRequest {
 	r.offset = &offset
 	return r
 }
 
-func (r ApiListCRMProductsRequest) Execute() (*ListCRMProductsResponse, *http.Response, error) {
-	return r.ApiService.ListCRMProductsExecute(r)
+func (r ApiListCrmProductsRequest) Execute() (*ListCrmProductsResponse, *http.Response, error) {
+	return r.ApiService.ListCrmProductsExecute(r)
 }
 
 /*
-ListCRMProducts List c r m products
+ListCrmProducts List crm products
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListCRMProductsRequest
+	@return ApiListCrmProductsRequest
 */
-func (a *CrmAPIService) ListCRMProducts(ctx context.Context) ApiListCRMProductsRequest {
-	return ApiListCRMProductsRequest{
+func (a *CrmAPIService) ListCrmProducts(ctx context.Context) ApiListCrmProductsRequest {
+	return ApiListCrmProductsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -111,16 +135,16 @@ func (a *CrmAPIService) ListCRMProducts(ctx context.Context) ApiListCRMProductsR
 
 // Execute executes the request
 //
-//	@return ListCRMProductsResponse
-func (a *CrmAPIService) ListCRMProductsExecute(r ApiListCRMProductsRequest) (*ListCRMProductsResponse, *http.Response, error) {
+//	@return ListCrmProductsResponse
+func (a *CrmAPIService) ListCrmProductsExecute(r ApiListCrmProductsRequest) (*ListCrmProductsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *ListCRMProductsResponse
+		localVarReturnValue *ListCrmProductsResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CrmAPIService.ListCRMProducts")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CrmAPIService.ListCrmProducts")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -266,29 +290,29 @@ func (a *CrmAPIService) ListCRMProductsExecute(r ApiListCRMProductsRequest) (*Li
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiUpsertCRMDealRequest struct {
+type ApiUpsertCrmDealRequest struct {
 	ctx                      context.Context
 	ApiService               CrmAPI
-	createCRMDealRequestBody *CreateCRMDealRequestBody
+	createCrmDealRequestBody *CreateCrmDealRequestBody
 }
 
-func (r ApiUpsertCRMDealRequest) CreateCRMDealRequestBody(createCRMDealRequestBody CreateCRMDealRequestBody) ApiUpsertCRMDealRequest {
-	r.createCRMDealRequestBody = &createCRMDealRequestBody
+func (r ApiUpsertCrmDealRequest) CreateCrmDealRequestBody(createCrmDealRequestBody CreateCrmDealRequestBody) ApiUpsertCrmDealRequest {
+	r.createCrmDealRequestBody = &createCrmDealRequestBody
 	return r
 }
 
-func (r ApiUpsertCRMDealRequest) Execute() (*UpsertCRMDealResponse, *http.Response, error) {
-	return r.ApiService.UpsertCRMDealExecute(r)
+func (r ApiUpsertCrmDealRequest) Execute() (*UpsertCrmDealResponse, *http.Response, error) {
+	return r.ApiService.UpsertCrmDealExecute(r)
 }
 
 /*
-UpsertCRMDeal Upsert c r m deal
+UpsertCrmDeal Upsert crm deal
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiUpsertCRMDealRequest
+	@return ApiUpsertCrmDealRequest
 */
-func (a *CrmAPIService) UpsertCRMDeal(ctx context.Context) ApiUpsertCRMDealRequest {
-	return ApiUpsertCRMDealRequest{
+func (a *CrmAPIService) UpsertCrmDeal(ctx context.Context) ApiUpsertCrmDealRequest {
+	return ApiUpsertCrmDealRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -296,16 +320,16 @@ func (a *CrmAPIService) UpsertCRMDeal(ctx context.Context) ApiUpsertCRMDealReque
 
 // Execute executes the request
 //
-//	@return UpsertCRMDealResponse
-func (a *CrmAPIService) UpsertCRMDealExecute(r ApiUpsertCRMDealRequest) (*UpsertCRMDealResponse, *http.Response, error) {
+//	@return UpsertCrmDealResponse
+func (a *CrmAPIService) UpsertCrmDealExecute(r ApiUpsertCrmDealRequest) (*UpsertCrmDealResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *UpsertCRMDealResponse
+		localVarReturnValue *UpsertCrmDealResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CrmAPIService.UpsertCRMDeal")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CrmAPIService.UpsertCrmDeal")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -315,8 +339,8 @@ func (a *CrmAPIService) UpsertCRMDealExecute(r ApiUpsertCRMDealRequest) (*Upsert
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createCRMDealRequestBody == nil {
-		return localVarReturnValue, nil, reportError("createCRMDealRequestBody is required and must be specified")
+	if r.createCrmDealRequestBody == nil {
+		return localVarReturnValue, nil, reportError("createCrmDealRequestBody is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -337,7 +361,7 @@ func (a *CrmAPIService) UpsertCRMDealExecute(r ApiUpsertCRMDealRequest) (*Upsert
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.createCRMDealRequestBody
+	localVarPostBody = r.createCrmDealRequestBody
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
@@ -436,29 +460,29 @@ func (a *CrmAPIService) UpsertCRMDealExecute(r ApiUpsertCRMDealRequest) (*Upsert
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiUpsertCRMProductRequest struct {
+type ApiUpsertCrmProductRequest struct {
 	ctx                         context.Context
 	ApiService                  CrmAPI
-	createCRMProductRequestBody *CreateCRMProductRequestBody
+	createCrmProductRequestBody *CreateCrmProductRequestBody
 }
 
-func (r ApiUpsertCRMProductRequest) CreateCRMProductRequestBody(createCRMProductRequestBody CreateCRMProductRequestBody) ApiUpsertCRMProductRequest {
-	r.createCRMProductRequestBody = &createCRMProductRequestBody
+func (r ApiUpsertCrmProductRequest) CreateCrmProductRequestBody(createCrmProductRequestBody CreateCrmProductRequestBody) ApiUpsertCrmProductRequest {
+	r.createCrmProductRequestBody = &createCrmProductRequestBody
 	return r
 }
 
-func (r ApiUpsertCRMProductRequest) Execute() (*UpsertCRMProductResponse, *http.Response, error) {
-	return r.ApiService.UpsertCRMProductExecute(r)
+func (r ApiUpsertCrmProductRequest) Execute() (*UpsertCrmProductResponse, *http.Response, error) {
+	return r.ApiService.UpsertCrmProductExecute(r)
 }
 
 /*
-UpsertCRMProduct Upsert c r m product
+UpsertCrmProduct Upsert crm product
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiUpsertCRMProductRequest
+	@return ApiUpsertCrmProductRequest
 */
-func (a *CrmAPIService) UpsertCRMProduct(ctx context.Context) ApiUpsertCRMProductRequest {
-	return ApiUpsertCRMProductRequest{
+func (a *CrmAPIService) UpsertCrmProduct(ctx context.Context) ApiUpsertCrmProductRequest {
+	return ApiUpsertCrmProductRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -466,16 +490,16 @@ func (a *CrmAPIService) UpsertCRMProduct(ctx context.Context) ApiUpsertCRMProduc
 
 // Execute executes the request
 //
-//	@return UpsertCRMProductResponse
-func (a *CrmAPIService) UpsertCRMProductExecute(r ApiUpsertCRMProductRequest) (*UpsertCRMProductResponse, *http.Response, error) {
+//	@return UpsertCrmProductResponse
+func (a *CrmAPIService) UpsertCrmProductExecute(r ApiUpsertCrmProductRequest) (*UpsertCrmProductResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *UpsertCRMProductResponse
+		localVarReturnValue *UpsertCrmProductResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CrmAPIService.UpsertCRMProduct")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CrmAPIService.UpsertCrmProduct")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -485,8 +509,8 @@ func (a *CrmAPIService) UpsertCRMProductExecute(r ApiUpsertCRMProductRequest) (*
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createCRMProductRequestBody == nil {
-		return localVarReturnValue, nil, reportError("createCRMProductRequestBody is required and must be specified")
+	if r.createCrmProductRequestBody == nil {
+		return localVarReturnValue, nil, reportError("createCrmProductRequestBody is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -507,7 +531,347 @@ func (a *CrmAPIService) UpsertCRMProductExecute(r ApiUpsertCRMProductRequest) (*
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.createCRMProductRequestBody
+	localVarPostBody = r.createCrmProductRequestBody
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpsertDealLineItemAssociationRequest struct {
+	ctx                                         context.Context
+	ApiService                                  CrmAPI
+	createCrmDealLineItemAssociationRequestBody *CreateCrmDealLineItemAssociationRequestBody
+}
+
+func (r ApiUpsertDealLineItemAssociationRequest) CreateCrmDealLineItemAssociationRequestBody(createCrmDealLineItemAssociationRequestBody CreateCrmDealLineItemAssociationRequestBody) ApiUpsertDealLineItemAssociationRequest {
+	r.createCrmDealLineItemAssociationRequestBody = &createCrmDealLineItemAssociationRequestBody
+	return r
+}
+
+func (r ApiUpsertDealLineItemAssociationRequest) Execute() (*UpsertDealLineItemAssociationResponse, *http.Response, error) {
+	return r.ApiService.UpsertDealLineItemAssociationExecute(r)
+}
+
+/*
+UpsertDealLineItemAssociation Upsert deal line item association
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpsertDealLineItemAssociationRequest
+*/
+func (a *CrmAPIService) UpsertDealLineItemAssociation(ctx context.Context) ApiUpsertDealLineItemAssociationRequest {
+	return ApiUpsertDealLineItemAssociationRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return UpsertDealLineItemAssociationResponse
+func (a *CrmAPIService) UpsertDealLineItemAssociationExecute(r ApiUpsertDealLineItemAssociationRequest) (*UpsertDealLineItemAssociationResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpsertDealLineItemAssociationResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CrmAPIService.UpsertDealLineItemAssociation")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/crm/associations/deal-line-item"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.createCrmDealLineItemAssociationRequestBody == nil {
+		return localVarReturnValue, nil, reportError("createCrmDealLineItemAssociationRequestBody is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.createCrmDealLineItemAssociationRequestBody
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Schematic-Api-Key"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+	if req == nil {
+		// Offline mode no-op
+		return nil, nil, nil
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpsertLineItemRequest struct {
+	ctx                          context.Context
+	ApiService                   CrmAPI
+	createCrmLineItemRequestBody *CreateCrmLineItemRequestBody
+}
+
+func (r ApiUpsertLineItemRequest) CreateCrmLineItemRequestBody(createCrmLineItemRequestBody CreateCrmLineItemRequestBody) ApiUpsertLineItemRequest {
+	r.createCrmLineItemRequestBody = &createCrmLineItemRequestBody
+	return r
+}
+
+func (r ApiUpsertLineItemRequest) Execute() (*UpsertLineItemResponse, *http.Response, error) {
+	return r.ApiService.UpsertLineItemExecute(r)
+}
+
+/*
+UpsertLineItem Upsert line item
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpsertLineItemRequest
+*/
+func (a *CrmAPIService) UpsertLineItem(ctx context.Context) ApiUpsertLineItemRequest {
+	return ApiUpsertLineItemRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return UpsertLineItemResponse
+func (a *CrmAPIService) UpsertLineItemExecute(r ApiUpsertLineItemRequest) (*UpsertLineItemResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpsertLineItemResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CrmAPIService.UpsertLineItem")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/crm/deal-line-item/upsert"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.createCrmLineItemRequestBody == nil {
+		return localVarReturnValue, nil, reportError("createCrmLineItemRequestBody is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.createCrmLineItemRequestBody
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {

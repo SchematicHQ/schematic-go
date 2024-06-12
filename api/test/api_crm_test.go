@@ -11,10 +11,11 @@ package api
 
 import (
 	"context"
+	"testing"
+
 	schematicapi "github.com/SchematicHQ/schematic-go/api"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func Test_api_CrmAPIService(t *testing.T) {
@@ -26,7 +27,7 @@ func Test_api_CrmAPIService(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test
 
-		resp, httpRes, err := apiClient.CrmAPI.ListCRMProducts(context.Background()).Execute()
+		resp, httpRes, err := apiClient.CrmAPI.ListCrmProducts(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -38,7 +39,7 @@ func Test_api_CrmAPIService(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test
 
-		resp, httpRes, err := apiClient.CrmAPI.UpsertCRMProduct(context.Background()).Execute()
+		resp, httpRes, err := apiClient.CrmAPI.UpsertCrmProduct(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

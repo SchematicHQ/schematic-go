@@ -21,7 +21,7 @@ var _ MappedNullable = &GetWebhookEventResponse{}
 
 // GetWebhookEventResponse struct for GetWebhookEventResponse
 type GetWebhookEventResponse struct {
-	Data WebhookEventResponseData `json:"data"`
+	Data WebhookEventDetailResponseData `json:"data"`
 	// Input parameters
 	Params map[string]interface{} `json:"params"`
 }
@@ -32,7 +32,7 @@ type _GetWebhookEventResponse GetWebhookEventResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewGetWebhookEventResponse(data WebhookEventResponseData, params map[string]interface{}) *GetWebhookEventResponse {
+func NewGetWebhookEventResponse(data WebhookEventDetailResponseData, params map[string]interface{}) *GetWebhookEventResponse {
 	this := GetWebhookEventResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewGetWebhookEventResponseWithDefaults() *GetWebhookEventResponse {
 }
 
 // GetData returns the Data field value
-func (o *GetWebhookEventResponse) GetData() WebhookEventResponseData {
+func (o *GetWebhookEventResponse) GetData() WebhookEventDetailResponseData {
 	if o == nil {
-		var ret WebhookEventResponseData
+		var ret WebhookEventDetailResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *GetWebhookEventResponse) GetData() WebhookEventResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *GetWebhookEventResponse) GetDataOk() (*WebhookEventResponseData, bool) {
+func (o *GetWebhookEventResponse) GetDataOk() (*WebhookEventDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *GetWebhookEventResponse) GetDataOk() (*WebhookEventResponseData, bool) 
 }
 
 // SetData sets field value
-func (o *GetWebhookEventResponse) SetData(v WebhookEventResponseData) {
+func (o *GetWebhookEventResponse) SetData(v WebhookEventDetailResponseData) {
 	o.Data = v
 }
 

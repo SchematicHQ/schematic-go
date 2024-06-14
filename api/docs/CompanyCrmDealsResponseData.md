@@ -4,9 +4,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**DealArr** | Pointer to **NullableFloat32** |  | [optional] 
+**DealArr** | **string** |  | 
 **DealExternalId** | **string** |  | 
-**DealMrr** | Pointer to **NullableFloat32** |  | [optional] 
+**DealMrr** | **string** |  | 
 **DealName** | Pointer to **NullableString** |  | [optional] 
 **LineItems** | [**[]CrmDealLineItem**](CrmDealLineItem.md) |  | 
 
@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewCompanyCrmDealsResponseData
 
-`func NewCompanyCrmDealsResponseData(dealExternalId string, lineItems []CrmDealLineItem, ) *CompanyCrmDealsResponseData`
+`func NewCompanyCrmDealsResponseData(dealArr string, dealExternalId string, dealMrr string, lineItems []CrmDealLineItem, ) *CompanyCrmDealsResponseData`
 
 NewCompanyCrmDealsResponseData instantiates a new CompanyCrmDealsResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -31,39 +31,24 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetDealArr
 
-`func (o *CompanyCrmDealsResponseData) GetDealArr() float32`
+`func (o *CompanyCrmDealsResponseData) GetDealArr() string`
 
 GetDealArr returns the DealArr field if non-nil, zero value otherwise.
 
 ### GetDealArrOk
 
-`func (o *CompanyCrmDealsResponseData) GetDealArrOk() (*float32, bool)`
+`func (o *CompanyCrmDealsResponseData) GetDealArrOk() (*string, bool)`
 
 GetDealArrOk returns a tuple with the DealArr field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDealArr
 
-`func (o *CompanyCrmDealsResponseData) SetDealArr(v float32)`
+`func (o *CompanyCrmDealsResponseData) SetDealArr(v string)`
 
 SetDealArr sets DealArr field to given value.
 
-### HasDealArr
 
-`func (o *CompanyCrmDealsResponseData) HasDealArr() bool`
-
-HasDealArr returns a boolean if a field has been set.
-
-### SetDealArrNil
-
-`func (o *CompanyCrmDealsResponseData) SetDealArrNil(b bool)`
-
- SetDealArrNil sets the value for DealArr to be an explicit nil
-
-### UnsetDealArr
-`func (o *CompanyCrmDealsResponseData) UnsetDealArr()`
-
-UnsetDealArr ensures that no value is present for DealArr, not even an explicit nil
 ### GetDealExternalId
 
 `func (o *CompanyCrmDealsResponseData) GetDealExternalId() string`
@@ -86,39 +71,24 @@ SetDealExternalId sets DealExternalId field to given value.
 
 ### GetDealMrr
 
-`func (o *CompanyCrmDealsResponseData) GetDealMrr() float32`
+`func (o *CompanyCrmDealsResponseData) GetDealMrr() string`
 
 GetDealMrr returns the DealMrr field if non-nil, zero value otherwise.
 
 ### GetDealMrrOk
 
-`func (o *CompanyCrmDealsResponseData) GetDealMrrOk() (*float32, bool)`
+`func (o *CompanyCrmDealsResponseData) GetDealMrrOk() (*string, bool)`
 
 GetDealMrrOk returns a tuple with the DealMrr field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDealMrr
 
-`func (o *CompanyCrmDealsResponseData) SetDealMrr(v float32)`
+`func (o *CompanyCrmDealsResponseData) SetDealMrr(v string)`
 
 SetDealMrr sets DealMrr field to given value.
 
-### HasDealMrr
 
-`func (o *CompanyCrmDealsResponseData) HasDealMrr() bool`
-
-HasDealMrr returns a boolean if a field has been set.
-
-### SetDealMrrNil
-
-`func (o *CompanyCrmDealsResponseData) SetDealMrrNil(b bool)`
-
- SetDealMrrNil sets the value for DealMrr to be an explicit nil
-
-### UnsetDealMrr
-`func (o *CompanyCrmDealsResponseData) UnsetDealMrr()`
-
-UnsetDealMrr ensures that no value is present for DealMrr, not even an explicit nil
 ### GetDealName
 
 `func (o *CompanyCrmDealsResponseData) GetDealName() string`

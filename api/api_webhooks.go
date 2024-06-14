@@ -16,6 +16,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strings"
 )
 
@@ -140,8 +141,26 @@ type WebhooksAPIService service
 type ApiCountWebhookEventsRequest struct {
 	ctx        context.Context
 	ApiService WebhooksAPI
+	webhookId  *string
+	ids        *[]string
+	q          *string
 	limit      *int32
 	offset     *int32
+}
+
+func (r ApiCountWebhookEventsRequest) WebhookId(webhookId string) ApiCountWebhookEventsRequest {
+	r.webhookId = &webhookId
+	return r
+}
+
+func (r ApiCountWebhookEventsRequest) Ids(ids []string) ApiCountWebhookEventsRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiCountWebhookEventsRequest) Q(q string) ApiCountWebhookEventsRequest {
+	r.q = &q
+	return r
 }
 
 // Page limit (default 100)
@@ -195,6 +214,23 @@ func (a *WebhooksAPIService) CountWebhookEventsExecute(r ApiCountWebhookEventsRe
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.webhookId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "webhook_id", r.webhookId, "")
+	}
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
 	}
@@ -1166,8 +1202,26 @@ func (a *WebhooksAPIService) GetWebhookEventExecute(r ApiGetWebhookEventRequest)
 type ApiListWebhookEventsRequest struct {
 	ctx        context.Context
 	ApiService WebhooksAPI
+	webhookId  *string
+	ids        *[]string
+	q          *string
 	limit      *int32
 	offset     *int32
+}
+
+func (r ApiListWebhookEventsRequest) WebhookId(webhookId string) ApiListWebhookEventsRequest {
+	r.webhookId = &webhookId
+	return r
+}
+
+func (r ApiListWebhookEventsRequest) Ids(ids []string) ApiListWebhookEventsRequest {
+	r.ids = &ids
+	return r
+}
+
+func (r ApiListWebhookEventsRequest) Q(q string) ApiListWebhookEventsRequest {
+	r.q = &q
+	return r
 }
 
 // Page limit (default 100)
@@ -1221,6 +1275,23 @@ func (a *WebhooksAPIService) ListWebhookEventsExecute(r ApiListWebhookEventsRequ
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.webhookId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "webhook_id", r.webhookId, "")
+	}
+	if r.ids != nil {
+		t := *r.ids
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "ids", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
+		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
 	}

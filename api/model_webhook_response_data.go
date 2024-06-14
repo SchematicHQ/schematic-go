@@ -20,7 +20,7 @@ import (
 // checks if the WebhookResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &WebhookResponseData{}
 
-// WebhookResponseData The updated resource
+// WebhookResponseData struct for WebhookResponseData
 type WebhookResponseData struct {
 	CreatedAt    time.Time `json:"created_at"`
 	Id           string    `json:"id"`

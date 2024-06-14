@@ -5,14 +5,14 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **AccountId** | **string** |  | 
-**Arr** | Pointer to **NullableFloat32** |  | [optional] 
+**Arr** | **string** |  | 
 **CompanyExternalId** | Pointer to **NullableString** |  | [optional] 
 **CreatedAt** | **time.Time** |  | 
 **DealExternalId** | **string** |  | 
 **DealId** | **string** |  | 
 **DeletedAt** | Pointer to **NullableTime** |  | [optional] 
 **EnvironmentId** | **string** |  | 
-**Mrr** | Pointer to **NullableFloat32** |  | [optional] 
+**Mrr** | **string** |  | 
 **Name** | Pointer to **NullableString** |  | [optional] 
 **ProductExternalId** | Pointer to **NullableString** |  | [optional] 
 **UpdatedAt** | **time.Time** |  | 
@@ -21,7 +21,7 @@ Name | Type | Description | Notes
 
 ### NewCrmDealResponseData
 
-`func NewCrmDealResponseData(accountId string, createdAt time.Time, dealExternalId string, dealId string, environmentId string, updatedAt time.Time, ) *CrmDealResponseData`
+`func NewCrmDealResponseData(accountId string, arr string, createdAt time.Time, dealExternalId string, dealId string, environmentId string, mrr string, updatedAt time.Time, ) *CrmDealResponseData`
 
 NewCrmDealResponseData instantiates a new CrmDealResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -58,39 +58,24 @@ SetAccountId sets AccountId field to given value.
 
 ### GetArr
 
-`func (o *CrmDealResponseData) GetArr() float32`
+`func (o *CrmDealResponseData) GetArr() string`
 
 GetArr returns the Arr field if non-nil, zero value otherwise.
 
 ### GetArrOk
 
-`func (o *CrmDealResponseData) GetArrOk() (*float32, bool)`
+`func (o *CrmDealResponseData) GetArrOk() (*string, bool)`
 
 GetArrOk returns a tuple with the Arr field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetArr
 
-`func (o *CrmDealResponseData) SetArr(v float32)`
+`func (o *CrmDealResponseData) SetArr(v string)`
 
 SetArr sets Arr field to given value.
 
-### HasArr
 
-`func (o *CrmDealResponseData) HasArr() bool`
-
-HasArr returns a boolean if a field has been set.
-
-### SetArrNil
-
-`func (o *CrmDealResponseData) SetArrNil(b bool)`
-
- SetArrNil sets the value for Arr to be an explicit nil
-
-### UnsetArr
-`func (o *CrmDealResponseData) UnsetArr()`
-
-UnsetArr ensures that no value is present for Arr, not even an explicit nil
 ### GetCompanyExternalId
 
 `func (o *CrmDealResponseData) GetCompanyExternalId() string`
@@ -243,39 +228,24 @@ SetEnvironmentId sets EnvironmentId field to given value.
 
 ### GetMrr
 
-`func (o *CrmDealResponseData) GetMrr() float32`
+`func (o *CrmDealResponseData) GetMrr() string`
 
 GetMrr returns the Mrr field if non-nil, zero value otherwise.
 
 ### GetMrrOk
 
-`func (o *CrmDealResponseData) GetMrrOk() (*float32, bool)`
+`func (o *CrmDealResponseData) GetMrrOk() (*string, bool)`
 
 GetMrrOk returns a tuple with the Mrr field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetMrr
 
-`func (o *CrmDealResponseData) SetMrr(v float32)`
+`func (o *CrmDealResponseData) SetMrr(v string)`
 
 SetMrr sets Mrr field to given value.
 
-### HasMrr
 
-`func (o *CrmDealResponseData) HasMrr() bool`
-
-HasMrr returns a boolean if a field has been set.
-
-### SetMrrNil
-
-`func (o *CrmDealResponseData) SetMrrNil(b bool)`
-
- SetMrrNil sets the value for Mrr to be an explicit nil
-
-### UnsetMrr
-`func (o *CrmDealResponseData) UnsetMrr()`
-
-UnsetMrr ensures that no value is present for Mrr, not even an explicit nil
 ### GetName
 
 `func (o *CrmDealResponseData) GetName() string`

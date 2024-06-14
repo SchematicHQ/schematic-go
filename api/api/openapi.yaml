@@ -6670,6 +6670,29 @@ paths:
     get:
       operationId: listWebhookEvents
       parameters:
+      - explode: true
+        in: query
+        name: webhook_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: ids
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+        style: form
       - description: Page limit (default 100)
         explode: true
         in: query
@@ -6772,6 +6795,29 @@ paths:
     get:
       operationId: countWebhookEvents
       parameters:
+      - explode: true
+        in: query
+        name: webhook_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: ids
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+        style: form
       - description: Page limit (default 100)
         explode: true
         in: query
@@ -7750,46 +7796,44 @@ components:
       type: object
     CompanyCrmDealsResponseData:
       example:
-        deal_arr: 0.8008281904610115
+        deal_arr: deal_arr
         deal_external_id: deal_external_id
-        deal_mrr: 6.027456183070403
+        deal_mrr: deal_mrr
         deal_name: deal_name
         line_items:
-        - quantity: 5
-          total_discount: 7.061401241503109
+        - quantity: 6
+          total_discount: "{}"
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          term_month: 2
-          discount_percentage: 1.4658129805029452
+          term_month: 1
+          discount_percentage: "{}"
           deleted_at: 2000-01-23T04:56:07.000+00:00
           billing_frequency: billing_frequency
           updated_at: 2000-01-23T04:56:07.000+00:00
-          price: 5.962133916683182
+          price: 0.8008281904610115
           name: name
           currency: currency
           id: id
-        - quantity: 5
-          total_discount: 7.061401241503109
+        - quantity: 6
+          total_discount: "{}"
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          term_month: 2
-          discount_percentage: 1.4658129805029452
+          term_month: 1
+          discount_percentage: "{}"
           deleted_at: 2000-01-23T04:56:07.000+00:00
           billing_frequency: billing_frequency
           updated_at: 2000-01-23T04:56:07.000+00:00
-          price: 5.962133916683182
+          price: 0.8008281904610115
           name: name
           currency: currency
           id: id
       properties:
         deal_arr:
-          nullable: true
-          type: number
+          type: string
         deal_external_id:
           type: string
         deal_mrr:
-          nullable: true
-          type: number
+          type: string
         deal_name:
           nullable: true
           type: string
@@ -7798,7 +7842,9 @@ components:
             $ref: '#/components/schemas/CrmDealLineItem'
           type: array
       required:
+      - deal_arr
       - deal_external_id
+      - deal_mrr
       - line_items
       title: CompanyCrmDealsResponseData
       type: object
@@ -8422,7 +8468,7 @@ components:
       type: object
     CreateCrmDealRequestBody:
       example:
-        arr: 0.8008281904610115
+        arr: arr
         crm_product_id: crm_product_id
         deal_external_id: deal_external_id
         deal_stage: deal_stage
@@ -8430,11 +8476,11 @@ components:
         crm_company_id: crm_company_id
         crm_company_key: crm_company_key
         crm_type: crm_type
-        mrr: 6.027456183070403
+        mrr: mrr
       properties:
         arr:
           nullable: true
-          type: number
+          type: string
         crm_company_id:
           nullable: true
           type: string
@@ -8455,7 +8501,7 @@ components:
           type: string
         mrr:
           nullable: true
-          type: number
+          type: string
       required:
       - crm_company_key
       - crm_type
@@ -8464,12 +8510,12 @@ components:
       type: object
     CreateCrmLineItemRequestBody:
       example:
-        amount: 6.027456183070403
-        quantity: 5
-        total_discount: 5.637376656633329
+        amount: amount
+        quantity: 6
+        total_discount: total_discount
         TermMonth: 0
         interval: interval
-        discount_percentage: 1.4658129805029452
+        discount_percentage: discount_percentage
         line_item_external_id: line_item_external_id
         product_external_id: product_external_id
       properties:
@@ -8477,10 +8523,10 @@ components:
           nullable: true
           type: integer
         amount:
-          type: number
+          type: string
         discount_percentage:
           nullable: true
-          type: number
+          type: string
         interval:
           type: string
         line_item_external_id:
@@ -8491,7 +8537,7 @@ components:
           type: integer
         total_discount:
           nullable: true
-          type: number
+          type: string
       required:
       - amount
       - interval
@@ -8502,8 +8548,8 @@ components:
       type: object
     CreateCrmProductRequestBody:
       example:
-        quantity: 6
-        price: 0.8008281904610115
+        quantity: 0
+        price: price
         name: name
         description: description
         currency: currency
@@ -8522,7 +8568,7 @@ components:
         name:
           type: string
         price:
-          type: number
+          type: string
         quantity:
           type: integer
         sku:
@@ -8799,7 +8845,7 @@ components:
           - crm_product
           type: string
         event_subtype:
-          description: DealName of track event type used to measure this condition
+          description: Name of track event type used to measure this condition
           nullable: true
           type: string
         id:
@@ -9129,16 +9175,16 @@ components:
       type: object
     CrmDealLineItem:
       example:
-        quantity: 5
-        total_discount: 7.061401241503109
+        quantity: 6
+        total_discount: "{}"
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
-        term_month: 2
-        discount_percentage: 1.4658129805029452
+        term_month: 1
+        discount_percentage: "{}"
         deleted_at: 2000-01-23T04:56:07.000+00:00
         billing_frequency: billing_frequency
         updated_at: 2000-01-23T04:56:07.000+00:00
-        price: 5.962133916683182
+        price: 0.8008281904610115
         name: name
         currency: currency
         id: id
@@ -9157,8 +9203,8 @@ components:
         description:
           type: string
         discount_percentage:
-          nullable: true
-          type: number
+          title: Decimal
+          type: object
         id:
           type: string
         name:
@@ -9171,8 +9217,8 @@ components:
           nullable: true
           type: integer
         total_discount:
-          nullable: true
-          type: number
+          title: Decimal
+          type: object
         updated_at:
           format: date-time
           type: string
@@ -9191,7 +9237,7 @@ components:
     CrmDealResponseData:
       description: The created resource
       example:
-        arr: 0.8008281904610115
+        arr: arr
         deal_external_id: deal_external_id
         account_id: account_id
         company_external_id: company_external_id
@@ -9200,15 +9246,14 @@ components:
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
         deal_id: deal_id
-        mrr: 6.027456183070403
+        mrr: mrr
         deleted_at: 2000-01-23T04:56:07.000+00:00
         product_external_id: product_external_id
       properties:
         account_id:
           type: string
         arr:
-          nullable: true
-          type: number
+          type: string
         company_external_id:
           nullable: true
           type: string
@@ -9226,8 +9271,7 @@ components:
         environment_id:
           type: string
         mrr:
-          nullable: true
-          type: number
+          type: string
         name:
           nullable: true
           type: string
@@ -9239,10 +9283,12 @@ components:
           type: string
       required:
       - account_id
+      - arr
       - created_at
       - deal_external_id
       - deal_id
       - environment_id
+      - mrr
       - updated_at
       title: CrmDealResponseData
       type: object
@@ -9288,10 +9334,10 @@ components:
       description: The created resource
       example:
         account_id: account_id
-        quantity: 6.027456183070403
+        quantity: 0.8008281904610115
         environment_id: environment_id
         updated_at: 2000-01-23T04:56:07.000+00:00
-        price: 0.8008281904610115
+        price: price
         product_id: product_id
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
@@ -9317,7 +9363,7 @@ components:
         name:
           type: string
         price:
-          type: number
+          type: string
         product_id:
           type: string
         quantity:
@@ -9337,6 +9383,9 @@ components:
       - quantity
       - updated_at
       title: CrmProductResponseData
+      type: object
+    Decimal:
+      title: Decimal
       type: object
     DeleteResponse:
       example:
@@ -24547,16 +24596,60 @@ components:
       - updated_at
       title: UserResponseData
       type: object
-    WebhookEventResponseData:
+    WebhookEventDetailResponseData:
       example:
         sent_at: 2000-01-23T04:56:07.000+00:00
         response_code: 0
+        webhook:
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          request_types:
+          - request_types
+          - request_types
+          url: url
+          status: status
         request_type: request_type
         updated_at: 2000-01-23T04:56:07.000+00:00
         webhook_id: webhook_id
         created_at: 2000-01-23T04:56:07.000+00:00
         id: id
         status: status
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        id:
+          type: string
+        request_type:
+          type: string
+        response_code:
+          nullable: true
+          type: integer
+        sent_at:
+          format: date-time
+          nullable: true
+          type: string
+        status:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        webhook:
+          $ref: '#/components/schemas/WebhookResponseData'
+        webhook_id:
+          type: string
+      required:
+      - created_at
+      - id
+      - request_type
+      - status
+      - updated_at
+      - webhook_id
+      title: WebhookEventDetailResponseData
+      type: object
+    WebhookEventResponseData:
       properties:
         created_at:
           format: date-time
@@ -24589,7 +24682,6 @@ components:
       title: WebhookEventResponseData
       type: object
     WebhookResponseData:
-      description: The updated resource
       example:
         updated_at: 2000-01-23T04:56:07.000+00:00
         name: name
@@ -26254,65 +26346,65 @@ components:
     GetActiveDealsResponse:
       example:
         data:
-        - deal_arr: 0.8008281904610115
+        - deal_arr: deal_arr
           deal_external_id: deal_external_id
-          deal_mrr: 6.027456183070403
+          deal_mrr: deal_mrr
           deal_name: deal_name
           line_items:
-          - quantity: 5
-            total_discount: 7.061401241503109
+          - quantity: 6
+            total_discount: "{}"
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            term_month: 2
-            discount_percentage: 1.4658129805029452
+            term_month: 1
+            discount_percentage: "{}"
             deleted_at: 2000-01-23T04:56:07.000+00:00
             billing_frequency: billing_frequency
             updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 5.962133916683182
+            price: 0.8008281904610115
             name: name
             currency: currency
             id: id
-          - quantity: 5
-            total_discount: 7.061401241503109
+          - quantity: 6
+            total_discount: "{}"
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            term_month: 2
-            discount_percentage: 1.4658129805029452
+            term_month: 1
+            discount_percentage: "{}"
             deleted_at: 2000-01-23T04:56:07.000+00:00
             billing_frequency: billing_frequency
             updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 5.962133916683182
+            price: 0.8008281904610115
             name: name
             currency: currency
             id: id
-        - deal_arr: 0.8008281904610115
+        - deal_arr: deal_arr
           deal_external_id: deal_external_id
-          deal_mrr: 6.027456183070403
+          deal_mrr: deal_mrr
           deal_name: deal_name
           line_items:
-          - quantity: 5
-            total_discount: 7.061401241503109
+          - quantity: 6
+            total_discount: "{}"
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            term_month: 2
-            discount_percentage: 1.4658129805029452
+            term_month: 1
+            discount_percentage: "{}"
             deleted_at: 2000-01-23T04:56:07.000+00:00
             billing_frequency: billing_frequency
             updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 5.962133916683182
+            price: 0.8008281904610115
             name: name
             currency: currency
             id: id
-          - quantity: 5
-            total_discount: 7.061401241503109
+          - quantity: 6
+            total_discount: "{}"
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            term_month: 2
-            discount_percentage: 1.4658129805029452
+            term_month: 1
+            discount_percentage: "{}"
             deleted_at: 2000-01-23T04:56:07.000+00:00
             billing_frequency: billing_frequency
             updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 5.962133916683182
+            price: 0.8008281904610115
             name: name
             currency: currency
             id: id
@@ -27511,7 +27603,7 @@ components:
     UpsertCrmDealResponse:
       example:
         data:
-          arr: 0.8008281904610115
+          arr: arr
           deal_external_id: deal_external_id
           account_id: account_id
           company_external_id: company_external_id
@@ -27520,7 +27612,7 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           deal_id: deal_id
-          mrr: 6.027456183070403
+          mrr: mrr
           deleted_at: 2000-01-23T04:56:07.000+00:00
           product_external_id: product_external_id
         params: "{}"
@@ -27564,10 +27656,10 @@ components:
       example:
         data:
         - account_id: account_id
-          quantity: 6.027456183070403
+          quantity: 0.8008281904610115
           environment_id: environment_id
           updated_at: 2000-01-23T04:56:07.000+00:00
-          price: 0.8008281904610115
+          price: price
           product_id: product_id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -27575,10 +27667,10 @@ components:
           external_id: external_id
           deleted_at: 2000-01-23T04:56:07.000+00:00
         - account_id: account_id
-          quantity: 6.027456183070403
+          quantity: 0.8008281904610115
           environment_id: environment_id
           updated_at: 2000-01-23T04:56:07.000+00:00
-          price: 0.8008281904610115
+          price: price
           product_id: product_id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -27610,10 +27702,10 @@ components:
       example:
         data:
           account_id: account_id
-          quantity: 6.027456183070403
+          quantity: 0.8008281904610115
           environment_id: environment_id
           updated_at: 2000-01-23T04:56:07.000+00:00
-          price: 0.8008281904610115
+          price: price
           product_id: product_id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -65888,15 +65980,28 @@ components:
     ListWebhookEventsParams:
       description: Input parameters
       example:
+        q: q
         offset: 0
+        webhook_id: webhook_id
         limit: 100
+        ids:
+        - ids
+        - ids
       properties:
+        ids:
+          items:
+            type: string
+          type: array
         limit:
           example: 100
           type: integer
         offset:
           example: 0
           type: integer
+        q:
+          type: string
+        webhook_id:
+          type: string
       title: ListWebhookEventsParams
       type: object
     ListWebhookEventsResponse:
@@ -65904,6 +66009,16 @@ components:
         data:
         - sent_at: 2000-01-23T04:56:07.000+00:00
           response_code: 0
+          webhook:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            request_types:
+            - request_types
+            - request_types
+            url: url
+            status: status
           request_type: request_type
           updated_at: 2000-01-23T04:56:07.000+00:00
           webhook_id: webhook_id
@@ -65912,6 +66027,16 @@ components:
           status: status
         - sent_at: 2000-01-23T04:56:07.000+00:00
           response_code: 0
+          webhook:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            request_types:
+            - request_types
+            - request_types
+            url: url
+            status: status
           request_type: request_type
           updated_at: 2000-01-23T04:56:07.000+00:00
           webhook_id: webhook_id
@@ -65919,13 +66044,18 @@ components:
           id: id
           status: status
         params:
+          q: q
           offset: 0
+          webhook_id: webhook_id
           limit: 100
+          ids:
+          - ids
+          - ids
       properties:
         data:
           description: The returned resources
           items:
-            $ref: '#/components/schemas/WebhookEventResponseData'
+            $ref: '#/components/schemas/WebhookEventDetailResponseData'
           title: ListWebhookEventsResponseData
           type: array
         params:
@@ -65940,6 +66070,16 @@ components:
         data:
           sent_at: 2000-01-23T04:56:07.000+00:00
           response_code: 0
+          webhook:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            request_types:
+            - request_types
+            - request_types
+            url: url
+            status: status
           request_type: request_type
           updated_at: 2000-01-23T04:56:07.000+00:00
           webhook_id: webhook_id
@@ -65949,7 +66089,7 @@ components:
         params: "{}"
       properties:
         data:
-          $ref: '#/components/schemas/WebhookEventResponseData'
+          $ref: '#/components/schemas/WebhookEventDetailResponseData'
         params:
           description: Input parameters
           title: GetWebhookEventParams
@@ -65962,15 +66102,28 @@ components:
     CountWebhookEventsParams:
       description: Input parameters
       example:
+        q: q
         offset: 0
+        webhook_id: webhook_id
         limit: 100
+        ids:
+        - ids
+        - ids
       properties:
+        ids:
+          items:
+            type: string
+          type: array
         limit:
           example: 100
           type: integer
         offset:
           example: 0
           type: integer
+        q:
+          type: string
+        webhook_id:
+          type: string
       title: CountWebhookEventsParams
       type: object
     CountWebhookEventsResponse:
@@ -65978,8 +66131,13 @@ components:
         data:
           count: 0
         params:
+          q: q
           offset: 0
+          webhook_id: webhook_id
           limit: 100
+          ids:
+          - ids
+          - ids
       properties:
         data:
           $ref: '#/components/schemas/CountResponse'

@@ -18,7 +18,7 @@ Method | HTTP request | Description
 
 ## CountWebhookEvents
 
-> CountWebhookEventsResponse CountWebhookEvents(ctx).Limit(limit).Offset(offset).Execute()
+> CountWebhookEventsResponse CountWebhookEvents(ctx).WebhookId(webhookId).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 
 Count webhook events
 
@@ -40,10 +40,13 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
+	webhookId := "webhookId_example" // string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().WebhooksAPI.CountWebhookEvents(context.Background()).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().WebhooksAPI.CountWebhookEvents(context.Background()).WebhookId(webhookId).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `WebhooksAPI.CountWebhookEvents``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -64,6 +67,9 @@ Other parameters are passed through a pointer to a apiCountWebhookEventsRequest 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **webhookId** | **string** |  | 
+ **ids** | **[]string** |  | 
+ **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -438,7 +444,7 @@ Name | Type | Description  | Notes
 
 ## ListWebhookEvents
 
-> ListWebhookEventsResponse ListWebhookEvents(ctx).Limit(limit).Offset(offset).Execute()
+> ListWebhookEventsResponse ListWebhookEvents(ctx).WebhookId(webhookId).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 
 List webhook events
 
@@ -460,10 +466,13 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
+	webhookId := "webhookId_example" // string |  (optional)
+	ids := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().WebhooksAPI.ListWebhookEvents(context.Background()).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().WebhooksAPI.ListWebhookEvents(context.Background()).WebhookId(webhookId).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `WebhooksAPI.ListWebhookEvents``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -484,6 +493,9 @@ Other parameters are passed through a pointer to a apiListWebhookEventsRequest s
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **webhookId** | **string** |  | 
+ **ids** | **[]string** |  | 
+ **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

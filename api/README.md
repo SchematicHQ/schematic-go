@@ -416,6 +416,7 @@ Class | Method | HTTP request | Description
  - [UpsertUserTraitResponse](docs/UpsertUserTraitResponse.md)
  - [UserDetailResponseData](docs/UserDetailResponseData.md)
  - [UserResponseData](docs/UserResponseData.md)
+ - [WebhookEventDetailResponseData](docs/WebhookEventDetailResponseData.md)
  - [WebhookEventResponseData](docs/WebhookEventResponseData.md)
  - [WebhookResponseData](docs/WebhookResponseData.md)
 

@@ -21,14 +21,14 @@ var _ MappedNullable = &CreateCrmProductRequestBody{}
 
 // CreateCrmProductRequestBody struct for CreateCrmProductRequestBody
 type CreateCrmProductRequestBody struct {
-	Currency    string  `json:"currency"`
-	Description string  `json:"description"`
-	ExternalId  string  `json:"external_id"`
-	Interval    string  `json:"interval"`
-	Name        string  `json:"name"`
-	Price       float32 `json:"price"`
-	Quantity    int32   `json:"quantity"`
-	Sku         string  `json:"sku"`
+	Currency    string `json:"currency"`
+	Description string `json:"description"`
+	ExternalId  string `json:"external_id"`
+	Interval    string `json:"interval"`
+	Name        string `json:"name"`
+	Price       string `json:"price"`
+	Quantity    int32  `json:"quantity"`
+	Sku         string `json:"sku"`
 }
 
 type _CreateCrmProductRequestBody CreateCrmProductRequestBody
@@ -37,7 +37,7 @@ type _CreateCrmProductRequestBody CreateCrmProductRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateCrmProductRequestBody(currency string, description string, externalId string, interval string, name string, price float32, quantity int32, sku string) *CreateCrmProductRequestBody {
+func NewCreateCrmProductRequestBody(currency string, description string, externalId string, interval string, name string, price string, quantity int32, sku string) *CreateCrmProductRequestBody {
 	this := CreateCrmProductRequestBody{}
 	this.Currency = currency
 	this.Description = description
@@ -179,9 +179,9 @@ func (o *CreateCrmProductRequestBody) SetName(v string) {
 }
 
 // GetPrice returns the Price field value
-func (o *CreateCrmProductRequestBody) GetPrice() float32 {
+func (o *CreateCrmProductRequestBody) GetPrice() string {
 	if o == nil {
-		var ret float32
+		var ret string
 		return ret
 	}
 
@@ -190,7 +190,7 @@ func (o *CreateCrmProductRequestBody) GetPrice() float32 {
 
 // GetPriceOk returns a tuple with the Price field value
 // and a boolean to check if the value has been set.
-func (o *CreateCrmProductRequestBody) GetPriceOk() (*float32, bool) {
+func (o *CreateCrmProductRequestBody) GetPriceOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -198,7 +198,7 @@ func (o *CreateCrmProductRequestBody) GetPriceOk() (*float32, bool) {
 }
 
 // SetPrice sets field value
-func (o *CreateCrmProductRequestBody) SetPrice(v float32) {
+func (o *CreateCrmProductRequestBody) SetPrice(v string) {
 	o.Price = v
 }
 

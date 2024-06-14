@@ -5,19 +5,19 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **TermMonth** | Pointer to **NullableInt32** |  | [optional] 
-**Amount** | **float32** |  | 
-**DiscountPercentage** | Pointer to **NullableFloat32** |  | [optional] 
+**Amount** | **string** |  | 
+**DiscountPercentage** | Pointer to **NullableString** |  | [optional] 
 **Interval** | **string** |  | 
 **LineItemExternalId** | **string** |  | 
 **ProductExternalId** | **string** |  | 
 **Quantity** | **int32** |  | 
-**TotalDiscount** | Pointer to **NullableFloat32** |  | [optional] 
+**TotalDiscount** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
 ### NewCreateCrmLineItemRequestBody
 
-`func NewCreateCrmLineItemRequestBody(amount float32, interval string, lineItemExternalId string, productExternalId string, quantity int32, ) *CreateCrmLineItemRequestBody`
+`func NewCreateCrmLineItemRequestBody(amount string, interval string, lineItemExternalId string, productExternalId string, quantity int32, ) *CreateCrmLineItemRequestBody`
 
 NewCreateCrmLineItemRequestBody instantiates a new CreateCrmLineItemRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -69,40 +69,40 @@ HasTermMonth returns a boolean if a field has been set.
 UnsetTermMonth ensures that no value is present for TermMonth, not even an explicit nil
 ### GetAmount
 
-`func (o *CreateCrmLineItemRequestBody) GetAmount() float32`
+`func (o *CreateCrmLineItemRequestBody) GetAmount() string`
 
 GetAmount returns the Amount field if non-nil, zero value otherwise.
 
 ### GetAmountOk
 
-`func (o *CreateCrmLineItemRequestBody) GetAmountOk() (*float32, bool)`
+`func (o *CreateCrmLineItemRequestBody) GetAmountOk() (*string, bool)`
 
 GetAmountOk returns a tuple with the Amount field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAmount
 
-`func (o *CreateCrmLineItemRequestBody) SetAmount(v float32)`
+`func (o *CreateCrmLineItemRequestBody) SetAmount(v string)`
 
 SetAmount sets Amount field to given value.
 
 
 ### GetDiscountPercentage
 
-`func (o *CreateCrmLineItemRequestBody) GetDiscountPercentage() float32`
+`func (o *CreateCrmLineItemRequestBody) GetDiscountPercentage() string`
 
 GetDiscountPercentage returns the DiscountPercentage field if non-nil, zero value otherwise.
 
 ### GetDiscountPercentageOk
 
-`func (o *CreateCrmLineItemRequestBody) GetDiscountPercentageOk() (*float32, bool)`
+`func (o *CreateCrmLineItemRequestBody) GetDiscountPercentageOk() (*string, bool)`
 
 GetDiscountPercentageOk returns a tuple with the DiscountPercentage field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDiscountPercentage
 
-`func (o *CreateCrmLineItemRequestBody) SetDiscountPercentage(v float32)`
+`func (o *CreateCrmLineItemRequestBody) SetDiscountPercentage(v string)`
 
 SetDiscountPercentage sets DiscountPercentage field to given value.
 
@@ -204,20 +204,20 @@ SetQuantity sets Quantity field to given value.
 
 ### GetTotalDiscount
 
-`func (o *CreateCrmLineItemRequestBody) GetTotalDiscount() float32`
+`func (o *CreateCrmLineItemRequestBody) GetTotalDiscount() string`
 
 GetTotalDiscount returns the TotalDiscount field if non-nil, zero value otherwise.
 
 ### GetTotalDiscountOk
 
-`func (o *CreateCrmLineItemRequestBody) GetTotalDiscountOk() (*float32, bool)`
+`func (o *CreateCrmLineItemRequestBody) GetTotalDiscountOk() (*string, bool)`
 
 GetTotalDiscountOk returns a tuple with the TotalDiscount field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTotalDiscount
 
-`func (o *CreateCrmLineItemRequestBody) SetTotalDiscount(v float32)`
+`func (o *CreateCrmLineItemRequestBody) SetTotalDiscount(v string)`
 
 SetTotalDiscount sets TotalDiscount field to given value.
 

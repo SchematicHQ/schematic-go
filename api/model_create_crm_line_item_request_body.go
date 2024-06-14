@@ -21,14 +21,14 @@ var _ MappedNullable = &CreateCrmLineItemRequestBody{}
 
 // CreateCrmLineItemRequestBody struct for CreateCrmLineItemRequestBody
 type CreateCrmLineItemRequestBody struct {
-	TermMonth          NullableInt32   `json:"TermMonth,omitempty"`
-	Amount             float32         `json:"amount"`
-	DiscountPercentage NullableFloat32 `json:"discount_percentage,omitempty"`
-	Interval           string          `json:"interval"`
-	LineItemExternalId string          `json:"line_item_external_id"`
-	ProductExternalId  string          `json:"product_external_id"`
-	Quantity           int32           `json:"quantity"`
-	TotalDiscount      NullableFloat32 `json:"total_discount,omitempty"`
+	TermMonth          NullableInt32  `json:"TermMonth,omitempty"`
+	Amount             string         `json:"amount"`
+	DiscountPercentage NullableString `json:"discount_percentage,omitempty"`
+	Interval           string         `json:"interval"`
+	LineItemExternalId string         `json:"line_item_external_id"`
+	ProductExternalId  string         `json:"product_external_id"`
+	Quantity           int32          `json:"quantity"`
+	TotalDiscount      NullableString `json:"total_discount,omitempty"`
 }
 
 type _CreateCrmLineItemRequestBody CreateCrmLineItemRequestBody
@@ -37,7 +37,7 @@ type _CreateCrmLineItemRequestBody CreateCrmLineItemRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateCrmLineItemRequestBody(amount float32, interval string, lineItemExternalId string, productExternalId string, quantity int32) *CreateCrmLineItemRequestBody {
+func NewCreateCrmLineItemRequestBody(amount string, interval string, lineItemExternalId string, productExternalId string, quantity int32) *CreateCrmLineItemRequestBody {
 	this := CreateCrmLineItemRequestBody{}
 	this.Amount = amount
 	this.Interval = interval
@@ -99,9 +99,9 @@ func (o *CreateCrmLineItemRequestBody) UnsetTermMonth() {
 }
 
 // GetAmount returns the Amount field value
-func (o *CreateCrmLineItemRequestBody) GetAmount() float32 {
+func (o *CreateCrmLineItemRequestBody) GetAmount() string {
 	if o == nil {
-		var ret float32
+		var ret string
 		return ret
 	}
 
@@ -110,7 +110,7 @@ func (o *CreateCrmLineItemRequestBody) GetAmount() float32 {
 
 // GetAmountOk returns a tuple with the Amount field value
 // and a boolean to check if the value has been set.
-func (o *CreateCrmLineItemRequestBody) GetAmountOk() (*float32, bool) {
+func (o *CreateCrmLineItemRequestBody) GetAmountOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -118,14 +118,14 @@ func (o *CreateCrmLineItemRequestBody) GetAmountOk() (*float32, bool) {
 }
 
 // SetAmount sets field value
-func (o *CreateCrmLineItemRequestBody) SetAmount(v float32) {
+func (o *CreateCrmLineItemRequestBody) SetAmount(v string) {
 	o.Amount = v
 }
 
 // GetDiscountPercentage returns the DiscountPercentage field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreateCrmLineItemRequestBody) GetDiscountPercentage() float32 {
+func (o *CreateCrmLineItemRequestBody) GetDiscountPercentage() string {
 	if o == nil || IsNil(o.DiscountPercentage.Get()) {
-		var ret float32
+		var ret string
 		return ret
 	}
 	return *o.DiscountPercentage.Get()
@@ -134,7 +134,7 @@ func (o *CreateCrmLineItemRequestBody) GetDiscountPercentage() float32 {
 // GetDiscountPercentageOk returns a tuple with the DiscountPercentage field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreateCrmLineItemRequestBody) GetDiscountPercentageOk() (*float32, bool) {
+func (o *CreateCrmLineItemRequestBody) GetDiscountPercentageOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -150,8 +150,8 @@ func (o *CreateCrmLineItemRequestBody) HasDiscountPercentage() bool {
 	return false
 }
 
-// SetDiscountPercentage gets a reference to the given NullableFloat32 and assigns it to the DiscountPercentage field.
-func (o *CreateCrmLineItemRequestBody) SetDiscountPercentage(v float32) {
+// SetDiscountPercentage gets a reference to the given NullableString and assigns it to the DiscountPercentage field.
+func (o *CreateCrmLineItemRequestBody) SetDiscountPercentage(v string) {
 	o.DiscountPercentage.Set(&v)
 }
 
@@ -262,9 +262,9 @@ func (o *CreateCrmLineItemRequestBody) SetQuantity(v int32) {
 }
 
 // GetTotalDiscount returns the TotalDiscount field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreateCrmLineItemRequestBody) GetTotalDiscount() float32 {
+func (o *CreateCrmLineItemRequestBody) GetTotalDiscount() string {
 	if o == nil || IsNil(o.TotalDiscount.Get()) {
-		var ret float32
+		var ret string
 		return ret
 	}
 	return *o.TotalDiscount.Get()
@@ -273,7 +273,7 @@ func (o *CreateCrmLineItemRequestBody) GetTotalDiscount() float32 {
 // GetTotalDiscountOk returns a tuple with the TotalDiscount field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreateCrmLineItemRequestBody) GetTotalDiscountOk() (*float32, bool) {
+func (o *CreateCrmLineItemRequestBody) GetTotalDiscountOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -289,8 +289,8 @@ func (o *CreateCrmLineItemRequestBody) HasTotalDiscount() bool {
 	return false
 }
 
-// SetTotalDiscount gets a reference to the given NullableFloat32 and assigns it to the TotalDiscount field.
-func (o *CreateCrmLineItemRequestBody) SetTotalDiscount(v float32) {
+// SetTotalDiscount gets a reference to the given NullableString and assigns it to the TotalDiscount field.
+func (o *CreateCrmLineItemRequestBody) SetTotalDiscount(v string) {
 	o.TotalDiscount.Set(&v)
 }
 

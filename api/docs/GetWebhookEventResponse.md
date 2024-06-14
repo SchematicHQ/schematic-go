@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**WebhookEventResponseData**](WebhookEventResponseData.md) |  | 
+**Data** | [**WebhookEventDetailResponseData**](WebhookEventDetailResponseData.md) |  | 
 **Params** | **map[string]interface{}** | Input parameters | 
 
 ## Methods
 
 ### NewGetWebhookEventResponse
 
-`func NewGetWebhookEventResponse(data WebhookEventResponseData, params map[string]interface{}, ) *GetWebhookEventResponse`
+`func NewGetWebhookEventResponse(data WebhookEventDetailResponseData, params map[string]interface{}, ) *GetWebhookEventResponse`
 
 NewGetWebhookEventResponse instantiates a new GetWebhookEventResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *GetWebhookEventResponse) GetData() WebhookEventResponseData`
+`func (o *GetWebhookEventResponse) GetData() WebhookEventDetailResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *GetWebhookEventResponse) GetDataOk() (*WebhookEventResponseData, bool)`
+`func (o *GetWebhookEventResponse) GetDataOk() (*WebhookEventDetailResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *GetWebhookEventResponse) SetData(v WebhookEventResponseData)`
+`func (o *GetWebhookEventResponse) SetData(v WebhookEventDetailResponseData)`
 
 SetData sets Data field to given value.
 

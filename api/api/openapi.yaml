@@ -7796,9 +7796,9 @@ components:
       type: object
     CompanyCrmDealsResponseData:
       example:
-        deal_arr: "{}"
+        deal_arr: deal_arr
         deal_external_id: deal_external_id
-        deal_mrr: "{}"
+        deal_mrr: deal_mrr
         deal_name: deal_name
         line_items:
         - quantity: 6
@@ -7829,13 +7829,11 @@ components:
           id: id
       properties:
         deal_arr:
-          title: Decimal
-          type: object
+          type: string
         deal_external_id:
           type: string
         deal_mrr:
-          title: Decimal
-          type: object
+          type: string
         deal_name:
           nullable: true
           type: string
@@ -7844,7 +7842,9 @@ components:
             $ref: '#/components/schemas/CrmDealLineItem'
           type: array
       required:
+      - deal_arr
       - deal_external_id
+      - deal_mrr
       - line_items
       title: CompanyCrmDealsResponseData
       type: object
@@ -26346,9 +26346,9 @@ components:
     GetActiveDealsResponse:
       example:
         data:
-        - deal_arr: "{}"
+        - deal_arr: deal_arr
           deal_external_id: deal_external_id
-          deal_mrr: "{}"
+          deal_mrr: deal_mrr
           deal_name: deal_name
           line_items:
           - quantity: 6
@@ -26377,9 +26377,9 @@ components:
             name: name
             currency: currency
             id: id
-        - deal_arr: "{}"
+        - deal_arr: deal_arr
           deal_external_id: deal_external_id
-          deal_mrr: "{}"
+          deal_mrr: deal_mrr
           deal_name: deal_name
           line_items:
           - quantity: 6

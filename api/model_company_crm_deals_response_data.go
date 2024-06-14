@@ -21,11 +21,11 @@ var _ MappedNullable = &CompanyCrmDealsResponseData{}
 
 // CompanyCrmDealsResponseData struct for CompanyCrmDealsResponseData
 type CompanyCrmDealsResponseData struct {
-	DealArr        map[string]interface{} `json:"deal_arr,omitempty"`
-	DealExternalId string                 `json:"deal_external_id"`
-	DealMrr        map[string]interface{} `json:"deal_mrr,omitempty"`
-	DealName       NullableString         `json:"deal_name,omitempty"`
-	LineItems      []CrmDealLineItem      `json:"line_items"`
+	DealArr        string            `json:"deal_arr"`
+	DealExternalId string            `json:"deal_external_id"`
+	DealMrr        string            `json:"deal_mrr"`
+	DealName       NullableString    `json:"deal_name,omitempty"`
+	LineItems      []CrmDealLineItem `json:"line_items"`
 }
 
 type _CompanyCrmDealsResponseData CompanyCrmDealsResponseData
@@ -34,9 +34,11 @@ type _CompanyCrmDealsResponseData CompanyCrmDealsResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCompanyCrmDealsResponseData(dealExternalId string, lineItems []CrmDealLineItem) *CompanyCrmDealsResponseData {
+func NewCompanyCrmDealsResponseData(dealArr string, dealExternalId string, dealMrr string, lineItems []CrmDealLineItem) *CompanyCrmDealsResponseData {
 	this := CompanyCrmDealsResponseData{}
+	this.DealArr = dealArr
 	this.DealExternalId = dealExternalId
+	this.DealMrr = dealMrr
 	this.LineItems = lineItems
 	return &this
 }
@@ -49,35 +51,27 @@ func NewCompanyCrmDealsResponseDataWithDefaults() *CompanyCrmDealsResponseData {
 	return &this
 }
 
-// GetDealArr returns the DealArr field value if set, zero value otherwise.
-func (o *CompanyCrmDealsResponseData) GetDealArr() map[string]interface{} {
-	if o == nil || IsNil(o.DealArr) {
-		var ret map[string]interface{}
+// GetDealArr returns the DealArr field value
+func (o *CompanyCrmDealsResponseData) GetDealArr() string {
+	if o == nil {
+		var ret string
 		return ret
 	}
+
 	return o.DealArr
 }
 
-// GetDealArrOk returns a tuple with the DealArr field value if set, nil otherwise
+// GetDealArrOk returns a tuple with the DealArr field value
 // and a boolean to check if the value has been set.
-func (o *CompanyCrmDealsResponseData) GetDealArrOk() (map[string]interface{}, bool) {
-	if o == nil || IsNil(o.DealArr) {
-		return map[string]interface{}{}, false
+func (o *CompanyCrmDealsResponseData) GetDealArrOk() (*string, bool) {
+	if o == nil {
+		return nil, false
 	}
-	return o.DealArr, true
+	return &o.DealArr, true
 }
 
-// HasDealArr returns a boolean if a field has been set.
-func (o *CompanyCrmDealsResponseData) HasDealArr() bool {
-	if o != nil && !IsNil(o.DealArr) {
-		return true
-	}
-
-	return false
-}
-
-// SetDealArr gets a reference to the given map[string]interface{} and assigns it to the DealArr field.
-func (o *CompanyCrmDealsResponseData) SetDealArr(v map[string]interface{}) {
+// SetDealArr sets field value
+func (o *CompanyCrmDealsResponseData) SetDealArr(v string) {
 	o.DealArr = v
 }
 
@@ -105,35 +99,27 @@ func (o *CompanyCrmDealsResponseData) SetDealExternalId(v string) {
 	o.DealExternalId = v
 }
 
-// GetDealMrr returns the DealMrr field value if set, zero value otherwise.
-func (o *CompanyCrmDealsResponseData) GetDealMrr() map[string]interface{} {
-	if o == nil || IsNil(o.DealMrr) {
-		var ret map[string]interface{}
+// GetDealMrr returns the DealMrr field value
+func (o *CompanyCrmDealsResponseData) GetDealMrr() string {
+	if o == nil {
+		var ret string
 		return ret
 	}
+
 	return o.DealMrr
 }
 
-// GetDealMrrOk returns a tuple with the DealMrr field value if set, nil otherwise
+// GetDealMrrOk returns a tuple with the DealMrr field value
 // and a boolean to check if the value has been set.
-func (o *CompanyCrmDealsResponseData) GetDealMrrOk() (map[string]interface{}, bool) {
-	if o == nil || IsNil(o.DealMrr) {
-		return map[string]interface{}{}, false
+func (o *CompanyCrmDealsResponseData) GetDealMrrOk() (*string, bool) {
+	if o == nil {
+		return nil, false
 	}
-	return o.DealMrr, true
+	return &o.DealMrr, true
 }
 
-// HasDealMrr returns a boolean if a field has been set.
-func (o *CompanyCrmDealsResponseData) HasDealMrr() bool {
-	if o != nil && !IsNil(o.DealMrr) {
-		return true
-	}
-
-	return false
-}
-
-// SetDealMrr gets a reference to the given map[string]interface{} and assigns it to the DealMrr field.
-func (o *CompanyCrmDealsResponseData) SetDealMrr(v map[string]interface{}) {
+// SetDealMrr sets field value
+func (o *CompanyCrmDealsResponseData) SetDealMrr(v string) {
 	o.DealMrr = v
 }
 
@@ -214,13 +200,9 @@ func (o CompanyCrmDealsResponseData) MarshalJSON() ([]byte, error) {
 
 func (o CompanyCrmDealsResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.DealArr) {
-		toSerialize["deal_arr"] = o.DealArr
-	}
+	toSerialize["deal_arr"] = o.DealArr
 	toSerialize["deal_external_id"] = o.DealExternalId
-	if !IsNil(o.DealMrr) {
-		toSerialize["deal_mrr"] = o.DealMrr
-	}
+	toSerialize["deal_mrr"] = o.DealMrr
 	if o.DealName.IsSet() {
 		toSerialize["deal_name"] = o.DealName.Get()
 	}
@@ -233,7 +215,9 @@ func (o *CompanyCrmDealsResponseData) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
+		"deal_arr",
 		"deal_external_id",
+		"deal_mrr",
 		"line_items",
 	}
 

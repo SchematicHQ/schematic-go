@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Arr** | Pointer to **NullableFloat32** |  | [optional] 
+**Arr** | Pointer to **NullableString** |  | [optional] 
 **CrmCompanyId** | Pointer to **NullableString** |  | [optional] 
 **CrmCompanyKey** | **string** |  | 
 **CrmProductId** | Pointer to **NullableString** |  | [optional] 
@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **DealExternalId** | **string** |  | 
 **DealName** | Pointer to **NullableString** |  | [optional] 
 **DealStage** | Pointer to **NullableString** |  | [optional] 
-**Mrr** | Pointer to **NullableFloat32** |  | [optional] 
+**Mrr** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -35,20 +35,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetArr
 
-`func (o *CreateCrmDealRequestBody) GetArr() float32`
+`func (o *CreateCrmDealRequestBody) GetArr() string`
 
 GetArr returns the Arr field if non-nil, zero value otherwise.
 
 ### GetArrOk
 
-`func (o *CreateCrmDealRequestBody) GetArrOk() (*float32, bool)`
+`func (o *CreateCrmDealRequestBody) GetArrOk() (*string, bool)`
 
 GetArrOk returns a tuple with the Arr field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetArr
 
-`func (o *CreateCrmDealRequestBody) SetArr(v float32)`
+`func (o *CreateCrmDealRequestBody) SetArr(v string)`
 
 SetArr sets Arr field to given value.
 
@@ -270,20 +270,20 @@ HasDealStage returns a boolean if a field has been set.
 UnsetDealStage ensures that no value is present for DealStage, not even an explicit nil
 ### GetMrr
 
-`func (o *CreateCrmDealRequestBody) GetMrr() float32`
+`func (o *CreateCrmDealRequestBody) GetMrr() string`
 
 GetMrr returns the Mrr field if non-nil, zero value otherwise.
 
 ### GetMrrOk
 
-`func (o *CreateCrmDealRequestBody) GetMrrOk() (*float32, bool)`
+`func (o *CreateCrmDealRequestBody) GetMrrOk() (*string, bool)`
 
 GetMrrOk returns a tuple with the Mrr field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetMrr
 
-`func (o *CreateCrmDealRequestBody) SetMrr(v float32)`
+`func (o *CreateCrmDealRequestBody) SetMrr(v string)`
 
 SetMrr sets Mrr field to given value.
 

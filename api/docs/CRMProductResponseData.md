@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **EnvironmentId** | **string** |  | 
 **ExternalId** | **string** |  | 
 **Name** | **string** |  | 
-**Price** | **float32** |  | 
+**Price** | **string** |  | 
 **ProductId** | **string** |  | 
 **Quantity** | **float32** |  | 
 **UpdatedAt** | **time.Time** |  | 
@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 
 ### NewCrmProductResponseData
 
-`func NewCrmProductResponseData(accountId string, createdAt time.Time, currency string, environmentId string, externalId string, name string, price float32, productId string, quantity float32, updatedAt time.Time, ) *CrmProductResponseData`
+`func NewCrmProductResponseData(accountId string, createdAt time.Time, currency string, environmentId string, externalId string, name string, price string, productId string, quantity float32, updatedAt time.Time, ) *CrmProductResponseData`
 
 NewCrmProductResponseData instantiates a new CrmProductResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -192,20 +192,20 @@ SetName sets Name field to given value.
 
 ### GetPrice
 
-`func (o *CrmProductResponseData) GetPrice() float32`
+`func (o *CrmProductResponseData) GetPrice() string`
 
 GetPrice returns the Price field if non-nil, zero value otherwise.
 
 ### GetPriceOk
 
-`func (o *CrmProductResponseData) GetPriceOk() (*float32, bool)`
+`func (o *CrmProductResponseData) GetPriceOk() (*string, bool)`
 
 GetPriceOk returns a tuple with the Price field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPrice
 
-`func (o *CrmProductResponseData) SetPrice(v float32)`
+`func (o *CrmProductResponseData) SetPrice(v string)`
 
 SetPrice sets Price field to given value.
 

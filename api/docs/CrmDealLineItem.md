@@ -9,13 +9,13 @@ Name | Type | Description | Notes
 **Currency** | **string** |  | 
 **DeletedAt** | Pointer to **NullableTime** |  | [optional] 
 **Description** | **string** |  | 
-**DiscountPercentage** | Pointer to **NullableFloat32** |  | [optional] 
+**DiscountPercentage** | Pointer to **map[string]interface{}** |  | [optional] 
 **Id** | **string** |  | 
 **Name** | **string** |  | 
 **Price** | **float32** |  | 
 **Quantity** | **int32** |  | 
 **TermMonth** | Pointer to **NullableInt32** |  | [optional] 
-**TotalDiscount** | Pointer to **NullableFloat32** |  | [optional] 
+**TotalDiscount** | Pointer to **map[string]interface{}** |  | [optional] 
 **UpdatedAt** | **time.Time** |  | 
 
 ## Methods
@@ -154,20 +154,20 @@ SetDescription sets Description field to given value.
 
 ### GetDiscountPercentage
 
-`func (o *CrmDealLineItem) GetDiscountPercentage() float32`
+`func (o *CrmDealLineItem) GetDiscountPercentage() map[string]interface{}`
 
 GetDiscountPercentage returns the DiscountPercentage field if non-nil, zero value otherwise.
 
 ### GetDiscountPercentageOk
 
-`func (o *CrmDealLineItem) GetDiscountPercentageOk() (*float32, bool)`
+`func (o *CrmDealLineItem) GetDiscountPercentageOk() (*map[string]interface{}, bool)`
 
 GetDiscountPercentageOk returns a tuple with the DiscountPercentage field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDiscountPercentage
 
-`func (o *CrmDealLineItem) SetDiscountPercentage(v float32)`
+`func (o *CrmDealLineItem) SetDiscountPercentage(v map[string]interface{})`
 
 SetDiscountPercentage sets DiscountPercentage field to given value.
 
@@ -177,16 +177,6 @@ SetDiscountPercentage sets DiscountPercentage field to given value.
 
 HasDiscountPercentage returns a boolean if a field has been set.
 
-### SetDiscountPercentageNil
-
-`func (o *CrmDealLineItem) SetDiscountPercentageNil(b bool)`
-
- SetDiscountPercentageNil sets the value for DiscountPercentage to be an explicit nil
-
-### UnsetDiscountPercentage
-`func (o *CrmDealLineItem) UnsetDiscountPercentage()`
-
-UnsetDiscountPercentage ensures that no value is present for DiscountPercentage, not even an explicit nil
 ### GetId
 
 `func (o *CrmDealLineItem) GetId() string`
@@ -304,20 +294,20 @@ HasTermMonth returns a boolean if a field has been set.
 UnsetTermMonth ensures that no value is present for TermMonth, not even an explicit nil
 ### GetTotalDiscount
 
-`func (o *CrmDealLineItem) GetTotalDiscount() float32`
+`func (o *CrmDealLineItem) GetTotalDiscount() map[string]interface{}`
 
 GetTotalDiscount returns the TotalDiscount field if non-nil, zero value otherwise.
 
 ### GetTotalDiscountOk
 
-`func (o *CrmDealLineItem) GetTotalDiscountOk() (*float32, bool)`
+`func (o *CrmDealLineItem) GetTotalDiscountOk() (*map[string]interface{}, bool)`
 
 GetTotalDiscountOk returns a tuple with the TotalDiscount field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTotalDiscount
 
-`func (o *CrmDealLineItem) SetTotalDiscount(v float32)`
+`func (o *CrmDealLineItem) SetTotalDiscount(v map[string]interface{})`
 
 SetTotalDiscount sets TotalDiscount field to given value.
 
@@ -327,16 +317,6 @@ SetTotalDiscount sets TotalDiscount field to given value.
 
 HasTotalDiscount returns a boolean if a field has been set.
 
-### SetTotalDiscountNil
-
-`func (o *CrmDealLineItem) SetTotalDiscountNil(b bool)`
-
- SetTotalDiscountNil sets the value for TotalDiscount to be an explicit nil
-
-### UnsetTotalDiscount
-`func (o *CrmDealLineItem) UnsetTotalDiscount()`
-
-UnsetTotalDiscount ensures that no value is present for TotalDiscount, not even an explicit nil
 ### GetUpdatedAt
 
 `func (o *CrmDealLineItem) GetUpdatedAt() time.Time`

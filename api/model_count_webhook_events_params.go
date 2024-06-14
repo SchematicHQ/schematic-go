@@ -19,8 +19,11 @@ var _ MappedNullable = &CountWebhookEventsParams{}
 
 // CountWebhookEventsParams Input parameters
 type CountWebhookEventsParams struct {
-	Limit  *int32 `json:"limit,omitempty"`
-	Offset *int32 `json:"offset,omitempty"`
+	Ids       []string `json:"ids,omitempty"`
+	Limit     *int32   `json:"limit,omitempty"`
+	Offset    *int32   `json:"offset,omitempty"`
+	Q         *string  `json:"q,omitempty"`
+	WebhookId *string  `json:"webhook_id,omitempty"`
 }
 
 // NewCountWebhookEventsParams instantiates a new CountWebhookEventsParams object
@@ -38,6 +41,38 @@ func NewCountWebhookEventsParams() *CountWebhookEventsParams {
 func NewCountWebhookEventsParamsWithDefaults() *CountWebhookEventsParams {
 	this := CountWebhookEventsParams{}
 	return &this
+}
+
+// GetIds returns the Ids field value if set, zero value otherwise.
+func (o *CountWebhookEventsParams) GetIds() []string {
+	if o == nil || IsNil(o.Ids) {
+		var ret []string
+		return ret
+	}
+	return o.Ids
+}
+
+// GetIdsOk returns a tuple with the Ids field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CountWebhookEventsParams) GetIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Ids) {
+		return nil, false
+	}
+	return o.Ids, true
+}
+
+// HasIds returns a boolean if a field has been set.
+func (o *CountWebhookEventsParams) HasIds() bool {
+	if o != nil && !IsNil(o.Ids) {
+		return true
+	}
+
+	return false
+}
+
+// SetIds gets a reference to the given []string and assigns it to the Ids field.
+func (o *CountWebhookEventsParams) SetIds(v []string) {
+	o.Ids = v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -104,6 +139,70 @@ func (o *CountWebhookEventsParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetQ returns the Q field value if set, zero value otherwise.
+func (o *CountWebhookEventsParams) GetQ() string {
+	if o == nil || IsNil(o.Q) {
+		var ret string
+		return ret
+	}
+	return *o.Q
+}
+
+// GetQOk returns a tuple with the Q field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CountWebhookEventsParams) GetQOk() (*string, bool) {
+	if o == nil || IsNil(o.Q) {
+		return nil, false
+	}
+	return o.Q, true
+}
+
+// HasQ returns a boolean if a field has been set.
+func (o *CountWebhookEventsParams) HasQ() bool {
+	if o != nil && !IsNil(o.Q) {
+		return true
+	}
+
+	return false
+}
+
+// SetQ gets a reference to the given string and assigns it to the Q field.
+func (o *CountWebhookEventsParams) SetQ(v string) {
+	o.Q = &v
+}
+
+// GetWebhookId returns the WebhookId field value if set, zero value otherwise.
+func (o *CountWebhookEventsParams) GetWebhookId() string {
+	if o == nil || IsNil(o.WebhookId) {
+		var ret string
+		return ret
+	}
+	return *o.WebhookId
+}
+
+// GetWebhookIdOk returns a tuple with the WebhookId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CountWebhookEventsParams) GetWebhookIdOk() (*string, bool) {
+	if o == nil || IsNil(o.WebhookId) {
+		return nil, false
+	}
+	return o.WebhookId, true
+}
+
+// HasWebhookId returns a boolean if a field has been set.
+func (o *CountWebhookEventsParams) HasWebhookId() bool {
+	if o != nil && !IsNil(o.WebhookId) {
+		return true
+	}
+
+	return false
+}
+
+// SetWebhookId gets a reference to the given string and assigns it to the WebhookId field.
+func (o *CountWebhookEventsParams) SetWebhookId(v string) {
+	o.WebhookId = &v
+}
+
 func (o CountWebhookEventsParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -114,11 +213,20 @@ func (o CountWebhookEventsParams) MarshalJSON() ([]byte, error) {
 
 func (o CountWebhookEventsParams) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Ids) {
+		toSerialize["ids"] = o.Ids
+	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.Q) {
+		toSerialize["q"] = o.Q
+	}
+	if !IsNil(o.WebhookId) {
+		toSerialize["webhook_id"] = o.WebhookId
 	}
 	return toSerialize, nil
 }

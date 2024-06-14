@@ -176,7 +176,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createCrmProductRequestBody := *schematicapi.NewCreateCrmProductRequestBody("Currency_example", "Description_example", "ExternalId_example", "Interval_example", "Name_example", float32(123), int32(123), "Sku_example") // CreateCrmProductRequestBody | 
+	createCrmProductRequestBody := *schematicapi.NewCreateCrmProductRequestBody("Currency_example", "Description_example", "ExternalId_example", "Interval_example", "Name_example", "Price_example", int32(123), "Sku_example") // CreateCrmProductRequestBody | 
 
 	resp, r, err := client.API().CrmAPI.UpsertCrmProduct(context.Background()).CreateCrmProductRequestBody(createCrmProductRequestBody).Execute()
 	if err != nil {
@@ -310,7 +310,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createCrmLineItemRequestBody := *schematicapi.NewCreateCrmLineItemRequestBody(float32(123), "Interval_example", "LineItemExternalId_example", "ProductExternalId_example", int32(123)) // CreateCrmLineItemRequestBody | 
+	createCrmLineItemRequestBody := *schematicapi.NewCreateCrmLineItemRequestBody("Amount_example", "Interval_example", "LineItemExternalId_example", "ProductExternalId_example", int32(123)) // CreateCrmLineItemRequestBody | 
 
 	resp, r, err := client.API().CrmAPI.UpsertLineItem(context.Background()).CreateCrmLineItemRequestBody(createCrmLineItemRequestBody).Execute()
 	if err != nil {

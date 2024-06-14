@@ -22,8 +22,8 @@ var _ MappedNullable = &ListWebhookEventsResponse{}
 // ListWebhookEventsResponse struct for ListWebhookEventsResponse
 type ListWebhookEventsResponse struct {
 	// The returned resources
-	Data   []WebhookEventResponseData `json:"data"`
-	Params ListWebhookEventsParams    `json:"params"`
+	Data   []WebhookEventDetailResponseData `json:"data"`
+	Params ListWebhookEventsParams          `json:"params"`
 }
 
 type _ListWebhookEventsResponse ListWebhookEventsResponse
@@ -32,7 +32,7 @@ type _ListWebhookEventsResponse ListWebhookEventsResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListWebhookEventsResponse(data []WebhookEventResponseData, params ListWebhookEventsParams) *ListWebhookEventsResponse {
+func NewListWebhookEventsResponse(data []WebhookEventDetailResponseData, params ListWebhookEventsParams) *ListWebhookEventsResponse {
 	this := ListWebhookEventsResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewListWebhookEventsResponseWithDefaults() *ListWebhookEventsResponse {
 }
 
 // GetData returns the Data field value
-func (o *ListWebhookEventsResponse) GetData() []WebhookEventResponseData {
+func (o *ListWebhookEventsResponse) GetData() []WebhookEventDetailResponseData {
 	if o == nil {
-		var ret []WebhookEventResponseData
+		var ret []WebhookEventDetailResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *ListWebhookEventsResponse) GetData() []WebhookEventResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *ListWebhookEventsResponse) GetDataOk() ([]WebhookEventResponseData, bool) {
+func (o *ListWebhookEventsResponse) GetDataOk() ([]WebhookEventDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *ListWebhookEventsResponse) GetDataOk() ([]WebhookEventResponseData, boo
 }
 
 // SetData sets field value
-func (o *ListWebhookEventsResponse) SetData(v []WebhookEventResponseData) {
+func (o *ListWebhookEventsResponse) SetData(v []WebhookEventDetailResponseData) {
 	o.Data = v
 }
 

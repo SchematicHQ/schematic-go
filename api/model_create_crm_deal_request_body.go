@@ -21,15 +21,15 @@ var _ MappedNullable = &CreateCrmDealRequestBody{}
 
 // CreateCrmDealRequestBody struct for CreateCrmDealRequestBody
 type CreateCrmDealRequestBody struct {
-	Arr            NullableFloat32 `json:"arr,omitempty"`
-	CrmCompanyId   NullableString  `json:"crm_company_id,omitempty"`
-	CrmCompanyKey  string          `json:"crm_company_key"`
-	CrmProductId   NullableString  `json:"crm_product_id,omitempty"`
-	CrmType        string          `json:"crm_type"`
-	DealExternalId string          `json:"deal_external_id"`
-	DealName       NullableString  `json:"deal_name,omitempty"`
-	DealStage      NullableString  `json:"deal_stage,omitempty"`
-	Mrr            NullableFloat32 `json:"mrr,omitempty"`
+	Arr            NullableString `json:"arr,omitempty"`
+	CrmCompanyId   NullableString `json:"crm_company_id,omitempty"`
+	CrmCompanyKey  string         `json:"crm_company_key"`
+	CrmProductId   NullableString `json:"crm_product_id,omitempty"`
+	CrmType        string         `json:"crm_type"`
+	DealExternalId string         `json:"deal_external_id"`
+	DealName       NullableString `json:"deal_name,omitempty"`
+	DealStage      NullableString `json:"deal_stage,omitempty"`
+	Mrr            NullableString `json:"mrr,omitempty"`
 }
 
 type _CreateCrmDealRequestBody CreateCrmDealRequestBody
@@ -55,9 +55,9 @@ func NewCreateCrmDealRequestBodyWithDefaults() *CreateCrmDealRequestBody {
 }
 
 // GetArr returns the Arr field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreateCrmDealRequestBody) GetArr() float32 {
+func (o *CreateCrmDealRequestBody) GetArr() string {
 	if o == nil || IsNil(o.Arr.Get()) {
-		var ret float32
+		var ret string
 		return ret
 	}
 	return *o.Arr.Get()
@@ -66,7 +66,7 @@ func (o *CreateCrmDealRequestBody) GetArr() float32 {
 // GetArrOk returns a tuple with the Arr field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreateCrmDealRequestBody) GetArrOk() (*float32, bool) {
+func (o *CreateCrmDealRequestBody) GetArrOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -82,8 +82,8 @@ func (o *CreateCrmDealRequestBody) HasArr() bool {
 	return false
 }
 
-// SetArr gets a reference to the given NullableFloat32 and assigns it to the Arr field.
-func (o *CreateCrmDealRequestBody) SetArr(v float32) {
+// SetArr gets a reference to the given NullableString and assigns it to the Arr field.
+func (o *CreateCrmDealRequestBody) SetArr(v string) {
 	o.Arr.Set(&v)
 }
 
@@ -342,9 +342,9 @@ func (o *CreateCrmDealRequestBody) UnsetDealStage() {
 }
 
 // GetMrr returns the Mrr field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreateCrmDealRequestBody) GetMrr() float32 {
+func (o *CreateCrmDealRequestBody) GetMrr() string {
 	if o == nil || IsNil(o.Mrr.Get()) {
-		var ret float32
+		var ret string
 		return ret
 	}
 	return *o.Mrr.Get()
@@ -353,7 +353,7 @@ func (o *CreateCrmDealRequestBody) GetMrr() float32 {
 // GetMrrOk returns a tuple with the Mrr field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreateCrmDealRequestBody) GetMrrOk() (*float32, bool) {
+func (o *CreateCrmDealRequestBody) GetMrrOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -369,8 +369,8 @@ func (o *CreateCrmDealRequestBody) HasMrr() bool {
 	return false
 }
 
-// SetMrr gets a reference to the given NullableFloat32 and assigns it to the Mrr field.
-func (o *CreateCrmDealRequestBody) SetMrr(v float32) {
+// SetMrr gets a reference to the given NullableString and assigns it to the Mrr field.
+func (o *CreateCrmDealRequestBody) SetMrr(v string) {
 	o.Mrr.Set(&v)
 }
 

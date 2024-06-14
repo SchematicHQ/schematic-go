@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **ExternalId** | **string** |  | 
 **Interval** | **string** |  | 
 **Name** | **string** |  | 
-**Price** | **float32** |  | 
+**Price** | **string** |  | 
 **Quantity** | **int32** |  | 
 **Sku** | **string** |  | 
 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewCreateCrmProductRequestBody
 
-`func NewCreateCrmProductRequestBody(currency string, description string, externalId string, interval string, name string, price float32, quantity int32, sku string, ) *CreateCrmProductRequestBody`
+`func NewCreateCrmProductRequestBody(currency string, description string, externalId string, interval string, name string, price string, quantity int32, sku string, ) *CreateCrmProductRequestBody`
 
 NewCreateCrmProductRequestBody instantiates a new CreateCrmProductRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -134,20 +134,20 @@ SetName sets Name field to given value.
 
 ### GetPrice
 
-`func (o *CreateCrmProductRequestBody) GetPrice() float32`
+`func (o *CreateCrmProductRequestBody) GetPrice() string`
 
 GetPrice returns the Price field if non-nil, zero value otherwise.
 
 ### GetPriceOk
 
-`func (o *CreateCrmProductRequestBody) GetPriceOk() (*float32, bool)`
+`func (o *CreateCrmProductRequestBody) GetPriceOk() (*string, bool)`
 
 GetPriceOk returns a tuple with the Price field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPrice
 
-`func (o *CreateCrmProductRequestBody) SetPrice(v float32)`
+`func (o *CreateCrmProductRequestBody) SetPrice(v string)`
 
 SetPrice sets Price field to given value.
 

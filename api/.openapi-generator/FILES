@@ -305,6 +305,7 @@ docs/UpsertUserSubRequestBody.md
 docs/UpsertUserTraitResponse.md
 docs/UserDetailResponseData.md
 docs/UserResponseData.md
+docs/WebhookEventDetailResponseData.md
 docs/WebhookEventResponseData.md
 docs/WebhookResponseData.md
 docs/WebhooksAPI.md
@@ -593,6 +594,7 @@ model_upsert_user_sub_request_body.go
 model_upsert_user_trait_response.go
 model_user_detail_response_data.go
 model_user_response_data.go
+model_webhook_event_detail_response_data.go
 model_webhook_event_response_data.go
 model_webhook_response_data.go
 response.go

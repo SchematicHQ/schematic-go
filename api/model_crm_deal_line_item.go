@@ -22,19 +22,19 @@ var _ MappedNullable = &CrmDealLineItem{}
 
 // CrmDealLineItem struct for CrmDealLineItem
 type CrmDealLineItem struct {
-	BillingFrequency   string          `json:"billing_frequency"`
-	CreatedAt          time.Time       `json:"created_at"`
-	Currency           string          `json:"currency"`
-	DeletedAt          NullableTime    `json:"deleted_at,omitempty"`
-	Description        string          `json:"description"`
-	DiscountPercentage NullableFloat32 `json:"discount_percentage,omitempty"`
-	Id                 string          `json:"id"`
-	Name               string          `json:"name"`
-	Price              float32         `json:"price"`
-	Quantity           int32           `json:"quantity"`
-	TermMonth          NullableInt32   `json:"term_month,omitempty"`
-	TotalDiscount      NullableFloat32 `json:"total_discount,omitempty"`
-	UpdatedAt          time.Time       `json:"updated_at"`
+	BillingFrequency   string                 `json:"billing_frequency"`
+	CreatedAt          time.Time              `json:"created_at"`
+	Currency           string                 `json:"currency"`
+	DeletedAt          NullableTime           `json:"deleted_at,omitempty"`
+	Description        string                 `json:"description"`
+	DiscountPercentage map[string]interface{} `json:"discount_percentage,omitempty"`
+	Id                 string                 `json:"id"`
+	Name               string                 `json:"name"`
+	Price              float32                `json:"price"`
+	Quantity           int32                  `json:"quantity"`
+	TermMonth          NullableInt32          `json:"term_month,omitempty"`
+	TotalDiscount      map[string]interface{} `json:"total_discount,omitempty"`
+	UpdatedAt          time.Time              `json:"updated_at"`
 }
 
 type _CrmDealLineItem CrmDealLineItem
@@ -204,47 +204,36 @@ func (o *CrmDealLineItem) SetDescription(v string) {
 	o.Description = v
 }
 
-// GetDiscountPercentage returns the DiscountPercentage field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CrmDealLineItem) GetDiscountPercentage() float32 {
-	if o == nil || IsNil(o.DiscountPercentage.Get()) {
-		var ret float32
+// GetDiscountPercentage returns the DiscountPercentage field value if set, zero value otherwise.
+func (o *CrmDealLineItem) GetDiscountPercentage() map[string]interface{} {
+	if o == nil || IsNil(o.DiscountPercentage) {
+		var ret map[string]interface{}
 		return ret
 	}
-	return *o.DiscountPercentage.Get()
+	return o.DiscountPercentage
 }
 
 // GetDiscountPercentageOk returns a tuple with the DiscountPercentage field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CrmDealLineItem) GetDiscountPercentageOk() (*float32, bool) {
-	if o == nil {
-		return nil, false
+func (o *CrmDealLineItem) GetDiscountPercentageOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.DiscountPercentage) {
+		return map[string]interface{}{}, false
 	}
-	return o.DiscountPercentage.Get(), o.DiscountPercentage.IsSet()
+	return o.DiscountPercentage, true
 }
 
 // HasDiscountPercentage returns a boolean if a field has been set.
 func (o *CrmDealLineItem) HasDiscountPercentage() bool {
-	if o != nil && o.DiscountPercentage.IsSet() {
+	if o != nil && !IsNil(o.DiscountPercentage) {
 		return true
 	}
 
 	return false
 }
 
-// SetDiscountPercentage gets a reference to the given NullableFloat32 and assigns it to the DiscountPercentage field.
-func (o *CrmDealLineItem) SetDiscountPercentage(v float32) {
-	o.DiscountPercentage.Set(&v)
-}
-
-// SetDiscountPercentageNil sets the value for DiscountPercentage to be an explicit nil
-func (o *CrmDealLineItem) SetDiscountPercentageNil() {
-	o.DiscountPercentage.Set(nil)
-}
-
-// UnsetDiscountPercentage ensures that no value is present for DiscountPercentage, not even an explicit nil
-func (o *CrmDealLineItem) UnsetDiscountPercentage() {
-	o.DiscountPercentage.Unset()
+// SetDiscountPercentage gets a reference to the given map[string]interface{} and assigns it to the DiscountPercentage field.
+func (o *CrmDealLineItem) SetDiscountPercentage(v map[string]interface{}) {
+	o.DiscountPercentage = v
 }
 
 // GetId returns the Id field value
@@ -386,47 +375,36 @@ func (o *CrmDealLineItem) UnsetTermMonth() {
 	o.TermMonth.Unset()
 }
 
-// GetTotalDiscount returns the TotalDiscount field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CrmDealLineItem) GetTotalDiscount() float32 {
-	if o == nil || IsNil(o.TotalDiscount.Get()) {
-		var ret float32
+// GetTotalDiscount returns the TotalDiscount field value if set, zero value otherwise.
+func (o *CrmDealLineItem) GetTotalDiscount() map[string]interface{} {
+	if o == nil || IsNil(o.TotalDiscount) {
+		var ret map[string]interface{}
 		return ret
 	}
-	return *o.TotalDiscount.Get()
+	return o.TotalDiscount
 }
 
 // GetTotalDiscountOk returns a tuple with the TotalDiscount field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CrmDealLineItem) GetTotalDiscountOk() (*float32, bool) {
-	if o == nil {
-		return nil, false
+func (o *CrmDealLineItem) GetTotalDiscountOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.TotalDiscount) {
+		return map[string]interface{}{}, false
 	}
-	return o.TotalDiscount.Get(), o.TotalDiscount.IsSet()
+	return o.TotalDiscount, true
 }
 
 // HasTotalDiscount returns a boolean if a field has been set.
 func (o *CrmDealLineItem) HasTotalDiscount() bool {
-	if o != nil && o.TotalDiscount.IsSet() {
+	if o != nil && !IsNil(o.TotalDiscount) {
 		return true
 	}
 
 	return false
 }
 
-// SetTotalDiscount gets a reference to the given NullableFloat32 and assigns it to the TotalDiscount field.
-func (o *CrmDealLineItem) SetTotalDiscount(v float32) {
-	o.TotalDiscount.Set(&v)
-}
-
-// SetTotalDiscountNil sets the value for TotalDiscount to be an explicit nil
-func (o *CrmDealLineItem) SetTotalDiscountNil() {
-	o.TotalDiscount.Set(nil)
-}
-
-// UnsetTotalDiscount ensures that no value is present for TotalDiscount, not even an explicit nil
-func (o *CrmDealLineItem) UnsetTotalDiscount() {
-	o.TotalDiscount.Unset()
+// SetTotalDiscount gets a reference to the given map[string]interface{} and assigns it to the TotalDiscount field.
+func (o *CrmDealLineItem) SetTotalDiscount(v map[string]interface{}) {
+	o.TotalDiscount = v
 }
 
 // GetUpdatedAt returns the UpdatedAt field value
@@ -470,8 +448,8 @@ func (o CrmDealLineItem) ToMap() (map[string]interface{}, error) {
 		toSerialize["deleted_at"] = o.DeletedAt.Get()
 	}
 	toSerialize["description"] = o.Description
-	if o.DiscountPercentage.IsSet() {
-		toSerialize["discount_percentage"] = o.DiscountPercentage.Get()
+	if !IsNil(o.DiscountPercentage) {
+		toSerialize["discount_percentage"] = o.DiscountPercentage
 	}
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
@@ -480,8 +458,8 @@ func (o CrmDealLineItem) ToMap() (map[string]interface{}, error) {
 	if o.TermMonth.IsSet() {
 		toSerialize["term_month"] = o.TermMonth.Get()
 	}
-	if o.TotalDiscount.IsSet() {
-		toSerialize["total_discount"] = o.TotalDiscount.Get()
+	if !IsNil(o.TotalDiscount) {
+		toSerialize["total_discount"] = o.TotalDiscount
 	}
 	toSerialize["updated_at"] = o.UpdatedAt
 	return toSerialize, nil

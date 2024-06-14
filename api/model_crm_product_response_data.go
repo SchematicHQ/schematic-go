@@ -29,7 +29,7 @@ type CrmProductResponseData struct {
 	EnvironmentId string       `json:"environment_id"`
 	ExternalId    string       `json:"external_id"`
 	Name          string       `json:"name"`
-	Price         float32      `json:"price"`
+	Price         string       `json:"price"`
 	ProductId     string       `json:"product_id"`
 	Quantity      float32      `json:"quantity"`
 	UpdatedAt     time.Time    `json:"updated_at"`
@@ -41,7 +41,7 @@ type _CrmProductResponseData CrmProductResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCrmProductResponseData(accountId string, createdAt time.Time, currency string, environmentId string, externalId string, name string, price float32, productId string, quantity float32, updatedAt time.Time) *CrmProductResponseData {
+func NewCrmProductResponseData(accountId string, createdAt time.Time, currency string, environmentId string, externalId string, name string, price string, productId string, quantity float32, updatedAt time.Time) *CrmProductResponseData {
 	this := CrmProductResponseData{}
 	this.AccountId = accountId
 	this.CreatedAt = createdAt
@@ -252,9 +252,9 @@ func (o *CrmProductResponseData) SetName(v string) {
 }
 
 // GetPrice returns the Price field value
-func (o *CrmProductResponseData) GetPrice() float32 {
+func (o *CrmProductResponseData) GetPrice() string {
 	if o == nil {
-		var ret float32
+		var ret string
 		return ret
 	}
 
@@ -263,7 +263,7 @@ func (o *CrmProductResponseData) GetPrice() float32 {
 
 // GetPriceOk returns a tuple with the Price field value
 // and a boolean to check if the value has been set.
-func (o *CrmProductResponseData) GetPriceOk() (*float32, bool) {
+func (o *CrmProductResponseData) GetPriceOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -271,7 +271,7 @@ func (o *CrmProductResponseData) GetPriceOk() (*float32, bool) {
 }
 
 // SetPrice sets field value
-func (o *CrmProductResponseData) SetPrice(v float32) {
+func (o *CrmProductResponseData) SetPrice(v string) {
 	o.Price = v
 }
 

@@ -203,7 +203,7 @@ func main() {
 	defer client.Close()
 
 	companyId := "companyId_example" // string |  (optional)
-	companyKeys := map[string]interface{}{ ... } // map[string]interface{} |  (optional)
+	companyKeys := map[string]string{"key": "Inner_example"} // map[string]string |  (optional)
 	featureIds := []string{"Inner_example"} // []string |  (optional)
 	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
@@ -231,7 +231,7 @@ Other parameters are passed through a pointer to a apiCountFeatureUsageRequest s
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **companyId** | **string** |  | 
- **companyKeys** | [**map[string]interface{}**](map[string]interface{}.md) |  | 
+ **companyKeys** | **map[string]string** |  | 
  **featureIds** | **[]string** |  | 
  **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
@@ -330,7 +330,7 @@ Name | Type | Description  | Notes
 
 ## CountPlanEntitlements
 
-> CountPlanEntitlementsResponse CountPlanEntitlements(ctx).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Limit(limit).Offset(offset).Execute()
+> CountPlanEntitlementsResponse CountPlanEntitlements(ctx).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Q(q).Limit(limit).Offset(offset).Execute()
 
 Count plan entitlements
 
@@ -357,10 +357,11 @@ func main() {
 	ids := []string{"Inner_example"} // []string |  (optional)
 	planId := "planId_example" // string |  (optional)
 	planIds := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EntitlementsAPI.CountPlanEntitlements(context.Background()).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EntitlementsAPI.CountPlanEntitlements(context.Background()).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.CountPlanEntitlements``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -386,6 +387,7 @@ Name | Type | Description  | Notes
  **ids** | **[]string** |  | 
  **planId** | **string** |  | 
  **planIds** | **[]string** |  | 
+ **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -1069,7 +1071,7 @@ func main() {
 	defer client.Close()
 
 	companyId := "companyId_example" // string |  (optional)
-	companyKeys := map[string]interface{}{ ... } // map[string]interface{} |  (optional)
+	companyKeys := map[string]string{"key": "Inner_example"} // map[string]string |  (optional)
 	featureIds := []string{"Inner_example"} // []string |  (optional)
 	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
@@ -1097,7 +1099,7 @@ Other parameters are passed through a pointer to a apiListFeatureUsageRequest st
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **companyId** | **string** |  | 
- **companyKeys** | [**map[string]interface{}**](map[string]interface{}.md) |  | 
+ **companyKeys** | **map[string]string** |  | 
  **featureIds** | **[]string** |  | 
  **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
@@ -1196,7 +1198,7 @@ Name | Type | Description  | Notes
 
 ## ListPlanEntitlements
 
-> ListPlanEntitlementsResponse ListPlanEntitlements(ctx).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Limit(limit).Offset(offset).Execute()
+> ListPlanEntitlementsResponse ListPlanEntitlements(ctx).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Q(q).Limit(limit).Offset(offset).Execute()
 
 List plan entitlements
 
@@ -1223,10 +1225,11 @@ func main() {
 	ids := []string{"Inner_example"} // []string |  (optional)
 	planId := "planId_example" // string |  (optional)
 	planIds := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EntitlementsAPI.ListPlanEntitlements(context.Background()).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EntitlementsAPI.ListPlanEntitlements(context.Background()).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).PlanId(planId).PlanIds(planIds).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.ListPlanEntitlements``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1252,6 +1255,7 @@ Name | Type | Description  | Notes
  **ids** | **[]string** |  | 
  **planId** | **string** |  | 
  **planIds** | **[]string** |  | 
+ **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

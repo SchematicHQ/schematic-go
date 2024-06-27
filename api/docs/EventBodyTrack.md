@@ -4,10 +4,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Company** | Pointer to **map[string]interface{}** | Key-value pairs to identify company associated with track event | [optional] 
+**Company** | Pointer to **map[string]string** | Key-value pairs to identify company associated with track event | [optional] 
 **Event** | **string** | The name of the type of track event | 
 **Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
-**User** | Pointer to **map[string]interface{}** | Key-value pairs to identify user associated with track event | [optional] 
+**User** | Pointer to **map[string]string** | Key-value pairs to identify user associated with track event | [optional] 
 
 ## Methods
 
@@ -30,20 +30,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetCompany
 
-`func (o *EventBodyTrack) GetCompany() map[string]interface{}`
+`func (o *EventBodyTrack) GetCompany() map[string]string`
 
 GetCompany returns the Company field if non-nil, zero value otherwise.
 
 ### GetCompanyOk
 
-`func (o *EventBodyTrack) GetCompanyOk() (*map[string]interface{}, bool)`
+`func (o *EventBodyTrack) GetCompanyOk() (*map[string]string, bool)`
 
 GetCompanyOk returns a tuple with the Company field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCompany
 
-`func (o *EventBodyTrack) SetCompany(v map[string]interface{})`
+`func (o *EventBodyTrack) SetCompany(v map[string]string)`
 
 SetCompany sets Company field to given value.
 
@@ -100,20 +100,20 @@ HasTraits returns a boolean if a field has been set.
 
 ### GetUser
 
-`func (o *EventBodyTrack) GetUser() map[string]interface{}`
+`func (o *EventBodyTrack) GetUser() map[string]string`
 
 GetUser returns the User field if non-nil, zero value otherwise.
 
 ### GetUserOk
 
-`func (o *EventBodyTrack) GetUserOk() (*map[string]interface{}, bool)`
+`func (o *EventBodyTrack) GetUserOk() (*map[string]string, bool)`
 
 GetUserOk returns a tuple with the User field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUser
 
-`func (o *EventBodyTrack) SetUser(v map[string]interface{})`
+`func (o *EventBodyTrack) SetUser(v map[string]string)`
 
 SetUser sets User field to given value.
 

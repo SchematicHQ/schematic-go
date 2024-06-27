@@ -26,7 +26,7 @@ func main() {
 }
 ```
 
-By default, the client will do some local caching for flag checks, if you would like to change this behavior, you can do so using an initialization option to specify the max size of the cache (in bytes) and the max age of the cache (in seconds):
+By default, the client will do some local caching for flag checks, if you would like to change this behavior, you can do so using an initialization option to specify the max size of the cache (in terms of number of records) and the max age of the cache (as a `time.Duration`):
 
 ```go
 import (
@@ -38,11 +38,11 @@ import (
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  cacheSizeBytes := 1000000
-  cacheTTL := 1 * time.Second
+  cacheSize := 100
+  cacheTTL := 1 * time.Millisecond
   client := schematic.NewClient(
     apiKey,
-    schematic.WithLocalFlagCheckCache(cacheSizeBytes, cacheTTL),
+    schematic.WithLocalFlagCheckCache(cacheSize, cacheTTL),
   )
   defer client.Close()
 }

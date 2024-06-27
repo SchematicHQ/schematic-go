@@ -21,8 +21,10 @@ var _ MappedNullable = &GetActiveDealsParams{}
 type GetActiveDealsParams struct {
 	CompanyId *string `json:"company_id,omitempty"`
 	DealStage *string `json:"deal_stage,omitempty"`
-	Limit     *int32  `json:"limit,omitempty"`
-	Offset    *int32  `json:"offset,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32 `json:"offset,omitempty"`
 }
 
 // NewGetActiveDealsParams instantiates a new GetActiveDealsParams object

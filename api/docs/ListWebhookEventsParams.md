@@ -5,8 +5,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Ids** | Pointer to **[]string** |  | [optional] 
-**Limit** | Pointer to **int32** |  | [optional] 
-**Offset** | Pointer to **int32** |  | [optional] 
+**Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
+**Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
 **Q** | Pointer to **string** |  | [optional] 
 **WebhookId** | Pointer to **string** |  | [optional] 
 

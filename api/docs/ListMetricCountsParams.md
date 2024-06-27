@@ -10,8 +10,8 @@ Name | Type | Description | Notes
 **EventSubtype** | Pointer to **string** |  | [optional] 
 **EventSubtypes** | Pointer to **[]string** |  | [optional] 
 **Grouping** | Pointer to **string** |  | [optional] 
-**Limit** | Pointer to **int32** |  | [optional] 
-**Offset** | Pointer to **int32** |  | [optional] 
+**Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
+**Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
 **StartTime** | Pointer to **time.Time** |  | [optional] 
 **UserId** | Pointer to **string** |  | [optional] 
 

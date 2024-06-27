@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Incr** | Pointer to **NullableInt32** | Amount to increment the trait by (positive or negative) | [optional] 
-**Keys** | **map[string]interface{}** | Key/value pairs too identify a company or user | 
+**Keys** | **map[string]string** | Key/value pairs too identify a company or user | 
 **Set** | Pointer to **NullableString** | Value to set the trait to | [optional] 
 **Trait** | **string** | Name of the trait to update | 
 **UpdateOnly** | Pointer to **NullableBool** | Unless this is set, the company or user will be created if it does not already exist | [optional] 
@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewUpsertTraitRequestBody
 
-`func NewUpsertTraitRequestBody(keys map[string]interface{}, trait string, ) *UpsertTraitRequestBody`
+`func NewUpsertTraitRequestBody(keys map[string]string, trait string, ) *UpsertTraitRequestBody`
 
 NewUpsertTraitRequestBody instantiates a new UpsertTraitRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -66,20 +66,20 @@ HasIncr returns a boolean if a field has been set.
 UnsetIncr ensures that no value is present for Incr, not even an explicit nil
 ### GetKeys
 
-`func (o *UpsertTraitRequestBody) GetKeys() map[string]interface{}`
+`func (o *UpsertTraitRequestBody) GetKeys() map[string]string`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *UpsertTraitRequestBody) GetKeysOk() (*map[string]interface{}, bool)`
+`func (o *UpsertTraitRequestBody) GetKeysOk() (*map[string]string, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *UpsertTraitRequestBody) SetKeys(v map[string]interface{})`
+`func (o *UpsertTraitRequestBody) SetKeys(v map[string]string)`
 
 SetKeys sets Keys field to given value.
 

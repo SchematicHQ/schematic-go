@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CompanyId** | Pointer to **NullableString** | Optionally specify company using Schematic company ID | [optional] 
-**Keys** | **map[string]interface{}** |  | 
+**Keys** | **map[string]string** |  | 
 **LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
 **Name** | Pointer to **NullableString** |  | [optional] 
 **Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 
 ### NewUpsertUserSubRequestBody
 
-`func NewUpsertUserSubRequestBody(keys map[string]interface{}, ) *UpsertUserSubRequestBody`
+`func NewUpsertUserSubRequestBody(keys map[string]string, ) *UpsertUserSubRequestBody`
 
 NewUpsertUserSubRequestBody instantiates a new UpsertUserSubRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -67,20 +67,20 @@ HasCompanyId returns a boolean if a field has been set.
 UnsetCompanyId ensures that no value is present for CompanyId, not even an explicit nil
 ### GetKeys
 
-`func (o *UpsertUserSubRequestBody) GetKeys() map[string]interface{}`
+`func (o *UpsertUserSubRequestBody) GetKeys() map[string]string`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *UpsertUserSubRequestBody) GetKeysOk() (*map[string]interface{}, bool)`
+`func (o *UpsertUserSubRequestBody) GetKeysOk() (*map[string]string, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *UpsertUserSubRequestBody) SetKeys(v map[string]interface{})`
+`func (o *UpsertUserSubRequestBody) SetKeys(v map[string]string)`
 
 SetKeys sets Keys field to given value.
 

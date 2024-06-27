@@ -51,7 +51,7 @@ func NewClient(apiKey string, opts ...ClientOpt) Client {
 
 	// If no caching behavior is specified, assume a default behavior
 	if len(client.flagCheckCacheProviders) == 0 {
-		client.flagCheckCacheProviders = append(client.flagCheckCacheProviders, newDefaultCache(boolSizeFunc))
+		client.flagCheckCacheProviders = append(client.flagCheckCacheProviders, newDefaultCache[bool]())
 	}
 
 	// Start background worker which handles async error logging and event buffering

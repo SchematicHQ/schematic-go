@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CreatedAt** | **time.Time** |  | 
 **Id** | **string** |  | 
+**Payload** | **string** |  | 
 **RequestType** | **string** |  | 
 **ResponseCode** | Pointer to **NullableInt32** |  | [optional] 
 **SentAt** | Pointer to **NullableTime** |  | [optional] 
@@ -18,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewWebhookEventDetailResponseData
 
-`func NewWebhookEventDetailResponseData(createdAt time.Time, id string, requestType string, status string, updatedAt time.Time, webhookId string, ) *WebhookEventDetailResponseData`
+`func NewWebhookEventDetailResponseData(createdAt time.Time, id string, payload string, requestType string, status string, updatedAt time.Time, webhookId string, ) *WebhookEventDetailResponseData`
 
 NewWebhookEventDetailResponseData instantiates a new WebhookEventDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -71,6 +72,26 @@ and a boolean to check if the value has been set.
 `func (o *WebhookEventDetailResponseData) SetId(v string)`
 
 SetId sets Id field to given value.
+
+
+### GetPayload
+
+`func (o *WebhookEventDetailResponseData) GetPayload() string`
+
+GetPayload returns the Payload field if non-nil, zero value otherwise.
+
+### GetPayloadOk
+
+`func (o *WebhookEventDetailResponseData) GetPayloadOk() (*string, bool)`
+
+GetPayloadOk returns a tuple with the Payload field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPayload
+
+`func (o *WebhookEventDetailResponseData) SetPayload(v string)`
+
+SetPayload sets Payload field to given value.
 
 
 ### GetRequestType

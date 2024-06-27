@@ -24,8 +24,10 @@ type CountCompanyOverridesParams struct {
 	FeatureId  *string  `json:"feature_id,omitempty"`
 	FeatureIds []string `json:"feature_ids,omitempty"`
 	Ids        []string `json:"ids,omitempty"`
-	Limit      *int32   `json:"limit,omitempty"`
-	Offset     *int32   `json:"offset,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32 `json:"offset,omitempty"`
 }
 
 // NewCountCompanyOverridesParams instantiates a new CountCompanyOverridesParams object

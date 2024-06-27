@@ -19,7 +19,9 @@ var _ MappedNullable = &CountWebhooksParams{}
 
 // CountWebhooksParams Input parameters
 type CountWebhooksParams struct {
-	Limit  *int32  `json:"limit,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
 	Offset *int32  `json:"offset,omitempty"`
 	Q      *string `json:"q,omitempty"`
 }

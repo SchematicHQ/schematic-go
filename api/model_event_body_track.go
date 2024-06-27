@@ -22,13 +22,13 @@ var _ MappedNullable = &EventBodyTrack{}
 // EventBodyTrack struct for EventBodyTrack
 type EventBodyTrack struct {
 	// Key-value pairs to identify company associated with track event
-	Company map[string]interface{} `json:"company,omitempty"`
+	Company *map[string]string `json:"company,omitempty"`
 	// The name of the type of track event
 	Event string `json:"event"`
 	// A map of trait names to trait values
 	Traits map[string]interface{} `json:"traits,omitempty"`
 	// Key-value pairs to identify user associated with track event
-	User map[string]interface{} `json:"user,omitempty"`
+	User *map[string]string `json:"user,omitempty"`
 }
 
 type _EventBodyTrack EventBodyTrack
@@ -52,19 +52,19 @@ func NewEventBodyTrackWithDefaults() *EventBodyTrack {
 }
 
 // GetCompany returns the Company field value if set, zero value otherwise.
-func (o *EventBodyTrack) GetCompany() map[string]interface{} {
+func (o *EventBodyTrack) GetCompany() map[string]string {
 	if o == nil || IsNil(o.Company) {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
-	return o.Company
+	return *o.Company
 }
 
 // GetCompanyOk returns a tuple with the Company field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EventBodyTrack) GetCompanyOk() (map[string]interface{}, bool) {
+func (o *EventBodyTrack) GetCompanyOk() (*map[string]string, bool) {
 	if o == nil || IsNil(o.Company) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
 	return o.Company, true
 }
@@ -78,9 +78,9 @@ func (o *EventBodyTrack) HasCompany() bool {
 	return false
 }
 
-// SetCompany gets a reference to the given map[string]interface{} and assigns it to the Company field.
-func (o *EventBodyTrack) SetCompany(v map[string]interface{}) {
-	o.Company = v
+// SetCompany gets a reference to the given map[string]string and assigns it to the Company field.
+func (o *EventBodyTrack) SetCompany(v map[string]string) {
+	o.Company = &v
 }
 
 // GetEvent returns the Event field value
@@ -140,19 +140,19 @@ func (o *EventBodyTrack) SetTraits(v map[string]interface{}) {
 }
 
 // GetUser returns the User field value if set, zero value otherwise.
-func (o *EventBodyTrack) GetUser() map[string]interface{} {
+func (o *EventBodyTrack) GetUser() map[string]string {
 	if o == nil || IsNil(o.User) {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
-	return o.User
+	return *o.User
 }
 
 // GetUserOk returns a tuple with the User field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EventBodyTrack) GetUserOk() (map[string]interface{}, bool) {
+func (o *EventBodyTrack) GetUserOk() (*map[string]string, bool) {
 	if o == nil || IsNil(o.User) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
 	return o.User, true
 }
@@ -166,9 +166,9 @@ func (o *EventBodyTrack) HasUser() bool {
 	return false
 }
 
-// SetUser gets a reference to the given map[string]interface{} and assigns it to the User field.
-func (o *EventBodyTrack) SetUser(v map[string]interface{}) {
-	o.User = v
+// SetUser gets a reference to the given map[string]string and assigns it to the User field.
+func (o *EventBodyTrack) SetUser(v map[string]string) {
+	o.User = &v
 }
 
 func (o EventBodyTrack) MarshalJSON() ([]byte, error) {

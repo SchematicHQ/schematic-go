@@ -26,10 +26,12 @@ type ListMetricCountsParams struct {
 	EventSubtype  *string    `json:"event_subtype,omitempty"`
 	EventSubtypes []string   `json:"event_subtypes,omitempty"`
 	Grouping      *string    `json:"grouping,omitempty"`
-	Limit         *int32     `json:"limit,omitempty"`
-	Offset        *int32     `json:"offset,omitempty"`
-	StartTime     *time.Time `json:"start_time,omitempty"`
-	UserId        *string    `json:"user_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int32     `json:"offset,omitempty"`
+	StartTime *time.Time `json:"start_time,omitempty"`
+	UserId    *string    `json:"user_id,omitempty"`
 }
 
 // NewListMetricCountsParams instantiates a new ListMetricCountsParams object

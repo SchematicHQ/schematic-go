@@ -710,7 +710,7 @@ type ApiCountFeatureUsageRequest struct {
 	ctx         context.Context
 	ApiService  EntitlementsAPI
 	companyId   *string
-	companyKeys *map[string]interface{}
+	companyKeys *map[string]string
 	featureIds  *[]string
 	q           *string
 	limit       *int32
@@ -722,7 +722,7 @@ func (r ApiCountFeatureUsageRequest) CompanyId(companyId string) ApiCountFeature
 	return r
 }
 
-func (r ApiCountFeatureUsageRequest) CompanyKeys(companyKeys map[string]interface{}) ApiCountFeatureUsageRequest {
+func (r ApiCountFeatureUsageRequest) CompanyKeys(companyKeys map[string]string) ApiCountFeatureUsageRequest {
 	r.companyKeys = &companyKeys
 	return r
 }
@@ -1135,6 +1135,7 @@ type ApiCountPlanEntitlementsRequest struct {
 	ids        *[]string
 	planId     *string
 	planIds    *[]string
+	q          *string
 	limit      *int32
 	offset     *int32
 }
@@ -1161,6 +1162,11 @@ func (r ApiCountPlanEntitlementsRequest) PlanId(planId string) ApiCountPlanEntit
 
 func (r ApiCountPlanEntitlementsRequest) PlanIds(planIds []string) ApiCountPlanEntitlementsRequest {
 	r.planIds = &planIds
+	return r
+}
+
+func (r ApiCountPlanEntitlementsRequest) Q(q string) ApiCountPlanEntitlementsRequest {
+	r.q = &q
 	return r
 }
 
@@ -1253,6 +1259,9 @@ func (a *EntitlementsAPIService) CountPlanEntitlementsExecute(r ApiCountPlanEnti
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "plan_ids", t, "multi")
 		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -2987,7 +2996,7 @@ type ApiListFeatureUsageRequest struct {
 	ctx         context.Context
 	ApiService  EntitlementsAPI
 	companyId   *string
-	companyKeys *map[string]interface{}
+	companyKeys *map[string]string
 	featureIds  *[]string
 	q           *string
 	limit       *int32
@@ -2999,7 +3008,7 @@ func (r ApiListFeatureUsageRequest) CompanyId(companyId string) ApiListFeatureUs
 	return r
 }
 
-func (r ApiListFeatureUsageRequest) CompanyKeys(companyKeys map[string]interface{}) ApiListFeatureUsageRequest {
+func (r ApiListFeatureUsageRequest) CompanyKeys(companyKeys map[string]string) ApiListFeatureUsageRequest {
 	r.companyKeys = &companyKeys
 	return r
 }
@@ -3412,6 +3421,7 @@ type ApiListPlanEntitlementsRequest struct {
 	ids        *[]string
 	planId     *string
 	planIds    *[]string
+	q          *string
 	limit      *int32
 	offset     *int32
 }
@@ -3438,6 +3448,11 @@ func (r ApiListPlanEntitlementsRequest) PlanId(planId string) ApiListPlanEntitle
 
 func (r ApiListPlanEntitlementsRequest) PlanIds(planIds []string) ApiListPlanEntitlementsRequest {
 	r.planIds = &planIds
+	return r
+}
+
+func (r ApiListPlanEntitlementsRequest) Q(q string) ApiListPlanEntitlementsRequest {
+	r.q = &q
 	return r
 }
 
@@ -3530,6 +3545,9 @@ func (a *EntitlementsAPIService) ListPlanEntitlementsExecute(r ApiListPlanEntitl
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "plan_ids", t, "multi")
 		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")

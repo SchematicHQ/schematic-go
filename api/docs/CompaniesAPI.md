@@ -369,7 +369,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	upsertCompanyRequestBody := *schematicapi.NewUpsertCompanyRequestBody(map[string]interface{}(123)) // UpsertCompanyRequestBody | 
+	upsertCompanyRequestBody := *schematicapi.NewUpsertCompanyRequestBody(map[string]string{"key": "Inner_example"}) // UpsertCompanyRequestBody | 
 
 	resp, r, err := client.API().CompaniesAPI.CreateCompany(context.Background()).UpsertCompanyRequestBody(upsertCompanyRequestBody).Execute()
 	if err != nil {
@@ -436,7 +436,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	upsertUserRequestBody := *schematicapi.NewUpsertUserRequestBody(map[string]interface{}(123), map[string]interface{}(123)) // UpsertUserRequestBody | 
+	upsertUserRequestBody := *schematicapi.NewUpsertUserRequestBody(map[string]string{"key": "Inner_example"}, map[string]string{"key": "Inner_example"}) // UpsertUserRequestBody | 
 
 	resp, r, err := client.API().CompaniesAPI.CreateUser(context.Background()).UpsertUserRequestBody(upsertUserRequestBody).Execute()
 	if err != nil {
@@ -574,7 +574,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	keysRequestBody := *schematicapi.NewKeysRequestBody(map[string]interface{}(123)) // KeysRequestBody | 
+	keysRequestBody := *schematicapi.NewKeysRequestBody(map[string]string{"key": "Inner_example"}) // KeysRequestBody | 
 
 	resp, r, err := client.API().CompaniesAPI.DeleteCompanyByKeys(context.Background()).KeysRequestBody(keysRequestBody).Execute()
 	if err != nil {
@@ -783,7 +783,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	keysRequestBody := *schematicapi.NewKeysRequestBody(map[string]interface{}(123)) // KeysRequestBody | 
+	keysRequestBody := *schematicapi.NewKeysRequestBody(map[string]string{"key": "Inner_example"}) // KeysRequestBody | 
 
 	resp, r, err := client.API().CompaniesAPI.DeleteUserByKeys(context.Background()).KeysRequestBody(keysRequestBody).Execute()
 	if err != nil {
@@ -2073,7 +2073,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	upsertCompanyRequestBody := *schematicapi.NewUpsertCompanyRequestBody(map[string]interface{}(123)) // UpsertCompanyRequestBody | 
+	upsertCompanyRequestBody := *schematicapi.NewUpsertCompanyRequestBody(map[string]string{"key": "Inner_example"}) // UpsertCompanyRequestBody | 
 
 	resp, r, err := client.API().CompaniesAPI.UpsertCompany(context.Background()).UpsertCompanyRequestBody(upsertCompanyRequestBody).Execute()
 	if err != nil {
@@ -2140,7 +2140,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	upsertTraitRequestBody := *schematicapi.NewUpsertTraitRequestBody(map[string]interface{}(123), "Trait_example") // UpsertTraitRequestBody | 
+	upsertTraitRequestBody := *schematicapi.NewUpsertTraitRequestBody(map[string]string{"key": "Inner_example"}, "Trait_example") // UpsertTraitRequestBody | 
 
 	resp, r, err := client.API().CompaniesAPI.UpsertCompanyTrait(context.Background()).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
 	if err != nil {
@@ -2207,7 +2207,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	upsertUserRequestBody := *schematicapi.NewUpsertUserRequestBody(map[string]interface{}(123), map[string]interface{}(123)) // UpsertUserRequestBody | 
+	upsertUserRequestBody := *schematicapi.NewUpsertUserRequestBody(map[string]string{"key": "Inner_example"}, map[string]string{"key": "Inner_example"}) // UpsertUserRequestBody | 
 
 	resp, r, err := client.API().CompaniesAPI.UpsertUser(context.Background()).UpsertUserRequestBody(upsertUserRequestBody).Execute()
 	if err != nil {
@@ -2274,7 +2274,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	upsertTraitRequestBody := *schematicapi.NewUpsertTraitRequestBody(map[string]interface{}(123), "Trait_example") // UpsertTraitRequestBody | 
+	upsertTraitRequestBody := *schematicapi.NewUpsertTraitRequestBody(map[string]string{"key": "Inner_example"}, "Trait_example") // UpsertTraitRequestBody | 
 
 	resp, r, err := client.API().CompaniesAPI.UpsertUserTrait(context.Background()).UpsertTraitRequestBody(upsertTraitRequestBody).Execute()
 	if err != nil {

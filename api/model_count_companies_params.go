@@ -19,12 +19,16 @@ var _ MappedNullable = &CountCompaniesParams{}
 
 // CountCompaniesParams Input parameters
 type CountCompaniesParams struct {
-	Ids                       []string `json:"ids,omitempty"`
-	Limit                     *int32   `json:"limit,omitempty"`
-	Offset                    *int32   `json:"offset,omitempty"`
-	PlanId                    *string  `json:"plan_id,omitempty"`
-	Q                         *string  `json:"q,omitempty"`
-	WithoutFeatureOverrideFor *string  `json:"without_feature_override_for,omitempty"`
+	Ids []string `json:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	PlanId *string `json:"plan_id,omitempty"`
+	// Search filter
+	Q *string `json:"q,omitempty"`
+	// Filter out companies that already have a company override for the specified feature ID
+	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty"`
 }
 
 // NewCountCompaniesParams instantiates a new CountCompaniesParams object

@@ -4,13 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Keys** | **map[string]interface{}** |  | 
+**Keys** | **map[string]string** |  | 
 
 ## Methods
 
 ### NewKeysRequestBody
 
-`func NewKeysRequestBody(keys map[string]interface{}, ) *KeysRequestBody`
+`func NewKeysRequestBody(keys map[string]string, ) *KeysRequestBody`
 
 NewKeysRequestBody instantiates a new KeysRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -27,20 +27,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetKeys
 
-`func (o *KeysRequestBody) GetKeys() map[string]interface{}`
+`func (o *KeysRequestBody) GetKeys() map[string]string`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *KeysRequestBody) GetKeysOk() (*map[string]interface{}, bool)`
+`func (o *KeysRequestBody) GetKeysOk() (*map[string]string, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *KeysRequestBody) SetKeys(v map[string]interface{})`
+`func (o *KeysRequestBody) SetKeys(v map[string]string)`
 
 SetKeys sets Keys field to given value.
 

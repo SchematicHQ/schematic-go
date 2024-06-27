@@ -5,11 +5,11 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Ids** | Pointer to **[]string** |  | [optional] 
-**Limit** | Pointer to **int32** |  | [optional] 
-**Offset** | Pointer to **int32** |  | [optional] 
+**Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
+**Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
 **PlanId** | Pointer to **string** |  | [optional] 
-**Q** | Pointer to **string** |  | [optional] 
-**WithoutFeatureOverrideFor** | Pointer to **string** |  | [optional] 
+**Q** | Pointer to **string** | Search filter | [optional] 
+**WithoutFeatureOverrideFor** | Pointer to **string** | Filter out companies that already have a company override for the specified feature ID | [optional] 
 
 ## Methods
 

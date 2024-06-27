@@ -6,16 +6,16 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Company** | Pointer to [**EventBodyIdentifyCompany**](EventBodyIdentifyCompany.md) |  | [optional] 
 **Event** | **string** | The name of the type of track event | 
-**Traits** | Pointer to **map[string]interface{}** | A map of user trait names to trait values | [optional] 
-**User** | Pointer to **map[string]interface{}** | Key-value pairs to identify user associated with track event | [optional] 
-**Keys** | **map[string]interface{}** | Key-value pairs to identify the user | 
+**Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
+**User** | Pointer to **map[string]string** | Key-value pairs to identify user associated with track event | [optional] 
+**Keys** | **map[string]string** | Key-value pairs to identify the user | 
 **Name** | Pointer to **string** | The display name of the user being identified; required only if it is a new user | [optional] 
 
 ## Methods
 
 ### NewEventBody
 
-`func NewEventBody(event string, keys map[string]interface{}, ) *EventBody`
+`func NewEventBody(event string, keys map[string]string, ) *EventBody`
 
 NewEventBody instantiates a new EventBody object
 This constructor will assign default values to properties that have it defined,
@@ -102,20 +102,20 @@ HasTraits returns a boolean if a field has been set.
 
 ### GetUser
 
-`func (o *EventBody) GetUser() map[string]interface{}`
+`func (o *EventBody) GetUser() map[string]string`
 
 GetUser returns the User field if non-nil, zero value otherwise.
 
 ### GetUserOk
 
-`func (o *EventBody) GetUserOk() (*map[string]interface{}, bool)`
+`func (o *EventBody) GetUserOk() (*map[string]string, bool)`
 
 GetUserOk returns a tuple with the User field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUser
 
-`func (o *EventBody) SetUser(v map[string]interface{})`
+`func (o *EventBody) SetUser(v map[string]string)`
 
 SetUser sets User field to given value.
 
@@ -127,20 +127,20 @@ HasUser returns a boolean if a field has been set.
 
 ### GetKeys
 
-`func (o *EventBody) GetKeys() map[string]interface{}`
+`func (o *EventBody) GetKeys() map[string]string`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *EventBody) GetKeysOk() (*map[string]interface{}, bool)`
+`func (o *EventBody) GetKeysOk() (*map[string]string, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *EventBody) SetKeys(v map[string]interface{})`
+`func (o *EventBody) SetKeys(v map[string]string)`
 
 SetKeys sets Keys field to given value.
 

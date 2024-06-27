@@ -16,8 +16,8 @@ Name | Type | Description | Notes
 **FlagKey** | **string** |  | 
 **Id** | **string** |  | 
 **Reason** | **string** |  | 
-**ReqCompany** | Pointer to **map[string]interface{}** |  | [optional] 
-**ReqUser** | Pointer to **map[string]interface{}** |  | [optional] 
+**ReqCompany** | Pointer to **map[string]string** |  | [optional] 
+**ReqUser** | Pointer to **map[string]string** |  | [optional] 
 **Rule** | Pointer to [**RuleResponseData**](RuleResponseData.md) |  | [optional] 
 **RuleId** | Pointer to **NullableString** |  | [optional] 
 **UpdatedAt** | **time.Time** |  | 
@@ -346,20 +346,20 @@ SetReason sets Reason field to given value.
 
 ### GetReqCompany
 
-`func (o *FlagCheckLogDetailResponseData) GetReqCompany() map[string]interface{}`
+`func (o *FlagCheckLogDetailResponseData) GetReqCompany() map[string]string`
 
 GetReqCompany returns the ReqCompany field if non-nil, zero value otherwise.
 
 ### GetReqCompanyOk
 
-`func (o *FlagCheckLogDetailResponseData) GetReqCompanyOk() (*map[string]interface{}, bool)`
+`func (o *FlagCheckLogDetailResponseData) GetReqCompanyOk() (*map[string]string, bool)`
 
 GetReqCompanyOk returns a tuple with the ReqCompany field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetReqCompany
 
-`func (o *FlagCheckLogDetailResponseData) SetReqCompany(v map[string]interface{})`
+`func (o *FlagCheckLogDetailResponseData) SetReqCompany(v map[string]string)`
 
 SetReqCompany sets ReqCompany field to given value.
 
@@ -381,20 +381,20 @@ HasReqCompany returns a boolean if a field has been set.
 UnsetReqCompany ensures that no value is present for ReqCompany, not even an explicit nil
 ### GetReqUser
 
-`func (o *FlagCheckLogDetailResponseData) GetReqUser() map[string]interface{}`
+`func (o *FlagCheckLogDetailResponseData) GetReqUser() map[string]string`
 
 GetReqUser returns the ReqUser field if non-nil, zero value otherwise.
 
 ### GetReqUserOk
 
-`func (o *FlagCheckLogDetailResponseData) GetReqUserOk() (*map[string]interface{}, bool)`
+`func (o *FlagCheckLogDetailResponseData) GetReqUserOk() (*map[string]string, bool)`
 
 GetReqUserOk returns a tuple with the ReqUser field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetReqUser
 
-`func (o *FlagCheckLogDetailResponseData) SetReqUser(v map[string]interface{})`
+`func (o *FlagCheckLogDetailResponseData) SetReqUser(v map[string]string)`
 
 SetReqUser sets ReqUser field to given value.
 

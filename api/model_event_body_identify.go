@@ -23,10 +23,10 @@ var _ MappedNullable = &EventBodyIdentify{}
 type EventBodyIdentify struct {
 	Company *EventBodyIdentifyCompany `json:"company,omitempty"`
 	// Key-value pairs to identify the user
-	Keys map[string]interface{} `json:"keys"`
+	Keys map[string]string `json:"keys"`
 	// The display name of the user being identified; required only if it is a new user
 	Name *string `json:"name,omitempty"`
-	// A map of user trait names to trait values
+	// A map of trait names to trait values
 	Traits map[string]interface{} `json:"traits,omitempty"`
 }
 
@@ -36,7 +36,7 @@ type _EventBodyIdentify EventBodyIdentify
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEventBodyIdentify(keys map[string]interface{}) *EventBodyIdentify {
+func NewEventBodyIdentify(keys map[string]string) *EventBodyIdentify {
 	this := EventBodyIdentify{}
 	this.Keys = keys
 	return &this
@@ -83,9 +83,9 @@ func (o *EventBodyIdentify) SetCompany(v EventBodyIdentifyCompany) {
 }
 
 // GetKeys returns the Keys field value
-func (o *EventBodyIdentify) GetKeys() map[string]interface{} {
+func (o *EventBodyIdentify) GetKeys() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 
@@ -94,15 +94,15 @@ func (o *EventBodyIdentify) GetKeys() map[string]interface{} {
 
 // GetKeysOk returns a tuple with the Keys field value
 // and a boolean to check if the value has been set.
-func (o *EventBodyIdentify) GetKeysOk() (map[string]interface{}, bool) {
+func (o *EventBodyIdentify) GetKeysOk() (*map[string]string, bool) {
 	if o == nil {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.Keys, true
+	return &o.Keys, true
 }
 
 // SetKeys sets field value
-func (o *EventBodyIdentify) SetKeys(v map[string]interface{}) {
+func (o *EventBodyIdentify) SetKeys(v map[string]string) {
 	o.Keys = v
 }
 

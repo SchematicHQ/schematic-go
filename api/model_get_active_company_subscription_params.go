@@ -20,8 +20,10 @@ var _ MappedNullable = &GetActiveCompanySubscriptionParams{}
 // GetActiveCompanySubscriptionParams Input parameters
 type GetActiveCompanySubscriptionParams struct {
 	CompanyId *string `json:"company_id,omitempty"`
-	Limit     *int32  `json:"limit,omitempty"`
-	Offset    *int32  `json:"offset,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32 `json:"offset,omitempty"`
 }
 
 // NewGetActiveCompanySubscriptionParams instantiates a new GetActiveCompanySubscriptionParams object

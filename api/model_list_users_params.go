@@ -21,10 +21,13 @@ var _ MappedNullable = &ListUsersParams{}
 type ListUsersParams struct {
 	CompanyId *string  `json:"company_id,omitempty"`
 	Ids       []string `json:"ids,omitempty"`
-	Limit     *int32   `json:"limit,omitempty"`
-	Offset    *int32   `json:"offset,omitempty"`
-	PlanId    *string  `json:"plan_id,omitempty"`
-	Q         *string  `json:"q,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	PlanId *string `json:"plan_id,omitempty"`
+	// Search filter
+	Q *string `json:"q,omitempty"`
 }
 
 // NewListUsersParams instantiates a new ListUsersParams object

@@ -21,10 +21,12 @@ var _ MappedNullable = &CountEntityTraitDefinitionsParams{}
 type CountEntityTraitDefinitionsParams struct {
 	EntityType *string  `json:"entity_type,omitempty"`
 	Ids        []string `json:"ids,omitempty"`
-	Limit      *int32   `json:"limit,omitempty"`
-	Offset     *int32   `json:"offset,omitempty"`
-	Q          *string  `json:"q,omitempty"`
-	TraitType  *string  `json:"trait_type,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int32  `json:"offset,omitempty"`
+	Q         *string `json:"q,omitempty"`
+	TraitType *string `json:"trait_type,omitempty"`
 }
 
 // NewCountEntityTraitDefinitionsParams instantiates a new CountEntityTraitDefinitionsParams object

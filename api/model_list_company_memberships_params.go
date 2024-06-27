@@ -20,9 +20,11 @@ var _ MappedNullable = &ListCompanyMembershipsParams{}
 // ListCompanyMembershipsParams Input parameters
 type ListCompanyMembershipsParams struct {
 	CompanyId *string `json:"company_id,omitempty"`
-	Limit     *int32  `json:"limit,omitempty"`
-	Offset    *int32  `json:"offset,omitempty"`
-	UserId    *string `json:"user_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	UserId *string `json:"user_id,omitempty"`
 }
 
 // NewListCompanyMembershipsParams instantiates a new ListCompanyMembershipsParams object

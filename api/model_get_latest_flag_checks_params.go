@@ -22,8 +22,10 @@ type GetLatestFlagChecksParams struct {
 	FlagId  *string  `json:"flag_id,omitempty"`
 	FlagIds []string `json:"flag_ids,omitempty"`
 	Id      *string  `json:"id,omitempty"`
-	Limit   *int32   `json:"limit,omitempty"`
-	Offset  *int32   `json:"offset,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32 `json:"offset,omitempty"`
 }
 
 // NewGetLatestFlagChecksParams instantiates a new GetLatestFlagChecksParams object

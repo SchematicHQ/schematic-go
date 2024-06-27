@@ -12,8 +12,8 @@ func TestFlagCheckCacheKey(t *testing.T) {
 		{
 			name: "Empty context and flag key",
 			evalCtx: &CheckFlagRequestBody{
-				Company: map[string]interface{}{},
-				User:    map[string]interface{}{},
+				Company: map[string]string{},
+				User:    map[string]string{},
 			},
 			flagKey:  "",
 			expected: "f:",
@@ -21,11 +21,11 @@ func TestFlagCheckCacheKey(t *testing.T) {
 		{
 			name: "Context with company and user data",
 			evalCtx: &CheckFlagRequestBody{
-				Company: map[string]interface{}{
+				Company: map[string]string{
 					"id":   "123",
 					"name": "ACME Inc.",
 				},
-				User: map[string]interface{}{
+				User: map[string]string{
 					"id":    "456",
 					"email": "john@example.com",
 				},
@@ -36,11 +36,11 @@ func TestFlagCheckCacheKey(t *testing.T) {
 		{
 			name: "Context with only company data",
 			evalCtx: &CheckFlagRequestBody{
-				Company: map[string]interface{}{
+				Company: map[string]string{
 					"id":   "789",
 					"name": "XYZ Corp.",
 				},
-				User: map[string]interface{}{},
+				User: map[string]string{},
 			},
 			flagKey:  "feature_flag_2",
 			expected: "f:feature_flag_2;c:id:789;c:name:XYZ Corp.",
@@ -48,8 +48,8 @@ func TestFlagCheckCacheKey(t *testing.T) {
 		{
 			name: "Context with only user data",
 			evalCtx: &CheckFlagRequestBody{
-				Company: map[string]interface{}{},
-				User: map[string]interface{}{
+				Company: map[string]string{},
+				User: map[string]string{
 					"id":    "abc",
 					"email": "jane@example.com",
 				},

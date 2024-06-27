@@ -33,7 +33,7 @@ type ClientOptLocalFlagCheckCache struct {
 }
 
 func (c ClientOptLocalFlagCheckCache) Apply(ctx context.Context, client Client) error {
-	client.AddFlagCheckCacheProvider(ctx, newLocalCache(c.maxSize, c.ttl, boolSizeFunc))
+	client.AddFlagCheckCacheProvider(ctx, newLocalCache[bool](c.maxSize, c.ttl))
 
 	return nil
 }
@@ -48,7 +48,7 @@ type ClientOptDisableFlagCheckCache struct {
 }
 
 func (c ClientOptDisableFlagCheckCache) Apply(ctx context.Context, client Client) error {
-	client.AddFlagCheckCacheProvider(ctx, newLocalCache(0, 0, boolSizeFunc))
+	client.AddFlagCheckCacheProvider(ctx, newLocalCache[bool](0, 0))
 
 	return nil
 }

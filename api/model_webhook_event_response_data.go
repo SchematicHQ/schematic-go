@@ -24,6 +24,7 @@ var _ MappedNullable = &WebhookEventResponseData{}
 type WebhookEventResponseData struct {
 	CreatedAt    time.Time     `json:"created_at"`
 	Id           string        `json:"id"`
+	Payload      string        `json:"payload"`
 	RequestType  string        `json:"request_type"`
 	ResponseCode NullableInt32 `json:"response_code,omitempty"`
 	SentAt       NullableTime  `json:"sent_at,omitempty"`
@@ -38,10 +39,11 @@ type _WebhookEventResponseData WebhookEventResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewWebhookEventResponseData(createdAt time.Time, id string, requestType string, status string, updatedAt time.Time, webhookId string) *WebhookEventResponseData {
+func NewWebhookEventResponseData(createdAt time.Time, id string, payload string, requestType string, status string, updatedAt time.Time, webhookId string) *WebhookEventResponseData {
 	this := WebhookEventResponseData{}
 	this.CreatedAt = createdAt
 	this.Id = id
+	this.Payload = payload
 	this.RequestType = requestType
 	this.Status = status
 	this.UpdatedAt = updatedAt
@@ -103,6 +105,30 @@ func (o *WebhookEventResponseData) GetIdOk() (*string, bool) {
 // SetId sets field value
 func (o *WebhookEventResponseData) SetId(v string) {
 	o.Id = v
+}
+
+// GetPayload returns the Payload field value
+func (o *WebhookEventResponseData) GetPayload() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Payload
+}
+
+// GetPayloadOk returns a tuple with the Payload field value
+// and a boolean to check if the value has been set.
+func (o *WebhookEventResponseData) GetPayloadOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Payload, true
+}
+
+// SetPayload sets field value
+func (o *WebhookEventResponseData) SetPayload(v string) {
+	o.Payload = v
 }
 
 // GetRequestType returns the RequestType field value
@@ -299,6 +325,7 @@ func (o WebhookEventResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["id"] = o.Id
+	toSerialize["payload"] = o.Payload
 	toSerialize["request_type"] = o.RequestType
 	if o.ResponseCode.IsSet() {
 		toSerialize["response_code"] = o.ResponseCode.Get()
@@ -319,6 +346,7 @@ func (o *WebhookEventResponseData) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"created_at",
 		"id",
+		"payload",
 		"request_type",
 		"status",
 		"updated_at",

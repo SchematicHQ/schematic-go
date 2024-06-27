@@ -118,8 +118,8 @@ func TestTrackEventBatch(t *testing.T) {
 	mocks.EventsAPI.EXPECT().CreateEventBatchExecute(gomock.Any()).Return(nil, nil, nil).Times(1)
 
 	ctx := context.Background()
-	client.Track(ctx, &schematic.EventBodyTrack{Event: "foo", Company: map[string]any{"foo": "bar"}})
-	client.Track(ctx, &schematic.EventBodyTrack{Event: "bar", Company: map[string]any{"foo": "bar"}})
+	client.Track(ctx, &schematic.EventBodyTrack{Event: "foo", Company: &map[string]string{"foo": "bar"}})
+	client.Track(ctx, &schematic.EventBodyTrack{Event: "bar", Company: &map[string]string{"foo": "bar"}})
 	time.Sleep(11 * time.Millisecond)
 }
 
@@ -137,12 +137,12 @@ func TestMultipleEventBatches(t *testing.T) {
 	mocks.EventsAPI.EXPECT().CreateEventBatchExecute(gomock.Any()).Return(nil, nil, nil).Times(2)
 
 	ctx := context.Background()
-	client.Track(ctx, &schematic.EventBodyTrack{Event: "foo", Company: map[string]any{"foo": "bar"}})
-	client.Track(ctx, &schematic.EventBodyTrack{Event: "bar", Company: map[string]any{"foo": "bar"}})
+	client.Track(ctx, &schematic.EventBodyTrack{Event: "foo", Company: &map[string]string{"foo": "bar"}})
+	client.Track(ctx, &schematic.EventBodyTrack{Event: "bar", Company: &map[string]string{"foo": "bar"}})
 	// Wait for event buffer to flush and start submitting second batch
 	time.Sleep(20 * time.Millisecond)
-	client.Identify(ctx, &schematic.EventBodyIdentify{Keys: map[string]any{"foo": "bar"}})
-	client.Track(ctx, &schematic.EventBodyTrack{Event: "baz", Company: map[string]any{"foo": "bar"}})
+	client.Identify(ctx, &schematic.EventBodyIdentify{Keys: map[string]string{"foo": "bar"}})
+	client.Track(ctx, &schematic.EventBodyTrack{Event: "baz", Company: &map[string]string{"foo": "bar"}})
 	// Wait for event buffer to flush
 	time.Sleep(20 * time.Millisecond)
 }
@@ -167,7 +167,7 @@ func TestCheckFlagLiveMode(t *testing.T) {
 	mockObjs.HTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
 		Body:       io.NopCloser(bytes.NewReader(respBody)),
 		StatusCode: 200,
-    Header:     http.Header{"Content-Type": []string{"application/json"}},
+		Header:     http.Header{"Content-Type": []string{"application/json"}},
 	}, nil).Times(1)
 
 	assert.True(t, client.CheckFlag(context.Background(), &schematic.CheckFlagRequestBody{}, "test-flag"))

@@ -5,10 +5,10 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CompanyId** | Pointer to **string** |  | [optional] 
-**CompanyKeys** | Pointer to **map[string]interface{}** |  | [optional] 
+**CompanyKeys** | Pointer to **map[string]string** |  | [optional] 
 **FeatureIds** | Pointer to **[]string** |  | [optional] 
-**Limit** | Pointer to **int32** |  | [optional] 
-**Offset** | Pointer to **int32** |  | [optional] 
+**Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
+**Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
 **Q** | Pointer to **string** |  | [optional] 
 
 ## Methods
@@ -57,20 +57,20 @@ HasCompanyId returns a boolean if a field has been set.
 
 ### GetCompanyKeys
 
-`func (o *ListFeatureUsageParams) GetCompanyKeys() map[string]interface{}`
+`func (o *ListFeatureUsageParams) GetCompanyKeys() map[string]string`
 
 GetCompanyKeys returns the CompanyKeys field if non-nil, zero value otherwise.
 
 ### GetCompanyKeysOk
 
-`func (o *ListFeatureUsageParams) GetCompanyKeysOk() (*map[string]interface{}, bool)`
+`func (o *ListFeatureUsageParams) GetCompanyKeysOk() (*map[string]string, bool)`
 
 GetCompanyKeysOk returns a tuple with the CompanyKeys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCompanyKeys
 
-`func (o *ListFeatureUsageParams) SetCompanyKeys(v map[string]interface{})`
+`func (o *ListFeatureUsageParams) SetCompanyKeys(v map[string]string)`
 
 SetCompanyKeys sets CompanyKeys field to given value.
 

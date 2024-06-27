@@ -22,10 +22,13 @@ type CountPlanEntitlementsParams struct {
 	FeatureId  *string  `json:"feature_id,omitempty"`
 	FeatureIds []string `json:"feature_ids,omitempty"`
 	Ids        []string `json:"ids,omitempty"`
-	Limit      *int32   `json:"limit,omitempty"`
-	Offset     *int32   `json:"offset,omitempty"`
-	PlanId     *string  `json:"plan_id,omitempty"`
-	PlanIds    []string `json:"plan_ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset  *int32   `json:"offset,omitempty"`
+	PlanId  *string  `json:"plan_id,omitempty"`
+	PlanIds []string `json:"plan_ids,omitempty"`
+	Q       *string  `json:"q,omitempty"`
 }
 
 // NewCountPlanEntitlementsParams instantiates a new CountPlanEntitlementsParams object
@@ -269,6 +272,38 @@ func (o *CountPlanEntitlementsParams) SetPlanIds(v []string) {
 	o.PlanIds = v
 }
 
+// GetQ returns the Q field value if set, zero value otherwise.
+func (o *CountPlanEntitlementsParams) GetQ() string {
+	if o == nil || IsNil(o.Q) {
+		var ret string
+		return ret
+	}
+	return *o.Q
+}
+
+// GetQOk returns a tuple with the Q field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CountPlanEntitlementsParams) GetQOk() (*string, bool) {
+	if o == nil || IsNil(o.Q) {
+		return nil, false
+	}
+	return o.Q, true
+}
+
+// HasQ returns a boolean if a field has been set.
+func (o *CountPlanEntitlementsParams) HasQ() bool {
+	if o != nil && !IsNil(o.Q) {
+		return true
+	}
+
+	return false
+}
+
+// SetQ gets a reference to the given string and assigns it to the Q field.
+func (o *CountPlanEntitlementsParams) SetQ(v string) {
+	o.Q = &v
+}
+
 func (o CountPlanEntitlementsParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -299,6 +334,9 @@ func (o CountPlanEntitlementsParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PlanIds) {
 		toSerialize["plan_ids"] = o.PlanIds
+	}
+	if !IsNil(o.Q) {
+		toSerialize["q"] = o.Q
 	}
 	return toSerialize, nil
 }

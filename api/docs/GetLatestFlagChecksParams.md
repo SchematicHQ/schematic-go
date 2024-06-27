@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 **FlagId** | Pointer to **string** |  | [optional] 
 **FlagIds** | Pointer to **[]string** |  | [optional] 
 **Id** | Pointer to **string** |  | [optional] 
-**Limit** | Pointer to **int32** |  | [optional] 
-**Offset** | Pointer to **int32** |  | [optional] 
+**Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
+**Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
 
 ## Methods
 

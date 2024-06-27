@@ -4,9 +4,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Company** | **map[string]interface{}** | Optionally specify company using key/value pairs | 
+**Company** | **map[string]string** | Optionally specify company using key/value pairs | 
 **CompanyId** | Pointer to **NullableString** | Optionally specify company using Schematic company ID | [optional] 
-**Keys** | **map[string]interface{}** |  | 
+**Keys** | **map[string]string** |  | 
 **LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
 **Name** | Pointer to **NullableString** |  | [optional] 
 **Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 
 ### NewUpsertUserRequestBody
 
-`func NewUpsertUserRequestBody(company map[string]interface{}, keys map[string]interface{}, ) *UpsertUserRequestBody`
+`func NewUpsertUserRequestBody(company map[string]string, keys map[string]string, ) *UpsertUserRequestBody`
 
 NewUpsertUserRequestBody instantiates a new UpsertUserRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -33,20 +33,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetCompany
 
-`func (o *UpsertUserRequestBody) GetCompany() map[string]interface{}`
+`func (o *UpsertUserRequestBody) GetCompany() map[string]string`
 
 GetCompany returns the Company field if non-nil, zero value otherwise.
 
 ### GetCompanyOk
 
-`func (o *UpsertUserRequestBody) GetCompanyOk() (*map[string]interface{}, bool)`
+`func (o *UpsertUserRequestBody) GetCompanyOk() (*map[string]string, bool)`
 
 GetCompanyOk returns a tuple with the Company field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCompany
 
-`func (o *UpsertUserRequestBody) SetCompany(v map[string]interface{})`
+`func (o *UpsertUserRequestBody) SetCompany(v map[string]string)`
 
 SetCompany sets Company field to given value.
 
@@ -88,20 +88,20 @@ HasCompanyId returns a boolean if a field has been set.
 UnsetCompanyId ensures that no value is present for CompanyId, not even an explicit nil
 ### GetKeys
 
-`func (o *UpsertUserRequestBody) GetKeys() map[string]interface{}`
+`func (o *UpsertUserRequestBody) GetKeys() map[string]string`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *UpsertUserRequestBody) GetKeysOk() (*map[string]interface{}, bool)`
+`func (o *UpsertUserRequestBody) GetKeysOk() (*map[string]string, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *UpsertUserRequestBody) SetKeys(v map[string]interface{})`
+`func (o *UpsertUserRequestBody) SetKeys(v map[string]string)`
 
 SetKeys sets Keys field to given value.
 

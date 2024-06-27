@@ -21,7 +21,7 @@ var _ MappedNullable = &KeysRequestBody{}
 
 // KeysRequestBody struct for KeysRequestBody
 type KeysRequestBody struct {
-	Keys map[string]interface{} `json:"keys"`
+	Keys map[string]string `json:"keys"`
 }
 
 type _KeysRequestBody KeysRequestBody
@@ -30,7 +30,7 @@ type _KeysRequestBody KeysRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewKeysRequestBody(keys map[string]interface{}) *KeysRequestBody {
+func NewKeysRequestBody(keys map[string]string) *KeysRequestBody {
 	this := KeysRequestBody{}
 	this.Keys = keys
 	return &this
@@ -45,9 +45,9 @@ func NewKeysRequestBodyWithDefaults() *KeysRequestBody {
 }
 
 // GetKeys returns the Keys field value
-func (o *KeysRequestBody) GetKeys() map[string]interface{} {
+func (o *KeysRequestBody) GetKeys() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 
@@ -56,15 +56,15 @@ func (o *KeysRequestBody) GetKeys() map[string]interface{} {
 
 // GetKeysOk returns a tuple with the Keys field value
 // and a boolean to check if the value has been set.
-func (o *KeysRequestBody) GetKeysOk() (map[string]interface{}, bool) {
+func (o *KeysRequestBody) GetKeysOk() (*map[string]string, bool) {
 	if o == nil {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.Keys, true
+	return &o.Keys, true
 }
 
 // SetKeys sets field value
-func (o *KeysRequestBody) SetKeys(v map[string]interface{}) {
+func (o *KeysRequestBody) SetKeys(v map[string]string) {
 	o.Keys = v
 }
 

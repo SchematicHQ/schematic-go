@@ -22,8 +22,10 @@ type CountEntityKeyDefinitionsParams struct {
 	EntityType *string  `json:"entity_type,omitempty"`
 	Ids        []string `json:"ids,omitempty"`
 	Key        *string  `json:"key,omitempty"`
-	Limit      *int32   `json:"limit,omitempty"`
-	Offset     *int32   `json:"offset,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32 `json:"offset,omitempty"`
 }
 
 // NewCountEntityKeyDefinitionsParams instantiates a new CountEntityKeyDefinitionsParams object

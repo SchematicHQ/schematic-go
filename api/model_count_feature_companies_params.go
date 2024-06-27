@@ -20,9 +20,11 @@ var _ MappedNullable = &CountFeatureCompaniesParams{}
 // CountFeatureCompaniesParams Input parameters
 type CountFeatureCompaniesParams struct {
 	FeatureId *string `json:"feature_id,omitempty"`
-	Limit     *int32  `json:"limit,omitempty"`
-	Offset    *int32  `json:"offset,omitempty"`
-	Q         *string `json:"q,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	Q      *string `json:"q,omitempty"`
 }
 
 // NewCountFeatureCompaniesParams instantiates a new CountFeatureCompaniesParams object

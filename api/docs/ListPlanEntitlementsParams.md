@@ -7,10 +7,11 @@ Name | Type | Description | Notes
 **FeatureId** | Pointer to **string** |  | [optional] 
 **FeatureIds** | Pointer to **[]string** |  | [optional] 
 **Ids** | Pointer to **[]string** |  | [optional] 
-**Limit** | Pointer to **int32** |  | [optional] 
-**Offset** | Pointer to **int32** |  | [optional] 
+**Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
+**Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
 **PlanId** | Pointer to **string** |  | [optional] 
 **PlanIds** | Pointer to **[]string** |  | [optional] 
+**Q** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -205,6 +206,31 @@ SetPlanIds sets PlanIds field to given value.
 `func (o *ListPlanEntitlementsParams) HasPlanIds() bool`
 
 HasPlanIds returns a boolean if a field has been set.
+
+### GetQ
+
+`func (o *ListPlanEntitlementsParams) GetQ() string`
+
+GetQ returns the Q field if non-nil, zero value otherwise.
+
+### GetQOk
+
+`func (o *ListPlanEntitlementsParams) GetQOk() (*string, bool)`
+
+GetQOk returns a tuple with the Q field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetQ
+
+`func (o *ListPlanEntitlementsParams) SetQ(v string)`
+
+SetQ sets Q field to given value.
+
+### HasQ
+
+`func (o *ListPlanEntitlementsParams) HasQ() bool`
+
+HasQ returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

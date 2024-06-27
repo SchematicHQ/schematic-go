@@ -1,13 +1,13 @@
 package schematic
 
 import (
+	"container/list"
 	"context"
-	"math"
 	"sync"
 	"time"
 )
 
-const defaultCacheSize = 10 * 1024 // 10KB
+const defaultCacheSize = 1000 // 1000 records
 const defaultCacheTTL = 5 * time.Second
 
 type CacheProvider[T any] interface {
@@ -16,89 +16,66 @@ type CacheProvider[T any] interface {
 }
 
 type cachedItem[T any] struct {
-	value         T
-	accessCounter int64
-	size          int
-	expiration    time.Time
+	key        string
+	value      T
+	expiration time.Time
 }
 
 type localCache[T any] struct {
-	cache map[string]cachedItem[T]
-
-	// Max bytes to store in cache
+	cache   map[string]*list.Element
+	lruList *list.List
 	maxSize int
-
-	// Current size of the cache in bytes
-	currentSize int
-
-	// Access counter for LRU eviction
-	accessCounter int64
-
-	// Default TTL for cached items
-	ttl time.Duration
-
-	// Function to calculate the size of a cached item
-	sizeFunc func(val T) int
-
-	// Mutex to protect concurrent access to the cache
-	mu sync.RWMutex
+	ttl     time.Duration
+	mu      sync.RWMutex
 }
 
-func newDefaultCache[T any](sizeFunc func(val T) int) *localCache[T] {
-	return newLocalCache(defaultCacheSize, defaultCacheTTL, sizeFunc)
+func newDefaultCache[T any]() *localCache[T] {
+	return newLocalCache[T](defaultCacheSize, defaultCacheTTL)
 }
 
-func newLocalCache[T any](maxSize int, ttl time.Duration, sizeFunc func(val T) int) *localCache[T] {
+func newLocalCache[T any](maxSize int, ttl time.Duration) *localCache[T] {
 	return &localCache[T]{
-		cache:    make(map[string]cachedItem[T]),
-		maxSize:  maxSize,
-		ttl:      ttl,
-		sizeFunc: sizeFunc,
+		cache:   make(map[string]*list.Element),
+		lruList: list.New(),
+		maxSize: maxSize,
+		ttl:     ttl,
 	}
 }
 
 func (c *localCache[T]) Get(ctx context.Context, key string) (T, bool) {
 	var empty T
-	if c == nil {
-		return empty, false
-	}
-
-	if c.maxSize == 0 {
+	if c == nil || c.maxSize == 0 {
 		return empty, false
 	}
 
 	c.mu.RLock()
-	item, ok := c.cache[key]
+	element, exists := c.cache[key]
 	c.mu.RUnlock()
-	if !ok {
+
+	if !exists {
 		return empty, false
 	}
+
+	item := element.Value.(*cachedItem[T])
 
 	// Check if the item has expired
 	if time.Now().After(item.expiration) {
 		c.mu.Lock()
-		// Re-check the expiration under write lock
-		item, ok := c.cache[key]
-		if ok && time.Now().After(item.expiration) {
-			c.currentSize -= item.size
-			delete(c.cache, key)
-		}
+		c.lruList.Remove(element)
+		delete(c.cache, key)
 		c.mu.Unlock()
 		return empty, false
 	}
 
-	// Update the access counter for LRU eviction
+	// Move the accessed item to the front of the list
 	c.mu.Lock()
-	c.accessCounter++
-	item.accessCounter = c.accessCounter
-	c.cache[key] = item
+	c.lruList.MoveToFront(element)
 	c.mu.Unlock()
 
 	return item.value, true
 }
 
 func (c *localCache[T]) Set(ctx context.Context, key string, val T, ttlOverride *time.Duration) error {
-	// if maxSize = 0, caching is disabled
 	if c == nil || c.maxSize == 0 {
 		return nil
 	}
@@ -108,65 +85,36 @@ func (c *localCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 		ttl = *ttlOverride
 	}
 
-	size := c.sizeFunc(val)
-
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	// Check if the key already exists in the cache
-	if item, ok := c.cache[key]; ok {
-		// Update the existing item
-		c.currentSize -= item.size
-		c.currentSize += size
-		c.accessCounter++
-		c.cache[key] = cachedItem[T]{
-			value:         val,
-			accessCounter: c.accessCounter,
-			size:          size,
-			expiration:    time.Now().Add(ttl),
-		}
+	// If the key already exists, update it
+	if element, exists := c.cache[key]; exists {
+		c.lruList.MoveToFront(element)
+		item := element.Value.(*cachedItem[T])
+		item.value = val
+		item.expiration = time.Now().Add(ttl)
 		return nil
 	}
 
-	// Evict expired items
-	for key, item := range c.cache {
-		if time.Now().After(item.expiration) {
-			c.currentSize -= item.size
-			delete(c.cache, key)
+	// If we're at capacity, remove the least recently used item
+	if c.lruList.Len() >= c.maxSize {
+		oldest := c.lruList.Back()
+		if oldest != nil {
+			c.lruList.Remove(oldest)
+			delete(c.cache, oldest.Value.(*cachedItem[T]).key)
 		}
 	}
 
-	// Evict records if the cache size exceeds the max size
-	for c.currentSize+size > c.maxSize {
-		oldestKey := ""
-		oldestAccessCounter := int64(math.MaxInt64)
-
-		for k, v := range c.cache {
-			if v.accessCounter < oldestAccessCounter {
-				oldestKey = k
-				oldestAccessCounter = v.accessCounter
-			}
-		}
-
-		if oldestKey != "" {
-			c.currentSize -= c.cache[oldestKey].size
-			delete(c.cache, oldestKey)
-		}
+	// Add the new item
+	item := &cachedItem[T]{
+		key:        key,
+		value:      val,
+		expiration: time.Now().Add(ttl),
 	}
-
-	// Add the new item to the cache
-	c.accessCounter++
-	c.cache[key] = cachedItem[T]{
-		value:         val,
-		accessCounter: c.accessCounter,
-		size:          size,
-		expiration:    time.Now().Add(ttl),
-	}
-	c.currentSize += size
+	element := c.lruList.PushFront(item)
+	c.cache[key] = element
 
 	return nil
 }
 
-func boolSizeFunc(val bool) int {
-	return 1
-}

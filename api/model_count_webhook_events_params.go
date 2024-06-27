@@ -19,11 +19,13 @@ var _ MappedNullable = &CountWebhookEventsParams{}
 
 // CountWebhookEventsParams Input parameters
 type CountWebhookEventsParams struct {
-	Ids       []string `json:"ids,omitempty"`
-	Limit     *int32   `json:"limit,omitempty"`
-	Offset    *int32   `json:"offset,omitempty"`
-	Q         *string  `json:"q,omitempty"`
-	WebhookId *string  `json:"webhook_id,omitempty"`
+	Ids []string `json:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int32  `json:"offset,omitempty"`
+	Q         *string `json:"q,omitempty"`
+	WebhookId *string `json:"webhook_id,omitempty"`
 }
 
 // NewCountWebhookEventsParams instantiates a new CountWebhookEventsParams object

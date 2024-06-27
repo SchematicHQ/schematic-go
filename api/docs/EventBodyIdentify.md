@@ -5,15 +5,15 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Company** | Pointer to [**EventBodyIdentifyCompany**](EventBodyIdentifyCompany.md) |  | [optional] 
-**Keys** | **map[string]interface{}** | Key-value pairs to identify the user | 
+**Keys** | **map[string]string** | Key-value pairs to identify the user | 
 **Name** | Pointer to **string** | The display name of the user being identified; required only if it is a new user | [optional] 
-**Traits** | Pointer to **map[string]interface{}** | A map of user trait names to trait values | [optional] 
+**Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
 
 ## Methods
 
 ### NewEventBodyIdentify
 
-`func NewEventBodyIdentify(keys map[string]interface{}, ) *EventBodyIdentify`
+`func NewEventBodyIdentify(keys map[string]string, ) *EventBodyIdentify`
 
 NewEventBodyIdentify instantiates a new EventBodyIdentify object
 This constructor will assign default values to properties that have it defined,
@@ -55,20 +55,20 @@ HasCompany returns a boolean if a field has been set.
 
 ### GetKeys
 
-`func (o *EventBodyIdentify) GetKeys() map[string]interface{}`
+`func (o *EventBodyIdentify) GetKeys() map[string]string`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *EventBodyIdentify) GetKeysOk() (*map[string]interface{}, bool)`
+`func (o *EventBodyIdentify) GetKeysOk() (*map[string]string, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *EventBodyIdentify) SetKeys(v map[string]interface{})`
+`func (o *EventBodyIdentify) SetKeys(v map[string]string)`
 
 SetKeys sets Keys field to given value.
 

@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | Pointer to **NullableString** |  | [optional] 
-**Keys** | **map[string]interface{}** |  | 
+**Keys** | **map[string]string** |  | 
 **LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
 **Name** | Pointer to **NullableString** |  | [optional] 
 **Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 
 ### NewUpsertCompanyRequestBody
 
-`func NewUpsertCompanyRequestBody(keys map[string]interface{}, ) *UpsertCompanyRequestBody`
+`func NewUpsertCompanyRequestBody(keys map[string]string, ) *UpsertCompanyRequestBody`
 
 NewUpsertCompanyRequestBody instantiates a new UpsertCompanyRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -67,20 +67,20 @@ HasId returns a boolean if a field has been set.
 UnsetId ensures that no value is present for Id, not even an explicit nil
 ### GetKeys
 
-`func (o *UpsertCompanyRequestBody) GetKeys() map[string]interface{}`
+`func (o *UpsertCompanyRequestBody) GetKeys() map[string]string`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *UpsertCompanyRequestBody) GetKeysOk() (*map[string]interface{}, bool)`
+`func (o *UpsertCompanyRequestBody) GetKeysOk() (*map[string]string, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *UpsertCompanyRequestBody) SetKeys(v map[string]interface{})`
+`func (o *UpsertCompanyRequestBody) SetKeys(v map[string]string)`
 
 SetKeys sets Keys field to given value.
 

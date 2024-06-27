@@ -19,8 +19,8 @@ var _ MappedNullable = &CheckFlagRequestBody{}
 
 // CheckFlagRequestBody struct for CheckFlagRequestBody
 type CheckFlagRequestBody struct {
-	Company map[string]interface{} `json:"company,omitempty"`
-	User    map[string]interface{} `json:"user,omitempty"`
+	Company map[string]string `json:"company,omitempty"`
+	User    map[string]string `json:"user,omitempty"`
 }
 
 // NewCheckFlagRequestBody instantiates a new CheckFlagRequestBody object
@@ -41,9 +41,9 @@ func NewCheckFlagRequestBodyWithDefaults() *CheckFlagRequestBody {
 }
 
 // GetCompany returns the Company field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CheckFlagRequestBody) GetCompany() map[string]interface{} {
+func (o *CheckFlagRequestBody) GetCompany() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 	return o.Company
@@ -52,11 +52,11 @@ func (o *CheckFlagRequestBody) GetCompany() map[string]interface{} {
 // GetCompanyOk returns a tuple with the Company field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CheckFlagRequestBody) GetCompanyOk() (map[string]interface{}, bool) {
+func (o *CheckFlagRequestBody) GetCompanyOk() (*map[string]string, bool) {
 	if o == nil || IsNil(o.Company) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.Company, true
+	return &o.Company, true
 }
 
 // HasCompany returns a boolean if a field has been set.
@@ -68,15 +68,15 @@ func (o *CheckFlagRequestBody) HasCompany() bool {
 	return false
 }
 
-// SetCompany gets a reference to the given map[string]interface{} and assigns it to the Company field.
-func (o *CheckFlagRequestBody) SetCompany(v map[string]interface{}) {
+// SetCompany gets a reference to the given map[string]string and assigns it to the Company field.
+func (o *CheckFlagRequestBody) SetCompany(v map[string]string) {
 	o.Company = v
 }
 
 // GetUser returns the User field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CheckFlagRequestBody) GetUser() map[string]interface{} {
+func (o *CheckFlagRequestBody) GetUser() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 	return o.User
@@ -85,11 +85,11 @@ func (o *CheckFlagRequestBody) GetUser() map[string]interface{} {
 // GetUserOk returns a tuple with the User field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CheckFlagRequestBody) GetUserOk() (map[string]interface{}, bool) {
+func (o *CheckFlagRequestBody) GetUserOk() (*map[string]string, bool) {
 	if o == nil || IsNil(o.User) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.User, true
+	return &o.User, true
 }
 
 // HasUser returns a boolean if a field has been set.
@@ -101,8 +101,8 @@ func (o *CheckFlagRequestBody) HasUser() bool {
 	return false
 }
 
-// SetUser gets a reference to the given map[string]interface{} and assigns it to the User field.
-func (o *CheckFlagRequestBody) SetUser(v map[string]interface{}) {
+// SetUser gets a reference to the given map[string]string and assigns it to the User field.
+func (o *CheckFlagRequestBody) SetUser(v map[string]string) {
 	o.User = v
 }
 

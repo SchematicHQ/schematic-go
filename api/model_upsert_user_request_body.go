@@ -23,12 +23,12 @@ var _ MappedNullable = &UpsertUserRequestBody{}
 // UpsertUserRequestBody struct for UpsertUserRequestBody
 type UpsertUserRequestBody struct {
 	// Optionally specify company using key/value pairs
-	Company map[string]interface{} `json:"company"`
+	Company map[string]string `json:"company"`
 	// Optionally specify company using Schematic company ID
-	CompanyId  NullableString         `json:"company_id,omitempty"`
-	Keys       map[string]interface{} `json:"keys"`
-	LastSeenAt NullableTime           `json:"last_seen_at,omitempty"`
-	Name       NullableString         `json:"name,omitempty"`
+	CompanyId  NullableString    `json:"company_id,omitempty"`
+	Keys       map[string]string `json:"keys"`
+	LastSeenAt NullableTime      `json:"last_seen_at,omitempty"`
+	Name       NullableString    `json:"name,omitempty"`
 	// A map of trait names to trait values
 	Traits     map[string]interface{} `json:"traits,omitempty"`
 	UpdateOnly NullableBool           `json:"update_only,omitempty"`
@@ -40,7 +40,7 @@ type _UpsertUserRequestBody UpsertUserRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUpsertUserRequestBody(company map[string]interface{}, keys map[string]interface{}) *UpsertUserRequestBody {
+func NewUpsertUserRequestBody(company map[string]string, keys map[string]string) *UpsertUserRequestBody {
 	this := UpsertUserRequestBody{}
 	this.Company = company
 	this.Keys = keys
@@ -56,9 +56,9 @@ func NewUpsertUserRequestBodyWithDefaults() *UpsertUserRequestBody {
 }
 
 // GetCompany returns the Company field value
-func (o *UpsertUserRequestBody) GetCompany() map[string]interface{} {
+func (o *UpsertUserRequestBody) GetCompany() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 
@@ -67,15 +67,15 @@ func (o *UpsertUserRequestBody) GetCompany() map[string]interface{} {
 
 // GetCompanyOk returns a tuple with the Company field value
 // and a boolean to check if the value has been set.
-func (o *UpsertUserRequestBody) GetCompanyOk() (map[string]interface{}, bool) {
+func (o *UpsertUserRequestBody) GetCompanyOk() (*map[string]string, bool) {
 	if o == nil {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.Company, true
+	return &o.Company, true
 }
 
 // SetCompany sets field value
-func (o *UpsertUserRequestBody) SetCompany(v map[string]interface{}) {
+func (o *UpsertUserRequestBody) SetCompany(v map[string]string) {
 	o.Company = v
 }
 
@@ -123,9 +123,9 @@ func (o *UpsertUserRequestBody) UnsetCompanyId() {
 }
 
 // GetKeys returns the Keys field value
-func (o *UpsertUserRequestBody) GetKeys() map[string]interface{} {
+func (o *UpsertUserRequestBody) GetKeys() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 
@@ -134,15 +134,15 @@ func (o *UpsertUserRequestBody) GetKeys() map[string]interface{} {
 
 // GetKeysOk returns a tuple with the Keys field value
 // and a boolean to check if the value has been set.
-func (o *UpsertUserRequestBody) GetKeysOk() (map[string]interface{}, bool) {
+func (o *UpsertUserRequestBody) GetKeysOk() (*map[string]string, bool) {
 	if o == nil {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.Keys, true
+	return &o.Keys, true
 }
 
 // SetKeys sets field value
-func (o *UpsertUserRequestBody) SetKeys(v map[string]interface{}) {
+func (o *UpsertUserRequestBody) SetKeys(v map[string]string) {
 	o.Keys = v
 }
 

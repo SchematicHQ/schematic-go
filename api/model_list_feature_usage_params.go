@@ -19,12 +19,14 @@ var _ MappedNullable = &ListFeatureUsageParams{}
 
 // ListFeatureUsageParams Input parameters
 type ListFeatureUsageParams struct {
-	CompanyId   *string                `json:"company_id,omitempty"`
-	CompanyKeys map[string]interface{} `json:"company_keys,omitempty"`
-	FeatureIds  []string               `json:"feature_ids,omitempty"`
-	Limit       *int32                 `json:"limit,omitempty"`
-	Offset      *int32                 `json:"offset,omitempty"`
-	Q           *string                `json:"q,omitempty"`
+	CompanyId   *string            `json:"company_id,omitempty"`
+	CompanyKeys *map[string]string `json:"company_keys,omitempty"`
+	FeatureIds  []string           `json:"feature_ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	Q      *string `json:"q,omitempty"`
 }
 
 // NewListFeatureUsageParams instantiates a new ListFeatureUsageParams object
@@ -77,19 +79,19 @@ func (o *ListFeatureUsageParams) SetCompanyId(v string) {
 }
 
 // GetCompanyKeys returns the CompanyKeys field value if set, zero value otherwise.
-func (o *ListFeatureUsageParams) GetCompanyKeys() map[string]interface{} {
+func (o *ListFeatureUsageParams) GetCompanyKeys() map[string]string {
 	if o == nil || IsNil(o.CompanyKeys) {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
-	return o.CompanyKeys
+	return *o.CompanyKeys
 }
 
 // GetCompanyKeysOk returns a tuple with the CompanyKeys field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListFeatureUsageParams) GetCompanyKeysOk() (map[string]interface{}, bool) {
+func (o *ListFeatureUsageParams) GetCompanyKeysOk() (*map[string]string, bool) {
 	if o == nil || IsNil(o.CompanyKeys) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
 	return o.CompanyKeys, true
 }
@@ -103,9 +105,9 @@ func (o *ListFeatureUsageParams) HasCompanyKeys() bool {
 	return false
 }
 
-// SetCompanyKeys gets a reference to the given map[string]interface{} and assigns it to the CompanyKeys field.
-func (o *ListFeatureUsageParams) SetCompanyKeys(v map[string]interface{}) {
-	o.CompanyKeys = v
+// SetCompanyKeys gets a reference to the given map[string]string and assigns it to the CompanyKeys field.
+func (o *ListFeatureUsageParams) SetCompanyKeys(v map[string]string) {
+	o.CompanyKeys = &v
 }
 
 // GetFeatureIds returns the FeatureIds field value if set, zero value otherwise.

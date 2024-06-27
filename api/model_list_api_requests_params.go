@@ -20,10 +20,12 @@ var _ MappedNullable = &ListApiRequestsParams{}
 // ListApiRequestsParams Input parameters
 type ListApiRequestsParams struct {
 	EnvironmentId *string `json:"environment_id,omitempty"`
-	Limit         *int32  `json:"limit,omitempty"`
-	Offset        *int32  `json:"offset,omitempty"`
-	Q             *string `json:"q,omitempty"`
-	RequestType   *string `json:"request_type,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset      *int32  `json:"offset,omitempty"`
+	Q           *string `json:"q,omitempty"`
+	RequestType *string `json:"request_type,omitempty"`
 }
 
 // NewListApiRequestsParams instantiates a new ListApiRequestsParams object

@@ -2,7 +2,6 @@ package schematic
 
 import (
 	"context"
-	"reflect"
 	"sync"
 	"time"
 
@@ -10,11 +9,9 @@ import (
 )
 
 const defaultEventBufferPeriod = 5 * time.Second
+const maxEvents = 100
 
 type eventBuffer struct {
-	// current size of buffer
-	currentSize int
-
 	// error logging channel
 	errors chan error
 
@@ -30,8 +27,8 @@ type eventBuffer struct {
 	// logger
 	logger Logger
 
-	// max bytes to store in buffer
-	maxSize int
+	// max number of events to store in buffer
+	maxEvents int
 
 	// mutexes for flushing and pushing to the buffer
 	mutexFlush sync.Mutex
@@ -54,13 +51,14 @@ func newEventBuffer(
 	if _period != nil {
 		period = *_period
 	}
+
 	buffer := &eventBuffer{
-		errors:     errors,
 		events:     []*api.CreateEventRequestBody{},
 		eventsAPI:  eventsAPI,
+		errors:     errors,
 		interval:   period,
 		logger:     logger,
-		maxSize:    10 * 1024,
+		maxEvents:  maxEvents,
 		mutexFlush: sync.Mutex{},
 		mutexPush:  sync.Mutex{},
 		shutdown:   make(chan struct{}),
@@ -80,14 +78,13 @@ func (b *eventBuffer) flush() {
 		return
 	}
 
-	events := []api.CreateEventRequestBody{}
-	for _, event := range b.events {
-		if event == nil {
-			continue
+	events := make([]api.CreateEventRequestBody, len(b.events))
+	for i, event := range b.events {
+		if event != nil {
+			events[i] = *event
 		}
-
-		events = append(events, *event)
 	}
+
 	req := api.CreateEventBatchRequestBody{
 		Events: events,
 	}
@@ -97,7 +94,6 @@ func (b *eventBuffer) flush() {
 	}
 
 	b.events = b.events[:0]
-	b.currentSize = 0
 }
 
 func (b *eventBuffer) periodicFlush() {
@@ -121,6 +117,10 @@ func (b *eventBuffer) periodicFlush() {
 }
 
 func (b *eventBuffer) push(event *api.CreateEventRequestBody) {
+	if event == nil {
+		return
+	}
+
 	if b.stopped {
 		b.logger.Printf("ERROR: Event buffer is stopped, not accepting new events")
 		return
@@ -129,13 +129,11 @@ func (b *eventBuffer) push(event *api.CreateEventRequestBody) {
 	b.mutexPush.Lock()
 	defer b.mutexPush.Unlock()
 
-	eventSize := int(reflect.TypeOf(*event).Size())
-	if b.currentSize+eventSize > b.maxSize {
+	if len(b.events) >= b.maxEvents {
 		b.flush()
 	}
 
 	b.events = append(b.events, event)
-	b.currentSize += eventSize
 }
 
 func (b *eventBuffer) stop() {

@@ -21,9 +21,11 @@ var _ MappedNullable = &ListEventsParams{}
 type ListEventsParams struct {
 	CompanyId    *string `json:"company_id,omitempty"`
 	EventSubtype *string `json:"event_subtype,omitempty"`
-	Limit        *int32  `json:"limit,omitempty"`
-	Offset       *int32  `json:"offset,omitempty"`
-	UserId       *string `json:"user_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	UserId *string `json:"user_id,omitempty"`
 }
 
 // NewListEventsParams instantiates a new ListEventsParams object

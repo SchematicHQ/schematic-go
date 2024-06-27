@@ -34,8 +34,8 @@ type FlagCheckLogDetailResponseData struct {
 	FlagKey       string                   `json:"flag_key"`
 	Id            string                   `json:"id"`
 	Reason        string                   `json:"reason"`
-	ReqCompany    map[string]interface{}   `json:"req_company,omitempty"`
-	ReqUser       map[string]interface{}   `json:"req_user,omitempty"`
+	ReqCompany    map[string]string        `json:"req_company,omitempty"`
+	ReqUser       map[string]string        `json:"req_user,omitempty"`
 	Rule          *RuleResponseData        `json:"rule,omitempty"`
 	RuleId        NullableString           `json:"rule_id,omitempty"`
 	UpdatedAt     time.Time                `json:"updated_at"`
@@ -441,9 +441,9 @@ func (o *FlagCheckLogDetailResponseData) SetReason(v string) {
 }
 
 // GetReqCompany returns the ReqCompany field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *FlagCheckLogDetailResponseData) GetReqCompany() map[string]interface{} {
+func (o *FlagCheckLogDetailResponseData) GetReqCompany() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 	return o.ReqCompany
@@ -452,11 +452,11 @@ func (o *FlagCheckLogDetailResponseData) GetReqCompany() map[string]interface{} 
 // GetReqCompanyOk returns a tuple with the ReqCompany field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *FlagCheckLogDetailResponseData) GetReqCompanyOk() (map[string]interface{}, bool) {
+func (o *FlagCheckLogDetailResponseData) GetReqCompanyOk() (*map[string]string, bool) {
 	if o == nil || IsNil(o.ReqCompany) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.ReqCompany, true
+	return &o.ReqCompany, true
 }
 
 // HasReqCompany returns a boolean if a field has been set.
@@ -468,15 +468,15 @@ func (o *FlagCheckLogDetailResponseData) HasReqCompany() bool {
 	return false
 }
 
-// SetReqCompany gets a reference to the given map[string]interface{} and assigns it to the ReqCompany field.
-func (o *FlagCheckLogDetailResponseData) SetReqCompany(v map[string]interface{}) {
+// SetReqCompany gets a reference to the given map[string]string and assigns it to the ReqCompany field.
+func (o *FlagCheckLogDetailResponseData) SetReqCompany(v map[string]string) {
 	o.ReqCompany = v
 }
 
 // GetReqUser returns the ReqUser field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *FlagCheckLogDetailResponseData) GetReqUser() map[string]interface{} {
+func (o *FlagCheckLogDetailResponseData) GetReqUser() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 	return o.ReqUser
@@ -485,11 +485,11 @@ func (o *FlagCheckLogDetailResponseData) GetReqUser() map[string]interface{} {
 // GetReqUserOk returns a tuple with the ReqUser field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *FlagCheckLogDetailResponseData) GetReqUserOk() (map[string]interface{}, bool) {
+func (o *FlagCheckLogDetailResponseData) GetReqUserOk() (*map[string]string, bool) {
 	if o == nil || IsNil(o.ReqUser) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.ReqUser, true
+	return &o.ReqUser, true
 }
 
 // HasReqUser returns a boolean if a field has been set.
@@ -501,8 +501,8 @@ func (o *FlagCheckLogDetailResponseData) HasReqUser() bool {
 	return false
 }
 
-// SetReqUser gets a reference to the given map[string]interface{} and assigns it to the ReqUser field.
-func (o *FlagCheckLogDetailResponseData) SetReqUser(v map[string]interface{}) {
+// SetReqUser gets a reference to the given map[string]string and assigns it to the ReqUser field.
+func (o *FlagCheckLogDetailResponseData) SetReqUser(v map[string]string) {
 	o.ReqUser = v
 }
 

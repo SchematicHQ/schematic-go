@@ -19,10 +19,12 @@ var _ MappedNullable = &ListCrmProductsParams{}
 
 // ListCrmProductsParams Input parameters
 type ListCrmProductsParams struct {
-	Ids    []string `json:"ids,omitempty"`
-	Limit  *int32   `json:"limit,omitempty"`
-	Name   *string  `json:"name,omitempty"`
-	Offset *int32   `json:"offset,omitempty"`
+	Ids []string `json:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int32  `json:"limit,omitempty"`
+	Name  *string `json:"name,omitempty"`
+	// Page offset (default 0)
+	Offset *int32 `json:"offset,omitempty"`
 }
 
 // NewListCrmProductsParams instantiates a new ListCrmProductsParams object

@@ -20,9 +20,11 @@ var _ MappedNullable = &ListCompanyPlansParams{}
 // ListCompanyPlansParams Input parameters
 type ListCompanyPlansParams struct {
 	CompanyId *string `json:"company_id,omitempty"`
-	Limit     *int32  `json:"limit,omitempty"`
-	Offset    *int32  `json:"offset,omitempty"`
-	PlanId    *string `json:"plan_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	PlanId *string `json:"plan_id,omitempty"`
 }
 
 // NewListCompanyPlansParams instantiates a new ListCompanyPlansParams object

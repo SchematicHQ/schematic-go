@@ -19,10 +19,12 @@ var _ MappedNullable = &ListApiKeysParams{}
 
 // ListApiKeysParams Input parameters
 type ListApiKeysParams struct {
-	EnvironmentId      *string `json:"environment_id,omitempty"`
-	Limit              *int32  `json:"limit,omitempty"`
-	Offset             *int32  `json:"offset,omitempty"`
-	RequireEnvironment *bool   `json:"require_environment,omitempty"`
+	EnvironmentId *string `json:"environment_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset             *int32 `json:"offset,omitempty"`
+	RequireEnvironment *bool  `json:"require_environment,omitempty"`
 }
 
 // NewListApiKeysParams instantiates a new ListApiKeysParams object

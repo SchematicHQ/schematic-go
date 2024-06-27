@@ -19,12 +19,16 @@ var _ MappedNullable = &CountFeaturesParams{}
 
 // CountFeaturesParams Input parameters
 type CountFeaturesParams struct {
-	Ids                       []string `json:"ids,omitempty"`
-	Limit                     *int32   `json:"limit,omitempty"`
-	Offset                    *int32   `json:"offset,omitempty"`
-	Q                         *string  `json:"q,omitempty"`
-	WithoutCompanyOverrideFor *string  `json:"without_company_override_for,omitempty"`
-	WithoutPlanEntitlementFor *string  `json:"without_plan_entitlement_for,omitempty"`
+	Ids []string `json:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	Q      *string `json:"q,omitempty"`
+	// Filter out features that already have a company override for the specified company ID
+	WithoutCompanyOverrideFor *string `json:"without_company_override_for,omitempty"`
+	// Filter out features that already have a plan entitlement for the specified plan ID
+	WithoutPlanEntitlementFor *string `json:"without_plan_entitlement_for,omitempty"`
 }
 
 // NewCountFeaturesParams instantiates a new CountFeaturesParams object

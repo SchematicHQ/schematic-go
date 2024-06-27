@@ -21,6 +21,7 @@ var _ MappedNullable = &UpdateWebhookRequestBody{}
 type UpdateWebhookRequestBody struct {
 	Name         NullableString `json:"name,omitempty"`
 	RequestTypes []string       `json:"request_types,omitempty"`
+	Status       NullableString `json:"status,omitempty"`
 	Url          NullableString `json:"url,omitempty"`
 }
 
@@ -84,9 +85,9 @@ func (o *UpdateWebhookRequestBody) UnsetName() {
 	o.Name.Unset()
 }
 
-// GetRequestTypes returns the RequestTypes field value if set, zero value otherwise.
+// GetRequestTypes returns the RequestTypes field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *UpdateWebhookRequestBody) GetRequestTypes() []string {
-	if o == nil || IsNil(o.RequestTypes) {
+	if o == nil {
 		var ret []string
 		return ret
 	}
@@ -95,6 +96,7 @@ func (o *UpdateWebhookRequestBody) GetRequestTypes() []string {
 
 // GetRequestTypesOk returns a tuple with the RequestTypes field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *UpdateWebhookRequestBody) GetRequestTypesOk() ([]string, bool) {
 	if o == nil || IsNil(o.RequestTypes) {
 		return nil, false
@@ -114,6 +116,49 @@ func (o *UpdateWebhookRequestBody) HasRequestTypes() bool {
 // SetRequestTypes gets a reference to the given []string and assigns it to the RequestTypes field.
 func (o *UpdateWebhookRequestBody) SetRequestTypes(v []string) {
 	o.RequestTypes = v
+}
+
+// GetStatus returns the Status field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateWebhookRequestBody) GetStatus() string {
+	if o == nil || IsNil(o.Status.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Status.Get()
+}
+
+// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateWebhookRequestBody) GetStatusOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Status.Get(), o.Status.IsSet()
+}
+
+// HasStatus returns a boolean if a field has been set.
+func (o *UpdateWebhookRequestBody) HasStatus() bool {
+	if o != nil && o.Status.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetStatus gets a reference to the given NullableString and assigns it to the Status field.
+func (o *UpdateWebhookRequestBody) SetStatus(v string) {
+	o.Status.Set(&v)
+}
+
+// SetStatusNil sets the value for Status to be an explicit nil
+func (o *UpdateWebhookRequestBody) SetStatusNil() {
+	o.Status.Set(nil)
+}
+
+// UnsetStatus ensures that no value is present for Status, not even an explicit nil
+func (o *UpdateWebhookRequestBody) UnsetStatus() {
+	o.Status.Unset()
 }
 
 // GetUrl returns the Url field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -172,8 +217,11 @@ func (o UpdateWebhookRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.Name.IsSet() {
 		toSerialize["name"] = o.Name.Get()
 	}
-	if !IsNil(o.RequestTypes) {
+	if o.RequestTypes != nil {
 		toSerialize["request_types"] = o.RequestTypes
+	}
+	if o.Status.IsSet() {
+		toSerialize["status"] = o.Status.Get()
 	}
 	if o.Url.IsSet() {
 		toSerialize["url"] = o.Url.Get()

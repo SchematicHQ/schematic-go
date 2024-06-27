@@ -24,7 +24,7 @@ type UpsertTraitRequestBody struct {
 	// Amount to increment the trait by (positive or negative)
 	Incr NullableInt32 `json:"incr,omitempty"`
 	// Key/value pairs too identify a company or user
-	Keys map[string]interface{} `json:"keys"`
+	Keys map[string]string `json:"keys"`
 	// Value to set the trait to
 	Set NullableString `json:"set,omitempty"`
 	// Name of the trait to update
@@ -39,7 +39,7 @@ type _UpsertTraitRequestBody UpsertTraitRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUpsertTraitRequestBody(keys map[string]interface{}, trait string) *UpsertTraitRequestBody {
+func NewUpsertTraitRequestBody(keys map[string]string, trait string) *UpsertTraitRequestBody {
 	this := UpsertTraitRequestBody{}
 	this.Keys = keys
 	this.Trait = trait
@@ -98,9 +98,9 @@ func (o *UpsertTraitRequestBody) UnsetIncr() {
 }
 
 // GetKeys returns the Keys field value
-func (o *UpsertTraitRequestBody) GetKeys() map[string]interface{} {
+func (o *UpsertTraitRequestBody) GetKeys() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 
@@ -109,15 +109,15 @@ func (o *UpsertTraitRequestBody) GetKeys() map[string]interface{} {
 
 // GetKeysOk returns a tuple with the Keys field value
 // and a boolean to check if the value has been set.
-func (o *UpsertTraitRequestBody) GetKeysOk() (map[string]interface{}, bool) {
+func (o *UpsertTraitRequestBody) GetKeysOk() (*map[string]string, bool) {
 	if o == nil {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.Keys, true
+	return &o.Keys, true
 }
 
 // SetKeys sets field value
-func (o *UpsertTraitRequestBody) SetKeys(v map[string]interface{}) {
+func (o *UpsertTraitRequestBody) SetKeys(v map[string]string) {
 	o.Keys = v
 }
 

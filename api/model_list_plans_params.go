@@ -19,12 +19,15 @@ var _ MappedNullable = &ListPlansParams{}
 
 // ListPlansParams Input parameters
 type ListPlansParams struct {
-	CompanyId             *string  `json:"company_id,omitempty"`
-	Ids                   []string `json:"ids,omitempty"`
-	Limit                 *int32   `json:"limit,omitempty"`
-	Offset                *int32   `json:"offset,omitempty"`
-	Q                     *string  `json:"q,omitempty"`
-	WithoutEntitlementFor *string  `json:"without_entitlement_for,omitempty"`
+	CompanyId *string  `json:"company_id,omitempty"`
+	Ids       []string `json:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	Q      *string `json:"q,omitempty"`
+	// Filter out plans that already have a plan entitlement for the specified feature ID
+	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty"`
 }
 
 // NewListPlansParams instantiates a new ListPlansParams object

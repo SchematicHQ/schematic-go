@@ -4,15 +4,15 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Keys** | **map[string]interface{}** | Key-value pairs to identify the company | 
+**Keys** | **map[string]string** | Key-value pairs to identify the company | 
 **Name** | Pointer to **string** | The display name of the company; required only if it is a new company | [optional] 
-**Traits** | Pointer to **map[string]interface{}** | A map of company trait names to trait values | [optional] 
+**Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
 
 ## Methods
 
 ### NewEventBodyIdentifyCompany
 
-`func NewEventBodyIdentifyCompany(keys map[string]interface{}, ) *EventBodyIdentifyCompany`
+`func NewEventBodyIdentifyCompany(keys map[string]string, ) *EventBodyIdentifyCompany`
 
 NewEventBodyIdentifyCompany instantiates a new EventBodyIdentifyCompany object
 This constructor will assign default values to properties that have it defined,
@@ -29,20 +29,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetKeys
 
-`func (o *EventBodyIdentifyCompany) GetKeys() map[string]interface{}`
+`func (o *EventBodyIdentifyCompany) GetKeys() map[string]string`
 
 GetKeys returns the Keys field if non-nil, zero value otherwise.
 
 ### GetKeysOk
 
-`func (o *EventBodyIdentifyCompany) GetKeysOk() (*map[string]interface{}, bool)`
+`func (o *EventBodyIdentifyCompany) GetKeysOk() (*map[string]string, bool)`
 
 GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetKeys
 
-`func (o *EventBodyIdentifyCompany) SetKeys(v map[string]interface{})`
+`func (o *EventBodyIdentifyCompany) SetKeys(v map[string]string)`
 
 SetKeys sets Keys field to given value.
 

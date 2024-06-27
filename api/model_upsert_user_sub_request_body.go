@@ -23,10 +23,10 @@ var _ MappedNullable = &UpsertUserSubRequestBody{}
 // UpsertUserSubRequestBody struct for UpsertUserSubRequestBody
 type UpsertUserSubRequestBody struct {
 	// Optionally specify company using Schematic company ID
-	CompanyId  NullableString         `json:"company_id,omitempty"`
-	Keys       map[string]interface{} `json:"keys"`
-	LastSeenAt NullableTime           `json:"last_seen_at,omitempty"`
-	Name       NullableString         `json:"name,omitempty"`
+	CompanyId  NullableString    `json:"company_id,omitempty"`
+	Keys       map[string]string `json:"keys"`
+	LastSeenAt NullableTime      `json:"last_seen_at,omitempty"`
+	Name       NullableString    `json:"name,omitempty"`
 	// A map of trait names to trait values
 	Traits     map[string]interface{} `json:"traits,omitempty"`
 	UpdateOnly NullableBool           `json:"update_only,omitempty"`
@@ -38,7 +38,7 @@ type _UpsertUserSubRequestBody UpsertUserSubRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUpsertUserSubRequestBody(keys map[string]interface{}) *UpsertUserSubRequestBody {
+func NewUpsertUserSubRequestBody(keys map[string]string) *UpsertUserSubRequestBody {
 	this := UpsertUserSubRequestBody{}
 	this.Keys = keys
 	return &this
@@ -96,9 +96,9 @@ func (o *UpsertUserSubRequestBody) UnsetCompanyId() {
 }
 
 // GetKeys returns the Keys field value
-func (o *UpsertUserSubRequestBody) GetKeys() map[string]interface{} {
+func (o *UpsertUserSubRequestBody) GetKeys() map[string]string {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret map[string]string
 		return ret
 	}
 
@@ -107,15 +107,15 @@ func (o *UpsertUserSubRequestBody) GetKeys() map[string]interface{} {
 
 // GetKeysOk returns a tuple with the Keys field value
 // and a boolean to check if the value has been set.
-func (o *UpsertUserSubRequestBody) GetKeysOk() (map[string]interface{}, bool) {
+func (o *UpsertUserSubRequestBody) GetKeysOk() (*map[string]string, bool) {
 	if o == nil {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.Keys, true
+	return &o.Keys, true
 }
 
 // SetKeys sets field value
-func (o *UpsertUserSubRequestBody) SetKeys(v map[string]interface{}) {
+func (o *UpsertUserSubRequestBody) SetKeys(v map[string]string) {
 	o.Keys = v
 }
 

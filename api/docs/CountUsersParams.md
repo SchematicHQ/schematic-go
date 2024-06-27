@@ -6,10 +6,10 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CompanyId** | Pointer to **string** |  | [optional] 
 **Ids** | Pointer to **[]string** |  | [optional] 
-**Limit** | Pointer to **int32** |  | [optional] 
-**Offset** | Pointer to **int32** |  | [optional] 
+**Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
+**Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
 **PlanId** | Pointer to **string** |  | [optional] 
-**Q** | Pointer to **string** |  | [optional] 
+**Q** | Pointer to **string** | Search filter | [optional] 
 
 ## Methods
 

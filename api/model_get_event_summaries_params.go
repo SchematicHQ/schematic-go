@@ -20,9 +20,11 @@ var _ MappedNullable = &GetEventSummariesParams{}
 // GetEventSummariesParams Input parameters
 type GetEventSummariesParams struct {
 	EventSubtypes []string `json:"event_subtypes,omitempty"`
-	Limit         *int32   `json:"limit,omitempty"`
-	Offset        *int32   `json:"offset,omitempty"`
-	Q             *string  `json:"q,omitempty"`
+	// Page limit (default 100)
+	Limit *int32 `json:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int32  `json:"offset,omitempty"`
+	Q      *string `json:"q,omitempty"`
 }
 
 // NewGetEventSummariesParams instantiates a new GetEventSummariesParams object

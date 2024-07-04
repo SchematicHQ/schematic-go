@@ -118,7 +118,7 @@ Name | Type | Description  | Notes
 
 ## CountEntityKeyDefinitions
 
-> CountEntityKeyDefinitionsResponse CountEntityKeyDefinitions(ctx).EntityType(entityType).Ids(ids).Key(key).Limit(limit).Offset(offset).Execute()
+> CountEntityKeyDefinitionsResponse CountEntityKeyDefinitions(ctx).EntityType(entityType).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 
 Count entity key definitions
 
@@ -142,11 +142,11 @@ func main() {
 
 	entityType := "entityType_example" // string |  (optional)
 	ids := []string{"Inner_example"} // []string |  (optional)
-	key := "key_example" // string |  (optional)
+	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().CompaniesAPI.CountEntityKeyDefinitions(context.Background()).EntityType(entityType).Ids(ids).Key(key).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().CompaniesAPI.CountEntityKeyDefinitions(context.Background()).EntityType(entityType).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CountEntityKeyDefinitions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -169,7 +169,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **entityType** | **string** |  | 
  **ids** | **[]string** |  | 
- **key** | **string** |  | 
+ **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -1615,7 +1615,7 @@ Name | Type | Description  | Notes
 
 ## ListEntityKeyDefinitions
 
-> ListEntityKeyDefinitionsResponse ListEntityKeyDefinitions(ctx).EntityType(entityType).Ids(ids).Key(key).Limit(limit).Offset(offset).Execute()
+> ListEntityKeyDefinitionsResponse ListEntityKeyDefinitions(ctx).EntityType(entityType).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 
 List entity key definitions
 
@@ -1639,11 +1639,11 @@ func main() {
 
 	entityType := "entityType_example" // string |  (optional)
 	ids := []string{"Inner_example"} // []string |  (optional)
-	key := "key_example" // string |  (optional)
+	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().CompaniesAPI.ListEntityKeyDefinitions(context.Background()).EntityType(entityType).Ids(ids).Key(key).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().CompaniesAPI.ListEntityKeyDefinitions(context.Background()).EntityType(entityType).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.ListEntityKeyDefinitions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1666,7 +1666,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **entityType** | **string** |  | 
  **ids** | **[]string** |  | 
- **key** | **string** |  | 
+ **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Access** | **bool** | Whether further usage is permitted. | 
 **Allocation** | Pointer to **NullableInt32** | The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted. | [optional] 
+**AllocationType** | **string** | The type of allocation that is being used. | 
 **EntitlementId** | **string** |  | 
 **EntitlementType** | **string** |  | 
 **Feature** | Pointer to [**FeatureDetailResponseData**](FeatureDetailResponseData.md) |  | [optional] 
@@ -17,7 +18,7 @@ Name | Type | Description | Notes
 
 ### NewFeatureUsageResponseData
 
-`func NewFeatureUsageResponseData(access bool, entitlementId string, entitlementType string, ) *FeatureUsageResponseData`
+`func NewFeatureUsageResponseData(access bool, allocationType string, entitlementId string, entitlementType string, ) *FeatureUsageResponseData`
 
 NewFeatureUsageResponseData instantiates a new FeatureUsageResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -87,6 +88,26 @@ HasAllocation returns a boolean if a field has been set.
 `func (o *FeatureUsageResponseData) UnsetAllocation()`
 
 UnsetAllocation ensures that no value is present for Allocation, not even an explicit nil
+### GetAllocationType
+
+`func (o *FeatureUsageResponseData) GetAllocationType() string`
+
+GetAllocationType returns the AllocationType field if non-nil, zero value otherwise.
+
+### GetAllocationTypeOk
+
+`func (o *FeatureUsageResponseData) GetAllocationTypeOk() (*string, bool)`
+
+GetAllocationTypeOk returns a tuple with the AllocationType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAllocationType
+
+`func (o *FeatureUsageResponseData) SetAllocationType(v string)`
+
+SetAllocationType sets AllocationType field to given value.
+
+
 ### GetEntitlementId
 
 `func (o *FeatureUsageResponseData) GetEntitlementId() string`

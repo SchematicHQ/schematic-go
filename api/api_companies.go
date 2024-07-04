@@ -647,7 +647,7 @@ type ApiCountEntityKeyDefinitionsRequest struct {
 	ApiService CompaniesAPI
 	entityType *string
 	ids        *[]string
-	key        *string
+	q          *string
 	limit      *int32
 	offset     *int32
 }
@@ -662,8 +662,8 @@ func (r ApiCountEntityKeyDefinitionsRequest) Ids(ids []string) ApiCountEntityKey
 	return r
 }
 
-func (r ApiCountEntityKeyDefinitionsRequest) Key(key string) ApiCountEntityKeyDefinitionsRequest {
-	r.key = &key
+func (r ApiCountEntityKeyDefinitionsRequest) Q(q string) ApiCountEntityKeyDefinitionsRequest {
+	r.q = &q
 	return r
 }
 
@@ -732,8 +732,8 @@ func (a *CompaniesAPIService) CountEntityKeyDefinitionsExecute(r ApiCountEntityK
 			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
 		}
 	}
-	if r.key != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "key", r.key, "")
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -4511,7 +4511,7 @@ type ApiListEntityKeyDefinitionsRequest struct {
 	ApiService CompaniesAPI
 	entityType *string
 	ids        *[]string
-	key        *string
+	q          *string
 	limit      *int32
 	offset     *int32
 }
@@ -4526,8 +4526,8 @@ func (r ApiListEntityKeyDefinitionsRequest) Ids(ids []string) ApiListEntityKeyDe
 	return r
 }
 
-func (r ApiListEntityKeyDefinitionsRequest) Key(key string) ApiListEntityKeyDefinitionsRequest {
-	r.key = &key
+func (r ApiListEntityKeyDefinitionsRequest) Q(q string) ApiListEntityKeyDefinitionsRequest {
+	r.q = &q
 	return r
 }
 
@@ -4596,8 +4596,8 @@ func (a *CompaniesAPIService) ListEntityKeyDefinitionsExecute(r ApiListEntityKey
 			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
 		}
 	}
-	if r.key != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "key", r.key, "")
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")

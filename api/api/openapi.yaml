@@ -1618,6 +1618,13 @@ paths:
             type: string
           type: array
         style: form
+      - explode: true
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+        style: form
       - description: Page limit (default 100)
         explode: true
         in: query
@@ -1906,6 +1913,13 @@ paths:
           items:
             type: string
           type: array
+        style: form
+      - explode: true
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
         style: form
       - description: Page limit (default 100)
         explode: true
@@ -2412,7 +2426,7 @@ paths:
         style: form
       - explode: true
         in: query
-        name: key
+        name: q
         required: false
         schema:
           type: string
@@ -2496,7 +2510,7 @@ paths:
         style: form
       - explode: true
         in: query
-        name: key
+        name: q
         required: false
         schema:
           type: string
@@ -8576,7 +8590,7 @@ components:
     CreateCompanyOverrideRequestBody:
       example:
         feature_id: feature_id
-        value_type: Boolean
+        value_type: boolean
         value_trait_id: value_trait_id
         company_id: company_id
         value_bool: true
@@ -8605,10 +8619,10 @@ components:
           type: string
         value_type:
           enum:
-          - Boolean
-          - Numeric
-          - Trait
-          - Unlimited
+          - boolean
+          - numeric
+          - trait
+          - unlimited
           type: string
       required:
       - company_id
@@ -9031,6 +9045,7 @@ components:
           type: string
         metric_value:
           description: Value to compare the track event metric against
+          nullable: true
           type: integer
         operator:
           enum:
@@ -9057,7 +9072,6 @@ components:
           type: string
       required:
       - condition_type
-      - metric_value
       - operator
       - resource_ids
       title: CreateOrUpdateConditionRequestBody
@@ -9224,7 +9238,7 @@ components:
     CreatePlanEntitlementRequestBody:
       example:
         feature_id: feature_id
-        value_type: Boolean
+        value_type: boolean
         value_trait_id: value_trait_id
         value_bool: true
         value_numeric: 0
@@ -9253,10 +9267,10 @@ components:
           type: string
         value_type:
           enum:
-          - Boolean
-          - Numeric
-          - Trait
-          - Unlimited
+          - boolean
+          - numeric
+          - trait
+          - unlimited
           type: string
       required:
       - feature_id
@@ -9311,10 +9325,10 @@ components:
           type: string
         value_type:
           enum:
-          - Boolean
-          - Numeric
-          - Trait
-          - Unlimited
+          - boolean
+          - numeric
+          - trait
+          - unlimited
           type: string
       required:
       - feature_id
@@ -11428,6 +11442,7 @@ components:
           lifecycle_phase: lifecycle_phase
           trait_id: trait_id
         entitlement_id: entitlement_id
+        allocation_type: boolean
         usage: 5
         company:
           traits: "{}"
@@ -11527,6 +11542,14 @@ components:
             indicates that unlimited usage is permitted.
           nullable: true
           type: integer
+        allocation_type:
+          description: The type of allocation that is being used.
+          enum:
+          - boolean
+          - numeric
+          - trait
+          - unlimited
+          type: string
         company:
           $ref: '#/components/schemas/CompanyDetailResponseData'
         entitlement_id:
@@ -11548,6 +11571,7 @@ components:
           type: integer
       required:
       - access
+      - allocation_type
       - entitlement_id
       - entitlement_type
       title: FeatureCompanyResponseData
@@ -12861,6 +12885,7 @@ components:
           lifecycle_phase: lifecycle_phase
           trait_id: trait_id
         entitlement_id: entitlement_id
+        allocation_type: boolean
         usage: 6
         company:
           traits: "{}"
@@ -12967,6 +12992,14 @@ components:
             indicates that unlimited usage is permitted.
           nullable: true
           type: integer
+        allocation_type:
+          description: The type of allocation that is being used.
+          enum:
+          - boolean
+          - numeric
+          - trait
+          - unlimited
+          type: string
         company:
           $ref: '#/components/schemas/CompanyDetailResponseData'
         entitlement_id:
@@ -12990,6 +13023,7 @@ components:
           $ref: '#/components/schemas/UserResponseData'
       required:
       - access
+      - allocation_type
       - entitlement_id
       - entitlement_type
       title: FeatureCompanyUserResponseData
@@ -15700,6 +15734,7 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           entitlement_id: entitlement_id
+          allocation_type: boolean
           usage: 6
           entitlement_type: entitlement_type
           plan:
@@ -17016,6 +17051,7 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           entitlement_id: entitlement_id
+          allocation_type: boolean
           usage: 6
           entitlement_type: entitlement_type
           plan:
@@ -18343,6 +18379,7 @@ components:
           lifecycle_phase: lifecycle_phase
           trait_id: trait_id
         entitlement_id: entitlement_id
+        allocation_type: boolean
         usage: 6
         entitlement_type: entitlement_type
         plan:
@@ -18361,6 +18398,14 @@ components:
             indicates that unlimited usage is permitted.
           nullable: true
           type: integer
+        allocation_type:
+          description: The type of allocation that is being used.
+          enum:
+          - boolean
+          - numeric
+          - trait
+          - unlimited
+          type: string
         entitlement_id:
           type: string
         entitlement_type:
@@ -18380,6 +18425,7 @@ components:
           type: integer
       required:
       - access
+      - allocation_type
       - entitlement_id
       - entitlement_type
       title: FeatureUsageResponseData
@@ -22679,6 +22725,7 @@ components:
           nullable: true
           type: string
         metric_value:
+          nullable: true
           type: integer
         operator:
           type: string
@@ -22713,7 +22760,6 @@ components:
       - created_at
       - environment_id
       - id
-      - metric_value
       - operator
       - resource_ids
       - resources
@@ -22923,6 +22969,7 @@ components:
           nullable: true
           type: string
         metric_value:
+          nullable: true
           type: integer
         operator:
           type: string
@@ -22951,7 +22998,6 @@ components:
       - created_at
       - environment_id
       - id
-      - metric_value
       - operator
       - resource_ids
       - rule_id
@@ -24107,7 +24153,7 @@ components:
       type: object
     UpdateCompanyOverrideRequestBody:
       example:
-        value_type: Boolean
+        value_type: boolean
         value_trait_id: value_trait_id
         value_bool: true
         value_numeric: 0
@@ -24131,10 +24177,10 @@ components:
           type: string
         value_type:
           enum:
-          - Boolean
-          - Numeric
-          - Trait
-          - Unlimited
+          - boolean
+          - numeric
+          - trait
+          - unlimited
           type: string
       required:
       - value_type
@@ -24409,7 +24455,7 @@ components:
       type: object
     UpdatePlanEntitlementRequestBody:
       example:
-        value_type: Boolean
+        value_type: boolean
         value_trait_id: value_trait_id
         value_bool: true
         value_numeric: 0
@@ -24433,10 +24479,10 @@ components:
           type: string
         value_type:
           enum:
-          - Boolean
-          - Numeric
-          - Trait
-          - Unlimited
+          - boolean
+          - numeric
+          - trait
+          - unlimited
           type: string
       required:
       - value_type
@@ -24487,10 +24533,10 @@ components:
           type: string
         value_type:
           enum:
-          - Boolean
-          - Numeric
-          - Trait
-          - Unlimited
+          - boolean
+          - numeric
+          - trait
+          - unlimited
           type: string
       required:
       - value_type
@@ -24915,6 +24961,7 @@ components:
         id:
           type: string
         payload:
+          nullable: true
           type: string
         request_type:
           type: string
@@ -24937,7 +24984,6 @@ components:
       required:
       - created_at
       - id
-      - payload
       - request_type
       - status
       - updated_at
@@ -24952,6 +24998,7 @@ components:
         id:
           type: string
         payload:
+          nullable: true
           type: string
         request_type:
           type: string
@@ -24972,7 +25019,6 @@ components:
       required:
       - created_at
       - id
-      - payload
       - request_type
       - status
       - updated_at
@@ -26870,6 +26916,7 @@ components:
         company_ids:
         - company_ids
         - company_ids
+        q: q
         feature_ids:
         - feature_ids
         - feature_ids
@@ -26904,6 +26951,8 @@ components:
           description: Page offset (default 0)
           example: 0
           type: integer
+        q:
+          type: string
       title: ListCompanyOverridesParams
       type: object
     ListCompanyOverridesResponse:
@@ -27140,6 +27189,7 @@ components:
           company_ids:
           - company_ids
           - company_ids
+          q: q
           feature_ids:
           - feature_ids
           - feature_ids
@@ -27574,6 +27624,7 @@ components:
         company_ids:
         - company_ids
         - company_ids
+        q: q
         feature_ids:
         - feature_ids
         - feature_ids
@@ -27608,6 +27659,8 @@ components:
           description: Page offset (default 0)
           example: 0
           type: integer
+        q:
+          type: string
       title: CountCompanyOverridesParams
       type: object
     CountCompanyOverridesResponse:
@@ -27619,6 +27672,7 @@ components:
           company_ids:
           - company_ids
           - company_ids
+          q: q
           feature_ids:
           - feature_ids
           - feature_ids
@@ -28060,13 +28114,13 @@ components:
     ListEntityKeyDefinitionsParams:
       description: Input parameters
       example:
+        q: q
         entity_type: company
         offset: 0
         limit: 100
         ids:
         - ids
         - ids
-        key: key
       properties:
         entity_type:
           enum:
@@ -28077,8 +28131,6 @@ components:
           items:
             type: string
           type: array
-        key:
-          type: string
         limit:
           description: Page limit (default 100)
           example: 100
@@ -28087,6 +28139,8 @@ components:
           description: Page offset (default 0)
           example: 0
           type: integer
+        q:
+          type: string
       title: ListEntityKeyDefinitionsParams
       type: object
     ListEntityKeyDefinitionsResponse:
@@ -28103,13 +28157,13 @@ components:
           id: id
           key: key
         params:
+          q: q
           entity_type: company
           offset: 0
           limit: 100
           ids:
           - ids
           - ids
-          key: key
       properties:
         data:
           description: The returned resources
@@ -28127,13 +28181,13 @@ components:
     CountEntityKeyDefinitionsParams:
       description: Input parameters
       example:
+        q: q
         entity_type: company
         offset: 0
         limit: 100
         ids:
         - ids
         - ids
-        key: key
       properties:
         entity_type:
           enum:
@@ -28144,8 +28198,6 @@ components:
           items:
             type: string
           type: array
-        key:
-          type: string
         limit:
           description: Page limit (default 100)
           example: 100
@@ -28154,6 +28206,8 @@ components:
           description: Page offset (default 0)
           example: 0
           type: integer
+        q:
+          type: string
       title: CountEntityKeyDefinitionsParams
       type: object
     CountEntityKeyDefinitionsResponse:
@@ -28161,13 +28215,13 @@ components:
         data:
           count: 0
         params:
+          q: q
           entity_type: company
           offset: 0
           limit: 100
           ids:
           - ids
           - ids
-          key: key
       properties:
         data:
           $ref: '#/components/schemas/CountResponse'
@@ -30242,6 +30296,7 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           entitlement_id: entitlement_id
+          allocation_type: boolean
           usage: 5
           company:
             traits: "{}"
@@ -31639,6 +31694,7 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           entitlement_id: entitlement_id
+          allocation_type: boolean
           usage: 5
           company:
             traits: "{}"
@@ -33134,6 +33190,7 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           entitlement_id: entitlement_id
+          allocation_type: boolean
           usage: 6
           entitlement_type: entitlement_type
           plan:
@@ -34450,6 +34507,7 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           entitlement_id: entitlement_id
+          allocation_type: boolean
           usage: 6
           entitlement_type: entitlement_type
           plan:
@@ -35874,6 +35932,7 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           entitlement_id: entitlement_id
+          allocation_type: boolean
           usage: 6
           company:
             traits: "{}"
@@ -37278,6 +37337,7 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           entitlement_id: entitlement_id
+          allocation_type: boolean
           usage: 6
           company:
             traits: "{}"
@@ -64268,6 +64328,7 @@ components:
               lifecycle_phase: lifecycle_phase
               trait_id: trait_id
             entitlement_id: entitlement_id
+            allocation_type: boolean
             usage: 6
             entitlement_type: entitlement_type
             plan:
@@ -65584,6 +65645,7 @@ components:
               lifecycle_phase: lifecycle_phase
               trait_id: trait_id
             entitlement_id: entitlement_id
+            allocation_type: boolean
             usage: 6
             entitlement_type: entitlement_type
             plan:

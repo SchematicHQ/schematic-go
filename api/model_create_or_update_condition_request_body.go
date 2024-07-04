@@ -30,8 +30,8 @@ type CreateOrUpdateConditionRequestBody struct {
 	// Period of time over which to measure the track event metric
 	MetricPeriod NullableString `json:"metric_period,omitempty"`
 	// Value to compare the track event metric against
-	MetricValue int32  `json:"metric_value"`
-	Operator    string `json:"operator"`
+	MetricValue NullableInt32 `json:"metric_value,omitempty"`
+	Operator    string        `json:"operator"`
 	// List of resource IDs (companies, users, or plans) targeted by this condition
 	ResourceIds []string `json:"resource_ids"`
 	// ID of trait to use to measure this condition
@@ -46,10 +46,9 @@ type _CreateOrUpdateConditionRequestBody CreateOrUpdateConditionRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateOrUpdateConditionRequestBody(conditionType string, metricValue int32, operator string, resourceIds []string) *CreateOrUpdateConditionRequestBody {
+func NewCreateOrUpdateConditionRequestBody(conditionType string, operator string, resourceIds []string) *CreateOrUpdateConditionRequestBody {
 	this := CreateOrUpdateConditionRequestBody{}
 	this.ConditionType = conditionType
-	this.MetricValue = metricValue
 	this.Operator = operator
 	this.ResourceIds = resourceIds
 	return &this
@@ -259,28 +258,47 @@ func (o *CreateOrUpdateConditionRequestBody) UnsetMetricPeriod() {
 	o.MetricPeriod.Unset()
 }
 
-// GetMetricValue returns the MetricValue field value
+// GetMetricValue returns the MetricValue field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *CreateOrUpdateConditionRequestBody) GetMetricValue() int32 {
-	if o == nil {
+	if o == nil || IsNil(o.MetricValue.Get()) {
 		var ret int32
 		return ret
 	}
-
-	return o.MetricValue
+	return *o.MetricValue.Get()
 }
 
-// GetMetricValueOk returns a tuple with the MetricValue field value
+// GetMetricValueOk returns a tuple with the MetricValue field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *CreateOrUpdateConditionRequestBody) GetMetricValueOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.MetricValue, true
+	return o.MetricValue.Get(), o.MetricValue.IsSet()
 }
 
-// SetMetricValue sets field value
+// HasMetricValue returns a boolean if a field has been set.
+func (o *CreateOrUpdateConditionRequestBody) HasMetricValue() bool {
+	if o != nil && o.MetricValue.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMetricValue gets a reference to the given NullableInt32 and assigns it to the MetricValue field.
 func (o *CreateOrUpdateConditionRequestBody) SetMetricValue(v int32) {
-	o.MetricValue = v
+	o.MetricValue.Set(&v)
+}
+
+// SetMetricValueNil sets the value for MetricValue to be an explicit nil
+func (o *CreateOrUpdateConditionRequestBody) SetMetricValueNil() {
+	o.MetricValue.Set(nil)
+}
+
+// UnsetMetricValue ensures that no value is present for MetricValue, not even an explicit nil
+func (o *CreateOrUpdateConditionRequestBody) UnsetMetricValue() {
+	o.MetricValue.Unset()
 }
 
 // GetOperator returns the Operator field value
@@ -440,7 +458,9 @@ func (o CreateOrUpdateConditionRequestBody) ToMap() (map[string]interface{}, err
 	if o.MetricPeriod.IsSet() {
 		toSerialize["metric_period"] = o.MetricPeriod.Get()
 	}
-	toSerialize["metric_value"] = o.MetricValue
+	if o.MetricValue.IsSet() {
+		toSerialize["metric_value"] = o.MetricValue.Get()
+	}
 	toSerialize["operator"] = o.Operator
 	toSerialize["resource_ids"] = o.ResourceIds
 	if o.TraitId.IsSet() {
@@ -458,7 +478,6 @@ func (o *CreateOrUpdateConditionRequestBody) UnmarshalJSON(data []byte) (err err
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"condition_type",
-		"metric_value",
 		"operator",
 		"resource_ids",
 	}

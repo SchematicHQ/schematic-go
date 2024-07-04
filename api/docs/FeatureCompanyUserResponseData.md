@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Access** | **bool** | Whether further usage is permitted. | 
 **Allocation** | Pointer to **NullableInt32** | The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted. | [optional] 
+**AllocationType** | **string** | The type of allocation that is being used. | 
 **Company** | Pointer to [**CompanyDetailResponseData**](CompanyDetailResponseData.md) |  | [optional] 
 **EntitlementId** | **string** |  | 
 **EntitlementType** | **string** |  | 
@@ -19,7 +20,7 @@ Name | Type | Description | Notes
 
 ### NewFeatureCompanyUserResponseData
 
-`func NewFeatureCompanyUserResponseData(access bool, entitlementId string, entitlementType string, ) *FeatureCompanyUserResponseData`
+`func NewFeatureCompanyUserResponseData(access bool, allocationType string, entitlementId string, entitlementType string, ) *FeatureCompanyUserResponseData`
 
 NewFeatureCompanyUserResponseData instantiates a new FeatureCompanyUserResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -89,6 +90,26 @@ HasAllocation returns a boolean if a field has been set.
 `func (o *FeatureCompanyUserResponseData) UnsetAllocation()`
 
 UnsetAllocation ensures that no value is present for Allocation, not even an explicit nil
+### GetAllocationType
+
+`func (o *FeatureCompanyUserResponseData) GetAllocationType() string`
+
+GetAllocationType returns the AllocationType field if non-nil, zero value otherwise.
+
+### GetAllocationTypeOk
+
+`func (o *FeatureCompanyUserResponseData) GetAllocationTypeOk() (*string, bool)`
+
+GetAllocationTypeOk returns a tuple with the AllocationType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAllocationType
+
+`func (o *FeatureCompanyUserResponseData) SetAllocationType(v string)`
+
+SetAllocationType sets AllocationType field to given value.
+
+
 ### GetCompany
 
 `func (o *FeatureCompanyUserResponseData) GetCompany() CompanyDetailResponseData`

@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CreatedAt** | **time.Time** |  | 
 **Id** | **string** |  | 
-**Payload** | **string** |  | 
+**Payload** | Pointer to **NullableString** |  | [optional] 
 **RequestType** | **string** |  | 
 **ResponseCode** | Pointer to **NullableInt32** |  | [optional] 
 **SentAt** | Pointer to **NullableTime** |  | [optional] 
@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewWebhookEventDetailResponseData
 
-`func NewWebhookEventDetailResponseData(createdAt time.Time, id string, payload string, requestType string, status string, updatedAt time.Time, webhookId string, ) *WebhookEventDetailResponseData`
+`func NewWebhookEventDetailResponseData(createdAt time.Time, id string, requestType string, status string, updatedAt time.Time, webhookId string, ) *WebhookEventDetailResponseData`
 
 NewWebhookEventDetailResponseData instantiates a new WebhookEventDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -93,7 +93,22 @@ and a boolean to check if the value has been set.
 
 SetPayload sets Payload field to given value.
 
+### HasPayload
 
+`func (o *WebhookEventDetailResponseData) HasPayload() bool`
+
+HasPayload returns a boolean if a field has been set.
+
+### SetPayloadNil
+
+`func (o *WebhookEventDetailResponseData) SetPayloadNil(b bool)`
+
+ SetPayloadNil sets the value for Payload to be an explicit nil
+
+### UnsetPayload
+`func (o *WebhookEventDetailResponseData) UnsetPayload()`
+
+UnsetPayload ensures that no value is present for Payload, not even an explicit nil
 ### GetRequestType
 
 `func (o *WebhookEventDetailResponseData) GetRequestType() string`

@@ -546,7 +546,7 @@ func main() {
 	defer client.Close()
 
 	planAudienceId := "planAudienceId_example" // string | plan_audience_id
-	updateAudienceRequestBody := *schematicapi.NewUpdateAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // UpdateAudienceRequestBody | 
+	updateAudienceRequestBody := *schematicapi.NewUpdateAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})}) // UpdateAudienceRequestBody | 
 
 	resp, r, err := client.API().PlansAPI.UpdateAudience(context.Background(), planAudienceId).UpdateAudienceRequestBody(updateAudienceRequestBody).Execute()
 	if err != nil {

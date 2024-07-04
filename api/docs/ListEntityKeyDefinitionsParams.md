@@ -6,9 +6,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **EntityType** | Pointer to **string** |  | [optional] 
 **Ids** | Pointer to **[]string** |  | [optional] 
-**Key** | Pointer to **string** |  | [optional] 
 **Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
 **Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
+**Q** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -79,31 +79,6 @@ SetIds sets Ids field to given value.
 
 HasIds returns a boolean if a field has been set.
 
-### GetKey
-
-`func (o *ListEntityKeyDefinitionsParams) GetKey() string`
-
-GetKey returns the Key field if non-nil, zero value otherwise.
-
-### GetKeyOk
-
-`func (o *ListEntityKeyDefinitionsParams) GetKeyOk() (*string, bool)`
-
-GetKeyOk returns a tuple with the Key field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetKey
-
-`func (o *ListEntityKeyDefinitionsParams) SetKey(v string)`
-
-SetKey sets Key field to given value.
-
-### HasKey
-
-`func (o *ListEntityKeyDefinitionsParams) HasKey() bool`
-
-HasKey returns a boolean if a field has been set.
-
 ### GetLimit
 
 `func (o *ListEntityKeyDefinitionsParams) GetLimit() int32`
@@ -153,6 +128,31 @@ SetOffset sets Offset field to given value.
 `func (o *ListEntityKeyDefinitionsParams) HasOffset() bool`
 
 HasOffset returns a boolean if a field has been set.
+
+### GetQ
+
+`func (o *ListEntityKeyDefinitionsParams) GetQ() string`
+
+GetQ returns the Q field if non-nil, zero value otherwise.
+
+### GetQOk
+
+`func (o *ListEntityKeyDefinitionsParams) GetQOk() (*string, bool)`
+
+GetQOk returns a tuple with the Q field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetQ
+
+`func (o *ListEntityKeyDefinitionsParams) SetQ(v string)`
+
+SetQ sets Q field to given value.
+
+### HasQ
+
+`func (o *ListEntityKeyDefinitionsParams) HasQ() bool`
+
+HasQ returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -21,11 +21,11 @@ var _ MappedNullable = &CountEntityKeyDefinitionsParams{}
 type CountEntityKeyDefinitionsParams struct {
 	EntityType *string  `json:"entity_type,omitempty"`
 	Ids        []string `json:"ids,omitempty"`
-	Key        *string  `json:"key,omitempty"`
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32 `json:"offset,omitempty"`
+	Offset *int32  `json:"offset,omitempty"`
+	Q      *string `json:"q,omitempty"`
 }
 
 // NewCountEntityKeyDefinitionsParams instantiates a new CountEntityKeyDefinitionsParams object
@@ -109,38 +109,6 @@ func (o *CountEntityKeyDefinitionsParams) SetIds(v []string) {
 	o.Ids = v
 }
 
-// GetKey returns the Key field value if set, zero value otherwise.
-func (o *CountEntityKeyDefinitionsParams) GetKey() string {
-	if o == nil || IsNil(o.Key) {
-		var ret string
-		return ret
-	}
-	return *o.Key
-}
-
-// GetKeyOk returns a tuple with the Key field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CountEntityKeyDefinitionsParams) GetKeyOk() (*string, bool) {
-	if o == nil || IsNil(o.Key) {
-		return nil, false
-	}
-	return o.Key, true
-}
-
-// HasKey returns a boolean if a field has been set.
-func (o *CountEntityKeyDefinitionsParams) HasKey() bool {
-	if o != nil && !IsNil(o.Key) {
-		return true
-	}
-
-	return false
-}
-
-// SetKey gets a reference to the given string and assigns it to the Key field.
-func (o *CountEntityKeyDefinitionsParams) SetKey(v string) {
-	o.Key = &v
-}
-
 // GetLimit returns the Limit field value if set, zero value otherwise.
 func (o *CountEntityKeyDefinitionsParams) GetLimit() int32 {
 	if o == nil || IsNil(o.Limit) {
@@ -205,6 +173,38 @@ func (o *CountEntityKeyDefinitionsParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetQ returns the Q field value if set, zero value otherwise.
+func (o *CountEntityKeyDefinitionsParams) GetQ() string {
+	if o == nil || IsNil(o.Q) {
+		var ret string
+		return ret
+	}
+	return *o.Q
+}
+
+// GetQOk returns a tuple with the Q field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CountEntityKeyDefinitionsParams) GetQOk() (*string, bool) {
+	if o == nil || IsNil(o.Q) {
+		return nil, false
+	}
+	return o.Q, true
+}
+
+// HasQ returns a boolean if a field has been set.
+func (o *CountEntityKeyDefinitionsParams) HasQ() bool {
+	if o != nil && !IsNil(o.Q) {
+		return true
+	}
+
+	return false
+}
+
+// SetQ gets a reference to the given string and assigns it to the Q field.
+func (o *CountEntityKeyDefinitionsParams) SetQ(v string) {
+	o.Q = &v
+}
+
 func (o CountEntityKeyDefinitionsParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -221,14 +221,14 @@ func (o CountEntityKeyDefinitionsParams) ToMap() (map[string]interface{}, error)
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
-	if !IsNil(o.Key) {
-		toSerialize["key"] = o.Key
-	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.Q) {
+		toSerialize["q"] = o.Q
 	}
 	return toSerialize, nil
 }

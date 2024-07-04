@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **EventSubtype** | Pointer to **NullableString** | Name of track event type used to measure this condition | [optional] 
 **Id** | Pointer to **NullableString** |  | [optional] 
 **MetricPeriod** | Pointer to **NullableString** | Period of time over which to measure the track event metric | [optional] 
-**MetricValue** | **int32** | Value to compare the track event metric against | 
+**MetricValue** | Pointer to **NullableInt32** | Value to compare the track event metric against | [optional] 
 **Operator** | **string** |  | 
 **ResourceIds** | **[]string** | List of resource IDs (companies, users, or plans) targeted by this condition | 
 **TraitId** | Pointer to **NullableString** | ID of trait to use to measure this condition | [optional] 
@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewCreateOrUpdateConditionRequestBody
 
-`func NewCreateOrUpdateConditionRequestBody(conditionType string, metricValue int32, operator string, resourceIds []string, ) *CreateOrUpdateConditionRequestBody`
+`func NewCreateOrUpdateConditionRequestBody(conditionType string, operator string, resourceIds []string, ) *CreateOrUpdateConditionRequestBody`
 
 NewCreateOrUpdateConditionRequestBody instantiates a new CreateOrUpdateConditionRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -213,7 +213,22 @@ and a boolean to check if the value has been set.
 
 SetMetricValue sets MetricValue field to given value.
 
+### HasMetricValue
 
+`func (o *CreateOrUpdateConditionRequestBody) HasMetricValue() bool`
+
+HasMetricValue returns a boolean if a field has been set.
+
+### SetMetricValueNil
+
+`func (o *CreateOrUpdateConditionRequestBody) SetMetricValueNil(b bool)`
+
+ SetMetricValueNil sets the value for MetricValue to be an explicit nil
+
+### UnsetMetricValue
+`func (o *CreateOrUpdateConditionRequestBody) UnsetMetricValue()`
+
+UnsetMetricValue ensures that no value is present for MetricValue, not even an explicit nil
 ### GetOperator
 
 `func (o *CreateOrUpdateConditionRequestBody) GetOperator() string`

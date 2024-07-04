@@ -28,7 +28,7 @@ Method | HTTP request | Description
 
 ## CountCompanyOverrides
 
-> CountCompanyOverridesResponse CountCompanyOverrides(ctx).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Limit(limit).Offset(offset).Execute()
+> CountCompanyOverridesResponse CountCompanyOverrides(ctx).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 
 Count company overrides
 
@@ -55,10 +55,11 @@ func main() {
 	featureId := "featureId_example" // string |  (optional)
 	featureIds := []string{"Inner_example"} // []string |  (optional)
 	ids := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EntitlementsAPI.CountCompanyOverrides(context.Background()).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EntitlementsAPI.CountCompanyOverrides(context.Background()).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.CountCompanyOverrides``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -84,6 +85,7 @@ Name | Type | Description  | Notes
  **featureId** | **string** |  | 
  **featureIds** | **[]string** |  | 
  **ids** | **[]string** |  | 
+ **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -896,7 +898,7 @@ Name | Type | Description  | Notes
 
 ## ListCompanyOverrides
 
-> ListCompanyOverridesResponse ListCompanyOverrides(ctx).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Limit(limit).Offset(offset).Execute()
+> ListCompanyOverridesResponse ListCompanyOverrides(ctx).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 
 List company overrides
 
@@ -923,10 +925,11 @@ func main() {
 	featureId := "featureId_example" // string |  (optional)
 	featureIds := []string{"Inner_example"} // []string |  (optional)
 	ids := []string{"Inner_example"} // []string |  (optional)
+	q := "q_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EntitlementsAPI.ListCompanyOverrides(context.Background()).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EntitlementsAPI.ListCompanyOverrides(context.Background()).CompanyId(companyId).CompanyIds(companyIds).FeatureId(featureId).FeatureIds(featureIds).Ids(ids).Q(q).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `EntitlementsAPI.ListCompanyOverrides``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -952,6 +955,7 @@ Name | Type | Description  | Notes
  **featureId** | **string** |  | 
  **featureIds** | **[]string** |  | 
  **ids** | **[]string** |  | 
+ **q** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

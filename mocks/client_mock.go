@@ -56,6 +56,18 @@ func (mr *MockClientMockRecorder) API() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "API", reflect.TypeOf((*MockClient)(nil).API))
 }
 
+// AddDefaultHeaders mocks base method.
+func (m *MockClient) AddDefaultHeaders(ctx context.Context, headers map[string]string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "AddDefaultHeaders", ctx, headers)
+}
+
+// AddDefaultHeaders indicates an expected call of AddDefaultHeaders.
+func (mr *MockClientMockRecorder) AddDefaultHeaders(ctx, headers any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddDefaultHeaders", reflect.TypeOf((*MockClient)(nil).AddDefaultHeaders), ctx, headers)
+}
+
 // AddFlagCheckCacheProvider mocks base method.
 func (m *MockClient) AddFlagCheckCacheProvider(arg0 context.Context, arg1 schematic.CacheProvider[bool]) {
 	m.ctrl.T.Helper()

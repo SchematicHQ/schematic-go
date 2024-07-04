@@ -24,7 +24,9 @@ type FeatureCompanyResponseData struct {
 	// Whether further usage is permitted.
 	Access bool `json:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
-	Allocation      NullableInt32              `json:"allocation,omitempty"`
+	Allocation NullableInt32 `json:"allocation,omitempty"`
+	// The type of allocation that is being used.
+	AllocationType  string                     `json:"allocation_type"`
 	Company         *CompanyDetailResponseData `json:"company,omitempty"`
 	EntitlementId   string                     `json:"entitlement_id"`
 	EntitlementType string                     `json:"entitlement_type"`
@@ -42,9 +44,10 @@ type _FeatureCompanyResponseData FeatureCompanyResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewFeatureCompanyResponseData(access bool, entitlementId string, entitlementType string) *FeatureCompanyResponseData {
+func NewFeatureCompanyResponseData(access bool, allocationType string, entitlementId string, entitlementType string) *FeatureCompanyResponseData {
 	this := FeatureCompanyResponseData{}
 	this.Access = access
+	this.AllocationType = allocationType
 	this.EntitlementId = entitlementId
 	this.EntitlementType = entitlementType
 	return &this
@@ -123,6 +126,30 @@ func (o *FeatureCompanyResponseData) SetAllocationNil() {
 // UnsetAllocation ensures that no value is present for Allocation, not even an explicit nil
 func (o *FeatureCompanyResponseData) UnsetAllocation() {
 	o.Allocation.Unset()
+}
+
+// GetAllocationType returns the AllocationType field value
+func (o *FeatureCompanyResponseData) GetAllocationType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.AllocationType
+}
+
+// GetAllocationTypeOk returns a tuple with the AllocationType field value
+// and a boolean to check if the value has been set.
+func (o *FeatureCompanyResponseData) GetAllocationTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.AllocationType, true
+}
+
+// SetAllocationType sets field value
+func (o *FeatureCompanyResponseData) SetAllocationType(v string) {
+	o.AllocationType = v
 }
 
 // GetCompany returns the Company field value if set, zero value otherwise.
@@ -369,6 +396,7 @@ func (o FeatureCompanyResponseData) ToMap() (map[string]interface{}, error) {
 	if o.Allocation.IsSet() {
 		toSerialize["allocation"] = o.Allocation.Get()
 	}
+	toSerialize["allocation_type"] = o.AllocationType
 	if !IsNil(o.Company) {
 		toSerialize["company"] = o.Company
 	}
@@ -395,6 +423,7 @@ func (o *FeatureCompanyResponseData) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"access",
+		"allocation_type",
 		"entitlement_id",
 		"entitlement_type",
 	}

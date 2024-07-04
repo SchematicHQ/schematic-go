@@ -25,6 +25,22 @@ func WithAPIHost(host string) ClientOpt {
 	return ClientOptAPIHost{host}
 }
 
+// Override API client host
+
+type ClientOptDefaultHeaders struct {
+	headers map[string]string
+}
+
+func (c ClientOptDefaultHeaders) Apply(ctx context.Context, client Client) error {
+	client.AddDefaultHeaders(ctx, c.headers)
+
+	return nil
+}
+
+func WithDefaultHeaders(headers map[string]string) ClientOpt {
+	return ClientOptDefaultHeaders{headers}
+}
+
 // Specify local cache behavior
 
 type ClientOptLocalFlagCheckCache struct {

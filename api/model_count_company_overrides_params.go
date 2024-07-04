@@ -27,7 +27,8 @@ type CountCompanyOverridesParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32 `json:"offset,omitempty"`
+	Offset *int32  `json:"offset,omitempty"`
+	Q      *string `json:"q,omitempty"`
 }
 
 // NewCountCompanyOverridesParams instantiates a new CountCompanyOverridesParams object
@@ -271,6 +272,38 @@ func (o *CountCompanyOverridesParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetQ returns the Q field value if set, zero value otherwise.
+func (o *CountCompanyOverridesParams) GetQ() string {
+	if o == nil || IsNil(o.Q) {
+		var ret string
+		return ret
+	}
+	return *o.Q
+}
+
+// GetQOk returns a tuple with the Q field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CountCompanyOverridesParams) GetQOk() (*string, bool) {
+	if o == nil || IsNil(o.Q) {
+		return nil, false
+	}
+	return o.Q, true
+}
+
+// HasQ returns a boolean if a field has been set.
+func (o *CountCompanyOverridesParams) HasQ() bool {
+	if o != nil && !IsNil(o.Q) {
+		return true
+	}
+
+	return false
+}
+
+// SetQ gets a reference to the given string and assigns it to the Q field.
+func (o *CountCompanyOverridesParams) SetQ(v string) {
+	o.Q = &v
+}
+
 func (o CountCompanyOverridesParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -301,6 +334,9 @@ func (o CountCompanyOverridesParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.Q) {
+		toSerialize["q"] = o.Q
 	}
 	return toSerialize, nil
 }

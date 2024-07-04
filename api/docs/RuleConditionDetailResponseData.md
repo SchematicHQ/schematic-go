@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **FlagId** | Pointer to **NullableString** |  | [optional] 
 **Id** | **string** |  | 
 **MetricPeriod** | Pointer to **NullableString** |  | [optional] 
-**MetricValue** | **int32** |  | 
+**MetricValue** | Pointer to **NullableInt32** |  | [optional] 
 **Operator** | **string** |  | 
 **PlanId** | Pointer to **NullableString** |  | [optional] 
 **ResourceIds** | **[]string** |  | 
@@ -30,7 +30,7 @@ Name | Type | Description | Notes
 
 ### NewRuleConditionDetailResponseData
 
-`func NewRuleConditionDetailResponseData(conditionType string, createdAt time.Time, environmentId string, id string, metricValue int32, operator string, resourceIds []string, resources []RuleConditionResourceResponseData, ruleId string, traitValue string, updatedAt time.Time, ) *RuleConditionDetailResponseData`
+`func NewRuleConditionDetailResponseData(conditionType string, createdAt time.Time, environmentId string, id string, operator string, resourceIds []string, resources []RuleConditionResourceResponseData, ruleId string, traitValue string, updatedAt time.Time, ) *RuleConditionDetailResponseData`
 
 NewRuleConditionDetailResponseData instantiates a new RuleConditionDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -344,7 +344,22 @@ and a boolean to check if the value has been set.
 
 SetMetricValue sets MetricValue field to given value.
 
+### HasMetricValue
 
+`func (o *RuleConditionDetailResponseData) HasMetricValue() bool`
+
+HasMetricValue returns a boolean if a field has been set.
+
+### SetMetricValueNil
+
+`func (o *RuleConditionDetailResponseData) SetMetricValueNil(b bool)`
+
+ SetMetricValueNil sets the value for MetricValue to be an explicit nil
+
+### UnsetMetricValue
+`func (o *RuleConditionDetailResponseData) UnsetMetricValue()`
+
+UnsetMetricValue ensures that no value is present for MetricValue, not even an explicit nil
 ### GetOperator
 
 `func (o *RuleConditionDetailResponseData) GetOperator() string`

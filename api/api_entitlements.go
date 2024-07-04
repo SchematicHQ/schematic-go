@@ -268,6 +268,7 @@ type ApiCountCompanyOverridesRequest struct {
 	featureId  *string
 	featureIds *[]string
 	ids        *[]string
+	q          *string
 	limit      *int32
 	offset     *int32
 }
@@ -294,6 +295,11 @@ func (r ApiCountCompanyOverridesRequest) FeatureIds(featureIds []string) ApiCoun
 
 func (r ApiCountCompanyOverridesRequest) Ids(ids []string) ApiCountCompanyOverridesRequest {
 	r.ids = &ids
+	return r
+}
+
+func (r ApiCountCompanyOverridesRequest) Q(q string) ApiCountCompanyOverridesRequest {
+	r.q = &q
 	return r
 }
 
@@ -386,6 +392,9 @@ func (a *EntitlementsAPIService) CountCompanyOverridesExecute(r ApiCountCompanyO
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
 		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -2554,6 +2563,7 @@ type ApiListCompanyOverridesRequest struct {
 	featureId  *string
 	featureIds *[]string
 	ids        *[]string
+	q          *string
 	limit      *int32
 	offset     *int32
 }
@@ -2580,6 +2590,11 @@ func (r ApiListCompanyOverridesRequest) FeatureIds(featureIds []string) ApiListC
 
 func (r ApiListCompanyOverridesRequest) Ids(ids []string) ApiListCompanyOverridesRequest {
 	r.ids = &ids
+	return r
+}
+
+func (r ApiListCompanyOverridesRequest) Q(q string) ApiListCompanyOverridesRequest {
+	r.q = &q
 	return r
 }
 
@@ -2672,6 +2687,9 @@ func (a *EntitlementsAPIService) ListCompanyOverridesExecute(r ApiListCompanyOve
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "ids", t, "multi")
 		}
+	}
+	if r.q != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")

@@ -31,7 +31,7 @@ type RuleConditionResponseData struct {
 	FlagId            NullableString `json:"flag_id,omitempty"`
 	Id                string         `json:"id"`
 	MetricPeriod      NullableString `json:"metric_period,omitempty"`
-	MetricValue       int32          `json:"metric_value"`
+	MetricValue       NullableInt32  `json:"metric_value,omitempty"`
 	Operator          string         `json:"operator"`
 	PlanId            NullableString `json:"plan_id,omitempty"`
 	ResourceIds       []string       `json:"resource_ids"`
@@ -48,13 +48,12 @@ type _RuleConditionResponseData RuleConditionResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRuleConditionResponseData(conditionType string, createdAt time.Time, environmentId string, id string, metricValue int32, operator string, resourceIds []string, ruleId string, traitValue string, updatedAt time.Time) *RuleConditionResponseData {
+func NewRuleConditionResponseData(conditionType string, createdAt time.Time, environmentId string, id string, operator string, resourceIds []string, ruleId string, traitValue string, updatedAt time.Time) *RuleConditionResponseData {
 	this := RuleConditionResponseData{}
 	this.ConditionType = conditionType
 	this.CreatedAt = createdAt
 	this.EnvironmentId = environmentId
 	this.Id = id
-	this.MetricValue = metricValue
 	this.Operator = operator
 	this.ResourceIds = resourceIds
 	this.RuleId = ruleId
@@ -382,28 +381,47 @@ func (o *RuleConditionResponseData) UnsetMetricPeriod() {
 	o.MetricPeriod.Unset()
 }
 
-// GetMetricValue returns the MetricValue field value
+// GetMetricValue returns the MetricValue field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *RuleConditionResponseData) GetMetricValue() int32 {
-	if o == nil {
+	if o == nil || IsNil(o.MetricValue.Get()) {
 		var ret int32
 		return ret
 	}
-
-	return o.MetricValue
+	return *o.MetricValue.Get()
 }
 
-// GetMetricValueOk returns a tuple with the MetricValue field value
+// GetMetricValueOk returns a tuple with the MetricValue field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *RuleConditionResponseData) GetMetricValueOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.MetricValue, true
+	return o.MetricValue.Get(), o.MetricValue.IsSet()
 }
 
-// SetMetricValue sets field value
+// HasMetricValue returns a boolean if a field has been set.
+func (o *RuleConditionResponseData) HasMetricValue() bool {
+	if o != nil && o.MetricValue.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMetricValue gets a reference to the given NullableInt32 and assigns it to the MetricValue field.
 func (o *RuleConditionResponseData) SetMetricValue(v int32) {
-	o.MetricValue = v
+	o.MetricValue.Set(&v)
+}
+
+// SetMetricValueNil sets the value for MetricValue to be an explicit nil
+func (o *RuleConditionResponseData) SetMetricValueNil() {
+	o.MetricValue.Set(nil)
+}
+
+// UnsetMetricValue ensures that no value is present for MetricValue, not even an explicit nil
+func (o *RuleConditionResponseData) UnsetMetricValue() {
+	o.MetricValue.Unset()
 }
 
 // GetOperator returns the Operator field value
@@ -684,7 +702,9 @@ func (o RuleConditionResponseData) ToMap() (map[string]interface{}, error) {
 	if o.MetricPeriod.IsSet() {
 		toSerialize["metric_period"] = o.MetricPeriod.Get()
 	}
-	toSerialize["metric_value"] = o.MetricValue
+	if o.MetricValue.IsSet() {
+		toSerialize["metric_value"] = o.MetricValue.Get()
+	}
 	toSerialize["operator"] = o.Operator
 	if o.PlanId.IsSet() {
 		toSerialize["plan_id"] = o.PlanId.Get()
@@ -711,7 +731,6 @@ func (o *RuleConditionResponseData) UnmarshalJSON(data []byte) (err error) {
 		"created_at",
 		"environment_id",
 		"id",
-		"metric_value",
 		"operator",
 		"resource_ids",
 		"rule_id",

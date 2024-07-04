@@ -194,7 +194,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
+	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
 
 	resp, r, err := client.API().FeaturesAPI.CountAudienceCompanies(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
 	if err != nil {
@@ -261,7 +261,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
+	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
 
 	resp, r, err := client.API().FeaturesAPI.CountAudienceUsers(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
 	if err != nil {
@@ -1119,7 +1119,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
+	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
 
 	resp, r, err := client.API().FeaturesAPI.ListAudienceCompanies(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
 	if err != nil {
@@ -1186,7 +1186,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
+	audienceRequestBody := *schematicapi.NewAudienceRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})}) // AudienceRequestBody | 
 
 	resp, r, err := client.API().FeaturesAPI.ListAudienceUsers(context.Background()).AudienceRequestBody(audienceRequestBody).Execute()
 	if err != nil {
@@ -1627,7 +1627,7 @@ func main() {
 	defer client.Close()
 
 	flagId := "flagId_example" // string | flag_id
-	updateFlagRulesRequestBody := *schematicapi.NewUpdateFlagRulesRequestBody([]schematicapi.CreateOrUpdateRuleRequestBody{*schematicapi.NewCreateOrUpdateRuleRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", int32(123), "Operator_example", []string{"ResourceIds_example"})}, "Name_example", int32(123), false)}) // UpdateFlagRulesRequestBody | 
+	updateFlagRulesRequestBody := *schematicapi.NewUpdateFlagRulesRequestBody([]schematicapi.CreateOrUpdateRuleRequestBody{*schematicapi.NewCreateOrUpdateRuleRequestBody([]schematicapi.CreateOrUpdateConditionGroupRequestBody{*schematicapi.NewCreateOrUpdateConditionGroupRequestBody([]schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})})}, []schematicapi.CreateOrUpdateConditionRequestBody{*schematicapi.NewCreateOrUpdateConditionRequestBody("ConditionType_example", "Operator_example", []string{"ResourceIds_example"})}, "Name_example", int32(123), false)}) // UpdateFlagRulesRequestBody | 
 
 	resp, r, err := client.API().FeaturesAPI.UpdateFlagRules(context.Background(), flagId).UpdateFlagRulesRequestBody(updateFlagRulesRequestBody).Execute()
 	if err != nil {

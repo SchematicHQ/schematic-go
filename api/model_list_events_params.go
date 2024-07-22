@@ -19,8 +19,10 @@ var _ MappedNullable = &ListEventsParams{}
 
 // ListEventsParams Input parameters
 type ListEventsParams struct {
-	CompanyId    *string `json:"company_id,omitempty"`
-	EventSubtype *string `json:"event_subtype,omitempty"`
+	CompanyId    *string  `json:"company_id,omitempty"`
+	EventSubtype *string  `json:"event_subtype,omitempty"`
+	EventTypes   []string `json:"event_types,omitempty"`
+	FlagId       *string  `json:"flag_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
@@ -107,6 +109,70 @@ func (o *ListEventsParams) HasEventSubtype() bool {
 // SetEventSubtype gets a reference to the given string and assigns it to the EventSubtype field.
 func (o *ListEventsParams) SetEventSubtype(v string) {
 	o.EventSubtype = &v
+}
+
+// GetEventTypes returns the EventTypes field value if set, zero value otherwise.
+func (o *ListEventsParams) GetEventTypes() []string {
+	if o == nil || IsNil(o.EventTypes) {
+		var ret []string
+		return ret
+	}
+	return o.EventTypes
+}
+
+// GetEventTypesOk returns a tuple with the EventTypes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListEventsParams) GetEventTypesOk() ([]string, bool) {
+	if o == nil || IsNil(o.EventTypes) {
+		return nil, false
+	}
+	return o.EventTypes, true
+}
+
+// HasEventTypes returns a boolean if a field has been set.
+func (o *ListEventsParams) HasEventTypes() bool {
+	if o != nil && !IsNil(o.EventTypes) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventTypes gets a reference to the given []string and assigns it to the EventTypes field.
+func (o *ListEventsParams) SetEventTypes(v []string) {
+	o.EventTypes = v
+}
+
+// GetFlagId returns the FlagId field value if set, zero value otherwise.
+func (o *ListEventsParams) GetFlagId() string {
+	if o == nil || IsNil(o.FlagId) {
+		var ret string
+		return ret
+	}
+	return *o.FlagId
+}
+
+// GetFlagIdOk returns a tuple with the FlagId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListEventsParams) GetFlagIdOk() (*string, bool) {
+	if o == nil || IsNil(o.FlagId) {
+		return nil, false
+	}
+	return o.FlagId, true
+}
+
+// HasFlagId returns a boolean if a field has been set.
+func (o *ListEventsParams) HasFlagId() bool {
+	if o != nil && !IsNil(o.FlagId) {
+		return true
+	}
+
+	return false
+}
+
+// SetFlagId gets a reference to the given string and assigns it to the FlagId field.
+func (o *ListEventsParams) SetFlagId(v string) {
+	o.FlagId = &v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -220,6 +286,12 @@ func (o ListEventsParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.EventSubtype) {
 		toSerialize["event_subtype"] = o.EventSubtype
+	}
+	if !IsNil(o.EventTypes) {
+		toSerialize["event_types"] = o.EventTypes
+	}
+	if !IsNil(o.FlagId) {
+		toSerialize["flag_id"] = o.FlagId
 	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit

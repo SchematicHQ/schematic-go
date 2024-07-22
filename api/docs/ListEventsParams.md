@@ -6,6 +6,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CompanyId** | Pointer to **string** |  | [optional] 
 **EventSubtype** | Pointer to **string** |  | [optional] 
+**EventTypes** | Pointer to **[]string** |  | [optional] 
+**FlagId** | Pointer to **string** |  | [optional] 
 **Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
 **Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
 **UserId** | Pointer to **string** |  | [optional] 
@@ -78,6 +80,56 @@ SetEventSubtype sets EventSubtype field to given value.
 `func (o *ListEventsParams) HasEventSubtype() bool`
 
 HasEventSubtype returns a boolean if a field has been set.
+
+### GetEventTypes
+
+`func (o *ListEventsParams) GetEventTypes() []string`
+
+GetEventTypes returns the EventTypes field if non-nil, zero value otherwise.
+
+### GetEventTypesOk
+
+`func (o *ListEventsParams) GetEventTypesOk() (*[]string, bool)`
+
+GetEventTypesOk returns a tuple with the EventTypes field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEventTypes
+
+`func (o *ListEventsParams) SetEventTypes(v []string)`
+
+SetEventTypes sets EventTypes field to given value.
+
+### HasEventTypes
+
+`func (o *ListEventsParams) HasEventTypes() bool`
+
+HasEventTypes returns a boolean if a field has been set.
+
+### GetFlagId
+
+`func (o *ListEventsParams) GetFlagId() string`
+
+GetFlagId returns the FlagId field if non-nil, zero value otherwise.
+
+### GetFlagIdOk
+
+`func (o *ListEventsParams) GetFlagIdOk() (*string, bool)`
+
+GetFlagIdOk returns a tuple with the FlagId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFlagId
+
+`func (o *ListEventsParams) SetFlagId(v string)`
+
+SetFlagId sets FlagId field to given value.
+
+### HasFlagId
+
+`func (o *ListEventsParams) HasFlagId() bool`
+
+HasFlagId returns a boolean if a field has been set.
 
 ### GetLimit
 

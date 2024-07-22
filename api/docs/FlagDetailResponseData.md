@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **FlagType** | **string** |  | 
 **Id** | **string** |  | 
 **Key** | **string** |  | 
+**LastCheckedAt** | Pointer to **NullableTime** |  | [optional] 
 **LatestCheck** | Pointer to [**FlagCheckLogResponseData**](FlagCheckLogResponseData.md) |  | [optional] 
 **Name** | **string** |  | 
 **Rules** | [**[]RuleDetailResponseData**](RuleDetailResponseData.md) |  | 
@@ -216,6 +217,41 @@ and a boolean to check if the value has been set.
 SetKey sets Key field to given value.
 
 
+### GetLastCheckedAt
+
+`func (o *FlagDetailResponseData) GetLastCheckedAt() time.Time`
+
+GetLastCheckedAt returns the LastCheckedAt field if non-nil, zero value otherwise.
+
+### GetLastCheckedAtOk
+
+`func (o *FlagDetailResponseData) GetLastCheckedAtOk() (*time.Time, bool)`
+
+GetLastCheckedAtOk returns a tuple with the LastCheckedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastCheckedAt
+
+`func (o *FlagDetailResponseData) SetLastCheckedAt(v time.Time)`
+
+SetLastCheckedAt sets LastCheckedAt field to given value.
+
+### HasLastCheckedAt
+
+`func (o *FlagDetailResponseData) HasLastCheckedAt() bool`
+
+HasLastCheckedAt returns a boolean if a field has been set.
+
+### SetLastCheckedAtNil
+
+`func (o *FlagDetailResponseData) SetLastCheckedAtNil(b bool)`
+
+ SetLastCheckedAtNil sets the value for LastCheckedAt to be an explicit nil
+
+### UnsetLastCheckedAt
+`func (o *FlagDetailResponseData) UnsetLastCheckedAt()`
+
+UnsetLastCheckedAt ensures that no value is present for LastCheckedAt, not even an explicit nil
 ### GetLatestCheck
 
 `func (o *FlagDetailResponseData) GetLatestCheck() FlagCheckLogResponseData`

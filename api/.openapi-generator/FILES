@@ -159,6 +159,7 @@ docs/EntityTraitValue.md
 docs/EnvironmentDetailResponseData.md
 docs/EnvironmentResponseData.md
 docs/EventBody.md
+docs/EventBodyFlagCheck.md
 docs/EventBodyIdentify.md
 docs/EventBodyIdentifyCompany.md
 docs/EventBodyTrack.md
@@ -481,6 +482,7 @@ model_entity_trait_value.go
 model_environment_detail_response_data.go
 model_environment_response_data.go
 model_event_body.go
+model_event_body_flag_check.go
 model_event_body_identify.go
 model_event_body_identify_company.go
 model_event_body_track.go

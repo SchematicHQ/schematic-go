@@ -22,18 +22,19 @@ var _ MappedNullable = &FlagDetailResponseData{}
 
 // FlagDetailResponseData struct for FlagDetailResponseData
 type FlagDetailResponseData struct {
-	CreatedAt    time.Time                 `json:"created_at"`
-	DefaultValue bool                      `json:"default_value"`
-	Description  string                    `json:"description"`
-	Feature      *FeatureResponseData      `json:"feature,omitempty"`
-	FeatureId    NullableString            `json:"feature_id,omitempty"`
-	FlagType     string                    `json:"flag_type"`
-	Id           string                    `json:"id"`
-	Key          string                    `json:"key"`
-	LatestCheck  *FlagCheckLogResponseData `json:"latest_check,omitempty"`
-	Name         string                    `json:"name"`
-	Rules        []RuleDetailResponseData  `json:"rules"`
-	UpdatedAt    time.Time                 `json:"updated_at"`
+	CreatedAt     time.Time                 `json:"created_at"`
+	DefaultValue  bool                      `json:"default_value"`
+	Description   string                    `json:"description"`
+	Feature       *FeatureResponseData      `json:"feature,omitempty"`
+	FeatureId     NullableString            `json:"feature_id,omitempty"`
+	FlagType      string                    `json:"flag_type"`
+	Id            string                    `json:"id"`
+	Key           string                    `json:"key"`
+	LastCheckedAt NullableTime              `json:"last_checked_at,omitempty"`
+	LatestCheck   *FlagCheckLogResponseData `json:"latest_check,omitempty"`
+	Name          string                    `json:"name"`
+	Rules         []RuleDetailResponseData  `json:"rules"`
+	UpdatedAt     time.Time                 `json:"updated_at"`
 }
 
 type _FlagDetailResponseData FlagDetailResponseData
@@ -283,6 +284,49 @@ func (o *FlagDetailResponseData) SetKey(v string) {
 	o.Key = v
 }
 
+// GetLastCheckedAt returns the LastCheckedAt field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *FlagDetailResponseData) GetLastCheckedAt() time.Time {
+	if o == nil || IsNil(o.LastCheckedAt.Get()) {
+		var ret time.Time
+		return ret
+	}
+	return *o.LastCheckedAt.Get()
+}
+
+// GetLastCheckedAtOk returns a tuple with the LastCheckedAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *FlagDetailResponseData) GetLastCheckedAtOk() (*time.Time, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastCheckedAt.Get(), o.LastCheckedAt.IsSet()
+}
+
+// HasLastCheckedAt returns a boolean if a field has been set.
+func (o *FlagDetailResponseData) HasLastCheckedAt() bool {
+	if o != nil && o.LastCheckedAt.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetLastCheckedAt gets a reference to the given NullableTime and assigns it to the LastCheckedAt field.
+func (o *FlagDetailResponseData) SetLastCheckedAt(v time.Time) {
+	o.LastCheckedAt.Set(&v)
+}
+
+// SetLastCheckedAtNil sets the value for LastCheckedAt to be an explicit nil
+func (o *FlagDetailResponseData) SetLastCheckedAtNil() {
+	o.LastCheckedAt.Set(nil)
+}
+
+// UnsetLastCheckedAt ensures that no value is present for LastCheckedAt, not even an explicit nil
+func (o *FlagDetailResponseData) UnsetLastCheckedAt() {
+	o.LastCheckedAt.Unset()
+}
+
 // GetLatestCheck returns the LatestCheck field value if set, zero value otherwise.
 func (o *FlagDetailResponseData) GetLatestCheck() FlagCheckLogResponseData {
 	if o == nil || IsNil(o.LatestCheck) {
@@ -409,6 +453,9 @@ func (o FlagDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["flag_type"] = o.FlagType
 	toSerialize["id"] = o.Id
 	toSerialize["key"] = o.Key
+	if o.LastCheckedAt.IsSet() {
+		toSerialize["last_checked_at"] = o.LastCheckedAt.Get()
+	}
 	if !IsNil(o.LatestCheck) {
 		toSerialize["latest_check"] = o.LatestCheck
 	}

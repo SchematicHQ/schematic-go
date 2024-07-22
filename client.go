@@ -60,15 +60,6 @@ func NewClient(apiKey string, opts ...ClientOpt) Client {
 	return client
 }
 
-func (c *client) AddDefaultHeaders(ctx context.Context, headers map[string]string) {
-	for key, value := range headers {
-		c.apiClientConfig.AddDefaultHeader(key, value)
-	}
-
-	// In case this is called after initialization, recreate the API client
-	c.APIClient = api.NewAPIClient(c.apiClientConfig)
-}
-
 func (c *client) AddFlagCheckCacheProvider(ctx context.Context, provider CacheProvider[bool]) {
 	c.flagCheckCacheProviders = append(c.flagCheckCacheProviders, provider)
 }

@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**AudienceType** | Pointer to **NullableString** |  | [optional] 
 **Description** | **string** |  | 
 **Name** | **string** |  | 
 **PlanType** | **string** |  | 
@@ -27,6 +28,41 @@ NewCreatePlanRequestBodyWithDefaults instantiates a new CreatePlanRequestBody ob
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
+### GetAudienceType
+
+`func (o *CreatePlanRequestBody) GetAudienceType() string`
+
+GetAudienceType returns the AudienceType field if non-nil, zero value otherwise.
+
+### GetAudienceTypeOk
+
+`func (o *CreatePlanRequestBody) GetAudienceTypeOk() (*string, bool)`
+
+GetAudienceTypeOk returns a tuple with the AudienceType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAudienceType
+
+`func (o *CreatePlanRequestBody) SetAudienceType(v string)`
+
+SetAudienceType sets AudienceType field to given value.
+
+### HasAudienceType
+
+`func (o *CreatePlanRequestBody) HasAudienceType() bool`
+
+HasAudienceType returns a boolean if a field has been set.
+
+### SetAudienceTypeNil
+
+`func (o *CreatePlanRequestBody) SetAudienceTypeNil(b bool)`
+
+ SetAudienceTypeNil sets the value for AudienceType to be an explicit nil
+
+### UnsetAudienceType
+`func (o *CreatePlanRequestBody) UnsetAudienceType()`
+
+UnsetAudienceType ensures that no value is present for AudienceType, not even an explicit nil
 ### GetDescription
 
 `func (o *CreatePlanRequestBody) GetDescription() string`

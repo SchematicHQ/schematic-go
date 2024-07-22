@@ -22,17 +22,16 @@ var _ MappedNullable = &BillingProductResponseData{}
 
 // BillingProductResponseData struct for BillingProductResponseData
 type BillingProductResponseData struct {
-	AccountId     string       `json:"account_id"`
-	CreatedAt     time.Time    `json:"created_at"`
-	Currency      string       `json:"currency"`
-	DeletedAt     NullableTime `json:"deleted_at,omitempty"`
-	EnvironmentId string       `json:"environment_id"`
-	ExternalId    string       `json:"external_id"`
-	Name          string       `json:"name"`
-	Price         float32      `json:"price"`
-	ProductId     string       `json:"product_id"`
-	Quantity      float32      `json:"quantity"`
-	UpdatedAt     time.Time    `json:"updated_at"`
+	AccountId     string    `json:"account_id"`
+	CreatedAt     time.Time `json:"created_at"`
+	Currency      string    `json:"currency"`
+	EnvironmentId string    `json:"environment_id"`
+	ExternalId    string    `json:"external_id"`
+	Name          string    `json:"name"`
+	Price         float32   `json:"price"`
+	ProductId     string    `json:"product_id"`
+	Quantity      float32   `json:"quantity"`
+	UpdatedAt     time.Time `json:"updated_at"`
 }
 
 type _BillingProductResponseData BillingProductResponseData
@@ -134,49 +133,6 @@ func (o *BillingProductResponseData) GetCurrencyOk() (*string, bool) {
 // SetCurrency sets field value
 func (o *BillingProductResponseData) SetCurrency(v string) {
 	o.Currency = v
-}
-
-// GetDeletedAt returns the DeletedAt field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *BillingProductResponseData) GetDeletedAt() time.Time {
-	if o == nil || IsNil(o.DeletedAt.Get()) {
-		var ret time.Time
-		return ret
-	}
-	return *o.DeletedAt.Get()
-}
-
-// GetDeletedAtOk returns a tuple with the DeletedAt field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *BillingProductResponseData) GetDeletedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.DeletedAt.Get(), o.DeletedAt.IsSet()
-}
-
-// HasDeletedAt returns a boolean if a field has been set.
-func (o *BillingProductResponseData) HasDeletedAt() bool {
-	if o != nil && o.DeletedAt.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetDeletedAt gets a reference to the given NullableTime and assigns it to the DeletedAt field.
-func (o *BillingProductResponseData) SetDeletedAt(v time.Time) {
-	o.DeletedAt.Set(&v)
-}
-
-// SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
-func (o *BillingProductResponseData) SetDeletedAtNil() {
-	o.DeletedAt.Set(nil)
-}
-
-// UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
-func (o *BillingProductResponseData) UnsetDeletedAt() {
-	o.DeletedAt.Unset()
 }
 
 // GetEnvironmentId returns the EnvironmentId field value
@@ -360,9 +316,6 @@ func (o BillingProductResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["account_id"] = o.AccountId
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["currency"] = o.Currency
-	if o.DeletedAt.IsSet() {
-		toSerialize["deleted_at"] = o.DeletedAt.Get()
-	}
 	toSerialize["environment_id"] = o.EnvironmentId
 	toSerialize["external_id"] = o.ExternalId
 	toSerialize["name"] = o.Name

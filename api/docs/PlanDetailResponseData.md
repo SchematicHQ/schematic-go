@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**AudienceType** | **string** |  | 
 **CompanyCount** | **int32** |  | 
 **CreatedAt** | **time.Time** |  | 
 **Description** | **string** |  | 
@@ -17,7 +18,7 @@ Name | Type | Description | Notes
 
 ### NewPlanDetailResponseData
 
-`func NewPlanDetailResponseData(companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time, ) *PlanDetailResponseData`
+`func NewPlanDetailResponseData(audienceType string, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time, ) *PlanDetailResponseData`
 
 NewPlanDetailResponseData instantiates a new PlanDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -31,6 +32,26 @@ will change when the set of required properties is changed
 NewPlanDetailResponseDataWithDefaults instantiates a new PlanDetailResponseData object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetAudienceType
+
+`func (o *PlanDetailResponseData) GetAudienceType() string`
+
+GetAudienceType returns the AudienceType field if non-nil, zero value otherwise.
+
+### GetAudienceTypeOk
+
+`func (o *PlanDetailResponseData) GetAudienceTypeOk() (*string, bool)`
+
+GetAudienceTypeOk returns a tuple with the AudienceType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAudienceType
+
+`func (o *PlanDetailResponseData) SetAudienceType(v string)`
+
+SetAudienceType sets AudienceType field to given value.
+
 
 ### GetCompanyCount
 

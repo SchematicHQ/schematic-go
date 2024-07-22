@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**AudienceType** | **string** |  | 
 **Description** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
 **PlanType** | Pointer to **NullableString** |  | [optional] 
@@ -12,7 +13,7 @@ Name | Type | Description | Notes
 
 ### NewUpdatePlanRequestBody
 
-`func NewUpdatePlanRequestBody(name string, ) *UpdatePlanRequestBody`
+`func NewUpdatePlanRequestBody(audienceType string, name string, ) *UpdatePlanRequestBody`
 
 NewUpdatePlanRequestBody instantiates a new UpdatePlanRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -26,6 +27,26 @@ will change when the set of required properties is changed
 NewUpdatePlanRequestBodyWithDefaults instantiates a new UpdatePlanRequestBody object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetAudienceType
+
+`func (o *UpdatePlanRequestBody) GetAudienceType() string`
+
+GetAudienceType returns the AudienceType field if non-nil, zero value otherwise.
+
+### GetAudienceTypeOk
+
+`func (o *UpdatePlanRequestBody) GetAudienceTypeOk() (*string, bool)`
+
+GetAudienceTypeOk returns a tuple with the AudienceType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAudienceType
+
+`func (o *UpdatePlanRequestBody) SetAudienceType(v string)`
+
+SetAudienceType sets AudienceType field to given value.
+
 
 ### GetDescription
 

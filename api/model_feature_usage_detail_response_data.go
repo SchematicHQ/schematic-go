@@ -19,7 +19,7 @@ import (
 // checks if the FeatureUsageDetailResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &FeatureUsageDetailResponseData{}
 
-// FeatureUsageDetailResponseData The returned resource
+// FeatureUsageDetailResponseData struct for FeatureUsageDetailResponseData
 type FeatureUsageDetailResponseData struct {
 	Features []FeatureUsageResponseData `json:"features"`
 }

@@ -25,7 +25,6 @@ type CrmDealLineItem struct {
 	BillingFrequency   string                 `json:"billing_frequency"`
 	CreatedAt          time.Time              `json:"created_at"`
 	Currency           string                 `json:"currency"`
-	DeletedAt          NullableTime           `json:"deleted_at,omitempty"`
 	Description        string                 `json:"description"`
 	DiscountPercentage map[string]interface{} `json:"discount_percentage,omitempty"`
 	Id                 string                 `json:"id"`
@@ -135,49 +134,6 @@ func (o *CrmDealLineItem) GetCurrencyOk() (*string, bool) {
 // SetCurrency sets field value
 func (o *CrmDealLineItem) SetCurrency(v string) {
 	o.Currency = v
-}
-
-// GetDeletedAt returns the DeletedAt field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CrmDealLineItem) GetDeletedAt() time.Time {
-	if o == nil || IsNil(o.DeletedAt.Get()) {
-		var ret time.Time
-		return ret
-	}
-	return *o.DeletedAt.Get()
-}
-
-// GetDeletedAtOk returns a tuple with the DeletedAt field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CrmDealLineItem) GetDeletedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.DeletedAt.Get(), o.DeletedAt.IsSet()
-}
-
-// HasDeletedAt returns a boolean if a field has been set.
-func (o *CrmDealLineItem) HasDeletedAt() bool {
-	if o != nil && o.DeletedAt.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetDeletedAt gets a reference to the given NullableTime and assigns it to the DeletedAt field.
-func (o *CrmDealLineItem) SetDeletedAt(v time.Time) {
-	o.DeletedAt.Set(&v)
-}
-
-// SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
-func (o *CrmDealLineItem) SetDeletedAtNil() {
-	o.DeletedAt.Set(nil)
-}
-
-// UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
-func (o *CrmDealLineItem) UnsetDeletedAt() {
-	o.DeletedAt.Unset()
 }
 
 // GetDescription returns the Description field value
@@ -444,9 +400,6 @@ func (o CrmDealLineItem) ToMap() (map[string]interface{}, error) {
 	toSerialize["billing_frequency"] = o.BillingFrequency
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["currency"] = o.Currency
-	if o.DeletedAt.IsSet() {
-		toSerialize["deleted_at"] = o.DeletedAt.Get()
-	}
 	toSerialize["description"] = o.Description
 	if !IsNil(o.DiscountPercentage) {
 		toSerialize["discount_percentage"] = o.DiscountPercentage

@@ -22,11 +22,12 @@ var _ MappedNullable = &CreateBillingSubscriptionsRequestBody{}
 
 // CreateBillingSubscriptionsRequestBody struct for CreateBillingSubscriptionsRequestBody
 type CreateBillingSubscriptionsRequestBody struct {
-	CustomerExternalId     string         `json:"customer_external_id"`
-	ExpiredAt              time.Time      `json:"expired_at"`
-	Interval               NullableString `json:"interval,omitempty"`
-	ProductExternalIds     []string       `json:"product_external_ids"`
-	SubscriptionExternalId string         `json:"subscription_external_id"`
+	CustomerExternalId     string                  `json:"customer_external_id"`
+	ExpiredAt              time.Time               `json:"expired_at"`
+	Interval               NullableString          `json:"interval,omitempty"`
+	ProductExternalIds     []BillingProductPricing `json:"product_external_ids"`
+	SubscriptionExternalId string                  `json:"subscription_external_id"`
+	TotalPrice             int32                   `json:"total_price"`
 }
 
 type _CreateBillingSubscriptionsRequestBody CreateBillingSubscriptionsRequestBody
@@ -35,12 +36,13 @@ type _CreateBillingSubscriptionsRequestBody CreateBillingSubscriptionsRequestBod
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []string, subscriptionExternalId string) *CreateBillingSubscriptionsRequestBody {
+func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []BillingProductPricing, subscriptionExternalId string, totalPrice int32) *CreateBillingSubscriptionsRequestBody {
 	this := CreateBillingSubscriptionsRequestBody{}
 	this.CustomerExternalId = customerExternalId
 	this.ExpiredAt = expiredAt
 	this.ProductExternalIds = productExternalIds
 	this.SubscriptionExternalId = subscriptionExternalId
+	this.TotalPrice = totalPrice
 	return &this
 }
 
@@ -144,9 +146,9 @@ func (o *CreateBillingSubscriptionsRequestBody) UnsetInterval() {
 }
 
 // GetProductExternalIds returns the ProductExternalIds field value
-func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIds() []string {
+func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIds() []BillingProductPricing {
 	if o == nil {
-		var ret []string
+		var ret []BillingProductPricing
 		return ret
 	}
 
@@ -155,7 +157,7 @@ func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIds() []string
 
 // GetProductExternalIdsOk returns a tuple with the ProductExternalIds field value
 // and a boolean to check if the value has been set.
-func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIdsOk() ([]string, bool) {
+func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIdsOk() ([]BillingProductPricing, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -163,7 +165,7 @@ func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIdsOk() ([]str
 }
 
 // SetProductExternalIds sets field value
-func (o *CreateBillingSubscriptionsRequestBody) SetProductExternalIds(v []string) {
+func (o *CreateBillingSubscriptionsRequestBody) SetProductExternalIds(v []BillingProductPricing) {
 	o.ProductExternalIds = v
 }
 
@@ -191,6 +193,30 @@ func (o *CreateBillingSubscriptionsRequestBody) SetSubscriptionExternalId(v stri
 	o.SubscriptionExternalId = v
 }
 
+// GetTotalPrice returns the TotalPrice field value
+func (o *CreateBillingSubscriptionsRequestBody) GetTotalPrice() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.TotalPrice
+}
+
+// GetTotalPriceOk returns a tuple with the TotalPrice field value
+// and a boolean to check if the value has been set.
+func (o *CreateBillingSubscriptionsRequestBody) GetTotalPriceOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.TotalPrice, true
+}
+
+// SetTotalPrice sets field value
+func (o *CreateBillingSubscriptionsRequestBody) SetTotalPrice(v int32) {
+	o.TotalPrice = v
+}
+
 func (o CreateBillingSubscriptionsRequestBody) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -208,6 +234,7 @@ func (o CreateBillingSubscriptionsRequestBody) ToMap() (map[string]interface{}, 
 	}
 	toSerialize["product_external_ids"] = o.ProductExternalIds
 	toSerialize["subscription_external_id"] = o.SubscriptionExternalId
+	toSerialize["total_price"] = o.TotalPrice
 	return toSerialize, nil
 }
 
@@ -220,6 +247,7 @@ func (o *CreateBillingSubscriptionsRequestBody) UnmarshalJSON(data []byte) (err 
 		"expired_at",
 		"product_external_ids",
 		"subscription_external_id",
+		"total_price",
 	}
 
 	allProperties := make(map[string]interface{})

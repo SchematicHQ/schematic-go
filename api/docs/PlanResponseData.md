@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**AudienceType** | **string** |  | 
 **CreatedAt** | **time.Time** |  | 
 **Description** | **string** |  | 
 **Id** | **string** |  | 
@@ -15,7 +16,7 @@ Name | Type | Description | Notes
 
 ### NewPlanResponseData
 
-`func NewPlanResponseData(createdAt time.Time, description string, id string, name string, planType string, updatedAt time.Time, ) *PlanResponseData`
+`func NewPlanResponseData(audienceType string, createdAt time.Time, description string, id string, name string, planType string, updatedAt time.Time, ) *PlanResponseData`
 
 NewPlanResponseData instantiates a new PlanResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -29,6 +30,26 @@ will change when the set of required properties is changed
 NewPlanResponseDataWithDefaults instantiates a new PlanResponseData object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetAudienceType
+
+`func (o *PlanResponseData) GetAudienceType() string`
+
+GetAudienceType returns the AudienceType field if non-nil, zero value otherwise.
+
+### GetAudienceTypeOk
+
+`func (o *PlanResponseData) GetAudienceTypeOk() (*string, bool)`
+
+GetAudienceTypeOk returns a tuple with the AudienceType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAudienceType
+
+`func (o *PlanResponseData) SetAudienceType(v string)`
+
+SetAudienceType sets AudienceType field to given value.
+
 
 ### GetCreatedAt
 

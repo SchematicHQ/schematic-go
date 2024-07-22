@@ -25,7 +25,9 @@ type UpsertUserRequestBody struct {
 	// Optionally specify company using key/value pairs
 	Company map[string]string `json:"company"`
 	// Optionally specify company using Schematic company ID
-	CompanyId  NullableString    `json:"company_id,omitempty"`
+	CompanyId NullableString `json:"company_id,omitempty"`
+	// If you know the Schematic ID, you can use that here instead of keys
+	Id         NullableString    `json:"id,omitempty"`
 	Keys       map[string]string `json:"keys"`
 	LastSeenAt NullableTime      `json:"last_seen_at,omitempty"`
 	Name       NullableString    `json:"name,omitempty"`
@@ -120,6 +122,49 @@ func (o *UpsertUserRequestBody) SetCompanyIdNil() {
 // UnsetCompanyId ensures that no value is present for CompanyId, not even an explicit nil
 func (o *UpsertUserRequestBody) UnsetCompanyId() {
 	o.CompanyId.Unset()
+}
+
+// GetId returns the Id field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpsertUserRequestBody) GetId() string {
+	if o == nil || IsNil(o.Id.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Id.Get()
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpsertUserRequestBody) GetIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Id.Get(), o.Id.IsSet()
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *UpsertUserRequestBody) HasId() bool {
+	if o != nil && o.Id.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given NullableString and assigns it to the Id field.
+func (o *UpsertUserRequestBody) SetId(v string) {
+	o.Id.Set(&v)
+}
+
+// SetIdNil sets the value for Id to be an explicit nil
+func (o *UpsertUserRequestBody) SetIdNil() {
+	o.Id.Set(nil)
+}
+
+// UnsetId ensures that no value is present for Id, not even an explicit nil
+func (o *UpsertUserRequestBody) UnsetId() {
+	o.Id.Unset()
 }
 
 // GetKeys returns the Keys field value
@@ -320,6 +365,9 @@ func (o UpsertUserRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize["company"] = o.Company
 	if o.CompanyId.IsSet() {
 		toSerialize["company_id"] = o.CompanyId.Get()
+	}
+	if o.Id.IsSet() {
+		toSerialize["id"] = o.Id.Get()
 	}
 	toSerialize["keys"] = o.Keys
 	if o.LastSeenAt.IsSet() {

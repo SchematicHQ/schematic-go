@@ -28,7 +28,6 @@ type CrmDealResponseData struct {
 	CreatedAt         time.Time      `json:"created_at"`
 	DealExternalId    string         `json:"deal_external_id"`
 	DealId            string         `json:"deal_id"`
-	DeletedAt         NullableTime   `json:"deleted_at,omitempty"`
 	EnvironmentId     string         `json:"environment_id"`
 	Mrr               string         `json:"mrr"`
 	Name              NullableString `json:"name,omitempty"`
@@ -226,49 +225,6 @@ func (o *CrmDealResponseData) SetDealId(v string) {
 	o.DealId = v
 }
 
-// GetDeletedAt returns the DeletedAt field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CrmDealResponseData) GetDeletedAt() time.Time {
-	if o == nil || IsNil(o.DeletedAt.Get()) {
-		var ret time.Time
-		return ret
-	}
-	return *o.DeletedAt.Get()
-}
-
-// GetDeletedAtOk returns a tuple with the DeletedAt field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CrmDealResponseData) GetDeletedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.DeletedAt.Get(), o.DeletedAt.IsSet()
-}
-
-// HasDeletedAt returns a boolean if a field has been set.
-func (o *CrmDealResponseData) HasDeletedAt() bool {
-	if o != nil && o.DeletedAt.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetDeletedAt gets a reference to the given NullableTime and assigns it to the DeletedAt field.
-func (o *CrmDealResponseData) SetDeletedAt(v time.Time) {
-	o.DeletedAt.Set(&v)
-}
-
-// SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
-func (o *CrmDealResponseData) SetDeletedAtNil() {
-	o.DeletedAt.Set(nil)
-}
-
-// UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
-func (o *CrmDealResponseData) UnsetDeletedAt() {
-	o.DeletedAt.Unset()
-}
-
 // GetEnvironmentId returns the EnvironmentId field value
 func (o *CrmDealResponseData) GetEnvironmentId() string {
 	if o == nil {
@@ -445,9 +401,6 @@ func (o CrmDealResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["deal_external_id"] = o.DealExternalId
 	toSerialize["deal_id"] = o.DealId
-	if o.DeletedAt.IsSet() {
-		toSerialize["deleted_at"] = o.DeletedAt.Get()
-	}
 	toSerialize["environment_id"] = o.EnvironmentId
 	toSerialize["mrr"] = o.Mrr
 	if o.Name.IsSet() {

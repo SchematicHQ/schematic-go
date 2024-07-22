@@ -22,6 +22,7 @@ var _ MappedNullable = &UpsertCompanyRequestBody{}
 
 // UpsertCompanyRequestBody struct for UpsertCompanyRequestBody
 type UpsertCompanyRequestBody struct {
+	// If you know the Schematic ID, you can use that here instead of keys
 	Id         NullableString    `json:"id,omitempty"`
 	Keys       map[string]string `json:"keys"`
 	LastSeenAt NullableTime      `json:"last_seen_at,omitempty"`

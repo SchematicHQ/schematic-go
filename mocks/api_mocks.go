@@ -988,6 +988,66 @@ func (m *MockBillingAPI) EXPECT() *MockBillingAPIMockRecorder {
 	return m.recorder
 }
 
+// CountCustomers mocks base method.
+func (m *MockBillingAPI) CountCustomers(arg0 context.Context) api.ApiCountCustomersRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountCustomers", arg0)
+	ret0, _ := ret[0].(api.ApiCountCustomersRequest)
+	return ret0
+}
+
+// CountCustomers indicates an expected call of CountCustomers.
+func (mr *MockBillingAPIMockRecorder) CountCustomers(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountCustomers", reflect.TypeOf((*MockBillingAPI)(nil).CountCustomers), arg0)
+}
+
+// CountCustomersExecute mocks base method.
+func (m *MockBillingAPI) CountCustomersExecute(arg0 api.ApiCountCustomersRequest) (*api.CountCustomersResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountCustomersExecute", arg0)
+	ret0, _ := ret[0].(*api.CountCustomersResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CountCustomersExecute indicates an expected call of CountCustomersExecute.
+func (mr *MockBillingAPIMockRecorder) CountCustomersExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountCustomersExecute", reflect.TypeOf((*MockBillingAPI)(nil).CountCustomersExecute), arg0)
+}
+
+// ListCustomers mocks base method.
+func (m *MockBillingAPI) ListCustomers(arg0 context.Context) api.ApiListCustomersRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListCustomers", arg0)
+	ret0, _ := ret[0].(api.ApiListCustomersRequest)
+	return ret0
+}
+
+// ListCustomers indicates an expected call of ListCustomers.
+func (mr *MockBillingAPIMockRecorder) ListCustomers(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCustomers", reflect.TypeOf((*MockBillingAPI)(nil).ListCustomers), arg0)
+}
+
+// ListCustomersExecute mocks base method.
+func (m *MockBillingAPI) ListCustomersExecute(arg0 api.ApiListCustomersRequest) (*api.ListCustomersResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListCustomersExecute", arg0)
+	ret0, _ := ret[0].(*api.ListCustomersResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ListCustomersExecute indicates an expected call of ListCustomersExecute.
+func (mr *MockBillingAPIMockRecorder) ListCustomersExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCustomersExecute", reflect.TypeOf((*MockBillingAPI)(nil).ListCustomersExecute), arg0)
+}
+
 // ListProducts mocks base method.
 func (m *MockBillingAPI) ListProducts(arg0 context.Context) api.ApiListProductsRequest {
 	m.ctrl.T.Helper()
@@ -1016,6 +1076,36 @@ func (m *MockBillingAPI) ListProductsExecute(arg0 api.ApiListProductsRequest) (*
 func (mr *MockBillingAPIMockRecorder) ListProductsExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProductsExecute", reflect.TypeOf((*MockBillingAPI)(nil).ListProductsExecute), arg0)
+}
+
+// UpsertBillingCustomer mocks base method.
+func (m *MockBillingAPI) UpsertBillingCustomer(arg0 context.Context) api.ApiUpsertBillingCustomerRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertBillingCustomer", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertBillingCustomerRequest)
+	return ret0
+}
+
+// UpsertBillingCustomer indicates an expected call of UpsertBillingCustomer.
+func (mr *MockBillingAPIMockRecorder) UpsertBillingCustomer(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertBillingCustomer", reflect.TypeOf((*MockBillingAPI)(nil).UpsertBillingCustomer), arg0)
+}
+
+// UpsertBillingCustomerExecute mocks base method.
+func (m *MockBillingAPI) UpsertBillingCustomerExecute(arg0 api.ApiUpsertBillingCustomerRequest) (*api.UpsertBillingCustomerResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertBillingCustomerExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertBillingCustomerResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpsertBillingCustomerExecute indicates an expected call of UpsertBillingCustomerExecute.
+func (mr *MockBillingAPIMockRecorder) UpsertBillingCustomerExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertBillingCustomerExecute", reflect.TypeOf((*MockBillingAPI)(nil).UpsertBillingCustomerExecute), arg0)
 }
 
 // UpsertBillingProduct mocks base method.
@@ -3921,4 +4011,34 @@ func (m *MockPlansAPI) UpdatePlanExecute(arg0 api.ApiUpdatePlanRequest) (*api.Up
 func (mr *MockPlansAPIMockRecorder) UpdatePlanExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePlanExecute", reflect.TypeOf((*MockPlansAPI)(nil).UpdatePlanExecute), arg0)
+}
+
+// UpsertBillingProductPlan mocks base method.
+func (m *MockPlansAPI) UpsertBillingProductPlan(arg0 context.Context, arg1 string) api.ApiUpsertBillingProductPlanRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertBillingProductPlan", arg0, arg1)
+	ret0, _ := ret[0].(api.ApiUpsertBillingProductPlanRequest)
+	return ret0
+}
+
+// UpsertBillingProductPlan indicates an expected call of UpsertBillingProductPlan.
+func (mr *MockPlansAPIMockRecorder) UpsertBillingProductPlan(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertBillingProductPlan", reflect.TypeOf((*MockPlansAPI)(nil).UpsertBillingProductPlan), arg0, arg1)
+}
+
+// UpsertBillingProductPlanExecute mocks base method.
+func (m *MockPlansAPI) UpsertBillingProductPlanExecute(arg0 api.ApiUpsertBillingProductPlanRequest) (*api.UpsertBillingProductPlanResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertBillingProductPlanExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertBillingProductPlanResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpsertBillingProductPlanExecute indicates an expected call of UpsertBillingProductPlanExecute.
+func (mr *MockPlansAPIMockRecorder) UpsertBillingProductPlanExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertBillingProductPlanExecute", reflect.TypeOf((*MockPlansAPI)(nil).UpsertBillingProductPlanExecute), arg0)
 }

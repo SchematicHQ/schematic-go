@@ -4,7 +4,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**DeletedAt** | Pointer to **NullableTime** |  | [optional] 
 **ExpiredAt** | Pointer to **NullableTime** |  | [optional] 
 **ExternalId** | **string** |  | 
 **Id** | **int32** |  | 
@@ -29,41 +28,6 @@ NewBillingSubscriptionResponseDataWithDefaults instantiates a new BillingSubscri
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetDeletedAt
-
-`func (o *BillingSubscriptionResponseData) GetDeletedAt() time.Time`
-
-GetDeletedAt returns the DeletedAt field if non-nil, zero value otherwise.
-
-### GetDeletedAtOk
-
-`func (o *BillingSubscriptionResponseData) GetDeletedAtOk() (*time.Time, bool)`
-
-GetDeletedAtOk returns a tuple with the DeletedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDeletedAt
-
-`func (o *BillingSubscriptionResponseData) SetDeletedAt(v time.Time)`
-
-SetDeletedAt sets DeletedAt field to given value.
-
-### HasDeletedAt
-
-`func (o *BillingSubscriptionResponseData) HasDeletedAt() bool`
-
-HasDeletedAt returns a boolean if a field has been set.
-
-### SetDeletedAtNil
-
-`func (o *BillingSubscriptionResponseData) SetDeletedAtNil(b bool)`
-
- SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
-
-### UnsetDeletedAt
-`func (o *BillingSubscriptionResponseData) UnsetDeletedAt()`
-
-UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
 ### GetExpiredAt
 
 `func (o *BillingSubscriptionResponseData) GetExpiredAt() time.Time`

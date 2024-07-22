@@ -7,7 +7,6 @@ Name | Type | Description | Notes
 **AccountId** | **string** |  | 
 **CreatedAt** | **time.Time** |  | 
 **DealId** | Pointer to **NullableString** |  | [optional] 
-**DeletedAt** | Pointer to **NullableTime** |  | [optional] 
 **EnvironmentId** | **string** |  | 
 **ProductExternalId** | Pointer to **NullableString** |  | [optional] 
 **UpdatedAt** | **time.Time** |  | 
@@ -106,41 +105,6 @@ HasDealId returns a boolean if a field has been set.
 `func (o *CrmLineItemResponseData) UnsetDealId()`
 
 UnsetDealId ensures that no value is present for DealId, not even an explicit nil
-### GetDeletedAt
-
-`func (o *CrmLineItemResponseData) GetDeletedAt() time.Time`
-
-GetDeletedAt returns the DeletedAt field if non-nil, zero value otherwise.
-
-### GetDeletedAtOk
-
-`func (o *CrmLineItemResponseData) GetDeletedAtOk() (*time.Time, bool)`
-
-GetDeletedAtOk returns a tuple with the DeletedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDeletedAt
-
-`func (o *CrmLineItemResponseData) SetDeletedAt(v time.Time)`
-
-SetDeletedAt sets DeletedAt field to given value.
-
-### HasDeletedAt
-
-`func (o *CrmLineItemResponseData) HasDeletedAt() bool`
-
-HasDeletedAt returns a boolean if a field has been set.
-
-### SetDeletedAtNil
-
-`func (o *CrmLineItemResponseData) SetDeletedAtNil(b bool)`
-
- SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
-
-### UnsetDeletedAt
-`func (o *CrmLineItemResponseData) UnsetDeletedAt()`
-
-UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
 ### GetEnvironmentId
 
 `func (o *CrmLineItemResponseData) GetEnvironmentId() string`

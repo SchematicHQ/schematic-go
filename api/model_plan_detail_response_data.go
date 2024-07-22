@@ -22,6 +22,7 @@ var _ MappedNullable = &PlanDetailResponseData{}
 
 // PlanDetailResponseData The updated resource
 type PlanDetailResponseData struct {
+	AudienceType string                      `json:"audience_type"`
 	CompanyCount int32                       `json:"company_count"`
 	CreatedAt    time.Time                   `json:"created_at"`
 	Description  string                      `json:"description"`
@@ -38,8 +39,9 @@ type _PlanDetailResponseData PlanDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPlanDetailResponseData(companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time) *PlanDetailResponseData {
+func NewPlanDetailResponseData(audienceType string, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time) *PlanDetailResponseData {
 	this := PlanDetailResponseData{}
+	this.AudienceType = audienceType
 	this.CompanyCount = companyCount
 	this.CreatedAt = createdAt
 	this.Description = description
@@ -57,6 +59,30 @@ func NewPlanDetailResponseData(companyCount int32, createdAt time.Time, descript
 func NewPlanDetailResponseDataWithDefaults() *PlanDetailResponseData {
 	this := PlanDetailResponseData{}
 	return &this
+}
+
+// GetAudienceType returns the AudienceType field value
+func (o *PlanDetailResponseData) GetAudienceType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.AudienceType
+}
+
+// GetAudienceTypeOk returns a tuple with the AudienceType field value
+// and a boolean to check if the value has been set.
+func (o *PlanDetailResponseData) GetAudienceTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.AudienceType, true
+}
+
+// SetAudienceType sets field value
+func (o *PlanDetailResponseData) SetAudienceType(v string) {
+	o.AudienceType = v
 }
 
 // GetCompanyCount returns the CompanyCount field value
@@ -261,6 +287,7 @@ func (o PlanDetailResponseData) MarshalJSON() ([]byte, error) {
 
 func (o PlanDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	toSerialize["audience_type"] = o.AudienceType
 	toSerialize["company_count"] = o.CompanyCount
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["description"] = o.Description
@@ -277,6 +304,7 @@ func (o *PlanDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
+		"audience_type",
 		"company_count",
 		"created_at",
 		"description",

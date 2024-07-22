@@ -6,6 +6,7 @@ All URIs are relative to *https://api.schematichq.com*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AccesstokensAPI* | [**IssueTemporaryAccessToken**](docs/AccesstokensAPI.md#issuetemporaryaccesstoken) | **Post** /temporary-access-tokens | Issue temporary access token
 *AccountsAPI* | [**CountApiKeys**](docs/AccountsAPI.md#countapikeys) | **Get** /api-keys/count | Count api keys
 *AccountsAPI* | [**CountApiRequests**](docs/AccountsAPI.md#countapirequests) | **Get** /api-requests/count | Count api requests
 *AccountsAPI* | [**CreateApiKey**](docs/AccountsAPI.md#createapikey) | **Post** /api-keys | Create api key
@@ -20,7 +21,10 @@ Class | Method | HTTP request | Description
 *AccountsAPI* | [**ListEnvironments**](docs/AccountsAPI.md#listenvironments) | **Get** /environments | List environments
 *AccountsAPI* | [**UpdateApiKey**](docs/AccountsAPI.md#updateapikey) | **Put** /api-keys/{api_key_id} | Update api key
 *AccountsAPI* | [**UpdateEnvironment**](docs/AccountsAPI.md#updateenvironment) | **Put** /environments/{environment_id} | Update environment
+*BillingAPI* | [**CountCustomers**](docs/BillingAPI.md#countcustomers) | **Get** /billing/customers/count | Count customers
+*BillingAPI* | [**ListCustomers**](docs/BillingAPI.md#listcustomers) | **Get** /billing/customers | List customers
 *BillingAPI* | [**ListProducts**](docs/BillingAPI.md#listproducts) | **Get** /billing/products | List products
+*BillingAPI* | [**UpsertBillingCustomer**](docs/BillingAPI.md#upsertbillingcustomer) | **Post** /billing/customer/upsert | Upsert billing customer
 *BillingAPI* | [**UpsertBillingProduct**](docs/BillingAPI.md#upsertbillingproduct) | **Post** /billing/product/upsert | Upsert billing product
 *BillingAPI* | [**UpsertBillingSubscription**](docs/BillingAPI.md#upsertbillingsubscription) | **Post** /billing/subscription/upsert | Upsert billing subscription
 *CompaniesAPI* | [**CountCompanies**](docs/CompaniesAPI.md#countcompanies) | **Get** /companies/count | Count companies
@@ -55,6 +59,13 @@ Class | Method | HTTP request | Description
 *CompaniesAPI* | [**UpsertCompanyTrait**](docs/CompaniesAPI.md#upsertcompanytrait) | **Post** /company-traits | Upsert company trait
 *CompaniesAPI* | [**UpsertUser**](docs/CompaniesAPI.md#upsertuser) | **Post** /users | Upsert user
 *CompaniesAPI* | [**UpsertUserTrait**](docs/CompaniesAPI.md#upsertusertrait) | **Post** /user-traits | Upsert user trait
+*ComponentsAPI* | [**CountComponents**](docs/ComponentsAPI.md#countcomponents) | **Get** /components/count | Count components
+*ComponentsAPI* | [**CreateComponent**](docs/ComponentsAPI.md#createcomponent) | **Post** /components | Create component
+*ComponentsAPI* | [**DeleteComponent**](docs/ComponentsAPI.md#deletecomponent) | **Delete** /components/{component_id} | Delete component
+*ComponentsAPI* | [**GetComponent**](docs/ComponentsAPI.md#getcomponent) | **Get** /components/{component_id} | Get component
+*ComponentsAPI* | [**HydrateComponent**](docs/ComponentsAPI.md#hydratecomponent) | **Get** /components/{component_id}/hydrate | Hydrate component
+*ComponentsAPI* | [**ListComponents**](docs/ComponentsAPI.md#listcomponents) | **Get** /components | List components
+*ComponentsAPI* | [**UpdateComponent**](docs/ComponentsAPI.md#updatecomponent) | **Put** /components/{component_id} | Update component
 *CrmAPI* | [**ListCrmProducts**](docs/CrmAPI.md#listcrmproducts) | **Get** /crm/products | List crm products
 *CrmAPI* | [**UpsertCrmDeal**](docs/CrmAPI.md#upsertcrmdeal) | **Post** /crm/deals/upsert | Upsert crm deal
 *CrmAPI* | [**UpsertCrmProduct**](docs/CrmAPI.md#upsertcrmproduct) | **Post** /crm/products/upsert | Upsert crm product
@@ -119,6 +130,7 @@ Class | Method | HTTP request | Description
 *PlansAPI* | [**ListPlans**](docs/PlansAPI.md#listplans) | **Get** /plans | List plans
 *PlansAPI* | [**UpdateAudience**](docs/PlansAPI.md#updateaudience) | **Put** /plan-audiences/{plan_audience_id} | Update audience
 *PlansAPI* | [**UpdatePlan**](docs/PlansAPI.md#updateplan) | **Put** /plans/{plan_id} | Update plan
+*PlansAPI* | [**UpsertBillingProductPlan**](docs/PlansAPI.md#upsertbillingproductplan) | **Put** /plans/{plan_id}/billing_products | Upsert billing product plan
 *WebhooksAPI* | [**CountWebhookEvents**](docs/WebhooksAPI.md#countwebhookevents) | **Get** /webhook-events/count | Count webhook events
 *WebhooksAPI* | [**CountWebhooks**](docs/WebhooksAPI.md#countwebhooks) | **Get** /webhooks/count | Count webhooks
 *WebhooksAPI* | [**CreateWebhook**](docs/WebhooksAPI.md#createwebhook) | **Post** /webhooks | Create webhook
@@ -138,6 +150,11 @@ Class | Method | HTTP request | Description
  - [ApiKeyRequestResponseData](docs/ApiKeyRequestResponseData.md)
  - [ApiKeyResponseData](docs/ApiKeyResponseData.md)
  - [AudienceRequestBody](docs/AudienceRequestBody.md)
+ - [BillingCustomerResponseData](docs/BillingCustomerResponseData.md)
+ - [BillingCustomerSubscription](docs/BillingCustomerSubscription.md)
+ - [BillingCustomerWithSubscriptionsResponseData](docs/BillingCustomerWithSubscriptionsResponseData.md)
+ - [BillingProductPlanResponseData](docs/BillingProductPlanResponseData.md)
+ - [BillingProductPricing](docs/BillingProductPricing.md)
  - [BillingProductResponseData](docs/BillingProductResponseData.md)
  - [BillingSubscriptionResponseData](docs/BillingSubscriptionResponseData.md)
  - [CheckFlagOutputWithFlagKey](docs/CheckFlagOutputWithFlagKey.md)
@@ -154,6 +171,8 @@ Class | Method | HTTP request | Description
  - [CompanyPlanResponseData](docs/CompanyPlanResponseData.md)
  - [CompanyResponseData](docs/CompanyResponseData.md)
  - [CompanySubscriptionResponseData](docs/CompanySubscriptionResponseData.md)
+ - [ComponentHydrateResponseData](docs/ComponentHydrateResponseData.md)
+ - [ComponentResponseData](docs/ComponentResponseData.md)
  - [CountApiKeysParams](docs/CountApiKeysParams.md)
  - [CountApiKeysResponse](docs/CountApiKeysResponse.md)
  - [CountApiRequestsParams](docs/CountApiRequestsParams.md)
@@ -164,6 +183,10 @@ Class | Method | HTTP request | Description
  - [CountCompaniesResponse](docs/CountCompaniesResponse.md)
  - [CountCompanyOverridesParams](docs/CountCompanyOverridesParams.md)
  - [CountCompanyOverridesResponse](docs/CountCompanyOverridesResponse.md)
+ - [CountComponentsParams](docs/CountComponentsParams.md)
+ - [CountComponentsResponse](docs/CountComponentsResponse.md)
+ - [CountCustomersParams](docs/CountCustomersParams.md)
+ - [CountCustomersResponse](docs/CountCustomersResponse.md)
  - [CountEntityKeyDefinitionsParams](docs/CountEntityKeyDefinitionsParams.md)
  - [CountEntityKeyDefinitionsResponse](docs/CountEntityKeyDefinitionsResponse.md)
  - [CountEntityTraitDefinitionsParams](docs/CountEntityTraitDefinitionsParams.md)
@@ -193,11 +216,14 @@ Class | Method | HTTP request | Description
  - [CountWebhooksResponse](docs/CountWebhooksResponse.md)
  - [CreateApiKeyRequestBody](docs/CreateApiKeyRequestBody.md)
  - [CreateApiKeyResponse](docs/CreateApiKeyResponse.md)
+ - [CreateBillingCustomerRequestBody](docs/CreateBillingCustomerRequestBody.md)
  - [CreateBillingProductRequestBody](docs/CreateBillingProductRequestBody.md)
  - [CreateBillingSubscriptionsRequestBody](docs/CreateBillingSubscriptionsRequestBody.md)
  - [CreateCompanyOverrideRequestBody](docs/CreateCompanyOverrideRequestBody.md)
  - [CreateCompanyOverrideResponse](docs/CreateCompanyOverrideResponse.md)
  - [CreateCompanyResponse](docs/CreateCompanyResponse.md)
+ - [CreateComponentRequestBody](docs/CreateComponentRequestBody.md)
+ - [CreateComponentResponse](docs/CreateComponentResponse.md)
  - [CreateCrmDealLineItemAssociationRequestBody](docs/CreateCrmDealLineItemAssociationRequestBody.md)
  - [CreateCrmDealRequestBody](docs/CreateCrmDealRequestBody.md)
  - [CreateCrmLineItemRequestBody](docs/CreateCrmLineItemRequestBody.md)
@@ -235,6 +261,7 @@ Class | Method | HTTP request | Description
  - [DeleteCompanyMembershipResponse](docs/DeleteCompanyMembershipResponse.md)
  - [DeleteCompanyOverrideResponse](docs/DeleteCompanyOverrideResponse.md)
  - [DeleteCompanyResponse](docs/DeleteCompanyResponse.md)
+ - [DeleteComponentResponse](docs/DeleteComponentResponse.md)
  - [DeleteEnvironmentResponse](docs/DeleteEnvironmentResponse.md)
  - [DeleteFeatureResponse](docs/DeleteFeatureResponse.md)
  - [DeleteFlagResponse](docs/DeleteFlagResponse.md)
@@ -279,6 +306,7 @@ Class | Method | HTTP request | Description
  - [GetAudienceResponse](docs/GetAudienceResponse.md)
  - [GetCompanyOverrideResponse](docs/GetCompanyOverrideResponse.md)
  - [GetCompanyResponse](docs/GetCompanyResponse.md)
+ - [GetComponentResponse](docs/GetComponentResponse.md)
  - [GetEntityTraitDefinitionResponse](docs/GetEntityTraitDefinitionResponse.md)
  - [GetEntityTraitValuesParams](docs/GetEntityTraitValuesParams.md)
  - [GetEntityTraitValuesResponse](docs/GetEntityTraitValuesResponse.md)
@@ -303,6 +331,10 @@ Class | Method | HTTP request | Description
  - [GetUserResponse](docs/GetUserResponse.md)
  - [GetWebhookEventResponse](docs/GetWebhookEventResponse.md)
  - [GetWebhookResponse](docs/GetWebhookResponse.md)
+ - [HydrateComponentResponse](docs/HydrateComponentResponse.md)
+ - [IssueTemporaryAccessTokenRequestBody](docs/IssueTemporaryAccessTokenRequestBody.md)
+ - [IssueTemporaryAccessTokenResponse](docs/IssueTemporaryAccessTokenResponse.md)
+ - [IssueTemporaryAccessTokenResponseData](docs/IssueTemporaryAccessTokenResponseData.md)
  - [KeysRequestBody](docs/KeysRequestBody.md)
  - [ListApiKeysParams](docs/ListApiKeysParams.md)
  - [ListApiKeysResponse](docs/ListApiKeysResponse.md)
@@ -318,8 +350,12 @@ Class | Method | HTTP request | Description
  - [ListCompanyOverridesResponse](docs/ListCompanyOverridesResponse.md)
  - [ListCompanyPlansParams](docs/ListCompanyPlansParams.md)
  - [ListCompanyPlansResponse](docs/ListCompanyPlansResponse.md)
+ - [ListComponentsParams](docs/ListComponentsParams.md)
+ - [ListComponentsResponse](docs/ListComponentsResponse.md)
  - [ListCrmProductsParams](docs/ListCrmProductsParams.md)
  - [ListCrmProductsResponse](docs/ListCrmProductsResponse.md)
+ - [ListCustomersParams](docs/ListCustomersParams.md)
+ - [ListCustomersResponse](docs/ListCustomersResponse.md)
  - [ListEntityKeyDefinitionsParams](docs/ListEntityKeyDefinitionsParams.md)
  - [ListEntityKeyDefinitionsResponse](docs/ListEntityKeyDefinitionsResponse.md)
  - [ListEntityTraitDefinitionsParams](docs/ListEntityTraitDefinitionsParams.md)
@@ -377,12 +413,15 @@ Class | Method | HTTP request | Description
  - [RuleResponseData](docs/RuleResponseData.md)
  - [RulesDetailResponseData](docs/RulesDetailResponseData.md)
  - [SegmentStatusResp](docs/SegmentStatusResp.md)
+ - [TemporaryAccessTokenResponseData](docs/TemporaryAccessTokenResponseData.md)
  - [UpdateApiKeyRequestBody](docs/UpdateApiKeyRequestBody.md)
  - [UpdateApiKeyResponse](docs/UpdateApiKeyResponse.md)
  - [UpdateAudienceRequestBody](docs/UpdateAudienceRequestBody.md)
  - [UpdateAudienceResponse](docs/UpdateAudienceResponse.md)
  - [UpdateCompanyOverrideRequestBody](docs/UpdateCompanyOverrideRequestBody.md)
  - [UpdateCompanyOverrideResponse](docs/UpdateCompanyOverrideResponse.md)
+ - [UpdateComponentRequestBody](docs/UpdateComponentRequestBody.md)
+ - [UpdateComponentResponse](docs/UpdateComponentResponse.md)
  - [UpdateEntityTraitDefinitionRequestBody](docs/UpdateEntityTraitDefinitionRequestBody.md)
  - [UpdateEntityTraitDefinitionResponse](docs/UpdateEntityTraitDefinitionResponse.md)
  - [UpdateEnvironmentRequestBody](docs/UpdateEnvironmentRequestBody.md)
@@ -400,6 +439,9 @@ Class | Method | HTTP request | Description
  - [UpdateRuleRequestBody](docs/UpdateRuleRequestBody.md)
  - [UpdateWebhookRequestBody](docs/UpdateWebhookRequestBody.md)
  - [UpdateWebhookResponse](docs/UpdateWebhookResponse.md)
+ - [UpsertBillingCustomerResponse](docs/UpsertBillingCustomerResponse.md)
+ - [UpsertBillingProductPlanResponse](docs/UpsertBillingProductPlanResponse.md)
+ - [UpsertBillingProductRequestBody](docs/UpsertBillingProductRequestBody.md)
  - [UpsertBillingProductResponse](docs/UpsertBillingProductResponse.md)
  - [UpsertBillingSubscriptionResponse](docs/UpsertBillingSubscriptionResponse.md)
  - [UpsertCompanyRequestBody](docs/UpsertCompanyRequestBody.md)

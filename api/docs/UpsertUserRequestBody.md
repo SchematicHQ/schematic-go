@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Company** | **map[string]string** | Optionally specify company using key/value pairs | 
 **CompanyId** | Pointer to **NullableString** | Optionally specify company using Schematic company ID | [optional] 
+**Id** | Pointer to **NullableString** | If you know the Schematic ID, you can use that here instead of keys | [optional] 
 **Keys** | **map[string]string** |  | 
 **LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
 **Name** | Pointer to **NullableString** |  | [optional] 
@@ -86,6 +87,41 @@ HasCompanyId returns a boolean if a field has been set.
 `func (o *UpsertUserRequestBody) UnsetCompanyId()`
 
 UnsetCompanyId ensures that no value is present for CompanyId, not even an explicit nil
+### GetId
+
+`func (o *UpsertUserRequestBody) GetId() string`
+
+GetId returns the Id field if non-nil, zero value otherwise.
+
+### GetIdOk
+
+`func (o *UpsertUserRequestBody) GetIdOk() (*string, bool)`
+
+GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetId
+
+`func (o *UpsertUserRequestBody) SetId(v string)`
+
+SetId sets Id field to given value.
+
+### HasId
+
+`func (o *UpsertUserRequestBody) HasId() bool`
+
+HasId returns a boolean if a field has been set.
+
+### SetIdNil
+
+`func (o *UpsertUserRequestBody) SetIdNil(b bool)`
+
+ SetIdNil sets the value for Id to be an explicit nil
+
+### UnsetId
+`func (o *UpsertUserRequestBody) UnsetId()`
+
+UnsetId ensures that no value is present for Id, not even an explicit nil
 ### GetKeys
 
 `func (o *UpsertUserRequestBody) GetKeys() map[string]string`

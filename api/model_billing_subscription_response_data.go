@@ -22,7 +22,6 @@ var _ MappedNullable = &BillingSubscriptionResponseData{}
 
 // BillingSubscriptionResponseData The created resource
 type BillingSubscriptionResponseData struct {
-	DeletedAt  NullableTime `json:"deleted_at,omitempty"`
 	ExpiredAt  NullableTime `json:"expired_at,omitempty"`
 	ExternalId string       `json:"external_id"`
 	Id         int32        `json:"id"`
@@ -49,49 +48,6 @@ func NewBillingSubscriptionResponseData(externalId string, id int32, updatedAt t
 func NewBillingSubscriptionResponseDataWithDefaults() *BillingSubscriptionResponseData {
 	this := BillingSubscriptionResponseData{}
 	return &this
-}
-
-// GetDeletedAt returns the DeletedAt field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *BillingSubscriptionResponseData) GetDeletedAt() time.Time {
-	if o == nil || IsNil(o.DeletedAt.Get()) {
-		var ret time.Time
-		return ret
-	}
-	return *o.DeletedAt.Get()
-}
-
-// GetDeletedAtOk returns a tuple with the DeletedAt field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *BillingSubscriptionResponseData) GetDeletedAtOk() (*time.Time, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.DeletedAt.Get(), o.DeletedAt.IsSet()
-}
-
-// HasDeletedAt returns a boolean if a field has been set.
-func (o *BillingSubscriptionResponseData) HasDeletedAt() bool {
-	if o != nil && o.DeletedAt.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetDeletedAt gets a reference to the given NullableTime and assigns it to the DeletedAt field.
-func (o *BillingSubscriptionResponseData) SetDeletedAt(v time.Time) {
-	o.DeletedAt.Set(&v)
-}
-
-// SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
-func (o *BillingSubscriptionResponseData) SetDeletedAtNil() {
-	o.DeletedAt.Set(nil)
-}
-
-// UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
-func (o *BillingSubscriptionResponseData) UnsetDeletedAt() {
-	o.DeletedAt.Unset()
 }
 
 // GetExpiredAt returns the ExpiredAt field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -219,9 +175,6 @@ func (o BillingSubscriptionResponseData) MarshalJSON() ([]byte, error) {
 
 func (o BillingSubscriptionResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.DeletedAt.IsSet() {
-		toSerialize["deleted_at"] = o.DeletedAt.Get()
-	}
 	if o.ExpiredAt.IsSet() {
 		toSerialize["expired_at"] = o.ExpiredAt.Get()
 	}

@@ -13,6 +13,7 @@ Method | HTTP request | Description
 [**ListPlans**](PlansAPI.md#ListPlans) | **Get** /plans | List plans
 [**UpdateAudience**](PlansAPI.md#UpdateAudience) | **Put** /plan-audiences/{plan_audience_id} | Update audience
 [**UpdatePlan**](PlansAPI.md#UpdatePlan) | **Put** /plans/{plan_id} | Update plan
+[**UpsertBillingProductPlan**](PlansAPI.md#UpsertBillingProductPlan) | **Put** /plans/{plan_id}/billing_products | Upsert billing product plan
 
 
 
@@ -619,7 +620,7 @@ func main() {
 	defer client.Close()
 
 	planId := "planId_example" // string | plan_id
-	updatePlanRequestBody := *schematicapi.NewUpdatePlanRequestBody("Name_example") // UpdatePlanRequestBody | 
+	updatePlanRequestBody := *schematicapi.NewUpdatePlanRequestBody("AudienceType_example", "Name_example") // UpdatePlanRequestBody | 
 
 	resp, r, err := client.API().PlansAPI.UpdatePlan(context.Background(), planId).UpdatePlanRequestBody(updatePlanRequestBody).Execute()
 	if err != nil {
@@ -652,6 +653,79 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**UpdatePlanResponse**](UpdatePlanResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertBillingProductPlan
+
+> UpsertBillingProductPlanResponse UpsertBillingProductPlan(ctx, planId).UpsertBillingProductRequestBody(upsertBillingProductRequestBody).Execute()
+
+Upsert billing product plan
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	planId := "planId_example" // string | plan_id
+	upsertBillingProductRequestBody := *schematicapi.NewUpsertBillingProductRequestBody("BillingProductID_example") // UpsertBillingProductRequestBody | 
+
+	resp, r, err := client.API().PlansAPI.UpsertBillingProductPlan(context.Background(), planId).UpsertBillingProductRequestBody(upsertBillingProductRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `PlansAPI.UpsertBillingProductPlan``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertBillingProductPlan`: UpsertBillingProductPlanResponse
+	fmt.Fprintf(os.Stdout, "Response from `PlansAPI.UpsertBillingProductPlan`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**planId** | **string** | plan_id | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertBillingProductPlanRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **upsertBillingProductRequestBody** | [**UpsertBillingProductRequestBody**](UpsertBillingProductRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertBillingProductPlanResponse**](UpsertBillingProductPlanResponse.md)
 
 ### Authorization
 

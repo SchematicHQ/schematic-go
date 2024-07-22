@@ -48,11 +48,15 @@ type APIClient struct {
 
 	// API Services
 
+	AccesstokensAPI AccesstokensAPI
+
 	AccountsAPI AccountsAPI
 
 	BillingAPI BillingAPI
 
 	CompaniesAPI CompaniesAPI
+
+	ComponentsAPI ComponentsAPI
 
 	CrmAPI CrmAPI
 
@@ -83,9 +87,11 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
+	c.AccesstokensAPI = (*AccesstokensAPIService)(&c.common)
 	c.AccountsAPI = (*AccountsAPIService)(&c.common)
 	c.BillingAPI = (*BillingAPIService)(&c.common)
 	c.CompaniesAPI = (*CompaniesAPIService)(&c.common)
+	c.ComponentsAPI = (*ComponentsAPIService)(&c.common)
 	c.CrmAPI = (*CrmAPIService)(&c.common)
 	c.EntitlementsAPI = (*EntitlementsAPIService)(&c.common)
 	c.EventsAPI = (*EventsAPIService)(&c.common)
@@ -520,18 +526,6 @@ func addFile(w *multipart.Writer, fieldName, path string) error {
 	_, err = io.Copy(part, file)
 
 	return err
-}
-
-// Prevent trying to import "fmt"
-func reportError(format string, a ...interface{}) error {
-	return fmt.Errorf(format, a...)
-}
-
-// A wrapper for strict JSON decoding
-func newStrictDecoder(data []byte) *json.Decoder {
-	dec := json.NewDecoder(bytes.NewBuffer(data))
-	dec.DisallowUnknownFields()
-	return dec
 }
 
 // Set request body from an interface{}

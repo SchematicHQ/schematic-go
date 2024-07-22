@@ -7,7 +7,6 @@ Name | Type | Description | Notes
 **BillingFrequency** | **string** |  | 
 **CreatedAt** | **time.Time** |  | 
 **Currency** | **string** |  | 
-**DeletedAt** | Pointer to **NullableTime** |  | [optional] 
 **Description** | **string** |  | 
 **DiscountPercentage** | Pointer to **map[string]interface{}** |  | [optional] 
 **Id** | **string** |  | 
@@ -97,41 +96,6 @@ and a boolean to check if the value has been set.
 SetCurrency sets Currency field to given value.
 
 
-### GetDeletedAt
-
-`func (o *CrmDealLineItem) GetDeletedAt() time.Time`
-
-GetDeletedAt returns the DeletedAt field if non-nil, zero value otherwise.
-
-### GetDeletedAtOk
-
-`func (o *CrmDealLineItem) GetDeletedAtOk() (*time.Time, bool)`
-
-GetDeletedAtOk returns a tuple with the DeletedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDeletedAt
-
-`func (o *CrmDealLineItem) SetDeletedAt(v time.Time)`
-
-SetDeletedAt sets DeletedAt field to given value.
-
-### HasDeletedAt
-
-`func (o *CrmDealLineItem) HasDeletedAt() bool`
-
-HasDeletedAt returns a boolean if a field has been set.
-
-### SetDeletedAtNil
-
-`func (o *CrmDealLineItem) SetDeletedAtNil(b bool)`
-
- SetDeletedAtNil sets the value for DeletedAt to be an explicit nil
-
-### UnsetDeletedAt
-`func (o *CrmDealLineItem) UnsetDeletedAt()`
-
-UnsetDeletedAt ensures that no value is present for DeletedAt, not even an explicit nil
 ### GetDescription
 
 `func (o *CrmDealLineItem) GetDescription() string`

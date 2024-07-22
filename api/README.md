@@ -21,10 +21,7 @@ Class | Method | HTTP request | Description
 *AccountsAPI* | [**ListEnvironments**](docs/AccountsAPI.md#listenvironments) | **Get** /environments | List environments
 *AccountsAPI* | [**UpdateApiKey**](docs/AccountsAPI.md#updateapikey) | **Put** /api-keys/{api_key_id} | Update api key
 *AccountsAPI* | [**UpdateEnvironment**](docs/AccountsAPI.md#updateenvironment) | **Put** /environments/{environment_id} | Update environment
-*BillingAPI* | [**CountCustomers**](docs/BillingAPI.md#countcustomers) | **Get** /billing/customers/count | Count customers
-*BillingAPI* | [**ListCustomers**](docs/BillingAPI.md#listcustomers) | **Get** /billing/customers | List customers
 *BillingAPI* | [**ListProducts**](docs/BillingAPI.md#listproducts) | **Get** /billing/products | List products
-*BillingAPI* | [**UpsertBillingCustomer**](docs/BillingAPI.md#upsertbillingcustomer) | **Post** /billing/customer/upsert | Upsert billing customer
 *BillingAPI* | [**UpsertBillingProduct**](docs/BillingAPI.md#upsertbillingproduct) | **Post** /billing/product/upsert | Upsert billing product
 *BillingAPI* | [**UpsertBillingSubscription**](docs/BillingAPI.md#upsertbillingsubscription) | **Post** /billing/subscription/upsert | Upsert billing subscription
 *CompaniesAPI* | [**CountCompanies**](docs/CompaniesAPI.md#countcompanies) | **Get** /companies/count | Count companies
@@ -150,11 +147,7 @@ Class | Method | HTTP request | Description
  - [ApiKeyRequestResponseData](docs/ApiKeyRequestResponseData.md)
  - [ApiKeyResponseData](docs/ApiKeyResponseData.md)
  - [AudienceRequestBody](docs/AudienceRequestBody.md)
- - [BillingCustomerResponseData](docs/BillingCustomerResponseData.md)
- - [BillingCustomerSubscription](docs/BillingCustomerSubscription.md)
- - [BillingCustomerWithSubscriptionsResponseData](docs/BillingCustomerWithSubscriptionsResponseData.md)
  - [BillingProductPlanResponseData](docs/BillingProductPlanResponseData.md)
- - [BillingProductPricing](docs/BillingProductPricing.md)
  - [BillingProductResponseData](docs/BillingProductResponseData.md)
  - [BillingSubscriptionResponseData](docs/BillingSubscriptionResponseData.md)
  - [CheckFlagOutputWithFlagKey](docs/CheckFlagOutputWithFlagKey.md)
@@ -185,8 +178,6 @@ Class | Method | HTTP request | Description
  - [CountCompanyOverridesResponse](docs/CountCompanyOverridesResponse.md)
  - [CountComponentsParams](docs/CountComponentsParams.md)
  - [CountComponentsResponse](docs/CountComponentsResponse.md)
- - [CountCustomersParams](docs/CountCustomersParams.md)
- - [CountCustomersResponse](docs/CountCustomersResponse.md)
  - [CountEntityKeyDefinitionsParams](docs/CountEntityKeyDefinitionsParams.md)
  - [CountEntityKeyDefinitionsResponse](docs/CountEntityKeyDefinitionsResponse.md)
  - [CountEntityTraitDefinitionsParams](docs/CountEntityTraitDefinitionsParams.md)
@@ -216,7 +207,6 @@ Class | Method | HTTP request | Description
  - [CountWebhooksResponse](docs/CountWebhooksResponse.md)
  - [CreateApiKeyRequestBody](docs/CreateApiKeyRequestBody.md)
  - [CreateApiKeyResponse](docs/CreateApiKeyResponse.md)
- - [CreateBillingCustomerRequestBody](docs/CreateBillingCustomerRequestBody.md)
  - [CreateBillingProductRequestBody](docs/CreateBillingProductRequestBody.md)
  - [CreateBillingSubscriptionsRequestBody](docs/CreateBillingSubscriptionsRequestBody.md)
  - [CreateCompanyOverrideRequestBody](docs/CreateCompanyOverrideRequestBody.md)
@@ -354,8 +344,6 @@ Class | Method | HTTP request | Description
  - [ListComponentsResponse](docs/ListComponentsResponse.md)
  - [ListCrmProductsParams](docs/ListCrmProductsParams.md)
  - [ListCrmProductsResponse](docs/ListCrmProductsResponse.md)
- - [ListCustomersParams](docs/ListCustomersParams.md)
- - [ListCustomersResponse](docs/ListCustomersResponse.md)
  - [ListEntityKeyDefinitionsParams](docs/ListEntityKeyDefinitionsParams.md)
  - [ListEntityKeyDefinitionsResponse](docs/ListEntityKeyDefinitionsResponse.md)
  - [ListEntityTraitDefinitionsParams](docs/ListEntityTraitDefinitionsParams.md)
@@ -439,7 +427,6 @@ Class | Method | HTTP request | Description
  - [UpdateRuleRequestBody](docs/UpdateRuleRequestBody.md)
  - [UpdateWebhookRequestBody](docs/UpdateWebhookRequestBody.md)
  - [UpdateWebhookResponse](docs/UpdateWebhookResponse.md)
- - [UpsertBillingCustomerResponse](docs/UpsertBillingCustomerResponse.md)
  - [UpsertBillingProductPlanResponse](docs/UpsertBillingProductPlanResponse.md)
  - [UpsertBillingProductRequestBody](docs/UpsertBillingProductRequestBody.md)
  - [UpsertBillingProductResponse](docs/UpsertBillingProductResponse.md)

@@ -7,15 +7,14 @@ Name | Type | Description | Notes
 **CustomerExternalId** | **string** |  | 
 **ExpiredAt** | **time.Time** |  | 
 **Interval** | Pointer to **NullableString** |  | [optional] 
-**ProductExternalIds** | [**[]BillingProductPricing**](BillingProductPricing.md) |  | 
+**ProductExternalIds** | **[]string** |  | 
 **SubscriptionExternalId** | **string** |  | 
-**TotalPrice** | **int32** |  | 
 
 ## Methods
 
 ### NewCreateBillingSubscriptionsRequestBody
 
-`func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []BillingProductPricing, subscriptionExternalId string, totalPrice int32, ) *CreateBillingSubscriptionsRequestBody`
+`func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []string, subscriptionExternalId string, ) *CreateBillingSubscriptionsRequestBody`
 
 NewCreateBillingSubscriptionsRequestBody instantiates a new CreateBillingSubscriptionsRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -107,20 +106,20 @@ HasInterval returns a boolean if a field has been set.
 UnsetInterval ensures that no value is present for Interval, not even an explicit nil
 ### GetProductExternalIds
 
-`func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIds() []BillingProductPricing`
+`func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIds() []string`
 
 GetProductExternalIds returns the ProductExternalIds field if non-nil, zero value otherwise.
 
 ### GetProductExternalIdsOk
 
-`func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIdsOk() (*[]BillingProductPricing, bool)`
+`func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIdsOk() (*[]string, bool)`
 
 GetProductExternalIdsOk returns a tuple with the ProductExternalIds field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetProductExternalIds
 
-`func (o *CreateBillingSubscriptionsRequestBody) SetProductExternalIds(v []BillingProductPricing)`
+`func (o *CreateBillingSubscriptionsRequestBody) SetProductExternalIds(v []string)`
 
 SetProductExternalIds sets ProductExternalIds field to given value.
 
@@ -143,26 +142,6 @@ and a boolean to check if the value has been set.
 `func (o *CreateBillingSubscriptionsRequestBody) SetSubscriptionExternalId(v string)`
 
 SetSubscriptionExternalId sets SubscriptionExternalId field to given value.
-
-
-### GetTotalPrice
-
-`func (o *CreateBillingSubscriptionsRequestBody) GetTotalPrice() int32`
-
-GetTotalPrice returns the TotalPrice field if non-nil, zero value otherwise.
-
-### GetTotalPriceOk
-
-`func (o *CreateBillingSubscriptionsRequestBody) GetTotalPriceOk() (*int32, bool)`
-
-GetTotalPriceOk returns a tuple with the TotalPrice field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetTotalPrice
-
-`func (o *CreateBillingSubscriptionsRequestBody) SetTotalPrice(v int32)`
-
-SetTotalPrice sets TotalPrice field to given value.
 
 
 

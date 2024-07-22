@@ -60,9 +60,20 @@ func NewClient(apiKey string, opts ...ClientOpt) Client {
 	return client
 }
 
-func (c *client) AddDefaultHeaders(ctx context.Context, headers map[string]string) {
-	for key, value := range headers {
-		c.apiClientConfig.AddDefaultHeader(key, value)
+func (c *client) SetAPIClient(apiClient *api.APIClient) {
+	c.APIClient = apiClient
+}
+
+func (c *client) SetAPIHost(ctx context.Context, host string) {
+	// Host can be provided with or without scheme; if it's provided without scheme, assume HTTPS
+	if u, err := url.Parse(host); err == nil && u.Scheme != "" && u.Host != "" {
+		c.apiClientConfig.Scheme = u.Scheme
+		c.apiClientConfig.Host = u.Host
+	} else if err != nil {
+		c.apiClientConfig.Host = host
+	} else {
+		c.logger.Printf("ERROR: Invalid host URL: %s", host)
+		return
 	}
 
 	// In case this is called after initialization, recreate the API client
@@ -136,26 +147,6 @@ func (c *client) Identify(
 	if err := c.enqueueEvent("identify", api.EventBodyIdentifyAsEventBody(body)); err != nil {
 		c.errors <- err
 	}
-}
-
-func (c *client) SetAPIClient(apiClient *api.APIClient) {
-	c.APIClient = apiClient
-}
-
-func (c *client) SetAPIHost(ctx context.Context, host string) {
-	// Host can be provided with or without scheme; if it's provided without scheme, assume HTTPS
-	if u, err := url.Parse(host); err == nil && u.Scheme != "" && u.Host != "" {
-		c.apiClientConfig.Scheme = u.Scheme
-		c.apiClientConfig.Host = u.Host
-	} else if err != nil {
-		c.apiClientConfig.Host = host
-	} else {
-		c.logger.Printf("ERROR: Invalid host URL: %s", host)
-		return
-	}
-
-	// In case this is called after initialization, recreate the API client
-	c.APIClient = api.NewAPIClient(c.apiClientConfig)
 }
 
 func (c *client) SetEventBufferPeriod(period time.Duration) {

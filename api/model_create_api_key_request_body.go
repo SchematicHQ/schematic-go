@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,9 +20,10 @@ var _ MappedNullable = &CreateApiKeyRequestBody{}
 
 // CreateApiKeyRequestBody struct for CreateApiKeyRequestBody
 type CreateApiKeyRequestBody struct {
-	Description   NullableString `json:"description,omitempty"`
-	EnvironmentId NullableString `json:"environment_id,omitempty"`
-	Name          string         `json:"name"`
+	Description          NullableString `json:"description,omitempty"`
+	EnvironmentId        NullableString `json:"environment_id,omitempty"`
+	Name                 string         `json:"name"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateApiKeyRequestBody CreateApiKeyRequestBody
@@ -173,6 +173,11 @@ func (o CreateApiKeyRequestBody) ToMap() (map[string]interface{}, error) {
 		toSerialize["environment_id"] = o.EnvironmentId.Get()
 	}
 	toSerialize["name"] = o.Name
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -200,15 +205,22 @@ func (o *CreateApiKeyRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateApiKeyRequestBody := _CreateApiKeyRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateApiKeyRequestBody)
+	err = json.Unmarshal(data, &varCreateApiKeyRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateApiKeyRequestBody(varCreateApiKeyRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

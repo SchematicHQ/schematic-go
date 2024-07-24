@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -31,8 +30,9 @@ type UserDetailResponseData struct {
 	LastSeenAt         NullableTime                          `json:"last_seen_at,omitempty"`
 	Name               string                                `json:"name"`
 	// A map of trait names to trait values
-	Traits    map[string]interface{} `json:"traits,omitempty"`
-	UpdatedAt time.Time              `json:"updated_at"`
+	Traits               map[string]interface{} `json:"traits,omitempty"`
+	UpdatedAt            time.Time              `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UserDetailResponseData UserDetailResponseData
@@ -353,6 +353,11 @@ func (o UserDetailResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["traits"] = o.Traits
 	}
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -387,15 +392,29 @@ func (o *UserDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varUserDetailResponseData := _UserDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUserDetailResponseData)
+	err = json.Unmarshal(data, &varUserDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UserDetailResponseData(varUserDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_memberships")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "entity_traits")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "keys")
+		delete(additionalProperties, "last_seen_at")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "traits")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

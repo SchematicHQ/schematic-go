@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,13 +21,14 @@ var _ MappedNullable = &ComponentResponseData{}
 
 // ComponentResponseData struct for ComponentResponseData
 type ComponentResponseData struct {
-	Ast       []int32   `json:"ast"`
-	CreatedAt time.Time `json:"created_at"`
-	Id        string    `json:"id"`
-	Name      string    `json:"name"`
-	State     string    `json:"state"`
-	Type      string    `json:"type"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Ast                  []int32   `json:"ast"`
+	CreatedAt            time.Time `json:"created_at"`
+	Id                   string    `json:"id"`
+	Name                 string    `json:"name"`
+	State                string    `json:"state"`
+	Type                 string    `json:"type"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ComponentResponseData ComponentResponseData
@@ -242,6 +242,11 @@ func (o ComponentResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["state"] = o.State
 	toSerialize["type"] = o.Type
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -275,15 +280,26 @@ func (o *ComponentResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varComponentResponseData := _ComponentResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varComponentResponseData)
+	err = json.Unmarshal(data, &varComponentResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ComponentResponseData(varComponentResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ast")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

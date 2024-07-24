@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,14 +21,15 @@ var _ MappedNullable = &RuleConditionGroupDetailResponseData{}
 
 // RuleConditionGroupDetailResponseData struct for RuleConditionGroupDetailResponseData
 type RuleConditionGroupDetailResponseData struct {
-	Conditions    []RuleConditionDetailResponseData `json:"conditions"`
-	CreatedAt     time.Time                         `json:"created_at"`
-	EnvironmentId string                            `json:"environment_id"`
-	FlagId        NullableString                    `json:"flag_id,omitempty"`
-	Id            string                            `json:"id"`
-	PlanId        NullableString                    `json:"plan_id,omitempty"`
-	RuleId        string                            `json:"rule_id"`
-	UpdatedAt     time.Time                         `json:"updated_at"`
+	Conditions           []RuleConditionDetailResponseData `json:"conditions"`
+	CreatedAt            time.Time                         `json:"created_at"`
+	EnvironmentId        string                            `json:"environment_id"`
+	FlagId               NullableString                    `json:"flag_id,omitempty"`
+	Id                   string                            `json:"id"`
+	PlanId               NullableString                    `json:"plan_id,omitempty"`
+	RuleId               string                            `json:"rule_id"`
+	UpdatedAt            time.Time                         `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _RuleConditionGroupDetailResponseData RuleConditionGroupDetailResponseData
@@ -309,6 +309,11 @@ func (o RuleConditionGroupDetailResponseData) ToMap() (map[string]interface{}, e
 	}
 	toSerialize["rule_id"] = o.RuleId
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -341,15 +346,27 @@ func (o *RuleConditionGroupDetailResponseData) UnmarshalJSON(data []byte) (err e
 
 	varRuleConditionGroupDetailResponseData := _RuleConditionGroupDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varRuleConditionGroupDetailResponseData)
+	err = json.Unmarshal(data, &varRuleConditionGroupDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = RuleConditionGroupDetailResponseData(varRuleConditionGroupDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "conditions")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "rule_id")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

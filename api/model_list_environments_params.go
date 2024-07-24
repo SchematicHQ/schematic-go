@@ -23,8 +23,11 @@ type ListEnvironmentsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32 `json:"offset,omitempty"`
+	Offset               *int32 `json:"offset,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListEnvironmentsParams ListEnvironmentsParams
 
 // NewListEnvironmentsParams instantiates a new ListEnvironmentsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -158,7 +161,35 @@ func (o ListEnvironmentsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListEnvironmentsParams) UnmarshalJSON(data []byte) (err error) {
+	varListEnvironmentsParams := _ListEnvironmentsParams{}
+
+	err = json.Unmarshal(data, &varListEnvironmentsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListEnvironmentsParams(varListEnvironmentsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListEnvironmentsParams struct {

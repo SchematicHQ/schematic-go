@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,14 +21,15 @@ var _ MappedNullable = &ApiKeyResponseData{}
 
 // ApiKeyResponseData The updated resource
 type ApiKeyResponseData struct {
-	CreatedAt     time.Time      `json:"created_at"`
-	Description   NullableString `json:"description,omitempty"`
-	EnvironmentId NullableString `json:"environment_id,omitempty"`
-	Id            string         `json:"id"`
-	LastUsedAt    NullableTime   `json:"last_used_at,omitempty"`
-	Name          string         `json:"name"`
-	Scopes        []string       `json:"scopes"`
-	UpdatedAt     time.Time      `json:"updated_at"`
+	CreatedAt            time.Time      `json:"created_at"`
+	Description          NullableString `json:"description,omitempty"`
+	EnvironmentId        NullableString `json:"environment_id,omitempty"`
+	Id                   string         `json:"id"`
+	LastUsedAt           NullableTime   `json:"last_used_at,omitempty"`
+	Name                 string         `json:"name"`
+	Scopes               []string       `json:"scopes"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ApiKeyResponseData ApiKeyResponseData
@@ -329,6 +329,11 @@ func (o ApiKeyResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	toSerialize["scopes"] = o.Scopes
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -360,15 +365,27 @@ func (o *ApiKeyResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varApiKeyResponseData := _ApiKeyResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varApiKeyResponseData)
+	err = json.Unmarshal(data, &varApiKeyResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ApiKeyResponseData(varApiKeyResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "last_used_at")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "scopes")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

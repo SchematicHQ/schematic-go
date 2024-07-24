@@ -24,10 +24,13 @@ type ListEntityTraitDefinitionsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int32  `json:"offset,omitempty"`
-	Q         *string `json:"q,omitempty"`
-	TraitType *string `json:"trait_type,omitempty"`
+	Offset               *int32  `json:"offset,omitempty"`
+	Q                    *string `json:"q,omitempty"`
+	TraitType            *string `json:"trait_type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListEntityTraitDefinitionsParams ListEntityTraitDefinitionsParams
 
 // NewListEntityTraitDefinitionsParams instantiates a new ListEntityTraitDefinitionsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -266,7 +269,38 @@ func (o ListEntityTraitDefinitionsParams) ToMap() (map[string]interface{}, error
 	if !IsNil(o.TraitType) {
 		toSerialize["trait_type"] = o.TraitType
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListEntityTraitDefinitionsParams) UnmarshalJSON(data []byte) (err error) {
+	varListEntityTraitDefinitionsParams := _ListEntityTraitDefinitionsParams{}
+
+	err = json.Unmarshal(data, &varListEntityTraitDefinitionsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListEntityTraitDefinitionsParams(varListEntityTraitDefinitionsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "entity_type")
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "q")
+		delete(additionalProperties, "trait_type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListEntityTraitDefinitionsParams struct {

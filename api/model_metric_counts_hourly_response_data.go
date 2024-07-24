@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,13 +21,14 @@ var _ MappedNullable = &MetricCountsHourlyResponseData{}
 
 // MetricCountsHourlyResponseData struct for MetricCountsHourlyResponseData
 type MetricCountsHourlyResponseData struct {
-	CompanyId     NullableString `json:"company_id,omitempty"`
-	CreatedAt     time.Time      `json:"created_at"`
-	EnvironmentId string         `json:"environment_id"`
-	EventSubtype  string         `json:"event_subtype"`
-	StartTime     time.Time      `json:"start_time"`
-	UserId        NullableString `json:"user_id,omitempty"`
-	Value         int32          `json:"value"`
+	CompanyId            NullableString `json:"company_id,omitempty"`
+	CreatedAt            time.Time      `json:"created_at"`
+	EnvironmentId        string         `json:"environment_id"`
+	EventSubtype         string         `json:"event_subtype"`
+	StartTime            time.Time      `json:"start_time"`
+	UserId               NullableString `json:"user_id,omitempty"`
+	Value                int32          `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _MetricCountsHourlyResponseData MetricCountsHourlyResponseData
@@ -282,6 +282,11 @@ func (o MetricCountsHourlyResponseData) ToMap() (map[string]interface{}, error) 
 		toSerialize["user_id"] = o.UserId.Get()
 	}
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -313,15 +318,26 @@ func (o *MetricCountsHourlyResponseData) UnmarshalJSON(data []byte) (err error) 
 
 	varMetricCountsHourlyResponseData := _MetricCountsHourlyResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varMetricCountsHourlyResponseData)
+	err = json.Unmarshal(data, &varMetricCountsHourlyResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = MetricCountsHourlyResponseData(varMetricCountsHourlyResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "start_time")
+		delete(additionalProperties, "user_id")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

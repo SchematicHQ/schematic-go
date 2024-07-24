@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,13 +20,14 @@ var _ MappedNullable = &CreateOrUpdateFlagRequestBody{}
 
 // CreateOrUpdateFlagRequestBody struct for CreateOrUpdateFlagRequestBody
 type CreateOrUpdateFlagRequestBody struct {
-	DefaultValue bool           `json:"default_value"`
-	Description  string         `json:"description"`
-	FeatureId    NullableString `json:"feature_id,omitempty"`
-	FlagType     string         `json:"flag_type"`
-	Id           NullableString `json:"id,omitempty"`
-	Key          string         `json:"key"`
-	Name         string         `json:"name"`
+	DefaultValue         bool           `json:"default_value"`
+	Description          string         `json:"description"`
+	FeatureId            NullableString `json:"feature_id,omitempty"`
+	FlagType             string         `json:"flag_type"`
+	Id                   NullableString `json:"id,omitempty"`
+	Key                  string         `json:"key"`
+	Name                 string         `json:"name"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateOrUpdateFlagRequestBody CreateOrUpdateFlagRequestBody
@@ -281,6 +281,11 @@ func (o CreateOrUpdateFlagRequestBody) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["key"] = o.Key
 	toSerialize["name"] = o.Name
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -312,15 +317,26 @@ func (o *CreateOrUpdateFlagRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateOrUpdateFlagRequestBody := _CreateOrUpdateFlagRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateOrUpdateFlagRequestBody)
+	err = json.Unmarshal(data, &varCreateOrUpdateFlagRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateOrUpdateFlagRequestBody(varCreateOrUpdateFlagRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "default_value")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "feature_id")
+		delete(additionalProperties, "flag_type")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

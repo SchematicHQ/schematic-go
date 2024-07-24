@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,15 +21,16 @@ var _ MappedNullable = &ApiKeyCreateResponseData{}
 
 // ApiKeyCreateResponseData The created resource
 type ApiKeyCreateResponseData struct {
-	CreatedAt     time.Time      `json:"created_at"`
-	Description   NullableString `json:"description,omitempty"`
-	EnvironmentId NullableString `json:"environment_id,omitempty"`
-	Id            string         `json:"id"`
-	LastUsedAt    NullableTime   `json:"last_used_at,omitempty"`
-	Name          string         `json:"name"`
-	Scopes        []string       `json:"scopes"`
-	Secret        string         `json:"secret"`
-	UpdatedAt     time.Time      `json:"updated_at"`
+	CreatedAt            time.Time      `json:"created_at"`
+	Description          NullableString `json:"description,omitempty"`
+	EnvironmentId        NullableString `json:"environment_id,omitempty"`
+	Id                   string         `json:"id"`
+	LastUsedAt           NullableTime   `json:"last_used_at,omitempty"`
+	Name                 string         `json:"name"`
+	Scopes               []string       `json:"scopes"`
+	Secret               string         `json:"secret"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ApiKeyCreateResponseData ApiKeyCreateResponseData
@@ -356,6 +356,11 @@ func (o ApiKeyCreateResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["scopes"] = o.Scopes
 	toSerialize["secret"] = o.Secret
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -388,15 +393,28 @@ func (o *ApiKeyCreateResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varApiKeyCreateResponseData := _ApiKeyCreateResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varApiKeyCreateResponseData)
+	err = json.Unmarshal(data, &varApiKeyCreateResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ApiKeyCreateResponseData(varApiKeyCreateResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "last_used_at")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "scopes")
+		delete(additionalProperties, "secret")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,10 +20,11 @@ var _ MappedNullable = &BillingProductPlanResponseData{}
 
 // BillingProductPlanResponseData The updated resource
 type BillingProductPlanResponseData struct {
-	AccountId        string `json:"account_id"`
-	BillingProductId string `json:"billing_product_id"`
-	EnvironmentId    string `json:"environment_id"`
-	PlanId           string `json:"plan_id"`
+	AccountId            string `json:"account_id"`
+	BillingProductId     string `json:"billing_product_id"`
+	EnvironmentId        string `json:"environment_id"`
+	PlanId               string `json:"plan_id"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BillingProductPlanResponseData BillingProductPlanResponseData
@@ -160,6 +160,11 @@ func (o BillingProductPlanResponseData) ToMap() (map[string]interface{}, error) 
 	toSerialize["billing_product_id"] = o.BillingProductId
 	toSerialize["environment_id"] = o.EnvironmentId
 	toSerialize["plan_id"] = o.PlanId
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -190,15 +195,23 @@ func (o *BillingProductPlanResponseData) UnmarshalJSON(data []byte) (err error) 
 
 	varBillingProductPlanResponseData := _BillingProductPlanResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varBillingProductPlanResponseData)
+	err = json.Unmarshal(data, &varBillingProductPlanResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = BillingProductPlanResponseData(varBillingProductPlanResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "account_id")
+		delete(additionalProperties, "billing_product_id")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "plan_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

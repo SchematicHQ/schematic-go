@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -30,8 +29,9 @@ type UpsertUserSubRequestBody struct {
 	LastSeenAt NullableTime      `json:"last_seen_at,omitempty"`
 	Name       NullableString    `json:"name,omitempty"`
 	// A map of trait names to trait values
-	Traits     map[string]interface{} `json:"traits,omitempty"`
-	UpdateOnly NullableBool           `json:"update_only,omitempty"`
+	Traits               map[string]interface{} `json:"traits,omitempty"`
+	UpdateOnly           NullableBool           `json:"update_only,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpsertUserSubRequestBody UpsertUserSubRequestBody
@@ -354,6 +354,11 @@ func (o UpsertUserSubRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.UpdateOnly.IsSet() {
 		toSerialize["update_only"] = o.UpdateOnly.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -381,15 +386,26 @@ func (o *UpsertUserSubRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varUpsertUserSubRequestBody := _UpsertUserSubRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpsertUserSubRequestBody)
+	err = json.Unmarshal(data, &varUpsertUserSubRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UpsertUserSubRequestBody(varUpsertUserSubRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "keys")
+		delete(additionalProperties, "last_seen_at")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "traits")
+		delete(additionalProperties, "update_only")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

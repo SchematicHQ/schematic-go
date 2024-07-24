@@ -4,6 +4,7 @@ templateDir: templates
 outputDir: api
 enablePostProcessFile: true
 additionalProperties:
+  disallowAdditionalPropertiesIfNotPresent: false
   generateInterfaces: true
   goImportAlias: schematicapi
   httpUserAgent: schematic-go@1.0.6

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -22,8 +21,9 @@ var _ MappedNullable = &ListCrmProductsResponse{}
 // ListCrmProductsResponse struct for ListCrmProductsResponse
 type ListCrmProductsResponse struct {
 	// The returned resources
-	Data   []CrmProductResponseData `json:"data"`
-	Params ListCrmProductsParams    `json:"params"`
+	Data                 []CrmProductResponseData `json:"data"`
+	Params               ListCrmProductsParams    `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ListCrmProductsResponse ListCrmProductsResponse
@@ -107,6 +107,11 @@ func (o ListCrmProductsResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -135,15 +140,21 @@ func (o *ListCrmProductsResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varListCrmProductsResponse := _ListCrmProductsResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varListCrmProductsResponse)
+	err = json.Unmarshal(data, &varListCrmProductsResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ListCrmProductsResponse(varListCrmProductsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

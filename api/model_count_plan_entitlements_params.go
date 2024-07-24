@@ -25,11 +25,14 @@ type CountPlanEntitlementsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset  *int32   `json:"offset,omitempty"`
-	PlanId  *string  `json:"plan_id,omitempty"`
-	PlanIds []string `json:"plan_ids,omitempty"`
-	Q       *string  `json:"q,omitempty"`
+	Offset               *int32   `json:"offset,omitempty"`
+	PlanId               *string  `json:"plan_id,omitempty"`
+	PlanIds              []string `json:"plan_ids,omitempty"`
+	Q                    *string  `json:"q,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CountPlanEntitlementsParams CountPlanEntitlementsParams
 
 // NewCountPlanEntitlementsParams instantiates a new CountPlanEntitlementsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -338,7 +341,40 @@ func (o CountPlanEntitlementsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Q) {
 		toSerialize["q"] = o.Q
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CountPlanEntitlementsParams) UnmarshalJSON(data []byte) (err error) {
+	varCountPlanEntitlementsParams := _CountPlanEntitlementsParams{}
+
+	err = json.Unmarshal(data, &varCountPlanEntitlementsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CountPlanEntitlementsParams(varCountPlanEntitlementsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "feature_id")
+		delete(additionalProperties, "feature_ids")
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "plan_ids")
+		delete(additionalProperties, "q")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCountPlanEntitlementsParams struct {

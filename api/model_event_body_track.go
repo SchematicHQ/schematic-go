@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -28,7 +27,8 @@ type EventBodyTrack struct {
 	// A map of trait names to trait values
 	Traits map[string]interface{} `json:"traits,omitempty"`
 	// Key-value pairs to identify user associated with track event
-	User *map[string]string `json:"user,omitempty"`
+	User                 *map[string]string `json:"user,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EventBodyTrack EventBodyTrack
@@ -191,6 +191,11 @@ func (o EventBodyTrack) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.User) {
 		toSerialize["user"] = o.User
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -218,15 +223,23 @@ func (o *EventBodyTrack) UnmarshalJSON(data []byte) (err error) {
 
 	varEventBodyTrack := _EventBodyTrack{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEventBodyTrack)
+	err = json.Unmarshal(data, &varEventBodyTrack)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EventBodyTrack(varEventBodyTrack)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company")
+		delete(additionalProperties, "event")
+		delete(additionalProperties, "traits")
+		delete(additionalProperties, "user")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

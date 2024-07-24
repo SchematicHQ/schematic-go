@@ -19,11 +19,14 @@ var _ MappedNullable = &UpdateComponentRequestBody{}
 
 // UpdateComponentRequestBody struct for UpdateComponentRequestBody
 type UpdateComponentRequestBody struct {
-	Ast        []int32        `json:"ast,omitempty"`
-	EntityType NullableString `json:"entity_type,omitempty"`
-	Name       NullableString `json:"name,omitempty"`
-	State      NullableString `json:"state,omitempty"`
+	Ast                  []int32        `json:"ast,omitempty"`
+	EntityType           NullableString `json:"entity_type,omitempty"`
+	Name                 NullableString `json:"name,omitempty"`
+	State                NullableString `json:"state,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateComponentRequestBody UpdateComponentRequestBody
 
 // NewUpdateComponentRequestBody instantiates a new UpdateComponentRequestBody object
 // This constructor will assign default values to properties that have it defined,
@@ -226,7 +229,36 @@ func (o UpdateComponentRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.State.IsSet() {
 		toSerialize["state"] = o.State.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateComponentRequestBody) UnmarshalJSON(data []byte) (err error) {
+	varUpdateComponentRequestBody := _UpdateComponentRequestBody{}
+
+	err = json.Unmarshal(data, &varUpdateComponentRequestBody)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateComponentRequestBody(varUpdateComponentRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ast")
+		delete(additionalProperties, "entity_type")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "state")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateComponentRequestBody struct {

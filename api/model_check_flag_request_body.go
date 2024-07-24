@@ -19,9 +19,12 @@ var _ MappedNullable = &CheckFlagRequestBody{}
 
 // CheckFlagRequestBody struct for CheckFlagRequestBody
 type CheckFlagRequestBody struct {
-	Company map[string]string `json:"company,omitempty"`
-	User    map[string]string `json:"user,omitempty"`
+	Company              map[string]string `json:"company,omitempty"`
+	User                 map[string]string `json:"user,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CheckFlagRequestBody CheckFlagRequestBody
 
 // NewCheckFlagRequestBody instantiates a new CheckFlagRequestBody object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o CheckFlagRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.User != nil {
 		toSerialize["user"] = o.User
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CheckFlagRequestBody) UnmarshalJSON(data []byte) (err error) {
+	varCheckFlagRequestBody := _CheckFlagRequestBody{}
+
+	err = json.Unmarshal(data, &varCheckFlagRequestBody)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CheckFlagRequestBody(varCheckFlagRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company")
+		delete(additionalProperties, "user")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCheckFlagRequestBody struct {

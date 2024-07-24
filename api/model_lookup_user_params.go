@@ -19,8 +19,11 @@ var _ MappedNullable = &LookupUserParams{}
 
 // LookupUserParams Input parameters
 type LookupUserParams struct {
-	Keys map[string]interface{} `json:"keys,omitempty"`
+	Keys                 map[string]interface{} `json:"keys,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _LookupUserParams LookupUserParams
 
 // NewLookupUserParams instantiates a new LookupUserParams object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o LookupUserParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Keys) {
 		toSerialize["keys"] = o.Keys
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *LookupUserParams) UnmarshalJSON(data []byte) (err error) {
+	varLookupUserParams := _LookupUserParams{}
+
+	err = json.Unmarshal(data, &varLookupUserParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = LookupUserParams(varLookupUserParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "keys")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableLookupUserParams struct {

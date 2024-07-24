@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &IssueTemporaryAccessTokenRequestBody{}
 
 // IssueTemporaryAccessTokenRequestBody struct for IssueTemporaryAccessTokenRequestBody
 type IssueTemporaryAccessTokenRequestBody struct {
-	Lookup       map[string]string `json:"lookup"`
-	ResourceType string            `json:"resource_type"`
+	Lookup               map[string]string `json:"lookup"`
+	ResourceType         string            `json:"resource_type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _IssueTemporaryAccessTokenRequestBody IssueTemporaryAccessTokenRequestBody
@@ -106,6 +106,11 @@ func (o IssueTemporaryAccessTokenRequestBody) ToMap() (map[string]interface{}, e
 	toSerialize := map[string]interface{}{}
 	toSerialize["lookup"] = o.Lookup
 	toSerialize["resource_type"] = o.ResourceType
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *IssueTemporaryAccessTokenRequestBody) UnmarshalJSON(data []byte) (err e
 
 	varIssueTemporaryAccessTokenRequestBody := _IssueTemporaryAccessTokenRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varIssueTemporaryAccessTokenRequestBody)
+	err = json.Unmarshal(data, &varIssueTemporaryAccessTokenRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = IssueTemporaryAccessTokenRequestBody(varIssueTemporaryAccessTokenRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "lookup")
+		delete(additionalProperties, "resource_type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

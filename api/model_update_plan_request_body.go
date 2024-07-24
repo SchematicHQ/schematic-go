@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,10 +20,11 @@ var _ MappedNullable = &UpdatePlanRequestBody{}
 
 // UpdatePlanRequestBody struct for UpdatePlanRequestBody
 type UpdatePlanRequestBody struct {
-	AudienceType string         `json:"audience_type"`
-	Description  NullableString `json:"description,omitempty"`
-	Name         string         `json:"name"`
-	PlanType     NullableString `json:"plan_type,omitempty"`
+	AudienceType         string         `json:"audience_type"`
+	Description          NullableString `json:"description,omitempty"`
+	Name                 string         `json:"name"`
+	PlanType             NullableString `json:"plan_type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpdatePlanRequestBody UpdatePlanRequestBody
@@ -200,6 +200,11 @@ func (o UpdatePlanRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.PlanType.IsSet() {
 		toSerialize["plan_type"] = o.PlanType.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -228,15 +233,23 @@ func (o *UpdatePlanRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varUpdatePlanRequestBody := _UpdatePlanRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpdatePlanRequestBody)
+	err = json.Unmarshal(data, &varUpdatePlanRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UpdatePlanRequestBody(varUpdatePlanRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "audience_type")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "plan_type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

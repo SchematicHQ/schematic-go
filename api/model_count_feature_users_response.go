@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &CountFeatureUsersResponse{}
 
 // CountFeatureUsersResponse struct for CountFeatureUsersResponse
 type CountFeatureUsersResponse struct {
-	Data   CountResponse           `json:"data"`
-	Params CountFeatureUsersParams `json:"params"`
+	Data                 CountResponse           `json:"data"`
+	Params               CountFeatureUsersParams `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CountFeatureUsersResponse CountFeatureUsersResponse
@@ -106,6 +106,11 @@ func (o CountFeatureUsersResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *CountFeatureUsersResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varCountFeatureUsersResponse := _CountFeatureUsersResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCountFeatureUsersResponse)
+	err = json.Unmarshal(data, &varCountFeatureUsersResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CountFeatureUsersResponse(varCountFeatureUsersResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

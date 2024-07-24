@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,7 +20,8 @@ var _ MappedNullable = &FeatureUsageDetailResponseData{}
 
 // FeatureUsageDetailResponseData struct for FeatureUsageDetailResponseData
 type FeatureUsageDetailResponseData struct {
-	Features []FeatureUsageResponseData `json:"features"`
+	Features             []FeatureUsageResponseData `json:"features"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FeatureUsageDetailResponseData FeatureUsageDetailResponseData
@@ -79,6 +79,11 @@ func (o FeatureUsageDetailResponseData) MarshalJSON() ([]byte, error) {
 func (o FeatureUsageDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["features"] = o.Features
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -106,15 +111,20 @@ func (o *FeatureUsageDetailResponseData) UnmarshalJSON(data []byte) (err error) 
 
 	varFeatureUsageDetailResponseData := _FeatureUsageDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFeatureUsageDetailResponseData)
+	err = json.Unmarshal(data, &varFeatureUsageDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FeatureUsageDetailResponseData(varFeatureUsageDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "features")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

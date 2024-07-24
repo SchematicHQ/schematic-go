@@ -19,9 +19,12 @@ var _ MappedNullable = &UpdateApiKeyRequestBody{}
 
 // UpdateApiKeyRequestBody struct for UpdateApiKeyRequestBody
 type UpdateApiKeyRequestBody struct {
-	Description NullableString `json:"description,omitempty"`
-	Name        NullableString `json:"name,omitempty"`
+	Description          NullableString `json:"description,omitempty"`
+	Name                 NullableString `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateApiKeyRequestBody UpdateApiKeyRequestBody
 
 // NewUpdateApiKeyRequestBody instantiates a new UpdateApiKeyRequestBody object
 // This constructor will assign default values to properties that have it defined,
@@ -142,7 +145,34 @@ func (o UpdateApiKeyRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.Name.IsSet() {
 		toSerialize["name"] = o.Name.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateApiKeyRequestBody) UnmarshalJSON(data []byte) (err error) {
+	varUpdateApiKeyRequestBody := _UpdateApiKeyRequestBody{}
+
+	err = json.Unmarshal(data, &varUpdateApiKeyRequestBody)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateApiKeyRequestBody(varUpdateApiKeyRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateApiKeyRequestBody struct {

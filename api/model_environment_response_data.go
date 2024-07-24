@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,11 +21,12 @@ var _ MappedNullable = &EnvironmentResponseData{}
 
 // EnvironmentResponseData struct for EnvironmentResponseData
 type EnvironmentResponseData struct {
-	CreatedAt       time.Time `json:"created_at"`
-	EnvironmentType string    `json:"environment_type"`
-	Id              string    `json:"id"`
-	Name            string    `json:"name"`
-	UpdatedAt       time.Time `json:"updated_at"`
+	CreatedAt            time.Time `json:"created_at"`
+	EnvironmentType      string    `json:"environment_type"`
+	Id                   string    `json:"id"`
+	Name                 string    `json:"name"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EnvironmentResponseData EnvironmentResponseData
@@ -188,6 +188,11 @@ func (o EnvironmentResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -219,15 +224,24 @@ func (o *EnvironmentResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varEnvironmentResponseData := _EnvironmentResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEnvironmentResponseData)
+	err = json.Unmarshal(data, &varEnvironmentResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EnvironmentResponseData(varEnvironmentResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_type")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

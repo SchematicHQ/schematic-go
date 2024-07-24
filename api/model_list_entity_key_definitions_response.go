@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -22,8 +21,9 @@ var _ MappedNullable = &ListEntityKeyDefinitionsResponse{}
 // ListEntityKeyDefinitionsResponse struct for ListEntityKeyDefinitionsResponse
 type ListEntityKeyDefinitionsResponse struct {
 	// The returned resources
-	Data   []EntityKeyDefinitionResponseData `json:"data"`
-	Params ListEntityKeyDefinitionsParams    `json:"params"`
+	Data                 []EntityKeyDefinitionResponseData `json:"data"`
+	Params               ListEntityKeyDefinitionsParams    `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ListEntityKeyDefinitionsResponse ListEntityKeyDefinitionsResponse
@@ -107,6 +107,11 @@ func (o ListEntityKeyDefinitionsResponse) ToMap() (map[string]interface{}, error
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -135,15 +140,21 @@ func (o *ListEntityKeyDefinitionsResponse) UnmarshalJSON(data []byte) (err error
 
 	varListEntityKeyDefinitionsResponse := _ListEntityKeyDefinitionsResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varListEntityKeyDefinitionsResponse)
+	err = json.Unmarshal(data, &varListEntityKeyDefinitionsResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ListEntityKeyDefinitionsResponse(varListEntityKeyDefinitionsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

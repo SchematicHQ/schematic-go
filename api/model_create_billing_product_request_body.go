@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,11 +20,12 @@ var _ MappedNullable = &CreateBillingProductRequestBody{}
 
 // CreateBillingProductRequestBody struct for CreateBillingProductRequestBody
 type CreateBillingProductRequestBody struct {
-	Currency   string  `json:"currency"`
-	ExternalId string  `json:"external_id"`
-	Name       string  `json:"name"`
-	Price      float32 `json:"price"`
-	Quantity   int32   `json:"quantity"`
+	Currency             string  `json:"currency"`
+	ExternalId           string  `json:"external_id"`
+	Name                 string  `json:"name"`
+	Price                float32 `json:"price"`
+	Quantity             int32   `json:"quantity"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateBillingProductRequestBody CreateBillingProductRequestBody
@@ -187,6 +187,11 @@ func (o CreateBillingProductRequestBody) ToMap() (map[string]interface{}, error)
 	toSerialize["name"] = o.Name
 	toSerialize["price"] = o.Price
 	toSerialize["quantity"] = o.Quantity
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -218,15 +223,24 @@ func (o *CreateBillingProductRequestBody) UnmarshalJSON(data []byte) (err error)
 
 	varCreateBillingProductRequestBody := _CreateBillingProductRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateBillingProductRequestBody)
+	err = json.Unmarshal(data, &varCreateBillingProductRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateBillingProductRequestBody(varCreateBillingProductRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "currency")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "price")
+		delete(additionalProperties, "quantity")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

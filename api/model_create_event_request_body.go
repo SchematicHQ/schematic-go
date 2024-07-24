@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -26,7 +25,8 @@ type CreateEventRequestBody struct {
 	// Either 'identify' or 'track'
 	EventType string `json:"event_type"`
 	// Optionally provide a timestamp at which the event was sent to Schematic
-	SentAt NullableTime `json:"sent_at,omitempty"`
+	SentAt               NullableTime `json:"sent_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateEventRequestBody CreateEventRequestBody
@@ -165,6 +165,11 @@ func (o CreateEventRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.SentAt.IsSet() {
 		toSerialize["sent_at"] = o.SentAt.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -192,15 +197,22 @@ func (o *CreateEventRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateEventRequestBody := _CreateEventRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateEventRequestBody)
+	err = json.Unmarshal(data, &varCreateEventRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateEventRequestBody(varCreateEventRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "body")
+		delete(additionalProperties, "event_type")
+		delete(additionalProperties, "sent_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

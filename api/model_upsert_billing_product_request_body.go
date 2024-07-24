@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,7 +20,8 @@ var _ MappedNullable = &UpsertBillingProductRequestBody{}
 
 // UpsertBillingProductRequestBody struct for UpsertBillingProductRequestBody
 type UpsertBillingProductRequestBody struct {
-	BillingProductID string `json:"BillingProductID"`
+	BillingProductID     string `json:"BillingProductID"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpsertBillingProductRequestBody UpsertBillingProductRequestBody
@@ -79,6 +79,11 @@ func (o UpsertBillingProductRequestBody) MarshalJSON() ([]byte, error) {
 func (o UpsertBillingProductRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["BillingProductID"] = o.BillingProductID
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -106,15 +111,20 @@ func (o *UpsertBillingProductRequestBody) UnmarshalJSON(data []byte) (err error)
 
 	varUpsertBillingProductRequestBody := _UpsertBillingProductRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpsertBillingProductRequestBody)
+	err = json.Unmarshal(data, &varUpsertBillingProductRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UpsertBillingProductRequestBody(varUpsertBillingProductRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "BillingProductID")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

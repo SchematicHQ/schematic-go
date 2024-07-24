@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,13 +21,14 @@ var _ MappedNullable = &CompanyResponseData{}
 
 // CompanyResponseData struct for CompanyResponseData
 type CompanyResponseData struct {
-	CreatedAt     time.Time      `json:"created_at"`
-	EnvironmentId string         `json:"environment_id"`
-	Id            string         `json:"id"`
-	LastSeenAt    NullableTime   `json:"last_seen_at,omitempty"`
-	LogoUrl       NullableString `json:"logo_url,omitempty"`
-	Name          string         `json:"name"`
-	UpdatedAt     time.Time      `json:"updated_at"`
+	CreatedAt            time.Time      `json:"created_at"`
+	EnvironmentId        string         `json:"environment_id"`
+	Id                   string         `json:"id"`
+	LastSeenAt           NullableTime   `json:"last_seen_at,omitempty"`
+	LogoUrl              NullableString `json:"logo_url,omitempty"`
+	Name                 string         `json:"name"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CompanyResponseData CompanyResponseData
@@ -282,6 +282,11 @@ func (o CompanyResponseData) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["name"] = o.Name
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -313,15 +318,26 @@ func (o *CompanyResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varCompanyResponseData := _CompanyResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCompanyResponseData)
+	err = json.Unmarshal(data, &varCompanyResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CompanyResponseData(varCompanyResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "last_seen_at")
+		delete(additionalProperties, "logo_url")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

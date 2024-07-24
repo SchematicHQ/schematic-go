@@ -19,8 +19,11 @@ var _ MappedNullable = &LookupCompanyParams{}
 
 // LookupCompanyParams Input parameters
 type LookupCompanyParams struct {
-	Keys map[string]interface{} `json:"keys,omitempty"`
+	Keys                 map[string]interface{} `json:"keys,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _LookupCompanyParams LookupCompanyParams
 
 // NewLookupCompanyParams instantiates a new LookupCompanyParams object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o LookupCompanyParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Keys) {
 		toSerialize["keys"] = o.Keys
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *LookupCompanyParams) UnmarshalJSON(data []byte) (err error) {
+	varLookupCompanyParams := _LookupCompanyParams{}
+
+	err = json.Unmarshal(data, &varLookupCompanyParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = LookupCompanyParams(varLookupCompanyParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "keys")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableLookupCompanyParams struct {

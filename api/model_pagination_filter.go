@@ -22,8 +22,11 @@ type PaginationFilter struct {
 	// Page limit (default 100)
 	Limit NullableInt32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset NullableInt32 `json:"offset,omitempty"`
+	Offset               NullableInt32 `json:"offset,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PaginationFilter PaginationFilter
 
 // NewPaginationFilter instantiates a new PaginationFilter object
 // This constructor will assign default values to properties that have it defined,
@@ -144,7 +147,34 @@ func (o PaginationFilter) ToMap() (map[string]interface{}, error) {
 	if o.Offset.IsSet() {
 		toSerialize["offset"] = o.Offset.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *PaginationFilter) UnmarshalJSON(data []byte) (err error) {
+	varPaginationFilter := _PaginationFilter{}
+
+	err = json.Unmarshal(data, &varPaginationFilter)
+
+	if err != nil {
+		return err
+	}
+
+	*o = PaginationFilter(varPaginationFilter)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePaginationFilter struct {

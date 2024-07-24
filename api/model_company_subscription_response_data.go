@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -27,6 +26,7 @@ type CompanySubscriptionResponseData struct {
 	Interval               string                       `json:"interval"`
 	Products               []BillingProductResponseData `json:"products"`
 	SubscriptionExternalId string                       `json:"subscription_external_id"`
+	AdditionalProperties   map[string]interface{}
 }
 
 type _CompanySubscriptionResponseData CompanySubscriptionResponseData
@@ -208,6 +208,11 @@ func (o CompanySubscriptionResponseData) ToMap() (map[string]interface{}, error)
 	toSerialize["interval"] = o.Interval
 	toSerialize["products"] = o.Products
 	toSerialize["subscription_external_id"] = o.SubscriptionExternalId
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -238,15 +243,24 @@ func (o *CompanySubscriptionResponseData) UnmarshalJSON(data []byte) (err error)
 
 	varCompanySubscriptionResponseData := _CompanySubscriptionResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCompanySubscriptionResponseData)
+	err = json.Unmarshal(data, &varCompanySubscriptionResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CompanySubscriptionResponseData(varCompanySubscriptionResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "customer_external_id")
+		delete(additionalProperties, "expired_at")
+		delete(additionalProperties, "interval")
+		delete(additionalProperties, "products")
+		delete(additionalProperties, "subscription_external_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

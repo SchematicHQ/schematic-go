@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -26,7 +25,8 @@ type EventBodyIdentifyCompany struct {
 	// The display name of the company; required only if it is a new company
 	Name *string `json:"name,omitempty"`
 	// A map of trait names to trait values
-	Traits map[string]interface{} `json:"traits,omitempty"`
+	Traits               map[string]interface{} `json:"traits,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EventBodyIdentifyCompany EventBodyIdentifyCompany
@@ -154,6 +154,11 @@ func (o EventBodyIdentifyCompany) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Traits) {
 		toSerialize["traits"] = o.Traits
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -181,15 +186,22 @@ func (o *EventBodyIdentifyCompany) UnmarshalJSON(data []byte) (err error) {
 
 	varEventBodyIdentifyCompany := _EventBodyIdentifyCompany{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEventBodyIdentifyCompany)
+	err = json.Unmarshal(data, &varEventBodyIdentifyCompany)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EventBodyIdentifyCompany(varEventBodyIdentifyCompany)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "keys")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "traits")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

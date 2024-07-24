@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -32,9 +31,10 @@ type CompanyDetailResponseData struct {
 	Name          string                          `json:"name"`
 	Plans         []PreviewObject                 `json:"plans"`
 	// A map of trait names to trait values
-	Traits    map[string]interface{} `json:"traits,omitempty"`
-	UpdatedAt time.Time              `json:"updated_at"`
-	UserCount int32                  `json:"user_count"`
+	Traits               map[string]interface{} `json:"traits,omitempty"`
+	UpdatedAt            time.Time              `json:"updated_at"`
+	UserCount            int32                  `json:"user_count"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CompanyDetailResponseData CompanyDetailResponseData
@@ -427,6 +427,11 @@ func (o CompanyDetailResponseData) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["user_count"] = o.UserCount
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -462,15 +467,31 @@ func (o *CompanyDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varCompanyDetailResponseData := _CompanyDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCompanyDetailResponseData)
+	err = json.Unmarshal(data, &varCompanyDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CompanyDetailResponseData(varCompanyDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "entity_traits")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "keys")
+		delete(additionalProperties, "last_seen_at")
+		delete(additionalProperties, "logo_url")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "plans")
+		delete(additionalProperties, "traits")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "user_count")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

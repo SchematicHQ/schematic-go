@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,21 +21,22 @@ var _ MappedNullable = &PlanEntitlementResponseData{}
 
 // PlanEntitlementResponseData The updated resource
 type PlanEntitlementResponseData struct {
-	CreatedAt     time.Time                          `json:"created_at"`
-	EnvironmentId string                             `json:"environment_id"`
-	Feature       *FeatureResponseData               `json:"feature,omitempty"`
-	FeatureId     string                             `json:"feature_id"`
-	Id            string                             `json:"id"`
-	MetricPeriod  NullableString                     `json:"metric_period,omitempty"`
-	Plan          *PlanResponseData                  `json:"plan,omitempty"`
-	PlanId        string                             `json:"plan_id"`
-	RuleId        string                             `json:"rule_id"`
-	UpdatedAt     time.Time                          `json:"updated_at"`
-	ValueBool     NullableBool                       `json:"value_bool,omitempty"`
-	ValueNumeric  NullableInt32                      `json:"value_numeric,omitempty"`
-	ValueTrait    *EntityTraitDefinitionResponseData `json:"value_trait,omitempty"`
-	ValueTraitId  NullableString                     `json:"value_trait_id,omitempty"`
-	ValueType     string                             `json:"value_type"`
+	CreatedAt            time.Time                          `json:"created_at"`
+	EnvironmentId        string                             `json:"environment_id"`
+	Feature              *FeatureResponseData               `json:"feature,omitempty"`
+	FeatureId            string                             `json:"feature_id"`
+	Id                   string                             `json:"id"`
+	MetricPeriod         NullableString                     `json:"metric_period,omitempty"`
+	Plan                 *PlanResponseData                  `json:"plan,omitempty"`
+	PlanId               string                             `json:"plan_id"`
+	RuleId               string                             `json:"rule_id"`
+	UpdatedAt            time.Time                          `json:"updated_at"`
+	ValueBool            NullableBool                       `json:"value_bool,omitempty"`
+	ValueNumeric         NullableInt32                      `json:"value_numeric,omitempty"`
+	ValueTrait           *EntityTraitDefinitionResponseData `json:"value_trait,omitempty"`
+	ValueTraitId         NullableString                     `json:"value_trait_id,omitempty"`
+	ValueType            string                             `json:"value_type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _PlanEntitlementResponseData PlanEntitlementResponseData
@@ -565,6 +565,11 @@ func (o PlanEntitlementResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["value_trait_id"] = o.ValueTraitId.Get()
 	}
 	toSerialize["value_type"] = o.ValueType
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -599,15 +604,34 @@ func (o *PlanEntitlementResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varPlanEntitlementResponseData := _PlanEntitlementResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varPlanEntitlementResponseData)
+	err = json.Unmarshal(data, &varPlanEntitlementResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = PlanEntitlementResponseData(varPlanEntitlementResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "feature")
+		delete(additionalProperties, "feature_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "metric_period")
+		delete(additionalProperties, "plan")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "rule_id")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "value_bool")
+		delete(additionalProperties, "value_numeric")
+		delete(additionalProperties, "value_trait")
+		delete(additionalProperties, "value_trait_id")
+		delete(additionalProperties, "value_type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

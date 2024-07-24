@@ -27,8 +27,11 @@ type ListUsersParams struct {
 	Offset *int32  `json:"offset,omitempty"`
 	PlanId *string `json:"plan_id,omitempty"`
 	// Search filter
-	Q *string `json:"q,omitempty"`
+	Q                    *string `json:"q,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListUsersParams ListUsersParams
 
 // NewListUsersParams instantiates a new ListUsersParams object
 // This constructor will assign default values to properties that have it defined,
@@ -267,7 +270,38 @@ func (o ListUsersParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Q) {
 		toSerialize["q"] = o.Q
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListUsersParams) UnmarshalJSON(data []byte) (err error) {
+	varListUsersParams := _ListUsersParams{}
+
+	err = json.Unmarshal(data, &varListUsersParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListUsersParams(varListUsersParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "q")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListUsersParams struct {

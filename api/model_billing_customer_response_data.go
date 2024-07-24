@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,14 +21,15 @@ var _ MappedNullable = &BillingCustomerResponseData{}
 
 // BillingCustomerResponseData The created resource
 type BillingCustomerResponseData struct {
-	CompanyId      NullableString `json:"company_id,omitempty"`
-	DeletedAt      NullableTime   `json:"deleted_at,omitempty"`
-	Email          string         `json:"email"`
-	ExternalId     string         `json:"external_id"`
-	FailedToImport bool           `json:"failed_to_import"`
-	Id             string         `json:"id"`
-	Name           string         `json:"name"`
-	UpdatedAt      time.Time      `json:"updated_at"`
+	CompanyId            NullableString `json:"company_id,omitempty"`
+	DeletedAt            NullableTime   `json:"deleted_at,omitempty"`
+	Email                string         `json:"email"`
+	ExternalId           string         `json:"external_id"`
+	FailedToImport       bool           `json:"failed_to_import"`
+	Id                   string         `json:"id"`
+	Name                 string         `json:"name"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BillingCustomerResponseData BillingCustomerResponseData
@@ -309,6 +309,11 @@ func (o BillingCustomerResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -341,15 +346,27 @@ func (o *BillingCustomerResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varBillingCustomerResponseData := _BillingCustomerResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varBillingCustomerResponseData)
+	err = json.Unmarshal(data, &varBillingCustomerResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = BillingCustomerResponseData(varBillingCustomerResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "deleted_at")
+		delete(additionalProperties, "email")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "failed_to_import")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

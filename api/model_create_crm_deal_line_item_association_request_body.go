@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &CreateCrmDealLineItemAssociationRequestBody{}
 
 // CreateCrmDealLineItemAssociationRequestBody struct for CreateCrmDealLineItemAssociationRequestBody
 type CreateCrmDealLineItemAssociationRequestBody struct {
-	DealExternalId     string `json:"deal_external_id"`
-	LineItemExternalId string `json:"line_item_external_id"`
+	DealExternalId       string `json:"deal_external_id"`
+	LineItemExternalId   string `json:"line_item_external_id"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateCrmDealLineItemAssociationRequestBody CreateCrmDealLineItemAssociationRequestBody
@@ -106,6 +106,11 @@ func (o CreateCrmDealLineItemAssociationRequestBody) ToMap() (map[string]interfa
 	toSerialize := map[string]interface{}{}
 	toSerialize["deal_external_id"] = o.DealExternalId
 	toSerialize["line_item_external_id"] = o.LineItemExternalId
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *CreateCrmDealLineItemAssociationRequestBody) UnmarshalJSON(data []byte)
 
 	varCreateCrmDealLineItemAssociationRequestBody := _CreateCrmDealLineItemAssociationRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateCrmDealLineItemAssociationRequestBody)
+	err = json.Unmarshal(data, &varCreateCrmDealLineItemAssociationRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateCrmDealLineItemAssociationRequestBody(varCreateCrmDealLineItemAssociationRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "deal_external_id")
+		delete(additionalProperties, "line_item_external_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

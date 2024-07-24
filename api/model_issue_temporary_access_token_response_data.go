@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,14 +21,15 @@ var _ MappedNullable = &IssueTemporaryAccessTokenResponseData{}
 
 // IssueTemporaryAccessTokenResponseData The created resource
 type IssueTemporaryAccessTokenResponseData struct {
-	ApiKeyId      string    `json:"api_key_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	EnvironmentId string    `json:"environment_id"`
-	ExpiredAt     time.Time `json:"expired_at"`
-	Id            string    `json:"id"`
-	ResourceType  string    `json:"resource_type"`
-	Token         string    `json:"token"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	ApiKeyId             string    `json:"api_key_id"`
+	CreatedAt            time.Time `json:"created_at"`
+	EnvironmentId        string    `json:"environment_id"`
+	ExpiredAt            time.Time `json:"expired_at"`
+	Id                   string    `json:"id"`
+	ResourceType         string    `json:"resource_type"`
+	Token                string    `json:"token"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _IssueTemporaryAccessTokenResponseData IssueTemporaryAccessTokenResponseData
@@ -269,6 +269,11 @@ func (o IssueTemporaryAccessTokenResponseData) ToMap() (map[string]interface{}, 
 	toSerialize["resource_type"] = o.ResourceType
 	toSerialize["token"] = o.Token
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -303,15 +308,27 @@ func (o *IssueTemporaryAccessTokenResponseData) UnmarshalJSON(data []byte) (err 
 
 	varIssueTemporaryAccessTokenResponseData := _IssueTemporaryAccessTokenResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varIssueTemporaryAccessTokenResponseData)
+	err = json.Unmarshal(data, &varIssueTemporaryAccessTokenResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = IssueTemporaryAccessTokenResponseData(varIssueTemporaryAccessTokenResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "api_key_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "expired_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "resource_type")
+		delete(additionalProperties, "token")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

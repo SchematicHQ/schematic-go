@@ -23,10 +23,13 @@ type ListWebhookEventsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int32  `json:"offset,omitempty"`
-	Q         *string `json:"q,omitempty"`
-	WebhookId *string `json:"webhook_id,omitempty"`
+	Offset               *int32  `json:"offset,omitempty"`
+	Q                    *string `json:"q,omitempty"`
+	WebhookId            *string `json:"webhook_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListWebhookEventsParams ListWebhookEventsParams
 
 // NewListWebhookEventsParams instantiates a new ListWebhookEventsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -230,7 +233,37 @@ func (o ListWebhookEventsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.WebhookId) {
 		toSerialize["webhook_id"] = o.WebhookId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListWebhookEventsParams) UnmarshalJSON(data []byte) (err error) {
+	varListWebhookEventsParams := _ListWebhookEventsParams{}
+
+	err = json.Unmarshal(data, &varListWebhookEventsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListWebhookEventsParams(varListWebhookEventsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "q")
+		delete(additionalProperties, "webhook_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListWebhookEventsParams struct {

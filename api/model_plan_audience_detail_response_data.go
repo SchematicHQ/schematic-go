@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,18 +21,19 @@ var _ MappedNullable = &PlanAudienceDetailResponseData{}
 
 // PlanAudienceDetailResponseData The updated resource
 type PlanAudienceDetailResponseData struct {
-	ConditionGroups []RuleConditionGroupDetailResponseData `json:"condition_groups"`
-	Conditions      []RuleConditionDetailResponseData      `json:"conditions"`
-	CreatedAt       time.Time                              `json:"created_at"`
-	EnvironmentId   string                                 `json:"environment_id"`
-	FlagId          NullableString                         `json:"flag_id,omitempty"`
-	Id              string                                 `json:"id"`
-	Name            string                                 `json:"name"`
-	PlanId          NullableString                         `json:"plan_id,omitempty"`
-	Priority        int32                                  `json:"priority"`
-	RuleType        string                                 `json:"rule_type"`
-	UpdatedAt       time.Time                              `json:"updated_at"`
-	Value           bool                                   `json:"value"`
+	ConditionGroups      []RuleConditionGroupDetailResponseData `json:"condition_groups"`
+	Conditions           []RuleConditionDetailResponseData      `json:"conditions"`
+	CreatedAt            time.Time                              `json:"created_at"`
+	EnvironmentId        string                                 `json:"environment_id"`
+	FlagId               NullableString                         `json:"flag_id,omitempty"`
+	Id                   string                                 `json:"id"`
+	Name                 string                                 `json:"name"`
+	PlanId               NullableString                         `json:"plan_id,omitempty"`
+	Priority             int32                                  `json:"priority"`
+	RuleType             string                                 `json:"rule_type"`
+	UpdatedAt            time.Time                              `json:"updated_at"`
+	Value                bool                                   `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _PlanAudienceDetailResponseData PlanAudienceDetailResponseData
@@ -417,6 +417,11 @@ func (o PlanAudienceDetailResponseData) ToMap() (map[string]interface{}, error) 
 	toSerialize["rule_type"] = o.RuleType
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -453,15 +458,31 @@ func (o *PlanAudienceDetailResponseData) UnmarshalJSON(data []byte) (err error) 
 
 	varPlanAudienceDetailResponseData := _PlanAudienceDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varPlanAudienceDetailResponseData)
+	err = json.Unmarshal(data, &varPlanAudienceDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = PlanAudienceDetailResponseData(varPlanAudienceDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "condition_groups")
+		delete(additionalProperties, "conditions")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "priority")
+		delete(additionalProperties, "rule_type")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -26,8 +25,9 @@ type AudienceRequestBody struct {
 	// Page limit (default 100)
 	Limit NullableInt32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset NullableInt32  `json:"offset,omitempty"`
-	Q      NullableString `json:"q,omitempty"`
+	Offset               NullableInt32  `json:"offset,omitempty"`
+	Q                    NullableString `json:"q,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _AudienceRequestBody AudienceRequestBody
@@ -249,6 +249,11 @@ func (o AudienceRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.Q.IsSet() {
 		toSerialize["q"] = o.Q.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -277,15 +282,24 @@ func (o *AudienceRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varAudienceRequestBody := _AudienceRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varAudienceRequestBody)
+	err = json.Unmarshal(data, &varAudienceRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = AudienceRequestBody(varAudienceRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "condition_groups")
+		delete(additionalProperties, "conditions")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "q")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

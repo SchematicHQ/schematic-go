@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &GetOrCreateCompanyMembershipRequestBody{}
 
 // GetOrCreateCompanyMembershipRequestBody struct for GetOrCreateCompanyMembershipRequestBody
 type GetOrCreateCompanyMembershipRequestBody struct {
-	CompanyId string `json:"company_id"`
-	UserId    string `json:"user_id"`
+	CompanyId            string `json:"company_id"`
+	UserId               string `json:"user_id"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _GetOrCreateCompanyMembershipRequestBody GetOrCreateCompanyMembershipRequestBody
@@ -106,6 +106,11 @@ func (o GetOrCreateCompanyMembershipRequestBody) ToMap() (map[string]interface{}
 	toSerialize := map[string]interface{}{}
 	toSerialize["company_id"] = o.CompanyId
 	toSerialize["user_id"] = o.UserId
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *GetOrCreateCompanyMembershipRequestBody) UnmarshalJSON(data []byte) (er
 
 	varGetOrCreateCompanyMembershipRequestBody := _GetOrCreateCompanyMembershipRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varGetOrCreateCompanyMembershipRequestBody)
+	err = json.Unmarshal(data, &varGetOrCreateCompanyMembershipRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = GetOrCreateCompanyMembershipRequestBody(varGetOrCreateCompanyMembershipRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "user_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,9 +20,10 @@ var _ MappedNullable = &CreateWebhookRequestBody{}
 
 // CreateWebhookRequestBody struct for CreateWebhookRequestBody
 type CreateWebhookRequestBody struct {
-	Name         string   `json:"name"`
-	RequestTypes []string `json:"request_types"`
-	Url          string   `json:"url"`
+	Name                 string   `json:"name"`
+	RequestTypes         []string `json:"request_types"`
+	Url                  string   `json:"url"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateWebhookRequestBody CreateWebhookRequestBody
@@ -133,6 +133,11 @@ func (o CreateWebhookRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	toSerialize["request_types"] = o.RequestTypes
 	toSerialize["url"] = o.Url
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -162,15 +167,22 @@ func (o *CreateWebhookRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateWebhookRequestBody := _CreateWebhookRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateWebhookRequestBody)
+	err = json.Unmarshal(data, &varCreateWebhookRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateWebhookRequestBody(varCreateWebhookRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "request_types")
+		delete(additionalProperties, "url")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

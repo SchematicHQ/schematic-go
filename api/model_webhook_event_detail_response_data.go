@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,16 +21,17 @@ var _ MappedNullable = &WebhookEventDetailResponseData{}
 
 // WebhookEventDetailResponseData struct for WebhookEventDetailResponseData
 type WebhookEventDetailResponseData struct {
-	CreatedAt    time.Time            `json:"created_at"`
-	Id           string               `json:"id"`
-	Payload      NullableString       `json:"payload,omitempty"`
-	RequestType  string               `json:"request_type"`
-	ResponseCode NullableInt32        `json:"response_code,omitempty"`
-	SentAt       NullableTime         `json:"sent_at,omitempty"`
-	Status       string               `json:"status"`
-	UpdatedAt    time.Time            `json:"updated_at"`
-	Webhook      *WebhookResponseData `json:"webhook,omitempty"`
-	WebhookId    string               `json:"webhook_id"`
+	CreatedAt            time.Time            `json:"created_at"`
+	Id                   string               `json:"id"`
+	Payload              NullableString       `json:"payload,omitempty"`
+	RequestType          string               `json:"request_type"`
+	ResponseCode         NullableInt32        `json:"response_code,omitempty"`
+	SentAt               NullableTime         `json:"sent_at,omitempty"`
+	Status               string               `json:"status"`
+	UpdatedAt            time.Time            `json:"updated_at"`
+	Webhook              *WebhookResponseData `json:"webhook,omitempty"`
+	WebhookId            string               `json:"webhook_id"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _WebhookEventDetailResponseData WebhookEventDetailResponseData
@@ -392,6 +392,11 @@ func (o WebhookEventDetailResponseData) ToMap() (map[string]interface{}, error) 
 		toSerialize["webhook"] = o.Webhook
 	}
 	toSerialize["webhook_id"] = o.WebhookId
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -424,15 +429,29 @@ func (o *WebhookEventDetailResponseData) UnmarshalJSON(data []byte) (err error) 
 
 	varWebhookEventDetailResponseData := _WebhookEventDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varWebhookEventDetailResponseData)
+	err = json.Unmarshal(data, &varWebhookEventDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = WebhookEventDetailResponseData(varWebhookEventDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "payload")
+		delete(additionalProperties, "request_type")
+		delete(additionalProperties, "response_code")
+		delete(additionalProperties, "sent_at")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "webhook")
+		delete(additionalProperties, "webhook_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

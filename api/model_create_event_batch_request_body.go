@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,7 +20,8 @@ var _ MappedNullable = &CreateEventBatchRequestBody{}
 
 // CreateEventBatchRequestBody struct for CreateEventBatchRequestBody
 type CreateEventBatchRequestBody struct {
-	Events []CreateEventRequestBody `json:"events"`
+	Events               []CreateEventRequestBody `json:"events"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateEventBatchRequestBody CreateEventBatchRequestBody
@@ -79,6 +79,11 @@ func (o CreateEventBatchRequestBody) MarshalJSON() ([]byte, error) {
 func (o CreateEventBatchRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["events"] = o.Events
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -106,15 +111,20 @@ func (o *CreateEventBatchRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateEventBatchRequestBody := _CreateEventBatchRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateEventBatchRequestBody)
+	err = json.Unmarshal(data, &varCreateEventBatchRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateEventBatchRequestBody(varCreateEventBatchRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "events")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

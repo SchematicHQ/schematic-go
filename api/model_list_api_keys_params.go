@@ -23,9 +23,12 @@ type ListApiKeysParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset             *int32 `json:"offset,omitempty"`
-	RequireEnvironment *bool  `json:"require_environment,omitempty"`
+	Offset               *int32 `json:"offset,omitempty"`
+	RequireEnvironment   *bool  `json:"require_environment,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListApiKeysParams ListApiKeysParams
 
 // NewListApiKeysParams instantiates a new ListApiKeysParams object
 // This constructor will assign default values to properties that have it defined,
@@ -194,7 +197,36 @@ func (o ListApiKeysParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RequireEnvironment) {
 		toSerialize["require_environment"] = o.RequireEnvironment
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListApiKeysParams) UnmarshalJSON(data []byte) (err error) {
+	varListApiKeysParams := _ListApiKeysParams{}
+
+	err = json.Unmarshal(data, &varListApiKeysParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListApiKeysParams(varListApiKeysParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "require_environment")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListApiKeysParams struct {

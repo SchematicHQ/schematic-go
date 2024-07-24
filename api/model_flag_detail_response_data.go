@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,19 +21,20 @@ var _ MappedNullable = &FlagDetailResponseData{}
 
 // FlagDetailResponseData struct for FlagDetailResponseData
 type FlagDetailResponseData struct {
-	CreatedAt     time.Time                 `json:"created_at"`
-	DefaultValue  bool                      `json:"default_value"`
-	Description   string                    `json:"description"`
-	Feature       *FeatureResponseData      `json:"feature,omitempty"`
-	FeatureId     NullableString            `json:"feature_id,omitempty"`
-	FlagType      string                    `json:"flag_type"`
-	Id            string                    `json:"id"`
-	Key           string                    `json:"key"`
-	LastCheckedAt NullableTime              `json:"last_checked_at,omitempty"`
-	LatestCheck   *FlagCheckLogResponseData `json:"latest_check,omitempty"`
-	Name          string                    `json:"name"`
-	Rules         []RuleDetailResponseData  `json:"rules"`
-	UpdatedAt     time.Time                 `json:"updated_at"`
+	CreatedAt            time.Time                 `json:"created_at"`
+	DefaultValue         bool                      `json:"default_value"`
+	Description          string                    `json:"description"`
+	Feature              *FeatureResponseData      `json:"feature,omitempty"`
+	FeatureId            NullableString            `json:"feature_id,omitempty"`
+	FlagType             string                    `json:"flag_type"`
+	Id                   string                    `json:"id"`
+	Key                  string                    `json:"key"`
+	LastCheckedAt        NullableTime              `json:"last_checked_at,omitempty"`
+	LatestCheck          *FlagCheckLogResponseData `json:"latest_check,omitempty"`
+	Name                 string                    `json:"name"`
+	Rules                []RuleDetailResponseData  `json:"rules"`
+	UpdatedAt            time.Time                 `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FlagDetailResponseData FlagDetailResponseData
@@ -462,6 +462,11 @@ func (o FlagDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	toSerialize["rules"] = o.Rules
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -497,15 +502,32 @@ func (o *FlagDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varFlagDetailResponseData := _FlagDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFlagDetailResponseData)
+	err = json.Unmarshal(data, &varFlagDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FlagDetailResponseData(varFlagDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "default_value")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "feature")
+		delete(additionalProperties, "feature_id")
+		delete(additionalProperties, "flag_type")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "last_checked_at")
+		delete(additionalProperties, "latest_check")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "rules")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

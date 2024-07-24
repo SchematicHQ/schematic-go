@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,27 +21,28 @@ var _ MappedNullable = &RuleConditionDetailResponseData{}
 
 // RuleConditionDetailResponseData struct for RuleConditionDetailResponseData
 type RuleConditionDetailResponseData struct {
-	ComparisonTrait   *EntityTraitDefinitionResponseData  `json:"comparison_trait,omitempty"`
-	ComparisonTraitId NullableString                      `json:"comparison_trait_id,omitempty"`
-	ConditionGroupId  NullableString                      `json:"condition_group_id,omitempty"`
-	ConditionType     string                              `json:"condition_type"`
-	CreatedAt         time.Time                           `json:"created_at"`
-	EnvironmentId     string                              `json:"environment_id"`
-	EventSubtype      NullableString                      `json:"event_subtype,omitempty"`
-	FlagId            NullableString                      `json:"flag_id,omitempty"`
-	Id                string                              `json:"id"`
-	MetricPeriod      NullableString                      `json:"metric_period,omitempty"`
-	MetricValue       NullableInt32                       `json:"metric_value,omitempty"`
-	Operator          string                              `json:"operator"`
-	PlanId            NullableString                      `json:"plan_id,omitempty"`
-	ResourceIds       []string                            `json:"resource_ids"`
-	Resources         []RuleConditionResourceResponseData `json:"resources"`
-	RuleId            string                              `json:"rule_id"`
-	Trait             *EntityTraitDefinitionResponseData  `json:"trait,omitempty"`
-	TraitEntityType   NullableString                      `json:"trait_entity_type,omitempty"`
-	TraitId           NullableString                      `json:"trait_id,omitempty"`
-	TraitValue        string                              `json:"trait_value"`
-	UpdatedAt         time.Time                           `json:"updated_at"`
+	ComparisonTrait      *EntityTraitDefinitionResponseData  `json:"comparison_trait,omitempty"`
+	ComparisonTraitId    NullableString                      `json:"comparison_trait_id,omitempty"`
+	ConditionGroupId     NullableString                      `json:"condition_group_id,omitempty"`
+	ConditionType        string                              `json:"condition_type"`
+	CreatedAt            time.Time                           `json:"created_at"`
+	EnvironmentId        string                              `json:"environment_id"`
+	EventSubtype         NullableString                      `json:"event_subtype,omitempty"`
+	FlagId               NullableString                      `json:"flag_id,omitempty"`
+	Id                   string                              `json:"id"`
+	MetricPeriod         NullableString                      `json:"metric_period,omitempty"`
+	MetricValue          NullableInt32                       `json:"metric_value,omitempty"`
+	Operator             string                              `json:"operator"`
+	PlanId               NullableString                      `json:"plan_id,omitempty"`
+	ResourceIds          []string                            `json:"resource_ids"`
+	Resources            []RuleConditionResourceResponseData `json:"resources"`
+	RuleId               string                              `json:"rule_id"`
+	Trait                *EntityTraitDefinitionResponseData  `json:"trait,omitempty"`
+	TraitEntityType      NullableString                      `json:"trait_entity_type,omitempty"`
+	TraitId              NullableString                      `json:"trait_id,omitempty"`
+	TraitValue           string                              `json:"trait_value"`
+	UpdatedAt            time.Time                           `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _RuleConditionDetailResponseData RuleConditionDetailResponseData
@@ -818,6 +818,11 @@ func (o RuleConditionDetailResponseData) ToMap() (map[string]interface{}, error)
 	}
 	toSerialize["trait_value"] = o.TraitValue
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -854,15 +859,40 @@ func (o *RuleConditionDetailResponseData) UnmarshalJSON(data []byte) (err error)
 
 	varRuleConditionDetailResponseData := _RuleConditionDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varRuleConditionDetailResponseData)
+	err = json.Unmarshal(data, &varRuleConditionDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = RuleConditionDetailResponseData(varRuleConditionDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comparison_trait")
+		delete(additionalProperties, "comparison_trait_id")
+		delete(additionalProperties, "condition_group_id")
+		delete(additionalProperties, "condition_type")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "metric_period")
+		delete(additionalProperties, "metric_value")
+		delete(additionalProperties, "operator")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "resource_ids")
+		delete(additionalProperties, "resources")
+		delete(additionalProperties, "rule_id")
+		delete(additionalProperties, "trait")
+		delete(additionalProperties, "trait_entity_type")
+		delete(additionalProperties, "trait_id")
+		delete(additionalProperties, "trait_value")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

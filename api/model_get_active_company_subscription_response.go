@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -22,8 +21,9 @@ var _ MappedNullable = &GetActiveCompanySubscriptionResponse{}
 // GetActiveCompanySubscriptionResponse struct for GetActiveCompanySubscriptionResponse
 type GetActiveCompanySubscriptionResponse struct {
 	// The returned resources
-	Data   []CompanySubscriptionResponseData  `json:"data"`
-	Params GetActiveCompanySubscriptionParams `json:"params"`
+	Data                 []CompanySubscriptionResponseData  `json:"data"`
+	Params               GetActiveCompanySubscriptionParams `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _GetActiveCompanySubscriptionResponse GetActiveCompanySubscriptionResponse
@@ -107,6 +107,11 @@ func (o GetActiveCompanySubscriptionResponse) ToMap() (map[string]interface{}, e
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -135,15 +140,21 @@ func (o *GetActiveCompanySubscriptionResponse) UnmarshalJSON(data []byte) (err e
 
 	varGetActiveCompanySubscriptionResponse := _GetActiveCompanySubscriptionResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varGetActiveCompanySubscriptionResponse)
+	err = json.Unmarshal(data, &varGetActiveCompanySubscriptionResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = GetActiveCompanySubscriptionResponse(varGetActiveCompanySubscriptionResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

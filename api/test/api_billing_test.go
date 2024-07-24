@@ -22,11 +22,47 @@ func Test_api_BillingAPIService(t *testing.T) {
 	configuration := schematicapi.NewConfiguration()
 	apiClient := schematicapi.NewAPIClient(configuration)
 
+	t.Run("Test BillingAPIService CountCustomers", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.BillingAPI.CountCustomers(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test BillingAPIService ListCustomers", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.BillingAPI.ListCustomers(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test BillingAPIService ListProducts", func(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.BillingAPI.ListProducts(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test BillingAPIService UpsertBillingCustomer", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.BillingAPI.UpsertBillingCustomer(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

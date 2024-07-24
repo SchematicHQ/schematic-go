@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,9 +20,10 @@ var _ MappedNullable = &CreateComponentRequestBody{}
 
 // CreateComponentRequestBody struct for CreateComponentRequestBody
 type CreateComponentRequestBody struct {
-	Ast        []int32 `json:"ast"`
-	EntityType string  `json:"entity_type"`
-	Name       string  `json:"name"`
+	Ast                  []int32 `json:"ast"`
+	EntityType           string  `json:"entity_type"`
+	Name                 string  `json:"name"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateComponentRequestBody CreateComponentRequestBody
@@ -133,6 +133,11 @@ func (o CreateComponentRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize["ast"] = o.Ast
 	toSerialize["entity_type"] = o.EntityType
 	toSerialize["name"] = o.Name
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -162,15 +167,22 @@ func (o *CreateComponentRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateComponentRequestBody := _CreateComponentRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateComponentRequestBody)
+	err = json.Unmarshal(data, &varCreateComponentRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateComponentRequestBody(varCreateComponentRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ast")
+		delete(additionalProperties, "entity_type")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

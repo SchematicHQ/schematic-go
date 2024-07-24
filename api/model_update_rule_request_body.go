@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,11 +20,12 @@ var _ MappedNullable = &UpdateRuleRequestBody{}
 
 // UpdateRuleRequestBody struct for UpdateRuleRequestBody
 type UpdateRuleRequestBody struct {
-	ConditionGroups []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
-	Conditions      []CreateOrUpdateConditionRequestBody      `json:"conditions"`
-	Name            string                                    `json:"name"`
-	Priority        int32                                     `json:"priority"`
-	Value           bool                                      `json:"value"`
+	ConditionGroups      []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
+	Conditions           []CreateOrUpdateConditionRequestBody      `json:"conditions"`
+	Name                 string                                    `json:"name"`
+	Priority             int32                                     `json:"priority"`
+	Value                bool                                      `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpdateRuleRequestBody UpdateRuleRequestBody
@@ -187,6 +187,11 @@ func (o UpdateRuleRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	toSerialize["priority"] = o.Priority
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -218,15 +223,24 @@ func (o *UpdateRuleRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varUpdateRuleRequestBody := _UpdateRuleRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpdateRuleRequestBody)
+	err = json.Unmarshal(data, &varUpdateRuleRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UpdateRuleRequestBody(varUpdateRuleRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "condition_groups")
+		delete(additionalProperties, "conditions")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "priority")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

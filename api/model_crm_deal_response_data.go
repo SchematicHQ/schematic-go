@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,17 +21,18 @@ var _ MappedNullable = &CrmDealResponseData{}
 
 // CrmDealResponseData The created resource
 type CrmDealResponseData struct {
-	AccountId         string         `json:"account_id"`
-	Arr               string         `json:"arr"`
-	CompanyExternalId NullableString `json:"company_external_id,omitempty"`
-	CreatedAt         time.Time      `json:"created_at"`
-	DealExternalId    string         `json:"deal_external_id"`
-	DealId            string         `json:"deal_id"`
-	EnvironmentId     string         `json:"environment_id"`
-	Mrr               string         `json:"mrr"`
-	Name              NullableString `json:"name,omitempty"`
-	ProductExternalId NullableString `json:"product_external_id,omitempty"`
-	UpdatedAt         time.Time      `json:"updated_at"`
+	AccountId            string         `json:"account_id"`
+	Arr                  string         `json:"arr"`
+	CompanyExternalId    NullableString `json:"company_external_id,omitempty"`
+	CreatedAt            time.Time      `json:"created_at"`
+	DealExternalId       string         `json:"deal_external_id"`
+	DealId               string         `json:"deal_id"`
+	EnvironmentId        string         `json:"environment_id"`
+	Mrr                  string         `json:"mrr"`
+	Name                 NullableString `json:"name,omitempty"`
+	ProductExternalId    NullableString `json:"product_external_id,omitempty"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CrmDealResponseData CrmDealResponseData
@@ -410,6 +410,11 @@ func (o CrmDealResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["product_external_id"] = o.ProductExternalId.Get()
 	}
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -444,15 +449,30 @@ func (o *CrmDealResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varCrmDealResponseData := _CrmDealResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCrmDealResponseData)
+	err = json.Unmarshal(data, &varCrmDealResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CrmDealResponseData(varCrmDealResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "account_id")
+		delete(additionalProperties, "arr")
+		delete(additionalProperties, "company_external_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "deal_external_id")
+		delete(additionalProperties, "deal_id")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "mrr")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "product_external_id")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

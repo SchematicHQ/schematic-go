@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,13 +20,14 @@ var _ MappedNullable = &CreateFeatureRequestBody{}
 
 // CreateFeatureRequestBody struct for CreateFeatureRequestBody
 type CreateFeatureRequestBody struct {
-	Description    string                         `json:"description"`
-	EventSubtype   NullableString                 `json:"event_subtype,omitempty"`
-	FeatureType    string                         `json:"feature_type"`
-	Flag           *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
-	LifecyclePhase NullableString                 `json:"lifecycle_phase,omitempty"`
-	Name           string                         `json:"name"`
-	TraitId        NullableString                 `json:"trait_id,omitempty"`
+	Description          string                         `json:"description"`
+	EventSubtype         NullableString                 `json:"event_subtype,omitempty"`
+	FeatureType          string                         `json:"feature_type"`
+	Flag                 *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
+	LifecyclePhase       NullableString                 `json:"lifecycle_phase,omitempty"`
+	Name                 string                         `json:"name"`
+	TraitId              NullableString                 `json:"trait_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateFeatureRequestBody CreateFeatureRequestBody
@@ -310,6 +310,11 @@ func (o CreateFeatureRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.TraitId.IsSet() {
 		toSerialize["trait_id"] = o.TraitId.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -339,15 +344,26 @@ func (o *CreateFeatureRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateFeatureRequestBody := _CreateFeatureRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateFeatureRequestBody)
+	err = json.Unmarshal(data, &varCreateFeatureRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateFeatureRequestBody(varCreateFeatureRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "feature_type")
+		delete(additionalProperties, "flag")
+		delete(additionalProperties, "lifecycle_phase")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "trait_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

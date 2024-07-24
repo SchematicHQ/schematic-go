@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,13 +20,14 @@ var _ MappedNullable = &CreateCompanyOverrideRequestBody{}
 
 // CreateCompanyOverrideRequestBody struct for CreateCompanyOverrideRequestBody
 type CreateCompanyOverrideRequestBody struct {
-	CompanyId    string         `json:"company_id"`
-	FeatureId    string         `json:"feature_id"`
-	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	ValueBool    NullableBool   `json:"value_bool,omitempty"`
-	ValueNumeric NullableInt32  `json:"value_numeric,omitempty"`
-	ValueTraitId NullableString `json:"value_trait_id,omitempty"`
-	ValueType    string         `json:"value_type"`
+	CompanyId            string         `json:"company_id"`
+	FeatureId            string         `json:"feature_id"`
+	MetricPeriod         NullableString `json:"metric_period,omitempty"`
+	ValueBool            NullableBool   `json:"value_bool,omitempty"`
+	ValueNumeric         NullableInt32  `json:"value_numeric,omitempty"`
+	ValueTraitId         NullableString `json:"value_trait_id,omitempty"`
+	ValueType            string         `json:"value_type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateCompanyOverrideRequestBody CreateCompanyOverrideRequestBody
@@ -321,6 +321,11 @@ func (o CreateCompanyOverrideRequestBody) ToMap() (map[string]interface{}, error
 		toSerialize["value_trait_id"] = o.ValueTraitId.Get()
 	}
 	toSerialize["value_type"] = o.ValueType
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -350,15 +355,26 @@ func (o *CreateCompanyOverrideRequestBody) UnmarshalJSON(data []byte) (err error
 
 	varCreateCompanyOverrideRequestBody := _CreateCompanyOverrideRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateCompanyOverrideRequestBody)
+	err = json.Unmarshal(data, &varCreateCompanyOverrideRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateCompanyOverrideRequestBody(varCreateCompanyOverrideRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "feature_id")
+		delete(additionalProperties, "metric_period")
+		delete(additionalProperties, "value_bool")
+		delete(additionalProperties, "value_numeric")
+		delete(additionalProperties, "value_trait_id")
+		delete(additionalProperties, "value_type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

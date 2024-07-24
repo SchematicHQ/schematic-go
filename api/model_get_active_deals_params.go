@@ -24,8 +24,11 @@ type GetActiveDealsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32 `json:"offset,omitempty"`
+	Offset               *int32 `json:"offset,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _GetActiveDealsParams GetActiveDealsParams
 
 // NewGetActiveDealsParams instantiates a new GetActiveDealsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -194,7 +197,36 @@ func (o GetActiveDealsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *GetActiveDealsParams) UnmarshalJSON(data []byte) (err error) {
+	varGetActiveDealsParams := _GetActiveDealsParams{}
+
+	err = json.Unmarshal(data, &varGetActiveDealsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = GetActiveDealsParams(varGetActiveDealsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "deal_stage")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableGetActiveDealsParams struct {

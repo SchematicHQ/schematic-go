@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,7 +20,8 @@ var _ MappedNullable = &CountResponse{}
 
 // CountResponse The created resource
 type CountResponse struct {
-	Count int32 `json:"count"`
+	Count                int32 `json:"count"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CountResponse CountResponse
@@ -79,6 +79,11 @@ func (o CountResponse) MarshalJSON() ([]byte, error) {
 func (o CountResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["count"] = o.Count
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -106,15 +111,20 @@ func (o *CountResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varCountResponse := _CountResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCountResponse)
+	err = json.Unmarshal(data, &varCountResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CountResponse(varCountResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "count")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

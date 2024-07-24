@@ -142,4 +142,18 @@ func Test_api_PlansAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test PlansAPIService UpsertBillingProductPlan", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		var planId string
+
+		resp, httpRes, err := apiClient.PlansAPI.UpsertBillingProductPlan(context.Background(), planId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 }

@@ -24,9 +24,12 @@ type CountCustomersParams struct {
 	Limit *int32  `json:"limit,omitempty"`
 	Name  *string `json:"name,omitempty"`
 	// Page offset (default 0)
-	Offset *int32  `json:"offset,omitempty"`
-	Q      *string `json:"q,omitempty"`
+	Offset               *int32  `json:"offset,omitempty"`
+	Q                    *string `json:"q,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CountCustomersParams CountCustomersParams
 
 // NewCountCustomersParams instantiates a new CountCustomersParams object
 // This constructor will assign default values to properties that have it defined,
@@ -230,7 +233,37 @@ func (o CountCustomersParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Q) {
 		toSerialize["q"] = o.Q
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CountCustomersParams) UnmarshalJSON(data []byte) (err error) {
+	varCountCustomersParams := _CountCustomersParams{}
+
+	err = json.Unmarshal(data, &varCountCustomersParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CountCustomersParams(varCountCustomersParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "failed_to_import")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "q")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCountCustomersParams struct {

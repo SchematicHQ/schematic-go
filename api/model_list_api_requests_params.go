@@ -23,10 +23,13 @@ type ListApiRequestsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset      *int32  `json:"offset,omitempty"`
-	Q           *string `json:"q,omitempty"`
-	RequestType *string `json:"request_type,omitempty"`
+	Offset               *int32  `json:"offset,omitempty"`
+	Q                    *string `json:"q,omitempty"`
+	RequestType          *string `json:"request_type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListApiRequestsParams ListApiRequestsParams
 
 // NewListApiRequestsParams instantiates a new ListApiRequestsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -230,7 +233,37 @@ func (o ListApiRequestsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RequestType) {
 		toSerialize["request_type"] = o.RequestType
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListApiRequestsParams) UnmarshalJSON(data []byte) (err error) {
+	varListApiRequestsParams := _ListApiRequestsParams{}
+
+	err = json.Unmarshal(data, &varListApiRequestsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListApiRequestsParams(varListApiRequestsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "q")
+		delete(additionalProperties, "request_type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListApiRequestsParams struct {

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,12 +20,13 @@ var _ MappedNullable = &CreateBillingCustomerRequestBody{}
 
 // CreateBillingCustomerRequestBody struct for CreateBillingCustomerRequestBody
 type CreateBillingCustomerRequestBody struct {
-	CompanyId      NullableString    `json:"company_id,omitempty"`
-	Email          string            `json:"email"`
-	ExternalId     string            `json:"external_id"`
-	FailedToImport bool              `json:"failed_to_import"`
-	Meta           map[string]string `json:"meta"`
-	Name           string            `json:"name"`
+	CompanyId            NullableString    `json:"company_id,omitempty"`
+	Email                string            `json:"email"`
+	ExternalId           string            `json:"external_id"`
+	FailedToImport       bool              `json:"failed_to_import"`
+	Meta                 map[string]string `json:"meta"`
+	Name                 string            `json:"name"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateBillingCustomerRequestBody CreateBillingCustomerRequestBody
@@ -234,6 +234,11 @@ func (o CreateBillingCustomerRequestBody) ToMap() (map[string]interface{}, error
 	toSerialize["failed_to_import"] = o.FailedToImport
 	toSerialize["meta"] = o.Meta
 	toSerialize["name"] = o.Name
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -265,15 +270,25 @@ func (o *CreateBillingCustomerRequestBody) UnmarshalJSON(data []byte) (err error
 
 	varCreateBillingCustomerRequestBody := _CreateBillingCustomerRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateBillingCustomerRequestBody)
+	err = json.Unmarshal(data, &varCreateBillingCustomerRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateBillingCustomerRequestBody(varCreateBillingCustomerRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "email")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "failed_to_import")
+		delete(additionalProperties, "meta")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

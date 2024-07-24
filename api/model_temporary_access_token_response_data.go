@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,13 +21,14 @@ var _ MappedNullable = &TemporaryAccessTokenResponseData{}
 
 // TemporaryAccessTokenResponseData struct for TemporaryAccessTokenResponseData
 type TemporaryAccessTokenResponseData struct {
-	ApiKeyId      string    `json:"api_key_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	EnvironmentId string    `json:"environment_id"`
-	ExpiredAt     time.Time `json:"expired_at"`
-	Id            string    `json:"id"`
-	ResourceType  string    `json:"resource_type"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	ApiKeyId             string    `json:"api_key_id"`
+	CreatedAt            time.Time `json:"created_at"`
+	EnvironmentId        string    `json:"environment_id"`
+	ExpiredAt            time.Time `json:"expired_at"`
+	Id                   string    `json:"id"`
+	ResourceType         string    `json:"resource_type"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _TemporaryAccessTokenResponseData TemporaryAccessTokenResponseData
@@ -242,6 +242,11 @@ func (o TemporaryAccessTokenResponseData) ToMap() (map[string]interface{}, error
 	toSerialize["id"] = o.Id
 	toSerialize["resource_type"] = o.ResourceType
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -275,15 +280,26 @@ func (o *TemporaryAccessTokenResponseData) UnmarshalJSON(data []byte) (err error
 
 	varTemporaryAccessTokenResponseData := _TemporaryAccessTokenResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varTemporaryAccessTokenResponseData)
+	err = json.Unmarshal(data, &varTemporaryAccessTokenResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = TemporaryAccessTokenResponseData(varTemporaryAccessTokenResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "api_key_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "expired_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "resource_type")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,11 +21,12 @@ var _ MappedNullable = &RawEventResponseData{}
 
 // RawEventResponseData struct for RawEventResponseData
 type RawEventResponseData struct {
-	CapturedAt time.Time      `json:"captured_at"`
-	EventId    NullableString `json:"event_id,omitempty"`
-	RemoteAddr string         `json:"remote_addr"`
-	RemoteIp   string         `json:"remote_ip"`
-	UserAgent  string         `json:"user_agent"`
+	CapturedAt           time.Time      `json:"captured_at"`
+	EventId              NullableString `json:"event_id,omitempty"`
+	RemoteAddr           string         `json:"remote_addr"`
+	RemoteIp             string         `json:"remote_ip"`
+	UserAgent            string         `json:"user_agent"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _RawEventResponseData RawEventResponseData
@@ -208,6 +208,11 @@ func (o RawEventResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["remote_addr"] = o.RemoteAddr
 	toSerialize["remote_ip"] = o.RemoteIp
 	toSerialize["user_agent"] = o.UserAgent
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -238,15 +243,24 @@ func (o *RawEventResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varRawEventResponseData := _RawEventResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varRawEventResponseData)
+	err = json.Unmarshal(data, &varRawEventResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = RawEventResponseData(varRawEventResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "captured_at")
+		delete(additionalProperties, "event_id")
+		delete(additionalProperties, "remote_addr")
+		delete(additionalProperties, "remote_ip")
+		delete(additionalProperties, "user_agent")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

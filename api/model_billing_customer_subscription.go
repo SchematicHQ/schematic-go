@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,8 +21,9 @@ var _ MappedNullable = &BillingCustomerSubscription{}
 
 // BillingCustomerSubscription struct for BillingCustomerSubscription
 type BillingCustomerSubscription struct {
-	ExpiredAt  NullableTime `json:"expired_at,omitempty"`
-	TotalPrice float32      `json:"total_price"`
+	ExpiredAt            NullableTime `json:"expired_at,omitempty"`
+	TotalPrice           float32      `json:"total_price"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BillingCustomerSubscription BillingCustomerSubscription
@@ -127,6 +127,11 @@ func (o BillingCustomerSubscription) ToMap() (map[string]interface{}, error) {
 		toSerialize["expired_at"] = o.ExpiredAt.Get()
 	}
 	toSerialize["total_price"] = o.TotalPrice
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -154,15 +159,21 @@ func (o *BillingCustomerSubscription) UnmarshalJSON(data []byte) (err error) {
 
 	varBillingCustomerSubscription := _BillingCustomerSubscription{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varBillingCustomerSubscription)
+	err = json.Unmarshal(data, &varBillingCustomerSubscription)
 
 	if err != nil {
 		return err
 	}
 
 	*o = BillingCustomerSubscription(varBillingCustomerSubscription)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "expired_at")
+		delete(additionalProperties, "total_price")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

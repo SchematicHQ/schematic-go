@@ -23,9 +23,12 @@ type ListCompanyPlansParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32  `json:"offset,omitempty"`
-	PlanId *string `json:"plan_id,omitempty"`
+	Offset               *int32  `json:"offset,omitempty"`
+	PlanId               *string `json:"plan_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListCompanyPlansParams ListCompanyPlansParams
 
 // NewListCompanyPlansParams instantiates a new ListCompanyPlansParams object
 // This constructor will assign default values to properties that have it defined,
@@ -194,7 +197,36 @@ func (o ListCompanyPlansParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PlanId) {
 		toSerialize["plan_id"] = o.PlanId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListCompanyPlansParams) UnmarshalJSON(data []byte) (err error) {
+	varListCompanyPlansParams := _ListCompanyPlansParams{}
+
+	err = json.Unmarshal(data, &varListCompanyPlansParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListCompanyPlansParams(varListCompanyPlansParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "plan_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListCompanyPlansParams struct {

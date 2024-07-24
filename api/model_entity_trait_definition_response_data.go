@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,13 +21,14 @@ var _ MappedNullable = &EntityTraitDefinitionResponseData{}
 
 // EntityTraitDefinitionResponseData struct for EntityTraitDefinitionResponseData
 type EntityTraitDefinitionResponseData struct {
-	CreatedAt   time.Time `json:"created_at"`
-	DisplayName string    `json:"display_name"`
-	EntityType  string    `json:"entity_type"`
-	Hierarchy   []string  `json:"hierarchy"`
-	Id          string    `json:"id"`
-	TraitType   string    `json:"trait_type"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	CreatedAt            time.Time `json:"created_at"`
+	DisplayName          string    `json:"display_name"`
+	EntityType           string    `json:"entity_type"`
+	Hierarchy            []string  `json:"hierarchy"`
+	Id                   string    `json:"id"`
+	TraitType            string    `json:"trait_type"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EntityTraitDefinitionResponseData EntityTraitDefinitionResponseData
@@ -242,6 +242,11 @@ func (o EntityTraitDefinitionResponseData) ToMap() (map[string]interface{}, erro
 	toSerialize["id"] = o.Id
 	toSerialize["trait_type"] = o.TraitType
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -275,15 +280,26 @@ func (o *EntityTraitDefinitionResponseData) UnmarshalJSON(data []byte) (err erro
 
 	varEntityTraitDefinitionResponseData := _EntityTraitDefinitionResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEntityTraitDefinitionResponseData)
+	err = json.Unmarshal(data, &varEntityTraitDefinitionResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EntityTraitDefinitionResponseData(varEntityTraitDefinitionResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "entity_type")
+		delete(additionalProperties, "hierarchy")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "trait_type")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

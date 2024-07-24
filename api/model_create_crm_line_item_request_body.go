@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,14 +20,15 @@ var _ MappedNullable = &CreateCrmLineItemRequestBody{}
 
 // CreateCrmLineItemRequestBody struct for CreateCrmLineItemRequestBody
 type CreateCrmLineItemRequestBody struct {
-	TermMonth          NullableInt32  `json:"TermMonth,omitempty"`
-	Amount             string         `json:"amount"`
-	DiscountPercentage NullableString `json:"discount_percentage,omitempty"`
-	Interval           string         `json:"interval"`
-	LineItemExternalId string         `json:"line_item_external_id"`
-	ProductExternalId  string         `json:"product_external_id"`
-	Quantity           int32          `json:"quantity"`
-	TotalDiscount      NullableString `json:"total_discount,omitempty"`
+	TermMonth            NullableInt32  `json:"TermMonth,omitempty"`
+	Amount               string         `json:"amount"`
+	DiscountPercentage   NullableString `json:"discount_percentage,omitempty"`
+	Interval             string         `json:"interval"`
+	LineItemExternalId   string         `json:"line_item_external_id"`
+	ProductExternalId    string         `json:"product_external_id"`
+	Quantity             int32          `json:"quantity"`
+	TotalDiscount        NullableString `json:"total_discount,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateCrmLineItemRequestBody CreateCrmLineItemRequestBody
@@ -328,6 +328,11 @@ func (o CreateCrmLineItemRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.TotalDiscount.IsSet() {
 		toSerialize["total_discount"] = o.TotalDiscount.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -359,15 +364,27 @@ func (o *CreateCrmLineItemRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateCrmLineItemRequestBody := _CreateCrmLineItemRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateCrmLineItemRequestBody)
+	err = json.Unmarshal(data, &varCreateCrmLineItemRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateCrmLineItemRequestBody(varCreateCrmLineItemRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "TermMonth")
+		delete(additionalProperties, "amount")
+		delete(additionalProperties, "discount_percentage")
+		delete(additionalProperties, "interval")
+		delete(additionalProperties, "line_item_external_id")
+		delete(additionalProperties, "product_external_id")
+		delete(additionalProperties, "quantity")
+		delete(additionalProperties, "total_discount")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

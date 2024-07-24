@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,11 +20,12 @@ var _ MappedNullable = &CompanyCrmDealsResponseData{}
 
 // CompanyCrmDealsResponseData struct for CompanyCrmDealsResponseData
 type CompanyCrmDealsResponseData struct {
-	DealArr        string            `json:"deal_arr"`
-	DealExternalId string            `json:"deal_external_id"`
-	DealMrr        string            `json:"deal_mrr"`
-	DealName       NullableString    `json:"deal_name,omitempty"`
-	LineItems      []CrmDealLineItem `json:"line_items"`
+	DealArr              string            `json:"deal_arr"`
+	DealExternalId       string            `json:"deal_external_id"`
+	DealMrr              string            `json:"deal_mrr"`
+	DealName             NullableString    `json:"deal_name,omitempty"`
+	LineItems            []CrmDealLineItem `json:"line_items"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CompanyCrmDealsResponseData CompanyCrmDealsResponseData
@@ -207,6 +207,11 @@ func (o CompanyCrmDealsResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["deal_name"] = o.DealName.Get()
 	}
 	toSerialize["line_items"] = o.LineItems
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -237,15 +242,24 @@ func (o *CompanyCrmDealsResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varCompanyCrmDealsResponseData := _CompanyCrmDealsResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCompanyCrmDealsResponseData)
+	err = json.Unmarshal(data, &varCompanyCrmDealsResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CompanyCrmDealsResponseData(varCompanyCrmDealsResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "deal_arr")
+		delete(additionalProperties, "deal_external_id")
+		delete(additionalProperties, "deal_mrr")
+		delete(additionalProperties, "deal_name")
+		delete(additionalProperties, "line_items")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

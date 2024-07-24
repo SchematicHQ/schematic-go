@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,16 +21,17 @@ var _ MappedNullable = &CrmProductResponseData{}
 
 // CrmProductResponseData The created resource
 type CrmProductResponseData struct {
-	AccountId     string    `json:"account_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	Currency      string    `json:"currency"`
-	EnvironmentId string    `json:"environment_id"`
-	ExternalId    string    `json:"external_id"`
-	Name          string    `json:"name"`
-	Price         string    `json:"price"`
-	ProductId     string    `json:"product_id"`
-	Quantity      float32   `json:"quantity"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	AccountId            string    `json:"account_id"`
+	CreatedAt            time.Time `json:"created_at"`
+	Currency             string    `json:"currency"`
+	EnvironmentId        string    `json:"environment_id"`
+	ExternalId           string    `json:"external_id"`
+	Name                 string    `json:"name"`
+	Price                string    `json:"price"`
+	ProductId            string    `json:"product_id"`
+	Quantity             float32   `json:"quantity"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CrmProductResponseData CrmProductResponseData
@@ -323,6 +323,11 @@ func (o CrmProductResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["product_id"] = o.ProductId
 	toSerialize["quantity"] = o.Quantity
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -359,15 +364,29 @@ func (o *CrmProductResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varCrmProductResponseData := _CrmProductResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCrmProductResponseData)
+	err = json.Unmarshal(data, &varCrmProductResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CrmProductResponseData(varCrmProductResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "account_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "currency")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "price")
+		delete(additionalProperties, "product_id")
+		delete(additionalProperties, "quantity")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

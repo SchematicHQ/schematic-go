@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -35,7 +34,8 @@ type FeatureCompanyResponseData struct {
 	Period NullableString    `json:"period,omitempty"`
 	Plan   *PlanResponseData `json:"plan,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured.
-	Usage NullableInt32 `json:"usage,omitempty"`
+	Usage                NullableInt32 `json:"usage,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FeatureCompanyResponseData FeatureCompanyResponseData
@@ -414,6 +414,11 @@ func (o FeatureCompanyResponseData) ToMap() (map[string]interface{}, error) {
 	if o.Usage.IsSet() {
 		toSerialize["usage"] = o.Usage.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -444,15 +449,29 @@ func (o *FeatureCompanyResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varFeatureCompanyResponseData := _FeatureCompanyResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFeatureCompanyResponseData)
+	err = json.Unmarshal(data, &varFeatureCompanyResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FeatureCompanyResponseData(varFeatureCompanyResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "access")
+		delete(additionalProperties, "allocation")
+		delete(additionalProperties, "allocation_type")
+		delete(additionalProperties, "company")
+		delete(additionalProperties, "entitlement_id")
+		delete(additionalProperties, "entitlement_type")
+		delete(additionalProperties, "feature")
+		delete(additionalProperties, "period")
+		delete(additionalProperties, "plan")
+		delete(additionalProperties, "usage")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

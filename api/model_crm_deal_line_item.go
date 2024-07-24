@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,18 +21,19 @@ var _ MappedNullable = &CrmDealLineItem{}
 
 // CrmDealLineItem struct for CrmDealLineItem
 type CrmDealLineItem struct {
-	BillingFrequency   string                 `json:"billing_frequency"`
-	CreatedAt          time.Time              `json:"created_at"`
-	Currency           string                 `json:"currency"`
-	Description        string                 `json:"description"`
-	DiscountPercentage map[string]interface{} `json:"discount_percentage,omitempty"`
-	Id                 string                 `json:"id"`
-	Name               string                 `json:"name"`
-	Price              float32                `json:"price"`
-	Quantity           int32                  `json:"quantity"`
-	TermMonth          NullableInt32          `json:"term_month,omitempty"`
-	TotalDiscount      map[string]interface{} `json:"total_discount,omitempty"`
-	UpdatedAt          time.Time              `json:"updated_at"`
+	BillingFrequency     string                 `json:"billing_frequency"`
+	CreatedAt            time.Time              `json:"created_at"`
+	Currency             string                 `json:"currency"`
+	Description          string                 `json:"description"`
+	DiscountPercentage   map[string]interface{} `json:"discount_percentage,omitempty"`
+	Id                   string                 `json:"id"`
+	Name                 string                 `json:"name"`
+	Price                float32                `json:"price"`
+	Quantity             int32                  `json:"quantity"`
+	TermMonth            NullableInt32          `json:"term_month,omitempty"`
+	TotalDiscount        map[string]interface{} `json:"total_discount,omitempty"`
+	UpdatedAt            time.Time              `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CrmDealLineItem CrmDealLineItem
@@ -415,6 +415,11 @@ func (o CrmDealLineItem) ToMap() (map[string]interface{}, error) {
 		toSerialize["total_discount"] = o.TotalDiscount
 	}
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -450,15 +455,31 @@ func (o *CrmDealLineItem) UnmarshalJSON(data []byte) (err error) {
 
 	varCrmDealLineItem := _CrmDealLineItem{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCrmDealLineItem)
+	err = json.Unmarshal(data, &varCrmDealLineItem)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CrmDealLineItem(varCrmDealLineItem)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "billing_frequency")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "currency")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "discount_percentage")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "price")
+		delete(additionalProperties, "quantity")
+		delete(additionalProperties, "term_month")
+		delete(additionalProperties, "total_discount")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

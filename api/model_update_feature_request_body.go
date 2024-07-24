@@ -19,14 +19,17 @@ var _ MappedNullable = &UpdateFeatureRequestBody{}
 
 // UpdateFeatureRequestBody struct for UpdateFeatureRequestBody
 type UpdateFeatureRequestBody struct {
-	Description    NullableString                 `json:"description,omitempty"`
-	EventSubtype   NullableString                 `json:"event_subtype,omitempty"`
-	FeatureType    NullableString                 `json:"feature_type,omitempty"`
-	Flag           *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
-	LifecyclePhase NullableString                 `json:"lifecycle_phase,omitempty"`
-	Name           NullableString                 `json:"name,omitempty"`
-	TraitId        NullableString                 `json:"trait_id,omitempty"`
+	Description          NullableString                 `json:"description,omitempty"`
+	EventSubtype         NullableString                 `json:"event_subtype,omitempty"`
+	FeatureType          NullableString                 `json:"feature_type,omitempty"`
+	Flag                 *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
+	LifecyclePhase       NullableString                 `json:"lifecycle_phase,omitempty"`
+	Name                 NullableString                 `json:"name,omitempty"`
+	TraitId              NullableString                 `json:"trait_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateFeatureRequestBody UpdateFeatureRequestBody
 
 // NewUpdateFeatureRequestBody instantiates a new UpdateFeatureRequestBody object
 // This constructor will assign default values to properties that have it defined,
@@ -366,7 +369,39 @@ func (o UpdateFeatureRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.TraitId.IsSet() {
 		toSerialize["trait_id"] = o.TraitId.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateFeatureRequestBody) UnmarshalJSON(data []byte) (err error) {
+	varUpdateFeatureRequestBody := _UpdateFeatureRequestBody{}
+
+	err = json.Unmarshal(data, &varUpdateFeatureRequestBody)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateFeatureRequestBody(varUpdateFeatureRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "feature_type")
+		delete(additionalProperties, "flag")
+		delete(additionalProperties, "lifecycle_phase")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "trait_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateFeatureRequestBody struct {

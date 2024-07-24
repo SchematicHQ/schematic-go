@@ -29,10 +29,13 @@ type ListMetricCountsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int32     `json:"offset,omitempty"`
-	StartTime *time.Time `json:"start_time,omitempty"`
-	UserId    *string    `json:"user_id,omitempty"`
+	Offset               *int32     `json:"offset,omitempty"`
+	StartTime            *time.Time `json:"start_time,omitempty"`
+	UserId               *string    `json:"user_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListMetricCountsParams ListMetricCountsParams
 
 // NewListMetricCountsParams instantiates a new ListMetricCountsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -411,7 +414,42 @@ func (o ListMetricCountsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UserId) {
 		toSerialize["user_id"] = o.UserId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListMetricCountsParams) UnmarshalJSON(data []byte) (err error) {
+	varListMetricCountsParams := _ListMetricCountsParams{}
+
+	err = json.Unmarshal(data, &varListMetricCountsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListMetricCountsParams(varListMetricCountsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "company_ids")
+		delete(additionalProperties, "end_time")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "event_subtypes")
+		delete(additionalProperties, "grouping")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "start_time")
+		delete(additionalProperties, "user_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListMetricCountsParams struct {

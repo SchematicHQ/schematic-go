@@ -13,13 +13,20 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // EventBody - struct for EventBody
 type EventBody struct {
-	EventBodyIdentify *EventBodyIdentify
-	EventBodyTrack    *EventBodyTrack
+	EventBodyFlagCheck *EventBodyFlagCheck
+	EventBodyIdentify  *EventBodyIdentify
+	EventBodyTrack     *EventBodyTrack
+}
+
+// EventBodyFlagCheckAsEventBody is a convenience function that returns EventBodyFlagCheck wrapped in EventBody
+func EventBodyFlagCheckAsEventBody(v *EventBodyFlagCheck) EventBody {
+	return EventBody{
+		EventBodyFlagCheck: v,
+	}
 }
 
 // EventBodyIdentifyAsEventBody is a convenience function that returns EventBodyIdentify wrapped in EventBody
@@ -40,6 +47,19 @@ func EventBodyTrackAsEventBody(v *EventBodyTrack) EventBody {
 func (dst *EventBody) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
+	// try to unmarshal data into EventBodyFlagCheck
+	err = newStrictDecoder(data).Decode(&dst.EventBodyFlagCheck)
+	if err == nil {
+		jsonEventBodyFlagCheck, _ := json.Marshal(dst.EventBodyFlagCheck)
+		if string(jsonEventBodyFlagCheck) == "{}" { // empty struct
+			dst.EventBodyFlagCheck = nil
+		} else {
+			match++
+		}
+	} else {
+		dst.EventBodyFlagCheck = nil
+	}
+
 	// try to unmarshal data into EventBodyIdentify
 	err = newStrictDecoder(data).Decode(&dst.EventBodyIdentify)
 	if err == nil {
@@ -47,11 +67,7 @@ func (dst *EventBody) UnmarshalJSON(data []byte) error {
 		if string(jsonEventBodyIdentify) == "{}" { // empty struct
 			dst.EventBodyIdentify = nil
 		} else {
-			if err = validator.Validate(dst.EventBodyIdentify); err != nil {
-				dst.EventBodyIdentify = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.EventBodyIdentify = nil
@@ -64,11 +80,7 @@ func (dst *EventBody) UnmarshalJSON(data []byte) error {
 		if string(jsonEventBodyTrack) == "{}" { // empty struct
 			dst.EventBodyTrack = nil
 		} else {
-			if err = validator.Validate(dst.EventBodyTrack); err != nil {
-				dst.EventBodyTrack = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.EventBodyTrack = nil
@@ -76,6 +88,7 @@ func (dst *EventBody) UnmarshalJSON(data []byte) error {
 
 	if match > 1 { // more than 1 match
 		// reset to nil
+		dst.EventBodyFlagCheck = nil
 		dst.EventBodyIdentify = nil
 		dst.EventBodyTrack = nil
 
@@ -89,6 +102,10 @@ func (dst *EventBody) UnmarshalJSON(data []byte) error {
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src EventBody) MarshalJSON() ([]byte, error) {
+	if src.EventBodyFlagCheck != nil {
+		return json.Marshal(&src.EventBodyFlagCheck)
+	}
+
 	if src.EventBodyIdentify != nil {
 		return json.Marshal(&src.EventBodyIdentify)
 	}
@@ -105,6 +122,10 @@ func (obj *EventBody) GetActualInstance() interface{} {
 	if obj == nil {
 		return nil
 	}
+	if obj.EventBodyFlagCheck != nil {
+		return obj.EventBodyFlagCheck
+	}
+
 	if obj.EventBodyIdentify != nil {
 		return obj.EventBodyIdentify
 	}

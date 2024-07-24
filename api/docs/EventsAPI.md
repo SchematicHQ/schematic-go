@@ -428,7 +428,7 @@ Other parameters are passed through a pointer to a apiGetSegmentIntegrationStatu
 
 ## ListEvents
 
-> ListEventsResponse ListEvents(ctx).CompanyId(companyId).UserId(userId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
+> ListEventsResponse ListEvents(ctx).CompanyId(companyId).EventSubtype(eventSubtype).EventTypes(eventTypes).FlagId(flagId).UserId(userId).Limit(limit).Offset(offset).Execute()
 
 List events
 
@@ -451,12 +451,14 @@ func main() {
 	defer client.Close()
 
 	companyId := "companyId_example" // string |  (optional)
-	userId := "userId_example" // string |  (optional)
 	eventSubtype := "eventSubtype_example" // string |  (optional)
+	eventTypes := []string{"Inner_example"} // []string |  (optional)
+	flagId := "flagId_example" // string |  (optional)
+	userId := "userId_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().EventsAPI.ListEvents(context.Background()).CompanyId(companyId).UserId(userId).EventSubtype(eventSubtype).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().EventsAPI.ListEvents(context.Background()).CompanyId(companyId).EventSubtype(eventSubtype).EventTypes(eventTypes).FlagId(flagId).UserId(userId).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `EventsAPI.ListEvents``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -478,8 +480,10 @@ Other parameters are passed through a pointer to a apiListEventsRequest struct v
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **companyId** | **string** |  | 
- **userId** | **string** |  | 
  **eventSubtype** | **string** |  | 
+ **eventTypes** | **[]string** |  | 
+ **flagId** | **string** |  | 
+ **userId** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 

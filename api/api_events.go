@@ -1159,8 +1159,10 @@ type ApiListEventsRequest struct {
 	ctx          context.Context
 	ApiService   EventsAPI
 	companyId    *string
-	userId       *string
 	eventSubtype *string
+	eventTypes   *[]string
+	flagId       *string
+	userId       *string
 	limit        *int32
 	offset       *int32
 }
@@ -1170,13 +1172,23 @@ func (r ApiListEventsRequest) CompanyId(companyId string) ApiListEventsRequest {
 	return r
 }
 
-func (r ApiListEventsRequest) UserId(userId string) ApiListEventsRequest {
-	r.userId = &userId
+func (r ApiListEventsRequest) EventSubtype(eventSubtype string) ApiListEventsRequest {
+	r.eventSubtype = &eventSubtype
 	return r
 }
 
-func (r ApiListEventsRequest) EventSubtype(eventSubtype string) ApiListEventsRequest {
-	r.eventSubtype = &eventSubtype
+func (r ApiListEventsRequest) EventTypes(eventTypes []string) ApiListEventsRequest {
+	r.eventTypes = &eventTypes
+	return r
+}
+
+func (r ApiListEventsRequest) FlagId(flagId string) ApiListEventsRequest {
+	r.flagId = &flagId
+	return r
+}
+
+func (r ApiListEventsRequest) UserId(userId string) ApiListEventsRequest {
+	r.userId = &userId
 	return r
 }
 
@@ -1234,11 +1246,25 @@ func (a *EventsAPIService) ListEventsExecute(r ApiListEventsRequest) (*ListEvent
 	if r.companyId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "company_id", r.companyId, "")
 	}
-	if r.userId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "user_id", r.userId, "")
-	}
 	if r.eventSubtype != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "event_subtype", r.eventSubtype, "")
+	}
+	if r.eventTypes != nil {
+		t := *r.eventTypes
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "event_types", s.Index(i).Interface(), "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "event_types", t, "multi")
+		}
+	}
+	if r.flagId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "flag_id", r.flagId, "")
+	}
+	if r.userId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "user_id", r.userId, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")

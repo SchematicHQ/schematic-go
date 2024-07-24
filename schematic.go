@@ -23,9 +23,6 @@ type Client interface {
 	// Close the client
 	Close()
 
-	// Add default headers to the API client
-	AddDefaultHeaders(ctx context.Context, headers map[string]string)
-
 	// Provide a custom cache provide for flag checks
 	AddFlagCheckCacheProvider(context.Context, CacheProvider[bool])
 

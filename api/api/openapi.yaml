@@ -3991,14 +3991,30 @@ paths:
         style: form
       - explode: true
         in: query
-        name: user_id
+        name: event_subtype
         required: false
         schema:
           type: string
         style: form
       - explode: true
         in: query
-        name: event_subtype
+        name: event_types
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: flag_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: user_id
         required: false
         schema:
           type: string
@@ -9328,21 +9344,8 @@ components:
             feature:
               flags:
               - feature_id: feature_id
-                feature:
-                  feature_type: feature_type
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  description: description
-                  event_subtype: event_subtype
-                  id: id
-                  lifecycle_phase: lifecycle_phase
-                  trait_id: trait_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
-                flag_type: flag_type
                 default_value: true
                 latest_check:
                   flag_id: flag_id
@@ -9959,24 +9962,25 @@ components:
                   priority: 2
                   value: true
                   plan_id: plan_id
+                last_checked_at: 2000-01-23T04:56:07.000+00:00
+                feature:
+                  feature_type: feature_type
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  created_at: 2000-01-23T04:56:07.000+00:00
+                  description: description
+                  event_subtype: event_subtype
+                  id: id
+                  lifecycle_phase: lifecycle_phase
+                  trait_id: trait_id
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                flag_type: flag_type
                 id: id
                 key: key
               - feature_id: feature_id
-                feature:
-                  feature_type: feature_type
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  description: description
-                  event_subtype: event_subtype
-                  id: id
-                  lifecycle_phase: lifecycle_phase
-                  trait_id: trait_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
-                flag_type: flag_type
                 default_value: true
                 latest_check:
                   flag_id: flag_id
@@ -10593,6 +10597,20 @@ components:
                   priority: 2
                   value: true
                   plan_id: plan_id
+                last_checked_at: 2000-01-23T04:56:07.000+00:00
+                feature:
+                  feature_type: feature_type
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  created_at: 2000-01-23T04:56:07.000+00:00
+                  description: description
+                  event_subtype: event_subtype
+                  id: id
+                  lifecycle_phase: lifecycle_phase
+                  trait_id: trait_id
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                flag_type: flag_type
                 id: id
                 key: key
               created_at: 2000-01-23T04:56:07.000+00:00
@@ -10646,21 +10664,8 @@ components:
             feature:
               flags:
               - feature_id: feature_id
-                feature:
-                  feature_type: feature_type
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  description: description
-                  event_subtype: event_subtype
-                  id: id
-                  lifecycle_phase: lifecycle_phase
-                  trait_id: trait_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
-                flag_type: flag_type
                 default_value: true
                 latest_check:
                   flag_id: flag_id
@@ -11277,24 +11282,25 @@ components:
                   priority: 2
                   value: true
                   plan_id: plan_id
+                last_checked_at: 2000-01-23T04:56:07.000+00:00
+                feature:
+                  feature_type: feature_type
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  created_at: 2000-01-23T04:56:07.000+00:00
+                  description: description
+                  event_subtype: event_subtype
+                  id: id
+                  lifecycle_phase: lifecycle_phase
+                  trait_id: trait_id
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                flag_type: flag_type
                 id: id
                 key: key
               - feature_id: feature_id
-                feature:
-                  feature_type: feature_type
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  description: description
-                  event_subtype: event_subtype
-                  id: id
-                  lifecycle_phase: lifecycle_phase
-                  trait_id: trait_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
-                flag_type: flag_type
                 default_value: true
                 latest_check:
                   flag_id: flag_id
@@ -11911,6 +11917,20 @@ components:
                   priority: 2
                   value: true
                   plan_id: plan_id
+                last_checked_at: 2000-01-23T04:56:07.000+00:00
+                feature:
+                  feature_type: feature_type
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  created_at: 2000-01-23T04:56:07.000+00:00
+                  description: description
+                  event_subtype: event_subtype
+                  id: id
+                  lifecycle_phase: lifecycle_phase
+                  trait_id: trait_id
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                flag_type: flag_type
                 id: id
                 key: key
               created_at: 2000-01-23T04:56:07.000+00:00
@@ -12516,6 +12536,7 @@ components:
           enum:
           - identify
           - track
+          - flag_check
           type: string
         sent_at:
           description: Optionally provide a timestamp at which the event was sent
@@ -13776,21 +13797,8 @@ components:
         feature:
           flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -14407,24 +14415,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -15041,6 +15050,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -15220,21 +15243,8 @@ components:
         feature:
           flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -15851,24 +15861,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -16485,6 +16496,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -16669,21 +16694,8 @@ components:
       example:
         flags:
         - feature_id: feature_id
-          feature:
-            feature_type: feature_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            event_subtype: event_subtype
-            id: id
-            lifecycle_phase: lifecycle_phase
-            trait_id: trait_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          flag_type: flag_type
           default_value: true
           latest_check:
             flag_id: flag_id
@@ -17300,24 +17312,25 @@ components:
             priority: 2
             value: true
             plan_id: plan_id
+          last_checked_at: 2000-01-23T04:56:07.000+00:00
+          feature:
+            feature_type: feature_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            event_subtype: event_subtype
+            id: id
+            lifecycle_phase: lifecycle_phase
+            trait_id: trait_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          flag_type: flag_type
           id: id
           key: key
         - feature_id: feature_id
-          feature:
-            feature_type: feature_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            event_subtype: event_subtype
-            id: id
-            lifecycle_phase: lifecycle_phase
-            trait_id: trait_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          flag_type: flag_type
           default_value: true
           latest_check:
             flag_id: flag_id
@@ -17934,6 +17947,20 @@ components:
             priority: 2
             value: true
             plan_id: plan_id
+          last_checked_at: 2000-01-23T04:56:07.000+00:00
+          feature:
+            feature_type: feature_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            event_subtype: event_subtype
+            id: id
+            lifecycle_phase: lifecycle_phase
+            trait_id: trait_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          flag_type: flag_type
           id: id
           key: key
         created_at: 2000-01-23T04:56:07.000+00:00
@@ -18069,21 +18096,8 @@ components:
           feature:
             flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -18700,24 +18714,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -19334,6 +19349,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -19387,21 +19416,8 @@ components:
           feature:
             flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -20018,24 +20034,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -20652,6 +20669,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -20716,21 +20747,8 @@ components:
         feature:
           flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -21347,24 +21365,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -21981,6 +22000,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -22272,21 +22305,8 @@ components:
     FlagDetailResponseData:
       example:
         feature_id: feature_id
-        feature:
-          feature_type: feature_type
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
-          created_at: 2000-01-23T04:56:07.000+00:00
-          description: description
-          event_subtype: event_subtype
-          id: id
-          lifecycle_phase: lifecycle_phase
-          trait_id: trait_id
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        name: name
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
-        flag_type: flag_type
         default_value: true
         latest_check:
           flag_id: flag_id
@@ -22903,6 +22923,20 @@ components:
           priority: 2
           value: true
           plan_id: plan_id
+        last_checked_at: 2000-01-23T04:56:07.000+00:00
+        feature:
+          feature_type: feature_type
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          description: description
+          event_subtype: event_subtype
+          id: id
+          lifecycle_phase: lifecycle_phase
+          trait_id: trait_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        name: name
+        flag_type: flag_type
         id: id
         key: key
       properties:
@@ -22923,6 +22957,10 @@ components:
         id:
           type: string
         key:
+          type: string
+        last_checked_at:
+          format: date-time
+          nullable: true
           type: string
         latest_check:
           $ref: '#/components/schemas/FlagCheckLogResponseData'
@@ -23517,21 +23555,8 @@ components:
         features:
         - flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -24148,24 +24173,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -24782,6 +24808,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -24819,21 +24859,8 @@ components:
           trait_id: trait_id
         - flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -25450,24 +25477,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -26084,6 +26112,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -26120,6 +26162,27 @@ components:
           lifecycle_phase: lifecycle_phase
           trait_id: trait_id
         plan_type: plan_type
+        billing_products:
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          external_id: external_id
+        - account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          external_id: external_id
         updated_at: 2000-01-23T04:56:07.000+00:00
         audience_type: audience_type
         company_count: 0
@@ -26130,6 +26193,10 @@ components:
       properties:
         audience_type:
           type: string
+        billing_products:
+          items:
+            $ref: '#/components/schemas/BillingProductResponseData'
+          type: array
         company_count:
           type: integer
         created_at:
@@ -26152,6 +26219,7 @@ components:
           type: string
       required:
       - audience_type
+      - billing_products
       - company_count
       - created_at
       - description
@@ -32038,21 +32106,8 @@ components:
               feature:
                 flags:
                 - feature_id: feature_id
-                  feature:
-                    feature_type: feature_type
-                    updated_at: 2000-01-23T04:56:07.000+00:00
-                    name: name
-                    created_at: 2000-01-23T04:56:07.000+00:00
-                    description: description
-                    event_subtype: event_subtype
-                    id: id
-                    lifecycle_phase: lifecycle_phase
-                    trait_id: trait_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
-                  flag_type: flag_type
                   default_value: true
                   latest_check:
                     flag_id: flag_id
@@ -32669,24 +32724,25 @@ components:
                     priority: 2
                     value: true
                     plan_id: plan_id
+                  last_checked_at: 2000-01-23T04:56:07.000+00:00
+                  feature:
+                    feature_type: feature_type
+                    updated_at: 2000-01-23T04:56:07.000+00:00
+                    name: name
+                    created_at: 2000-01-23T04:56:07.000+00:00
+                    description: description
+                    event_subtype: event_subtype
+                    id: id
+                    lifecycle_phase: lifecycle_phase
+                    trait_id: trait_id
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  flag_type: flag_type
                   id: id
                   key: key
                 - feature_id: feature_id
-                  feature:
-                    feature_type: feature_type
-                    updated_at: 2000-01-23T04:56:07.000+00:00
-                    name: name
-                    created_at: 2000-01-23T04:56:07.000+00:00
-                    description: description
-                    event_subtype: event_subtype
-                    id: id
-                    lifecycle_phase: lifecycle_phase
-                    trait_id: trait_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
-                  flag_type: flag_type
                   default_value: true
                   latest_check:
                     flag_id: flag_id
@@ -33303,6 +33359,20 @@ components:
                     priority: 2
                     value: true
                     plan_id: plan_id
+                  last_checked_at: 2000-01-23T04:56:07.000+00:00
+                  feature:
+                    feature_type: feature_type
+                    updated_at: 2000-01-23T04:56:07.000+00:00
+                    name: name
+                    created_at: 2000-01-23T04:56:07.000+00:00
+                    description: description
+                    event_subtype: event_subtype
+                    id: id
+                    lifecycle_phase: lifecycle_phase
+                    trait_id: trait_id
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  flag_type: flag_type
                   id: id
                   key: key
                 created_at: 2000-01-23T04:56:07.000+00:00
@@ -33356,21 +33426,8 @@ components:
               feature:
                 flags:
                 - feature_id: feature_id
-                  feature:
-                    feature_type: feature_type
-                    updated_at: 2000-01-23T04:56:07.000+00:00
-                    name: name
-                    created_at: 2000-01-23T04:56:07.000+00:00
-                    description: description
-                    event_subtype: event_subtype
-                    id: id
-                    lifecycle_phase: lifecycle_phase
-                    trait_id: trait_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
-                  flag_type: flag_type
                   default_value: true
                   latest_check:
                     flag_id: flag_id
@@ -33987,24 +34044,25 @@ components:
                     priority: 2
                     value: true
                     plan_id: plan_id
+                  last_checked_at: 2000-01-23T04:56:07.000+00:00
+                  feature:
+                    feature_type: feature_type
+                    updated_at: 2000-01-23T04:56:07.000+00:00
+                    name: name
+                    created_at: 2000-01-23T04:56:07.000+00:00
+                    description: description
+                    event_subtype: event_subtype
+                    id: id
+                    lifecycle_phase: lifecycle_phase
+                    trait_id: trait_id
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  flag_type: flag_type
                   id: id
                   key: key
                 - feature_id: feature_id
-                  feature:
-                    feature_type: feature_type
-                    updated_at: 2000-01-23T04:56:07.000+00:00
-                    name: name
-                    created_at: 2000-01-23T04:56:07.000+00:00
-                    description: description
-                    event_subtype: event_subtype
-                    id: id
-                    lifecycle_phase: lifecycle_phase
-                    trait_id: trait_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
-                  flag_type: flag_type
                   default_value: true
                   latest_check:
                     flag_id: flag_id
@@ -34621,6 +34679,20 @@ components:
                     priority: 2
                     value: true
                     plan_id: plan_id
+                  last_checked_at: 2000-01-23T04:56:07.000+00:00
+                  feature:
+                    feature_type: feature_type
+                    updated_at: 2000-01-23T04:56:07.000+00:00
+                    name: name
+                    created_at: 2000-01-23T04:56:07.000+00:00
+                    description: description
+                    event_subtype: event_subtype
+                    id: id
+                    lifecycle_phase: lifecycle_phase
+                    trait_id: trait_id
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  flag_type: flag_type
                   id: id
                   key: key
                 created_at: 2000-01-23T04:56:07.000+00:00
@@ -35632,7 +35704,11 @@ components:
     ListEventsParams:
       description: Input parameters
       example:
+        flag_id: flag_id
         company_id: company_id
+        event_types:
+        - event_types
+        - event_types
         offset: 0
         user_id: user_id
         limit: 100
@@ -35641,6 +35717,12 @@ components:
         company_id:
           type: string
         event_subtype:
+          type: string
+        event_types:
+          items:
+            type: string
+          type: array
+        flag_id:
           type: string
         limit:
           description: Page limit (default 100)
@@ -35728,7 +35810,11 @@ components:
             id: id
           status: status
         params:
+          flag_id: flag_id
           company_id: company_id
+          event_types:
+          - event_types
+          - event_types
           offset: 0
           user_id: user_id
           limit: 100
@@ -35850,21 +35936,8 @@ components:
           feature:
             flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -36481,24 +36554,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -37115,6 +37189,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -37249,21 +37337,8 @@ components:
           feature:
             flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -37880,24 +37955,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -38514,6 +38590,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -38746,21 +38836,8 @@ components:
           feature:
             flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -39377,24 +39454,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -40011,6 +40089,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -40064,21 +40156,8 @@ components:
           feature:
             flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -40695,24 +40774,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -41329,6 +41409,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -41490,21 +41584,8 @@ components:
           feature:
             flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -42121,24 +42202,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -42755,6 +42837,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -42896,21 +42992,8 @@ components:
           feature:
             flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -43527,24 +43610,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -44161,6 +44245,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -44397,21 +44495,8 @@ components:
         data:
         - flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -45028,24 +45113,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -45662,6 +45748,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -45699,21 +45799,8 @@ components:
           trait_id: trait_id
         - flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -46330,24 +46417,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -46964,6 +47052,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -47027,21 +47129,8 @@ components:
         data:
           flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -47658,24 +47747,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -48292,6 +48382,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -48345,21 +48449,8 @@ components:
         data:
           flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -48976,24 +49067,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -49610,6 +49702,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -49663,21 +49769,8 @@ components:
         data:
           flags:
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -50294,24 +50387,25 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           - feature_id: feature_id
-            feature:
-              feature_type: feature_type
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
-              created_at: 2000-01-23T04:56:07.000+00:00
-              description: description
-              event_subtype: event_subtype
-              id: id
-              lifecycle_phase: lifecycle_phase
-              trait_id: trait_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
-            flag_type: flag_type
             default_value: true
             latest_check:
               flag_id: flag_id
@@ -50928,6 +51022,20 @@ components:
               priority: 2
               value: true
               plan_id: plan_id
+            last_checked_at: 2000-01-23T04:56:07.000+00:00
+            feature:
+              feature_type: feature_type
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              created_at: 2000-01-23T04:56:07.000+00:00
+              description: description
+              event_subtype: event_subtype
+              id: id
+              lifecycle_phase: lifecycle_phase
+              trait_id: trait_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            flag_type: flag_type
             id: id
             key: key
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -51471,21 +51579,8 @@ components:
       example:
         data:
         - feature_id: feature_id
-          feature:
-            feature_type: feature_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            event_subtype: event_subtype
-            id: id
-            lifecycle_phase: lifecycle_phase
-            trait_id: trait_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          flag_type: flag_type
           default_value: true
           latest_check:
             flag_id: flag_id
@@ -52102,24 +52197,25 @@ components:
             priority: 2
             value: true
             plan_id: plan_id
+          last_checked_at: 2000-01-23T04:56:07.000+00:00
+          feature:
+            feature_type: feature_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            event_subtype: event_subtype
+            id: id
+            lifecycle_phase: lifecycle_phase
+            trait_id: trait_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          flag_type: flag_type
           id: id
           key: key
         - feature_id: feature_id
-          feature:
-            feature_type: feature_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            event_subtype: event_subtype
-            id: id
-            lifecycle_phase: lifecycle_phase
-            trait_id: trait_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          flag_type: flag_type
           default_value: true
           latest_check:
             flag_id: flag_id
@@ -52736,6 +52832,20 @@ components:
             priority: 2
             value: true
             plan_id: plan_id
+          last_checked_at: 2000-01-23T04:56:07.000+00:00
+          feature:
+            feature_type: feature_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            event_subtype: event_subtype
+            id: id
+            lifecycle_phase: lifecycle_phase
+            trait_id: trait_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          flag_type: flag_type
           id: id
           key: key
         params:
@@ -52764,21 +52874,8 @@ components:
       example:
         data:
           feature_id: feature_id
-          feature:
-            feature_type: feature_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            event_subtype: event_subtype
-            id: id
-            lifecycle_phase: lifecycle_phase
-            trait_id: trait_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          flag_type: flag_type
           default_value: true
           latest_check:
             flag_id: flag_id
@@ -53395,6 +53492,20 @@ components:
             priority: 2
             value: true
             plan_id: plan_id
+          last_checked_at: 2000-01-23T04:56:07.000+00:00
+          feature:
+            feature_type: feature_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            event_subtype: event_subtype
+            id: id
+            lifecycle_phase: lifecycle_phase
+            trait_id: trait_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          flag_type: flag_type
           id: id
           key: key
         params: "{}"
@@ -53414,21 +53525,8 @@ components:
       example:
         data:
           feature_id: feature_id
-          feature:
-            feature_type: feature_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            event_subtype: event_subtype
-            id: id
-            lifecycle_phase: lifecycle_phase
-            trait_id: trait_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          flag_type: flag_type
           default_value: true
           latest_check:
             flag_id: flag_id
@@ -54045,6 +54143,20 @@ components:
             priority: 2
             value: true
             plan_id: plan_id
+          last_checked_at: 2000-01-23T04:56:07.000+00:00
+          feature:
+            feature_type: feature_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            event_subtype: event_subtype
+            id: id
+            lifecycle_phase: lifecycle_phase
+            trait_id: trait_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          flag_type: flag_type
           id: id
           key: key
         params: "{}"
@@ -54064,21 +54176,8 @@ components:
       example:
         data:
           feature_id: feature_id
-          feature:
-            feature_type: feature_type
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            event_subtype: event_subtype
-            id: id
-            lifecycle_phase: lifecycle_phase
-            trait_id: trait_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
-          flag_type: flag_type
           default_value: true
           latest_check:
             flag_id: flag_id
@@ -54695,6 +54794,20 @@ components:
             priority: 2
             value: true
             plan_id: plan_id
+          last_checked_at: 2000-01-23T04:56:07.000+00:00
+          feature:
+            feature_type: feature_type
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            description: description
+            event_subtype: event_subtype
+            id: id
+            lifecycle_phase: lifecycle_phase
+            trait_id: trait_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          name: name
+          flag_type: flag_type
           id: id
           key: key
         params: "{}"
@@ -56653,21 +56766,8 @@ components:
         - features:
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -57284,24 +57384,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -57918,6 +58019,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -57955,21 +58070,8 @@ components:
             trait_id: trait_id
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -58586,24 +58688,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -59220,6 +59323,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -59256,6 +59373,27 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
+          billing_products:
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -59266,21 +59404,8 @@ components:
         - features:
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -59897,24 +60022,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -60531,6 +60657,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -60568,21 +60708,8 @@ components:
             trait_id: trait_id
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -61199,24 +61326,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -61833,6 +61961,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -61869,6 +62011,27 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
+          billing_products:
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -61905,21 +62068,8 @@ components:
           features:
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -62536,24 +62686,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -63170,6 +63321,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -63207,21 +63372,8 @@ components:
             trait_id: trait_id
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -63838,24 +63990,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -64472,6 +64625,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -64508,6 +64675,27 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
+          billing_products:
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -64534,21 +64722,8 @@ components:
           features:
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -65165,24 +65340,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -65799,6 +65975,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -65836,21 +66026,8 @@ components:
             trait_id: trait_id
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -66467,24 +66644,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -67101,6 +67279,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -67137,6 +67329,27 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
+          billing_products:
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -67163,21 +67376,8 @@ components:
           features:
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -67794,24 +67994,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -68428,6 +68629,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -68465,21 +68680,8 @@ components:
             trait_id: trait_id
           - flags:
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -69096,24 +69298,25 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             - feature_id: feature_id
-              feature:
-                feature_type: feature_type
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
-                created_at: 2000-01-23T04:56:07.000+00:00
-                description: description
-                event_subtype: event_subtype
-                id: id
-                lifecycle_phase: lifecycle_phase
-                trait_id: trait_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
-              flag_type: flag_type
               default_value: true
               latest_check:
                 flag_id: flag_id
@@ -69730,6 +69933,20 @@ components:
                 priority: 2
                 value: true
                 plan_id: plan_id
+              last_checked_at: 2000-01-23T04:56:07.000+00:00
+              feature:
+                feature_type: feature_type
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                created_at: 2000-01-23T04:56:07.000+00:00
+                description: description
+                event_subtype: event_subtype
+                id: id
+                lifecycle_phase: lifecycle_phase
+                trait_id: trait_id
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              name: name
+              flag_type: flag_type
               id: id
               key: key
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -69766,6 +69983,27 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
+          billing_products:
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
+          - account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -69942,21 +70180,8 @@ components:
             feature:
               flags:
               - feature_id: feature_id
-                feature:
-                  feature_type: feature_type
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  description: description
-                  event_subtype: event_subtype
-                  id: id
-                  lifecycle_phase: lifecycle_phase
-                  trait_id: trait_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
-                flag_type: flag_type
                 default_value: true
                 latest_check:
                   flag_id: flag_id
@@ -70573,24 +70798,25 @@ components:
                   priority: 2
                   value: true
                   plan_id: plan_id
+                last_checked_at: 2000-01-23T04:56:07.000+00:00
+                feature:
+                  feature_type: feature_type
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  created_at: 2000-01-23T04:56:07.000+00:00
+                  description: description
+                  event_subtype: event_subtype
+                  id: id
+                  lifecycle_phase: lifecycle_phase
+                  trait_id: trait_id
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                flag_type: flag_type
                 id: id
                 key: key
               - feature_id: feature_id
-                feature:
-                  feature_type: feature_type
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  description: description
-                  event_subtype: event_subtype
-                  id: id
-                  lifecycle_phase: lifecycle_phase
-                  trait_id: trait_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
-                flag_type: flag_type
                 default_value: true
                 latest_check:
                   flag_id: flag_id
@@ -71207,6 +71433,20 @@ components:
                   priority: 2
                   value: true
                   plan_id: plan_id
+                last_checked_at: 2000-01-23T04:56:07.000+00:00
+                feature:
+                  feature_type: feature_type
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  created_at: 2000-01-23T04:56:07.000+00:00
+                  description: description
+                  event_subtype: event_subtype
+                  id: id
+                  lifecycle_phase: lifecycle_phase
+                  trait_id: trait_id
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                flag_type: flag_type
                 id: id
                 key: key
               created_at: 2000-01-23T04:56:07.000+00:00
@@ -71260,21 +71500,8 @@ components:
             feature:
               flags:
               - feature_id: feature_id
-                feature:
-                  feature_type: feature_type
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  description: description
-                  event_subtype: event_subtype
-                  id: id
-                  lifecycle_phase: lifecycle_phase
-                  trait_id: trait_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
-                flag_type: flag_type
                 default_value: true
                 latest_check:
                   flag_id: flag_id
@@ -71891,24 +72118,25 @@ components:
                   priority: 2
                   value: true
                   plan_id: plan_id
+                last_checked_at: 2000-01-23T04:56:07.000+00:00
+                feature:
+                  feature_type: feature_type
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  created_at: 2000-01-23T04:56:07.000+00:00
+                  description: description
+                  event_subtype: event_subtype
+                  id: id
+                  lifecycle_phase: lifecycle_phase
+                  trait_id: trait_id
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                flag_type: flag_type
                 id: id
                 key: key
               - feature_id: feature_id
-                feature:
-                  feature_type: feature_type
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  name: name
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  description: description
-                  event_subtype: event_subtype
-                  id: id
-                  lifecycle_phase: lifecycle_phase
-                  trait_id: trait_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
-                flag_type: flag_type
                 default_value: true
                 latest_check:
                   flag_id: flag_id
@@ -72525,6 +72753,20 @@ components:
                   priority: 2
                   value: true
                   plan_id: plan_id
+                last_checked_at: 2000-01-23T04:56:07.000+00:00
+                feature:
+                  feature_type: feature_type
+                  updated_at: 2000-01-23T04:56:07.000+00:00
+                  name: name
+                  created_at: 2000-01-23T04:56:07.000+00:00
+                  description: description
+                  event_subtype: event_subtype
+                  id: id
+                  lifecycle_phase: lifecycle_phase
+                  trait_id: trait_id
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                name: name
+                flag_type: flag_type
                 id: id
                 key: key
               created_at: 2000-01-23T04:56:07.000+00:00
@@ -73906,6 +74148,61 @@ components:
       - event
       title: EventBodyTrack
       type: object
+    EventBodyFlagCheck:
+      properties:
+        company_id:
+          description: "Schematic company ID (starting with 'comp_') of the company\
+            \ evaluated, if any"
+          nullable: true
+          type: string
+        error:
+          description: Report an error that occurred during the flag check
+          nullable: true
+          type: string
+        flag_id:
+          description: "Schematic flag ID (starting with 'flag_') for the flag matching\
+            \ the key, if any"
+          nullable: true
+          type: string
+        flag_key:
+          description: The key of the flag being checked
+          type: string
+        reason:
+          description: The reason why the value was returned
+          type: string
+        req_company:
+          additionalProperties:
+            type: string
+          description: Key-value pairs used to to identify company for which the flag
+            was checked
+          nullable: true
+          type: object
+        req_user:
+          additionalProperties:
+            type: string
+          description: Key-value pairs used to to identify user for which the flag
+            was checked
+          nullable: true
+          type: object
+        rule_id:
+          description: "Schematic rule ID (starting with 'rule_') of the rule that\
+            \ matched for the flag, if any"
+          nullable: true
+          type: string
+        user_id:
+          description: "Schematic user ID (starting with 'user_') of the user evaluated,\
+            \ if any"
+          nullable: true
+          type: string
+        value:
+          description: The value of the flag for the given company and/or user
+          type: boolean
+      required:
+      - flag_key
+      - reason
+      - value
+      title: EventBodyFlagCheck
+      type: object
     EventBodyIdentifyCompany:
       description: Information about the company associated with the user; required
         only if it is a new user
@@ -73949,6 +74246,7 @@ components:
     EventBody:
       oneOf:
       - $ref: '#/components/schemas/EventBodyTrack'
+      - $ref: '#/components/schemas/EventBodyFlagCheck'
       - $ref: '#/components/schemas/EventBodyIdentify'
       title: EventBody
       type: object

@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **AudienceType** | **string** |  | 
+**BillingProducts** | [**[]BillingProductResponseData**](BillingProductResponseData.md) |  | 
 **CompanyCount** | **int32** |  | 
 **CreatedAt** | **time.Time** |  | 
 **Description** | **string** |  | 
@@ -18,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewPlanDetailResponseData
 
-`func NewPlanDetailResponseData(audienceType string, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time, ) *PlanDetailResponseData`
+`func NewPlanDetailResponseData(audienceType string, billingProducts []BillingProductResponseData, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time, ) *PlanDetailResponseData`
 
 NewPlanDetailResponseData instantiates a new PlanDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -51,6 +52,26 @@ and a boolean to check if the value has been set.
 `func (o *PlanDetailResponseData) SetAudienceType(v string)`
 
 SetAudienceType sets AudienceType field to given value.
+
+
+### GetBillingProducts
+
+`func (o *PlanDetailResponseData) GetBillingProducts() []BillingProductResponseData`
+
+GetBillingProducts returns the BillingProducts field if non-nil, zero value otherwise.
+
+### GetBillingProductsOk
+
+`func (o *PlanDetailResponseData) GetBillingProductsOk() (*[]BillingProductResponseData, bool)`
+
+GetBillingProductsOk returns a tuple with the BillingProducts field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetBillingProducts
+
+`func (o *PlanDetailResponseData) SetBillingProducts(v []BillingProductResponseData)`
+
+SetBillingProducts sets BillingProducts field to given value.
 
 
 ### GetCompanyCount

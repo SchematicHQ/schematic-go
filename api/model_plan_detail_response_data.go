@@ -22,15 +22,16 @@ var _ MappedNullable = &PlanDetailResponseData{}
 
 // PlanDetailResponseData The updated resource
 type PlanDetailResponseData struct {
-	AudienceType string                      `json:"audience_type"`
-	CompanyCount int32                       `json:"company_count"`
-	CreatedAt    time.Time                   `json:"created_at"`
-	Description  string                      `json:"description"`
-	Features     []FeatureDetailResponseData `json:"features"`
-	Id           string                      `json:"id"`
-	Name         string                      `json:"name"`
-	PlanType     string                      `json:"plan_type"`
-	UpdatedAt    time.Time                   `json:"updated_at"`
+	AudienceType    string                       `json:"audience_type"`
+	BillingProducts []BillingProductResponseData `json:"billing_products"`
+	CompanyCount    int32                        `json:"company_count"`
+	CreatedAt       time.Time                    `json:"created_at"`
+	Description     string                       `json:"description"`
+	Features        []FeatureDetailResponseData  `json:"features"`
+	Id              string                       `json:"id"`
+	Name            string                       `json:"name"`
+	PlanType        string                       `json:"plan_type"`
+	UpdatedAt       time.Time                    `json:"updated_at"`
 }
 
 type _PlanDetailResponseData PlanDetailResponseData
@@ -39,9 +40,10 @@ type _PlanDetailResponseData PlanDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPlanDetailResponseData(audienceType string, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time) *PlanDetailResponseData {
+func NewPlanDetailResponseData(audienceType string, billingProducts []BillingProductResponseData, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time) *PlanDetailResponseData {
 	this := PlanDetailResponseData{}
 	this.AudienceType = audienceType
+	this.BillingProducts = billingProducts
 	this.CompanyCount = companyCount
 	this.CreatedAt = createdAt
 	this.Description = description
@@ -83,6 +85,30 @@ func (o *PlanDetailResponseData) GetAudienceTypeOk() (*string, bool) {
 // SetAudienceType sets field value
 func (o *PlanDetailResponseData) SetAudienceType(v string) {
 	o.AudienceType = v
+}
+
+// GetBillingProducts returns the BillingProducts field value
+func (o *PlanDetailResponseData) GetBillingProducts() []BillingProductResponseData {
+	if o == nil {
+		var ret []BillingProductResponseData
+		return ret
+	}
+
+	return o.BillingProducts
+}
+
+// GetBillingProductsOk returns a tuple with the BillingProducts field value
+// and a boolean to check if the value has been set.
+func (o *PlanDetailResponseData) GetBillingProductsOk() ([]BillingProductResponseData, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.BillingProducts, true
+}
+
+// SetBillingProducts sets field value
+func (o *PlanDetailResponseData) SetBillingProducts(v []BillingProductResponseData) {
+	o.BillingProducts = v
 }
 
 // GetCompanyCount returns the CompanyCount field value
@@ -288,6 +314,7 @@ func (o PlanDetailResponseData) MarshalJSON() ([]byte, error) {
 func (o PlanDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["audience_type"] = o.AudienceType
+	toSerialize["billing_products"] = o.BillingProducts
 	toSerialize["company_count"] = o.CompanyCount
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["description"] = o.Description
@@ -305,6 +332,7 @@ func (o *PlanDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"audience_type",
+		"billing_products",
 		"company_count",
 		"created_at",
 		"description",

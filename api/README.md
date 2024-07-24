@@ -281,6 +281,7 @@ Class | Method | HTTP request | Description
  - [EnvironmentDetailResponseData](docs/EnvironmentDetailResponseData.md)
  - [EnvironmentResponseData](docs/EnvironmentResponseData.md)
  - [EventBody](docs/EventBody.md)
+ - [EventBodyFlagCheck](docs/EventBodyFlagCheck.md)
  - [EventBodyIdentify](docs/EventBodyIdentify.md)
  - [EventBodyIdentifyCompany](docs/EventBodyIdentifyCompany.md)
  - [EventBodyTrack](docs/EventBodyTrack.md)

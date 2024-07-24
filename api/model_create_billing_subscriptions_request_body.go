@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -28,6 +27,7 @@ type CreateBillingSubscriptionsRequestBody struct {
 	ProductExternalIds     []BillingProductPricing `json:"product_external_ids"`
 	SubscriptionExternalId string                  `json:"subscription_external_id"`
 	TotalPrice             int32                   `json:"total_price"`
+	AdditionalProperties   map[string]interface{}
 }
 
 type _CreateBillingSubscriptionsRequestBody CreateBillingSubscriptionsRequestBody
@@ -235,6 +235,11 @@ func (o CreateBillingSubscriptionsRequestBody) ToMap() (map[string]interface{}, 
 	toSerialize["product_external_ids"] = o.ProductExternalIds
 	toSerialize["subscription_external_id"] = o.SubscriptionExternalId
 	toSerialize["total_price"] = o.TotalPrice
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -266,15 +271,25 @@ func (o *CreateBillingSubscriptionsRequestBody) UnmarshalJSON(data []byte) (err 
 
 	varCreateBillingSubscriptionsRequestBody := _CreateBillingSubscriptionsRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateBillingSubscriptionsRequestBody)
+	err = json.Unmarshal(data, &varCreateBillingSubscriptionsRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateBillingSubscriptionsRequestBody(varCreateBillingSubscriptionsRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "customer_external_id")
+		delete(additionalProperties, "expired_at")
+		delete(additionalProperties, "interval")
+		delete(additionalProperties, "product_external_ids")
+		delete(additionalProperties, "subscription_external_id")
+		delete(additionalProperties, "total_price")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

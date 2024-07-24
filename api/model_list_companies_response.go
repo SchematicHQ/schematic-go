@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -22,8 +21,9 @@ var _ MappedNullable = &ListCompaniesResponse{}
 // ListCompaniesResponse struct for ListCompaniesResponse
 type ListCompaniesResponse struct {
 	// The returned resources
-	Data   []CompanyDetailResponseData `json:"data"`
-	Params ListCompaniesParams         `json:"params"`
+	Data                 []CompanyDetailResponseData `json:"data"`
+	Params               ListCompaniesParams         `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ListCompaniesResponse ListCompaniesResponse
@@ -107,6 +107,11 @@ func (o ListCompaniesResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -135,15 +140,21 @@ func (o *ListCompaniesResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varListCompaniesResponse := _ListCompaniesResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varListCompaniesResponse)
+	err = json.Unmarshal(data, &varListCompaniesResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ListCompaniesResponse(varListCompaniesResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

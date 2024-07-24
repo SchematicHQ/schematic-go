@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,10 +20,11 @@ var _ MappedNullable = &CreateEntityTraitDefinitionRequestBody{}
 
 // CreateEntityTraitDefinitionRequestBody struct for CreateEntityTraitDefinitionRequestBody
 type CreateEntityTraitDefinitionRequestBody struct {
-	DisplayName NullableString `json:"display_name,omitempty"`
-	EntityType  string         `json:"entity_type"`
-	Hierarchy   []string       `json:"hierarchy"`
-	TraitType   string         `json:"trait_type"`
+	DisplayName          NullableString `json:"display_name,omitempty"`
+	EntityType           string         `json:"entity_type"`
+	Hierarchy            []string       `json:"hierarchy"`
+	TraitType            string         `json:"trait_type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateEntityTraitDefinitionRequestBody CreateEntityTraitDefinitionRequestBody
@@ -180,6 +180,11 @@ func (o CreateEntityTraitDefinitionRequestBody) ToMap() (map[string]interface{},
 	toSerialize["entity_type"] = o.EntityType
 	toSerialize["hierarchy"] = o.Hierarchy
 	toSerialize["trait_type"] = o.TraitType
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -209,15 +214,23 @@ func (o *CreateEntityTraitDefinitionRequestBody) UnmarshalJSON(data []byte) (err
 
 	varCreateEntityTraitDefinitionRequestBody := _CreateEntityTraitDefinitionRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateEntityTraitDefinitionRequestBody)
+	err = json.Unmarshal(data, &varCreateEntityTraitDefinitionRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateEntityTraitDefinitionRequestBody(varCreateEntityTraitDefinitionRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "entity_type")
+		delete(additionalProperties, "hierarchy")
+		delete(additionalProperties, "trait_type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

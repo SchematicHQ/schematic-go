@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &CreateEnvironmentRequestBody{}
 
 // CreateEnvironmentRequestBody struct for CreateEnvironmentRequestBody
 type CreateEnvironmentRequestBody struct {
-	EnvironmentType string `json:"environment_type"`
-	Name            string `json:"name"`
+	EnvironmentType      string `json:"environment_type"`
+	Name                 string `json:"name"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateEnvironmentRequestBody CreateEnvironmentRequestBody
@@ -106,6 +106,11 @@ func (o CreateEnvironmentRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["environment_type"] = o.EnvironmentType
 	toSerialize["name"] = o.Name
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *CreateEnvironmentRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateEnvironmentRequestBody := _CreateEnvironmentRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateEnvironmentRequestBody)
+	err = json.Unmarshal(data, &varCreateEnvironmentRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateEnvironmentRequestBody(varCreateEnvironmentRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "environment_type")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

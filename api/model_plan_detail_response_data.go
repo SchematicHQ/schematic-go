@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,16 +21,17 @@ var _ MappedNullable = &PlanDetailResponseData{}
 
 // PlanDetailResponseData The updated resource
 type PlanDetailResponseData struct {
-	AudienceType    string                       `json:"audience_type"`
-	BillingProducts []BillingProductResponseData `json:"billing_products"`
-	CompanyCount    int32                        `json:"company_count"`
-	CreatedAt       time.Time                    `json:"created_at"`
-	Description     string                       `json:"description"`
-	Features        []FeatureDetailResponseData  `json:"features"`
-	Id              string                       `json:"id"`
-	Name            string                       `json:"name"`
-	PlanType        string                       `json:"plan_type"`
-	UpdatedAt       time.Time                    `json:"updated_at"`
+	AudienceType         string                       `json:"audience_type"`
+	BillingProducts      []BillingProductResponseData `json:"billing_products"`
+	CompanyCount         int32                        `json:"company_count"`
+	CreatedAt            time.Time                    `json:"created_at"`
+	Description          string                       `json:"description"`
+	Features             []FeatureDetailResponseData  `json:"features"`
+	Id                   string                       `json:"id"`
+	Name                 string                       `json:"name"`
+	PlanType             string                       `json:"plan_type"`
+	UpdatedAt            time.Time                    `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _PlanDetailResponseData PlanDetailResponseData
@@ -323,6 +323,11 @@ func (o PlanDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	toSerialize["plan_type"] = o.PlanType
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -359,15 +364,29 @@ func (o *PlanDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varPlanDetailResponseData := _PlanDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varPlanDetailResponseData)
+	err = json.Unmarshal(data, &varPlanDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = PlanDetailResponseData(varPlanDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "audience_type")
+		delete(additionalProperties, "billing_products")
+		delete(additionalProperties, "company_count")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "features")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "plan_type")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

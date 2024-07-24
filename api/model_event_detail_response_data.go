@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,27 +21,28 @@ var _ MappedNullable = &EventDetailResponseData{}
 
 // EventDetailResponseData struct for EventDetailResponseData
 type EventDetailResponseData struct {
-	ApiKey        NullableString         `json:"api_key,omitempty"`
-	Body          map[string]interface{} `json:"body"`
-	BodyPreview   string                 `json:"body_preview"`
-	CapturedAt    time.Time              `json:"captured_at"`
-	Company       *PreviewObject         `json:"company,omitempty"`
-	CompanyId     NullableString         `json:"company_id,omitempty"`
-	EnrichedAt    NullableTime           `json:"enriched_at,omitempty"`
-	EnvironmentId NullableString         `json:"environment_id,omitempty"`
-	ErrorMessage  NullableString         `json:"error_message,omitempty"`
-	FeatureIds    []string               `json:"feature_ids"`
-	Features      []PreviewObject        `json:"features"`
-	Id            string                 `json:"id"`
-	LoadedAt      NullableTime           `json:"loaded_at,omitempty"`
-	ProcessedAt   NullableTime           `json:"processed_at,omitempty"`
-	SentAt        NullableTime           `json:"sent_at,omitempty"`
-	Status        string                 `json:"status"`
-	Subtype       NullableString         `json:"subtype,omitempty"`
-	Type          string                 `json:"type"`
-	UpdatedAt     time.Time              `json:"updated_at"`
-	User          *PreviewObject         `json:"user,omitempty"`
-	UserId        NullableString         `json:"user_id,omitempty"`
+	ApiKey               NullableString         `json:"api_key,omitempty"`
+	Body                 map[string]interface{} `json:"body"`
+	BodyPreview          string                 `json:"body_preview"`
+	CapturedAt           time.Time              `json:"captured_at"`
+	Company              *PreviewObject         `json:"company,omitempty"`
+	CompanyId            NullableString         `json:"company_id,omitempty"`
+	EnrichedAt           NullableTime           `json:"enriched_at,omitempty"`
+	EnvironmentId        NullableString         `json:"environment_id,omitempty"`
+	ErrorMessage         NullableString         `json:"error_message,omitempty"`
+	FeatureIds           []string               `json:"feature_ids"`
+	Features             []PreviewObject        `json:"features"`
+	Id                   string                 `json:"id"`
+	LoadedAt             NullableTime           `json:"loaded_at,omitempty"`
+	ProcessedAt          NullableTime           `json:"processed_at,omitempty"`
+	SentAt               NullableTime           `json:"sent_at,omitempty"`
+	Status               string                 `json:"status"`
+	Subtype              NullableString         `json:"subtype,omitempty"`
+	Type                 string                 `json:"type"`
+	UpdatedAt            time.Time              `json:"updated_at"`
+	User                 *PreviewObject         `json:"user,omitempty"`
+	UserId               NullableString         `json:"user_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EventDetailResponseData EventDetailResponseData
@@ -838,6 +838,11 @@ func (o EventDetailResponseData) ToMap() (map[string]interface{}, error) {
 	if o.UserId.IsSet() {
 		toSerialize["user_id"] = o.UserId.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -873,15 +878,40 @@ func (o *EventDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varEventDetailResponseData := _EventDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEventDetailResponseData)
+	err = json.Unmarshal(data, &varEventDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EventDetailResponseData(varEventDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "api_key")
+		delete(additionalProperties, "body")
+		delete(additionalProperties, "body_preview")
+		delete(additionalProperties, "captured_at")
+		delete(additionalProperties, "company")
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "enriched_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "error_message")
+		delete(additionalProperties, "feature_ids")
+		delete(additionalProperties, "features")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "loaded_at")
+		delete(additionalProperties, "processed_at")
+		delete(additionalProperties, "sent_at")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "subtype")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "user_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

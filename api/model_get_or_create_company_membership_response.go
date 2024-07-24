@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -23,7 +22,8 @@ var _ MappedNullable = &GetOrCreateCompanyMembershipResponse{}
 type GetOrCreateCompanyMembershipResponse struct {
 	Data CompanyMembershipDetailResponseData `json:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params"`
+	Params               map[string]interface{} `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _GetOrCreateCompanyMembershipResponse GetOrCreateCompanyMembershipResponse
@@ -107,6 +107,11 @@ func (o GetOrCreateCompanyMembershipResponse) ToMap() (map[string]interface{}, e
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -135,15 +140,21 @@ func (o *GetOrCreateCompanyMembershipResponse) UnmarshalJSON(data []byte) (err e
 
 	varGetOrCreateCompanyMembershipResponse := _GetOrCreateCompanyMembershipResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varGetOrCreateCompanyMembershipResponse)
+	err = json.Unmarshal(data, &varGetOrCreateCompanyMembershipResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = GetOrCreateCompanyMembershipResponse(varGetOrCreateCompanyMembershipResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

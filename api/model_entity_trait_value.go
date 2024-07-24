@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &EntityTraitValue{}
 
 // EntityTraitValue struct for EntityTraitValue
 type EntityTraitValue struct {
-	DefinitionId string `json:"definition_id"`
-	Value        string `json:"value"`
+	DefinitionId         string `json:"definition_id"`
+	Value                string `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EntityTraitValue EntityTraitValue
@@ -106,6 +106,11 @@ func (o EntityTraitValue) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["definition_id"] = o.DefinitionId
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *EntityTraitValue) UnmarshalJSON(data []byte) (err error) {
 
 	varEntityTraitValue := _EntityTraitValue{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEntityTraitValue)
+	err = json.Unmarshal(data, &varEntityTraitValue)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EntityTraitValue(varEntityTraitValue)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "definition_id")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

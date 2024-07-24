@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,15 +21,16 @@ var _ MappedNullable = &FeatureResponseData{}
 
 // FeatureResponseData struct for FeatureResponseData
 type FeatureResponseData struct {
-	CreatedAt      time.Time      `json:"created_at"`
-	Description    string         `json:"description"`
-	EventSubtype   NullableString `json:"event_subtype,omitempty"`
-	FeatureType    string         `json:"feature_type"`
-	Id             string         `json:"id"`
-	LifecyclePhase NullableString `json:"lifecycle_phase,omitempty"`
-	Name           string         `json:"name"`
-	TraitId        NullableString `json:"trait_id,omitempty"`
-	UpdatedAt      time.Time      `json:"updated_at"`
+	CreatedAt            time.Time      `json:"created_at"`
+	Description          string         `json:"description"`
+	EventSubtype         NullableString `json:"event_subtype,omitempty"`
+	FeatureType          string         `json:"feature_type"`
+	Id                   string         `json:"id"`
+	LifecyclePhase       NullableString `json:"lifecycle_phase,omitempty"`
+	Name                 string         `json:"name"`
+	TraitId              NullableString `json:"trait_id,omitempty"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FeatureResponseData FeatureResponseData
@@ -356,6 +356,11 @@ func (o FeatureResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["trait_id"] = o.TraitId.Get()
 	}
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -388,15 +393,28 @@ func (o *FeatureResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varFeatureResponseData := _FeatureResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFeatureResponseData)
+	err = json.Unmarshal(data, &varFeatureResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FeatureResponseData(varFeatureResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "feature_type")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "lifecycle_phase")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "trait_id")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &CountWebhookEventsResponse{}
 
 // CountWebhookEventsResponse struct for CountWebhookEventsResponse
 type CountWebhookEventsResponse struct {
-	Data   CountResponse            `json:"data"`
-	Params CountWebhookEventsParams `json:"params"`
+	Data                 CountResponse            `json:"data"`
+	Params               CountWebhookEventsParams `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CountWebhookEventsResponse CountWebhookEventsResponse
@@ -106,6 +106,11 @@ func (o CountWebhookEventsResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *CountWebhookEventsResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varCountWebhookEventsResponse := _CountWebhookEventsResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCountWebhookEventsResponse)
+	err = json.Unmarshal(data, &varCountWebhookEventsResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CountWebhookEventsResponse(varCountWebhookEventsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

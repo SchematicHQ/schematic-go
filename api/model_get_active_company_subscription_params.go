@@ -23,8 +23,11 @@ type GetActiveCompanySubscriptionParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32 `json:"offset,omitempty"`
+	Offset               *int32 `json:"offset,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _GetActiveCompanySubscriptionParams GetActiveCompanySubscriptionParams
 
 // NewGetActiveCompanySubscriptionParams instantiates a new GetActiveCompanySubscriptionParams object
 // This constructor will assign default values to properties that have it defined,
@@ -158,7 +161,35 @@ func (o GetActiveCompanySubscriptionParams) ToMap() (map[string]interface{}, err
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *GetActiveCompanySubscriptionParams) UnmarshalJSON(data []byte) (err error) {
+	varGetActiveCompanySubscriptionParams := _GetActiveCompanySubscriptionParams{}
+
+	err = json.Unmarshal(data, &varGetActiveCompanySubscriptionParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = GetActiveCompanySubscriptionParams(varGetActiveCompanySubscriptionParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableGetActiveCompanySubscriptionParams struct {

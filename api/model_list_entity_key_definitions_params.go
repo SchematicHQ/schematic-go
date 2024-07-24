@@ -24,9 +24,12 @@ type ListEntityKeyDefinitionsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32  `json:"offset,omitempty"`
-	Q      *string `json:"q,omitempty"`
+	Offset               *int32  `json:"offset,omitempty"`
+	Q                    *string `json:"q,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListEntityKeyDefinitionsParams ListEntityKeyDefinitionsParams
 
 // NewListEntityKeyDefinitionsParams instantiates a new ListEntityKeyDefinitionsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -230,7 +233,37 @@ func (o ListEntityKeyDefinitionsParams) ToMap() (map[string]interface{}, error) 
 	if !IsNil(o.Q) {
 		toSerialize["q"] = o.Q
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListEntityKeyDefinitionsParams) UnmarshalJSON(data []byte) (err error) {
+	varListEntityKeyDefinitionsParams := _ListEntityKeyDefinitionsParams{}
+
+	err = json.Unmarshal(data, &varListEntityKeyDefinitionsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListEntityKeyDefinitionsParams(varListEntityKeyDefinitionsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "entity_type")
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "q")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListEntityKeyDefinitionsParams struct {

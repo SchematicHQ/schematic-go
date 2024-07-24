@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -664,4 +665,15 @@ model_webhook_event_detail_response_data.go
 model_webhook_event_response_data.go
 model_webhook_response_data.go
 response.go
+test/api_accesstokens_test.go
+test/api_accounts_test.go
+test/api_billing_test.go
+test/api_companies_test.go
+test/api_components_test.go
+test/api_crm_test.go
+test/api_entitlements_test.go
+test/api_events_test.go
+test/api_features_test.go
+test/api_plans_test.go
+test/api_webhooks_test.go
 utils.go

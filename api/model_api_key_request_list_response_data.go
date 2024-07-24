@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,22 +21,23 @@ var _ MappedNullable = &ApiKeyRequestListResponseData{}
 
 // ApiKeyRequestListResponseData struct for ApiKeyRequestListResponseData
 type ApiKeyRequestListResponseData struct {
-	ApiKeyId          string         `json:"api_key_id"`
-	EndedAt           NullableTime   `json:"ended_at,omitempty"`
-	EnvironmentId     NullableString `json:"environment_id,omitempty"`
-	Id                string         `json:"id"`
-	Method            string         `json:"method"`
-	ReqBody           NullableString `json:"req_body,omitempty"`
-	RequestType       NullableString `json:"request_type,omitempty"`
-	ResourceId        NullableInt32  `json:"resource_id,omitempty"`
-	ResourceIdString  NullableString `json:"resource_id_string,omitempty"`
-	ResourceName      NullableString `json:"resource_name,omitempty"`
-	ResourceType      NullableString `json:"resource_type,omitempty"`
-	RespCode          NullableInt32  `json:"resp_code,omitempty"`
-	SecondaryResource NullableString `json:"secondary_resource,omitempty"`
-	StartedAt         time.Time      `json:"started_at"`
-	Url               string         `json:"url"`
-	UserName          NullableString `json:"user_name,omitempty"`
+	ApiKeyId             string         `json:"api_key_id"`
+	EndedAt              NullableTime   `json:"ended_at,omitempty"`
+	EnvironmentId        NullableString `json:"environment_id,omitempty"`
+	Id                   string         `json:"id"`
+	Method               string         `json:"method"`
+	ReqBody              NullableString `json:"req_body,omitempty"`
+	RequestType          NullableString `json:"request_type,omitempty"`
+	ResourceId           NullableInt32  `json:"resource_id,omitempty"`
+	ResourceIdString     NullableString `json:"resource_id_string,omitempty"`
+	ResourceName         NullableString `json:"resource_name,omitempty"`
+	ResourceType         NullableString `json:"resource_type,omitempty"`
+	RespCode             NullableInt32  `json:"resp_code,omitempty"`
+	SecondaryResource    NullableString `json:"secondary_resource,omitempty"`
+	StartedAt            time.Time      `json:"started_at"`
+	Url                  string         `json:"url"`
+	UserName             NullableString `json:"user_name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ApiKeyRequestListResponseData ApiKeyRequestListResponseData
@@ -705,6 +705,11 @@ func (o ApiKeyRequestListResponseData) ToMap() (map[string]interface{}, error) {
 	if o.UserName.IsSet() {
 		toSerialize["user_name"] = o.UserName.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -736,15 +741,35 @@ func (o *ApiKeyRequestListResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varApiKeyRequestListResponseData := _ApiKeyRequestListResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varApiKeyRequestListResponseData)
+	err = json.Unmarshal(data, &varApiKeyRequestListResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ApiKeyRequestListResponseData(varApiKeyRequestListResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "api_key_id")
+		delete(additionalProperties, "ended_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "method")
+		delete(additionalProperties, "req_body")
+		delete(additionalProperties, "request_type")
+		delete(additionalProperties, "resource_id")
+		delete(additionalProperties, "resource_id_string")
+		delete(additionalProperties, "resource_name")
+		delete(additionalProperties, "resource_type")
+		delete(additionalProperties, "resp_code")
+		delete(additionalProperties, "secondary_resource")
+		delete(additionalProperties, "started_at")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "user_name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

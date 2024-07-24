@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,10 +20,11 @@ var _ MappedNullable = &CreateOrUpdateConditionGroupRequestBody{}
 
 // CreateOrUpdateConditionGroupRequestBody struct for CreateOrUpdateConditionGroupRequestBody
 type CreateOrUpdateConditionGroupRequestBody struct {
-	Conditions []CreateOrUpdateConditionRequestBody `json:"conditions"`
-	FlagId     NullableString                       `json:"flag_id,omitempty"`
-	Id         NullableString                       `json:"id,omitempty"`
-	PlanId     NullableString                       `json:"plan_id,omitempty"`
+	Conditions           []CreateOrUpdateConditionRequestBody `json:"conditions"`
+	FlagId               NullableString                       `json:"flag_id,omitempty"`
+	Id                   NullableString                       `json:"id,omitempty"`
+	PlanId               NullableString                       `json:"plan_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateOrUpdateConditionGroupRequestBody CreateOrUpdateConditionGroupRequestBody
@@ -220,6 +220,11 @@ func (o CreateOrUpdateConditionGroupRequestBody) ToMap() (map[string]interface{}
 	if o.PlanId.IsSet() {
 		toSerialize["plan_id"] = o.PlanId.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -247,15 +252,23 @@ func (o *CreateOrUpdateConditionGroupRequestBody) UnmarshalJSON(data []byte) (er
 
 	varCreateOrUpdateConditionGroupRequestBody := _CreateOrUpdateConditionGroupRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateOrUpdateConditionGroupRequestBody)
+	err = json.Unmarshal(data, &varCreateOrUpdateConditionGroupRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateOrUpdateConditionGroupRequestBody(varCreateOrUpdateConditionGroupRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "conditions")
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "plan_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

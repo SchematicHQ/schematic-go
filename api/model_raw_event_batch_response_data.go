@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,7 +20,8 @@ var _ MappedNullable = &RawEventBatchResponseData{}
 
 // RawEventBatchResponseData The created resource
 type RawEventBatchResponseData struct {
-	Events []RawEventResponseData `json:"events"`
+	Events               []RawEventResponseData `json:"events"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _RawEventBatchResponseData RawEventBatchResponseData
@@ -79,6 +79,11 @@ func (o RawEventBatchResponseData) MarshalJSON() ([]byte, error) {
 func (o RawEventBatchResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["events"] = o.Events
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -106,15 +111,20 @@ func (o *RawEventBatchResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varRawEventBatchResponseData := _RawEventBatchResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varRawEventBatchResponseData)
+	err = json.Unmarshal(data, &varRawEventBatchResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = RawEventBatchResponseData(varRawEventBatchResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "events")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

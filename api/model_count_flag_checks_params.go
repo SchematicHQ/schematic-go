@@ -25,8 +25,11 @@ type CountFlagChecksParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32 `json:"offset,omitempty"`
+	Offset               *int32 `json:"offset,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CountFlagChecksParams CountFlagChecksParams
 
 // NewCountFlagChecksParams instantiates a new CountFlagChecksParams object
 // This constructor will assign default values to properties that have it defined,
@@ -230,7 +233,37 @@ func (o CountFlagChecksParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CountFlagChecksParams) UnmarshalJSON(data []byte) (err error) {
+	varCountFlagChecksParams := _CountFlagChecksParams{}
+
+	err = json.Unmarshal(data, &varCountFlagChecksParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CountFlagChecksParams(varCountFlagChecksParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "flag_ids")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCountFlagChecksParams struct {

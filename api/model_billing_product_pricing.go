@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &BillingProductPricing{}
 
 // BillingProductPricing struct for BillingProductPricing
 type BillingProductPricing struct {
-	Price             int32  `json:"price"`
-	ProductExternalId string `json:"product_external_id"`
+	Price                int32  `json:"price"`
+	ProductExternalId    string `json:"product_external_id"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BillingProductPricing BillingProductPricing
@@ -106,6 +106,11 @@ func (o BillingProductPricing) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["price"] = o.Price
 	toSerialize["product_external_id"] = o.ProductExternalId
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *BillingProductPricing) UnmarshalJSON(data []byte) (err error) {
 
 	varBillingProductPricing := _BillingProductPricing{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varBillingProductPricing)
+	err = json.Unmarshal(data, &varBillingProductPricing)
 
 	if err != nil {
 		return err
 	}
 
 	*o = BillingProductPricing(varBillingProductPricing)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "price")
+		delete(additionalProperties, "product_external_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

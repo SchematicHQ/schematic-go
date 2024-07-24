@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,16 +21,17 @@ var _ MappedNullable = &PlanAudienceResponseData{}
 
 // PlanAudienceResponseData struct for PlanAudienceResponseData
 type PlanAudienceResponseData struct {
-	CreatedAt     time.Time      `json:"created_at"`
-	EnvironmentId string         `json:"environment_id"`
-	FlagId        NullableString `json:"flag_id,omitempty"`
-	Id            string         `json:"id"`
-	Name          string         `json:"name"`
-	PlanId        NullableString `json:"plan_id,omitempty"`
-	Priority      int32          `json:"priority"`
-	RuleType      string         `json:"rule_type"`
-	UpdatedAt     time.Time      `json:"updated_at"`
-	Value         bool           `json:"value"`
+	CreatedAt            time.Time      `json:"created_at"`
+	EnvironmentId        string         `json:"environment_id"`
+	FlagId               NullableString `json:"flag_id,omitempty"`
+	Id                   string         `json:"id"`
+	Name                 string         `json:"name"`
+	PlanId               NullableString `json:"plan_id,omitempty"`
+	Priority             int32          `json:"priority"`
+	RuleType             string         `json:"rule_type"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+	Value                bool           `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _PlanAudienceResponseData PlanAudienceResponseData
@@ -363,6 +363,11 @@ func (o PlanAudienceResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["rule_type"] = o.RuleType
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -397,15 +402,29 @@ func (o *PlanAudienceResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varPlanAudienceResponseData := _PlanAudienceResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varPlanAudienceResponseData)
+	err = json.Unmarshal(data, &varPlanAudienceResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = PlanAudienceResponseData(varPlanAudienceResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "priority")
+		delete(additionalProperties, "rule_type")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

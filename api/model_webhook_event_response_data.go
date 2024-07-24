@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,15 +21,16 @@ var _ MappedNullable = &WebhookEventResponseData{}
 
 // WebhookEventResponseData struct for WebhookEventResponseData
 type WebhookEventResponseData struct {
-	CreatedAt    time.Time      `json:"created_at"`
-	Id           string         `json:"id"`
-	Payload      NullableString `json:"payload,omitempty"`
-	RequestType  string         `json:"request_type"`
-	ResponseCode NullableInt32  `json:"response_code,omitempty"`
-	SentAt       NullableTime   `json:"sent_at,omitempty"`
-	Status       string         `json:"status"`
-	UpdatedAt    time.Time      `json:"updated_at"`
-	WebhookId    string         `json:"webhook_id"`
+	CreatedAt            time.Time      `json:"created_at"`
+	Id                   string         `json:"id"`
+	Payload              NullableString `json:"payload,omitempty"`
+	RequestType          string         `json:"request_type"`
+	ResponseCode         NullableInt32  `json:"response_code,omitempty"`
+	SentAt               NullableTime   `json:"sent_at,omitempty"`
+	Status               string         `json:"status"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+	WebhookId            string         `json:"webhook_id"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _WebhookEventResponseData WebhookEventResponseData
@@ -356,6 +356,11 @@ func (o WebhookEventResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["status"] = o.Status
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["webhook_id"] = o.WebhookId
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -388,15 +393,28 @@ func (o *WebhookEventResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varWebhookEventResponseData := _WebhookEventResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varWebhookEventResponseData)
+	err = json.Unmarshal(data, &varWebhookEventResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = WebhookEventResponseData(varWebhookEventResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "payload")
+		delete(additionalProperties, "request_type")
+		delete(additionalProperties, "response_code")
+		delete(additionalProperties, "sent_at")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "webhook_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

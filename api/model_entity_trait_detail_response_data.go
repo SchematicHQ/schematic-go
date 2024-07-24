@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,13 +21,14 @@ var _ MappedNullable = &EntityTraitDetailResponseData{}
 
 // EntityTraitDetailResponseData struct for EntityTraitDetailResponseData
 type EntityTraitDetailResponseData struct {
-	CreatedAt     time.Time                          `json:"created_at"`
-	Definition    *EntityTraitDefinitionResponseData `json:"definition,omitempty"`
-	DefinitionId  string                             `json:"definition_id"`
-	EnvironmentId string                             `json:"environment_id"`
-	Id            string                             `json:"id"`
-	UpdatedAt     time.Time                          `json:"updated_at"`
-	Value         string                             `json:"value"`
+	CreatedAt            time.Time                          `json:"created_at"`
+	Definition           *EntityTraitDefinitionResponseData `json:"definition,omitempty"`
+	DefinitionId         string                             `json:"definition_id"`
+	EnvironmentId        string                             `json:"environment_id"`
+	Id                   string                             `json:"id"`
+	UpdatedAt            time.Time                          `json:"updated_at"`
+	Value                string                             `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EntityTraitDetailResponseData EntityTraitDetailResponseData
@@ -251,6 +251,11 @@ func (o EntityTraitDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -283,15 +288,26 @@ func (o *EntityTraitDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varEntityTraitDetailResponseData := _EntityTraitDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEntityTraitDetailResponseData)
+	err = json.Unmarshal(data, &varEntityTraitDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EntityTraitDetailResponseData(varEntityTraitDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "definition")
+		delete(additionalProperties, "definition_id")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

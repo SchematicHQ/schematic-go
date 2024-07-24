@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,13 +20,14 @@ var _ MappedNullable = &CreateOrUpdateRuleRequestBody{}
 
 // CreateOrUpdateRuleRequestBody struct for CreateOrUpdateRuleRequestBody
 type CreateOrUpdateRuleRequestBody struct {
-	ConditionGroups []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
-	Conditions      []CreateOrUpdateConditionRequestBody      `json:"conditions"`
-	Id              NullableString                            `json:"id,omitempty"`
-	Name            string                                    `json:"name"`
-	Priority        int32                                     `json:"priority"`
-	RuleType        NullableString                            `json:"rule_type,omitempty"`
-	Value           bool                                      `json:"value"`
+	ConditionGroups      []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
+	Conditions           []CreateOrUpdateConditionRequestBody      `json:"conditions"`
+	Id                   NullableString                            `json:"id,omitempty"`
+	Name                 string                                    `json:"name"`
+	Priority             int32                                     `json:"priority"`
+	RuleType             NullableString                            `json:"rule_type,omitempty"`
+	Value                bool                                      `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateOrUpdateRuleRequestBody CreateOrUpdateRuleRequestBody
@@ -281,6 +281,11 @@ func (o CreateOrUpdateRuleRequestBody) ToMap() (map[string]interface{}, error) {
 		toSerialize["rule_type"] = o.RuleType.Get()
 	}
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -312,15 +317,26 @@ func (o *CreateOrUpdateRuleRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateOrUpdateRuleRequestBody := _CreateOrUpdateRuleRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateOrUpdateRuleRequestBody)
+	err = json.Unmarshal(data, &varCreateOrUpdateRuleRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateOrUpdateRuleRequestBody(varCreateOrUpdateRuleRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "condition_groups")
+		delete(additionalProperties, "conditions")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "priority")
+		delete(additionalProperties, "rule_type")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,19 +21,20 @@ var _ MappedNullable = &FeatureDetailResponseData{}
 
 // FeatureDetailResponseData struct for FeatureDetailResponseData
 type FeatureDetailResponseData struct {
-	CreatedAt      time.Time                          `json:"created_at"`
-	Description    string                             `json:"description"`
-	EventSubtype   NullableString                     `json:"event_subtype,omitempty"`
-	EventSummary   *EventSummaryResponseData          `json:"event_summary,omitempty"`
-	FeatureType    string                             `json:"feature_type"`
-	Flags          []FlagDetailResponseData           `json:"flags"`
-	Id             string                             `json:"id"`
-	LifecyclePhase NullableString                     `json:"lifecycle_phase,omitempty"`
-	Name           string                             `json:"name"`
-	Plans          []PreviewObject                    `json:"plans"`
-	Trait          *EntityTraitDefinitionResponseData `json:"trait,omitempty"`
-	TraitId        NullableString                     `json:"trait_id,omitempty"`
-	UpdatedAt      time.Time                          `json:"updated_at"`
+	CreatedAt            time.Time                          `json:"created_at"`
+	Description          string                             `json:"description"`
+	EventSubtype         NullableString                     `json:"event_subtype,omitempty"`
+	EventSummary         *EventSummaryResponseData          `json:"event_summary,omitempty"`
+	FeatureType          string                             `json:"feature_type"`
+	Flags                []FlagDetailResponseData           `json:"flags"`
+	Id                   string                             `json:"id"`
+	LifecyclePhase       NullableString                     `json:"lifecycle_phase,omitempty"`
+	Name                 string                             `json:"name"`
+	Plans                []PreviewObject                    `json:"plans"`
+	Trait                *EntityTraitDefinitionResponseData `json:"trait,omitempty"`
+	TraitId              NullableString                     `json:"trait_id,omitempty"`
+	UpdatedAt            time.Time                          `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FeatureDetailResponseData FeatureDetailResponseData
@@ -482,6 +482,11 @@ func (o FeatureDetailResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["trait_id"] = o.TraitId.Get()
 	}
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -516,15 +521,32 @@ func (o *FeatureDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varFeatureDetailResponseData := _FeatureDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFeatureDetailResponseData)
+	err = json.Unmarshal(data, &varFeatureDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FeatureDetailResponseData(varFeatureDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "event_summary")
+		delete(additionalProperties, "feature_type")
+		delete(additionalProperties, "flags")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "lifecycle_phase")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "plans")
+		delete(additionalProperties, "trait")
+		delete(additionalProperties, "trait_id")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

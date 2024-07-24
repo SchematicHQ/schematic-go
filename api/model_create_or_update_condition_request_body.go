@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -37,7 +36,8 @@ type CreateOrUpdateConditionRequestBody struct {
 	// ID of trait to use to measure this condition
 	TraitId NullableString `json:"trait_id,omitempty"`
 	// Value to compare the trait value against
-	TraitValue NullableString `json:"trait_value,omitempty"`
+	TraitValue           NullableString `json:"trait_value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateOrUpdateConditionRequestBody CreateOrUpdateConditionRequestBody
@@ -469,6 +469,11 @@ func (o CreateOrUpdateConditionRequestBody) ToMap() (map[string]interface{}, err
 	if o.TraitValue.IsSet() {
 		toSerialize["trait_value"] = o.TraitValue.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -498,15 +503,29 @@ func (o *CreateOrUpdateConditionRequestBody) UnmarshalJSON(data []byte) (err err
 
 	varCreateOrUpdateConditionRequestBody := _CreateOrUpdateConditionRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateOrUpdateConditionRequestBody)
+	err = json.Unmarshal(data, &varCreateOrUpdateConditionRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateOrUpdateConditionRequestBody(varCreateOrUpdateConditionRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comparison_trait_id")
+		delete(additionalProperties, "condition_type")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "metric_period")
+		delete(additionalProperties, "metric_value")
+		delete(additionalProperties, "operator")
+		delete(additionalProperties, "resource_ids")
+		delete(additionalProperties, "trait_id")
+		delete(additionalProperties, "trait_value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

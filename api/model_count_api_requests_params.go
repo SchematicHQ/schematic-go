@@ -23,10 +23,13 @@ type CountApiRequestsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset      *int32  `json:"offset,omitempty"`
-	Q           *string `json:"q,omitempty"`
-	RequestType *string `json:"request_type,omitempty"`
+	Offset               *int32  `json:"offset,omitempty"`
+	Q                    *string `json:"q,omitempty"`
+	RequestType          *string `json:"request_type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CountApiRequestsParams CountApiRequestsParams
 
 // NewCountApiRequestsParams instantiates a new CountApiRequestsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -230,7 +233,37 @@ func (o CountApiRequestsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RequestType) {
 		toSerialize["request_type"] = o.RequestType
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CountApiRequestsParams) UnmarshalJSON(data []byte) (err error) {
+	varCountApiRequestsParams := _CountApiRequestsParams{}
+
+	err = json.Unmarshal(data, &varCountApiRequestsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CountApiRequestsParams(varCountApiRequestsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "q")
+		delete(additionalProperties, "request_type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCountApiRequestsParams struct {

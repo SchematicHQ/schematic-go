@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -30,7 +29,8 @@ type UpsertTraitRequestBody struct {
 	// Name of the trait to update
 	Trait string `json:"trait"`
 	// Unless this is set, the company or user will be created if it does not already exist
-	UpdateOnly NullableBool `json:"update_only,omitempty"`
+	UpdateOnly           NullableBool `json:"update_only,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpsertTraitRequestBody UpsertTraitRequestBody
@@ -252,6 +252,11 @@ func (o UpsertTraitRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.UpdateOnly.IsSet() {
 		toSerialize["update_only"] = o.UpdateOnly.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -280,15 +285,24 @@ func (o *UpsertTraitRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varUpsertTraitRequestBody := _UpsertTraitRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpsertTraitRequestBody)
+	err = json.Unmarshal(data, &varUpsertTraitRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UpsertTraitRequestBody(varUpsertTraitRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "incr")
+		delete(additionalProperties, "keys")
+		delete(additionalProperties, "set")
+		delete(additionalProperties, "trait")
+		delete(additionalProperties, "update_only")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

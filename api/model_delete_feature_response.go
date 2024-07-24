@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -23,7 +22,8 @@ var _ MappedNullable = &DeleteFeatureResponse{}
 type DeleteFeatureResponse struct {
 	Data DeleteResponse `json:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params"`
+	Params               map[string]interface{} `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _DeleteFeatureResponse DeleteFeatureResponse
@@ -107,6 +107,11 @@ func (o DeleteFeatureResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -135,15 +140,21 @@ func (o *DeleteFeatureResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varDeleteFeatureResponse := _DeleteFeatureResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varDeleteFeatureResponse)
+	err = json.Unmarshal(data, &varDeleteFeatureResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = DeleteFeatureResponse(varDeleteFeatureResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

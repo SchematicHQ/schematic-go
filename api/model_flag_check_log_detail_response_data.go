@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,26 +21,27 @@ var _ MappedNullable = &FlagCheckLogDetailResponseData{}
 
 // FlagCheckLogDetailResponseData struct for FlagCheckLogDetailResponseData
 type FlagCheckLogDetailResponseData struct {
-	CheckStatus   string                   `json:"check_status"`
-	Company       *CompanyResponseData     `json:"company,omitempty"`
-	CompanyId     NullableString           `json:"company_id,omitempty"`
-	CreatedAt     time.Time                `json:"created_at"`
-	Environment   *EnvironmentResponseData `json:"environment,omitempty"`
-	EnvironmentId string                   `json:"environment_id"`
-	Error         NullableString           `json:"error,omitempty"`
-	Flag          *FlagResponseData        `json:"flag,omitempty"`
-	FlagId        NullableString           `json:"flag_id,omitempty"`
-	FlagKey       string                   `json:"flag_key"`
-	Id            string                   `json:"id"`
-	Reason        string                   `json:"reason"`
-	ReqCompany    map[string]string        `json:"req_company,omitempty"`
-	ReqUser       map[string]string        `json:"req_user,omitempty"`
-	Rule          *RuleResponseData        `json:"rule,omitempty"`
-	RuleId        NullableString           `json:"rule_id,omitempty"`
-	UpdatedAt     time.Time                `json:"updated_at"`
-	User          *UserResponseData        `json:"user,omitempty"`
-	UserId        NullableString           `json:"user_id,omitempty"`
-	Value         bool                     `json:"value"`
+	CheckStatus          string                   `json:"check_status"`
+	Company              *CompanyResponseData     `json:"company,omitempty"`
+	CompanyId            NullableString           `json:"company_id,omitempty"`
+	CreatedAt            time.Time                `json:"created_at"`
+	Environment          *EnvironmentResponseData `json:"environment,omitempty"`
+	EnvironmentId        string                   `json:"environment_id"`
+	Error                NullableString           `json:"error,omitempty"`
+	Flag                 *FlagResponseData        `json:"flag,omitempty"`
+	FlagId               NullableString           `json:"flag_id,omitempty"`
+	FlagKey              string                   `json:"flag_key"`
+	Id                   string                   `json:"id"`
+	Reason               string                   `json:"reason"`
+	ReqCompany           map[string]string        `json:"req_company,omitempty"`
+	ReqUser              map[string]string        `json:"req_user,omitempty"`
+	Rule                 *RuleResponseData        `json:"rule,omitempty"`
+	RuleId               NullableString           `json:"rule_id,omitempty"`
+	UpdatedAt            time.Time                `json:"updated_at"`
+	User                 *UserResponseData        `json:"user,omitempty"`
+	UserId               NullableString           `json:"user_id,omitempty"`
+	Value                bool                     `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FlagCheckLogDetailResponseData FlagCheckLogDetailResponseData
@@ -758,6 +758,11 @@ func (o FlagCheckLogDetailResponseData) ToMap() (map[string]interface{}, error) 
 		toSerialize["user_id"] = o.UserId.Get()
 	}
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -792,15 +797,39 @@ func (o *FlagCheckLogDetailResponseData) UnmarshalJSON(data []byte) (err error) 
 
 	varFlagCheckLogDetailResponseData := _FlagCheckLogDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFlagCheckLogDetailResponseData)
+	err = json.Unmarshal(data, &varFlagCheckLogDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FlagCheckLogDetailResponseData(varFlagCheckLogDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "check_status")
+		delete(additionalProperties, "company")
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "flag")
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "flag_key")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "reason")
+		delete(additionalProperties, "req_company")
+		delete(additionalProperties, "req_user")
+		delete(additionalProperties, "rule")
+		delete(additionalProperties, "rule_id")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "user")
+		delete(additionalProperties, "user_id")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

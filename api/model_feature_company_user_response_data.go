@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -35,8 +34,9 @@ type FeatureCompanyUserResponseData struct {
 	Period NullableString    `json:"period,omitempty"`
 	Plan   *PlanResponseData `json:"plan,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured.
-	Usage NullableInt32     `json:"usage,omitempty"`
-	User  *UserResponseData `json:"user,omitempty"`
+	Usage                NullableInt32     `json:"usage,omitempty"`
+	User                 *UserResponseData `json:"user,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FeatureCompanyUserResponseData FeatureCompanyUserResponseData
@@ -450,6 +450,11 @@ func (o FeatureCompanyUserResponseData) ToMap() (map[string]interface{}, error) 
 	if !IsNil(o.User) {
 		toSerialize["user"] = o.User
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -480,15 +485,30 @@ func (o *FeatureCompanyUserResponseData) UnmarshalJSON(data []byte) (err error) 
 
 	varFeatureCompanyUserResponseData := _FeatureCompanyUserResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFeatureCompanyUserResponseData)
+	err = json.Unmarshal(data, &varFeatureCompanyUserResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FeatureCompanyUserResponseData(varFeatureCompanyUserResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "access")
+		delete(additionalProperties, "allocation")
+		delete(additionalProperties, "allocation_type")
+		delete(additionalProperties, "company")
+		delete(additionalProperties, "entitlement_id")
+		delete(additionalProperties, "entitlement_type")
+		delete(additionalProperties, "feature")
+		delete(additionalProperties, "period")
+		delete(additionalProperties, "plan")
+		delete(additionalProperties, "usage")
+		delete(additionalProperties, "user")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

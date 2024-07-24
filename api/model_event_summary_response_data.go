@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,12 +21,13 @@ var _ MappedNullable = &EventSummaryResponseData{}
 
 // EventSummaryResponseData struct for EventSummaryResponseData
 type EventSummaryResponseData struct {
-	CompanyCount  int32        `json:"company_count"`
-	EnvironmentId string       `json:"environment_id"`
-	EventCount    int32        `json:"event_count"`
-	EventSubtype  string       `json:"event_subtype"`
-	LastSeenAt    NullableTime `json:"last_seen_at,omitempty"`
-	UserCount     int32        `json:"user_count"`
+	CompanyCount         int32        `json:"company_count"`
+	EnvironmentId        string       `json:"environment_id"`
+	EventCount           int32        `json:"event_count"`
+	EventSubtype         string       `json:"event_subtype"`
+	LastSeenAt           NullableTime `json:"last_seen_at,omitempty"`
+	UserCount            int32        `json:"user_count"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EventSummaryResponseData EventSummaryResponseData
@@ -235,6 +235,11 @@ func (o EventSummaryResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["last_seen_at"] = o.LastSeenAt.Get()
 	}
 	toSerialize["user_count"] = o.UserCount
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -266,15 +271,25 @@ func (o *EventSummaryResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varEventSummaryResponseData := _EventSummaryResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEventSummaryResponseData)
+	err = json.Unmarshal(data, &varEventSummaryResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EventSummaryResponseData(varEventSummaryResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_count")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "event_count")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "last_seen_at")
+		delete(additionalProperties, "user_count")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

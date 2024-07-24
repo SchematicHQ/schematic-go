@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,12 +20,13 @@ var _ MappedNullable = &CheckFlagResponseData{}
 
 // CheckFlagResponseData The returned resource
 type CheckFlagResponseData struct {
-	CompanyId NullableString `json:"company_id,omitempty"`
-	Error     NullableString `json:"error,omitempty"`
-	Reason    string         `json:"reason"`
-	RuleId    NullableString `json:"rule_id,omitempty"`
-	UserId    NullableString `json:"user_id,omitempty"`
-	Value     bool           `json:"value"`
+	CompanyId            NullableString `json:"company_id,omitempty"`
+	Error                NullableString `json:"error,omitempty"`
+	Reason               string         `json:"reason"`
+	RuleId               NullableString `json:"rule_id,omitempty"`
+	UserId               NullableString `json:"user_id,omitempty"`
+	Value                bool           `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CheckFlagResponseData CheckFlagResponseData
@@ -294,6 +294,11 @@ func (o CheckFlagResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["user_id"] = o.UserId.Get()
 	}
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -322,15 +327,25 @@ func (o *CheckFlagResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varCheckFlagResponseData := _CheckFlagResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCheckFlagResponseData)
+	err = json.Unmarshal(data, &varCheckFlagResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CheckFlagResponseData(varCheckFlagResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "reason")
+		delete(additionalProperties, "rule_id")
+		delete(additionalProperties, "user_id")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

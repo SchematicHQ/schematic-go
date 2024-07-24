@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,15 +20,16 @@ var _ MappedNullable = &CreateCrmDealRequestBody{}
 
 // CreateCrmDealRequestBody struct for CreateCrmDealRequestBody
 type CreateCrmDealRequestBody struct {
-	Arr            NullableString `json:"arr,omitempty"`
-	CrmCompanyId   NullableString `json:"crm_company_id,omitempty"`
-	CrmCompanyKey  string         `json:"crm_company_key"`
-	CrmProductId   NullableString `json:"crm_product_id,omitempty"`
-	CrmType        string         `json:"crm_type"`
-	DealExternalId string         `json:"deal_external_id"`
-	DealName       NullableString `json:"deal_name,omitempty"`
-	DealStage      NullableString `json:"deal_stage,omitempty"`
-	Mrr            NullableString `json:"mrr,omitempty"`
+	Arr                  NullableString `json:"arr,omitempty"`
+	CrmCompanyId         NullableString `json:"crm_company_id,omitempty"`
+	CrmCompanyKey        string         `json:"crm_company_key"`
+	CrmProductId         NullableString `json:"crm_product_id,omitempty"`
+	CrmType              string         `json:"crm_type"`
+	DealExternalId       string         `json:"deal_external_id"`
+	DealName             NullableString `json:"deal_name,omitempty"`
+	DealStage            NullableString `json:"deal_stage,omitempty"`
+	Mrr                  NullableString `json:"mrr,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateCrmDealRequestBody CreateCrmDealRequestBody
@@ -415,6 +415,11 @@ func (o CreateCrmDealRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.Mrr.IsSet() {
 		toSerialize["mrr"] = o.Mrr.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -444,15 +449,28 @@ func (o *CreateCrmDealRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateCrmDealRequestBody := _CreateCrmDealRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateCrmDealRequestBody)
+	err = json.Unmarshal(data, &varCreateCrmDealRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateCrmDealRequestBody(varCreateCrmDealRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "arr")
+		delete(additionalProperties, "crm_company_id")
+		delete(additionalProperties, "crm_company_key")
+		delete(additionalProperties, "crm_product_id")
+		delete(additionalProperties, "crm_type")
+		delete(additionalProperties, "deal_external_id")
+		delete(additionalProperties, "deal_name")
+		delete(additionalProperties, "deal_stage")
+		delete(additionalProperties, "mrr")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

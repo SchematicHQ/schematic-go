@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &UpdateAudienceRequestBody{}
 
 // UpdateAudienceRequestBody struct for UpdateAudienceRequestBody
 type UpdateAudienceRequestBody struct {
-	ConditionGroups []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
-	Conditions      []CreateOrUpdateConditionRequestBody      `json:"conditions"`
+	ConditionGroups      []CreateOrUpdateConditionGroupRequestBody `json:"condition_groups"`
+	Conditions           []CreateOrUpdateConditionRequestBody      `json:"conditions"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpdateAudienceRequestBody UpdateAudienceRequestBody
@@ -106,6 +106,11 @@ func (o UpdateAudienceRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["condition_groups"] = o.ConditionGroups
 	toSerialize["conditions"] = o.Conditions
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *UpdateAudienceRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varUpdateAudienceRequestBody := _UpdateAudienceRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpdateAudienceRequestBody)
+	err = json.Unmarshal(data, &varUpdateAudienceRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UpdateAudienceRequestBody(varUpdateAudienceRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "condition_groups")
+		delete(additionalProperties, "conditions")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

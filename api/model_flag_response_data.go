@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,15 +21,16 @@ var _ MappedNullable = &FlagResponseData{}
 
 // FlagResponseData struct for FlagResponseData
 type FlagResponseData struct {
-	CreatedAt    time.Time      `json:"created_at"`
-	DefaultValue bool           `json:"default_value"`
-	Description  string         `json:"description"`
-	FeatureId    NullableString `json:"feature_id,omitempty"`
-	FlagType     string         `json:"flag_type"`
-	Id           string         `json:"id"`
-	Key          string         `json:"key"`
-	Name         string         `json:"name"`
-	UpdatedAt    time.Time      `json:"updated_at"`
+	CreatedAt            time.Time      `json:"created_at"`
+	DefaultValue         bool           `json:"default_value"`
+	Description          string         `json:"description"`
+	FeatureId            NullableString `json:"feature_id,omitempty"`
+	FlagType             string         `json:"flag_type"`
+	Id                   string         `json:"id"`
+	Key                  string         `json:"key"`
+	Name                 string         `json:"name"`
+	UpdatedAt            time.Time      `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FlagResponseData FlagResponseData
@@ -316,6 +316,11 @@ func (o FlagResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["key"] = o.Key
 	toSerialize["name"] = o.Name
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -350,15 +355,28 @@ func (o *FlagResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varFlagResponseData := _FlagResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFlagResponseData)
+	err = json.Unmarshal(data, &varFlagResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FlagResponseData(varFlagResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "default_value")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "feature_id")
+		delete(additionalProperties, "flag_type")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

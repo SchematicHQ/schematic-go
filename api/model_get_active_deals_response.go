@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -22,8 +21,9 @@ var _ MappedNullable = &GetActiveDealsResponse{}
 // GetActiveDealsResponse struct for GetActiveDealsResponse
 type GetActiveDealsResponse struct {
 	// The returned resources
-	Data   []CompanyCrmDealsResponseData `json:"data"`
-	Params GetActiveDealsParams          `json:"params"`
+	Data                 []CompanyCrmDealsResponseData `json:"data"`
+	Params               GetActiveDealsParams          `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _GetActiveDealsResponse GetActiveDealsResponse
@@ -107,6 +107,11 @@ func (o GetActiveDealsResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -135,15 +140,21 @@ func (o *GetActiveDealsResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varGetActiveDealsResponse := _GetActiveDealsResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varGetActiveDealsResponse)
+	err = json.Unmarshal(data, &varGetActiveDealsResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = GetActiveDealsResponse(varGetActiveDealsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

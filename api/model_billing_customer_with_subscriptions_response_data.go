@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,15 +21,16 @@ var _ MappedNullable = &BillingCustomerWithSubscriptionsResponseData{}
 
 // BillingCustomerWithSubscriptionsResponseData struct for BillingCustomerWithSubscriptionsResponseData
 type BillingCustomerWithSubscriptionsResponseData struct {
-	CompanyId      NullableString                `json:"company_id,omitempty"`
-	DeletedAt      NullableTime                  `json:"deleted_at,omitempty"`
-	Email          string                        `json:"email"`
-	ExternalId     string                        `json:"external_id"`
-	FailedToImport bool                          `json:"failed_to_import"`
-	Id             string                        `json:"id"`
-	Name           string                        `json:"name"`
-	Subscriptions  []BillingCustomerSubscription `json:"subscriptions"`
-	UpdatedAt      time.Time                     `json:"updated_at"`
+	CompanyId            NullableString                `json:"company_id,omitempty"`
+	DeletedAt            NullableTime                  `json:"deleted_at,omitempty"`
+	Email                string                        `json:"email"`
+	ExternalId           string                        `json:"external_id"`
+	FailedToImport       bool                          `json:"failed_to_import"`
+	Id                   string                        `json:"id"`
+	Name                 string                        `json:"name"`
+	Subscriptions        []BillingCustomerSubscription `json:"subscriptions"`
+	UpdatedAt            time.Time                     `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BillingCustomerWithSubscriptionsResponseData BillingCustomerWithSubscriptionsResponseData
@@ -336,6 +336,11 @@ func (o BillingCustomerWithSubscriptionsResponseData) ToMap() (map[string]interf
 	toSerialize["name"] = o.Name
 	toSerialize["subscriptions"] = o.Subscriptions
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -369,15 +374,28 @@ func (o *BillingCustomerWithSubscriptionsResponseData) UnmarshalJSON(data []byte
 
 	varBillingCustomerWithSubscriptionsResponseData := _BillingCustomerWithSubscriptionsResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varBillingCustomerWithSubscriptionsResponseData)
+	err = json.Unmarshal(data, &varBillingCustomerWithSubscriptionsResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = BillingCustomerWithSubscriptionsResponseData(varBillingCustomerWithSubscriptionsResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "deleted_at")
+		delete(additionalProperties, "email")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "failed_to_import")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "subscriptions")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

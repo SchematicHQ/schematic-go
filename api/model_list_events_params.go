@@ -26,9 +26,12 @@ type ListEventsParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32  `json:"offset,omitempty"`
-	UserId *string `json:"user_id,omitempty"`
+	Offset               *int32  `json:"offset,omitempty"`
+	UserId               *string `json:"user_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListEventsParams ListEventsParams
 
 // NewListEventsParams instantiates a new ListEventsParams object
 // This constructor will assign default values to properties that have it defined,
@@ -302,7 +305,39 @@ func (o ListEventsParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UserId) {
 		toSerialize["user_id"] = o.UserId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListEventsParams) UnmarshalJSON(data []byte) (err error) {
+	varListEventsParams := _ListEventsParams{}
+
+	err = json.Unmarshal(data, &varListEventsParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListEventsParams(varListEventsParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "event_subtype")
+		delete(additionalProperties, "event_types")
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "user_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListEventsParams struct {

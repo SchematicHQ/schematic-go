@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &CountEntityKeyDefinitionsResponse{}
 
 // CountEntityKeyDefinitionsResponse struct for CountEntityKeyDefinitionsResponse
 type CountEntityKeyDefinitionsResponse struct {
-	Data   CountResponse                   `json:"data"`
-	Params CountEntityKeyDefinitionsParams `json:"params"`
+	Data                 CountResponse                   `json:"data"`
+	Params               CountEntityKeyDefinitionsParams `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CountEntityKeyDefinitionsResponse CountEntityKeyDefinitionsResponse
@@ -106,6 +106,11 @@ func (o CountEntityKeyDefinitionsResponse) ToMap() (map[string]interface{}, erro
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *CountEntityKeyDefinitionsResponse) UnmarshalJSON(data []byte) (err erro
 
 	varCountEntityKeyDefinitionsResponse := _CountEntityKeyDefinitionsResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCountEntityKeyDefinitionsResponse)
+	err = json.Unmarshal(data, &varCountEntityKeyDefinitionsResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CountEntityKeyDefinitionsResponse(varCountEntityKeyDefinitionsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

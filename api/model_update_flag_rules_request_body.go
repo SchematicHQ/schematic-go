@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,7 +20,8 @@ var _ MappedNullable = &UpdateFlagRulesRequestBody{}
 
 // UpdateFlagRulesRequestBody struct for UpdateFlagRulesRequestBody
 type UpdateFlagRulesRequestBody struct {
-	Rules []CreateOrUpdateRuleRequestBody `json:"rules"`
+	Rules                []CreateOrUpdateRuleRequestBody `json:"rules"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpdateFlagRulesRequestBody UpdateFlagRulesRequestBody
@@ -79,6 +79,11 @@ func (o UpdateFlagRulesRequestBody) MarshalJSON() ([]byte, error) {
 func (o UpdateFlagRulesRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["rules"] = o.Rules
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -106,15 +111,20 @@ func (o *UpdateFlagRulesRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varUpdateFlagRulesRequestBody := _UpdateFlagRulesRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpdateFlagRulesRequestBody)
+	err = json.Unmarshal(data, &varUpdateFlagRulesRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UpdateFlagRulesRequestBody(varUpdateFlagRulesRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "rules")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

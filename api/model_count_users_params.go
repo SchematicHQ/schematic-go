@@ -27,8 +27,11 @@ type CountUsersParams struct {
 	Offset *int32  `json:"offset,omitempty"`
 	PlanId *string `json:"plan_id,omitempty"`
 	// Search filter
-	Q *string `json:"q,omitempty"`
+	Q                    *string `json:"q,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CountUsersParams CountUsersParams
 
 // NewCountUsersParams instantiates a new CountUsersParams object
 // This constructor will assign default values to properties that have it defined,
@@ -267,7 +270,38 @@ func (o CountUsersParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Q) {
 		toSerialize["q"] = o.Q
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CountUsersParams) UnmarshalJSON(data []byte) (err error) {
+	varCountUsersParams := _CountUsersParams{}
+
+	err = json.Unmarshal(data, &varCountUsersParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CountUsersParams(varCountUsersParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "q")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCountUsersParams struct {

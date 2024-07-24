@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,12 +21,13 @@ var _ MappedNullable = &CompanyMembershipDetailResponseData{}
 
 // CompanyMembershipDetailResponseData struct for CompanyMembershipDetailResponseData
 type CompanyMembershipDetailResponseData struct {
-	Company   *CompanyResponseData `json:"company,omitempty"`
-	CompanyId string               `json:"company_id"`
-	CreatedAt time.Time            `json:"created_at"`
-	Id        string               `json:"id"`
-	UpdatedAt time.Time            `json:"updated_at"`
-	UserId    string               `json:"user_id"`
+	Company              *CompanyResponseData `json:"company,omitempty"`
+	CompanyId            string               `json:"company_id"`
+	CreatedAt            time.Time            `json:"created_at"`
+	Id                   string               `json:"id"`
+	UpdatedAt            time.Time            `json:"updated_at"`
+	UserId               string               `json:"user_id"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CompanyMembershipDetailResponseData CompanyMembershipDetailResponseData
@@ -224,6 +224,11 @@ func (o CompanyMembershipDetailResponseData) ToMap() (map[string]interface{}, er
 	toSerialize["id"] = o.Id
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["user_id"] = o.UserId
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -255,15 +260,25 @@ func (o *CompanyMembershipDetailResponseData) UnmarshalJSON(data []byte) (err er
 
 	varCompanyMembershipDetailResponseData := _CompanyMembershipDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCompanyMembershipDetailResponseData)
+	err = json.Unmarshal(data, &varCompanyMembershipDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CompanyMembershipDetailResponseData(varCompanyMembershipDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company")
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "user_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

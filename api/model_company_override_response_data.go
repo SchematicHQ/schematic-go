@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,21 +21,22 @@ var _ MappedNullable = &CompanyOverrideResponseData{}
 
 // CompanyOverrideResponseData The updated resource
 type CompanyOverrideResponseData struct {
-	Company       *CompanyDetailResponseData         `json:"company,omitempty"`
-	CompanyId     string                             `json:"company_id"`
-	CreatedAt     time.Time                          `json:"created_at"`
-	EnvironmentId string                             `json:"environment_id"`
-	Feature       *FeatureResponseData               `json:"feature,omitempty"`
-	FeatureId     string                             `json:"feature_id"`
-	Id            string                             `json:"id"`
-	MetricPeriod  NullableString                     `json:"metric_period,omitempty"`
-	RuleId        string                             `json:"rule_id"`
-	UpdatedAt     time.Time                          `json:"updated_at"`
-	ValueBool     NullableBool                       `json:"value_bool,omitempty"`
-	ValueNumeric  NullableInt32                      `json:"value_numeric,omitempty"`
-	ValueTrait    *EntityTraitDefinitionResponseData `json:"value_trait,omitempty"`
-	ValueTraitId  NullableString                     `json:"value_trait_id,omitempty"`
-	ValueType     string                             `json:"value_type"`
+	Company              *CompanyDetailResponseData         `json:"company,omitempty"`
+	CompanyId            string                             `json:"company_id"`
+	CreatedAt            time.Time                          `json:"created_at"`
+	EnvironmentId        string                             `json:"environment_id"`
+	Feature              *FeatureResponseData               `json:"feature,omitempty"`
+	FeatureId            string                             `json:"feature_id"`
+	Id                   string                             `json:"id"`
+	MetricPeriod         NullableString                     `json:"metric_period,omitempty"`
+	RuleId               string                             `json:"rule_id"`
+	UpdatedAt            time.Time                          `json:"updated_at"`
+	ValueBool            NullableBool                       `json:"value_bool,omitempty"`
+	ValueNumeric         NullableInt32                      `json:"value_numeric,omitempty"`
+	ValueTrait           *EntityTraitDefinitionResponseData `json:"value_trait,omitempty"`
+	ValueTraitId         NullableString                     `json:"value_trait_id,omitempty"`
+	ValueType            string                             `json:"value_type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CompanyOverrideResponseData CompanyOverrideResponseData
@@ -565,6 +565,11 @@ func (o CompanyOverrideResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["value_trait_id"] = o.ValueTraitId.Get()
 	}
 	toSerialize["value_type"] = o.ValueType
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -599,15 +604,34 @@ func (o *CompanyOverrideResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varCompanyOverrideResponseData := _CompanyOverrideResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCompanyOverrideResponseData)
+	err = json.Unmarshal(data, &varCompanyOverrideResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CompanyOverrideResponseData(varCompanyOverrideResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company")
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "feature")
+		delete(additionalProperties, "feature_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "metric_period")
+		delete(additionalProperties, "rule_id")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "value_bool")
+		delete(additionalProperties, "value_numeric")
+		delete(additionalProperties, "value_trait")
+		delete(additionalProperties, "value_trait_id")
+		delete(additionalProperties, "value_type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

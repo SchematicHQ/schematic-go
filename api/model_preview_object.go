@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,9 +20,10 @@ var _ MappedNullable = &PreviewObject{}
 
 // PreviewObject struct for PreviewObject
 type PreviewObject struct {
-	Id       string         `json:"id"`
-	ImageUrl NullableString `json:"image_url,omitempty"`
-	Name     string         `json:"name"`
+	Id                   string         `json:"id"`
+	ImageUrl             NullableString `json:"image_url,omitempty"`
+	Name                 string         `json:"name"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _PreviewObject PreviewObject
@@ -153,6 +153,11 @@ func (o PreviewObject) ToMap() (map[string]interface{}, error) {
 		toSerialize["image_url"] = o.ImageUrl.Get()
 	}
 	toSerialize["name"] = o.Name
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -181,15 +186,22 @@ func (o *PreviewObject) UnmarshalJSON(data []byte) (err error) {
 
 	varPreviewObject := _PreviewObject{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varPreviewObject)
+	err = json.Unmarshal(data, &varPreviewObject)
 
 	if err != nil {
 		return err
 	}
 
 	*o = PreviewObject(varPreviewObject)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "image_url")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

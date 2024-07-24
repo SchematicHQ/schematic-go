@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,11 +20,12 @@ var _ MappedNullable = &UpdateReqCommon{}
 
 // UpdateReqCommon struct for UpdateReqCommon
 type UpdateReqCommon struct {
-	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	ValueBool    NullableBool   `json:"value_bool,omitempty"`
-	ValueNumeric NullableInt32  `json:"value_numeric,omitempty"`
-	ValueTraitId NullableString `json:"value_trait_id,omitempty"`
-	ValueType    string         `json:"value_type"`
+	MetricPeriod         NullableString `json:"metric_period,omitempty"`
+	ValueBool            NullableBool   `json:"value_bool,omitempty"`
+	ValueNumeric         NullableInt32  `json:"value_numeric,omitempty"`
+	ValueTraitId         NullableString `json:"value_trait_id,omitempty"`
+	ValueType            string         `json:"value_type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpdateReqCommon UpdateReqCommon
@@ -267,6 +267,11 @@ func (o UpdateReqCommon) ToMap() (map[string]interface{}, error) {
 		toSerialize["value_trait_id"] = o.ValueTraitId.Get()
 	}
 	toSerialize["value_type"] = o.ValueType
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -294,15 +299,24 @@ func (o *UpdateReqCommon) UnmarshalJSON(data []byte) (err error) {
 
 	varUpdateReqCommon := _UpdateReqCommon{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpdateReqCommon)
+	err = json.Unmarshal(data, &varUpdateReqCommon)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UpdateReqCommon(varUpdateReqCommon)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "metric_period")
+		delete(additionalProperties, "value_bool")
+		delete(additionalProperties, "value_numeric")
+		delete(additionalProperties, "value_trait_id")
+		delete(additionalProperties, "value_type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

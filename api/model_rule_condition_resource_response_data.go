@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &RuleConditionResourceResponseData{}
 
 // RuleConditionResourceResponseData struct for RuleConditionResourceResponseData
 type RuleConditionResourceResponseData struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
+	Id                   string `json:"id"`
+	Name                 string `json:"name"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _RuleConditionResourceResponseData RuleConditionResourceResponseData
@@ -106,6 +106,11 @@ func (o RuleConditionResourceResponseData) ToMap() (map[string]interface{}, erro
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *RuleConditionResourceResponseData) UnmarshalJSON(data []byte) (err erro
 
 	varRuleConditionResourceResponseData := _RuleConditionResourceResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varRuleConditionResourceResponseData)
+	err = json.Unmarshal(data, &varRuleConditionResourceResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = RuleConditionResourceResponseData(varRuleConditionResourceResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

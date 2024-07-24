@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,12 +21,13 @@ var _ MappedNullable = &UserResponseData{}
 
 // UserResponseData struct for UserResponseData
 type UserResponseData struct {
-	CreatedAt     time.Time    `json:"created_at"`
-	EnvironmentId string       `json:"environment_id"`
-	Id            string       `json:"id"`
-	LastSeenAt    NullableTime `json:"last_seen_at,omitempty"`
-	Name          string       `json:"name"`
-	UpdatedAt     time.Time    `json:"updated_at"`
+	CreatedAt            time.Time    `json:"created_at"`
+	EnvironmentId        string       `json:"environment_id"`
+	Id                   string       `json:"id"`
+	LastSeenAt           NullableTime `json:"last_seen_at,omitempty"`
+	Name                 string       `json:"name"`
+	UpdatedAt            time.Time    `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UserResponseData UserResponseData
@@ -235,6 +235,11 @@ func (o UserResponseData) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["name"] = o.Name
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -266,15 +271,25 @@ func (o *UserResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varUserResponseData := _UserResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUserResponseData)
+	err = json.Unmarshal(data, &varUserResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UserResponseData(varUserResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "last_seen_at")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

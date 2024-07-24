@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &LookupCompanyResponse{}
 
 // LookupCompanyResponse struct for LookupCompanyResponse
 type LookupCompanyResponse struct {
-	Data   CompanyDetailResponseData `json:"data"`
-	Params LookupCompanyParams       `json:"params"`
+	Data                 CompanyDetailResponseData `json:"data"`
+	Params               LookupCompanyParams       `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _LookupCompanyResponse LookupCompanyResponse
@@ -106,6 +106,11 @@ func (o LookupCompanyResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -134,15 +139,21 @@ func (o *LookupCompanyResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varLookupCompanyResponse := _LookupCompanyResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varLookupCompanyResponse)
+	err = json.Unmarshal(data, &varLookupCompanyResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = LookupCompanyResponse(varLookupCompanyResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -22,8 +21,9 @@ var _ MappedNullable = &ListEntityTraitDefinitionsResponse{}
 // ListEntityTraitDefinitionsResponse struct for ListEntityTraitDefinitionsResponse
 type ListEntityTraitDefinitionsResponse struct {
 	// The returned resources
-	Data   []EntityTraitDefinitionResponseData `json:"data"`
-	Params ListEntityTraitDefinitionsParams    `json:"params"`
+	Data                 []EntityTraitDefinitionResponseData `json:"data"`
+	Params               ListEntityTraitDefinitionsParams    `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ListEntityTraitDefinitionsResponse ListEntityTraitDefinitionsResponse
@@ -107,6 +107,11 @@ func (o ListEntityTraitDefinitionsResponse) ToMap() (map[string]interface{}, err
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -135,15 +140,21 @@ func (o *ListEntityTraitDefinitionsResponse) UnmarshalJSON(data []byte) (err err
 
 	varListEntityTraitDefinitionsResponse := _ListEntityTraitDefinitionsResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varListEntityTraitDefinitionsResponse)
+	err = json.Unmarshal(data, &varListEntityTraitDefinitionsResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ListEntityTraitDefinitionsResponse(varListEntityTraitDefinitionsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

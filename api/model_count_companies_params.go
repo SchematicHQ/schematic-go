@@ -29,7 +29,10 @@ type CountCompaniesParams struct {
 	Q *string `json:"q,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty"`
+	AdditionalProperties      map[string]interface{}
 }
+
+type _CountCompaniesParams CountCompaniesParams
 
 // NewCountCompaniesParams instantiates a new CountCompaniesParams object
 // This constructor will assign default values to properties that have it defined,
@@ -268,7 +271,38 @@ func (o CountCompaniesParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.WithoutFeatureOverrideFor) {
 		toSerialize["without_feature_override_for"] = o.WithoutFeatureOverrideFor
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CountCompaniesParams) UnmarshalJSON(data []byte) (err error) {
+	varCountCompaniesParams := _CountCompaniesParams{}
+
+	err = json.Unmarshal(data, &varCountCompaniesParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CountCompaniesParams(varCountCompaniesParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "q")
+		delete(additionalProperties, "without_feature_override_for")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCountCompaniesParams struct {

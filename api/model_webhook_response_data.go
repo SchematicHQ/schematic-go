@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,13 +21,14 @@ var _ MappedNullable = &WebhookResponseData{}
 
 // WebhookResponseData struct for WebhookResponseData
 type WebhookResponseData struct {
-	CreatedAt    time.Time `json:"created_at"`
-	Id           string    `json:"id"`
-	Name         string    `json:"name"`
-	RequestTypes []string  `json:"request_types"`
-	Status       string    `json:"status"`
-	UpdatedAt    time.Time `json:"updated_at"`
-	Url          string    `json:"url"`
+	CreatedAt            time.Time `json:"created_at"`
+	Id                   string    `json:"id"`
+	Name                 string    `json:"name"`
+	RequestTypes         []string  `json:"request_types"`
+	Status               string    `json:"status"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	Url                  string    `json:"url"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _WebhookResponseData WebhookResponseData
@@ -242,6 +242,11 @@ func (o WebhookResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["status"] = o.Status
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["url"] = o.Url
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -275,15 +280,26 @@ func (o *WebhookResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varWebhookResponseData := _WebhookResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varWebhookResponseData)
+	err = json.Unmarshal(data, &varWebhookResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = WebhookResponseData(varWebhookResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "request_types")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "url")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

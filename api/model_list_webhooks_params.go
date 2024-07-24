@@ -22,9 +22,12 @@ type ListWebhooksParams struct {
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32  `json:"offset,omitempty"`
-	Q      *string `json:"q,omitempty"`
+	Offset               *int32  `json:"offset,omitempty"`
+	Q                    *string `json:"q,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListWebhooksParams ListWebhooksParams
 
 // NewListWebhooksParams instantiates a new ListWebhooksParams object
 // This constructor will assign default values to properties that have it defined,
@@ -158,7 +161,35 @@ func (o ListWebhooksParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Q) {
 		toSerialize["q"] = o.Q
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListWebhooksParams) UnmarshalJSON(data []byte) (err error) {
+	varListWebhooksParams := _ListWebhooksParams{}
+
+	err = json.Unmarshal(data, &varListWebhooksParams)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListWebhooksParams(varListWebhooksParams)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "q")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListWebhooksParams struct {

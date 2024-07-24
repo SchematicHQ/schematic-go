@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,21 +21,22 @@ var _ MappedNullable = &FlagCheckLogResponseData{}
 
 // FlagCheckLogResponseData struct for FlagCheckLogResponseData
 type FlagCheckLogResponseData struct {
-	CheckStatus   string            `json:"check_status"`
-	CompanyId     NullableString    `json:"company_id,omitempty"`
-	CreatedAt     time.Time         `json:"created_at"`
-	EnvironmentId string            `json:"environment_id"`
-	Error         NullableString    `json:"error,omitempty"`
-	FlagId        NullableString    `json:"flag_id,omitempty"`
-	FlagKey       string            `json:"flag_key"`
-	Id            string            `json:"id"`
-	Reason        string            `json:"reason"`
-	ReqCompany    map[string]string `json:"req_company,omitempty"`
-	ReqUser       map[string]string `json:"req_user,omitempty"`
-	RuleId        NullableString    `json:"rule_id,omitempty"`
-	UpdatedAt     time.Time         `json:"updated_at"`
-	UserId        NullableString    `json:"user_id,omitempty"`
-	Value         bool              `json:"value"`
+	CheckStatus          string            `json:"check_status"`
+	CompanyId            NullableString    `json:"company_id,omitempty"`
+	CreatedAt            time.Time         `json:"created_at"`
+	EnvironmentId        string            `json:"environment_id"`
+	Error                NullableString    `json:"error,omitempty"`
+	FlagId               NullableString    `json:"flag_id,omitempty"`
+	FlagKey              string            `json:"flag_key"`
+	Id                   string            `json:"id"`
+	Reason               string            `json:"reason"`
+	ReqCompany           map[string]string `json:"req_company,omitempty"`
+	ReqUser              map[string]string `json:"req_user,omitempty"`
+	RuleId               NullableString    `json:"rule_id,omitempty"`
+	UpdatedAt            time.Time         `json:"updated_at"`
+	UserId               NullableString    `json:"user_id,omitempty"`
+	Value                bool              `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FlagCheckLogResponseData FlagCheckLogResponseData
@@ -578,6 +578,11 @@ func (o FlagCheckLogResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["user_id"] = o.UserId.Get()
 	}
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -612,15 +617,34 @@ func (o *FlagCheckLogResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varFlagCheckLogResponseData := _FlagCheckLogResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFlagCheckLogResponseData)
+	err = json.Unmarshal(data, &varFlagCheckLogResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FlagCheckLogResponseData(varFlagCheckLogResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "check_status")
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "flag_key")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "reason")
+		delete(additionalProperties, "req_company")
+		delete(additionalProperties, "req_user")
+		delete(additionalProperties, "rule_id")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "user_id")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

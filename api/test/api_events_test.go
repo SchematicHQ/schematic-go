@@ -86,6 +86,18 @@ func Test_api_EventsAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test EventsAPIService GetSegmentIntegrationStatus", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.EventsAPI.GetSegmentIntegrationStatus(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test EventsAPIService ListEvents", func(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test

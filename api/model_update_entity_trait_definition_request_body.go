@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,8 +20,9 @@ var _ MappedNullable = &UpdateEntityTraitDefinitionRequestBody{}
 
 // UpdateEntityTraitDefinitionRequestBody struct for UpdateEntityTraitDefinitionRequestBody
 type UpdateEntityTraitDefinitionRequestBody struct {
-	DisplayName NullableString `json:"display_name,omitempty"`
-	TraitType   string         `json:"trait_type"`
+	DisplayName          NullableString `json:"display_name,omitempty"`
+	TraitType            string         `json:"trait_type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpdateEntityTraitDefinitionRequestBody UpdateEntityTraitDefinitionRequestBody
@@ -126,6 +126,11 @@ func (o UpdateEntityTraitDefinitionRequestBody) ToMap() (map[string]interface{},
 		toSerialize["display_name"] = o.DisplayName.Get()
 	}
 	toSerialize["trait_type"] = o.TraitType
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -153,15 +158,21 @@ func (o *UpdateEntityTraitDefinitionRequestBody) UnmarshalJSON(data []byte) (err
 
 	varUpdateEntityTraitDefinitionRequestBody := _UpdateEntityTraitDefinitionRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUpdateEntityTraitDefinitionRequestBody)
+	err = json.Unmarshal(data, &varUpdateEntityTraitDefinitionRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UpdateEntityTraitDefinitionRequestBody(varUpdateEntityTraitDefinitionRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "trait_type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

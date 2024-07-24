@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,13 +20,14 @@ var _ MappedNullable = &CreatePlanEntitlementRequestBody{}
 
 // CreatePlanEntitlementRequestBody struct for CreatePlanEntitlementRequestBody
 type CreatePlanEntitlementRequestBody struct {
-	FeatureId    string         `json:"feature_id"`
-	MetricPeriod NullableString `json:"metric_period,omitempty"`
-	PlanId       string         `json:"plan_id"`
-	ValueBool    NullableBool   `json:"value_bool,omitempty"`
-	ValueNumeric NullableInt32  `json:"value_numeric,omitempty"`
-	ValueTraitId NullableString `json:"value_trait_id,omitempty"`
-	ValueType    string         `json:"value_type"`
+	FeatureId            string         `json:"feature_id"`
+	MetricPeriod         NullableString `json:"metric_period,omitempty"`
+	PlanId               string         `json:"plan_id"`
+	ValueBool            NullableBool   `json:"value_bool,omitempty"`
+	ValueNumeric         NullableInt32  `json:"value_numeric,omitempty"`
+	ValueTraitId         NullableString `json:"value_trait_id,omitempty"`
+	ValueType            string         `json:"value_type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreatePlanEntitlementRequestBody CreatePlanEntitlementRequestBody
@@ -321,6 +321,11 @@ func (o CreatePlanEntitlementRequestBody) ToMap() (map[string]interface{}, error
 		toSerialize["value_trait_id"] = o.ValueTraitId.Get()
 	}
 	toSerialize["value_type"] = o.ValueType
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -350,15 +355,26 @@ func (o *CreatePlanEntitlementRequestBody) UnmarshalJSON(data []byte) (err error
 
 	varCreatePlanEntitlementRequestBody := _CreatePlanEntitlementRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreatePlanEntitlementRequestBody)
+	err = json.Unmarshal(data, &varCreatePlanEntitlementRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreatePlanEntitlementRequestBody(varCreatePlanEntitlementRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "feature_id")
+		delete(additionalProperties, "metric_period")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "value_bool")
+		delete(additionalProperties, "value_numeric")
+		delete(additionalProperties, "value_trait_id")
+		delete(additionalProperties, "value_type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

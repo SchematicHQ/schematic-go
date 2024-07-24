@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,9 +21,10 @@ var _ MappedNullable = &SegmentStatusResp{}
 
 // SegmentStatusResp The returned resource
 type SegmentStatusResp struct {
-	Connected     bool         `json:"connected"`
-	EnvironmentId string       `json:"environment_id"`
-	LastEventAt   NullableTime `json:"last_event_at,omitempty"`
+	Connected            bool         `json:"connected"`
+	EnvironmentId        string       `json:"environment_id"`
+	LastEventAt          NullableTime `json:"last_event_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SegmentStatusResp SegmentStatusResp
@@ -154,6 +154,11 @@ func (o SegmentStatusResp) ToMap() (map[string]interface{}, error) {
 	if o.LastEventAt.IsSet() {
 		toSerialize["last_event_at"] = o.LastEventAt.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -182,15 +187,22 @@ func (o *SegmentStatusResp) UnmarshalJSON(data []byte) (err error) {
 
 	varSegmentStatusResp := _SegmentStatusResp{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSegmentStatusResp)
+	err = json.Unmarshal(data, &varSegmentStatusResp)
 
 	if err != nil {
 		return err
 	}
 
 	*o = SegmentStatusResp(varSegmentStatusResp)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "connected")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "last_event_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

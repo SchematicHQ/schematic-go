@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,7 +20,8 @@ var _ MappedNullable = &CheckFlagsResponseData{}
 
 // CheckFlagsResponseData The created resource
 type CheckFlagsResponseData struct {
-	Flags []CheckFlagOutputWithFlagKey `json:"flags"`
+	Flags                []CheckFlagOutputWithFlagKey `json:"flags"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CheckFlagsResponseData CheckFlagsResponseData
@@ -79,6 +79,11 @@ func (o CheckFlagsResponseData) MarshalJSON() ([]byte, error) {
 func (o CheckFlagsResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["flags"] = o.Flags
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -106,15 +111,20 @@ func (o *CheckFlagsResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varCheckFlagsResponseData := _CheckFlagsResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCheckFlagsResponseData)
+	err = json.Unmarshal(data, &varCheckFlagsResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CheckFlagsResponseData(varCheckFlagsResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "flags")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

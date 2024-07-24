@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,14 +20,15 @@ var _ MappedNullable = &CreateCrmProductRequestBody{}
 
 // CreateCrmProductRequestBody struct for CreateCrmProductRequestBody
 type CreateCrmProductRequestBody struct {
-	Currency    string `json:"currency"`
-	Description string `json:"description"`
-	ExternalId  string `json:"external_id"`
-	Interval    string `json:"interval"`
-	Name        string `json:"name"`
-	Price       string `json:"price"`
-	Quantity    int32  `json:"quantity"`
-	Sku         string `json:"sku"`
+	Currency             string `json:"currency"`
+	Description          string `json:"description"`
+	ExternalId           string `json:"external_id"`
+	Interval             string `json:"interval"`
+	Name                 string `json:"name"`
+	Price                string `json:"price"`
+	Quantity             int32  `json:"quantity"`
+	Sku                  string `json:"sku"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateCrmProductRequestBody CreateCrmProductRequestBody
@@ -268,6 +268,11 @@ func (o CreateCrmProductRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize["price"] = o.Price
 	toSerialize["quantity"] = o.Quantity
 	toSerialize["sku"] = o.Sku
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -302,15 +307,27 @@ func (o *CreateCrmProductRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateCrmProductRequestBody := _CreateCrmProductRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateCrmProductRequestBody)
+	err = json.Unmarshal(data, &varCreateCrmProductRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateCrmProductRequestBody(varCreateCrmProductRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "currency")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "interval")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "price")
+		delete(additionalProperties, "quantity")
+		delete(additionalProperties, "sku")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

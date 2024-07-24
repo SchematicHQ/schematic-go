@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,7 +20,8 @@ var _ MappedNullable = &KeysRequestBody{}
 
 // KeysRequestBody struct for KeysRequestBody
 type KeysRequestBody struct {
-	Keys map[string]string `json:"keys"`
+	Keys                 map[string]string `json:"keys"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _KeysRequestBody KeysRequestBody
@@ -79,6 +79,11 @@ func (o KeysRequestBody) MarshalJSON() ([]byte, error) {
 func (o KeysRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["keys"] = o.Keys
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -106,15 +111,20 @@ func (o *KeysRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varKeysRequestBody := _KeysRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varKeysRequestBody)
+	err = json.Unmarshal(data, &varKeysRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = KeysRequestBody(varKeysRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "keys")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -21,12 +20,13 @@ var _ MappedNullable = &CreateFlagRequestBody{}
 
 // CreateFlagRequestBody struct for CreateFlagRequestBody
 type CreateFlagRequestBody struct {
-	DefaultValue bool           `json:"default_value"`
-	Description  string         `json:"description"`
-	FeatureId    NullableString `json:"feature_id,omitempty"`
-	FlagType     string         `json:"flag_type"`
-	Key          string         `json:"key"`
-	Name         string         `json:"name"`
+	DefaultValue         bool           `json:"default_value"`
+	Description          string         `json:"description"`
+	FeatureId            NullableString `json:"feature_id,omitempty"`
+	FlagType             string         `json:"flag_type"`
+	Key                  string         `json:"key"`
+	Name                 string         `json:"name"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateFlagRequestBody CreateFlagRequestBody
@@ -234,6 +234,11 @@ func (o CreateFlagRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize["flag_type"] = o.FlagType
 	toSerialize["key"] = o.Key
 	toSerialize["name"] = o.Name
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -265,15 +270,25 @@ func (o *CreateFlagRequestBody) UnmarshalJSON(data []byte) (err error) {
 
 	varCreateFlagRequestBody := _CreateFlagRequestBody{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCreateFlagRequestBody)
+	err = json.Unmarshal(data, &varCreateFlagRequestBody)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CreateFlagRequestBody(varCreateFlagRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "default_value")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "feature_id")
+		delete(additionalProperties, "flag_type")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,12 +21,13 @@ var _ MappedNullable = &CompanyPlanResponseData{}
 
 // CompanyPlanResponseData struct for CompanyPlanResponseData
 type CompanyPlanResponseData struct {
-	CompanyId     string    `json:"company_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	EnvironmentId string    `json:"environment_id"`
-	Id            string    `json:"id"`
-	PlanId        string    `json:"plan_id"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	CompanyId            string    `json:"company_id"`
+	CreatedAt            time.Time `json:"created_at"`
+	EnvironmentId        string    `json:"environment_id"`
+	Id                   string    `json:"id"`
+	PlanId               string    `json:"plan_id"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CompanyPlanResponseData CompanyPlanResponseData
@@ -215,6 +215,11 @@ func (o CompanyPlanResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["plan_id"] = o.PlanId
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -247,15 +252,25 @@ func (o *CompanyPlanResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varCompanyPlanResponseData := _CompanyPlanResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCompanyPlanResponseData)
+	err = json.Unmarshal(data, &varCompanyPlanResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CompanyPlanResponseData(varCompanyPlanResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

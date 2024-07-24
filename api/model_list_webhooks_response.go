@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -22,8 +21,9 @@ var _ MappedNullable = &ListWebhooksResponse{}
 // ListWebhooksResponse struct for ListWebhooksResponse
 type ListWebhooksResponse struct {
 	// The returned resources
-	Data   []WebhookResponseData `json:"data"`
-	Params ListWebhooksParams    `json:"params"`
+	Data                 []WebhookResponseData `json:"data"`
+	Params               ListWebhooksParams    `json:"params"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ListWebhooksResponse ListWebhooksResponse
@@ -107,6 +107,11 @@ func (o ListWebhooksResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -135,15 +140,21 @@ func (o *ListWebhooksResponse) UnmarshalJSON(data []byte) (err error) {
 
 	varListWebhooksResponse := _ListWebhooksResponse{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varListWebhooksResponse)
+	err = json.Unmarshal(data, &varListWebhooksResponse)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ListWebhooksResponse(varListWebhooksResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

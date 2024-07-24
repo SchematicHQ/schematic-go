@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,11 +21,12 @@ var _ MappedNullable = &EntityKeyDefinitionResponseData{}
 
 // EntityKeyDefinitionResponseData struct for EntityKeyDefinitionResponseData
 type EntityKeyDefinitionResponseData struct {
-	CreatedAt  time.Time `json:"created_at"`
-	EntityType string    `json:"entity_type"`
-	Id         string    `json:"id"`
-	Key        string    `json:"key"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	CreatedAt            time.Time `json:"created_at"`
+	EntityType           string    `json:"entity_type"`
+	Id                   string    `json:"id"`
+	Key                  string    `json:"key"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EntityKeyDefinitionResponseData EntityKeyDefinitionResponseData
@@ -188,6 +188,11 @@ func (o EntityKeyDefinitionResponseData) ToMap() (map[string]interface{}, error)
 	toSerialize["id"] = o.Id
 	toSerialize["key"] = o.Key
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -219,15 +224,24 @@ func (o *EntityKeyDefinitionResponseData) UnmarshalJSON(data []byte) (err error)
 
 	varEntityKeyDefinitionResponseData := _EntityKeyDefinitionResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEntityKeyDefinitionResponseData)
+	err = json.Unmarshal(data, &varEntityKeyDefinitionResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EntityKeyDefinitionResponseData(varEntityKeyDefinitionResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "entity_type")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

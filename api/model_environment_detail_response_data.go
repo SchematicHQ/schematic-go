@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,12 +21,13 @@ var _ MappedNullable = &EnvironmentDetailResponseData{}
 
 // EnvironmentDetailResponseData The created resource
 type EnvironmentDetailResponseData struct {
-	ApiKeys         []ApiKeyResponseData `json:"api_keys"`
-	CreatedAt       time.Time            `json:"created_at"`
-	EnvironmentType string               `json:"environment_type"`
-	Id              string               `json:"id"`
-	Name            string               `json:"name"`
-	UpdatedAt       time.Time            `json:"updated_at"`
+	ApiKeys              []ApiKeyResponseData `json:"api_keys"`
+	CreatedAt            time.Time            `json:"created_at"`
+	EnvironmentType      string               `json:"environment_type"`
+	Id                   string               `json:"id"`
+	Name                 string               `json:"name"`
+	UpdatedAt            time.Time            `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EnvironmentDetailResponseData EnvironmentDetailResponseData
@@ -215,6 +215,11 @@ func (o EnvironmentDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -247,15 +252,25 @@ func (o *EnvironmentDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	varEnvironmentDetailResponseData := _EnvironmentDetailResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEnvironmentDetailResponseData)
+	err = json.Unmarshal(data, &varEnvironmentDetailResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EnvironmentDetailResponseData(varEnvironmentDetailResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "api_keys")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "environment_type")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

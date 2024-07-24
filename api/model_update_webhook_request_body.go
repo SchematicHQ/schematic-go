@@ -19,11 +19,14 @@ var _ MappedNullable = &UpdateWebhookRequestBody{}
 
 // UpdateWebhookRequestBody struct for UpdateWebhookRequestBody
 type UpdateWebhookRequestBody struct {
-	Name         NullableString `json:"name,omitempty"`
-	RequestTypes []string       `json:"request_types,omitempty"`
-	Status       NullableString `json:"status,omitempty"`
-	Url          NullableString `json:"url,omitempty"`
+	Name                 NullableString `json:"name,omitempty"`
+	RequestTypes         []string       `json:"request_types,omitempty"`
+	Status               NullableString `json:"status,omitempty"`
+	Url                  NullableString `json:"url,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateWebhookRequestBody UpdateWebhookRequestBody
 
 // NewUpdateWebhookRequestBody instantiates a new UpdateWebhookRequestBody object
 // This constructor will assign default values to properties that have it defined,
@@ -226,7 +229,36 @@ func (o UpdateWebhookRequestBody) ToMap() (map[string]interface{}, error) {
 	if o.Url.IsSet() {
 		toSerialize["url"] = o.Url.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateWebhookRequestBody) UnmarshalJSON(data []byte) (err error) {
+	varUpdateWebhookRequestBody := _UpdateWebhookRequestBody{}
+
+	err = json.Unmarshal(data, &varUpdateWebhookRequestBody)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateWebhookRequestBody(varUpdateWebhookRequestBody)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "request_types")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "url")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateWebhookRequestBody struct {

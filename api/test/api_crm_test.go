@@ -11,11 +11,10 @@ package api
 
 import (
 	"context"
-	"testing"
-
 	schematicapi "github.com/SchematicHQ/schematic-go/api"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func Test_api_CrmAPIService(t *testing.T) {
@@ -23,7 +22,7 @@ func Test_api_CrmAPIService(t *testing.T) {
 	configuration := schematicapi.NewConfiguration()
 	apiClient := schematicapi.NewAPIClient(configuration)
 
-	t.Run("Test CrmAPIService ListCRMProducts", func(t *testing.T) {
+	t.Run("Test CrmAPIService ListCrmProducts", func(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test
 
@@ -35,11 +34,47 @@ func Test_api_CrmAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test CrmAPIService UpsertCRMProduct", func(t *testing.T) {
+	t.Run("Test CrmAPIService UpsertCrmDeal", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.CrmAPI.UpsertCrmDeal(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CrmAPIService UpsertCrmProduct", func(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.CrmAPI.UpsertCrmProduct(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CrmAPIService UpsertDealLineItemAssociation", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.CrmAPI.UpsertDealLineItemAssociation(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test CrmAPIService UpsertLineItem", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.CrmAPI.UpsertLineItem(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

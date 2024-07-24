@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -22,10 +21,11 @@ var _ MappedNullable = &BillingSubscriptionResponseData{}
 
 // BillingSubscriptionResponseData The created resource
 type BillingSubscriptionResponseData struct {
-	ExpiredAt  NullableTime `json:"expired_at,omitempty"`
-	ExternalId string       `json:"external_id"`
-	Id         int32        `json:"id"`
-	UpdatedAt  time.Time    `json:"updated_at"`
+	ExpiredAt            NullableTime `json:"expired_at,omitempty"`
+	ExternalId           string       `json:"external_id"`
+	Id                   int32        `json:"id"`
+	UpdatedAt            time.Time    `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BillingSubscriptionResponseData BillingSubscriptionResponseData
@@ -181,6 +181,11 @@ func (o BillingSubscriptionResponseData) ToMap() (map[string]interface{}, error)
 	toSerialize["external_id"] = o.ExternalId
 	toSerialize["id"] = o.Id
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -210,15 +215,23 @@ func (o *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) (err error)
 
 	varBillingSubscriptionResponseData := _BillingSubscriptionResponseData{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varBillingSubscriptionResponseData)
+	err = json.Unmarshal(data, &varBillingSubscriptionResponseData)
 
 	if err != nil {
 		return err
 	}
 
 	*o = BillingSubscriptionResponseData(varBillingSubscriptionResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "expired_at")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -19,10 +19,13 @@ var _ MappedNullable = &ComponentHydrateResponseData{}
 
 // ComponentHydrateResponseData The returned resource
 type ComponentHydrateResponseData struct {
-	Company      *CompanyDetailResponseData      `json:"company,omitempty"`
-	Component    *ComponentResponseData          `json:"component,omitempty"`
-	FeatureUsage *FeatureUsageDetailResponseData `json:"feature_usage,omitempty"`
+	Company              *CompanyDetailResponseData      `json:"company,omitempty"`
+	Component            *ComponentResponseData          `json:"component,omitempty"`
+	FeatureUsage         *FeatureUsageDetailResponseData `json:"feature_usage,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ComponentHydrateResponseData ComponentHydrateResponseData
 
 // NewComponentHydrateResponseData instantiates a new ComponentHydrateResponseData object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o ComponentHydrateResponseData) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FeatureUsage) {
 		toSerialize["feature_usage"] = o.FeatureUsage
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ComponentHydrateResponseData) UnmarshalJSON(data []byte) (err error) {
+	varComponentHydrateResponseData := _ComponentHydrateResponseData{}
+
+	err = json.Unmarshal(data, &varComponentHydrateResponseData)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ComponentHydrateResponseData(varComponentHydrateResponseData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company")
+		delete(additionalProperties, "component")
+		delete(additionalProperties, "feature_usage")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableComponentHydrateResponseData struct {

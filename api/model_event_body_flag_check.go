@@ -11,7 +11,6 @@ API version: 0.1
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -40,7 +39,8 @@ type EventBodyFlagCheck struct {
 	// Schematic user ID (starting with 'user_') of the user evaluated, if any
 	UserId NullableString `json:"user_id,omitempty"`
 	// The value of the flag for the given company and/or user
-	Value bool `json:"value"`
+	Value                bool `json:"value"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _EventBodyFlagCheck EventBodyFlagCheck
@@ -452,6 +452,11 @@ func (o EventBodyFlagCheck) ToMap() (map[string]interface{}, error) {
 		toSerialize["user_id"] = o.UserId.Get()
 	}
 	toSerialize["value"] = o.Value
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -481,15 +486,29 @@ func (o *EventBodyFlagCheck) UnmarshalJSON(data []byte) (err error) {
 
 	varEventBodyFlagCheck := _EventBodyFlagCheck{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEventBodyFlagCheck)
+	err = json.Unmarshal(data, &varEventBodyFlagCheck)
 
 	if err != nil {
 		return err
 	}
 
 	*o = EventBodyFlagCheck(varEventBodyFlagCheck)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "flag_id")
+		delete(additionalProperties, "flag_key")
+		delete(additionalProperties, "reason")
+		delete(additionalProperties, "req_company")
+		delete(additionalProperties, "req_user")
+		delete(additionalProperties, "rule_id")
+		delete(additionalProperties, "user_id")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

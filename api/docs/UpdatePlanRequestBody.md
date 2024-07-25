@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **AudienceType** | **string** |  | 
 **Description** | Pointer to **NullableString** |  | [optional] 
+**Icon** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
 **PlanType** | Pointer to **NullableString** |  | [optional] 
 
@@ -83,6 +84,41 @@ HasDescription returns a boolean if a field has been set.
 `func (o *UpdatePlanRequestBody) UnsetDescription()`
 
 UnsetDescription ensures that no value is present for Description, not even an explicit nil
+### GetIcon
+
+`func (o *UpdatePlanRequestBody) GetIcon() string`
+
+GetIcon returns the Icon field if non-nil, zero value otherwise.
+
+### GetIconOk
+
+`func (o *UpdatePlanRequestBody) GetIconOk() (*string, bool)`
+
+GetIconOk returns a tuple with the Icon field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIcon
+
+`func (o *UpdatePlanRequestBody) SetIcon(v string)`
+
+SetIcon sets Icon field to given value.
+
+### HasIcon
+
+`func (o *UpdatePlanRequestBody) HasIcon() bool`
+
+HasIcon returns a boolean if a field has been set.
+
+### SetIconNil
+
+`func (o *UpdatePlanRequestBody) SetIconNil(b bool)`
+
+ SetIconNil sets the value for Icon to be an explicit nil
+
+### UnsetIcon
+`func (o *UpdatePlanRequestBody) UnsetIcon()`
+
+UnsetIcon ensures that no value is present for Icon, not even an explicit nil
 ### GetName
 
 `func (o *UpdatePlanRequestBody) GetName() string`

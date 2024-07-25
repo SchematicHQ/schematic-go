@@ -931,6 +931,130 @@ paths:
       summary: Count customers
       tags:
       - billing
+  /billing/price/upsert:
+    post:
+      operationId: upsertBillingPrice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBillingPriceRequestBody'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertBillingPriceResponse'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: Upsert billing price
+      tags:
+      - billing
+  /billing/product/prices:
+    get:
+      operationId: listProductPrices
+      parameters:
+      - explode: true
+        in: query
+        name: ids
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Page limit (default 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          description: Page limit (default 100)
+          example: 100
+          type: integer
+        style: form
+      - description: Page offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          description: Page offset (default 0)
+          example: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListProductPricesResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Server error
+      summary: List product prices
+      tags:
+      - billing
   /billing/product/upsert:
     post:
       operationId: upsertBillingProduct
@@ -8577,6 +8701,28 @@ components:
       - updated_at
       title: BillingCustomerWithSubscriptionsResponseData
       type: object
+    BillingPriceResponseData:
+      example:
+        external_price_id: external_price_id
+        price: 0
+        interval: interval
+        id: id
+      properties:
+        external_price_id:
+          type: string
+        id:
+          type: string
+        interval:
+          type: string
+        price:
+          type: integer
+      required:
+      - external_price_id
+      - id
+      - interval
+      - price
+      title: BillingPriceResponseData
+      type: object
     BillingProductPlanResponseData:
       description: The updated resource
       example:
@@ -8891,9 +9037,11 @@ components:
         plans:
         - image_url: image_url
           name: name
+          description: description
           id: id
         - image_url: image_url
           name: name
+          description: description
           id: id
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
@@ -9064,7 +9212,9 @@ components:
         value_trait_id: value_trait_id
         feature:
           feature_type: feature_type
+          maintainer_id: maintainer_id
           updated_at: 2000-01-23T04:56:07.000+00:00
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -9113,9 +9263,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -9963,9 +10115,12 @@ components:
                   value: true
                   plan_id: plan_id
                 last_checked_at: 2000-01-23T04:56:07.000+00:00
+                maintainer_id: maintainer_id
                 feature:
                   feature_type: feature_type
+                  maintainer_id: maintainer_id
                   updated_at: 2000-01-23T04:56:07.000+00:00
+                  icon: icon
                   name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
@@ -10598,9 +10753,12 @@ components:
                   value: true
                   plan_id: plan_id
                 last_checked_at: 2000-01-23T04:56:07.000+00:00
+                maintainer_id: maintainer_id
                 feature:
                   feature_type: feature_type
+                  maintainer_id: maintainer_id
                   updated_at: 2000-01-23T04:56:07.000+00:00
+                  icon: icon
                   name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
@@ -10613,10 +10771,12 @@ components:
                 flag_type: flag_type
                 id: id
                 key: key
+              icon: icon
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               event_subtype: event_subtype
               feature_type: feature_type
+              maintainer_id: maintainer_id
               event_summary:
                 environment_id: environment_id
                 user_count: 5
@@ -10628,9 +10788,11 @@ components:
               plans:
               - image_url: image_url
                 name: name
+                description: description
                 id: id
               - image_url: image_url
                 name: name
+                description: description
                 id: id
               name: name
               trait:
@@ -10654,6 +10816,7 @@ components:
               plan_type: plan_type
               updated_at: 2000-01-23T04:56:07.000+00:00
               audience_type: audience_type
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -11283,9 +11446,12 @@ components:
                   value: true
                   plan_id: plan_id
                 last_checked_at: 2000-01-23T04:56:07.000+00:00
+                maintainer_id: maintainer_id
                 feature:
                   feature_type: feature_type
+                  maintainer_id: maintainer_id
                   updated_at: 2000-01-23T04:56:07.000+00:00
+                  icon: icon
                   name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
@@ -11918,9 +12084,12 @@ components:
                   value: true
                   plan_id: plan_id
                 last_checked_at: 2000-01-23T04:56:07.000+00:00
+                maintainer_id: maintainer_id
                 feature:
                   feature_type: feature_type
+                  maintainer_id: maintainer_id
                   updated_at: 2000-01-23T04:56:07.000+00:00
+                  icon: icon
                   name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
@@ -11933,10 +12102,12 @@ components:
                 flag_type: flag_type
                 id: id
                 key: key
+              icon: icon
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               event_subtype: event_subtype
               feature_type: feature_type
+              maintainer_id: maintainer_id
               event_summary:
                 environment_id: environment_id
                 user_count: 5
@@ -11948,9 +12119,11 @@ components:
               plans:
               - image_url: image_url
                 name: name
+                description: description
                 id: id
               - image_url: image_url
                 name: name
+                description: description
                 id: id
               name: name
               trait:
@@ -11974,6 +12147,7 @@ components:
               plan_type: plan_type
               updated_at: 2000-01-23T04:56:07.000+00:00
               audience_type: audience_type
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -12018,9 +12192,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -12169,6 +12345,28 @@ components:
       - meta
       - name
       title: CreateBillingCustomerRequestBody
+      type: object
+    CreateBillingPriceRequestBody:
+      example:
+        price_external_id: price_external_id
+        price: 0
+        interval: interval
+        product_external_id: product_external_id
+      properties:
+        interval:
+          type: string
+        price:
+          type: integer
+        price_external_id:
+          type: string
+        product_external_id:
+          type: string
+      required:
+      - interval
+      - price
+      - price_external_id
+      - product_external_id
+      title: CreateBillingPriceRequestBody
       type: object
     CreateBillingProductRequestBody:
       example:
@@ -12553,12 +12751,15 @@ components:
         feature_type: boolean
         flag:
           feature_id: feature_id
+          maintainer_id: maintainer_id
           name: name
           description: description
           flag_type: flag_type
           default_value: true
           id: id
           key: key
+        maintainer_id: maintainer_id
+        icon: icon
         name: name
         description: description
         event_subtype: event_subtype
@@ -12578,7 +12779,13 @@ components:
           type: string
         flag:
           $ref: '#/components/schemas/CreateOrUpdateFlagRequestBody'
+        icon:
+          nullable: true
+          type: string
         lifecycle_phase:
+          nullable: true
+          type: string
+        maintainer_id:
           nullable: true
           type: string
         name:
@@ -12595,6 +12802,7 @@ components:
     CreateFlagRequestBody:
       example:
         feature_id: feature_id
+        maintainer_id: maintainer_id
         name: name
         description: description
         flag_type: flag_type
@@ -12611,6 +12819,9 @@ components:
         flag_type:
           type: string
         key:
+          type: string
+        maintainer_id:
+          nullable: true
           type: string
         name:
           type: string
@@ -12751,6 +12962,7 @@ components:
     CreateOrUpdateFlagRequestBody:
       example:
         feature_id: feature_id
+        maintainer_id: maintainer_id
         name: name
         description: description
         flag_type: flag_type
@@ -12771,6 +12983,9 @@ components:
           nullable: true
           type: string
         key:
+          type: string
+        maintainer_id:
+          nullable: true
           type: string
         name:
           type: string
@@ -12954,6 +13169,7 @@ components:
       example:
         plan_type: product
         audience_type: audience_type
+        icon: icon
         name: name
         description: description
       properties:
@@ -12961,6 +13177,9 @@ components:
           nullable: true
           type: string
         description:
+          type: string
+        icon:
+          nullable: true
           type: string
         name:
           type: string
@@ -13596,9 +13815,11 @@ components:
         features:
         - image_url: image_url
           name: name
+          description: description
           id: id
         - image_url: image_url
           name: name
+          description: description
           id: id
         enriched_at: 2000-01-23T04:56:07.000+00:00
         updated_at: 2000-01-23T04:56:07.000+00:00
@@ -13609,11 +13830,13 @@ components:
         company:
           image_url: image_url
           name: name
+          description: description
           id: id
         id: id
         user:
           image_url: image_url
           name: name
+          description: description
           id: id
         status: status
       properties:
@@ -14416,9 +14639,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -15051,9 +15277,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -15066,10 +15295,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -15081,9 +15312,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -15142,9 +15375,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -15188,6 +15423,7 @@ components:
           plan_type: plan_type
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -15862,9 +16098,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -16497,9 +16736,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -16512,10 +16754,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -16527,9 +16771,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -16588,9 +16834,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -16634,6 +16882,7 @@ components:
           plan_type: plan_type
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -17313,9 +17562,12 @@ components:
             value: true
             plan_id: plan_id
           last_checked_at: 2000-01-23T04:56:07.000+00:00
+          maintainer_id: maintainer_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -17948,9 +18200,12 @@ components:
             value: true
             plan_id: plan_id
           last_checked_at: 2000-01-23T04:56:07.000+00:00
+          maintainer_id: maintainer_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -17963,10 +18218,12 @@ components:
           flag_type: flag_type
           id: id
           key: key
+        icon: icon
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
         event_subtype: event_subtype
         feature_type: feature_type
+        maintainer_id: maintainer_id
         event_summary:
           environment_id: environment_id
           user_count: 5
@@ -17978,9 +18235,11 @@ components:
         plans:
         - image_url: image_url
           name: name
+          description: description
           id: id
         - image_url: image_url
           name: name
+          description: description
           id: id
         name: name
         trait:
@@ -18013,9 +18272,15 @@ components:
           items:
             $ref: '#/components/schemas/FlagDetailResponseData'
           type: array
+        icon:
+          nullable: true
+          type: string
         id:
           type: string
         lifecycle_phase:
+          nullable: true
+          type: string
+        maintainer_id:
           nullable: true
           type: string
         name:
@@ -18046,7 +18311,9 @@ components:
     FeatureResponseData:
       example:
         feature_type: feature_type
+        maintainer_id: maintainer_id
         updated_at: 2000-01-23T04:56:07.000+00:00
+        icon: icon
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
@@ -18065,9 +18332,15 @@ components:
           type: string
         feature_type:
           type: string
+        icon:
+          nullable: true
+          type: string
         id:
           type: string
         lifecycle_phase:
+          nullable: true
+          type: string
+        maintainer_id:
           nullable: true
           type: string
         name:
@@ -18715,9 +18988,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -19350,9 +19626,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -19365,10 +19644,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -19380,9 +19661,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -19406,6 +19689,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -20035,9 +20319,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -20670,9 +20957,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -20685,10 +20975,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -20700,9 +20992,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -20726,6 +21020,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -21366,9 +21661,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -22001,9 +22299,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -22016,10 +22317,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -22031,9 +22334,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -22057,6 +22362,7 @@ components:
           plan_type: plan_type
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -22110,6 +22416,7 @@ components:
           key: req_company
         flag:
           feature_id: feature_id
+          maintainer_id: maintainer_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -22924,9 +23231,12 @@ components:
           value: true
           plan_id: plan_id
         last_checked_at: 2000-01-23T04:56:07.000+00:00
+        maintainer_id: maintainer_id
         feature:
           feature_type: feature_type
+          maintainer_id: maintainer_id
           updated_at: 2000-01-23T04:56:07.000+00:00
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -22964,6 +23274,9 @@ components:
           type: string
         latest_check:
           $ref: '#/components/schemas/FlagCheckLogResponseData'
+        maintainer_id:
+          nullable: true
+          type: string
         name:
           type: string
         rules:
@@ -22988,6 +23301,7 @@ components:
     FlagResponseData:
       example:
         feature_id: feature_id
+        maintainer_id: maintainer_id
         updated_at: 2000-01-23T04:56:07.000+00:00
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
@@ -23012,6 +23326,9 @@ components:
         id:
           type: string
         key:
+          type: string
+        maintainer_id:
+          nullable: true
           type: string
         name:
           type: string
@@ -24174,9 +24491,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -24809,9 +25129,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -24824,10 +25147,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -24839,9 +25164,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -25478,9 +25805,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -26113,9 +26443,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -26128,10 +26461,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -26143,9 +26478,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -26186,6 +26523,7 @@ components:
         updated_at: 2000-01-23T04:56:07.000+00:00
         audience_type: audience_type
         company_count: 0
+        icon: icon
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
@@ -26208,6 +26546,9 @@ components:
           items:
             $ref: '#/components/schemas/FeatureDetailResponseData'
           type: array
+        icon:
+          nullable: true
+          type: string
         id:
           type: string
         name:
@@ -26252,7 +26593,9 @@ components:
         value_trait_id: value_trait_id
         feature:
           feature_type: feature_type
+          maintainer_id: maintainer_id
           updated_at: 2000-01-23T04:56:07.000+00:00
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -26267,6 +26610,7 @@ components:
           plan_type: plan_type
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -26326,6 +26670,7 @@ components:
         plan_type: plan_type
         updated_at: 2000-01-23T04:56:07.000+00:00
         audience_type: audience_type
+        icon: icon
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
@@ -26337,6 +26682,9 @@ components:
           format: date-time
           type: string
         description:
+          type: string
+        icon:
+          nullable: true
           type: string
         id:
           type: string
@@ -26361,8 +26709,12 @@ components:
       example:
         image_url: image_url
         name: name
+        description: description
         id: id
       properties:
+        description:
+          nullable: true
+          type: string
         id:
           type: string
         image_url:
@@ -27776,6 +28128,7 @@ components:
           plan_id: plan_id
         Flag:
           feature_id: feature_id
+          maintainer_id: maintainer_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -28064,12 +28417,15 @@ components:
         feature_type: boolean
         flag:
           feature_id: feature_id
+          maintainer_id: maintainer_id
           name: name
           description: description
           flag_type: flag_type
           default_value: true
           id: id
           key: key
+        maintainer_id: maintainer_id
+        icon: icon
         name: name
         description: description
         event_subtype: event_subtype
@@ -28091,7 +28447,13 @@ components:
           type: string
         flag:
           $ref: '#/components/schemas/CreateOrUpdateFlagRequestBody'
+        icon:
+          nullable: true
+          type: string
         lifecycle_phase:
+          nullable: true
+          type: string
+        maintainer_id:
           nullable: true
           type: string
         name:
@@ -28327,12 +28689,16 @@ components:
       example:
         plan_type: product
         audience_type: audience_type
+        icon: icon
         name: name
         description: description
       properties:
         audience_type:
           type: string
         description:
+          nullable: true
+          type: string
+        icon:
           nullable: true
           type: string
         name:
@@ -29364,9 +29730,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -29444,9 +29812,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -29861,6 +30231,88 @@ components:
       - params
       title: CountCustomersResponse
       type: object
+    UpsertBillingPriceResponse:
+      example:
+        data:
+          external_price_id: external_price_id
+          price: 0
+          interval: interval
+          id: id
+        params: "{}"
+      properties:
+        data:
+          $ref: '#/components/schemas/BillingPriceResponseData'
+        params:
+          description: Input parameters
+          title: UpsertBillingPriceParams
+          type: object
+      required:
+      - data
+      - params
+      title: UpsertBillingPriceResponse
+      type: object
+    ListProductPricesParams:
+      description: Input parameters
+      example:
+        q: q
+        offset: 0
+        limit: 100
+        name: name
+        ids:
+        - ids
+        - ids
+      properties:
+        ids:
+          items:
+            type: string
+          type: array
+        limit:
+          description: Page limit (default 100)
+          example: 100
+          type: integer
+        name:
+          type: string
+        offset:
+          description: Page offset (default 0)
+          example: 0
+          type: integer
+        q:
+          type: string
+      title: ListProductPricesParams
+      type: object
+    ListProductPricesResponse:
+      example:
+        data:
+        - external_price_id: external_price_id
+          price: 0
+          interval: interval
+          id: id
+        - external_price_id: external_price_id
+          price: 0
+          interval: interval
+          id: id
+        params:
+          q: q
+          offset: 0
+          limit: 100
+          name: name
+          ids:
+          - ids
+          - ids
+      properties:
+        data:
+          description: The returned resources
+          items:
+            $ref: '#/components/schemas/BillingPriceResponseData'
+          title: ListProductPricesResponseData
+          type: array
+        params:
+          $ref: '#/components/schemas/ListProductPricesParams'
+      required:
+      - data
+      - params
+      title: ListProductPricesResponse
+      type: object
     UpsertBillingProductResponse:
       example:
         data:
@@ -30058,9 +30510,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -30138,9 +30592,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -30244,9 +30700,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -30340,9 +30798,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -30511,9 +30971,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -30639,9 +31101,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -30979,7 +31443,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -31028,9 +31494,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -31092,7 +31560,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -31141,9 +31611,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -31237,7 +31709,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -31286,9 +31760,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -31366,7 +31842,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -31415,9 +31893,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -31495,7 +31975,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -31544,9 +32026,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -31881,9 +32365,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -32725,9 +33211,12 @@ components:
                     value: true
                     plan_id: plan_id
                   last_checked_at: 2000-01-23T04:56:07.000+00:00
+                  maintainer_id: maintainer_id
                   feature:
                     feature_type: feature_type
+                    maintainer_id: maintainer_id
                     updated_at: 2000-01-23T04:56:07.000+00:00
+                    icon: icon
                     name: name
                     created_at: 2000-01-23T04:56:07.000+00:00
                     description: description
@@ -33360,9 +33849,12 @@ components:
                     value: true
                     plan_id: plan_id
                   last_checked_at: 2000-01-23T04:56:07.000+00:00
+                  maintainer_id: maintainer_id
                   feature:
                     feature_type: feature_type
+                    maintainer_id: maintainer_id
                     updated_at: 2000-01-23T04:56:07.000+00:00
+                    icon: icon
                     name: name
                     created_at: 2000-01-23T04:56:07.000+00:00
                     description: description
@@ -33375,10 +33867,12 @@ components:
                   flag_type: flag_type
                   id: id
                   key: key
+                icon: icon
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 event_subtype: event_subtype
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 event_summary:
                   environment_id: environment_id
                   user_count: 5
@@ -33390,9 +33884,11 @@ components:
                 plans:
                 - image_url: image_url
                   name: name
+                  description: description
                   id: id
                 - image_url: image_url
                   name: name
+                  description: description
                   id: id
                 name: name
                 trait:
@@ -33416,6 +33912,7 @@ components:
                 plan_type: plan_type
                 updated_at: 2000-01-23T04:56:07.000+00:00
                 audience_type: audience_type
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -34045,9 +34542,12 @@ components:
                     value: true
                     plan_id: plan_id
                   last_checked_at: 2000-01-23T04:56:07.000+00:00
+                  maintainer_id: maintainer_id
                   feature:
                     feature_type: feature_type
+                    maintainer_id: maintainer_id
                     updated_at: 2000-01-23T04:56:07.000+00:00
+                    icon: icon
                     name: name
                     created_at: 2000-01-23T04:56:07.000+00:00
                     description: description
@@ -34680,9 +35180,12 @@ components:
                     value: true
                     plan_id: plan_id
                   last_checked_at: 2000-01-23T04:56:07.000+00:00
+                  maintainer_id: maintainer_id
                   feature:
                     feature_type: feature_type
+                    maintainer_id: maintainer_id
                     updated_at: 2000-01-23T04:56:07.000+00:00
+                    icon: icon
                     name: name
                     created_at: 2000-01-23T04:56:07.000+00:00
                     description: description
@@ -34695,10 +35198,12 @@ components:
                   flag_type: flag_type
                   id: id
                   key: key
+                icon: icon
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 event_subtype: event_subtype
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 event_summary:
                   environment_id: environment_id
                   user_count: 5
@@ -34710,9 +35215,11 @@ components:
                 plans:
                 - image_url: image_url
                   name: name
+                  description: description
                   id: id
                 - image_url: image_url
                   name: name
+                  description: description
                   id: id
                 name: name
                 trait:
@@ -34736,6 +35243,7 @@ components:
                 plan_type: plan_type
                 updated_at: 2000-01-23T04:56:07.000+00:00
                 audience_type: audience_type
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -34780,9 +35288,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -35754,9 +36264,11 @@ components:
           features:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           enriched_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -35767,11 +36279,13 @@ components:
           company:
             image_url: image_url
             name: name
+            description: description
             id: id
           id: id
           user:
             image_url: image_url
             name: name
+            description: description
             id: id
           status: status
         - error_message: error_message
@@ -35789,9 +36303,11 @@ components:
           features:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           enriched_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -35802,11 +36318,13 @@ components:
           company:
             image_url: image_url
             name: name
+            description: description
             id: id
           id: id
           user:
             image_url: image_url
             name: name
+            description: description
             id: id
           status: status
         params:
@@ -35872,9 +36390,11 @@ components:
           features:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           enriched_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -35885,11 +36405,13 @@ components:
           company:
             image_url: image_url
             name: name
+            description: description
             id: id
           id: id
           user:
             image_url: image_url
             name: name
+            description: description
             id: id
           status: status
         params: "{}"
@@ -36555,9 +37077,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -37190,9 +37715,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -37205,10 +37733,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -37220,9 +37750,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -37281,9 +37813,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -37327,6 +37861,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -37956,9 +38491,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -38591,9 +39129,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -38606,10 +39147,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -38621,9 +39164,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -38682,9 +39227,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -38728,6 +39275,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -39455,9 +40003,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -40090,9 +40641,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -40105,10 +40659,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -40120,9 +40676,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -40146,6 +40704,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -40775,9 +41334,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -41410,9 +41972,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -41425,10 +41990,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -41440,9 +42007,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -41466,6 +42035,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -42203,9 +42773,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -42838,9 +43411,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -42853,10 +43429,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -42868,9 +43446,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -42929,9 +43509,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -42975,6 +43557,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -43611,9 +44194,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -44246,9 +44832,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -44261,10 +44850,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -44276,9 +44867,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -44337,9 +44930,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -44383,6 +44978,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -45114,9 +45710,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -45749,9 +46348,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -45764,10 +46366,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -45779,9 +46383,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -46418,9 +47024,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -47053,9 +47662,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -47068,10 +47680,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -47083,9 +47697,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -47748,9 +48364,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -48383,9 +49002,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -48398,10 +49020,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -48413,9 +49037,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -49068,9 +49694,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -49703,9 +50332,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -49718,10 +50350,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -49733,9 +50367,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -50388,9 +51024,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -51023,9 +51662,12 @@ components:
               value: true
               plan_id: plan_id
             last_checked_at: 2000-01-23T04:56:07.000+00:00
+            maintainer_id: maintainer_id
             feature:
               feature_type: feature_type
+              maintainer_id: maintainer_id
               updated_at: 2000-01-23T04:56:07.000+00:00
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -51038,10 +51680,12 @@ components:
             flag_type: flag_type
             id: id
             key: key
+          icon: icon
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           event_subtype: event_subtype
           feature_type: feature_type
+          maintainer_id: maintainer_id
           event_summary:
             environment_id: environment_id
             user_count: 5
@@ -51053,9 +51697,11 @@ components:
           plans:
           - image_url: image_url
             name: name
+            description: description
             id: id
           - image_url: image_url
             name: name
+            description: description
             id: id
           name: name
           trait:
@@ -51198,6 +51844,7 @@ components:
             key: req_company
           flag:
             feature_id: feature_id
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -51257,6 +51904,7 @@ components:
             key: req_company
           flag:
             feature_id: feature_id
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -51341,6 +51989,7 @@ components:
             key: req_company
           flag:
             feature_id: feature_id
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -52198,9 +52847,12 @@ components:
             value: true
             plan_id: plan_id
           last_checked_at: 2000-01-23T04:56:07.000+00:00
+          maintainer_id: maintainer_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -52833,9 +53485,12 @@ components:
             value: true
             plan_id: plan_id
           last_checked_at: 2000-01-23T04:56:07.000+00:00
+          maintainer_id: maintainer_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -53493,9 +54148,12 @@ components:
             value: true
             plan_id: plan_id
           last_checked_at: 2000-01-23T04:56:07.000+00:00
+          maintainer_id: maintainer_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -54144,9 +54802,12 @@ components:
             value: true
             plan_id: plan_id
           last_checked_at: 2000-01-23T04:56:07.000+00:00
+          maintainer_id: maintainer_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -54795,9 +55456,12 @@ components:
             value: true
             plan_id: plan_id
           last_checked_at: 2000-01-23T04:56:07.000+00:00
+          maintainer_id: maintainer_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -55442,6 +56106,7 @@ components:
             plan_id: plan_id
           Flag:
             feature_id: feature_id
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
@@ -56376,7 +57041,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -56391,6 +57058,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -56416,7 +57084,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -56431,6 +57101,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -56488,7 +57159,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -56503,6 +57176,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -56544,7 +57218,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -56559,6 +57235,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -56600,7 +57277,9 @@ components:
           value_trait_id: value_trait_id
           feature:
             feature_type: feature_type
+            maintainer_id: maintainer_id
             updated_at: 2000-01-23T04:56:07.000+00:00
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -56615,6 +57294,7 @@ components:
             plan_type: plan_type
             updated_at: 2000-01-23T04:56:07.000+00:00
             audience_type: audience_type
+            icon: icon
             name: name
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
@@ -57385,9 +58065,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -58020,9 +58703,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -58035,10 +58721,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -58050,9 +58738,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -58689,9 +59379,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -59324,9 +60017,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -59339,10 +60035,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -59354,9 +60052,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -59397,6 +60097,7 @@ components:
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -60023,9 +60724,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -60658,9 +61362,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -60673,10 +61380,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -60688,9 +61397,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -61327,9 +62038,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -61962,9 +62676,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -61977,10 +62694,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -61992,9 +62711,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -62035,6 +62756,7 @@ components:
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -62687,9 +63409,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -63322,9 +64047,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -63337,10 +64065,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -63352,9 +64082,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -63991,9 +64723,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -64626,9 +65361,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -64641,10 +65379,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -64656,9 +65396,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -64699,6 +65441,7 @@ components:
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -65341,9 +66084,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -65976,9 +66722,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -65991,10 +66740,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -66006,9 +66757,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -66645,9 +67398,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -67280,9 +68036,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -67295,10 +68054,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -67310,9 +68071,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -67353,6 +68116,7 @@ components:
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -67995,9 +68759,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -68630,9 +69397,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -68645,10 +69415,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -68660,9 +69432,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -69299,9 +70073,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -69934,9 +70711,12 @@ components:
                 value: true
                 plan_id: plan_id
               last_checked_at: 2000-01-23T04:56:07.000+00:00
+              maintainer_id: maintainer_id
               feature:
                 feature_type: feature_type
+                maintainer_id: maintainer_id
                 updated_at: 2000-01-23T04:56:07.000+00:00
+                icon: icon
                 name: name
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
@@ -69949,10 +70729,12 @@ components:
               flag_type: flag_type
               id: id
               key: key
+            icon: icon
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             event_subtype: event_subtype
             feature_type: feature_type
+            maintainer_id: maintainer_id
             event_summary:
               environment_id: environment_id
               user_count: 5
@@ -69964,9 +70746,11 @@ components:
             plans:
             - image_url: image_url
               name: name
+              description: description
               id: id
             - image_url: image_url
               name: name
+              description: description
               id: id
             name: name
             trait:
@@ -70007,6 +70791,7 @@ components:
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
+          icon: icon
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
@@ -70799,9 +71584,12 @@ components:
                   value: true
                   plan_id: plan_id
                 last_checked_at: 2000-01-23T04:56:07.000+00:00
+                maintainer_id: maintainer_id
                 feature:
                   feature_type: feature_type
+                  maintainer_id: maintainer_id
                   updated_at: 2000-01-23T04:56:07.000+00:00
+                  icon: icon
                   name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
@@ -71434,9 +72222,12 @@ components:
                   value: true
                   plan_id: plan_id
                 last_checked_at: 2000-01-23T04:56:07.000+00:00
+                maintainer_id: maintainer_id
                 feature:
                   feature_type: feature_type
+                  maintainer_id: maintainer_id
                   updated_at: 2000-01-23T04:56:07.000+00:00
+                  icon: icon
                   name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
@@ -71449,10 +72240,12 @@ components:
                 flag_type: flag_type
                 id: id
                 key: key
+              icon: icon
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               event_subtype: event_subtype
               feature_type: feature_type
+              maintainer_id: maintainer_id
               event_summary:
                 environment_id: environment_id
                 user_count: 5
@@ -71464,9 +72257,11 @@ components:
               plans:
               - image_url: image_url
                 name: name
+                description: description
                 id: id
               - image_url: image_url
                 name: name
+                description: description
                 id: id
               name: name
               trait:
@@ -71490,6 +72285,7 @@ components:
               plan_type: plan_type
               updated_at: 2000-01-23T04:56:07.000+00:00
               audience_type: audience_type
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
@@ -72119,9 +72915,12 @@ components:
                   value: true
                   plan_id: plan_id
                 last_checked_at: 2000-01-23T04:56:07.000+00:00
+                maintainer_id: maintainer_id
                 feature:
                   feature_type: feature_type
+                  maintainer_id: maintainer_id
                   updated_at: 2000-01-23T04:56:07.000+00:00
+                  icon: icon
                   name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
@@ -72754,9 +73553,12 @@ components:
                   value: true
                   plan_id: plan_id
                 last_checked_at: 2000-01-23T04:56:07.000+00:00
+                maintainer_id: maintainer_id
                 feature:
                   feature_type: feature_type
+                  maintainer_id: maintainer_id
                   updated_at: 2000-01-23T04:56:07.000+00:00
+                  icon: icon
                   name: name
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
@@ -72769,10 +73571,12 @@ components:
                 flag_type: flag_type
                 id: id
                 key: key
+              icon: icon
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               event_subtype: event_subtype
               feature_type: feature_type
+              maintainer_id: maintainer_id
               event_summary:
                 environment_id: environment_id
                 user_count: 5
@@ -72784,9 +73588,11 @@ components:
               plans:
               - image_url: image_url
                 name: name
+                description: description
                 id: id
               - image_url: image_url
                 name: name
+                description: description
                 id: id
               name: name
               trait:
@@ -72810,6 +73616,7 @@ components:
               plan_type: plan_type
               updated_at: 2000-01-23T04:56:07.000+00:00
               audience_type: audience_type
+              icon: icon
               name: name
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description

@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -28,6 +27,7 @@ docs/BillingAPI.md
 docs/BillingCustomerResponseData.md
 docs/BillingCustomerSubscription.md
 docs/BillingCustomerWithSubscriptionsResponseData.md
+docs/BillingPriceResponseData.md
 docs/BillingProductPlanResponseData.md
 docs/BillingProductPricing.md
 docs/BillingProductResponseData.md
@@ -94,6 +94,7 @@ docs/CountWebhooksResponse.md
 docs/CreateApiKeyRequestBody.md
 docs/CreateApiKeyResponse.md
 docs/CreateBillingCustomerRequestBody.md
+docs/CreateBillingPriceRequestBody.md
 docs/CreateBillingProductRequestBody.md
 docs/CreateBillingSubscriptionsRequestBody.md
 docs/CreateCompanyOverrideRequestBody.md
@@ -264,6 +265,8 @@ docs/ListPlanEntitlementsParams.md
 docs/ListPlanEntitlementsResponse.md
 docs/ListPlansParams.md
 docs/ListPlansResponse.md
+docs/ListProductPricesParams.md
+docs/ListProductPricesResponse.md
 docs/ListProductsParams.md
 docs/ListProductsResponse.md
 docs/ListUsersParams.md
@@ -323,6 +326,7 @@ docs/UpdateRuleRequestBody.md
 docs/UpdateWebhookRequestBody.md
 docs/UpdateWebhookResponse.md
 docs/UpsertBillingCustomerResponse.md
+docs/UpsertBillingPriceResponse.md
 docs/UpsertBillingProductPlanResponse.md
 docs/UpsertBillingProductRequestBody.md
 docs/UpsertBillingProductResponse.md
@@ -355,6 +359,7 @@ model_audience_request_body.go
 model_billing_customer_response_data.go
 model_billing_customer_subscription.go
 model_billing_customer_with_subscriptions_response_data.go
+model_billing_price_response_data.go
 model_billing_product_plan_response_data.go
 model_billing_product_pricing.go
 model_billing_product_response_data.go
@@ -419,6 +424,7 @@ model_count_webhooks_response.go
 model_create_api_key_request_body.go
 model_create_api_key_response.go
 model_create_billing_customer_request_body.go
+model_create_billing_price_request_body.go
 model_create_billing_product_request_body.go
 model_create_billing_subscriptions_request_body.go
 model_create_company_override_request_body.go
@@ -585,6 +591,8 @@ model_list_plan_entitlements_params.go
 model_list_plan_entitlements_response.go
 model_list_plans_params.go
 model_list_plans_response.go
+model_list_product_prices_params.go
+model_list_product_prices_response.go
 model_list_products_params.go
 model_list_products_response.go
 model_list_users_params.go
@@ -643,6 +651,7 @@ model_update_rule_request_body.go
 model_update_webhook_request_body.go
 model_update_webhook_response.go
 model_upsert_billing_customer_response.go
+model_upsert_billing_price_response.go
 model_upsert_billing_product_plan_response.go
 model_upsert_billing_product_request_body.go
 model_upsert_billing_product_response.go
@@ -665,15 +674,4 @@ model_webhook_event_detail_response_data.go
 model_webhook_event_response_data.go
 model_webhook_response_data.go
 response.go
-test/api_accesstokens_test.go
-test/api_accounts_test.go
-test/api_billing_test.go
-test/api_companies_test.go
-test/api_components_test.go
-test/api_crm_test.go
-test/api_entitlements_test.go
-test/api_events_test.go
-test/api_features_test.go
-test/api_plans_test.go
-test/api_webhooks_test.go
 utils.go

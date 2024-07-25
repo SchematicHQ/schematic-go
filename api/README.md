@@ -23,8 +23,10 @@ Class | Method | HTTP request | Description
 *AccountsAPI* | [**UpdateEnvironment**](docs/AccountsAPI.md#updateenvironment) | **Put** /environments/{environment_id} | Update environment
 *BillingAPI* | [**CountCustomers**](docs/BillingAPI.md#countcustomers) | **Get** /billing/customers/count | Count customers
 *BillingAPI* | [**ListCustomers**](docs/BillingAPI.md#listcustomers) | **Get** /billing/customers | List customers
+*BillingAPI* | [**ListProductPrices**](docs/BillingAPI.md#listproductprices) | **Get** /billing/product/prices | List product prices
 *BillingAPI* | [**ListProducts**](docs/BillingAPI.md#listproducts) | **Get** /billing/products | List products
 *BillingAPI* | [**UpsertBillingCustomer**](docs/BillingAPI.md#upsertbillingcustomer) | **Post** /billing/customer/upsert | Upsert billing customer
+*BillingAPI* | [**UpsertBillingPrice**](docs/BillingAPI.md#upsertbillingprice) | **Post** /billing/price/upsert | Upsert billing price
 *BillingAPI* | [**UpsertBillingProduct**](docs/BillingAPI.md#upsertbillingproduct) | **Post** /billing/product/upsert | Upsert billing product
 *BillingAPI* | [**UpsertBillingSubscription**](docs/BillingAPI.md#upsertbillingsubscription) | **Post** /billing/subscription/upsert | Upsert billing subscription
 *CompaniesAPI* | [**CountCompanies**](docs/CompaniesAPI.md#countcompanies) | **Get** /companies/count | Count companies
@@ -153,6 +155,7 @@ Class | Method | HTTP request | Description
  - [BillingCustomerResponseData](docs/BillingCustomerResponseData.md)
  - [BillingCustomerSubscription](docs/BillingCustomerSubscription.md)
  - [BillingCustomerWithSubscriptionsResponseData](docs/BillingCustomerWithSubscriptionsResponseData.md)
+ - [BillingPriceResponseData](docs/BillingPriceResponseData.md)
  - [BillingProductPlanResponseData](docs/BillingProductPlanResponseData.md)
  - [BillingProductPricing](docs/BillingProductPricing.md)
  - [BillingProductResponseData](docs/BillingProductResponseData.md)
@@ -217,6 +220,7 @@ Class | Method | HTTP request | Description
  - [CreateApiKeyRequestBody](docs/CreateApiKeyRequestBody.md)
  - [CreateApiKeyResponse](docs/CreateApiKeyResponse.md)
  - [CreateBillingCustomerRequestBody](docs/CreateBillingCustomerRequestBody.md)
+ - [CreateBillingPriceRequestBody](docs/CreateBillingPriceRequestBody.md)
  - [CreateBillingProductRequestBody](docs/CreateBillingProductRequestBody.md)
  - [CreateBillingSubscriptionsRequestBody](docs/CreateBillingSubscriptionsRequestBody.md)
  - [CreateCompanyOverrideRequestBody](docs/CreateCompanyOverrideRequestBody.md)
@@ -383,6 +387,8 @@ Class | Method | HTTP request | Description
  - [ListPlanEntitlementsResponse](docs/ListPlanEntitlementsResponse.md)
  - [ListPlansParams](docs/ListPlansParams.md)
  - [ListPlansResponse](docs/ListPlansResponse.md)
+ - [ListProductPricesParams](docs/ListProductPricesParams.md)
+ - [ListProductPricesResponse](docs/ListProductPricesResponse.md)
  - [ListProductsParams](docs/ListProductsParams.md)
  - [ListProductsResponse](docs/ListProductsResponse.md)
  - [ListUsersParams](docs/ListUsersParams.md)
@@ -441,6 +447,7 @@ Class | Method | HTTP request | Description
  - [UpdateWebhookRequestBody](docs/UpdateWebhookRequestBody.md)
  - [UpdateWebhookResponse](docs/UpdateWebhookResponse.md)
  - [UpsertBillingCustomerResponse](docs/UpsertBillingCustomerResponse.md)
+ - [UpsertBillingPriceResponse](docs/UpsertBillingPriceResponse.md)
  - [UpsertBillingProductPlanResponse](docs/UpsertBillingProductPlanResponse.md)
  - [UpsertBillingProductRequestBody](docs/UpsertBillingProductRequestBody.md)
  - [UpsertBillingProductResponse](docs/UpsertBillingProductResponse.md)

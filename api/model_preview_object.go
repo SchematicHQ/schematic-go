@@ -20,6 +20,7 @@ var _ MappedNullable = &PreviewObject{}
 
 // PreviewObject struct for PreviewObject
 type PreviewObject struct {
+	Description          NullableString `json:"description,omitempty"`
 	Id                   string         `json:"id"`
 	ImageUrl             NullableString `json:"image_url,omitempty"`
 	Name                 string         `json:"name"`
@@ -45,6 +46,49 @@ func NewPreviewObject(id string, name string) *PreviewObject {
 func NewPreviewObjectWithDefaults() *PreviewObject {
 	this := PreviewObject{}
 	return &this
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *PreviewObject) GetDescription() string {
+	if o == nil || IsNil(o.Description.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Description.Get()
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *PreviewObject) GetDescriptionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Description.Get(), o.Description.IsSet()
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *PreviewObject) HasDescription() bool {
+	if o != nil && o.Description.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given NullableString and assigns it to the Description field.
+func (o *PreviewObject) SetDescription(v string) {
+	o.Description.Set(&v)
+}
+
+// SetDescriptionNil sets the value for Description to be an explicit nil
+func (o *PreviewObject) SetDescriptionNil() {
+	o.Description.Set(nil)
+}
+
+// UnsetDescription ensures that no value is present for Description, not even an explicit nil
+func (o *PreviewObject) UnsetDescription() {
+	o.Description.Unset()
 }
 
 // GetId returns the Id field value
@@ -148,6 +192,9 @@ func (o PreviewObject) MarshalJSON() ([]byte, error) {
 
 func (o PreviewObject) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if o.Description.IsSet() {
+		toSerialize["description"] = o.Description.Get()
+	}
 	toSerialize["id"] = o.Id
 	if o.ImageUrl.IsSet() {
 		toSerialize["image_url"] = o.ImageUrl.Get()
@@ -197,6 +244,7 @@ func (o *PreviewObject) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "description")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "image_url")
 		delete(additionalProperties, "name")

@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **AudienceType** | **string** |  | 
 **CreatedAt** | **time.Time** |  | 
 **Description** | **string** |  | 
+**Icon** | Pointer to **NullableString** |  | [optional] 
 **Id** | **string** |  | 
 **Name** | **string** |  | 
 **PlanType** | **string** |  | 
@@ -91,6 +92,41 @@ and a boolean to check if the value has been set.
 SetDescription sets Description field to given value.
 
 
+### GetIcon
+
+`func (o *PlanResponseData) GetIcon() string`
+
+GetIcon returns the Icon field if non-nil, zero value otherwise.
+
+### GetIconOk
+
+`func (o *PlanResponseData) GetIconOk() (*string, bool)`
+
+GetIconOk returns a tuple with the Icon field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIcon
+
+`func (o *PlanResponseData) SetIcon(v string)`
+
+SetIcon sets Icon field to given value.
+
+### HasIcon
+
+`func (o *PlanResponseData) HasIcon() bool`
+
+HasIcon returns a boolean if a field has been set.
+
+### SetIconNil
+
+`func (o *PlanResponseData) SetIconNil(b bool)`
+
+ SetIconNil sets the value for Icon to be an explicit nil
+
+### UnsetIcon
+`func (o *PlanResponseData) UnsetIcon()`
+
+UnsetIcon ensures that no value is present for Icon, not even an explicit nil
 ### GetId
 
 `func (o *PlanResponseData) GetId() string`

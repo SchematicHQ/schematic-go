@@ -27,6 +27,7 @@ type PlanDetailResponseData struct {
 	CreatedAt            time.Time                    `json:"created_at"`
 	Description          string                       `json:"description"`
 	Features             []FeatureDetailResponseData  `json:"features"`
+	Icon                 NullableString               `json:"icon,omitempty"`
 	Id                   string                       `json:"id"`
 	Name                 string                       `json:"name"`
 	PlanType             string                       `json:"plan_type"`
@@ -207,6 +208,49 @@ func (o *PlanDetailResponseData) SetFeatures(v []FeatureDetailResponseData) {
 	o.Features = v
 }
 
+// GetIcon returns the Icon field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *PlanDetailResponseData) GetIcon() string {
+	if o == nil || IsNil(o.Icon.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Icon.Get()
+}
+
+// GetIconOk returns a tuple with the Icon field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *PlanDetailResponseData) GetIconOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Icon.Get(), o.Icon.IsSet()
+}
+
+// HasIcon returns a boolean if a field has been set.
+func (o *PlanDetailResponseData) HasIcon() bool {
+	if o != nil && o.Icon.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetIcon gets a reference to the given NullableString and assigns it to the Icon field.
+func (o *PlanDetailResponseData) SetIcon(v string) {
+	o.Icon.Set(&v)
+}
+
+// SetIconNil sets the value for Icon to be an explicit nil
+func (o *PlanDetailResponseData) SetIconNil() {
+	o.Icon.Set(nil)
+}
+
+// UnsetIcon ensures that no value is present for Icon, not even an explicit nil
+func (o *PlanDetailResponseData) UnsetIcon() {
+	o.Icon.Unset()
+}
+
 // GetId returns the Id field value
 func (o *PlanDetailResponseData) GetId() string {
 	if o == nil {
@@ -319,6 +363,9 @@ func (o PlanDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["description"] = o.Description
 	toSerialize["features"] = o.Features
+	if o.Icon.IsSet() {
+		toSerialize["icon"] = o.Icon.Get()
+	}
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	toSerialize["plan_type"] = o.PlanType
@@ -381,6 +428,7 @@ func (o *PlanDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "features")
+		delete(additionalProperties, "icon")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "plan_type")

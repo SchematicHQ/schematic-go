@@ -6,8 +6,10 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CountCustomers**](BillingAPI.md#CountCustomers) | **Get** /billing/customers/count | Count customers
 [**ListCustomers**](BillingAPI.md#ListCustomers) | **Get** /billing/customers | List customers
+[**ListProductPrices**](BillingAPI.md#ListProductPrices) | **Get** /billing/product/prices | List product prices
 [**ListProducts**](BillingAPI.md#ListProducts) | **Get** /billing/products | List products
 [**UpsertBillingCustomer**](BillingAPI.md#UpsertBillingCustomer) | **Post** /billing/customer/upsert | Upsert billing customer
+[**UpsertBillingPrice**](BillingAPI.md#UpsertBillingPrice) | **Post** /billing/price/upsert | Upsert billing price
 [**UpsertBillingProduct**](BillingAPI.md#UpsertBillingProduct) | **Post** /billing/product/upsert | Upsert billing product
 [**UpsertBillingSubscription**](BillingAPI.md#UpsertBillingSubscription) | **Post** /billing/subscription/upsert | Upsert billing subscription
 
@@ -163,6 +165,81 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## ListProductPrices
+
+> ListProductPricesResponse ListProductPrices(ctx).Ids(ids).Name(name).Q(q).Limit(limit).Offset(offset).Execute()
+
+List product prices
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	ids := []string{"Inner_example"} // []string |  (optional)
+	name := "name_example" // string |  (optional)
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().BillingAPI.ListProductPrices(context.Background()).Ids(ids).Name(name).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.ListProductPrices``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListProductPrices`: ListProductPricesResponse
+	fmt.Fprintf(os.Stdout, "Response from `BillingAPI.ListProductPrices`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListProductPricesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ids** | **[]string** |  | 
+ **name** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListProductPricesResponse**](ListProductPricesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## ListProducts
 
 > ListProductsResponse ListProducts(ctx).Ids(ids).Name(name).Q(q).Limit(limit).Offset(offset).Execute()
@@ -290,6 +367,73 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**UpsertBillingCustomerResponse**](UpsertBillingCustomerResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertBillingPrice
+
+> UpsertBillingPriceResponse UpsertBillingPrice(ctx).CreateBillingPriceRequestBody(createBillingPriceRequestBody).Execute()
+
+Upsert billing price
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	createBillingPriceRequestBody := *schematicapi.NewCreateBillingPriceRequestBody("Interval_example", int32(123), "PriceExternalId_example", "ProductExternalId_example") // CreateBillingPriceRequestBody | 
+
+	resp, r, err := client.API().BillingAPI.UpsertBillingPrice(context.Background()).CreateBillingPriceRequestBody(createBillingPriceRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.UpsertBillingPrice``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertBillingPrice`: UpsertBillingPriceResponse
+	fmt.Fprintf(os.Stdout, "Response from `BillingAPI.UpsertBillingPrice`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertBillingPriceRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **createBillingPriceRequestBody** | [**CreateBillingPriceRequestBody**](CreateBillingPriceRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertBillingPriceResponse**](UpsertBillingPriceResponse.md)
 
 ### Authorization
 

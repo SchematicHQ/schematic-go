@@ -22,6 +22,7 @@ var _ MappedNullable = &CreatePlanRequestBody{}
 type CreatePlanRequestBody struct {
 	AudienceType         NullableString `json:"audience_type,omitempty"`
 	Description          string         `json:"description"`
+	Icon                 NullableString `json:"icon,omitempty"`
 	Name                 string         `json:"name"`
 	PlanType             string         `json:"plan_type"`
 	AdditionalProperties map[string]interface{}
@@ -116,6 +117,49 @@ func (o *CreatePlanRequestBody) SetDescription(v string) {
 	o.Description = v
 }
 
+// GetIcon returns the Icon field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreatePlanRequestBody) GetIcon() string {
+	if o == nil || IsNil(o.Icon.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Icon.Get()
+}
+
+// GetIconOk returns a tuple with the Icon field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreatePlanRequestBody) GetIconOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Icon.Get(), o.Icon.IsSet()
+}
+
+// HasIcon returns a boolean if a field has been set.
+func (o *CreatePlanRequestBody) HasIcon() bool {
+	if o != nil && o.Icon.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetIcon gets a reference to the given NullableString and assigns it to the Icon field.
+func (o *CreatePlanRequestBody) SetIcon(v string) {
+	o.Icon.Set(&v)
+}
+
+// SetIconNil sets the value for Icon to be an explicit nil
+func (o *CreatePlanRequestBody) SetIconNil() {
+	o.Icon.Set(nil)
+}
+
+// UnsetIcon ensures that no value is present for Icon, not even an explicit nil
+func (o *CreatePlanRequestBody) UnsetIcon() {
+	o.Icon.Unset()
+}
+
 // GetName returns the Name field value
 func (o *CreatePlanRequestBody) GetName() string {
 	if o == nil {
@@ -178,6 +222,9 @@ func (o CreatePlanRequestBody) ToMap() (map[string]interface{}, error) {
 		toSerialize["audience_type"] = o.AudienceType.Get()
 	}
 	toSerialize["description"] = o.Description
+	if o.Icon.IsSet() {
+		toSerialize["icon"] = o.Icon.Get()
+	}
 	toSerialize["name"] = o.Name
 	toSerialize["plan_type"] = o.PlanType
 
@@ -227,6 +274,7 @@ func (o *CreatePlanRequestBody) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "audience_type")
 		delete(additionalProperties, "description")
+		delete(additionalProperties, "icon")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "plan_type")
 		o.AdditionalProperties = additionalProperties

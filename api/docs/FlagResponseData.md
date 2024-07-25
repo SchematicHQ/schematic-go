@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **FlagType** | **string** |  | 
 **Id** | **string** |  | 
 **Key** | **string** |  | 
+**MaintainerId** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
 **UpdatedAt** | **time.Time** |  | 
 
@@ -188,6 +189,41 @@ and a boolean to check if the value has been set.
 SetKey sets Key field to given value.
 
 
+### GetMaintainerId
+
+`func (o *FlagResponseData) GetMaintainerId() string`
+
+GetMaintainerId returns the MaintainerId field if non-nil, zero value otherwise.
+
+### GetMaintainerIdOk
+
+`func (o *FlagResponseData) GetMaintainerIdOk() (*string, bool)`
+
+GetMaintainerIdOk returns a tuple with the MaintainerId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMaintainerId
+
+`func (o *FlagResponseData) SetMaintainerId(v string)`
+
+SetMaintainerId sets MaintainerId field to given value.
+
+### HasMaintainerId
+
+`func (o *FlagResponseData) HasMaintainerId() bool`
+
+HasMaintainerId returns a boolean if a field has been set.
+
+### SetMaintainerIdNil
+
+`func (o *FlagResponseData) SetMaintainerIdNil(b bool)`
+
+ SetMaintainerIdNil sets the value for MaintainerId to be an explicit nil
+
+### UnsetMaintainerId
+`func (o *FlagResponseData) UnsetMaintainerId()`
+
+UnsetMaintainerId ensures that no value is present for MaintainerId, not even an explicit nil
 ### GetName
 
 `func (o *FlagResponseData) GetName() string`

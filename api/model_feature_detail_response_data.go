@@ -27,8 +27,10 @@ type FeatureDetailResponseData struct {
 	EventSummary         *EventSummaryResponseData          `json:"event_summary,omitempty"`
 	FeatureType          string                             `json:"feature_type"`
 	Flags                []FlagDetailResponseData           `json:"flags"`
+	Icon                 NullableString                     `json:"icon,omitempty"`
 	Id                   string                             `json:"id"`
 	LifecyclePhase       NullableString                     `json:"lifecycle_phase,omitempty"`
+	MaintainerId         NullableString                     `json:"maintainer_id,omitempty"`
 	Name                 string                             `json:"name"`
 	Plans                []PreviewObject                    `json:"plans"`
 	Trait                *EntityTraitDefinitionResponseData `json:"trait,omitempty"`
@@ -235,6 +237,49 @@ func (o *FeatureDetailResponseData) SetFlags(v []FlagDetailResponseData) {
 	o.Flags = v
 }
 
+// GetIcon returns the Icon field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *FeatureDetailResponseData) GetIcon() string {
+	if o == nil || IsNil(o.Icon.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Icon.Get()
+}
+
+// GetIconOk returns a tuple with the Icon field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *FeatureDetailResponseData) GetIconOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Icon.Get(), o.Icon.IsSet()
+}
+
+// HasIcon returns a boolean if a field has been set.
+func (o *FeatureDetailResponseData) HasIcon() bool {
+	if o != nil && o.Icon.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetIcon gets a reference to the given NullableString and assigns it to the Icon field.
+func (o *FeatureDetailResponseData) SetIcon(v string) {
+	o.Icon.Set(&v)
+}
+
+// SetIconNil sets the value for Icon to be an explicit nil
+func (o *FeatureDetailResponseData) SetIconNil() {
+	o.Icon.Set(nil)
+}
+
+// UnsetIcon ensures that no value is present for Icon, not even an explicit nil
+func (o *FeatureDetailResponseData) UnsetIcon() {
+	o.Icon.Unset()
+}
+
 // GetId returns the Id field value
 func (o *FeatureDetailResponseData) GetId() string {
 	if o == nil {
@@ -300,6 +345,49 @@ func (o *FeatureDetailResponseData) SetLifecyclePhaseNil() {
 // UnsetLifecyclePhase ensures that no value is present for LifecyclePhase, not even an explicit nil
 func (o *FeatureDetailResponseData) UnsetLifecyclePhase() {
 	o.LifecyclePhase.Unset()
+}
+
+// GetMaintainerId returns the MaintainerId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *FeatureDetailResponseData) GetMaintainerId() string {
+	if o == nil || IsNil(o.MaintainerId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.MaintainerId.Get()
+}
+
+// GetMaintainerIdOk returns a tuple with the MaintainerId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *FeatureDetailResponseData) GetMaintainerIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.MaintainerId.Get(), o.MaintainerId.IsSet()
+}
+
+// HasMaintainerId returns a boolean if a field has been set.
+func (o *FeatureDetailResponseData) HasMaintainerId() bool {
+	if o != nil && o.MaintainerId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMaintainerId gets a reference to the given NullableString and assigns it to the MaintainerId field.
+func (o *FeatureDetailResponseData) SetMaintainerId(v string) {
+	o.MaintainerId.Set(&v)
+}
+
+// SetMaintainerIdNil sets the value for MaintainerId to be an explicit nil
+func (o *FeatureDetailResponseData) SetMaintainerIdNil() {
+	o.MaintainerId.Set(nil)
+}
+
+// UnsetMaintainerId ensures that no value is present for MaintainerId, not even an explicit nil
+func (o *FeatureDetailResponseData) UnsetMaintainerId() {
+	o.MaintainerId.Unset()
 }
 
 // GetName returns the Name field value
@@ -469,9 +557,15 @@ func (o FeatureDetailResponseData) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["feature_type"] = o.FeatureType
 	toSerialize["flags"] = o.Flags
+	if o.Icon.IsSet() {
+		toSerialize["icon"] = o.Icon.Get()
+	}
 	toSerialize["id"] = o.Id
 	if o.LifecyclePhase.IsSet() {
 		toSerialize["lifecycle_phase"] = o.LifecyclePhase.Get()
+	}
+	if o.MaintainerId.IsSet() {
+		toSerialize["maintainer_id"] = o.MaintainerId.Get()
 	}
 	toSerialize["name"] = o.Name
 	toSerialize["plans"] = o.Plans
@@ -538,8 +632,10 @@ func (o *FeatureDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "event_summary")
 		delete(additionalProperties, "feature_type")
 		delete(additionalProperties, "flags")
+		delete(additionalProperties, "icon")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "lifecycle_phase")
+		delete(additionalProperties, "maintainer_id")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "plans")
 		delete(additionalProperties, "trait")

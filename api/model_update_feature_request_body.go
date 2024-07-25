@@ -23,7 +23,9 @@ type UpdateFeatureRequestBody struct {
 	EventSubtype         NullableString                 `json:"event_subtype,omitempty"`
 	FeatureType          NullableString                 `json:"feature_type,omitempty"`
 	Flag                 *CreateOrUpdateFlagRequestBody `json:"flag,omitempty"`
+	Icon                 NullableString                 `json:"icon,omitempty"`
 	LifecyclePhase       NullableString                 `json:"lifecycle_phase,omitempty"`
+	MaintainerId         NullableString                 `json:"maintainer_id,omitempty"`
 	Name                 NullableString                 `json:"name,omitempty"`
 	TraitId              NullableString                 `json:"trait_id,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -209,6 +211,49 @@ func (o *UpdateFeatureRequestBody) SetFlag(v CreateOrUpdateFlagRequestBody) {
 	o.Flag = &v
 }
 
+// GetIcon returns the Icon field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateFeatureRequestBody) GetIcon() string {
+	if o == nil || IsNil(o.Icon.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Icon.Get()
+}
+
+// GetIconOk returns a tuple with the Icon field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateFeatureRequestBody) GetIconOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Icon.Get(), o.Icon.IsSet()
+}
+
+// HasIcon returns a boolean if a field has been set.
+func (o *UpdateFeatureRequestBody) HasIcon() bool {
+	if o != nil && o.Icon.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetIcon gets a reference to the given NullableString and assigns it to the Icon field.
+func (o *UpdateFeatureRequestBody) SetIcon(v string) {
+	o.Icon.Set(&v)
+}
+
+// SetIconNil sets the value for Icon to be an explicit nil
+func (o *UpdateFeatureRequestBody) SetIconNil() {
+	o.Icon.Set(nil)
+}
+
+// UnsetIcon ensures that no value is present for Icon, not even an explicit nil
+func (o *UpdateFeatureRequestBody) UnsetIcon() {
+	o.Icon.Unset()
+}
+
 // GetLifecyclePhase returns the LifecyclePhase field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *UpdateFeatureRequestBody) GetLifecyclePhase() string {
 	if o == nil || IsNil(o.LifecyclePhase.Get()) {
@@ -250,6 +295,49 @@ func (o *UpdateFeatureRequestBody) SetLifecyclePhaseNil() {
 // UnsetLifecyclePhase ensures that no value is present for LifecyclePhase, not even an explicit nil
 func (o *UpdateFeatureRequestBody) UnsetLifecyclePhase() {
 	o.LifecyclePhase.Unset()
+}
+
+// GetMaintainerId returns the MaintainerId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateFeatureRequestBody) GetMaintainerId() string {
+	if o == nil || IsNil(o.MaintainerId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.MaintainerId.Get()
+}
+
+// GetMaintainerIdOk returns a tuple with the MaintainerId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateFeatureRequestBody) GetMaintainerIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.MaintainerId.Get(), o.MaintainerId.IsSet()
+}
+
+// HasMaintainerId returns a boolean if a field has been set.
+func (o *UpdateFeatureRequestBody) HasMaintainerId() bool {
+	if o != nil && o.MaintainerId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMaintainerId gets a reference to the given NullableString and assigns it to the MaintainerId field.
+func (o *UpdateFeatureRequestBody) SetMaintainerId(v string) {
+	o.MaintainerId.Set(&v)
+}
+
+// SetMaintainerIdNil sets the value for MaintainerId to be an explicit nil
+func (o *UpdateFeatureRequestBody) SetMaintainerIdNil() {
+	o.MaintainerId.Set(nil)
+}
+
+// UnsetMaintainerId ensures that no value is present for MaintainerId, not even an explicit nil
+func (o *UpdateFeatureRequestBody) UnsetMaintainerId() {
+	o.MaintainerId.Unset()
 }
 
 // GetName returns the Name field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -360,8 +448,14 @@ func (o UpdateFeatureRequestBody) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Flag) {
 		toSerialize["flag"] = o.Flag
 	}
+	if o.Icon.IsSet() {
+		toSerialize["icon"] = o.Icon.Get()
+	}
 	if o.LifecyclePhase.IsSet() {
 		toSerialize["lifecycle_phase"] = o.LifecyclePhase.Get()
+	}
+	if o.MaintainerId.IsSet() {
+		toSerialize["maintainer_id"] = o.MaintainerId.Get()
 	}
 	if o.Name.IsSet() {
 		toSerialize["name"] = o.Name.Get()
@@ -395,7 +489,9 @@ func (o *UpdateFeatureRequestBody) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "event_subtype")
 		delete(additionalProperties, "feature_type")
 		delete(additionalProperties, "flag")
+		delete(additionalProperties, "icon")
 		delete(additionalProperties, "lifecycle_phase")
+		delete(additionalProperties, "maintainer_id")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "trait_id")
 		o.AdditionalProperties = additionalProperties

@@ -25,6 +25,7 @@ type CreateFlagRequestBody struct {
 	FeatureId            NullableString `json:"feature_id,omitempty"`
 	FlagType             string         `json:"flag_type"`
 	Key                  string         `json:"key"`
+	MaintainerId         NullableString `json:"maintainer_id,omitempty"`
 	Name                 string         `json:"name"`
 	AdditionalProperties map[string]interface{}
 }
@@ -192,6 +193,49 @@ func (o *CreateFlagRequestBody) SetKey(v string) {
 	o.Key = v
 }
 
+// GetMaintainerId returns the MaintainerId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateFlagRequestBody) GetMaintainerId() string {
+	if o == nil || IsNil(o.MaintainerId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.MaintainerId.Get()
+}
+
+// GetMaintainerIdOk returns a tuple with the MaintainerId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateFlagRequestBody) GetMaintainerIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.MaintainerId.Get(), o.MaintainerId.IsSet()
+}
+
+// HasMaintainerId returns a boolean if a field has been set.
+func (o *CreateFlagRequestBody) HasMaintainerId() bool {
+	if o != nil && o.MaintainerId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMaintainerId gets a reference to the given NullableString and assigns it to the MaintainerId field.
+func (o *CreateFlagRequestBody) SetMaintainerId(v string) {
+	o.MaintainerId.Set(&v)
+}
+
+// SetMaintainerIdNil sets the value for MaintainerId to be an explicit nil
+func (o *CreateFlagRequestBody) SetMaintainerIdNil() {
+	o.MaintainerId.Set(nil)
+}
+
+// UnsetMaintainerId ensures that no value is present for MaintainerId, not even an explicit nil
+func (o *CreateFlagRequestBody) UnsetMaintainerId() {
+	o.MaintainerId.Unset()
+}
+
 // GetName returns the Name field value
 func (o *CreateFlagRequestBody) GetName() string {
 	if o == nil {
@@ -233,6 +277,9 @@ func (o CreateFlagRequestBody) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["flag_type"] = o.FlagType
 	toSerialize["key"] = o.Key
+	if o.MaintainerId.IsSet() {
+		toSerialize["maintainer_id"] = o.MaintainerId.Get()
+	}
 	toSerialize["name"] = o.Name
 
 	for key, value := range o.AdditionalProperties {
@@ -286,6 +333,7 @@ func (o *CreateFlagRequestBody) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "feature_id")
 		delete(additionalProperties, "flag_type")
 		delete(additionalProperties, "key")
+		delete(additionalProperties, "maintainer_id")
 		delete(additionalProperties, "name")
 		o.AdditionalProperties = additionalProperties
 	}

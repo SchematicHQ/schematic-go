@@ -1048,6 +1048,36 @@ func (mr *MockBillingAPIMockRecorder) ListCustomersExecute(arg0 any) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCustomersExecute", reflect.TypeOf((*MockBillingAPI)(nil).ListCustomersExecute), arg0)
 }
 
+// ListProductPrices mocks base method.
+func (m *MockBillingAPI) ListProductPrices(arg0 context.Context) api.ApiListProductPricesRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListProductPrices", arg0)
+	ret0, _ := ret[0].(api.ApiListProductPricesRequest)
+	return ret0
+}
+
+// ListProductPrices indicates an expected call of ListProductPrices.
+func (mr *MockBillingAPIMockRecorder) ListProductPrices(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProductPrices", reflect.TypeOf((*MockBillingAPI)(nil).ListProductPrices), arg0)
+}
+
+// ListProductPricesExecute mocks base method.
+func (m *MockBillingAPI) ListProductPricesExecute(arg0 api.ApiListProductPricesRequest) (*api.ListProductPricesResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListProductPricesExecute", arg0)
+	ret0, _ := ret[0].(*api.ListProductPricesResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ListProductPricesExecute indicates an expected call of ListProductPricesExecute.
+func (mr *MockBillingAPIMockRecorder) ListProductPricesExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProductPricesExecute", reflect.TypeOf((*MockBillingAPI)(nil).ListProductPricesExecute), arg0)
+}
+
 // ListProducts mocks base method.
 func (m *MockBillingAPI) ListProducts(arg0 context.Context) api.ApiListProductsRequest {
 	m.ctrl.T.Helper()
@@ -1106,6 +1136,36 @@ func (m *MockBillingAPI) UpsertBillingCustomerExecute(arg0 api.ApiUpsertBillingC
 func (mr *MockBillingAPIMockRecorder) UpsertBillingCustomerExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertBillingCustomerExecute", reflect.TypeOf((*MockBillingAPI)(nil).UpsertBillingCustomerExecute), arg0)
+}
+
+// UpsertBillingPrice mocks base method.
+func (m *MockBillingAPI) UpsertBillingPrice(arg0 context.Context) api.ApiUpsertBillingPriceRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertBillingPrice", arg0)
+	ret0, _ := ret[0].(api.ApiUpsertBillingPriceRequest)
+	return ret0
+}
+
+// UpsertBillingPrice indicates an expected call of UpsertBillingPrice.
+func (mr *MockBillingAPIMockRecorder) UpsertBillingPrice(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertBillingPrice", reflect.TypeOf((*MockBillingAPI)(nil).UpsertBillingPrice), arg0)
+}
+
+// UpsertBillingPriceExecute mocks base method.
+func (m *MockBillingAPI) UpsertBillingPriceExecute(arg0 api.ApiUpsertBillingPriceRequest) (*api.UpsertBillingPriceResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertBillingPriceExecute", arg0)
+	ret0, _ := ret[0].(*api.UpsertBillingPriceResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// UpsertBillingPriceExecute indicates an expected call of UpsertBillingPriceExecute.
+func (mr *MockBillingAPIMockRecorder) UpsertBillingPriceExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertBillingPriceExecute", reflect.TypeOf((*MockBillingAPI)(nil).UpsertBillingPriceExecute), arg0)
 }
 
 // UpsertBillingProduct mocks base method.

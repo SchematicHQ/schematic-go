@@ -28,6 +28,7 @@ type FlagResponseData struct {
 	FlagType             string         `json:"flag_type"`
 	Id                   string         `json:"id"`
 	Key                  string         `json:"key"`
+	MaintainerId         NullableString `json:"maintainer_id,omitempty"`
 	Name                 string         `json:"name"`
 	UpdatedAt            time.Time      `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
@@ -247,6 +248,49 @@ func (o *FlagResponseData) SetKey(v string) {
 	o.Key = v
 }
 
+// GetMaintainerId returns the MaintainerId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *FlagResponseData) GetMaintainerId() string {
+	if o == nil || IsNil(o.MaintainerId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.MaintainerId.Get()
+}
+
+// GetMaintainerIdOk returns a tuple with the MaintainerId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *FlagResponseData) GetMaintainerIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.MaintainerId.Get(), o.MaintainerId.IsSet()
+}
+
+// HasMaintainerId returns a boolean if a field has been set.
+func (o *FlagResponseData) HasMaintainerId() bool {
+	if o != nil && o.MaintainerId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMaintainerId gets a reference to the given NullableString and assigns it to the MaintainerId field.
+func (o *FlagResponseData) SetMaintainerId(v string) {
+	o.MaintainerId.Set(&v)
+}
+
+// SetMaintainerIdNil sets the value for MaintainerId to be an explicit nil
+func (o *FlagResponseData) SetMaintainerIdNil() {
+	o.MaintainerId.Set(nil)
+}
+
+// UnsetMaintainerId ensures that no value is present for MaintainerId, not even an explicit nil
+func (o *FlagResponseData) UnsetMaintainerId() {
+	o.MaintainerId.Unset()
+}
+
 // GetName returns the Name field value
 func (o *FlagResponseData) GetName() string {
 	if o == nil {
@@ -314,6 +358,9 @@ func (o FlagResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["flag_type"] = o.FlagType
 	toSerialize["id"] = o.Id
 	toSerialize["key"] = o.Key
+	if o.MaintainerId.IsSet() {
+		toSerialize["maintainer_id"] = o.MaintainerId.Get()
+	}
 	toSerialize["name"] = o.Name
 	toSerialize["updated_at"] = o.UpdatedAt
 
@@ -373,6 +420,7 @@ func (o *FlagResponseData) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "flag_type")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "key")
+		delete(additionalProperties, "maintainer_id")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "updated_at")
 		o.AdditionalProperties = additionalProperties

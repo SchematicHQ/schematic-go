@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **Key** | **string** |  | 
 **LastCheckedAt** | Pointer to **NullableTime** |  | [optional] 
 **LatestCheck** | Pointer to [**FlagCheckLogResponseData**](FlagCheckLogResponseData.md) |  | [optional] 
+**MaintainerId** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
 **Rules** | [**[]RuleDetailResponseData**](RuleDetailResponseData.md) |  | 
 **UpdatedAt** | **time.Time** |  | 
@@ -277,6 +278,41 @@ SetLatestCheck sets LatestCheck field to given value.
 
 HasLatestCheck returns a boolean if a field has been set.
 
+### GetMaintainerId
+
+`func (o *FlagDetailResponseData) GetMaintainerId() string`
+
+GetMaintainerId returns the MaintainerId field if non-nil, zero value otherwise.
+
+### GetMaintainerIdOk
+
+`func (o *FlagDetailResponseData) GetMaintainerIdOk() (*string, bool)`
+
+GetMaintainerIdOk returns a tuple with the MaintainerId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMaintainerId
+
+`func (o *FlagDetailResponseData) SetMaintainerId(v string)`
+
+SetMaintainerId sets MaintainerId field to given value.
+
+### HasMaintainerId
+
+`func (o *FlagDetailResponseData) HasMaintainerId() bool`
+
+HasMaintainerId returns a boolean if a field has been set.
+
+### SetMaintainerIdNil
+
+`func (o *FlagDetailResponseData) SetMaintainerIdNil(b bool)`
+
+ SetMaintainerIdNil sets the value for MaintainerId to be an explicit nil
+
+### UnsetMaintainerId
+`func (o *FlagDetailResponseData) UnsetMaintainerId()`
+
+UnsetMaintainerId ensures that no value is present for MaintainerId, not even an explicit nil
 ### GetName
 
 `func (o *FlagDetailResponseData) GetName() string`

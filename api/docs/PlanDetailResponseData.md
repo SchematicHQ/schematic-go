@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **CreatedAt** | **time.Time** |  | 
 **Description** | **string** |  | 
 **Features** | [**[]FeatureDetailResponseData**](FeatureDetailResponseData.md) |  | 
+**Icon** | Pointer to **NullableString** |  | [optional] 
 **Id** | **string** |  | 
 **Name** | **string** |  | 
 **PlanType** | **string** |  | 
@@ -154,6 +155,41 @@ and a boolean to check if the value has been set.
 SetFeatures sets Features field to given value.
 
 
+### GetIcon
+
+`func (o *PlanDetailResponseData) GetIcon() string`
+
+GetIcon returns the Icon field if non-nil, zero value otherwise.
+
+### GetIconOk
+
+`func (o *PlanDetailResponseData) GetIconOk() (*string, bool)`
+
+GetIconOk returns a tuple with the Icon field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIcon
+
+`func (o *PlanDetailResponseData) SetIcon(v string)`
+
+SetIcon sets Icon field to given value.
+
+### HasIcon
+
+`func (o *PlanDetailResponseData) HasIcon() bool`
+
+HasIcon returns a boolean if a field has been set.
+
+### SetIconNil
+
+`func (o *PlanDetailResponseData) SetIconNil(b bool)`
+
+ SetIconNil sets the value for Icon to be an explicit nil
+
+### UnsetIcon
+`func (o *PlanDetailResponseData) UnsetIcon()`
+
+UnsetIcon ensures that no value is present for Icon, not even an explicit nil
 ### GetId
 
 `func (o *PlanDetailResponseData) GetId() string`

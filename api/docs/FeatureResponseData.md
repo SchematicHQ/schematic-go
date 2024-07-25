@@ -8,8 +8,10 @@ Name | Type | Description | Notes
 **Description** | **string** |  | 
 **EventSubtype** | Pointer to **NullableString** |  | [optional] 
 **FeatureType** | **string** |  | 
+**Icon** | Pointer to **NullableString** |  | [optional] 
 **Id** | **string** |  | 
 **LifecyclePhase** | Pointer to **NullableString** |  | [optional] 
+**MaintainerId** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
 **TraitId** | Pointer to **NullableString** |  | [optional] 
 **UpdatedAt** | **time.Time** |  | 
@@ -128,6 +130,41 @@ and a boolean to check if the value has been set.
 SetFeatureType sets FeatureType field to given value.
 
 
+### GetIcon
+
+`func (o *FeatureResponseData) GetIcon() string`
+
+GetIcon returns the Icon field if non-nil, zero value otherwise.
+
+### GetIconOk
+
+`func (o *FeatureResponseData) GetIconOk() (*string, bool)`
+
+GetIconOk returns a tuple with the Icon field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIcon
+
+`func (o *FeatureResponseData) SetIcon(v string)`
+
+SetIcon sets Icon field to given value.
+
+### HasIcon
+
+`func (o *FeatureResponseData) HasIcon() bool`
+
+HasIcon returns a boolean if a field has been set.
+
+### SetIconNil
+
+`func (o *FeatureResponseData) SetIconNil(b bool)`
+
+ SetIconNil sets the value for Icon to be an explicit nil
+
+### UnsetIcon
+`func (o *FeatureResponseData) UnsetIcon()`
+
+UnsetIcon ensures that no value is present for Icon, not even an explicit nil
 ### GetId
 
 `func (o *FeatureResponseData) GetId() string`
@@ -183,6 +220,41 @@ HasLifecyclePhase returns a boolean if a field has been set.
 `func (o *FeatureResponseData) UnsetLifecyclePhase()`
 
 UnsetLifecyclePhase ensures that no value is present for LifecyclePhase, not even an explicit nil
+### GetMaintainerId
+
+`func (o *FeatureResponseData) GetMaintainerId() string`
+
+GetMaintainerId returns the MaintainerId field if non-nil, zero value otherwise.
+
+### GetMaintainerIdOk
+
+`func (o *FeatureResponseData) GetMaintainerIdOk() (*string, bool)`
+
+GetMaintainerIdOk returns a tuple with the MaintainerId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMaintainerId
+
+`func (o *FeatureResponseData) SetMaintainerId(v string)`
+
+SetMaintainerId sets MaintainerId field to given value.
+
+### HasMaintainerId
+
+`func (o *FeatureResponseData) HasMaintainerId() bool`
+
+HasMaintainerId returns a boolean if a field has been set.
+
+### SetMaintainerIdNil
+
+`func (o *FeatureResponseData) SetMaintainerIdNil(b bool)`
+
+ SetMaintainerIdNil sets the value for MaintainerId to be an explicit nil
+
+### UnsetMaintainerId
+`func (o *FeatureResponseData) UnsetMaintainerId()`
+
+UnsetMaintainerId ensures that no value is present for MaintainerId, not even an explicit nil
 ### GetName
 
 `func (o *FeatureResponseData) GetName() string`

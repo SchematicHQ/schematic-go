@@ -13,7 +13,6 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // EventBody - struct for EventBody
@@ -55,11 +54,7 @@ func (dst *EventBody) UnmarshalJSON(data []byte) error {
 		if string(jsonEventBodyFlagCheck) == "{}" { // empty struct
 			dst.EventBodyFlagCheck = nil
 		} else {
-			if err = validator.Validate(dst.EventBodyFlagCheck); err != nil {
-				dst.EventBodyFlagCheck = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.EventBodyFlagCheck = nil
@@ -72,11 +67,7 @@ func (dst *EventBody) UnmarshalJSON(data []byte) error {
 		if string(jsonEventBodyIdentify) == "{}" { // empty struct
 			dst.EventBodyIdentify = nil
 		} else {
-			if err = validator.Validate(dst.EventBodyIdentify); err != nil {
-				dst.EventBodyIdentify = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.EventBodyIdentify = nil
@@ -89,11 +80,7 @@ func (dst *EventBody) UnmarshalJSON(data []byte) error {
 		if string(jsonEventBodyTrack) == "{}" { // empty struct
 			dst.EventBodyTrack = nil
 		} else {
-			if err = validator.Validate(dst.EventBodyTrack); err != nil {
-				dst.EventBodyTrack = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.EventBodyTrack = nil

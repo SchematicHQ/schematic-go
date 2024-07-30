@@ -21,6 +21,7 @@ var _ MappedNullable = &CompanyDetailResponseData{}
 
 // CompanyDetailResponseData struct for CompanyDetailResponseData
 type CompanyDetailResponseData struct {
+	AddOns        []PreviewObject                 `json:"add_ons"`
 	CreatedAt     time.Time                       `json:"created_at"`
 	EntityTraits  []EntityTraitDetailResponseData `json:"entity_traits"`
 	EnvironmentId string                          `json:"environment_id"`
@@ -29,6 +30,7 @@ type CompanyDetailResponseData struct {
 	LastSeenAt    NullableTime                    `json:"last_seen_at,omitempty"`
 	LogoUrl       NullableString                  `json:"logo_url,omitempty"`
 	Name          string                          `json:"name"`
+	Plan          *PreviewObject                  `json:"plan,omitempty"`
 	Plans         []PreviewObject                 `json:"plans"`
 	// A map of trait names to trait values
 	Traits               map[string]interface{} `json:"traits,omitempty"`
@@ -43,8 +45,9 @@ type _CompanyDetailResponseData CompanyDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCompanyDetailResponseData(createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, plans []PreviewObject, updatedAt time.Time, userCount int32) *CompanyDetailResponseData {
+func NewCompanyDetailResponseData(addOns []PreviewObject, createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, plans []PreviewObject, updatedAt time.Time, userCount int32) *CompanyDetailResponseData {
 	this := CompanyDetailResponseData{}
+	this.AddOns = addOns
 	this.CreatedAt = createdAt
 	this.EntityTraits = entityTraits
 	this.EnvironmentId = environmentId
@@ -63,6 +66,30 @@ func NewCompanyDetailResponseData(createdAt time.Time, entityTraits []EntityTrai
 func NewCompanyDetailResponseDataWithDefaults() *CompanyDetailResponseData {
 	this := CompanyDetailResponseData{}
 	return &this
+}
+
+// GetAddOns returns the AddOns field value
+func (o *CompanyDetailResponseData) GetAddOns() []PreviewObject {
+	if o == nil {
+		var ret []PreviewObject
+		return ret
+	}
+
+	return o.AddOns
+}
+
+// GetAddOnsOk returns a tuple with the AddOns field value
+// and a boolean to check if the value has been set.
+func (o *CompanyDetailResponseData) GetAddOnsOk() ([]PreviewObject, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.AddOns, true
+}
+
+// SetAddOns sets field value
+func (o *CompanyDetailResponseData) SetAddOns(v []PreviewObject) {
+	o.AddOns = v
 }
 
 // GetCreatedAt returns the CreatedAt field value
@@ -295,6 +322,38 @@ func (o *CompanyDetailResponseData) SetName(v string) {
 	o.Name = v
 }
 
+// GetPlan returns the Plan field value if set, zero value otherwise.
+func (o *CompanyDetailResponseData) GetPlan() PreviewObject {
+	if o == nil || IsNil(o.Plan) {
+		var ret PreviewObject
+		return ret
+	}
+	return *o.Plan
+}
+
+// GetPlanOk returns a tuple with the Plan field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CompanyDetailResponseData) GetPlanOk() (*PreviewObject, bool) {
+	if o == nil || IsNil(o.Plan) {
+		return nil, false
+	}
+	return o.Plan, true
+}
+
+// HasPlan returns a boolean if a field has been set.
+func (o *CompanyDetailResponseData) HasPlan() bool {
+	if o != nil && !IsNil(o.Plan) {
+		return true
+	}
+
+	return false
+}
+
+// SetPlan gets a reference to the given PreviewObject and assigns it to the Plan field.
+func (o *CompanyDetailResponseData) SetPlan(v PreviewObject) {
+	o.Plan = &v
+}
+
 // GetPlans returns the Plans field value
 func (o *CompanyDetailResponseData) GetPlans() []PreviewObject {
 	if o == nil {
@@ -409,6 +468,7 @@ func (o CompanyDetailResponseData) MarshalJSON() ([]byte, error) {
 
 func (o CompanyDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	toSerialize["add_ons"] = o.AddOns
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["entity_traits"] = o.EntityTraits
 	toSerialize["environment_id"] = o.EnvironmentId
@@ -421,6 +481,9 @@ func (o CompanyDetailResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["logo_url"] = o.LogoUrl.Get()
 	}
 	toSerialize["name"] = o.Name
+	if !IsNil(o.Plan) {
+		toSerialize["plan"] = o.Plan
+	}
 	toSerialize["plans"] = o.Plans
 	if !IsNil(o.Traits) {
 		toSerialize["traits"] = o.Traits
@@ -440,6 +503,7 @@ func (o *CompanyDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
+		"add_ons",
 		"created_at",
 		"entity_traits",
 		"environment_id",
@@ -478,6 +542,7 @@ func (o *CompanyDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "add_ons")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "entity_traits")
 		delete(additionalProperties, "environment_id")
@@ -486,6 +551,7 @@ func (o *CompanyDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "last_seen_at")
 		delete(additionalProperties, "logo_url")
 		delete(additionalProperties, "name")
+		delete(additionalProperties, "plan")
 		delete(additionalProperties, "plans")
 		delete(additionalProperties, "traits")
 		delete(additionalProperties, "updated_at")

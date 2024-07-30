@@ -8,7 +8,6 @@ Name | Type | Description | Notes
 **Description** | Pointer to **NullableString** |  | [optional] 
 **Icon** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
-**PlanType** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -139,41 +138,6 @@ and a boolean to check if the value has been set.
 SetName sets Name field to given value.
 
 
-### GetPlanType
-
-`func (o *UpdatePlanRequestBody) GetPlanType() string`
-
-GetPlanType returns the PlanType field if non-nil, zero value otherwise.
-
-### GetPlanTypeOk
-
-`func (o *UpdatePlanRequestBody) GetPlanTypeOk() (*string, bool)`
-
-GetPlanTypeOk returns a tuple with the PlanType field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPlanType
-
-`func (o *UpdatePlanRequestBody) SetPlanType(v string)`
-
-SetPlanType sets PlanType field to given value.
-
-### HasPlanType
-
-`func (o *UpdatePlanRequestBody) HasPlanType() bool`
-
-HasPlanType returns a boolean if a field has been set.
-
-### SetPlanTypeNil
-
-`func (o *UpdatePlanRequestBody) SetPlanTypeNil(b bool)`
-
- SetPlanTypeNil sets the value for PlanType to be an explicit nil
-
-### UnsetPlanType
-`func (o *UpdatePlanRequestBody) UnsetPlanType()`
-
-UnsetPlanType ensures that no value is present for PlanType, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

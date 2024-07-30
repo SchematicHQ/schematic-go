@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **ExpiredAt** | **time.Time** |  | 
 **Interval** | Pointer to **NullableString** |  | [optional] 
 **ProductExternalIds** | [**[]BillingProductPricing**](BillingProductPricing.md) |  | 
+**Status** | **string** |  | 
 **SubscriptionExternalId** | **string** |  | 
 **TotalPrice** | **int32** |  | 
 
@@ -15,7 +16,7 @@ Name | Type | Description | Notes
 
 ### NewCreateBillingSubscriptionsRequestBody
 
-`func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []BillingProductPricing, subscriptionExternalId string, totalPrice int32, ) *CreateBillingSubscriptionsRequestBody`
+`func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []BillingProductPricing, status string, subscriptionExternalId string, totalPrice int32, ) *CreateBillingSubscriptionsRequestBody`
 
 NewCreateBillingSubscriptionsRequestBody instantiates a new CreateBillingSubscriptionsRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -123,6 +124,26 @@ and a boolean to check if the value has been set.
 `func (o *CreateBillingSubscriptionsRequestBody) SetProductExternalIds(v []BillingProductPricing)`
 
 SetProductExternalIds sets ProductExternalIds field to given value.
+
+
+### GetStatus
+
+`func (o *CreateBillingSubscriptionsRequestBody) GetStatus() string`
+
+GetStatus returns the Status field if non-nil, zero value otherwise.
+
+### GetStatusOk
+
+`func (o *CreateBillingSubscriptionsRequestBody) GetStatusOk() (*string, bool)`
+
+GetStatusOk returns a tuple with the Status field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetStatus
+
+`func (o *CreateBillingSubscriptionsRequestBody) SetStatus(v string)`
+
+SetStatus sets Status field to given value.
 
 
 ### GetSubscriptionExternalId

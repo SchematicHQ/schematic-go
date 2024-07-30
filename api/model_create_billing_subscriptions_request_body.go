@@ -25,6 +25,7 @@ type CreateBillingSubscriptionsRequestBody struct {
 	ExpiredAt              time.Time               `json:"expired_at"`
 	Interval               NullableString          `json:"interval,omitempty"`
 	ProductExternalIds     []BillingProductPricing `json:"product_external_ids"`
+	Status                 string                  `json:"status"`
 	SubscriptionExternalId string                  `json:"subscription_external_id"`
 	TotalPrice             int32                   `json:"total_price"`
 	AdditionalProperties   map[string]interface{}
@@ -36,11 +37,12 @@ type _CreateBillingSubscriptionsRequestBody CreateBillingSubscriptionsRequestBod
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []BillingProductPricing, subscriptionExternalId string, totalPrice int32) *CreateBillingSubscriptionsRequestBody {
+func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []BillingProductPricing, status string, subscriptionExternalId string, totalPrice int32) *CreateBillingSubscriptionsRequestBody {
 	this := CreateBillingSubscriptionsRequestBody{}
 	this.CustomerExternalId = customerExternalId
 	this.ExpiredAt = expiredAt
 	this.ProductExternalIds = productExternalIds
+	this.Status = status
 	this.SubscriptionExternalId = subscriptionExternalId
 	this.TotalPrice = totalPrice
 	return &this
@@ -169,6 +171,30 @@ func (o *CreateBillingSubscriptionsRequestBody) SetProductExternalIds(v []Billin
 	o.ProductExternalIds = v
 }
 
+// GetStatus returns the Status field value
+func (o *CreateBillingSubscriptionsRequestBody) GetStatus() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Status
+}
+
+// GetStatusOk returns a tuple with the Status field value
+// and a boolean to check if the value has been set.
+func (o *CreateBillingSubscriptionsRequestBody) GetStatusOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Status, true
+}
+
+// SetStatus sets field value
+func (o *CreateBillingSubscriptionsRequestBody) SetStatus(v string) {
+	o.Status = v
+}
+
 // GetSubscriptionExternalId returns the SubscriptionExternalId field value
 func (o *CreateBillingSubscriptionsRequestBody) GetSubscriptionExternalId() string {
 	if o == nil {
@@ -233,6 +259,7 @@ func (o CreateBillingSubscriptionsRequestBody) ToMap() (map[string]interface{}, 
 		toSerialize["interval"] = o.Interval.Get()
 	}
 	toSerialize["product_external_ids"] = o.ProductExternalIds
+	toSerialize["status"] = o.Status
 	toSerialize["subscription_external_id"] = o.SubscriptionExternalId
 	toSerialize["total_price"] = o.TotalPrice
 
@@ -251,6 +278,7 @@ func (o *CreateBillingSubscriptionsRequestBody) UnmarshalJSON(data []byte) (err 
 		"customer_external_id",
 		"expired_at",
 		"product_external_ids",
+		"status",
 		"subscription_external_id",
 		"total_price",
 	}
@@ -286,6 +314,7 @@ func (o *CreateBillingSubscriptionsRequestBody) UnmarshalJSON(data []byte) (err 
 		delete(additionalProperties, "expired_at")
 		delete(additionalProperties, "interval")
 		delete(additionalProperties, "product_external_ids")
+		delete(additionalProperties, "status")
 		delete(additionalProperties, "subscription_external_id")
 		delete(additionalProperties, "total_price")
 		o.AdditionalProperties = additionalProperties

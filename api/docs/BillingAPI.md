@@ -5,9 +5,9 @@ All URIs are relative to *https://api.schematichq.com*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CountCustomers**](BillingAPI.md#CountCustomers) | **Get** /billing/customers/count | Count customers
+[**ListBillingProducts**](BillingAPI.md#ListBillingProducts) | **Get** /billing/products | List billing products
 [**ListCustomers**](BillingAPI.md#ListCustomers) | **Get** /billing/customers | List customers
 [**ListProductPrices**](BillingAPI.md#ListProductPrices) | **Get** /billing/product/prices | List product prices
-[**ListProducts**](BillingAPI.md#ListProducts) | **Get** /billing/products | List products
 [**UpsertBillingCustomer**](BillingAPI.md#UpsertBillingCustomer) | **Post** /billing/customer/upsert | Upsert billing customer
 [**UpsertBillingPrice**](BillingAPI.md#UpsertBillingPrice) | **Post** /billing/price/upsert | Upsert billing price
 [**UpsertBillingProduct**](BillingAPI.md#UpsertBillingProduct) | **Post** /billing/product/upsert | Upsert billing product
@@ -75,6 +75,81 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CountCustomersResponse**](CountCustomersResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListBillingProducts
+
+> ListBillingProductsResponse ListBillingProducts(ctx).Ids(ids).Name(name).Q(q).Limit(limit).Offset(offset).Execute()
+
+List billing products
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	ids := []string{"Inner_example"} // []string |  (optional)
+	name := "name_example" // string |  (optional)
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().BillingAPI.ListBillingProducts(context.Background()).Ids(ids).Name(name).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.ListBillingProducts``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListBillingProducts`: ListBillingProductsResponse
+	fmt.Fprintf(os.Stdout, "Response from `BillingAPI.ListBillingProducts`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListBillingProductsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ids** | **[]string** |  | 
+ **name** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListBillingProductsResponse**](ListBillingProductsResponse.md)
 
 ### Authorization
 
@@ -225,81 +300,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ListProductPricesResponse**](ListProductPricesResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ListProducts
-
-> ListProductsResponse ListProducts(ctx).Ids(ids).Name(name).Q(q).Limit(limit).Offset(offset).Execute()
-
-List products
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	ids := []string{"Inner_example"} // []string |  (optional)
-	name := "name_example" // string |  (optional)
-	q := "q_example" // string |  (optional)
-	limit := int32(100) // int32 | Page limit (default 100) (optional)
-	offset := int32(0) // int32 | Page offset (default 0) (optional)
-
-	resp, r, err := client.API().BillingAPI.ListProducts(context.Background()).Ids(ids).Name(name).Q(q).Limit(limit).Offset(offset).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.ListProducts``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `ListProducts`: ListProductsResponse
-	fmt.Fprintf(os.Stdout, "Response from `BillingAPI.ListProducts`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiListProductsRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **ids** | **[]string** |  | 
- **name** | **string** |  | 
- **q** | **string** |  | 
- **limit** | **int32** | Page limit (default 100) | 
- **offset** | **int32** | Page offset (default 0) | 
-
-### Return type
-
-[**ListProductsResponse**](ListProductsResponse.md)
 
 ### Authorization
 

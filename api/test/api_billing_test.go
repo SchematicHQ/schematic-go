@@ -34,6 +34,18 @@ func Test_api_BillingAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test BillingAPIService ListBillingProducts", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.BillingAPI.ListBillingProducts(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test BillingAPIService ListCustomers", func(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test
@@ -46,11 +58,11 @@ func Test_api_BillingAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test BillingAPIService ListProducts", func(t *testing.T) {
+	t.Run("Test BillingAPIService ListProductPrices", func(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test
 
-		resp, httpRes, err := apiClient.BillingAPI.ListProducts(context.Background()).Execute()
+		resp, httpRes, err := apiClient.BillingAPI.ListProductPrices(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -63,6 +75,18 @@ func Test_api_BillingAPIService(t *testing.T) {
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.BillingAPI.UpsertBillingCustomer(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test BillingAPIService UpsertBillingPrice", func(t *testing.T) {
+
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.BillingAPI.UpsertBillingPrice(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

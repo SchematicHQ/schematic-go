@@ -15,42 +15,42 @@ import (
 	"fmt"
 )
 
-// checks if the ListProductsResponse type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &ListProductsResponse{}
+// checks if the ListBillingProductsResponse type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ListBillingProductsResponse{}
 
-// ListProductsResponse struct for ListProductsResponse
-type ListProductsResponse struct {
+// ListBillingProductsResponse struct for ListBillingProductsResponse
+type ListBillingProductsResponse struct {
 	// The returned resources
-	Data                 []BillingProductResponseData `json:"data"`
-	Params               ListProductsParams           `json:"params"`
+	Data                 []BillingProductDetailResponseData `json:"data"`
+	Params               ListBillingProductsParams          `json:"params"`
 	AdditionalProperties map[string]interface{}
 }
 
-type _ListProductsResponse ListProductsResponse
+type _ListBillingProductsResponse ListBillingProductsResponse
 
-// NewListProductsResponse instantiates a new ListProductsResponse object
+// NewListBillingProductsResponse instantiates a new ListBillingProductsResponse object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListProductsResponse(data []BillingProductResponseData, params ListProductsParams) *ListProductsResponse {
-	this := ListProductsResponse{}
+func NewListBillingProductsResponse(data []BillingProductDetailResponseData, params ListBillingProductsParams) *ListBillingProductsResponse {
+	this := ListBillingProductsResponse{}
 	this.Data = data
 	this.Params = params
 	return &this
 }
 
-// NewListProductsResponseWithDefaults instantiates a new ListProductsResponse object
+// NewListBillingProductsResponseWithDefaults instantiates a new ListBillingProductsResponse object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewListProductsResponseWithDefaults() *ListProductsResponse {
-	this := ListProductsResponse{}
+func NewListBillingProductsResponseWithDefaults() *ListBillingProductsResponse {
+	this := ListBillingProductsResponse{}
 	return &this
 }
 
 // GetData returns the Data field value
-func (o *ListProductsResponse) GetData() []BillingProductResponseData {
+func (o *ListBillingProductsResponse) GetData() []BillingProductDetailResponseData {
 	if o == nil {
-		var ret []BillingProductResponseData
+		var ret []BillingProductDetailResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *ListProductsResponse) GetData() []BillingProductResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *ListProductsResponse) GetDataOk() ([]BillingProductResponseData, bool) {
+func (o *ListBillingProductsResponse) GetDataOk() ([]BillingProductDetailResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,14 +67,14 @@ func (o *ListProductsResponse) GetDataOk() ([]BillingProductResponseData, bool) 
 }
 
 // SetData sets field value
-func (o *ListProductsResponse) SetData(v []BillingProductResponseData) {
+func (o *ListBillingProductsResponse) SetData(v []BillingProductDetailResponseData) {
 	o.Data = v
 }
 
 // GetParams returns the Params field value
-func (o *ListProductsResponse) GetParams() ListProductsParams {
+func (o *ListBillingProductsResponse) GetParams() ListBillingProductsParams {
 	if o == nil {
-		var ret ListProductsParams
+		var ret ListBillingProductsParams
 		return ret
 	}
 
@@ -83,7 +83,7 @@ func (o *ListProductsResponse) GetParams() ListProductsParams {
 
 // GetParamsOk returns a tuple with the Params field value
 // and a boolean to check if the value has been set.
-func (o *ListProductsResponse) GetParamsOk() (*ListProductsParams, bool) {
+func (o *ListBillingProductsResponse) GetParamsOk() (*ListBillingProductsParams, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -91,11 +91,11 @@ func (o *ListProductsResponse) GetParamsOk() (*ListProductsParams, bool) {
 }
 
 // SetParams sets field value
-func (o *ListProductsResponse) SetParams(v ListProductsParams) {
+func (o *ListBillingProductsResponse) SetParams(v ListBillingProductsParams) {
 	o.Params = v
 }
 
-func (o ListProductsResponse) MarshalJSON() ([]byte, error) {
+func (o ListBillingProductsResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -103,7 +103,7 @@ func (o ListProductsResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o ListProductsResponse) ToMap() (map[string]interface{}, error) {
+func (o ListBillingProductsResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
 	toSerialize["params"] = o.Params
@@ -115,7 +115,7 @@ func (o ListProductsResponse) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-func (o *ListProductsResponse) UnmarshalJSON(data []byte) (err error) {
+func (o *ListBillingProductsResponse) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
@@ -138,15 +138,15 @@ func (o *ListProductsResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varListProductsResponse := _ListProductsResponse{}
+	varListBillingProductsResponse := _ListBillingProductsResponse{}
 
-	err = json.Unmarshal(data, &varListProductsResponse)
+	err = json.Unmarshal(data, &varListBillingProductsResponse)
 
 	if err != nil {
 		return err
 	}
 
-	*o = ListProductsResponse(varListProductsResponse)
+	*o = ListBillingProductsResponse(varListBillingProductsResponse)
 
 	additionalProperties := make(map[string]interface{})
 
@@ -159,38 +159,38 @@ func (o *ListProductsResponse) UnmarshalJSON(data []byte) (err error) {
 	return err
 }
 
-type NullableListProductsResponse struct {
-	value *ListProductsResponse
+type NullableListBillingProductsResponse struct {
+	value *ListBillingProductsResponse
 	isSet bool
 }
 
-func (v NullableListProductsResponse) Get() *ListProductsResponse {
+func (v NullableListBillingProductsResponse) Get() *ListBillingProductsResponse {
 	return v.value
 }
 
-func (v *NullableListProductsResponse) Set(val *ListProductsResponse) {
+func (v *NullableListBillingProductsResponse) Set(val *ListBillingProductsResponse) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableListProductsResponse) IsSet() bool {
+func (v NullableListBillingProductsResponse) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableListProductsResponse) Unset() {
+func (v *NullableListBillingProductsResponse) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableListProductsResponse(val *ListProductsResponse) *NullableListProductsResponse {
-	return &NullableListProductsResponse{value: val, isSet: true}
+func NewNullableListBillingProductsResponse(val *ListBillingProductsResponse) *NullableListBillingProductsResponse {
+	return &NullableListBillingProductsResponse{value: val, isSet: true}
 }
 
-func (v NullableListProductsResponse) MarshalJSON() ([]byte, error) {
+func (v NullableListBillingProductsResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableListProductsResponse) UnmarshalJSON(src []byte) error {
+func (v *NullableListBillingProductsResponse) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

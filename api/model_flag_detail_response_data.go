@@ -21,20 +21,19 @@ var _ MappedNullable = &FlagDetailResponseData{}
 
 // FlagDetailResponseData struct for FlagDetailResponseData
 type FlagDetailResponseData struct {
-	CreatedAt            time.Time                 `json:"created_at"`
-	DefaultValue         bool                      `json:"default_value"`
-	Description          string                    `json:"description"`
-	Feature              *FeatureResponseData      `json:"feature,omitempty"`
-	FeatureId            NullableString            `json:"feature_id,omitempty"`
-	FlagType             string                    `json:"flag_type"`
-	Id                   string                    `json:"id"`
-	Key                  string                    `json:"key"`
-	LastCheckedAt        NullableTime              `json:"last_checked_at,omitempty"`
-	LatestCheck          *FlagCheckLogResponseData `json:"latest_check,omitempty"`
-	MaintainerId         NullableString            `json:"maintainer_id,omitempty"`
-	Name                 string                    `json:"name"`
-	Rules                []RuleDetailResponseData  `json:"rules"`
-	UpdatedAt            time.Time                 `json:"updated_at"`
+	CreatedAt            time.Time                `json:"created_at"`
+	DefaultValue         bool                     `json:"default_value"`
+	Description          string                   `json:"description"`
+	Feature              *FeatureResponseData     `json:"feature,omitempty"`
+	FeatureId            NullableString           `json:"feature_id,omitempty"`
+	FlagType             string                   `json:"flag_type"`
+	Id                   string                   `json:"id"`
+	Key                  string                   `json:"key"`
+	LastCheckedAt        NullableTime             `json:"last_checked_at,omitempty"`
+	MaintainerId         NullableString           `json:"maintainer_id,omitempty"`
+	Name                 string                   `json:"name"`
+	Rules                []RuleDetailResponseData `json:"rules"`
+	UpdatedAt            time.Time                `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -328,38 +327,6 @@ func (o *FlagDetailResponseData) UnsetLastCheckedAt() {
 	o.LastCheckedAt.Unset()
 }
 
-// GetLatestCheck returns the LatestCheck field value if set, zero value otherwise.
-func (o *FlagDetailResponseData) GetLatestCheck() FlagCheckLogResponseData {
-	if o == nil || IsNil(o.LatestCheck) {
-		var ret FlagCheckLogResponseData
-		return ret
-	}
-	return *o.LatestCheck
-}
-
-// GetLatestCheckOk returns a tuple with the LatestCheck field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *FlagDetailResponseData) GetLatestCheckOk() (*FlagCheckLogResponseData, bool) {
-	if o == nil || IsNil(o.LatestCheck) {
-		return nil, false
-	}
-	return o.LatestCheck, true
-}
-
-// HasLatestCheck returns a boolean if a field has been set.
-func (o *FlagDetailResponseData) HasLatestCheck() bool {
-	if o != nil && !IsNil(o.LatestCheck) {
-		return true
-	}
-
-	return false
-}
-
-// SetLatestCheck gets a reference to the given FlagCheckLogResponseData and assigns it to the LatestCheck field.
-func (o *FlagDetailResponseData) SetLatestCheck(v FlagCheckLogResponseData) {
-	o.LatestCheck = &v
-}
-
 // GetMaintainerId returns the MaintainerId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *FlagDetailResponseData) GetMaintainerId() string {
 	if o == nil || IsNil(o.MaintainerId.Get()) {
@@ -500,9 +467,6 @@ func (o FlagDetailResponseData) ToMap() (map[string]interface{}, error) {
 	if o.LastCheckedAt.IsSet() {
 		toSerialize["last_checked_at"] = o.LastCheckedAt.Get()
 	}
-	if !IsNil(o.LatestCheck) {
-		toSerialize["latest_check"] = o.LatestCheck
-	}
 	if o.MaintainerId.IsSet() {
 		toSerialize["maintainer_id"] = o.MaintainerId.Get()
 	}
@@ -569,7 +533,6 @@ func (o *FlagDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "key")
 		delete(additionalProperties, "last_checked_at")
-		delete(additionalProperties, "latest_check")
 		delete(additionalProperties, "maintainer_id")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "rules")

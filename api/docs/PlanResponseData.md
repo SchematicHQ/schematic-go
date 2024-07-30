@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **AudienceType** | **string** |  | 
 **CreatedAt** | **time.Time** |  | 
 **Description** | **string** |  | 
-**Icon** | Pointer to **NullableString** |  | [optional] 
+**Icon** | **string** |  | 
 **Id** | **string** |  | 
 **Name** | **string** |  | 
 **PlanType** | **string** |  | 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewPlanResponseData
 
-`func NewPlanResponseData(audienceType string, createdAt time.Time, description string, id string, name string, planType string, updatedAt time.Time, ) *PlanResponseData`
+`func NewPlanResponseData(audienceType string, createdAt time.Time, description string, icon string, id string, name string, planType string, updatedAt time.Time, ) *PlanResponseData`
 
 NewPlanResponseData instantiates a new PlanResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -111,22 +111,7 @@ and a boolean to check if the value has been set.
 
 SetIcon sets Icon field to given value.
 
-### HasIcon
 
-`func (o *PlanResponseData) HasIcon() bool`
-
-HasIcon returns a boolean if a field has been set.
-
-### SetIconNil
-
-`func (o *PlanResponseData) SetIconNil(b bool)`
-
- SetIconNil sets the value for Icon to be an explicit nil
-
-### UnsetIcon
-`func (o *PlanResponseData) UnsetIcon()`
-
-UnsetIcon ensures that no value is present for Icon, not even an explicit nil
 ### GetId
 
 `func (o *PlanResponseData) GetId() string`

@@ -14,11 +14,11 @@ import (
 	"encoding/json"
 )
 
-// checks if the ListProductsParams type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &ListProductsParams{}
+// checks if the ListBillingProductsParams type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ListBillingProductsParams{}
 
-// ListProductsParams Input parameters
-type ListProductsParams struct {
+// ListBillingProductsParams Input parameters
+type ListBillingProductsParams struct {
 	Ids []string `json:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int32  `json:"limit,omitempty"`
@@ -29,27 +29,27 @@ type ListProductsParams struct {
 	AdditionalProperties map[string]interface{}
 }
 
-type _ListProductsParams ListProductsParams
+type _ListBillingProductsParams ListBillingProductsParams
 
-// NewListProductsParams instantiates a new ListProductsParams object
+// NewListBillingProductsParams instantiates a new ListBillingProductsParams object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListProductsParams() *ListProductsParams {
-	this := ListProductsParams{}
+func NewListBillingProductsParams() *ListBillingProductsParams {
+	this := ListBillingProductsParams{}
 	return &this
 }
 
-// NewListProductsParamsWithDefaults instantiates a new ListProductsParams object
+// NewListBillingProductsParamsWithDefaults instantiates a new ListBillingProductsParams object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewListProductsParamsWithDefaults() *ListProductsParams {
-	this := ListProductsParams{}
+func NewListBillingProductsParamsWithDefaults() *ListBillingProductsParams {
+	this := ListBillingProductsParams{}
 	return &this
 }
 
 // GetIds returns the Ids field value if set, zero value otherwise.
-func (o *ListProductsParams) GetIds() []string {
+func (o *ListBillingProductsParams) GetIds() []string {
 	if o == nil || IsNil(o.Ids) {
 		var ret []string
 		return ret
@@ -59,7 +59,7 @@ func (o *ListProductsParams) GetIds() []string {
 
 // GetIdsOk returns a tuple with the Ids field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListProductsParams) GetIdsOk() ([]string, bool) {
+func (o *ListBillingProductsParams) GetIdsOk() ([]string, bool) {
 	if o == nil || IsNil(o.Ids) {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *ListProductsParams) GetIdsOk() ([]string, bool) {
 }
 
 // HasIds returns a boolean if a field has been set.
-func (o *ListProductsParams) HasIds() bool {
+func (o *ListBillingProductsParams) HasIds() bool {
 	if o != nil && !IsNil(o.Ids) {
 		return true
 	}
@@ -76,12 +76,12 @@ func (o *ListProductsParams) HasIds() bool {
 }
 
 // SetIds gets a reference to the given []string and assigns it to the Ids field.
-func (o *ListProductsParams) SetIds(v []string) {
+func (o *ListBillingProductsParams) SetIds(v []string) {
 	o.Ids = v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
-func (o *ListProductsParams) GetLimit() int32 {
+func (o *ListBillingProductsParams) GetLimit() int32 {
 	if o == nil || IsNil(o.Limit) {
 		var ret int32
 		return ret
@@ -91,7 +91,7 @@ func (o *ListProductsParams) GetLimit() int32 {
 
 // GetLimitOk returns a tuple with the Limit field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListProductsParams) GetLimitOk() (*int32, bool) {
+func (o *ListBillingProductsParams) GetLimitOk() (*int32, bool) {
 	if o == nil || IsNil(o.Limit) {
 		return nil, false
 	}
@@ -99,7 +99,7 @@ func (o *ListProductsParams) GetLimitOk() (*int32, bool) {
 }
 
 // HasLimit returns a boolean if a field has been set.
-func (o *ListProductsParams) HasLimit() bool {
+func (o *ListBillingProductsParams) HasLimit() bool {
 	if o != nil && !IsNil(o.Limit) {
 		return true
 	}
@@ -108,12 +108,12 @@ func (o *ListProductsParams) HasLimit() bool {
 }
 
 // SetLimit gets a reference to the given int32 and assigns it to the Limit field.
-func (o *ListProductsParams) SetLimit(v int32) {
+func (o *ListBillingProductsParams) SetLimit(v int32) {
 	o.Limit = &v
 }
 
 // GetName returns the Name field value if set, zero value otherwise.
-func (o *ListProductsParams) GetName() string {
+func (o *ListBillingProductsParams) GetName() string {
 	if o == nil || IsNil(o.Name) {
 		var ret string
 		return ret
@@ -123,7 +123,7 @@ func (o *ListProductsParams) GetName() string {
 
 // GetNameOk returns a tuple with the Name field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListProductsParams) GetNameOk() (*string, bool) {
+func (o *ListBillingProductsParams) GetNameOk() (*string, bool) {
 	if o == nil || IsNil(o.Name) {
 		return nil, false
 	}
@@ -131,7 +131,7 @@ func (o *ListProductsParams) GetNameOk() (*string, bool) {
 }
 
 // HasName returns a boolean if a field has been set.
-func (o *ListProductsParams) HasName() bool {
+func (o *ListBillingProductsParams) HasName() bool {
 	if o != nil && !IsNil(o.Name) {
 		return true
 	}
@@ -140,12 +140,12 @@ func (o *ListProductsParams) HasName() bool {
 }
 
 // SetName gets a reference to the given string and assigns it to the Name field.
-func (o *ListProductsParams) SetName(v string) {
+func (o *ListBillingProductsParams) SetName(v string) {
 	o.Name = &v
 }
 
 // GetOffset returns the Offset field value if set, zero value otherwise.
-func (o *ListProductsParams) GetOffset() int32 {
+func (o *ListBillingProductsParams) GetOffset() int32 {
 	if o == nil || IsNil(o.Offset) {
 		var ret int32
 		return ret
@@ -155,7 +155,7 @@ func (o *ListProductsParams) GetOffset() int32 {
 
 // GetOffsetOk returns a tuple with the Offset field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListProductsParams) GetOffsetOk() (*int32, bool) {
+func (o *ListBillingProductsParams) GetOffsetOk() (*int32, bool) {
 	if o == nil || IsNil(o.Offset) {
 		return nil, false
 	}
@@ -163,7 +163,7 @@ func (o *ListProductsParams) GetOffsetOk() (*int32, bool) {
 }
 
 // HasOffset returns a boolean if a field has been set.
-func (o *ListProductsParams) HasOffset() bool {
+func (o *ListBillingProductsParams) HasOffset() bool {
 	if o != nil && !IsNil(o.Offset) {
 		return true
 	}
@@ -172,12 +172,12 @@ func (o *ListProductsParams) HasOffset() bool {
 }
 
 // SetOffset gets a reference to the given int32 and assigns it to the Offset field.
-func (o *ListProductsParams) SetOffset(v int32) {
+func (o *ListBillingProductsParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
 // GetQ returns the Q field value if set, zero value otherwise.
-func (o *ListProductsParams) GetQ() string {
+func (o *ListBillingProductsParams) GetQ() string {
 	if o == nil || IsNil(o.Q) {
 		var ret string
 		return ret
@@ -187,7 +187,7 @@ func (o *ListProductsParams) GetQ() string {
 
 // GetQOk returns a tuple with the Q field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListProductsParams) GetQOk() (*string, bool) {
+func (o *ListBillingProductsParams) GetQOk() (*string, bool) {
 	if o == nil || IsNil(o.Q) {
 		return nil, false
 	}
@@ -195,7 +195,7 @@ func (o *ListProductsParams) GetQOk() (*string, bool) {
 }
 
 // HasQ returns a boolean if a field has been set.
-func (o *ListProductsParams) HasQ() bool {
+func (o *ListBillingProductsParams) HasQ() bool {
 	if o != nil && !IsNil(o.Q) {
 		return true
 	}
@@ -204,11 +204,11 @@ func (o *ListProductsParams) HasQ() bool {
 }
 
 // SetQ gets a reference to the given string and assigns it to the Q field.
-func (o *ListProductsParams) SetQ(v string) {
+func (o *ListBillingProductsParams) SetQ(v string) {
 	o.Q = &v
 }
 
-func (o ListProductsParams) MarshalJSON() ([]byte, error) {
+func (o ListBillingProductsParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -216,7 +216,7 @@ func (o ListProductsParams) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o ListProductsParams) ToMap() (map[string]interface{}, error) {
+func (o ListBillingProductsParams) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
@@ -241,16 +241,16 @@ func (o ListProductsParams) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-func (o *ListProductsParams) UnmarshalJSON(data []byte) (err error) {
-	varListProductsParams := _ListProductsParams{}
+func (o *ListBillingProductsParams) UnmarshalJSON(data []byte) (err error) {
+	varListBillingProductsParams := _ListBillingProductsParams{}
 
-	err = json.Unmarshal(data, &varListProductsParams)
+	err = json.Unmarshal(data, &varListBillingProductsParams)
 
 	if err != nil {
 		return err
 	}
 
-	*o = ListProductsParams(varListProductsParams)
+	*o = ListBillingProductsParams(varListBillingProductsParams)
 
 	additionalProperties := make(map[string]interface{})
 
@@ -266,38 +266,38 @@ func (o *ListProductsParams) UnmarshalJSON(data []byte) (err error) {
 	return err
 }
 
-type NullableListProductsParams struct {
-	value *ListProductsParams
+type NullableListBillingProductsParams struct {
+	value *ListBillingProductsParams
 	isSet bool
 }
 
-func (v NullableListProductsParams) Get() *ListProductsParams {
+func (v NullableListBillingProductsParams) Get() *ListBillingProductsParams {
 	return v.value
 }
 
-func (v *NullableListProductsParams) Set(val *ListProductsParams) {
+func (v *NullableListBillingProductsParams) Set(val *ListBillingProductsParams) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableListProductsParams) IsSet() bool {
+func (v NullableListBillingProductsParams) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableListProductsParams) Unset() {
+func (v *NullableListBillingProductsParams) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableListProductsParams(val *ListProductsParams) *NullableListProductsParams {
-	return &NullableListProductsParams{value: val, isSet: true}
+func NewNullableListBillingProductsParams(val *ListBillingProductsParams) *NullableListBillingProductsParams {
+	return &NullableListBillingProductsParams{value: val, isSet: true}
 }
 
-func (v NullableListProductsParams) MarshalJSON() ([]byte, error) {
+func (v NullableListBillingProductsParams) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableListProductsParams) UnmarshalJSON(src []byte) error {
+func (v *NullableListBillingProductsParams) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

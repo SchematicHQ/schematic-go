@@ -21,17 +21,17 @@ var _ MappedNullable = &PlanDetailResponseData{}
 
 // PlanDetailResponseData The updated resource
 type PlanDetailResponseData struct {
-	AudienceType         string                       `json:"audience_type"`
-	BillingProducts      []BillingProductResponseData `json:"billing_products"`
-	CompanyCount         int32                        `json:"company_count"`
-	CreatedAt            time.Time                    `json:"created_at"`
-	Description          string                       `json:"description"`
-	Features             []FeatureDetailResponseData  `json:"features"`
-	Icon                 NullableString               `json:"icon,omitempty"`
-	Id                   string                       `json:"id"`
-	Name                 string                       `json:"name"`
-	PlanType             string                       `json:"plan_type"`
-	UpdatedAt            time.Time                    `json:"updated_at"`
+	AudienceType         string                            `json:"audience_type"`
+	BillingProduct       *BillingProductDetailResponseData `json:"billing_product,omitempty"`
+	CompanyCount         int32                             `json:"company_count"`
+	CreatedAt            time.Time                         `json:"created_at"`
+	Description          string                            `json:"description"`
+	Features             []FeatureDetailResponseData       `json:"features"`
+	Icon                 string                            `json:"icon"`
+	Id                   string                            `json:"id"`
+	Name                 string                            `json:"name"`
+	PlanType             string                            `json:"plan_type"`
+	UpdatedAt            time.Time                         `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -41,14 +41,14 @@ type _PlanDetailResponseData PlanDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPlanDetailResponseData(audienceType string, billingProducts []BillingProductResponseData, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time) *PlanDetailResponseData {
+func NewPlanDetailResponseData(audienceType string, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, icon string, id string, name string, planType string, updatedAt time.Time) *PlanDetailResponseData {
 	this := PlanDetailResponseData{}
 	this.AudienceType = audienceType
-	this.BillingProducts = billingProducts
 	this.CompanyCount = companyCount
 	this.CreatedAt = createdAt
 	this.Description = description
 	this.Features = features
+	this.Icon = icon
 	this.Id = id
 	this.Name = name
 	this.PlanType = planType
@@ -88,28 +88,36 @@ func (o *PlanDetailResponseData) SetAudienceType(v string) {
 	o.AudienceType = v
 }
 
-// GetBillingProducts returns the BillingProducts field value
-func (o *PlanDetailResponseData) GetBillingProducts() []BillingProductResponseData {
-	if o == nil {
-		var ret []BillingProductResponseData
+// GetBillingProduct returns the BillingProduct field value if set, zero value otherwise.
+func (o *PlanDetailResponseData) GetBillingProduct() BillingProductDetailResponseData {
+	if o == nil || IsNil(o.BillingProduct) {
+		var ret BillingProductDetailResponseData
 		return ret
 	}
-
-	return o.BillingProducts
+	return *o.BillingProduct
 }
 
-// GetBillingProductsOk returns a tuple with the BillingProducts field value
+// GetBillingProductOk returns a tuple with the BillingProduct field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PlanDetailResponseData) GetBillingProductsOk() ([]BillingProductResponseData, bool) {
-	if o == nil {
+func (o *PlanDetailResponseData) GetBillingProductOk() (*BillingProductDetailResponseData, bool) {
+	if o == nil || IsNil(o.BillingProduct) {
 		return nil, false
 	}
-	return o.BillingProducts, true
+	return o.BillingProduct, true
 }
 
-// SetBillingProducts sets field value
-func (o *PlanDetailResponseData) SetBillingProducts(v []BillingProductResponseData) {
-	o.BillingProducts = v
+// HasBillingProduct returns a boolean if a field has been set.
+func (o *PlanDetailResponseData) HasBillingProduct() bool {
+	if o != nil && !IsNil(o.BillingProduct) {
+		return true
+	}
+
+	return false
+}
+
+// SetBillingProduct gets a reference to the given BillingProductDetailResponseData and assigns it to the BillingProduct field.
+func (o *PlanDetailResponseData) SetBillingProduct(v BillingProductDetailResponseData) {
+	o.BillingProduct = &v
 }
 
 // GetCompanyCount returns the CompanyCount field value
@@ -208,47 +216,28 @@ func (o *PlanDetailResponseData) SetFeatures(v []FeatureDetailResponseData) {
 	o.Features = v
 }
 
-// GetIcon returns the Icon field value if set, zero value otherwise (both if not set or set to explicit null).
+// GetIcon returns the Icon field value
 func (o *PlanDetailResponseData) GetIcon() string {
-	if o == nil || IsNil(o.Icon.Get()) {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.Icon.Get()
+
+	return o.Icon
 }
 
-// GetIconOk returns a tuple with the Icon field value if set, nil otherwise
+// GetIconOk returns a tuple with the Icon field value
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *PlanDetailResponseData) GetIconOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return o.Icon.Get(), o.Icon.IsSet()
+	return &o.Icon, true
 }
 
-// HasIcon returns a boolean if a field has been set.
-func (o *PlanDetailResponseData) HasIcon() bool {
-	if o != nil && o.Icon.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetIcon gets a reference to the given NullableString and assigns it to the Icon field.
+// SetIcon sets field value
 func (o *PlanDetailResponseData) SetIcon(v string) {
-	o.Icon.Set(&v)
-}
-
-// SetIconNil sets the value for Icon to be an explicit nil
-func (o *PlanDetailResponseData) SetIconNil() {
-	o.Icon.Set(nil)
-}
-
-// UnsetIcon ensures that no value is present for Icon, not even an explicit nil
-func (o *PlanDetailResponseData) UnsetIcon() {
-	o.Icon.Unset()
+	o.Icon = v
 }
 
 // GetId returns the Id field value
@@ -358,14 +347,14 @@ func (o PlanDetailResponseData) MarshalJSON() ([]byte, error) {
 func (o PlanDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["audience_type"] = o.AudienceType
-	toSerialize["billing_products"] = o.BillingProducts
+	if !IsNil(o.BillingProduct) {
+		toSerialize["billing_product"] = o.BillingProduct
+	}
 	toSerialize["company_count"] = o.CompanyCount
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["description"] = o.Description
 	toSerialize["features"] = o.Features
-	if o.Icon.IsSet() {
-		toSerialize["icon"] = o.Icon.Get()
-	}
+	toSerialize["icon"] = o.Icon
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	toSerialize["plan_type"] = o.PlanType
@@ -384,11 +373,11 @@ func (o *PlanDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"audience_type",
-		"billing_products",
 		"company_count",
 		"created_at",
 		"description",
 		"features",
+		"icon",
 		"id",
 		"name",
 		"plan_type",
@@ -423,7 +412,7 @@ func (o *PlanDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "audience_type")
-		delete(additionalProperties, "billing_products")
+		delete(additionalProperties, "billing_product")
 		delete(additionalProperties, "company_count")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "description")

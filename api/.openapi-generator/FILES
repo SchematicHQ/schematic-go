@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -28,6 +29,7 @@ docs/BillingCustomerResponseData.md
 docs/BillingCustomerSubscription.md
 docs/BillingCustomerWithSubscriptionsResponseData.md
 docs/BillingPriceResponseData.md
+docs/BillingProductDetailResponseData.md
 docs/BillingProductPlanResponseData.md
 docs/BillingProductPricing.md
 docs/BillingProductResponseData.md
@@ -76,8 +78,6 @@ docs/CountFeatureUsersParams.md
 docs/CountFeatureUsersResponse.md
 docs/CountFeaturesParams.md
 docs/CountFeaturesResponse.md
-docs/CountFlagChecksParams.md
-docs/CountFlagChecksResponse.md
 docs/CountFlagsParams.md
 docs/CountFlagsResponse.md
 docs/CountPlanEntitlementsParams.md
@@ -176,8 +176,6 @@ docs/FeatureResponseData.md
 docs/FeatureUsageDetailResponseData.md
 docs/FeatureUsageResponseData.md
 docs/FeaturesAPI.md
-docs/FlagCheckLogDetailResponseData.md
-docs/FlagCheckLogResponseData.md
 docs/FlagDetailResponseData.md
 docs/FlagResponseData.md
 docs/GetActiveCompanySubscriptionParams.md
@@ -201,10 +199,7 @@ docs/GetEventSummaryBySubtypeResponse.md
 docs/GetFeatureResponse.md
 docs/GetFeatureUsageByCompanyParams.md
 docs/GetFeatureUsageByCompanyResponse.md
-docs/GetFlagCheckResponse.md
 docs/GetFlagResponse.md
-docs/GetLatestFlagChecksParams.md
-docs/GetLatestFlagChecksResponse.md
 docs/GetOrCreateCompanyMembershipRequestBody.md
 docs/GetOrCreateCompanyMembershipResponse.md
 docs/GetOrCreateEntityTraitDefinitionResponse.md
@@ -225,6 +220,8 @@ docs/ListApiRequestsParams.md
 docs/ListApiRequestsResponse.md
 docs/ListAudienceCompaniesResponse.md
 docs/ListAudienceUsersResponse.md
+docs/ListBillingProductsParams.md
+docs/ListBillingProductsResponse.md
 docs/ListCompaniesParams.md
 docs/ListCompaniesResponse.md
 docs/ListCompanyMembershipsParams.md
@@ -255,8 +252,6 @@ docs/ListFeatureUsersParams.md
 docs/ListFeatureUsersResponse.md
 docs/ListFeaturesParams.md
 docs/ListFeaturesResponse.md
-docs/ListFlagChecksParams.md
-docs/ListFlagChecksResponse.md
 docs/ListFlagsParams.md
 docs/ListFlagsResponse.md
 docs/ListMetricCountsParams.md
@@ -267,8 +262,6 @@ docs/ListPlansParams.md
 docs/ListPlansResponse.md
 docs/ListProductPricesParams.md
 docs/ListProductPricesResponse.md
-docs/ListProductsParams.md
-docs/ListProductsResponse.md
 docs/ListUsersParams.md
 docs/ListUsersResponse.md
 docs/ListWebhookEventsParams.md
@@ -360,6 +353,7 @@ model_billing_customer_response_data.go
 model_billing_customer_subscription.go
 model_billing_customer_with_subscriptions_response_data.go
 model_billing_price_response_data.go
+model_billing_product_detail_response_data.go
 model_billing_product_plan_response_data.go
 model_billing_product_pricing.go
 model_billing_product_response_data.go
@@ -406,8 +400,6 @@ model_count_feature_users_params.go
 model_count_feature_users_response.go
 model_count_features_params.go
 model_count_features_response.go
-model_count_flag_checks_params.go
-model_count_flag_checks_response.go
 model_count_flags_params.go
 model_count_flags_response.go
 model_count_plan_entitlements_params.go
@@ -502,8 +494,6 @@ model_feature_detail_response_data.go
 model_feature_response_data.go
 model_feature_usage_detail_response_data.go
 model_feature_usage_response_data.go
-model_flag_check_log_detail_response_data.go
-model_flag_check_log_response_data.go
 model_flag_detail_response_data.go
 model_flag_response_data.go
 model_get_active_company_subscription_params.go
@@ -527,10 +517,7 @@ model_get_event_summary_by_subtype_response.go
 model_get_feature_response.go
 model_get_feature_usage_by_company_params.go
 model_get_feature_usage_by_company_response.go
-model_get_flag_check_response.go
 model_get_flag_response.go
-model_get_latest_flag_checks_params.go
-model_get_latest_flag_checks_response.go
 model_get_or_create_company_membership_request_body.go
 model_get_or_create_company_membership_response.go
 model_get_or_create_entity_trait_definition_response.go
@@ -551,6 +538,8 @@ model_list_api_requests_params.go
 model_list_api_requests_response.go
 model_list_audience_companies_response.go
 model_list_audience_users_response.go
+model_list_billing_products_params.go
+model_list_billing_products_response.go
 model_list_companies_params.go
 model_list_companies_response.go
 model_list_company_memberships_params.go
@@ -581,8 +570,6 @@ model_list_feature_users_params.go
 model_list_feature_users_response.go
 model_list_features_params.go
 model_list_features_response.go
-model_list_flag_checks_params.go
-model_list_flag_checks_response.go
 model_list_flags_params.go
 model_list_flags_response.go
 model_list_metric_counts_params.go
@@ -593,8 +580,6 @@ model_list_plans_params.go
 model_list_plans_response.go
 model_list_product_prices_params.go
 model_list_product_prices_response.go
-model_list_products_params.go
-model_list_products_response.go
 model_list_users_params.go
 model_list_users_response.go
 model_list_webhook_events_params.go
@@ -674,4 +659,15 @@ model_webhook_event_detail_response_data.go
 model_webhook_event_response_data.go
 model_webhook_response_data.go
 response.go
+test/api_accesstokens_test.go
+test/api_accounts_test.go
+test/api_billing_test.go
+test/api_companies_test.go
+test/api_components_test.go
+test/api_crm_test.go
+test/api_entitlements_test.go
+test/api_events_test.go
+test/api_features_test.go
+test/api_plans_test.go
+test/api_webhooks_test.go
 utils.go

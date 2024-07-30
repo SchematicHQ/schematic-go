@@ -5,12 +5,12 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **AudienceType** | **string** |  | 
-**BillingProducts** | [**[]BillingProductResponseData**](BillingProductResponseData.md) |  | 
+**BillingProduct** | Pointer to [**BillingProductDetailResponseData**](BillingProductDetailResponseData.md) |  | [optional] 
 **CompanyCount** | **int32** |  | 
 **CreatedAt** | **time.Time** |  | 
 **Description** | **string** |  | 
 **Features** | [**[]FeatureDetailResponseData**](FeatureDetailResponseData.md) |  | 
-**Icon** | Pointer to **NullableString** |  | [optional] 
+**Icon** | **string** |  | 
 **Id** | **string** |  | 
 **Name** | **string** |  | 
 **PlanType** | **string** |  | 
@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 
 ### NewPlanDetailResponseData
 
-`func NewPlanDetailResponseData(audienceType string, billingProducts []BillingProductResponseData, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, id string, name string, planType string, updatedAt time.Time, ) *PlanDetailResponseData`
+`func NewPlanDetailResponseData(audienceType string, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, icon string, id string, name string, planType string, updatedAt time.Time, ) *PlanDetailResponseData`
 
 NewPlanDetailResponseData instantiates a new PlanDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -55,25 +55,30 @@ and a boolean to check if the value has been set.
 SetAudienceType sets AudienceType field to given value.
 
 
-### GetBillingProducts
+### GetBillingProduct
 
-`func (o *PlanDetailResponseData) GetBillingProducts() []BillingProductResponseData`
+`func (o *PlanDetailResponseData) GetBillingProduct() BillingProductDetailResponseData`
 
-GetBillingProducts returns the BillingProducts field if non-nil, zero value otherwise.
+GetBillingProduct returns the BillingProduct field if non-nil, zero value otherwise.
 
-### GetBillingProductsOk
+### GetBillingProductOk
 
-`func (o *PlanDetailResponseData) GetBillingProductsOk() (*[]BillingProductResponseData, bool)`
+`func (o *PlanDetailResponseData) GetBillingProductOk() (*BillingProductDetailResponseData, bool)`
 
-GetBillingProductsOk returns a tuple with the BillingProducts field if it's non-nil, zero value otherwise
+GetBillingProductOk returns a tuple with the BillingProduct field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetBillingProducts
+### SetBillingProduct
 
-`func (o *PlanDetailResponseData) SetBillingProducts(v []BillingProductResponseData)`
+`func (o *PlanDetailResponseData) SetBillingProduct(v BillingProductDetailResponseData)`
 
-SetBillingProducts sets BillingProducts field to given value.
+SetBillingProduct sets BillingProduct field to given value.
 
+### HasBillingProduct
+
+`func (o *PlanDetailResponseData) HasBillingProduct() bool`
+
+HasBillingProduct returns a boolean if a field has been set.
 
 ### GetCompanyCount
 
@@ -174,22 +179,7 @@ and a boolean to check if the value has been set.
 
 SetIcon sets Icon field to given value.
 
-### HasIcon
 
-`func (o *PlanDetailResponseData) HasIcon() bool`
-
-HasIcon returns a boolean if a field has been set.
-
-### SetIconNil
-
-`func (o *PlanDetailResponseData) SetIconNil(b bool)`
-
- SetIconNil sets the value for Icon to be an explicit nil
-
-### UnsetIcon
-`func (o *PlanDetailResponseData) UnsetIcon()`
-
-UnsetIcon ensures that no value is present for Icon, not even an explicit nil
 ### GetId
 
 `func (o *PlanDetailResponseData) GetId() string`

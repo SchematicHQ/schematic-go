@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **Description** | **string** |  | 
 **EventSubtype** | Pointer to **NullableString** |  | [optional] 
 **FeatureType** | **string** |  | 
-**Icon** | Pointer to **NullableString** |  | [optional] 
+**Icon** | **string** |  | 
 **Id** | **string** |  | 
 **LifecyclePhase** | Pointer to **NullableString** |  | [optional] 
 **MaintainerId** | Pointer to **NullableString** |  | [optional] 
@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 
 ### NewFeatureResponseData
 
-`func NewFeatureResponseData(createdAt time.Time, description string, featureType string, id string, name string, updatedAt time.Time, ) *FeatureResponseData`
+`func NewFeatureResponseData(createdAt time.Time, description string, featureType string, icon string, id string, name string, updatedAt time.Time, ) *FeatureResponseData`
 
 NewFeatureResponseData instantiates a new FeatureResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -149,22 +149,7 @@ and a boolean to check if the value has been set.
 
 SetIcon sets Icon field to given value.
 
-### HasIcon
 
-`func (o *FeatureResponseData) HasIcon() bool`
-
-HasIcon returns a boolean if a field has been set.
-
-### SetIconNil
-
-`func (o *FeatureResponseData) SetIconNil(b bool)`
-
- SetIconNil sets the value for Icon to be an explicit nil
-
-### UnsetIcon
-`func (o *FeatureResponseData) UnsetIcon()`
-
-UnsetIcon ensures that no value is present for Icon, not even an explicit nil
 ### GetId
 
 `func (o *FeatureResponseData) GetId() string`

@@ -19,7 +19,7 @@ import (
 // checks if the EnvironmentResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &EnvironmentResponseData{}
 
-// EnvironmentResponseData struct for EnvironmentResponseData
+// EnvironmentResponseData The updated resource
 type EnvironmentResponseData struct {
 	CreatedAt            time.Time `json:"created_at"`
 	EnvironmentType      string    `json:"environment_type"`

@@ -9,7 +9,6 @@ Method | HTTP request | Description
 [**CountAudienceCompanies**](FeaturesAPI.md#CountAudienceCompanies) | **Post** /audience/count-companies | Count audience companies
 [**CountAudienceUsers**](FeaturesAPI.md#CountAudienceUsers) | **Post** /audience/count-users | Count audience users
 [**CountFeatures**](FeaturesAPI.md#CountFeatures) | **Get** /features/count | Count features
-[**CountFlagChecks**](FeaturesAPI.md#CountFlagChecks) | **Get** /flag-checks/count | Count flag checks
 [**CountFlags**](FeaturesAPI.md#CountFlags) | **Get** /flags/count | Count flags
 [**CreateFeature**](FeaturesAPI.md#CreateFeature) | **Post** /features | Create feature
 [**CreateFlag**](FeaturesAPI.md#CreateFlag) | **Post** /flags | Create flag
@@ -17,12 +16,9 @@ Method | HTTP request | Description
 [**DeleteFlag**](FeaturesAPI.md#DeleteFlag) | **Delete** /flags/{flag_id} | Delete flag
 [**GetFeature**](FeaturesAPI.md#GetFeature) | **Get** /features/{feature_id} | Get feature
 [**GetFlag**](FeaturesAPI.md#GetFlag) | **Get** /flags/{flag_id} | Get flag
-[**GetFlagCheck**](FeaturesAPI.md#GetFlagCheck) | **Get** /flag-checks/{flag_check_id} | Get flag check
-[**GetLatestFlagChecks**](FeaturesAPI.md#GetLatestFlagChecks) | **Get** /flag-checks/latest | Get latest flag checks
 [**ListAudienceCompanies**](FeaturesAPI.md#ListAudienceCompanies) | **Post** /audience/get-companies | List audience companies
 [**ListAudienceUsers**](FeaturesAPI.md#ListAudienceUsers) | **Post** /audience/get-users | List audience users
 [**ListFeatures**](FeaturesAPI.md#ListFeatures) | **Get** /features | List features
-[**ListFlagChecks**](FeaturesAPI.md#ListFlagChecks) | **Get** /flag-checks | List flag checks
 [**ListFlags**](FeaturesAPI.md#ListFlags) | **Get** /flags | List flags
 [**UpdateFeature**](FeaturesAPI.md#UpdateFeature) | **Put** /features/{feature_id} | Update feature
 [**UpdateFlag**](FeaturesAPI.md#UpdateFlag) | **Put** /flags/{flag_id} | Update flag
@@ -366,81 +362,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CountFeaturesResponse**](CountFeaturesResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## CountFlagChecks
-
-> CountFlagChecksResponse CountFlagChecks(ctx).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
-
-Count flag checks
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	flagId := "flagId_example" // string |  (optional)
-	flagIds := []string{"Inner_example"} // []string |  (optional)
-	id := "id_example" // string |  (optional)
-	limit := int32(100) // int32 | Page limit (default 100) (optional)
-	offset := int32(0) // int32 | Page offset (default 0) (optional)
-
-	resp, r, err := client.API().FeaturesAPI.CountFlagChecks(context.Background()).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.CountFlagChecks``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `CountFlagChecks`: CountFlagChecksResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.CountFlagChecks`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCountFlagChecksRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **flagId** | **string** |  | 
- **flagIds** | **[]string** |  | 
- **id** | **string** |  | 
- **limit** | **int32** | Page limit (default 100) | 
- **offset** | **int32** | Page offset (default 0) | 
-
-### Return type
-
-[**CountFlagChecksResponse**](CountFlagChecksResponse.md)
 
 ### Authorization
 
@@ -949,152 +870,6 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetFlagCheck
-
-> GetFlagCheckResponse GetFlagCheck(ctx, flagCheckId).Execute()
-
-Get flag check
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	flagCheckId := "flagCheckId_example" // string | flag_check_id
-
-	resp, r, err := client.API().FeaturesAPI.GetFlagCheck(context.Background(), flagCheckId).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.GetFlagCheck``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `GetFlagCheck`: GetFlagCheckResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.GetFlagCheck`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**flagCheckId** | **string** | flag_check_id | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGetFlagCheckRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
-### Return type
-
-[**GetFlagCheckResponse**](GetFlagCheckResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## GetLatestFlagChecks
-
-> GetLatestFlagChecksResponse GetLatestFlagChecks(ctx).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
-
-Get latest flag checks
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	flagId := "flagId_example" // string |  (optional)
-	flagIds := []string{"Inner_example"} // []string |  (optional)
-	id := "id_example" // string |  (optional)
-	limit := int32(100) // int32 | Page limit (default 100) (optional)
-	offset := int32(0) // int32 | Page offset (default 0) (optional)
-
-	resp, r, err := client.API().FeaturesAPI.GetLatestFlagChecks(context.Background()).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.GetLatestFlagChecks``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `GetLatestFlagChecks`: GetLatestFlagChecksResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.GetLatestFlagChecks`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGetLatestFlagChecksRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **flagId** | **string** |  | 
- **flagIds** | **[]string** |  | 
- **id** | **string** |  | 
- **limit** | **int32** | Page limit (default 100) | 
- **offset** | **int32** | Page offset (default 0) | 
-
-### Return type
-
-[**GetLatestFlagChecksResponse**](GetLatestFlagChecksResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## ListAudienceCompanies
 
 > ListAudienceCompaniesResponse ListAudienceCompanies(ctx).AudienceRequestBody(audienceRequestBody).Execute()
@@ -1291,81 +1066,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ListFeaturesResponse**](ListFeaturesResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ListFlagChecks
-
-> ListFlagChecksResponse ListFlagChecks(ctx).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
-
-List flag checks
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	flagId := "flagId_example" // string |  (optional)
-	flagIds := []string{"Inner_example"} // []string |  (optional)
-	id := "id_example" // string |  (optional)
-	limit := int32(100) // int32 | Page limit (default 100) (optional)
-	offset := int32(0) // int32 | Page offset (default 0) (optional)
-
-	resp, r, err := client.API().FeaturesAPI.ListFlagChecks(context.Background()).FlagId(flagId).FlagIds(flagIds).Id(id).Limit(limit).Offset(offset).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FeaturesAPI.ListFlagChecks``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `ListFlagChecks`: ListFlagChecksResponse
-	fmt.Fprintf(os.Stdout, "Response from `FeaturesAPI.ListFlagChecks`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiListFlagChecksRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **flagId** | **string** |  | 
- **flagIds** | **[]string** |  | 
- **id** | **string** |  | 
- **limit** | **int32** | Page limit (default 100) | 
- **offset** | **int32** | Page offset (default 0) | 
-
-### Return type
-
-[**ListFlagChecksResponse**](ListFlagChecksResponse.md)
 
 ### Authorization
 

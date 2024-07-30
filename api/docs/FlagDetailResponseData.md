@@ -13,7 +13,6 @@ Name | Type | Description | Notes
 **Id** | **string** |  | 
 **Key** | **string** |  | 
 **LastCheckedAt** | Pointer to **NullableTime** |  | [optional] 
-**LatestCheck** | Pointer to [**FlagCheckLogResponseData**](FlagCheckLogResponseData.md) |  | [optional] 
 **MaintainerId** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
 **Rules** | [**[]RuleDetailResponseData**](RuleDetailResponseData.md) |  | 
@@ -253,31 +252,6 @@ HasLastCheckedAt returns a boolean if a field has been set.
 `func (o *FlagDetailResponseData) UnsetLastCheckedAt()`
 
 UnsetLastCheckedAt ensures that no value is present for LastCheckedAt, not even an explicit nil
-### GetLatestCheck
-
-`func (o *FlagDetailResponseData) GetLatestCheck() FlagCheckLogResponseData`
-
-GetLatestCheck returns the LatestCheck field if non-nil, zero value otherwise.
-
-### GetLatestCheckOk
-
-`func (o *FlagDetailResponseData) GetLatestCheckOk() (*FlagCheckLogResponseData, bool)`
-
-GetLatestCheckOk returns a tuple with the LatestCheck field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetLatestCheck
-
-`func (o *FlagDetailResponseData) SetLatestCheck(v FlagCheckLogResponseData)`
-
-SetLatestCheck sets LatestCheck field to given value.
-
-### HasLatestCheck
-
-`func (o *FlagDetailResponseData) HasLatestCheck() bool`
-
-HasLatestCheck returns a boolean if a field has been set.
-
 ### GetMaintainerId
 
 `func (o *FlagDetailResponseData) GetMaintainerId() string`

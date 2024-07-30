@@ -1100,7 +1100,7 @@ paths:
       - billing
   /billing/products:
     get:
-      operationId: listProducts
+      operationId: listBillingProducts
       parameters:
       - explode: true
         in: query
@@ -1150,7 +1150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListProductsResponse'
+                $ref: '#/components/schemas/ListBillingProductsResponse'
           description: OK
         "400":
           content:
@@ -1176,7 +1176,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
           description: Server error
-      summary: List products
+      summary: List billing products
       tags:
       - billing
   /billing/subscription/upsert:
@@ -5135,295 +5135,6 @@ paths:
       summary: Count features
       tags:
       - features
-  /flag-checks:
-    get:
-      operationId: listFlagChecks
-      parameters:
-      - explode: true
-        in: query
-        name: flag_id
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: flag_ids
-        required: false
-        schema:
-          items:
-            type: string
-          type: array
-        style: form
-      - explode: true
-        in: query
-        name: id
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: Page limit (default 100)
-        explode: true
-        in: query
-        name: limit
-        required: false
-        schema:
-          description: Page limit (default 100)
-          example: 100
-          type: integer
-        style: form
-      - description: Page offset (default 0)
-        explode: true
-        in: query
-        name: offset
-        required: false
-        schema:
-          description: Page offset (default 0)
-          example: 0
-          type: integer
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListFlagChecksResponse'
-          description: OK
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Bad request
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Unauthorized
-        "403":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Forbidden
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Server error
-      summary: List flag checks
-      tags:
-      - features
-  /flag-checks/{flag_check_id}:
-    get:
-      operationId: getFlagCheck
-      parameters:
-      - description: flag_check_id
-        explode: false
-        in: path
-        name: flag_check_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetFlagCheckResponse'
-          description: OK
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Unauthorized
-        "403":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Forbidden
-        "404":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Not found
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Server error
-      summary: Get flag check
-      tags:
-      - features
-  /flag-checks/count:
-    get:
-      operationId: countFlagChecks
-      parameters:
-      - explode: true
-        in: query
-        name: flag_id
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: flag_ids
-        required: false
-        schema:
-          items:
-            type: string
-          type: array
-        style: form
-      - explode: true
-        in: query
-        name: id
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: Page limit (default 100)
-        explode: true
-        in: query
-        name: limit
-        required: false
-        schema:
-          description: Page limit (default 100)
-          example: 100
-          type: integer
-        style: form
-      - description: Page offset (default 0)
-        explode: true
-        in: query
-        name: offset
-        required: false
-        schema:
-          description: Page offset (default 0)
-          example: 0
-          type: integer
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CountFlagChecksResponse'
-          description: OK
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Bad request
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Unauthorized
-        "403":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Forbidden
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Server error
-      summary: Count flag checks
-      tags:
-      - features
-  /flag-checks/latest:
-    get:
-      operationId: getLatestFlagChecks
-      parameters:
-      - explode: true
-        in: query
-        name: flag_id
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: flag_ids
-        required: false
-        schema:
-          items:
-            type: string
-          type: array
-        style: form
-      - explode: true
-        in: query
-        name: id
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: Page limit (default 100)
-        explode: true
-        in: query
-        name: limit
-        required: false
-        schema:
-          description: Page limit (default 100)
-          example: 100
-          type: integer
-        style: form
-      - description: Page offset (default 0)
-        explode: true
-        in: query
-        name: offset
-        required: false
-        schema:
-          description: Page offset (default 0)
-          example: 0
-          type: integer
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetLatestFlagChecksResponse'
-          description: OK
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Bad request
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Unauthorized
-        "403":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Forbidden
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
-          description: Server error
-      summary: Get latest flag checks
-      tags:
-      - features
   /flags:
     get:
       operationId: listFlags
@@ -8723,6 +8434,68 @@ components:
       - price
       title: BillingPriceResponseData
       type: object
+    BillingProductDetailResponseData:
+      example:
+        Prices:
+        - external_price_id: external_price_id
+          price: 0
+          interval: interval
+          id: id
+        - external_price_id: external_price_id
+          price: 0
+          interval: interval
+          id: id
+        account_id: account_id
+        quantity: 6.027456183070403
+        environment_id: environment_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        price: 0.8008281904610115
+        product_id: product_id
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        currency: currency
+        external_id: external_id
+      properties:
+        Prices:
+          items:
+            $ref: '#/components/schemas/BillingPriceResponseData'
+          type: array
+        account_id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        currency:
+          type: string
+        environment_id:
+          type: string
+        external_id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        product_id:
+          type: string
+        quantity:
+          type: number
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - Prices
+      - account_id
+      - created_at
+      - currency
+      - environment_id
+      - external_id
+      - name
+      - price
+      - product_id
+      - quantity
+      - updated_at
+      title: BillingProductDetailResponseData
+      type: object
     BillingProductPlanResponseData:
       description: The updated resource
       example:
@@ -9499,24 +9272,6 @@ components:
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 default_value: true
-                latest_check:
-                  flag_id: flag_id
-                  reason: reason
-                  req_company:
-                    key: req_company
-                  company_id: company_id
-                  environment_id: environment_id
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  error: error
-                  req_user:
-                    key: req_user
-                  check_status: check_status
-                  rule_id: rule_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  user_id: user_id
-                  flag_key: flag_key
-                  id: id
-                  value: true
                 rules:
                 - flag_id: flag_id
                   rule_type: rule_type
@@ -10137,24 +9892,6 @@ components:
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 default_value: true
-                latest_check:
-                  flag_id: flag_id
-                  reason: reason
-                  req_company:
-                    key: req_company
-                  company_id: company_id
-                  environment_id: environment_id
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  error: error
-                  req_user:
-                    key: req_user
-                  check_status: check_status
-                  rule_id: rule_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  user_id: user_id
-                  flag_key: flag_key
-                  id: id
-                  value: true
                 rules:
                 - flag_id: flag_id
                   rule_type: rule_type
@@ -10830,24 +10567,6 @@ components:
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 default_value: true
-                latest_check:
-                  flag_id: flag_id
-                  reason: reason
-                  req_company:
-                    key: req_company
-                  company_id: company_id
-                  environment_id: environment_id
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  error: error
-                  req_user:
-                    key: req_user
-                  check_status: check_status
-                  rule_id: rule_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  user_id: user_id
-                  flag_key: flag_key
-                  id: id
-                  value: true
                 rules:
                 - flag_id: flag_id
                   rule_type: rule_type
@@ -11468,24 +11187,6 @@ components:
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 default_value: true
-                latest_check:
-                  flag_id: flag_id
-                  reason: reason
-                  req_company:
-                    key: req_company
-                  company_id: company_id
-                  environment_id: environment_id
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  error: error
-                  req_user:
-                    key: req_user
-                  check_status: check_status
-                  rule_id: rule_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  user_id: user_id
-                  flag_key: flag_key
-                  id: id
-                  value: true
                 rules:
                 - flag_id: flag_id
                   rule_type: rule_type
@@ -12405,6 +12106,7 @@ components:
         total_price: 6
         interval: interval
         expired_at: 2000-01-23T04:56:07.000+00:00
+        status: status
         subscription_external_id: subscription_external_id
       properties:
         customer_external_id:
@@ -12419,6 +12121,8 @@ components:
           items:
             $ref: '#/components/schemas/BillingProductPricing'
           type: array
+        status:
+          type: string
         subscription_external_id:
           type: string
         total_price:
@@ -12427,6 +12131,7 @@ components:
       - customer_external_id
       - expired_at
       - product_external_ids
+      - status
       - subscription_external_id
       - total_price
       title: CreateBillingSubscriptionsRequestBody
@@ -13167,7 +12872,7 @@ components:
       type: object
     CreatePlanRequestBody:
       example:
-        plan_type: product
+        plan_type: plan
         audience_type: audience_type
         icon: icon
         name: name
@@ -13185,12 +12890,8 @@ components:
           type: string
         plan_type:
           enum:
-          - product
-          - pricing_plan
+          - plan
           - add_on
-          - overage
-          - billable_metric
-          - other
           type: string
       required:
       - description
@@ -13771,6 +13472,7 @@ components:
       title: EnvironmentDetailResponseData
       type: object
     EnvironmentResponseData:
+      description: The updated resource
       example:
         updated_at: 2000-01-23T04:56:07.000+00:00
         name: name
@@ -14023,24 +13725,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -14661,24 +14345,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -15482,24 +15148,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -16120,24 +15768,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -16946,24 +16576,6 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           default_value: true
-          latest_check:
-            flag_id: flag_id
-            reason: reason
-            req_company:
-              key: req_company
-            company_id: company_id
-            environment_id: environment_id
-            created_at: 2000-01-23T04:56:07.000+00:00
-            error: error
-            req_user:
-              key: req_user
-            check_status: check_status
-            rule_id: rule_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            user_id: user_id
-            flag_key: flag_key
-            id: id
-            value: true
           rules:
           - flag_id: flag_id
             rule_type: rule_type
@@ -17584,24 +17196,6 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           default_value: true
-          latest_check:
-            flag_id: flag_id
-            reason: reason
-            req_company:
-              key: req_company
-            company_id: company_id
-            environment_id: environment_id
-            created_at: 2000-01-23T04:56:07.000+00:00
-            error: error
-            req_user:
-              key: req_user
-            check_status: check_status
-            rule_id: rule_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            user_id: user_id
-            flag_key: flag_key
-            id: id
-            value: true
           rules:
           - flag_id: flag_id
             rule_type: rule_type
@@ -18273,7 +17867,6 @@ components:
             $ref: '#/components/schemas/FlagDetailResponseData'
           type: array
         icon:
-          nullable: true
           type: string
         id:
           type: string
@@ -18302,6 +17895,7 @@ components:
       - description
       - feature_type
       - flags
+      - icon
       - id
       - name
       - plans
@@ -18333,7 +17927,6 @@ components:
         feature_type:
           type: string
         icon:
-          nullable: true
           type: string
         id:
           type: string
@@ -18355,6 +17948,7 @@ components:
       - created_at
       - description
       - feature_type
+      - icon
       - id
       - name
       - updated_at
@@ -18372,24 +17966,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -19010,24 +18586,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -19703,24 +19261,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -20341,24 +19881,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -21045,24 +20567,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -21683,24 +21187,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -22408,231 +21894,12 @@ components:
       - entitlement_type
       title: FeatureUsageResponseData
       type: object
-    FlagCheckLogDetailResponseData:
-      example:
-        flag_id: flag_id
-        reason: reason
-        req_company:
-          key: req_company
-        flag:
-          feature_id: feature_id
-          maintainer_id: maintainer_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
-          created_at: 2000-01-23T04:56:07.000+00:00
-          description: description
-          flag_type: flag_type
-          default_value: true
-          id: id
-          key: key
-        company_id: company_id
-        environment_id: environment_id
-        created_at: 2000-01-23T04:56:07.000+00:00
-        rule:
-          flag_id: flag_id
-          rule_type: rule_type
-          environment_id: environment_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
-          created_at: 2000-01-23T04:56:07.000+00:00
-          id: id
-          priority: 0
-          value: true
-          plan_id: plan_id
-        error: error
-        req_user:
-          key: req_user
-        check_status: check_status
-        rule_id: rule_id
-        environment:
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
-          created_at: 2000-01-23T04:56:07.000+00:00
-          id: id
-          environment_type: environment_type
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        user_id: user_id
-        company:
-          environment_id: environment_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          logo_url: logo_url
-          name: name
-          created_at: 2000-01-23T04:56:07.000+00:00
-          id: id
-          last_seen_at: 2000-01-23T04:56:07.000+00:00
-        flag_key: flag_key
-        id: id
-        user:
-          environment_id: environment_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          name: name
-          created_at: 2000-01-23T04:56:07.000+00:00
-          id: id
-          last_seen_at: 2000-01-23T04:56:07.000+00:00
-        value: true
-      properties:
-        check_status:
-          type: string
-        company:
-          $ref: '#/components/schemas/CompanyResponseData'
-        company_id:
-          nullable: true
-          type: string
-        created_at:
-          format: date-time
-          type: string
-        environment:
-          $ref: '#/components/schemas/EnvironmentResponseData'
-        environment_id:
-          type: string
-        error:
-          nullable: true
-          type: string
-        flag:
-          $ref: '#/components/schemas/FlagResponseData'
-        flag_id:
-          nullable: true
-          type: string
-        flag_key:
-          type: string
-        id:
-          type: string
-        reason:
-          type: string
-        req_company:
-          additionalProperties:
-            type: string
-          nullable: true
-          type: object
-        req_user:
-          additionalProperties:
-            type: string
-          nullable: true
-          type: object
-        rule:
-          $ref: '#/components/schemas/RuleResponseData'
-        rule_id:
-          nullable: true
-          type: string
-        updated_at:
-          format: date-time
-          type: string
-        user:
-          $ref: '#/components/schemas/UserResponseData'
-        user_id:
-          nullable: true
-          type: string
-        value:
-          type: boolean
-      required:
-      - check_status
-      - created_at
-      - environment_id
-      - flag_key
-      - id
-      - reason
-      - updated_at
-      - value
-      title: FlagCheckLogDetailResponseData
-      type: object
-    FlagCheckLogResponseData:
-      example:
-        flag_id: flag_id
-        reason: reason
-        req_company:
-          key: req_company
-        company_id: company_id
-        environment_id: environment_id
-        created_at: 2000-01-23T04:56:07.000+00:00
-        error: error
-        req_user:
-          key: req_user
-        check_status: check_status
-        rule_id: rule_id
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        user_id: user_id
-        flag_key: flag_key
-        id: id
-        value: true
-      properties:
-        check_status:
-          type: string
-        company_id:
-          nullable: true
-          type: string
-        created_at:
-          format: date-time
-          type: string
-        environment_id:
-          type: string
-        error:
-          nullable: true
-          type: string
-        flag_id:
-          nullable: true
-          type: string
-        flag_key:
-          type: string
-        id:
-          type: string
-        reason:
-          type: string
-        req_company:
-          additionalProperties:
-            type: string
-          nullable: true
-          type: object
-        req_user:
-          additionalProperties:
-            type: string
-          nullable: true
-          type: object
-        rule_id:
-          nullable: true
-          type: string
-        updated_at:
-          format: date-time
-          type: string
-        user_id:
-          nullable: true
-          type: string
-        value:
-          type: boolean
-      required:
-      - check_status
-      - created_at
-      - environment_id
-      - flag_key
-      - id
-      - reason
-      - updated_at
-      - value
-      title: FlagCheckLogResponseData
-      type: object
     FlagDetailResponseData:
       example:
         feature_id: feature_id
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
         default_value: true
-        latest_check:
-          flag_id: flag_id
-          reason: reason
-          req_company:
-            key: req_company
-          company_id: company_id
-          environment_id: environment_id
-          created_at: 2000-01-23T04:56:07.000+00:00
-          error: error
-          req_user:
-            key: req_user
-          check_status: check_status
-          rule_id: rule_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          user_id: user_id
-          flag_key: flag_key
-          id: id
-          value: true
         rules:
         - flag_id: flag_id
           rule_type: rule_type
@@ -23272,8 +22539,6 @@ components:
           format: date-time
           nullable: true
           type: string
-        latest_check:
-          $ref: '#/components/schemas/FlagCheckLogResponseData'
         maintainer_id:
           nullable: true
           type: string
@@ -23875,24 +23140,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -24513,24 +23760,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -25189,24 +24418,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -25827,24 +25038,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -26499,27 +25692,6 @@ components:
           lifecycle_phase: lifecycle_phase
           trait_id: trait_id
         plan_type: plan_type
-        billing_products:
-        - account_id: account_id
-          quantity: 6.027456183070403
-          environment_id: environment_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          price: 0.8008281904610115
-          product_id: product_id
-          name: name
-          created_at: 2000-01-23T04:56:07.000+00:00
-          currency: currency
-          external_id: external_id
-        - account_id: account_id
-          quantity: 6.027456183070403
-          environment_id: environment_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          price: 0.8008281904610115
-          product_id: product_id
-          name: name
-          created_at: 2000-01-23T04:56:07.000+00:00
-          currency: currency
-          external_id: external_id
         updated_at: 2000-01-23T04:56:07.000+00:00
         audience_type: audience_type
         company_count: 0
@@ -26527,14 +25699,32 @@ components:
         name: name
         created_at: 2000-01-23T04:56:07.000+00:00
         description: description
+        billing_product:
+          Prices:
+          - external_price_id: external_price_id
+            price: 0
+            interval: interval
+            id: id
+          - external_price_id: external_price_id
+            price: 0
+            interval: interval
+            id: id
+          account_id: account_id
+          quantity: 6.027456183070403
+          environment_id: environment_id
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          price: 0.8008281904610115
+          product_id: product_id
+          name: name
+          created_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          external_id: external_id
         id: id
       properties:
         audience_type:
           type: string
-        billing_products:
-          items:
-            $ref: '#/components/schemas/BillingProductResponseData'
-          type: array
+        billing_product:
+          $ref: '#/components/schemas/BillingProductDetailResponseData'
         company_count:
           type: integer
         created_at:
@@ -26547,7 +25737,6 @@ components:
             $ref: '#/components/schemas/FeatureDetailResponseData'
           type: array
         icon:
-          nullable: true
           type: string
         id:
           type: string
@@ -26560,11 +25749,11 @@ components:
           type: string
       required:
       - audience_type
-      - billing_products
       - company_count
       - created_at
       - description
       - features
+      - icon
       - id
       - name
       - plan_type
@@ -26684,7 +25873,6 @@ components:
         description:
           type: string
         icon:
-          nullable: true
           type: string
         id:
           type: string
@@ -26699,6 +25887,7 @@ components:
       - audience_type
       - created_at
       - description
+      - icon
       - id
       - name
       - plan_type
@@ -27479,17 +26668,6 @@ components:
       title: RuleDetailResponseData
       type: object
     RuleResponseData:
-      example:
-        flag_id: flag_id
-        rule_type: rule_type
-        environment_id: environment_id
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        name: name
-        created_at: 2000-01-23T04:56:07.000+00:00
-        id: id
-        priority: 0
-        value: true
-        plan_id: plan_id
       properties:
         created_at:
           format: date-time
@@ -28687,7 +27865,6 @@ components:
       type: object
     UpdatePlanRequestBody:
       example:
-        plan_type: product
         audience_type: audience_type
         icon: icon
         name: name
@@ -28702,16 +27879,6 @@ components:
           nullable: true
           type: string
         name:
-          type: string
-        plan_type:
-          enum:
-          - product
-          - pricing_plan
-          - add_on
-          - overage
-          - billable_metric
-          - other
-          nullable: true
           type: string
       required:
       - audience_type
@@ -30339,7 +29506,7 @@ components:
       - params
       title: UpsertBillingProductResponse
       type: object
-    ListProductsParams:
+    ListBillingProductsParams:
       description: Input parameters
       example:
         q: q
@@ -30366,12 +29533,21 @@ components:
           type: integer
         q:
           type: string
-      title: ListProductsParams
+      title: ListBillingProductsParams
       type: object
-    ListProductsResponse:
+    ListBillingProductsResponse:
       example:
         data:
-        - account_id: account_id
+        - Prices:
+          - external_price_id: external_price_id
+            price: 0
+            interval: interval
+            id: id
+          - external_price_id: external_price_id
+            price: 0
+            interval: interval
+            id: id
+          account_id: account_id
           quantity: 6.027456183070403
           environment_id: environment_id
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -30381,7 +29557,16 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           currency: currency
           external_id: external_id
-        - account_id: account_id
+        - Prices:
+          - external_price_id: external_price_id
+            price: 0
+            interval: interval
+            id: id
+          - external_price_id: external_price_id
+            price: 0
+            interval: interval
+            id: id
+          account_id: account_id
           quantity: 6.027456183070403
           environment_id: environment_id
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -30403,15 +29588,15 @@ components:
         data:
           description: The returned resources
           items:
-            $ref: '#/components/schemas/BillingProductResponseData'
-          title: ListProductsResponseData
+            $ref: '#/components/schemas/BillingProductDetailResponseData'
+          title: ListBillingProductsResponseData
           type: array
         params:
-          $ref: '#/components/schemas/ListProductsParams'
+          $ref: '#/components/schemas/ListBillingProductsParams'
       required:
       - data
       - params
-      title: ListProductsResponse
+      title: ListBillingProductsResponse
       type: object
     UpsertBillingSubscriptionResponse:
       example:
@@ -32595,24 +31780,6 @@ components:
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
                   default_value: true
-                  latest_check:
-                    flag_id: flag_id
-                    reason: reason
-                    req_company:
-                      key: req_company
-                    company_id: company_id
-                    environment_id: environment_id
-                    created_at: 2000-01-23T04:56:07.000+00:00
-                    error: error
-                    req_user:
-                      key: req_user
-                    check_status: check_status
-                    rule_id: rule_id
-                    updated_at: 2000-01-23T04:56:07.000+00:00
-                    user_id: user_id
-                    flag_key: flag_key
-                    id: id
-                    value: true
                   rules:
                   - flag_id: flag_id
                     rule_type: rule_type
@@ -33233,24 +32400,6 @@ components:
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
                   default_value: true
-                  latest_check:
-                    flag_id: flag_id
-                    reason: reason
-                    req_company:
-                      key: req_company
-                    company_id: company_id
-                    environment_id: environment_id
-                    created_at: 2000-01-23T04:56:07.000+00:00
-                    error: error
-                    req_user:
-                      key: req_user
-                    check_status: check_status
-                    rule_id: rule_id
-                    updated_at: 2000-01-23T04:56:07.000+00:00
-                    user_id: user_id
-                    flag_key: flag_key
-                    id: id
-                    value: true
                   rules:
                   - flag_id: flag_id
                     rule_type: rule_type
@@ -33926,24 +33075,6 @@ components:
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
                   default_value: true
-                  latest_check:
-                    flag_id: flag_id
-                    reason: reason
-                    req_company:
-                      key: req_company
-                    company_id: company_id
-                    environment_id: environment_id
-                    created_at: 2000-01-23T04:56:07.000+00:00
-                    error: error
-                    req_user:
-                      key: req_user
-                    check_status: check_status
-                    rule_id: rule_id
-                    updated_at: 2000-01-23T04:56:07.000+00:00
-                    user_id: user_id
-                    flag_key: flag_key
-                    id: id
-                    value: true
                   rules:
                   - flag_id: flag_id
                     rule_type: rule_type
@@ -34564,24 +33695,6 @@ components:
                   created_at: 2000-01-23T04:56:07.000+00:00
                   description: description
                   default_value: true
-                  latest_check:
-                    flag_id: flag_id
-                    reason: reason
-                    req_company:
-                      key: req_company
-                    company_id: company_id
-                    environment_id: environment_id
-                    created_at: 2000-01-23T04:56:07.000+00:00
-                    error: error
-                    req_user:
-                      key: req_user
-                    check_status: check_status
-                    rule_id: rule_id
-                    updated_at: 2000-01-23T04:56:07.000+00:00
-                    user_id: user_id
-                    flag_key: flag_key
-                    id: id
-                    value: true
                   rules:
                   - flag_id: flag_id
                     rule_type: rule_type
@@ -36461,24 +35574,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -37099,24 +36194,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -37875,24 +36952,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -38513,24 +37572,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -39387,24 +38428,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -40025,24 +39048,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -40718,24 +39723,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -41356,24 +40343,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -42157,24 +41126,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -42795,24 +41746,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -43578,24 +42511,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -44216,24 +43131,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -45094,24 +43991,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -45732,24 +44611,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -46408,24 +45269,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -47046,24 +45889,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -47748,24 +46573,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -48386,24 +47193,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -49078,24 +47867,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -49716,24 +48487,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -50408,24 +49161,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -51046,24 +49781,6 @@ components:
             created_at: 2000-01-23T04:56:07.000+00:00
             description: description
             default_value: true
-            latest_check:
-              flag_id: flag_id
-              reason: reason
-              req_company:
-                key: req_company
-              company_id: company_id
-              environment_id: environment_id
-              created_at: 2000-01-23T04:56:07.000+00:00
-              error: error
-              req_user:
-                key: req_user
-              check_status: check_status
-              rule_id: rule_id
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              user_id: user_id
-              flag_key: flag_key
-              id: id
-              value: true
             rules:
             - flag_id: flag_id
               rule_type: rule_type
@@ -51806,395 +50523,6 @@ components:
       - params
       title: CountFeaturesResponse
       type: object
-    ListFlagChecksParams:
-      description: Input parameters
-      example:
-        flag_id: flag_id
-        flag_ids:
-        - flag_ids
-        - flag_ids
-        offset: 0
-        limit: 100
-        id: id
-      properties:
-        flag_id:
-          type: string
-        flag_ids:
-          items:
-            type: string
-          type: array
-        id:
-          type: string
-        limit:
-          description: Page limit (default 100)
-          example: 100
-          type: integer
-        offset:
-          description: Page offset (default 0)
-          example: 0
-          type: integer
-      title: ListFlagChecksParams
-      type: object
-    ListFlagChecksResponse:
-      example:
-        data:
-        - flag_id: flag_id
-          reason: reason
-          req_company:
-            key: req_company
-          flag:
-            feature_id: feature_id
-            maintainer_id: maintainer_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            flag_type: flag_type
-            default_value: true
-            id: id
-            key: key
-          company_id: company_id
-          environment_id: environment_id
-          created_at: 2000-01-23T04:56:07.000+00:00
-          rule:
-            flag_id: flag_id
-            rule_type: rule_type
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            priority: 0
-            value: true
-            plan_id: plan_id
-          error: error
-          req_user:
-            key: req_user
-          check_status: check_status
-          rule_id: rule_id
-          environment:
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            environment_type: environment_type
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          user_id: user_id
-          company:
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            logo_url: logo_url
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            last_seen_at: 2000-01-23T04:56:07.000+00:00
-          flag_key: flag_key
-          id: id
-          user:
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            last_seen_at: 2000-01-23T04:56:07.000+00:00
-          value: true
-        - flag_id: flag_id
-          reason: reason
-          req_company:
-            key: req_company
-          flag:
-            feature_id: feature_id
-            maintainer_id: maintainer_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            flag_type: flag_type
-            default_value: true
-            id: id
-            key: key
-          company_id: company_id
-          environment_id: environment_id
-          created_at: 2000-01-23T04:56:07.000+00:00
-          rule:
-            flag_id: flag_id
-            rule_type: rule_type
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            priority: 0
-            value: true
-            plan_id: plan_id
-          error: error
-          req_user:
-            key: req_user
-          check_status: check_status
-          rule_id: rule_id
-          environment:
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            environment_type: environment_type
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          user_id: user_id
-          company:
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            logo_url: logo_url
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            last_seen_at: 2000-01-23T04:56:07.000+00:00
-          flag_key: flag_key
-          id: id
-          user:
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            last_seen_at: 2000-01-23T04:56:07.000+00:00
-          value: true
-        params:
-          flag_id: flag_id
-          flag_ids:
-          - flag_ids
-          - flag_ids
-          offset: 0
-          limit: 100
-          id: id
-      properties:
-        data:
-          description: The returned resources
-          items:
-            $ref: '#/components/schemas/FlagCheckLogDetailResponseData'
-          title: ListFlagChecksResponseData
-          type: array
-        params:
-          $ref: '#/components/schemas/ListFlagChecksParams'
-      required:
-      - data
-      - params
-      title: ListFlagChecksResponse
-      type: object
-    GetFlagCheckResponse:
-      example:
-        data:
-          flag_id: flag_id
-          reason: reason
-          req_company:
-            key: req_company
-          flag:
-            feature_id: feature_id
-            maintainer_id: maintainer_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            description: description
-            flag_type: flag_type
-            default_value: true
-            id: id
-            key: key
-          company_id: company_id
-          environment_id: environment_id
-          created_at: 2000-01-23T04:56:07.000+00:00
-          rule:
-            flag_id: flag_id
-            rule_type: rule_type
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            priority: 0
-            value: true
-            plan_id: plan_id
-          error: error
-          req_user:
-            key: req_user
-          check_status: check_status
-          rule_id: rule_id
-          environment:
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            environment_type: environment_type
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          user_id: user_id
-          company:
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            logo_url: logo_url
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            last_seen_at: 2000-01-23T04:56:07.000+00:00
-          flag_key: flag_key
-          id: id
-          user:
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: id
-            last_seen_at: 2000-01-23T04:56:07.000+00:00
-          value: true
-        params: "{}"
-      properties:
-        data:
-          $ref: '#/components/schemas/FlagCheckLogDetailResponseData'
-        params:
-          description: Input parameters
-          title: GetFlagCheckParams
-          type: object
-      required:
-      - data
-      - params
-      title: GetFlagCheckResponse
-      type: object
-    CountFlagChecksParams:
-      description: Input parameters
-      example:
-        flag_id: flag_id
-        flag_ids:
-        - flag_ids
-        - flag_ids
-        offset: 0
-        limit: 100
-        id: id
-      properties:
-        flag_id:
-          type: string
-        flag_ids:
-          items:
-            type: string
-          type: array
-        id:
-          type: string
-        limit:
-          description: Page limit (default 100)
-          example: 100
-          type: integer
-        offset:
-          description: Page offset (default 0)
-          example: 0
-          type: integer
-      title: CountFlagChecksParams
-      type: object
-    CountFlagChecksResponse:
-      example:
-        data:
-          count: 0
-        params:
-          flag_id: flag_id
-          flag_ids:
-          - flag_ids
-          - flag_ids
-          offset: 0
-          limit: 100
-          id: id
-      properties:
-        data:
-          $ref: '#/components/schemas/CountResponse'
-        params:
-          $ref: '#/components/schemas/CountFlagChecksParams'
-      required:
-      - data
-      - params
-      title: CountFlagChecksResponse
-      type: object
-    GetLatestFlagChecksParams:
-      description: Input parameters
-      example:
-        flag_id: flag_id
-        flag_ids:
-        - flag_ids
-        - flag_ids
-        offset: 0
-        limit: 100
-        id: id
-      properties:
-        flag_id:
-          type: string
-        flag_ids:
-          items:
-            type: string
-          type: array
-        id:
-          type: string
-        limit:
-          description: Page limit (default 100)
-          example: 100
-          type: integer
-        offset:
-          description: Page offset (default 0)
-          example: 0
-          type: integer
-      title: GetLatestFlagChecksParams
-      type: object
-    GetLatestFlagChecksResponse:
-      example:
-        data:
-        - flag_id: flag_id
-          reason: reason
-          req_company:
-            key: req_company
-          company_id: company_id
-          environment_id: environment_id
-          created_at: 2000-01-23T04:56:07.000+00:00
-          error: error
-          req_user:
-            key: req_user
-          check_status: check_status
-          rule_id: rule_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          user_id: user_id
-          flag_key: flag_key
-          id: id
-          value: true
-        - flag_id: flag_id
-          reason: reason
-          req_company:
-            key: req_company
-          company_id: company_id
-          environment_id: environment_id
-          created_at: 2000-01-23T04:56:07.000+00:00
-          error: error
-          req_user:
-            key: req_user
-          check_status: check_status
-          rule_id: rule_id
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          user_id: user_id
-          flag_key: flag_key
-          id: id
-          value: true
-        params:
-          flag_id: flag_id
-          flag_ids:
-          - flag_ids
-          - flag_ids
-          offset: 0
-          limit: 100
-          id: id
-      properties:
-        data:
-          description: The returned resources
-          items:
-            $ref: '#/components/schemas/FlagCheckLogResponseData'
-          title: GetLatestFlagChecksResponseData
-          type: array
-        params:
-          $ref: '#/components/schemas/GetLatestFlagChecksParams'
-      required:
-      - data
-      - params
-      title: GetLatestFlagChecksResponse
-      type: object
     ListFlagsParams:
       description: Input parameters
       example:
@@ -52231,24 +50559,6 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           default_value: true
-          latest_check:
-            flag_id: flag_id
-            reason: reason
-            req_company:
-              key: req_company
-            company_id: company_id
-            environment_id: environment_id
-            created_at: 2000-01-23T04:56:07.000+00:00
-            error: error
-            req_user:
-              key: req_user
-            check_status: check_status
-            rule_id: rule_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            user_id: user_id
-            flag_key: flag_key
-            id: id
-            value: true
           rules:
           - flag_id: flag_id
             rule_type: rule_type
@@ -52869,24 +51179,6 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           default_value: true
-          latest_check:
-            flag_id: flag_id
-            reason: reason
-            req_company:
-              key: req_company
-            company_id: company_id
-            environment_id: environment_id
-            created_at: 2000-01-23T04:56:07.000+00:00
-            error: error
-            req_user:
-              key: req_user
-            check_status: check_status
-            rule_id: rule_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            user_id: user_id
-            flag_key: flag_key
-            id: id
-            value: true
           rules:
           - flag_id: flag_id
             rule_type: rule_type
@@ -53532,24 +51824,6 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           default_value: true
-          latest_check:
-            flag_id: flag_id
-            reason: reason
-            req_company:
-              key: req_company
-            company_id: company_id
-            environment_id: environment_id
-            created_at: 2000-01-23T04:56:07.000+00:00
-            error: error
-            req_user:
-              key: req_user
-            check_status: check_status
-            rule_id: rule_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            user_id: user_id
-            flag_key: flag_key
-            id: id
-            value: true
           rules:
           - flag_id: flag_id
             rule_type: rule_type
@@ -54186,24 +52460,6 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           default_value: true
-          latest_check:
-            flag_id: flag_id
-            reason: reason
-            req_company:
-              key: req_company
-            company_id: company_id
-            environment_id: environment_id
-            created_at: 2000-01-23T04:56:07.000+00:00
-            error: error
-            req_user:
-              key: req_user
-            check_status: check_status
-            rule_id: rule_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            user_id: user_id
-            flag_key: flag_key
-            id: id
-            value: true
           rules:
           - flag_id: flag_id
             rule_type: rule_type
@@ -54840,24 +53096,6 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
           default_value: true
-          latest_check:
-            flag_id: flag_id
-            reason: reason
-            req_company:
-              key: req_company
-            company_id: company_id
-            environment_id: environment_id
-            created_at: 2000-01-23T04:56:07.000+00:00
-            error: error
-            req_user:
-              key: req_user
-            check_status: check_status
-            rule_id: rule_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            user_id: user_id
-            flag_key: flag_key
-            id: id
-            value: true
           rules:
           - flag_id: flag_id
             rule_type: rule_type
@@ -57449,24 +55687,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -58087,24 +56307,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -58763,24 +56965,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -59401,24 +57585,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -60073,27 +58239,6 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
-          billing_products:
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -60101,6 +58246,26 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          billing_product:
+            Prices:
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           id: id
         - features:
           - flags:
@@ -60108,24 +58273,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -60746,24 +58893,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -61422,24 +59551,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -62060,24 +60171,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -62732,27 +60825,6 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
-          billing_products:
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -62760,6 +60832,26 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          billing_product:
+            Prices:
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           id: id
         params:
           q: q
@@ -62793,24 +60885,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -63431,24 +61505,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -64107,24 +62163,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -64745,24 +62783,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -65417,27 +63437,6 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
-          billing_products:
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -65445,6 +63444,26 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          billing_product:
+            Prices:
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           id: id
         params: "{}"
       properties:
@@ -65468,24 +63487,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -66106,24 +64107,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -66782,24 +64765,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -67420,24 +65385,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -68092,27 +66039,6 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
-          billing_products:
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -68120,6 +66046,26 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          billing_product:
+            Prices:
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           id: id
         params: "{}"
       properties:
@@ -68143,24 +66089,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -68781,24 +66709,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -69457,24 +67367,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -70095,24 +67987,6 @@ components:
               created_at: 2000-01-23T04:56:07.000+00:00
               description: description
               default_value: true
-              latest_check:
-                flag_id: flag_id
-                reason: reason
-                req_company:
-                  key: req_company
-                company_id: company_id
-                environment_id: environment_id
-                created_at: 2000-01-23T04:56:07.000+00:00
-                error: error
-                req_user:
-                  key: req_user
-                check_status: check_status
-                rule_id: rule_id
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                user_id: user_id
-                flag_key: flag_key
-                id: id
-                value: true
               rules:
               - flag_id: flag_id
                 rule_type: rule_type
@@ -70767,27 +68641,6 @@ components:
             lifecycle_phase: lifecycle_phase
             trait_id: trait_id
           plan_type: plan_type
-          billing_products:
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
-          - account_id: account_id
-            quantity: 6.027456183070403
-            environment_id: environment_id
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            price: 0.8008281904610115
-            product_id: product_id
-            name: name
-            created_at: 2000-01-23T04:56:07.000+00:00
-            currency: currency
-            external_id: external_id
           updated_at: 2000-01-23T04:56:07.000+00:00
           audience_type: audience_type
           company_count: 0
@@ -70795,6 +68648,26 @@ components:
           name: name
           created_at: 2000-01-23T04:56:07.000+00:00
           description: description
+          billing_product:
+            Prices:
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            - external_price_id: external_price_id
+              price: 0
+              interval: interval
+              id: id
+            account_id: account_id
+            quantity: 6.027456183070403
+            environment_id: environment_id
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            price: 0.8008281904610115
+            product_id: product_id
+            name: name
+            created_at: 2000-01-23T04:56:07.000+00:00
+            currency: currency
+            external_id: external_id
           id: id
         params: "{}"
       properties:
@@ -70968,24 +68841,6 @@ components:
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 default_value: true
-                latest_check:
-                  flag_id: flag_id
-                  reason: reason
-                  req_company:
-                    key: req_company
-                  company_id: company_id
-                  environment_id: environment_id
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  error: error
-                  req_user:
-                    key: req_user
-                  check_status: check_status
-                  rule_id: rule_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  user_id: user_id
-                  flag_key: flag_key
-                  id: id
-                  value: true
                 rules:
                 - flag_id: flag_id
                   rule_type: rule_type
@@ -71606,24 +69461,6 @@ components:
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 default_value: true
-                latest_check:
-                  flag_id: flag_id
-                  reason: reason
-                  req_company:
-                    key: req_company
-                  company_id: company_id
-                  environment_id: environment_id
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  error: error
-                  req_user:
-                    key: req_user
-                  check_status: check_status
-                  rule_id: rule_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  user_id: user_id
-                  flag_key: flag_key
-                  id: id
-                  value: true
                 rules:
                 - flag_id: flag_id
                   rule_type: rule_type
@@ -72299,24 +70136,6 @@ components:
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 default_value: true
-                latest_check:
-                  flag_id: flag_id
-                  reason: reason
-                  req_company:
-                    key: req_company
-                  company_id: company_id
-                  environment_id: environment_id
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  error: error
-                  req_user:
-                    key: req_user
-                  check_status: check_status
-                  rule_id: rule_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  user_id: user_id
-                  flag_key: flag_key
-                  id: id
-                  value: true
                 rules:
                 - flag_id: flag_id
                   rule_type: rule_type
@@ -72937,24 +70756,6 @@ components:
                 created_at: 2000-01-23T04:56:07.000+00:00
                 description: description
                 default_value: true
-                latest_check:
-                  flag_id: flag_id
-                  reason: reason
-                  req_company:
-                    key: req_company
-                  company_id: company_id
-                  environment_id: environment_id
-                  created_at: 2000-01-23T04:56:07.000+00:00
-                  error: error
-                  req_user:
-                    key: req_user
-                  check_status: check_status
-                  rule_id: rule_id
-                  updated_at: 2000-01-23T04:56:07.000+00:00
-                  user_id: user_id
-                  flag_key: flag_key
-                  id: id
-                  value: true
                 rules:
                 - flag_id: flag_id
                   rule_type: rule_type

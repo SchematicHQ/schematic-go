@@ -22,9 +22,9 @@ Class | Method | HTTP request | Description
 *AccountsAPI* | [**UpdateApiKey**](docs/AccountsAPI.md#updateapikey) | **Put** /api-keys/{api_key_id} | Update api key
 *AccountsAPI* | [**UpdateEnvironment**](docs/AccountsAPI.md#updateenvironment) | **Put** /environments/{environment_id} | Update environment
 *BillingAPI* | [**CountCustomers**](docs/BillingAPI.md#countcustomers) | **Get** /billing/customers/count | Count customers
+*BillingAPI* | [**ListBillingProducts**](docs/BillingAPI.md#listbillingproducts) | **Get** /billing/products | List billing products
 *BillingAPI* | [**ListCustomers**](docs/BillingAPI.md#listcustomers) | **Get** /billing/customers | List customers
 *BillingAPI* | [**ListProductPrices**](docs/BillingAPI.md#listproductprices) | **Get** /billing/product/prices | List product prices
-*BillingAPI* | [**ListProducts**](docs/BillingAPI.md#listproducts) | **Get** /billing/products | List products
 *BillingAPI* | [**UpsertBillingCustomer**](docs/BillingAPI.md#upsertbillingcustomer) | **Post** /billing/customer/upsert | Upsert billing customer
 *BillingAPI* | [**UpsertBillingPrice**](docs/BillingAPI.md#upsertbillingprice) | **Post** /billing/price/upsert | Upsert billing price
 *BillingAPI* | [**UpsertBillingProduct**](docs/BillingAPI.md#upsertbillingproduct) | **Post** /billing/product/upsert | Upsert billing product
@@ -105,7 +105,6 @@ Class | Method | HTTP request | Description
 *FeaturesAPI* | [**CountAudienceCompanies**](docs/FeaturesAPI.md#countaudiencecompanies) | **Post** /audience/count-companies | Count audience companies
 *FeaturesAPI* | [**CountAudienceUsers**](docs/FeaturesAPI.md#countaudienceusers) | **Post** /audience/count-users | Count audience users
 *FeaturesAPI* | [**CountFeatures**](docs/FeaturesAPI.md#countfeatures) | **Get** /features/count | Count features
-*FeaturesAPI* | [**CountFlagChecks**](docs/FeaturesAPI.md#countflagchecks) | **Get** /flag-checks/count | Count flag checks
 *FeaturesAPI* | [**CountFlags**](docs/FeaturesAPI.md#countflags) | **Get** /flags/count | Count flags
 *FeaturesAPI* | [**CreateFeature**](docs/FeaturesAPI.md#createfeature) | **Post** /features | Create feature
 *FeaturesAPI* | [**CreateFlag**](docs/FeaturesAPI.md#createflag) | **Post** /flags | Create flag
@@ -113,12 +112,9 @@ Class | Method | HTTP request | Description
 *FeaturesAPI* | [**DeleteFlag**](docs/FeaturesAPI.md#deleteflag) | **Delete** /flags/{flag_id} | Delete flag
 *FeaturesAPI* | [**GetFeature**](docs/FeaturesAPI.md#getfeature) | **Get** /features/{feature_id} | Get feature
 *FeaturesAPI* | [**GetFlag**](docs/FeaturesAPI.md#getflag) | **Get** /flags/{flag_id} | Get flag
-*FeaturesAPI* | [**GetFlagCheck**](docs/FeaturesAPI.md#getflagcheck) | **Get** /flag-checks/{flag_check_id} | Get flag check
-*FeaturesAPI* | [**GetLatestFlagChecks**](docs/FeaturesAPI.md#getlatestflagchecks) | **Get** /flag-checks/latest | Get latest flag checks
 *FeaturesAPI* | [**ListAudienceCompanies**](docs/FeaturesAPI.md#listaudiencecompanies) | **Post** /audience/get-companies | List audience companies
 *FeaturesAPI* | [**ListAudienceUsers**](docs/FeaturesAPI.md#listaudienceusers) | **Post** /audience/get-users | List audience users
 *FeaturesAPI* | [**ListFeatures**](docs/FeaturesAPI.md#listfeatures) | **Get** /features | List features
-*FeaturesAPI* | [**ListFlagChecks**](docs/FeaturesAPI.md#listflagchecks) | **Get** /flag-checks | List flag checks
 *FeaturesAPI* | [**ListFlags**](docs/FeaturesAPI.md#listflags) | **Get** /flags | List flags
 *FeaturesAPI* | [**UpdateFeature**](docs/FeaturesAPI.md#updatefeature) | **Put** /features/{feature_id} | Update feature
 *FeaturesAPI* | [**UpdateFlag**](docs/FeaturesAPI.md#updateflag) | **Put** /flags/{flag_id} | Update flag
@@ -156,6 +152,7 @@ Class | Method | HTTP request | Description
  - [BillingCustomerSubscription](docs/BillingCustomerSubscription.md)
  - [BillingCustomerWithSubscriptionsResponseData](docs/BillingCustomerWithSubscriptionsResponseData.md)
  - [BillingPriceResponseData](docs/BillingPriceResponseData.md)
+ - [BillingProductDetailResponseData](docs/BillingProductDetailResponseData.md)
  - [BillingProductPlanResponseData](docs/BillingProductPlanResponseData.md)
  - [BillingProductPricing](docs/BillingProductPricing.md)
  - [BillingProductResponseData](docs/BillingProductResponseData.md)
@@ -202,8 +199,6 @@ Class | Method | HTTP request | Description
  - [CountFeatureUsersResponse](docs/CountFeatureUsersResponse.md)
  - [CountFeaturesParams](docs/CountFeaturesParams.md)
  - [CountFeaturesResponse](docs/CountFeaturesResponse.md)
- - [CountFlagChecksParams](docs/CountFlagChecksParams.md)
- - [CountFlagChecksResponse](docs/CountFlagChecksResponse.md)
  - [CountFlagsParams](docs/CountFlagsParams.md)
  - [CountFlagsResponse](docs/CountFlagsResponse.md)
  - [CountPlanEntitlementsParams](docs/CountPlanEntitlementsParams.md)
@@ -298,8 +293,6 @@ Class | Method | HTTP request | Description
  - [FeatureResponseData](docs/FeatureResponseData.md)
  - [FeatureUsageDetailResponseData](docs/FeatureUsageDetailResponseData.md)
  - [FeatureUsageResponseData](docs/FeatureUsageResponseData.md)
- - [FlagCheckLogDetailResponseData](docs/FlagCheckLogDetailResponseData.md)
- - [FlagCheckLogResponseData](docs/FlagCheckLogResponseData.md)
  - [FlagDetailResponseData](docs/FlagDetailResponseData.md)
  - [FlagResponseData](docs/FlagResponseData.md)
  - [GetActiveCompanySubscriptionParams](docs/GetActiveCompanySubscriptionParams.md)
@@ -323,10 +316,7 @@ Class | Method | HTTP request | Description
  - [GetFeatureResponse](docs/GetFeatureResponse.md)
  - [GetFeatureUsageByCompanyParams](docs/GetFeatureUsageByCompanyParams.md)
  - [GetFeatureUsageByCompanyResponse](docs/GetFeatureUsageByCompanyResponse.md)
- - [GetFlagCheckResponse](docs/GetFlagCheckResponse.md)
  - [GetFlagResponse](docs/GetFlagResponse.md)
- - [GetLatestFlagChecksParams](docs/GetLatestFlagChecksParams.md)
- - [GetLatestFlagChecksResponse](docs/GetLatestFlagChecksResponse.md)
  - [GetOrCreateCompanyMembershipRequestBody](docs/GetOrCreateCompanyMembershipRequestBody.md)
  - [GetOrCreateCompanyMembershipResponse](docs/GetOrCreateCompanyMembershipResponse.md)
  - [GetOrCreateEntityTraitDefinitionResponse](docs/GetOrCreateEntityTraitDefinitionResponse.md)
@@ -347,6 +337,8 @@ Class | Method | HTTP request | Description
  - [ListApiRequestsResponse](docs/ListApiRequestsResponse.md)
  - [ListAudienceCompaniesResponse](docs/ListAudienceCompaniesResponse.md)
  - [ListAudienceUsersResponse](docs/ListAudienceUsersResponse.md)
+ - [ListBillingProductsParams](docs/ListBillingProductsParams.md)
+ - [ListBillingProductsResponse](docs/ListBillingProductsResponse.md)
  - [ListCompaniesParams](docs/ListCompaniesParams.md)
  - [ListCompaniesResponse](docs/ListCompaniesResponse.md)
  - [ListCompanyMembershipsParams](docs/ListCompanyMembershipsParams.md)
@@ -377,8 +369,6 @@ Class | Method | HTTP request | Description
  - [ListFeatureUsersResponse](docs/ListFeatureUsersResponse.md)
  - [ListFeaturesParams](docs/ListFeaturesParams.md)
  - [ListFeaturesResponse](docs/ListFeaturesResponse.md)
- - [ListFlagChecksParams](docs/ListFlagChecksParams.md)
- - [ListFlagChecksResponse](docs/ListFlagChecksResponse.md)
  - [ListFlagsParams](docs/ListFlagsParams.md)
  - [ListFlagsResponse](docs/ListFlagsResponse.md)
  - [ListMetricCountsParams](docs/ListMetricCountsParams.md)
@@ -389,8 +379,6 @@ Class | Method | HTTP request | Description
  - [ListPlansResponse](docs/ListPlansResponse.md)
  - [ListProductPricesParams](docs/ListProductPricesParams.md)
  - [ListProductPricesResponse](docs/ListProductPricesResponse.md)
- - [ListProductsParams](docs/ListProductsParams.md)
- - [ListProductsResponse](docs/ListProductsResponse.md)
  - [ListUsersParams](docs/ListUsersParams.md)
  - [ListUsersResponse](docs/ListUsersResponse.md)
  - [ListWebhookEventsParams](docs/ListWebhookEventsParams.md)

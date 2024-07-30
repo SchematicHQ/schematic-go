@@ -1018,6 +1018,36 @@ func (mr *MockBillingAPIMockRecorder) CountCustomersExecute(arg0 any) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountCustomersExecute", reflect.TypeOf((*MockBillingAPI)(nil).CountCustomersExecute), arg0)
 }
 
+// ListBillingProducts mocks base method.
+func (m *MockBillingAPI) ListBillingProducts(arg0 context.Context) api.ApiListBillingProductsRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBillingProducts", arg0)
+	ret0, _ := ret[0].(api.ApiListBillingProductsRequest)
+	return ret0
+}
+
+// ListBillingProducts indicates an expected call of ListBillingProducts.
+func (mr *MockBillingAPIMockRecorder) ListBillingProducts(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBillingProducts", reflect.TypeOf((*MockBillingAPI)(nil).ListBillingProducts), arg0)
+}
+
+// ListBillingProductsExecute mocks base method.
+func (m *MockBillingAPI) ListBillingProductsExecute(arg0 api.ApiListBillingProductsRequest) (*api.ListBillingProductsResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBillingProductsExecute", arg0)
+	ret0, _ := ret[0].(*api.ListBillingProductsResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ListBillingProductsExecute indicates an expected call of ListBillingProductsExecute.
+func (mr *MockBillingAPIMockRecorder) ListBillingProductsExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBillingProductsExecute", reflect.TypeOf((*MockBillingAPI)(nil).ListBillingProductsExecute), arg0)
+}
+
 // ListCustomers mocks base method.
 func (m *MockBillingAPI) ListCustomers(arg0 context.Context) api.ApiListCustomersRequest {
 	m.ctrl.T.Helper()
@@ -1076,36 +1106,6 @@ func (m *MockBillingAPI) ListProductPricesExecute(arg0 api.ApiListProductPricesR
 func (mr *MockBillingAPIMockRecorder) ListProductPricesExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProductPricesExecute", reflect.TypeOf((*MockBillingAPI)(nil).ListProductPricesExecute), arg0)
-}
-
-// ListProducts mocks base method.
-func (m *MockBillingAPI) ListProducts(arg0 context.Context) api.ApiListProductsRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListProducts", arg0)
-	ret0, _ := ret[0].(api.ApiListProductsRequest)
-	return ret0
-}
-
-// ListProducts indicates an expected call of ListProducts.
-func (mr *MockBillingAPIMockRecorder) ListProducts(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProducts", reflect.TypeOf((*MockBillingAPI)(nil).ListProducts), arg0)
-}
-
-// ListProductsExecute mocks base method.
-func (m *MockBillingAPI) ListProductsExecute(arg0 api.ApiListProductsRequest) (*api.ListProductsResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListProductsExecute", arg0)
-	ret0, _ := ret[0].(*api.ListProductsResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// ListProductsExecute indicates an expected call of ListProductsExecute.
-func (mr *MockBillingAPIMockRecorder) ListProductsExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProductsExecute", reflect.TypeOf((*MockBillingAPI)(nil).ListProductsExecute), arg0)
 }
 
 // UpsertBillingCustomer mocks base method.
@@ -3240,36 +3240,6 @@ func (mr *MockFeaturesAPIMockRecorder) CountFeaturesExecute(arg0 any) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountFeaturesExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).CountFeaturesExecute), arg0)
 }
 
-// CountFlagChecks mocks base method.
-func (m *MockFeaturesAPI) CountFlagChecks(arg0 context.Context) api.ApiCountFlagChecksRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountFlagChecks", arg0)
-	ret0, _ := ret[0].(api.ApiCountFlagChecksRequest)
-	return ret0
-}
-
-// CountFlagChecks indicates an expected call of CountFlagChecks.
-func (mr *MockFeaturesAPIMockRecorder) CountFlagChecks(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountFlagChecks", reflect.TypeOf((*MockFeaturesAPI)(nil).CountFlagChecks), arg0)
-}
-
-// CountFlagChecksExecute mocks base method.
-func (m *MockFeaturesAPI) CountFlagChecksExecute(arg0 api.ApiCountFlagChecksRequest) (*api.CountFlagChecksResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountFlagChecksExecute", arg0)
-	ret0, _ := ret[0].(*api.CountFlagChecksResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CountFlagChecksExecute indicates an expected call of CountFlagChecksExecute.
-func (mr *MockFeaturesAPIMockRecorder) CountFlagChecksExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountFlagChecksExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).CountFlagChecksExecute), arg0)
-}
-
 // CountFlags mocks base method.
 func (m *MockFeaturesAPI) CountFlags(arg0 context.Context) api.ApiCountFlagsRequest {
 	m.ctrl.T.Helper()
@@ -3464,36 +3434,6 @@ func (mr *MockFeaturesAPIMockRecorder) GetFlag(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlag", reflect.TypeOf((*MockFeaturesAPI)(nil).GetFlag), arg0, arg1)
 }
 
-// GetFlagCheck mocks base method.
-func (m *MockFeaturesAPI) GetFlagCheck(arg0 context.Context, arg1 string) api.ApiGetFlagCheckRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFlagCheck", arg0, arg1)
-	ret0, _ := ret[0].(api.ApiGetFlagCheckRequest)
-	return ret0
-}
-
-// GetFlagCheck indicates an expected call of GetFlagCheck.
-func (mr *MockFeaturesAPIMockRecorder) GetFlagCheck(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlagCheck", reflect.TypeOf((*MockFeaturesAPI)(nil).GetFlagCheck), arg0, arg1)
-}
-
-// GetFlagCheckExecute mocks base method.
-func (m *MockFeaturesAPI) GetFlagCheckExecute(arg0 api.ApiGetFlagCheckRequest) (*api.GetFlagCheckResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFlagCheckExecute", arg0)
-	ret0, _ := ret[0].(*api.GetFlagCheckResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// GetFlagCheckExecute indicates an expected call of GetFlagCheckExecute.
-func (mr *MockFeaturesAPIMockRecorder) GetFlagCheckExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlagCheckExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).GetFlagCheckExecute), arg0)
-}
-
 // GetFlagExecute mocks base method.
 func (m *MockFeaturesAPI) GetFlagExecute(arg0 api.ApiGetFlagRequest) (*api.GetFlagResponse, *http.Response, error) {
 	m.ctrl.T.Helper()
@@ -3508,36 +3448,6 @@ func (m *MockFeaturesAPI) GetFlagExecute(arg0 api.ApiGetFlagRequest) (*api.GetFl
 func (mr *MockFeaturesAPIMockRecorder) GetFlagExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlagExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).GetFlagExecute), arg0)
-}
-
-// GetLatestFlagChecks mocks base method.
-func (m *MockFeaturesAPI) GetLatestFlagChecks(arg0 context.Context) api.ApiGetLatestFlagChecksRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLatestFlagChecks", arg0)
-	ret0, _ := ret[0].(api.ApiGetLatestFlagChecksRequest)
-	return ret0
-}
-
-// GetLatestFlagChecks indicates an expected call of GetLatestFlagChecks.
-func (mr *MockFeaturesAPIMockRecorder) GetLatestFlagChecks(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestFlagChecks", reflect.TypeOf((*MockFeaturesAPI)(nil).GetLatestFlagChecks), arg0)
-}
-
-// GetLatestFlagChecksExecute mocks base method.
-func (m *MockFeaturesAPI) GetLatestFlagChecksExecute(arg0 api.ApiGetLatestFlagChecksRequest) (*api.GetLatestFlagChecksResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLatestFlagChecksExecute", arg0)
-	ret0, _ := ret[0].(*api.GetLatestFlagChecksResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// GetLatestFlagChecksExecute indicates an expected call of GetLatestFlagChecksExecute.
-func (mr *MockFeaturesAPIMockRecorder) GetLatestFlagChecksExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestFlagChecksExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).GetLatestFlagChecksExecute), arg0)
 }
 
 // ListAudienceCompanies mocks base method.
@@ -3628,36 +3538,6 @@ func (m *MockFeaturesAPI) ListFeaturesExecute(arg0 api.ApiListFeaturesRequest) (
 func (mr *MockFeaturesAPIMockRecorder) ListFeaturesExecute(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFeaturesExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).ListFeaturesExecute), arg0)
-}
-
-// ListFlagChecks mocks base method.
-func (m *MockFeaturesAPI) ListFlagChecks(arg0 context.Context) api.ApiListFlagChecksRequest {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListFlagChecks", arg0)
-	ret0, _ := ret[0].(api.ApiListFlagChecksRequest)
-	return ret0
-}
-
-// ListFlagChecks indicates an expected call of ListFlagChecks.
-func (mr *MockFeaturesAPIMockRecorder) ListFlagChecks(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFlagChecks", reflect.TypeOf((*MockFeaturesAPI)(nil).ListFlagChecks), arg0)
-}
-
-// ListFlagChecksExecute mocks base method.
-func (m *MockFeaturesAPI) ListFlagChecksExecute(arg0 api.ApiListFlagChecksRequest) (*api.ListFlagChecksResponse, *http.Response, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListFlagChecksExecute", arg0)
-	ret0, _ := ret[0].(*api.ListFlagChecksResponse)
-	ret1, _ := ret[1].(*http.Response)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// ListFlagChecksExecute indicates an expected call of ListFlagChecksExecute.
-func (mr *MockFeaturesAPIMockRecorder) ListFlagChecksExecute(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFlagChecksExecute", reflect.TypeOf((*MockFeaturesAPI)(nil).ListFlagChecksExecute), arg0)
 }
 
 // ListFlags mocks base method.

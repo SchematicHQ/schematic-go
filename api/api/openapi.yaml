@@ -12155,6 +12155,7 @@ components:
         total_price: 6
         interval: interval
         expired_at: 2000-01-23T04:56:07.000+00:00
+        status: status
         subscription_external_id: subscription_external_id
       properties:
         customer_external_id:
@@ -12169,6 +12170,8 @@ components:
           items:
             $ref: '#/components/schemas/BillingProductPricing'
           type: array
+        status:
+          type: string
         subscription_external_id:
           type: string
         total_price:
@@ -12177,6 +12180,7 @@ components:
       - customer_external_id
       - expired_at
       - product_external_ids
+      - status
       - subscription_external_id
       - total_price
       title: CreateBillingSubscriptionsRequestBody

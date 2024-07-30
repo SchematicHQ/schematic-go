@@ -84,18 +84,6 @@ func Test_api_FeaturesAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test FeaturesAPIService CountFlagChecks", func(t *testing.T) {
-
-		t.Skip("skip test") // remove to run test
-
-		resp, httpRes, err := apiClient.FeaturesAPI.CountFlagChecks(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
 	t.Run("Test FeaturesAPIService CountFlags", func(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test
@@ -188,32 +176,6 @@ func Test_api_FeaturesAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test FeaturesAPIService GetFlagCheck", func(t *testing.T) {
-
-		t.Skip("skip test") // remove to run test
-
-		var flagCheckId string
-
-		resp, httpRes, err := apiClient.FeaturesAPI.GetFlagCheck(context.Background(), flagCheckId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test FeaturesAPIService GetLatestFlagChecks", func(t *testing.T) {
-
-		t.Skip("skip test") // remove to run test
-
-		resp, httpRes, err := apiClient.FeaturesAPI.GetLatestFlagChecks(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
 	t.Run("Test FeaturesAPIService ListAudienceCompanies", func(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test
@@ -243,18 +205,6 @@ func Test_api_FeaturesAPIService(t *testing.T) {
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.FeaturesAPI.ListFeatures(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test FeaturesAPIService ListFlagChecks", func(t *testing.T) {
-
-		t.Skip("skip test") // remove to run test
-
-		resp, httpRes, err := apiClient.FeaturesAPI.ListFlagChecks(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

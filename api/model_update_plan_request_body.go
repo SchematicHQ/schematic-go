@@ -24,7 +24,6 @@ type UpdatePlanRequestBody struct {
 	Description          NullableString `json:"description,omitempty"`
 	Icon                 NullableString `json:"icon,omitempty"`
 	Name                 string         `json:"name"`
-	PlanType             NullableString `json:"plan_type,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -183,49 +182,6 @@ func (o *UpdatePlanRequestBody) SetName(v string) {
 	o.Name = v
 }
 
-// GetPlanType returns the PlanType field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *UpdatePlanRequestBody) GetPlanType() string {
-	if o == nil || IsNil(o.PlanType.Get()) {
-		var ret string
-		return ret
-	}
-	return *o.PlanType.Get()
-}
-
-// GetPlanTypeOk returns a tuple with the PlanType field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *UpdatePlanRequestBody) GetPlanTypeOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.PlanType.Get(), o.PlanType.IsSet()
-}
-
-// HasPlanType returns a boolean if a field has been set.
-func (o *UpdatePlanRequestBody) HasPlanType() bool {
-	if o != nil && o.PlanType.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetPlanType gets a reference to the given NullableString and assigns it to the PlanType field.
-func (o *UpdatePlanRequestBody) SetPlanType(v string) {
-	o.PlanType.Set(&v)
-}
-
-// SetPlanTypeNil sets the value for PlanType to be an explicit nil
-func (o *UpdatePlanRequestBody) SetPlanTypeNil() {
-	o.PlanType.Set(nil)
-}
-
-// UnsetPlanType ensures that no value is present for PlanType, not even an explicit nil
-func (o *UpdatePlanRequestBody) UnsetPlanType() {
-	o.PlanType.Unset()
-}
-
 func (o UpdatePlanRequestBody) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -244,9 +200,6 @@ func (o UpdatePlanRequestBody) ToMap() (map[string]interface{}, error) {
 		toSerialize["icon"] = o.Icon.Get()
 	}
 	toSerialize["name"] = o.Name
-	if o.PlanType.IsSet() {
-		toSerialize["plan_type"] = o.PlanType.Get()
-	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -295,7 +248,6 @@ func (o *UpdatePlanRequestBody) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "icon")
 		delete(additionalProperties, "name")
-		delete(additionalProperties, "plan_type")
 		o.AdditionalProperties = additionalProperties
 	}
 

@@ -25,7 +25,7 @@ type FeatureResponseData struct {
 	Description          string         `json:"description"`
 	EventSubtype         NullableString `json:"event_subtype,omitempty"`
 	FeatureType          string         `json:"feature_type"`
-	Icon                 NullableString `json:"icon,omitempty"`
+	Icon                 string         `json:"icon"`
 	Id                   string         `json:"id"`
 	LifecyclePhase       NullableString `json:"lifecycle_phase,omitempty"`
 	MaintainerId         NullableString `json:"maintainer_id,omitempty"`
@@ -41,11 +41,12 @@ type _FeatureResponseData FeatureResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewFeatureResponseData(createdAt time.Time, description string, featureType string, id string, name string, updatedAt time.Time) *FeatureResponseData {
+func NewFeatureResponseData(createdAt time.Time, description string, featureType string, icon string, id string, name string, updatedAt time.Time) *FeatureResponseData {
 	this := FeatureResponseData{}
 	this.CreatedAt = createdAt
 	this.Description = description
 	this.FeatureType = featureType
+	this.Icon = icon
 	this.Id = id
 	this.Name = name
 	this.UpdatedAt = updatedAt
@@ -175,47 +176,28 @@ func (o *FeatureResponseData) SetFeatureType(v string) {
 	o.FeatureType = v
 }
 
-// GetIcon returns the Icon field value if set, zero value otherwise (both if not set or set to explicit null).
+// GetIcon returns the Icon field value
 func (o *FeatureResponseData) GetIcon() string {
-	if o == nil || IsNil(o.Icon.Get()) {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.Icon.Get()
+
+	return o.Icon
 }
 
-// GetIconOk returns a tuple with the Icon field value if set, nil otherwise
+// GetIconOk returns a tuple with the Icon field value
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *FeatureResponseData) GetIconOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return o.Icon.Get(), o.Icon.IsSet()
+	return &o.Icon, true
 }
 
-// HasIcon returns a boolean if a field has been set.
-func (o *FeatureResponseData) HasIcon() bool {
-	if o != nil && o.Icon.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetIcon gets a reference to the given NullableString and assigns it to the Icon field.
+// SetIcon sets field value
 func (o *FeatureResponseData) SetIcon(v string) {
-	o.Icon.Set(&v)
-}
-
-// SetIconNil sets the value for Icon to be an explicit nil
-func (o *FeatureResponseData) SetIconNil() {
-	o.Icon.Set(nil)
-}
-
-// UnsetIcon ensures that no value is present for Icon, not even an explicit nil
-func (o *FeatureResponseData) UnsetIcon() {
-	o.Icon.Unset()
+	o.Icon = v
 }
 
 // GetId returns the Id field value
@@ -435,9 +417,7 @@ func (o FeatureResponseData) ToMap() (map[string]interface{}, error) {
 		toSerialize["event_subtype"] = o.EventSubtype.Get()
 	}
 	toSerialize["feature_type"] = o.FeatureType
-	if o.Icon.IsSet() {
-		toSerialize["icon"] = o.Icon.Get()
-	}
+	toSerialize["icon"] = o.Icon
 	toSerialize["id"] = o.Id
 	if o.LifecyclePhase.IsSet() {
 		toSerialize["lifecycle_phase"] = o.LifecyclePhase.Get()
@@ -466,6 +446,7 @@ func (o *FeatureResponseData) UnmarshalJSON(data []byte) (err error) {
 		"created_at",
 		"description",
 		"feature_type",
+		"icon",
 		"id",
 		"name",
 		"updated_at",

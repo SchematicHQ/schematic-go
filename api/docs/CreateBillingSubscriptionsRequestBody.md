@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewCreateBillingSubscriptionsRequestBody
 
-`func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []BillingProductPricing, status string, subscriptionExternalId string, totalPrice int32, ) *CreateBillingSubscriptionsRequestBody`
+`func NewCreateBillingSubscriptionsRequestBody(customerExternalId string, expiredAt time.Time, productExternalIds []BillingProductPricing, subscriptionExternalId string, totalPrice int32, ) *CreateBillingSubscriptionsRequestBody`
 
 NewCreateBillingSubscriptionsRequestBody instantiates a new CreateBillingSubscriptionsRequestBody object
 This constructor will assign default values to properties that have it defined,

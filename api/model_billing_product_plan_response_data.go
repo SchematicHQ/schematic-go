@@ -20,10 +20,12 @@ var _ MappedNullable = &BillingProductPlanResponseData{}
 
 // BillingProductPlanResponseData The updated resource
 type BillingProductPlanResponseData struct {
-	AccountId            string `json:"account_id"`
-	BillingProductId     string `json:"billing_product_id"`
-	EnvironmentId        string `json:"environment_id"`
-	PlanId               string `json:"plan_id"`
+	AccountId            string         `json:"account_id"`
+	BillingProductId     string         `json:"billing_product_id"`
+	EnvironmentId        string         `json:"environment_id"`
+	MonthlyPriceId       NullableString `json:"monthly_price_id,omitempty"`
+	PlanId               string         `json:"plan_id"`
+	YearlyPriceId        NullableString `json:"yearly_price_id,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -122,6 +124,49 @@ func (o *BillingProductPlanResponseData) SetEnvironmentId(v string) {
 	o.EnvironmentId = v
 }
 
+// GetMonthlyPriceId returns the MonthlyPriceId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *BillingProductPlanResponseData) GetMonthlyPriceId() string {
+	if o == nil || IsNil(o.MonthlyPriceId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.MonthlyPriceId.Get()
+}
+
+// GetMonthlyPriceIdOk returns a tuple with the MonthlyPriceId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *BillingProductPlanResponseData) GetMonthlyPriceIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.MonthlyPriceId.Get(), o.MonthlyPriceId.IsSet()
+}
+
+// HasMonthlyPriceId returns a boolean if a field has been set.
+func (o *BillingProductPlanResponseData) HasMonthlyPriceId() bool {
+	if o != nil && o.MonthlyPriceId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMonthlyPriceId gets a reference to the given NullableString and assigns it to the MonthlyPriceId field.
+func (o *BillingProductPlanResponseData) SetMonthlyPriceId(v string) {
+	o.MonthlyPriceId.Set(&v)
+}
+
+// SetMonthlyPriceIdNil sets the value for MonthlyPriceId to be an explicit nil
+func (o *BillingProductPlanResponseData) SetMonthlyPriceIdNil() {
+	o.MonthlyPriceId.Set(nil)
+}
+
+// UnsetMonthlyPriceId ensures that no value is present for MonthlyPriceId, not even an explicit nil
+func (o *BillingProductPlanResponseData) UnsetMonthlyPriceId() {
+	o.MonthlyPriceId.Unset()
+}
+
 // GetPlanId returns the PlanId field value
 func (o *BillingProductPlanResponseData) GetPlanId() string {
 	if o == nil {
@@ -146,6 +191,49 @@ func (o *BillingProductPlanResponseData) SetPlanId(v string) {
 	o.PlanId = v
 }
 
+// GetYearlyPriceId returns the YearlyPriceId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *BillingProductPlanResponseData) GetYearlyPriceId() string {
+	if o == nil || IsNil(o.YearlyPriceId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.YearlyPriceId.Get()
+}
+
+// GetYearlyPriceIdOk returns a tuple with the YearlyPriceId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *BillingProductPlanResponseData) GetYearlyPriceIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.YearlyPriceId.Get(), o.YearlyPriceId.IsSet()
+}
+
+// HasYearlyPriceId returns a boolean if a field has been set.
+func (o *BillingProductPlanResponseData) HasYearlyPriceId() bool {
+	if o != nil && o.YearlyPriceId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetYearlyPriceId gets a reference to the given NullableString and assigns it to the YearlyPriceId field.
+func (o *BillingProductPlanResponseData) SetYearlyPriceId(v string) {
+	o.YearlyPriceId.Set(&v)
+}
+
+// SetYearlyPriceIdNil sets the value for YearlyPriceId to be an explicit nil
+func (o *BillingProductPlanResponseData) SetYearlyPriceIdNil() {
+	o.YearlyPriceId.Set(nil)
+}
+
+// UnsetYearlyPriceId ensures that no value is present for YearlyPriceId, not even an explicit nil
+func (o *BillingProductPlanResponseData) UnsetYearlyPriceId() {
+	o.YearlyPriceId.Unset()
+}
+
 func (o BillingProductPlanResponseData) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -159,7 +247,13 @@ func (o BillingProductPlanResponseData) ToMap() (map[string]interface{}, error) 
 	toSerialize["account_id"] = o.AccountId
 	toSerialize["billing_product_id"] = o.BillingProductId
 	toSerialize["environment_id"] = o.EnvironmentId
+	if o.MonthlyPriceId.IsSet() {
+		toSerialize["monthly_price_id"] = o.MonthlyPriceId.Get()
+	}
 	toSerialize["plan_id"] = o.PlanId
+	if o.YearlyPriceId.IsSet() {
+		toSerialize["yearly_price_id"] = o.YearlyPriceId.Get()
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -209,7 +303,9 @@ func (o *BillingProductPlanResponseData) UnmarshalJSON(data []byte) (err error) 
 		delete(additionalProperties, "account_id")
 		delete(additionalProperties, "billing_product_id")
 		delete(additionalProperties, "environment_id")
+		delete(additionalProperties, "monthly_price_id")
 		delete(additionalProperties, "plan_id")
+		delete(additionalProperties, "yearly_price_id")
 		o.AdditionalProperties = additionalProperties
 	}
 

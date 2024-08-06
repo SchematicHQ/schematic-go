@@ -693,7 +693,7 @@ func main() {
 	defer client.Close()
 
 	planId := "planId_example" // string | plan_id
-	upsertBillingProductRequestBody := *schematicapi.NewUpsertBillingProductRequestBody("BillingProductID_example") // UpsertBillingProductRequestBody | 
+	upsertBillingProductRequestBody := *schematicapi.NewUpsertBillingProductRequestBody("BillingProductId_example") // UpsertBillingProductRequestBody | 
 
 	resp, r, err := client.API().PlansAPI.UpsertBillingProductPlan(context.Background(), planId).UpsertBillingProductRequestBody(upsertBillingProductRequestBody).Execute()
 	if err != nil {

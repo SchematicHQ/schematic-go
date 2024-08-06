@@ -22,7 +22,7 @@ var _ MappedNullable = &BillingCustomerSubscription{}
 // BillingCustomerSubscription struct for BillingCustomerSubscription
 type BillingCustomerSubscription struct {
 	ExpiredAt            NullableTime `json:"expired_at,omitempty"`
-	TotalPrice           float32      `json:"total_price"`
+	TotalPrice           int32        `json:"total_price"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -32,7 +32,7 @@ type _BillingCustomerSubscription BillingCustomerSubscription
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBillingCustomerSubscription(totalPrice float32) *BillingCustomerSubscription {
+func NewBillingCustomerSubscription(totalPrice int32) *BillingCustomerSubscription {
 	this := BillingCustomerSubscription{}
 	this.TotalPrice = totalPrice
 	return &this
@@ -90,9 +90,9 @@ func (o *BillingCustomerSubscription) UnsetExpiredAt() {
 }
 
 // GetTotalPrice returns the TotalPrice field value
-func (o *BillingCustomerSubscription) GetTotalPrice() float32 {
+func (o *BillingCustomerSubscription) GetTotalPrice() int32 {
 	if o == nil {
-		var ret float32
+		var ret int32
 		return ret
 	}
 
@@ -101,7 +101,7 @@ func (o *BillingCustomerSubscription) GetTotalPrice() float32 {
 
 // GetTotalPriceOk returns a tuple with the TotalPrice field value
 // and a boolean to check if the value has been set.
-func (o *BillingCustomerSubscription) GetTotalPriceOk() (*float32, bool) {
+func (o *BillingCustomerSubscription) GetTotalPriceOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -109,7 +109,7 @@ func (o *BillingCustomerSubscription) GetTotalPriceOk() (*float32, bool) {
 }
 
 // SetTotalPrice sets field value
-func (o *BillingCustomerSubscription) SetTotalPrice(v float32) {
+func (o *BillingCustomerSubscription) SetTotalPrice(v int32) {
 	o.TotalPrice = v
 }
 

@@ -8349,7 +8349,7 @@ components:
       type: object
     BillingCustomerSubscription:
       example:
-        total_price: 0.8008281904610115
+        total_price: 0
         expired_at: 2000-01-23T04:56:07.000+00:00
       properties:
         expired_at:
@@ -8357,7 +8357,7 @@ components:
           nullable: true
           type: string
         total_price:
-          type: number
+          type: integer
       required:
       - total_price
       title: BillingCustomerSubscription
@@ -8365,9 +8365,9 @@ components:
     BillingCustomerWithSubscriptionsResponseData:
       example:
         subscriptions:
-        - total_price: 0.8008281904610115
+        - total_price: 0
           expired_at: 2000-01-23T04:56:07.000+00:00
-        - total_price: 0.8008281904610115
+        - total_price: 0
           expired_at: 2000-01-23T04:56:07.000+00:00
         company_id: company_id
         failed_to_import: true
@@ -8499,8 +8499,10 @@ components:
     BillingProductPlanResponseData:
       description: The updated resource
       example:
+        yearly_price_id: yearly_price_id
         account_id: account_id
         environment_id: environment_id
+        monthly_price_id: monthly_price_id
         billing_product_id: billing_product_id
         plan_id: plan_id
       properties:
@@ -8510,7 +8512,13 @@ components:
           type: string
         environment_id:
           type: string
+        monthly_price_id:
+          nullable: true
+          type: string
         plan_id:
+          type: string
+        yearly_price_id:
+          nullable: true
           type: string
       required:
       - account_id
@@ -12152,9 +12160,11 @@ components:
         - price: 0
           product_external_id: product_external_id
         customer_external_id: customer_external_id
+        metadata: "{}"
         total_price: 6
         interval: interval
         expired_at: 2000-01-23T04:56:07.000+00:00
+        status: status
         subscription_external_id: subscription_external_id
       properties:
         customer_external_id:
@@ -12165,10 +12175,16 @@ components:
         interval:
           nullable: true
           type: string
+        metadata:
+          nullable: true
+          type: object
         product_external_ids:
           items:
             $ref: '#/components/schemas/BillingProductPricing'
           type: array
+        status:
+          nullable: true
+          type: string
         subscription_external_id:
           type: string
         total_price:
@@ -28065,12 +28081,20 @@ components:
       type: object
     UpsertBillingProductRequestBody:
       example:
-        BillingProductID: BillingProductID
+        yearly_price_id: yearly_price_id
+        monthly_price_id: monthly_price_id
+        billing_product_id: billing_product_id
       properties:
-        BillingProductID:
+        billing_product_id:
+          type: string
+        monthly_price_id:
+          nullable: true
+          type: string
+        yearly_price_id:
+          nullable: true
           type: string
       required:
-      - BillingProductID
+      - billing_product_id
       title: UpsertBillingProductRequestBody
       type: object
     UpsertCompanyRequestBody:
@@ -29409,9 +29433,9 @@ components:
       example:
         data:
         - subscriptions:
-          - total_price: 0.8008281904610115
+          - total_price: 0
             expired_at: 2000-01-23T04:56:07.000+00:00
-          - total_price: 0.8008281904610115
+          - total_price: 0
             expired_at: 2000-01-23T04:56:07.000+00:00
           company_id: company_id
           failed_to_import: true
@@ -29422,9 +29446,9 @@ components:
           deleted_at: 2000-01-23T04:56:07.000+00:00
           email: email
         - subscriptions:
-          - total_price: 0.8008281904610115
+          - total_price: 0
             expired_at: 2000-01-23T04:56:07.000+00:00
-          - total_price: 0.8008281904610115
+          - total_price: 0
             expired_at: 2000-01-23T04:56:07.000+00:00
           company_id: company_id
           failed_to_import: true
@@ -69041,8 +69065,10 @@ components:
     UpsertBillingProductPlanResponse:
       example:
         data:
+          yearly_price_id: yearly_price_id
           account_id: account_id
           environment_id: environment_id
+          monthly_price_id: monthly_price_id
           billing_product_id: billing_product_id
           plan_id: plan_id
         params: "{}"

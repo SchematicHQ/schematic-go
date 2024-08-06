@@ -27,3 +27,6 @@ _testmain.go
 .travis.yml
 git_push.sh
 cover.out
+
+## IntelliJ IDEA
+.idea/

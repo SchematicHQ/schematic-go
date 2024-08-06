@@ -24,7 +24,9 @@ type CreateBillingSubscriptionsRequestBody struct {
 	CustomerExternalId     string                  `json:"customer_external_id"`
 	ExpiredAt              time.Time               `json:"expired_at"`
 	Interval               NullableString          `json:"interval,omitempty"`
+	Metadata               map[string]interface{}  `json:"metadata,omitempty"`
 	ProductExternalIds     []BillingProductPricing `json:"product_external_ids"`
+	Status                 NullableString          `json:"status,omitempty"`
 	SubscriptionExternalId string                  `json:"subscription_external_id"`
 	TotalPrice             int32                   `json:"total_price"`
 	AdditionalProperties   map[string]interface{}
@@ -145,6 +147,39 @@ func (o *CreateBillingSubscriptionsRequestBody) UnsetInterval() {
 	o.Interval.Unset()
 }
 
+// GetMetadata returns the Metadata field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateBillingSubscriptionsRequestBody) GetMetadata() map[string]interface{} {
+	if o == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Metadata
+}
+
+// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateBillingSubscriptionsRequestBody) GetMetadataOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Metadata) {
+		return map[string]interface{}{}, false
+	}
+	return o.Metadata, true
+}
+
+// HasMetadata returns a boolean if a field has been set.
+func (o *CreateBillingSubscriptionsRequestBody) HasMetadata() bool {
+	if o != nil && !IsNil(o.Metadata) {
+		return true
+	}
+
+	return false
+}
+
+// SetMetadata gets a reference to the given map[string]interface{} and assigns it to the Metadata field.
+func (o *CreateBillingSubscriptionsRequestBody) SetMetadata(v map[string]interface{}) {
+	o.Metadata = v
+}
+
 // GetProductExternalIds returns the ProductExternalIds field value
 func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIds() []BillingProductPricing {
 	if o == nil {
@@ -167,6 +202,49 @@ func (o *CreateBillingSubscriptionsRequestBody) GetProductExternalIdsOk() ([]Bil
 // SetProductExternalIds sets field value
 func (o *CreateBillingSubscriptionsRequestBody) SetProductExternalIds(v []BillingProductPricing) {
 	o.ProductExternalIds = v
+}
+
+// GetStatus returns the Status field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateBillingSubscriptionsRequestBody) GetStatus() string {
+	if o == nil || IsNil(o.Status.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Status.Get()
+}
+
+// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateBillingSubscriptionsRequestBody) GetStatusOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Status.Get(), o.Status.IsSet()
+}
+
+// HasStatus returns a boolean if a field has been set.
+func (o *CreateBillingSubscriptionsRequestBody) HasStatus() bool {
+	if o != nil && o.Status.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetStatus gets a reference to the given NullableString and assigns it to the Status field.
+func (o *CreateBillingSubscriptionsRequestBody) SetStatus(v string) {
+	o.Status.Set(&v)
+}
+
+// SetStatusNil sets the value for Status to be an explicit nil
+func (o *CreateBillingSubscriptionsRequestBody) SetStatusNil() {
+	o.Status.Set(nil)
+}
+
+// UnsetStatus ensures that no value is present for Status, not even an explicit nil
+func (o *CreateBillingSubscriptionsRequestBody) UnsetStatus() {
+	o.Status.Unset()
 }
 
 // GetSubscriptionExternalId returns the SubscriptionExternalId field value
@@ -232,7 +310,13 @@ func (o CreateBillingSubscriptionsRequestBody) ToMap() (map[string]interface{}, 
 	if o.Interval.IsSet() {
 		toSerialize["interval"] = o.Interval.Get()
 	}
+	if o.Metadata != nil {
+		toSerialize["metadata"] = o.Metadata
+	}
 	toSerialize["product_external_ids"] = o.ProductExternalIds
+	if o.Status.IsSet() {
+		toSerialize["status"] = o.Status.Get()
+	}
 	toSerialize["subscription_external_id"] = o.SubscriptionExternalId
 	toSerialize["total_price"] = o.TotalPrice
 
@@ -285,7 +369,9 @@ func (o *CreateBillingSubscriptionsRequestBody) UnmarshalJSON(data []byte) (err 
 		delete(additionalProperties, "customer_external_id")
 		delete(additionalProperties, "expired_at")
 		delete(additionalProperties, "interval")
+		delete(additionalProperties, "metadata")
 		delete(additionalProperties, "product_external_ids")
+		delete(additionalProperties, "status")
 		delete(additionalProperties, "subscription_external_id")
 		delete(additionalProperties, "total_price")
 		o.AdditionalProperties = additionalProperties

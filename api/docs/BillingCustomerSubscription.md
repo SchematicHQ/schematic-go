@@ -5,13 +5,13 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ExpiredAt** | Pointer to **NullableTime** |  | [optional] 
-**TotalPrice** | **float32** |  | 
+**TotalPrice** | **int32** |  | 
 
 ## Methods
 
 ### NewBillingCustomerSubscription
 
-`func NewBillingCustomerSubscription(totalPrice float32, ) *BillingCustomerSubscription`
+`func NewBillingCustomerSubscription(totalPrice int32, ) *BillingCustomerSubscription`
 
 NewBillingCustomerSubscription instantiates a new BillingCustomerSubscription object
 This constructor will assign default values to properties that have it defined,
@@ -63,20 +63,20 @@ HasExpiredAt returns a boolean if a field has been set.
 UnsetExpiredAt ensures that no value is present for ExpiredAt, not even an explicit nil
 ### GetTotalPrice
 
-`func (o *BillingCustomerSubscription) GetTotalPrice() float32`
+`func (o *BillingCustomerSubscription) GetTotalPrice() int32`
 
 GetTotalPrice returns the TotalPrice field if non-nil, zero value otherwise.
 
 ### GetTotalPriceOk
 
-`func (o *BillingCustomerSubscription) GetTotalPriceOk() (*float32, bool)`
+`func (o *BillingCustomerSubscription) GetTotalPriceOk() (*int32, bool)`
 
 GetTotalPriceOk returns a tuple with the TotalPrice field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTotalPrice
 
-`func (o *BillingCustomerSubscription) SetTotalPrice(v float32)`
+`func (o *BillingCustomerSubscription) SetTotalPrice(v int32)`
 
 SetTotalPrice sets TotalPrice field to given value.
 

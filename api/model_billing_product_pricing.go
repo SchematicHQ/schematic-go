@@ -20,8 +20,10 @@ var _ MappedNullable = &BillingProductPricing{}
 
 // BillingProductPricing struct for BillingProductPricing
 type BillingProductPricing struct {
-	Price                int32  `json:"price"`
-	ProductExternalId    string `json:"product_external_id"`
+	Interval             NullableString `json:"interval,omitempty"`
+	Price                int32          `json:"price"`
+	PriceExternalId      NullableString `json:"price_external_id,omitempty"`
+	ProductExternalId    string         `json:"product_external_id"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -46,6 +48,49 @@ func NewBillingProductPricingWithDefaults() *BillingProductPricing {
 	return &this
 }
 
+// GetInterval returns the Interval field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *BillingProductPricing) GetInterval() string {
+	if o == nil || IsNil(o.Interval.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Interval.Get()
+}
+
+// GetIntervalOk returns a tuple with the Interval field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *BillingProductPricing) GetIntervalOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Interval.Get(), o.Interval.IsSet()
+}
+
+// HasInterval returns a boolean if a field has been set.
+func (o *BillingProductPricing) HasInterval() bool {
+	if o != nil && o.Interval.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetInterval gets a reference to the given NullableString and assigns it to the Interval field.
+func (o *BillingProductPricing) SetInterval(v string) {
+	o.Interval.Set(&v)
+}
+
+// SetIntervalNil sets the value for Interval to be an explicit nil
+func (o *BillingProductPricing) SetIntervalNil() {
+	o.Interval.Set(nil)
+}
+
+// UnsetInterval ensures that no value is present for Interval, not even an explicit nil
+func (o *BillingProductPricing) UnsetInterval() {
+	o.Interval.Unset()
+}
+
 // GetPrice returns the Price field value
 func (o *BillingProductPricing) GetPrice() int32 {
 	if o == nil {
@@ -68,6 +113,49 @@ func (o *BillingProductPricing) GetPriceOk() (*int32, bool) {
 // SetPrice sets field value
 func (o *BillingProductPricing) SetPrice(v int32) {
 	o.Price = v
+}
+
+// GetPriceExternalId returns the PriceExternalId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *BillingProductPricing) GetPriceExternalId() string {
+	if o == nil || IsNil(o.PriceExternalId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.PriceExternalId.Get()
+}
+
+// GetPriceExternalIdOk returns a tuple with the PriceExternalId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *BillingProductPricing) GetPriceExternalIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.PriceExternalId.Get(), o.PriceExternalId.IsSet()
+}
+
+// HasPriceExternalId returns a boolean if a field has been set.
+func (o *BillingProductPricing) HasPriceExternalId() bool {
+	if o != nil && o.PriceExternalId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetPriceExternalId gets a reference to the given NullableString and assigns it to the PriceExternalId field.
+func (o *BillingProductPricing) SetPriceExternalId(v string) {
+	o.PriceExternalId.Set(&v)
+}
+
+// SetPriceExternalIdNil sets the value for PriceExternalId to be an explicit nil
+func (o *BillingProductPricing) SetPriceExternalIdNil() {
+	o.PriceExternalId.Set(nil)
+}
+
+// UnsetPriceExternalId ensures that no value is present for PriceExternalId, not even an explicit nil
+func (o *BillingProductPricing) UnsetPriceExternalId() {
+	o.PriceExternalId.Unset()
 }
 
 // GetProductExternalId returns the ProductExternalId field value
@@ -104,7 +192,13 @@ func (o BillingProductPricing) MarshalJSON() ([]byte, error) {
 
 func (o BillingProductPricing) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if o.Interval.IsSet() {
+		toSerialize["interval"] = o.Interval.Get()
+	}
 	toSerialize["price"] = o.Price
+	if o.PriceExternalId.IsSet() {
+		toSerialize["price_external_id"] = o.PriceExternalId.Get()
+	}
 	toSerialize["product_external_id"] = o.ProductExternalId
 
 	for key, value := range o.AdditionalProperties {
@@ -150,7 +244,9 @@ func (o *BillingProductPricing) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "interval")
 		delete(additionalProperties, "price")
+		delete(additionalProperties, "price_external_id")
 		delete(additionalProperties, "product_external_id")
 		o.AdditionalProperties = additionalProperties
 	}

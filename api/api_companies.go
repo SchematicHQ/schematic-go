@@ -281,18 +281,6 @@ type CompaniesAPI interface {
 	ListCompanyMembershipsExecute(r ApiListCompanyMembershipsRequest) (*ListCompanyMembershipsResponse, *http.Response, error)
 
 	/*
-		ListCompanyPlans List company plans
-
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiListCompanyPlansRequest
-	*/
-	ListCompanyPlans(ctx context.Context) ApiListCompanyPlansRequest
-
-	// ListCompanyPlansExecute executes the request
-	//  @return ListCompanyPlansResponse
-	ListCompanyPlansExecute(r ApiListCompanyPlansRequest) (*ListCompanyPlansResponse, *http.Response, error)
-
-	/*
 		ListEntityKeyDefinitions List entity key definitions
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -424,6 +412,7 @@ type ApiCountCompaniesRequest struct {
 	planId                    *string
 	q                         *string
 	withoutFeatureOverrideFor *string
+	withoutPlan               *bool
 	limit                     *int32
 	offset                    *int32
 }
@@ -447,6 +436,12 @@ func (r ApiCountCompaniesRequest) Q(q string) ApiCountCompaniesRequest {
 // Filter out companies that already have a company override for the specified feature ID
 func (r ApiCountCompaniesRequest) WithoutFeatureOverrideFor(withoutFeatureOverrideFor string) ApiCountCompaniesRequest {
 	r.withoutFeatureOverrideFor = &withoutFeatureOverrideFor
+	return r
+}
+
+// Filter out companies that have a plan
+func (r ApiCountCompaniesRequest) WithoutPlan(withoutPlan bool) ApiCountCompaniesRequest {
+	r.withoutPlan = &withoutPlan
 	return r
 }
 
@@ -520,6 +515,9 @@ func (a *CompaniesAPIService) CountCompaniesExecute(r ApiCountCompaniesRequest) 
 	}
 	if r.withoutFeatureOverrideFor != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "without_feature_override_for", r.withoutFeatureOverrideFor, "")
+	}
+	if r.withoutPlan != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "without_plan", r.withoutPlan, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -3894,6 +3892,7 @@ type ApiListCompaniesRequest struct {
 	planId                    *string
 	q                         *string
 	withoutFeatureOverrideFor *string
+	withoutPlan               *bool
 	limit                     *int32
 	offset                    *int32
 }
@@ -3917,6 +3916,12 @@ func (r ApiListCompaniesRequest) Q(q string) ApiListCompaniesRequest {
 // Filter out companies that already have a company override for the specified feature ID
 func (r ApiListCompaniesRequest) WithoutFeatureOverrideFor(withoutFeatureOverrideFor string) ApiListCompaniesRequest {
 	r.withoutFeatureOverrideFor = &withoutFeatureOverrideFor
+	return r
+}
+
+// Filter out companies that have a plan
+func (r ApiListCompaniesRequest) WithoutPlan(withoutPlan bool) ApiListCompaniesRequest {
+	r.withoutPlan = &withoutPlan
 	return r
 }
 
@@ -3990,6 +3995,9 @@ func (a *CompaniesAPIService) ListCompaniesExecute(r ApiListCompaniesRequest) (*
 	}
 	if r.withoutFeatureOverrideFor != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "without_feature_override_for", r.withoutFeatureOverrideFor, "")
+	}
+	if r.withoutPlan != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "without_plan", r.withoutPlan, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -4187,203 +4195,6 @@ func (a *CompaniesAPIService) ListCompanyMembershipsExecute(r ApiListCompanyMemb
 	}
 	if r.userId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "user_id", r.userId, "")
-	}
-	if r.limit != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
-	}
-	if r.offset != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
-	}
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["X-Schematic-Api-Key"] = key
-			}
-		}
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-	if req == nil {
-		// Offline mode no-op
-		return nil, nil, nil
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 400 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 403 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ApiError
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiListCompanyPlansRequest struct {
-	ctx        context.Context
-	ApiService CompaniesAPI
-	companyId  *string
-	planId     *string
-	limit      *int32
-	offset     *int32
-}
-
-func (r ApiListCompanyPlansRequest) CompanyId(companyId string) ApiListCompanyPlansRequest {
-	r.companyId = &companyId
-	return r
-}
-
-func (r ApiListCompanyPlansRequest) PlanId(planId string) ApiListCompanyPlansRequest {
-	r.planId = &planId
-	return r
-}
-
-// Page limit (default 100)
-func (r ApiListCompanyPlansRequest) Limit(limit int32) ApiListCompanyPlansRequest {
-	r.limit = &limit
-	return r
-}
-
-// Page offset (default 0)
-func (r ApiListCompanyPlansRequest) Offset(offset int32) ApiListCompanyPlansRequest {
-	r.offset = &offset
-	return r
-}
-
-func (r ApiListCompanyPlansRequest) Execute() (*ListCompanyPlansResponse, *http.Response, error) {
-	return r.ApiService.ListCompanyPlansExecute(r)
-}
-
-/*
-ListCompanyPlans List company plans
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListCompanyPlansRequest
-*/
-func (a *CompaniesAPIService) ListCompanyPlans(ctx context.Context) ApiListCompanyPlansRequest {
-	return ApiListCompanyPlansRequest{
-		ApiService: a,
-		ctx:        ctx,
-	}
-}
-
-// Execute executes the request
-//
-//	@return ListCompanyPlansResponse
-func (a *CompaniesAPIService) ListCompanyPlansExecute(r ApiListCompanyPlansRequest) (*ListCompanyPlansResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *ListCompanyPlansResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CompaniesAPIService.ListCompanyPlans")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/company-plans"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	if r.companyId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "company_id", r.companyId, "")
-	}
-	if r.planId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "plan_id", r.planId, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")

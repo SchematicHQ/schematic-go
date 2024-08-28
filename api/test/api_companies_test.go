@@ -286,18 +286,6 @@ func Test_api_CompaniesAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test CompaniesAPIService ListCompanyPlans", func(t *testing.T) {
-
-		t.Skip("skip test") // remove to run test
-
-		resp, httpRes, err := apiClient.CompaniesAPI.ListCompanyPlans(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
 	t.Run("Test CompaniesAPIService ListEntityKeyDefinitions", func(t *testing.T) {
 
 		t.Skip("skip test") // remove to run test

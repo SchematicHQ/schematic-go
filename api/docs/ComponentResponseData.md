@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Ast** | **[]int32** |  | 
+**Ast** | Pointer to **map[string]float32** |  | [optional] 
 **CreatedAt** | **time.Time** |  | 
 **Id** | **string** |  | 
 **Name** | **string** |  | 
@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 
 ### NewComponentResponseData
 
-`func NewComponentResponseData(ast []int32, createdAt time.Time, id string, name string, state string, type_ string, updatedAt time.Time, ) *ComponentResponseData`
+`func NewComponentResponseData(createdAt time.Time, id string, name string, state string, type_ string, updatedAt time.Time, ) *ComponentResponseData`
 
 NewComponentResponseData instantiates a new ComponentResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -33,23 +33,28 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetAst
 
-`func (o *ComponentResponseData) GetAst() []int32`
+`func (o *ComponentResponseData) GetAst() map[string]float32`
 
 GetAst returns the Ast field if non-nil, zero value otherwise.
 
 ### GetAstOk
 
-`func (o *ComponentResponseData) GetAstOk() (*[]int32, bool)`
+`func (o *ComponentResponseData) GetAstOk() (*map[string]float32, bool)`
 
 GetAstOk returns a tuple with the Ast field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAst
 
-`func (o *ComponentResponseData) SetAst(v []int32)`
+`func (o *ComponentResponseData) SetAst(v map[string]float32)`
 
 SetAst sets Ast field to given value.
 
+### HasAst
+
+`func (o *ComponentResponseData) HasAst() bool`
+
+HasAst returns a boolean if a field has been set.
 
 ### GetCreatedAt
 

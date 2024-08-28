@@ -20,7 +20,6 @@ var _ MappedNullable = &UpdatePlanRequestBody{}
 
 // UpdatePlanRequestBody struct for UpdatePlanRequestBody
 type UpdatePlanRequestBody struct {
-	AudienceType         string         `json:"audience_type"`
 	Description          NullableString `json:"description,omitempty"`
 	Icon                 NullableString `json:"icon,omitempty"`
 	Name                 string         `json:"name"`
@@ -33,9 +32,8 @@ type _UpdatePlanRequestBody UpdatePlanRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUpdatePlanRequestBody(audienceType string, name string) *UpdatePlanRequestBody {
+func NewUpdatePlanRequestBody(name string) *UpdatePlanRequestBody {
 	this := UpdatePlanRequestBody{}
-	this.AudienceType = audienceType
 	this.Name = name
 	return &this
 }
@@ -46,30 +44,6 @@ func NewUpdatePlanRequestBody(audienceType string, name string) *UpdatePlanReque
 func NewUpdatePlanRequestBodyWithDefaults() *UpdatePlanRequestBody {
 	this := UpdatePlanRequestBody{}
 	return &this
-}
-
-// GetAudienceType returns the AudienceType field value
-func (o *UpdatePlanRequestBody) GetAudienceType() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.AudienceType
-}
-
-// GetAudienceTypeOk returns a tuple with the AudienceType field value
-// and a boolean to check if the value has been set.
-func (o *UpdatePlanRequestBody) GetAudienceTypeOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.AudienceType, true
-}
-
-// SetAudienceType sets field value
-func (o *UpdatePlanRequestBody) SetAudienceType(v string) {
-	o.AudienceType = v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -192,7 +166,6 @@ func (o UpdatePlanRequestBody) MarshalJSON() ([]byte, error) {
 
 func (o UpdatePlanRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["audience_type"] = o.AudienceType
 	if o.Description.IsSet() {
 		toSerialize["description"] = o.Description.Get()
 	}
@@ -213,7 +186,6 @@ func (o *UpdatePlanRequestBody) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"audience_type",
 		"name",
 	}
 
@@ -244,7 +216,6 @@ func (o *UpdatePlanRequestBody) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "audience_type")
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "icon")
 		delete(additionalProperties, "name")

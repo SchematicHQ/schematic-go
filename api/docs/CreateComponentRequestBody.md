@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Ast** | **[]int32** |  | 
+**Ast** | Pointer to **map[string]float32** |  | [optional] 
 **EntityType** | **string** |  | 
 **Name** | **string** |  | 
 
@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 
 ### NewCreateComponentRequestBody
 
-`func NewCreateComponentRequestBody(ast []int32, entityType string, name string, ) *CreateComponentRequestBody`
+`func NewCreateComponentRequestBody(entityType string, name string, ) *CreateComponentRequestBody`
 
 NewCreateComponentRequestBody instantiates a new CreateComponentRequestBody object
 This constructor will assign default values to properties that have it defined,
@@ -29,23 +29,28 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetAst
 
-`func (o *CreateComponentRequestBody) GetAst() []int32`
+`func (o *CreateComponentRequestBody) GetAst() map[string]float32`
 
 GetAst returns the Ast field if non-nil, zero value otherwise.
 
 ### GetAstOk
 
-`func (o *CreateComponentRequestBody) GetAstOk() (*[]int32, bool)`
+`func (o *CreateComponentRequestBody) GetAstOk() (*map[string]float32, bool)`
 
 GetAstOk returns a tuple with the Ast field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAst
 
-`func (o *CreateComponentRequestBody) SetAst(v []int32)`
+`func (o *CreateComponentRequestBody) SetAst(v map[string]float32)`
 
 SetAst sets Ast field to given value.
 
+### HasAst
+
+`func (o *CreateComponentRequestBody) HasAst() bool`
+
+HasAst returns a boolean if a field has been set.
 
 ### GetEntityType
 

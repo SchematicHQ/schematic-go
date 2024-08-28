@@ -12,6 +12,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the ComponentHydrateResponseData type satisfies the MappedNullable interface at compile time
@@ -19,9 +20,12 @@ var _ MappedNullable = &ComponentHydrateResponseData{}
 
 // ComponentHydrateResponseData The returned resource
 type ComponentHydrateResponseData struct {
-	Company              *CompanyDetailResponseData      `json:"company,omitempty"`
-	Component            *ComponentResponseData          `json:"component,omitempty"`
-	FeatureUsage         *FeatureUsageDetailResponseData `json:"feature_usage,omitempty"`
+	ActivePlans          []CompanyPlanDetailResponseData  `json:"active_plans"`
+	Company              *CompanyDetailResponseData       `json:"company,omitempty"`
+	Component            *ComponentResponseData           `json:"component,omitempty"`
+	FeatureUsage         *FeatureUsageDetailResponseData  `json:"feature_usage,omitempty"`
+	StripeEmbed          *StripeEmbedInfo                 `json:"stripe_embed,omitempty"`
+	Subscription         *CompanySubscriptionResponseData `json:"subscription,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -31,8 +35,9 @@ type _ComponentHydrateResponseData ComponentHydrateResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewComponentHydrateResponseData() *ComponentHydrateResponseData {
+func NewComponentHydrateResponseData(activePlans []CompanyPlanDetailResponseData) *ComponentHydrateResponseData {
 	this := ComponentHydrateResponseData{}
+	this.ActivePlans = activePlans
 	return &this
 }
 
@@ -42,6 +47,30 @@ func NewComponentHydrateResponseData() *ComponentHydrateResponseData {
 func NewComponentHydrateResponseDataWithDefaults() *ComponentHydrateResponseData {
 	this := ComponentHydrateResponseData{}
 	return &this
+}
+
+// GetActivePlans returns the ActivePlans field value
+func (o *ComponentHydrateResponseData) GetActivePlans() []CompanyPlanDetailResponseData {
+	if o == nil {
+		var ret []CompanyPlanDetailResponseData
+		return ret
+	}
+
+	return o.ActivePlans
+}
+
+// GetActivePlansOk returns a tuple with the ActivePlans field value
+// and a boolean to check if the value has been set.
+func (o *ComponentHydrateResponseData) GetActivePlansOk() ([]CompanyPlanDetailResponseData, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.ActivePlans, true
+}
+
+// SetActivePlans sets field value
+func (o *ComponentHydrateResponseData) SetActivePlans(v []CompanyPlanDetailResponseData) {
+	o.ActivePlans = v
 }
 
 // GetCompany returns the Company field value if set, zero value otherwise.
@@ -140,6 +169,70 @@ func (o *ComponentHydrateResponseData) SetFeatureUsage(v FeatureUsageDetailRespo
 	o.FeatureUsage = &v
 }
 
+// GetStripeEmbed returns the StripeEmbed field value if set, zero value otherwise.
+func (o *ComponentHydrateResponseData) GetStripeEmbed() StripeEmbedInfo {
+	if o == nil || IsNil(o.StripeEmbed) {
+		var ret StripeEmbedInfo
+		return ret
+	}
+	return *o.StripeEmbed
+}
+
+// GetStripeEmbedOk returns a tuple with the StripeEmbed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentHydrateResponseData) GetStripeEmbedOk() (*StripeEmbedInfo, bool) {
+	if o == nil || IsNil(o.StripeEmbed) {
+		return nil, false
+	}
+	return o.StripeEmbed, true
+}
+
+// HasStripeEmbed returns a boolean if a field has been set.
+func (o *ComponentHydrateResponseData) HasStripeEmbed() bool {
+	if o != nil && !IsNil(o.StripeEmbed) {
+		return true
+	}
+
+	return false
+}
+
+// SetStripeEmbed gets a reference to the given StripeEmbedInfo and assigns it to the StripeEmbed field.
+func (o *ComponentHydrateResponseData) SetStripeEmbed(v StripeEmbedInfo) {
+	o.StripeEmbed = &v
+}
+
+// GetSubscription returns the Subscription field value if set, zero value otherwise.
+func (o *ComponentHydrateResponseData) GetSubscription() CompanySubscriptionResponseData {
+	if o == nil || IsNil(o.Subscription) {
+		var ret CompanySubscriptionResponseData
+		return ret
+	}
+	return *o.Subscription
+}
+
+// GetSubscriptionOk returns a tuple with the Subscription field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentHydrateResponseData) GetSubscriptionOk() (*CompanySubscriptionResponseData, bool) {
+	if o == nil || IsNil(o.Subscription) {
+		return nil, false
+	}
+	return o.Subscription, true
+}
+
+// HasSubscription returns a boolean if a field has been set.
+func (o *ComponentHydrateResponseData) HasSubscription() bool {
+	if o != nil && !IsNil(o.Subscription) {
+		return true
+	}
+
+	return false
+}
+
+// SetSubscription gets a reference to the given CompanySubscriptionResponseData and assigns it to the Subscription field.
+func (o *ComponentHydrateResponseData) SetSubscription(v CompanySubscriptionResponseData) {
+	o.Subscription = &v
+}
+
 func (o ComponentHydrateResponseData) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -150,6 +243,7 @@ func (o ComponentHydrateResponseData) MarshalJSON() ([]byte, error) {
 
 func (o ComponentHydrateResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	toSerialize["active_plans"] = o.ActivePlans
 	if !IsNil(o.Company) {
 		toSerialize["company"] = o.Company
 	}
@@ -158,6 +252,12 @@ func (o ComponentHydrateResponseData) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.FeatureUsage) {
 		toSerialize["feature_usage"] = o.FeatureUsage
+	}
+	if !IsNil(o.StripeEmbed) {
+		toSerialize["stripe_embed"] = o.StripeEmbed
+	}
+	if !IsNil(o.Subscription) {
+		toSerialize["subscription"] = o.Subscription
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -168,6 +268,27 @@ func (o ComponentHydrateResponseData) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *ComponentHydrateResponseData) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"active_plans",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
 	varComponentHydrateResponseData := _ComponentHydrateResponseData{}
 
 	err = json.Unmarshal(data, &varComponentHydrateResponseData)
@@ -181,9 +302,12 @@ func (o *ComponentHydrateResponseData) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "active_plans")
 		delete(additionalProperties, "company")
 		delete(additionalProperties, "component")
 		delete(additionalProperties, "feature_usage")
+		delete(additionalProperties, "stripe_embed")
+		delete(additionalProperties, "subscription")
 		o.AdditionalProperties = additionalProperties
 	}
 

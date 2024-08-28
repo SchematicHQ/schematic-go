@@ -20,9 +20,9 @@ var _ MappedNullable = &CreateComponentRequestBody{}
 
 // CreateComponentRequestBody struct for CreateComponentRequestBody
 type CreateComponentRequestBody struct {
-	Ast                  []int32 `json:"ast"`
-	EntityType           string  `json:"entity_type"`
-	Name                 string  `json:"name"`
+	Ast                  *map[string]float32 `json:"ast,omitempty"`
+	EntityType           string              `json:"entity_type"`
+	Name                 string              `json:"name"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -32,9 +32,8 @@ type _CreateComponentRequestBody CreateComponentRequestBody
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateComponentRequestBody(ast []int32, entityType string, name string) *CreateComponentRequestBody {
+func NewCreateComponentRequestBody(entityType string, name string) *CreateComponentRequestBody {
 	this := CreateComponentRequestBody{}
-	this.Ast = ast
 	this.EntityType = entityType
 	this.Name = name
 	return &this
@@ -48,28 +47,36 @@ func NewCreateComponentRequestBodyWithDefaults() *CreateComponentRequestBody {
 	return &this
 }
 
-// GetAst returns the Ast field value
-func (o *CreateComponentRequestBody) GetAst() []int32 {
-	if o == nil {
-		var ret []int32
+// GetAst returns the Ast field value if set, zero value otherwise.
+func (o *CreateComponentRequestBody) GetAst() map[string]float32 {
+	if o == nil || IsNil(o.Ast) {
+		var ret map[string]float32
 		return ret
 	}
-
-	return o.Ast
+	return *o.Ast
 }
 
-// GetAstOk returns a tuple with the Ast field value
+// GetAstOk returns a tuple with the Ast field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CreateComponentRequestBody) GetAstOk() ([]int32, bool) {
-	if o == nil {
+func (o *CreateComponentRequestBody) GetAstOk() (*map[string]float32, bool) {
+	if o == nil || IsNil(o.Ast) {
 		return nil, false
 	}
 	return o.Ast, true
 }
 
-// SetAst sets field value
-func (o *CreateComponentRequestBody) SetAst(v []int32) {
-	o.Ast = v
+// HasAst returns a boolean if a field has been set.
+func (o *CreateComponentRequestBody) HasAst() bool {
+	if o != nil && !IsNil(o.Ast) {
+		return true
+	}
+
+	return false
+}
+
+// SetAst gets a reference to the given map[string]float32 and assigns it to the Ast field.
+func (o *CreateComponentRequestBody) SetAst(v map[string]float32) {
+	o.Ast = &v
 }
 
 // GetEntityType returns the EntityType field value
@@ -130,7 +137,9 @@ func (o CreateComponentRequestBody) MarshalJSON() ([]byte, error) {
 
 func (o CreateComponentRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["ast"] = o.Ast
+	if !IsNil(o.Ast) {
+		toSerialize["ast"] = o.Ast
+	}
 	toSerialize["entity_type"] = o.EntityType
 	toSerialize["name"] = o.Name
 
@@ -146,7 +155,6 @@ func (o *CreateComponentRequestBody) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"ast",
 		"entity_type",
 		"name",
 	}

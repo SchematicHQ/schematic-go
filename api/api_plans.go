@@ -159,6 +159,8 @@ type ApiCountPlansRequest struct {
 	companyId             *string
 	ids                   *[]string
 	q                     *string
+	planType              *string
+	hasProductId          *bool
 	withoutEntitlementFor *string
 	limit                 *int32
 	offset                *int32
@@ -176,6 +178,18 @@ func (r ApiCountPlansRequest) Ids(ids []string) ApiCountPlansRequest {
 
 func (r ApiCountPlansRequest) Q(q string) ApiCountPlansRequest {
 	r.q = &q
+	return r
+}
+
+// Filter by plan type
+func (r ApiCountPlansRequest) PlanType(planType string) ApiCountPlansRequest {
+	r.planType = &planType
+	return r
+}
+
+// Filter out plans that do not have a billing product ID
+func (r ApiCountPlansRequest) HasProductId(hasProductId bool) ApiCountPlansRequest {
+	r.hasProductId = &hasProductId
 	return r
 }
 
@@ -252,6 +266,12 @@ func (a *PlansAPIService) CountPlansExecute(r ApiCountPlansRequest) (*CountPlans
 	}
 	if r.q != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.planType != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "plan_type", r.planType, "")
+	}
+	if r.hasProductId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "has_product_id", r.hasProductId, "")
 	}
 	if r.withoutEntitlementFor != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "without_entitlement_for", r.withoutEntitlementFor, "")
@@ -1205,6 +1225,8 @@ type ApiListPlansRequest struct {
 	companyId             *string
 	ids                   *[]string
 	q                     *string
+	planType              *string
+	hasProductId          *bool
 	withoutEntitlementFor *string
 	limit                 *int32
 	offset                *int32
@@ -1222,6 +1244,18 @@ func (r ApiListPlansRequest) Ids(ids []string) ApiListPlansRequest {
 
 func (r ApiListPlansRequest) Q(q string) ApiListPlansRequest {
 	r.q = &q
+	return r
+}
+
+// Filter by plan type
+func (r ApiListPlansRequest) PlanType(planType string) ApiListPlansRequest {
+	r.planType = &planType
+	return r
+}
+
+// Filter out plans that do not have a billing product ID
+func (r ApiListPlansRequest) HasProductId(hasProductId bool) ApiListPlansRequest {
+	r.hasProductId = &hasProductId
 	return r
 }
 
@@ -1298,6 +1332,12 @@ func (a *PlansAPIService) ListPlansExecute(r ApiListPlansRequest) (*ListPlansRes
 	}
 	if r.q != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "q", r.q, "")
+	}
+	if r.planType != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "plan_type", r.planType, "")
+	}
+	if r.hasProductId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "has_product_id", r.hasProductId, "")
 	}
 	if r.withoutEntitlementFor != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "without_entitlement_for", r.withoutEntitlementFor, "")

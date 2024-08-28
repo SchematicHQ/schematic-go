@@ -20,7 +20,6 @@ var _ MappedNullable = &CreatePlanRequestBody{}
 
 // CreatePlanRequestBody struct for CreatePlanRequestBody
 type CreatePlanRequestBody struct {
-	AudienceType         NullableString `json:"audience_type,omitempty"`
 	Description          string         `json:"description"`
 	Icon                 NullableString `json:"icon,omitempty"`
 	Name                 string         `json:"name"`
@@ -48,49 +47,6 @@ func NewCreatePlanRequestBody(description string, name string, planType string) 
 func NewCreatePlanRequestBodyWithDefaults() *CreatePlanRequestBody {
 	this := CreatePlanRequestBody{}
 	return &this
-}
-
-// GetAudienceType returns the AudienceType field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *CreatePlanRequestBody) GetAudienceType() string {
-	if o == nil || IsNil(o.AudienceType.Get()) {
-		var ret string
-		return ret
-	}
-	return *o.AudienceType.Get()
-}
-
-// GetAudienceTypeOk returns a tuple with the AudienceType field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *CreatePlanRequestBody) GetAudienceTypeOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.AudienceType.Get(), o.AudienceType.IsSet()
-}
-
-// HasAudienceType returns a boolean if a field has been set.
-func (o *CreatePlanRequestBody) HasAudienceType() bool {
-	if o != nil && o.AudienceType.IsSet() {
-		return true
-	}
-
-	return false
-}
-
-// SetAudienceType gets a reference to the given NullableString and assigns it to the AudienceType field.
-func (o *CreatePlanRequestBody) SetAudienceType(v string) {
-	o.AudienceType.Set(&v)
-}
-
-// SetAudienceTypeNil sets the value for AudienceType to be an explicit nil
-func (o *CreatePlanRequestBody) SetAudienceTypeNil() {
-	o.AudienceType.Set(nil)
-}
-
-// UnsetAudienceType ensures that no value is present for AudienceType, not even an explicit nil
-func (o *CreatePlanRequestBody) UnsetAudienceType() {
-	o.AudienceType.Unset()
 }
 
 // GetDescription returns the Description field value
@@ -218,9 +174,6 @@ func (o CreatePlanRequestBody) MarshalJSON() ([]byte, error) {
 
 func (o CreatePlanRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AudienceType.IsSet() {
-		toSerialize["audience_type"] = o.AudienceType.Get()
-	}
 	toSerialize["description"] = o.Description
 	if o.Icon.IsSet() {
 		toSerialize["icon"] = o.Icon.Get()
@@ -272,7 +225,6 @@ func (o *CreatePlanRequestBody) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "audience_type")
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "icon")
 		delete(additionalProperties, "name")

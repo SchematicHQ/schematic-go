@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **PlanId** | Pointer to **string** |  | [optional] 
 **Q** | Pointer to **string** | Search filter | [optional] 
 **WithoutFeatureOverrideFor** | Pointer to **string** | Filter out companies that already have a company override for the specified feature ID | [optional] 
+**WithoutPlan** | Pointer to **bool** | Filter out companies that have a plan | [optional] 
 
 ## Methods
 
@@ -179,6 +180,31 @@ SetWithoutFeatureOverrideFor sets WithoutFeatureOverrideFor field to given value
 `func (o *CountCompaniesParams) HasWithoutFeatureOverrideFor() bool`
 
 HasWithoutFeatureOverrideFor returns a boolean if a field has been set.
+
+### GetWithoutPlan
+
+`func (o *CountCompaniesParams) GetWithoutPlan() bool`
+
+GetWithoutPlan returns the WithoutPlan field if non-nil, zero value otherwise.
+
+### GetWithoutPlanOk
+
+`func (o *CountCompaniesParams) GetWithoutPlanOk() (*bool, bool)`
+
+GetWithoutPlanOk returns a tuple with the WithoutPlan field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetWithoutPlan
+
+`func (o *CountCompaniesParams) SetWithoutPlan(v bool)`
+
+SetWithoutPlan sets WithoutPlan field to given value.
+
+### HasWithoutPlan
+
+`func (o *CountCompaniesParams) HasWithoutPlan() bool`
+
+HasWithoutPlan returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

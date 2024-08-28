@@ -21,11 +21,14 @@ var _ MappedNullable = &CompanySubscriptionResponseData{}
 
 // CompanySubscriptionResponseData struct for CompanySubscriptionResponseData
 type CompanySubscriptionResponseData struct {
-	CustomerExternalId     string                       `json:"customer_external_id"`
-	ExpiredAt              NullableTime                 `json:"expired_at,omitempty"`
-	Interval               string                       `json:"interval"`
-	Products               []BillingProductResponseData `json:"products"`
-	SubscriptionExternalId string                       `json:"subscription_external_id"`
+	CustomerExternalId     string                                      `json:"customer_external_id"`
+	ExpiredAt              NullableTime                                `json:"expired_at,omitempty"`
+	Interval               string                                      `json:"interval"`
+	LatestInvoice          *BillingInvoiceResponseData                 `json:"latest_invoice,omitempty"`
+	PaymentMethod          *BillingPaymentMethodResponseData           `json:"payment_method,omitempty"`
+	Products               []BillingProductForSubscriptionResponseData `json:"products"`
+	SubscriptionExternalId string                                      `json:"subscription_external_id"`
+	TotalPrice             int32                                       `json:"total_price"`
 	AdditionalProperties   map[string]interface{}
 }
 
@@ -35,12 +38,13 @@ type _CompanySubscriptionResponseData CompanySubscriptionResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCompanySubscriptionResponseData(customerExternalId string, interval string, products []BillingProductResponseData, subscriptionExternalId string) *CompanySubscriptionResponseData {
+func NewCompanySubscriptionResponseData(customerExternalId string, interval string, products []BillingProductForSubscriptionResponseData, subscriptionExternalId string, totalPrice int32) *CompanySubscriptionResponseData {
 	this := CompanySubscriptionResponseData{}
 	this.CustomerExternalId = customerExternalId
 	this.Interval = interval
 	this.Products = products
 	this.SubscriptionExternalId = subscriptionExternalId
+	this.TotalPrice = totalPrice
 	return &this
 }
 
@@ -143,10 +147,74 @@ func (o *CompanySubscriptionResponseData) SetInterval(v string) {
 	o.Interval = v
 }
 
+// GetLatestInvoice returns the LatestInvoice field value if set, zero value otherwise.
+func (o *CompanySubscriptionResponseData) GetLatestInvoice() BillingInvoiceResponseData {
+	if o == nil || IsNil(o.LatestInvoice) {
+		var ret BillingInvoiceResponseData
+		return ret
+	}
+	return *o.LatestInvoice
+}
+
+// GetLatestInvoiceOk returns a tuple with the LatestInvoice field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CompanySubscriptionResponseData) GetLatestInvoiceOk() (*BillingInvoiceResponseData, bool) {
+	if o == nil || IsNil(o.LatestInvoice) {
+		return nil, false
+	}
+	return o.LatestInvoice, true
+}
+
+// HasLatestInvoice returns a boolean if a field has been set.
+func (o *CompanySubscriptionResponseData) HasLatestInvoice() bool {
+	if o != nil && !IsNil(o.LatestInvoice) {
+		return true
+	}
+
+	return false
+}
+
+// SetLatestInvoice gets a reference to the given BillingInvoiceResponseData and assigns it to the LatestInvoice field.
+func (o *CompanySubscriptionResponseData) SetLatestInvoice(v BillingInvoiceResponseData) {
+	o.LatestInvoice = &v
+}
+
+// GetPaymentMethod returns the PaymentMethod field value if set, zero value otherwise.
+func (o *CompanySubscriptionResponseData) GetPaymentMethod() BillingPaymentMethodResponseData {
+	if o == nil || IsNil(o.PaymentMethod) {
+		var ret BillingPaymentMethodResponseData
+		return ret
+	}
+	return *o.PaymentMethod
+}
+
+// GetPaymentMethodOk returns a tuple with the PaymentMethod field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CompanySubscriptionResponseData) GetPaymentMethodOk() (*BillingPaymentMethodResponseData, bool) {
+	if o == nil || IsNil(o.PaymentMethod) {
+		return nil, false
+	}
+	return o.PaymentMethod, true
+}
+
+// HasPaymentMethod returns a boolean if a field has been set.
+func (o *CompanySubscriptionResponseData) HasPaymentMethod() bool {
+	if o != nil && !IsNil(o.PaymentMethod) {
+		return true
+	}
+
+	return false
+}
+
+// SetPaymentMethod gets a reference to the given BillingPaymentMethodResponseData and assigns it to the PaymentMethod field.
+func (o *CompanySubscriptionResponseData) SetPaymentMethod(v BillingPaymentMethodResponseData) {
+	o.PaymentMethod = &v
+}
+
 // GetProducts returns the Products field value
-func (o *CompanySubscriptionResponseData) GetProducts() []BillingProductResponseData {
+func (o *CompanySubscriptionResponseData) GetProducts() []BillingProductForSubscriptionResponseData {
 	if o == nil {
-		var ret []BillingProductResponseData
+		var ret []BillingProductForSubscriptionResponseData
 		return ret
 	}
 
@@ -155,7 +223,7 @@ func (o *CompanySubscriptionResponseData) GetProducts() []BillingProductResponse
 
 // GetProductsOk returns a tuple with the Products field value
 // and a boolean to check if the value has been set.
-func (o *CompanySubscriptionResponseData) GetProductsOk() ([]BillingProductResponseData, bool) {
+func (o *CompanySubscriptionResponseData) GetProductsOk() ([]BillingProductForSubscriptionResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -163,7 +231,7 @@ func (o *CompanySubscriptionResponseData) GetProductsOk() ([]BillingProductRespo
 }
 
 // SetProducts sets field value
-func (o *CompanySubscriptionResponseData) SetProducts(v []BillingProductResponseData) {
+func (o *CompanySubscriptionResponseData) SetProducts(v []BillingProductForSubscriptionResponseData) {
 	o.Products = v
 }
 
@@ -191,6 +259,30 @@ func (o *CompanySubscriptionResponseData) SetSubscriptionExternalId(v string) {
 	o.SubscriptionExternalId = v
 }
 
+// GetTotalPrice returns the TotalPrice field value
+func (o *CompanySubscriptionResponseData) GetTotalPrice() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.TotalPrice
+}
+
+// GetTotalPriceOk returns a tuple with the TotalPrice field value
+// and a boolean to check if the value has been set.
+func (o *CompanySubscriptionResponseData) GetTotalPriceOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.TotalPrice, true
+}
+
+// SetTotalPrice sets field value
+func (o *CompanySubscriptionResponseData) SetTotalPrice(v int32) {
+	o.TotalPrice = v
+}
+
 func (o CompanySubscriptionResponseData) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -206,8 +298,15 @@ func (o CompanySubscriptionResponseData) ToMap() (map[string]interface{}, error)
 		toSerialize["expired_at"] = o.ExpiredAt.Get()
 	}
 	toSerialize["interval"] = o.Interval
+	if !IsNil(o.LatestInvoice) {
+		toSerialize["latest_invoice"] = o.LatestInvoice
+	}
+	if !IsNil(o.PaymentMethod) {
+		toSerialize["payment_method"] = o.PaymentMethod
+	}
 	toSerialize["products"] = o.Products
 	toSerialize["subscription_external_id"] = o.SubscriptionExternalId
+	toSerialize["total_price"] = o.TotalPrice
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -225,6 +324,7 @@ func (o *CompanySubscriptionResponseData) UnmarshalJSON(data []byte) (err error)
 		"interval",
 		"products",
 		"subscription_external_id",
+		"total_price",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -257,8 +357,11 @@ func (o *CompanySubscriptionResponseData) UnmarshalJSON(data []byte) (err error)
 		delete(additionalProperties, "customer_external_id")
 		delete(additionalProperties, "expired_at")
 		delete(additionalProperties, "interval")
+		delete(additionalProperties, "latest_invoice")
+		delete(additionalProperties, "payment_method")
 		delete(additionalProperties, "products")
 		delete(additionalProperties, "subscription_external_id")
+		delete(additionalProperties, "total_price")
 		o.AdditionalProperties = additionalProperties
 	}
 

@@ -21,14 +21,14 @@ var _ MappedNullable = &PlanResponseData{}
 
 // PlanResponseData struct for PlanResponseData
 type PlanResponseData struct {
-	AudienceType         string    `json:"audience_type"`
-	CreatedAt            time.Time `json:"created_at"`
-	Description          string    `json:"description"`
-	Icon                 string    `json:"icon"`
-	Id                   string    `json:"id"`
-	Name                 string    `json:"name"`
-	PlanType             string    `json:"plan_type"`
-	UpdatedAt            time.Time `json:"updated_at"`
+	AudienceType         NullableString `json:"audience_type,omitempty"`
+	CreatedAt            time.Time      `json:"created_at"`
+	Description          string         `json:"description"`
+	Icon                 string         `json:"icon"`
+	Id                   string         `json:"id"`
+	Name                 string         `json:"name"`
+	PlanType             string         `json:"plan_type"`
+	UpdatedAt            time.Time      `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -38,9 +38,8 @@ type _PlanResponseData PlanResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPlanResponseData(audienceType string, createdAt time.Time, description string, icon string, id string, name string, planType string, updatedAt time.Time) *PlanResponseData {
+func NewPlanResponseData(createdAt time.Time, description string, icon string, id string, name string, planType string, updatedAt time.Time) *PlanResponseData {
 	this := PlanResponseData{}
-	this.AudienceType = audienceType
 	this.CreatedAt = createdAt
 	this.Description = description
 	this.Icon = icon
@@ -59,28 +58,47 @@ func NewPlanResponseDataWithDefaults() *PlanResponseData {
 	return &this
 }
 
-// GetAudienceType returns the AudienceType field value
+// GetAudienceType returns the AudienceType field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *PlanResponseData) GetAudienceType() string {
-	if o == nil {
+	if o == nil || IsNil(o.AudienceType.Get()) {
 		var ret string
 		return ret
 	}
-
-	return o.AudienceType
+	return *o.AudienceType.Get()
 }
 
-// GetAudienceTypeOk returns a tuple with the AudienceType field value
+// GetAudienceTypeOk returns a tuple with the AudienceType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *PlanResponseData) GetAudienceTypeOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.AudienceType, true
+	return o.AudienceType.Get(), o.AudienceType.IsSet()
 }
 
-// SetAudienceType sets field value
+// HasAudienceType returns a boolean if a field has been set.
+func (o *PlanResponseData) HasAudienceType() bool {
+	if o != nil && o.AudienceType.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetAudienceType gets a reference to the given NullableString and assigns it to the AudienceType field.
 func (o *PlanResponseData) SetAudienceType(v string) {
-	o.AudienceType = v
+	o.AudienceType.Set(&v)
+}
+
+// SetAudienceTypeNil sets the value for AudienceType to be an explicit nil
+func (o *PlanResponseData) SetAudienceTypeNil() {
+	o.AudienceType.Set(nil)
+}
+
+// UnsetAudienceType ensures that no value is present for AudienceType, not even an explicit nil
+func (o *PlanResponseData) UnsetAudienceType() {
+	o.AudienceType.Unset()
 }
 
 // GetCreatedAt returns the CreatedAt field value
@@ -261,7 +279,9 @@ func (o PlanResponseData) MarshalJSON() ([]byte, error) {
 
 func (o PlanResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["audience_type"] = o.AudienceType
+	if o.AudienceType.IsSet() {
+		toSerialize["audience_type"] = o.AudienceType.Get()
+	}
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["description"] = o.Description
 	toSerialize["icon"] = o.Icon
@@ -282,7 +302,6 @@ func (o *PlanResponseData) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"audience_type",
 		"created_at",
 		"description",
 		"icon",

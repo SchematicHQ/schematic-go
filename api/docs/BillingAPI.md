@@ -7,11 +7,15 @@ Method | HTTP request | Description
 [**CountCustomers**](BillingAPI.md#CountCustomers) | **Get** /billing/customers/count | Count customers
 [**ListBillingProducts**](BillingAPI.md#ListBillingProducts) | **Get** /billing/products | List billing products
 [**ListCustomers**](BillingAPI.md#ListCustomers) | **Get** /billing/customers | List customers
+[**ListInvoices**](BillingAPI.md#ListInvoices) | **Get** /billing/invoices | List invoices
+[**ListPaymentMethods**](BillingAPI.md#ListPaymentMethods) | **Get** /billing/payment-methods | List payment methods
 [**ListProductPrices**](BillingAPI.md#ListProductPrices) | **Get** /billing/product/prices | List product prices
 [**UpsertBillingCustomer**](BillingAPI.md#UpsertBillingCustomer) | **Post** /billing/customer/upsert | Upsert billing customer
 [**UpsertBillingPrice**](BillingAPI.md#UpsertBillingPrice) | **Post** /billing/price/upsert | Upsert billing price
 [**UpsertBillingProduct**](BillingAPI.md#UpsertBillingProduct) | **Post** /billing/product/upsert | Upsert billing product
 [**UpsertBillingSubscription**](BillingAPI.md#UpsertBillingSubscription) | **Post** /billing/subscription/upsert | Upsert billing subscription
+[**UpsertInvoice**](BillingAPI.md#UpsertInvoice) | **Post** /billing/invoices | Upsert invoice
+[**UpsertPaymentMethod**](BillingAPI.md#UpsertPaymentMethod) | **Post** /billing/payment-methods | Upsert payment method
 
 
 
@@ -225,6 +229,158 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ListCustomersResponse**](ListCustomersResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListInvoices
+
+> ListInvoicesResponse ListInvoices(ctx).CustomerExternalID(customerExternalID).CompanyID(companyID).SubscriptionExternalID(subscriptionExternalID).Limit(limit).Offset(offset).Execute()
+
+List invoices
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	customerExternalID := "customerExternalID_example" // string | 
+	companyID := "companyID_example" // string |  (optional)
+	subscriptionExternalID := "subscriptionExternalID_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().BillingAPI.ListInvoices(context.Background()).CustomerExternalID(customerExternalID).CompanyID(companyID).SubscriptionExternalID(subscriptionExternalID).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.ListInvoices``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListInvoices`: ListInvoicesResponse
+	fmt.Fprintf(os.Stdout, "Response from `BillingAPI.ListInvoices`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListInvoicesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **customerExternalID** | **string** |  | 
+ **companyID** | **string** |  | 
+ **subscriptionExternalID** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListInvoicesResponse**](ListInvoicesResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListPaymentMethods
+
+> ListPaymentMethodsResponse ListPaymentMethods(ctx).CustomerExternalID(customerExternalID).CompanyID(companyID).InvoiceExternalID(invoiceExternalID).SubscriptionExternalID(subscriptionExternalID).Limit(limit).Offset(offset).Execute()
+
+List payment methods
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	customerExternalID := "customerExternalID_example" // string | 
+	companyID := "companyID_example" // string |  (optional)
+	invoiceExternalID := "invoiceExternalID_example" // string |  (optional)
+	subscriptionExternalID := "subscriptionExternalID_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().BillingAPI.ListPaymentMethods(context.Background()).CustomerExternalID(customerExternalID).CompanyID(companyID).InvoiceExternalID(invoiceExternalID).SubscriptionExternalID(subscriptionExternalID).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.ListPaymentMethods``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListPaymentMethods`: ListPaymentMethodsResponse
+	fmt.Fprintf(os.Stdout, "Response from `BillingAPI.ListPaymentMethods`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListPaymentMethodsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **customerExternalID** | **string** |  | 
+ **companyID** | **string** |  | 
+ **invoiceExternalID** | **string** |  | 
+ **subscriptionExternalID** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**ListPaymentMethodsResponse**](ListPaymentMethodsResponse.md)
 
 ### Authorization
 
@@ -569,6 +725,140 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**UpsertBillingSubscriptionResponse**](UpsertBillingSubscriptionResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertInvoice
+
+> UpsertInvoiceResponse UpsertInvoice(ctx).CreateBillingInvoiceRequestBody(createBillingInvoiceRequestBody).Execute()
+
+Upsert invoice
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	createBillingInvoiceRequestBody := *schematicapi.NewCreateBillingInvoiceRequestBody(int32(123), int32(123), int32(123), "CollectionMethod_example", "Currency_example", "CustomerExternalId_example", "ExternalId_example", int32(123)) // CreateBillingInvoiceRequestBody | 
+
+	resp, r, err := client.API().BillingAPI.UpsertInvoice(context.Background()).CreateBillingInvoiceRequestBody(createBillingInvoiceRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.UpsertInvoice``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertInvoice`: UpsertInvoiceResponse
+	fmt.Fprintf(os.Stdout, "Response from `BillingAPI.UpsertInvoice`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertInvoiceRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **createBillingInvoiceRequestBody** | [**CreateBillingInvoiceRequestBody**](CreateBillingInvoiceRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertInvoiceResponse**](UpsertInvoiceResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpsertPaymentMethod
+
+> UpsertPaymentMethodResponse UpsertPaymentMethod(ctx).CreateBillingPaymentMethodRequestBody(createBillingPaymentMethodRequestBody).Execute()
+
+Upsert payment method
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	createBillingPaymentMethodRequestBody := *schematicapi.NewCreateBillingPaymentMethodRequestBody("CustomerExternalId_example", "ExternalId_example", "PaymentMethodType_example") // CreateBillingPaymentMethodRequestBody | 
+
+	resp, r, err := client.API().BillingAPI.UpsertPaymentMethod(context.Background()).CreateBillingPaymentMethodRequestBody(createBillingPaymentMethodRequestBody).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.UpsertPaymentMethod``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpsertPaymentMethod`: UpsertPaymentMethodResponse
+	fmt.Fprintf(os.Stdout, "Response from `BillingAPI.UpsertPaymentMethod`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpsertPaymentMethodRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **createBillingPaymentMethodRequestBody** | [**CreateBillingPaymentMethodRequestBody**](CreateBillingPaymentMethodRequestBody.md) |  | 
+
+### Return type
+
+[**UpsertPaymentMethodResponse**](UpsertPaymentMethodResponse.md)
 
 ### Authorization
 

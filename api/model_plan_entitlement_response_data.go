@@ -19,7 +19,7 @@ import (
 // checks if the PlanEntitlementResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &PlanEntitlementResponseData{}
 
-// PlanEntitlementResponseData The updated resource
+// PlanEntitlementResponseData struct for PlanEntitlementResponseData
 type PlanEntitlementResponseData struct {
 	CreatedAt            time.Time                          `json:"created_at"`
 	EnvironmentId        string                             `json:"environment_id"`

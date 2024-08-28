@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Ast** | Pointer to **[]int32** |  | [optional] 
+**Ast** | Pointer to **map[string]float32** |  | [optional] 
 **EntityType** | Pointer to **NullableString** |  | [optional] 
 **Name** | Pointer to **NullableString** |  | [optional] 
 **State** | Pointer to **NullableString** |  | [optional] 
@@ -30,20 +30,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetAst
 
-`func (o *UpdateComponentRequestBody) GetAst() []int32`
+`func (o *UpdateComponentRequestBody) GetAst() map[string]float32`
 
 GetAst returns the Ast field if non-nil, zero value otherwise.
 
 ### GetAstOk
 
-`func (o *UpdateComponentRequestBody) GetAstOk() (*[]int32, bool)`
+`func (o *UpdateComponentRequestBody) GetAstOk() (*map[string]float32, bool)`
 
 GetAstOk returns a tuple with the Ast field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAst
 
-`func (o *UpdateComponentRequestBody) SetAst(v []int32)`
+`func (o *UpdateComponentRequestBody) SetAst(v map[string]float32)`
 
 SetAst sets Ast field to given value.
 
@@ -53,16 +53,6 @@ SetAst sets Ast field to given value.
 
 HasAst returns a boolean if a field has been set.
 
-### SetAstNil
-
-`func (o *UpdateComponentRequestBody) SetAstNil(b bool)`
-
- SetAstNil sets the value for Ast to be an explicit nil
-
-### UnsetAst
-`func (o *UpdateComponentRequestBody) UnsetAst()`
-
-UnsetAst ensures that no value is present for Ast, not even an explicit nil
 ### GetEntityType
 
 `func (o *UpdateComponentRequestBody) GetEntityType() string`

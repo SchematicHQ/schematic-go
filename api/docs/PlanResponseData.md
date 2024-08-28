@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AudienceType** | **string** |  | 
+**AudienceType** | Pointer to **NullableString** |  | [optional] 
 **CreatedAt** | **time.Time** |  | 
 **Description** | **string** |  | 
 **Icon** | **string** |  | 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewPlanResponseData
 
-`func NewPlanResponseData(audienceType string, createdAt time.Time, description string, icon string, id string, name string, planType string, updatedAt time.Time, ) *PlanResponseData`
+`func NewPlanResponseData(createdAt time.Time, description string, icon string, id string, name string, planType string, updatedAt time.Time, ) *PlanResponseData`
 
 NewPlanResponseData instantiates a new PlanResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -51,7 +51,22 @@ and a boolean to check if the value has been set.
 
 SetAudienceType sets AudienceType field to given value.
 
+### HasAudienceType
 
+`func (o *PlanResponseData) HasAudienceType() bool`
+
+HasAudienceType returns a boolean if a field has been set.
+
+### SetAudienceTypeNil
+
+`func (o *PlanResponseData) SetAudienceTypeNil(b bool)`
+
+ SetAudienceTypeNil sets the value for AudienceType to be an explicit nil
+
+### UnsetAudienceType
+`func (o *PlanResponseData) UnsetAudienceType()`
+
+UnsetAudienceType ensures that no value is present for AudienceType, not even an explicit nil
 ### GetCreatedAt
 
 `func (o *PlanResponseData) GetCreatedAt() time.Time`

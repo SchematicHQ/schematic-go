@@ -8,8 +8,8 @@ Method | HTTP request | Description
 [**CreateComponent**](ComponentsAPI.md#CreateComponent) | **Post** /components | Create component
 [**DeleteComponent**](ComponentsAPI.md#DeleteComponent) | **Delete** /components/{component_id} | Delete component
 [**GetComponent**](ComponentsAPI.md#GetComponent) | **Get** /components/{component_id} | Get component
-[**HydrateComponent**](ComponentsAPI.md#HydrateComponent) | **Get** /components/{component_id}/hydrate | Hydrate component
 [**ListComponents**](ComponentsAPI.md#ListComponents) | **Get** /components | List components
+[**PreviewComponentData**](ComponentsAPI.md#PreviewComponentData) | **Get** /components/preview-data | Preview component data
 [**UpdateComponent**](ComponentsAPI.md#UpdateComponent) | **Put** /components/{component_id} | Update component
 
 
@@ -109,7 +109,7 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createComponentRequestBody := *schematicapi.NewCreateComponentRequestBody([]int32{int32(123)}, "EntityType_example", "Name_example") // CreateComponentRequestBody | 
+	createComponentRequestBody := *schematicapi.NewCreateComponentRequestBody("EntityType_example", "Name_example") // CreateComponentRequestBody | 
 
 	resp, r, err := client.API().ComponentsAPI.CreateComponent(context.Background()).CreateComponentRequestBody(createComponentRequestBody).Execute()
 	if err != nil {
@@ -294,77 +294,6 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## HydrateComponent
-
-> HydrateComponentResponse HydrateComponent(ctx, componentId).Execute()
-
-Hydrate component
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	componentId := "componentId_example" // string | component_id
-
-	resp, r, err := client.API().ComponentsAPI.HydrateComponent(context.Background(), componentId).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ComponentsAPI.HydrateComponent``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `HydrateComponent`: HydrateComponentResponse
-	fmt.Fprintf(os.Stdout, "Response from `ComponentsAPI.HydrateComponent`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**componentId** | **string** | component_id | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiHydrateComponentRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
-### Return type
-
-[**HydrateComponentResponse**](HydrateComponentResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## ListComponents
 
 > ListComponentsResponse ListComponents(ctx).Q(q).Limit(limit).Offset(offset).Execute()
@@ -421,6 +350,75 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ListComponentsResponse**](ListComponentsResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PreviewComponentData
+
+> PreviewComponentDataResponse PreviewComponentData(ctx).CompanyId(companyId).ComponentId(componentId).Execute()
+
+Preview component data
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	companyId := "companyId_example" // string |  (optional)
+	componentId := "componentId_example" // string |  (optional)
+
+	resp, r, err := client.API().ComponentsAPI.PreviewComponentData(context.Background()).CompanyId(companyId).ComponentId(componentId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ComponentsAPI.PreviewComponentData``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PreviewComponentData`: PreviewComponentDataResponse
+	fmt.Fprintf(os.Stdout, "Response from `ComponentsAPI.PreviewComponentData`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPreviewComponentDataRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **companyId** | **string** |  | 
+ **componentId** | **string** |  | 
+
+### Return type
+
+[**PreviewComponentDataResponse**](PreviewComponentDataResponse.md)
 
 ### Authorization
 

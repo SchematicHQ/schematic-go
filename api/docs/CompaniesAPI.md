@@ -25,7 +25,6 @@ Method | HTTP request | Description
 [**GetUser**](CompaniesAPI.md#GetUser) | **Get** /users/{user_id} | Get user
 [**ListCompanies**](CompaniesAPI.md#ListCompanies) | **Get** /companies | List companies
 [**ListCompanyMemberships**](CompaniesAPI.md#ListCompanyMemberships) | **Get** /company-memberships | List company memberships
-[**ListCompanyPlans**](CompaniesAPI.md#ListCompanyPlans) | **Get** /company-plans | List company plans
 [**ListEntityKeyDefinitions**](CompaniesAPI.md#ListEntityKeyDefinitions) | **Get** /entity-key-definitions | List entity key definitions
 [**ListEntityTraitDefinitions**](CompaniesAPI.md#ListEntityTraitDefinitions) | **Get** /entity-trait-definitions | List entity trait definitions
 [**ListUsers**](CompaniesAPI.md#ListUsers) | **Get** /users | List users
@@ -41,7 +40,7 @@ Method | HTTP request | Description
 
 ## CountCompanies
 
-> CountCompaniesResponse CountCompanies(ctx).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).Limit(limit).Offset(offset).Execute()
+> CountCompaniesResponse CountCompanies(ctx).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).WithoutPlan(withoutPlan).Limit(limit).Offset(offset).Execute()
 
 Count companies
 
@@ -67,10 +66,11 @@ func main() {
 	planId := "planId_example" // string |  (optional)
 	q := "q_example" // string | Search filter (optional)
 	withoutFeatureOverrideFor := "withoutFeatureOverrideFor_example" // string | Filter out companies that already have a company override for the specified feature ID (optional)
+	withoutPlan := true // bool | Filter out companies that have a plan (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().CompaniesAPI.CountCompanies(context.Background()).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().CompaniesAPI.CountCompanies(context.Background()).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).WithoutPlan(withoutPlan).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.CountCompanies``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -95,6 +95,7 @@ Name | Type | Description  | Notes
  **planId** | **string** |  | 
  **q** | **string** | Search filter | 
  **withoutFeatureOverrideFor** | **string** | Filter out companies that already have a company override for the specified feature ID | 
+ **withoutPlan** | **bool** | Filter out companies that have a plan | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -1392,7 +1393,7 @@ Name | Type | Description  | Notes
 
 ## ListCompanies
 
-> ListCompaniesResponse ListCompanies(ctx).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).Limit(limit).Offset(offset).Execute()
+> ListCompaniesResponse ListCompanies(ctx).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).WithoutPlan(withoutPlan).Limit(limit).Offset(offset).Execute()
 
 List companies
 
@@ -1418,10 +1419,11 @@ func main() {
 	planId := "planId_example" // string |  (optional)
 	q := "q_example" // string | Search filter (optional)
 	withoutFeatureOverrideFor := "withoutFeatureOverrideFor_example" // string | Filter out companies that already have a company override for the specified feature ID (optional)
+	withoutPlan := true // bool | Filter out companies that have a plan (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().CompaniesAPI.ListCompanies(context.Background()).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().CompaniesAPI.ListCompanies(context.Background()).Ids(ids).PlanId(planId).Q(q).WithoutFeatureOverrideFor(withoutFeatureOverrideFor).WithoutPlan(withoutPlan).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.ListCompanies``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1446,6 +1448,7 @@ Name | Type | Description  | Notes
  **planId** | **string** |  | 
  **q** | **string** | Search filter | 
  **withoutFeatureOverrideFor** | **string** | Filter out companies that already have a company override for the specified feature ID | 
+ **withoutPlan** | **bool** | Filter out companies that have a plan | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -1525,79 +1528,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ListCompanyMembershipsResponse**](ListCompanyMembershipsResponse.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ListCompanyPlans
-
-> ListCompanyPlansResponse ListCompanyPlans(ctx).CompanyId(companyId).PlanId(planId).Limit(limit).Offset(offset).Execute()
-
-List company plans
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	schematicapi "github.com/SchematicHQ/schematic-go/api"
-	"github.com/SchematicHQ/schematic-go"
-)
-
-func main() {
-	apiKey := os.Getenv("SCHEMATIC_API_KEY")
-	client := schematic.NewClient(apiKey)
-	defer client.Close()
-
-	companyId := "companyId_example" // string |  (optional)
-	planId := "planId_example" // string |  (optional)
-	limit := int32(100) // int32 | Page limit (default 100) (optional)
-	offset := int32(0) // int32 | Page offset (default 0) (optional)
-
-	resp, r, err := client.API().CompaniesAPI.ListCompanyPlans(context.Background()).CompanyId(companyId).PlanId(planId).Limit(limit).Offset(offset).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `CompaniesAPI.ListCompanyPlans``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `ListCompanyPlans`: ListCompanyPlansResponse
-	fmt.Fprintf(os.Stdout, "Response from `CompaniesAPI.ListCompanyPlans`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiListCompanyPlansRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **companyId** | **string** |  | 
- **planId** | **string** |  | 
- **limit** | **int32** | Page limit (default 100) | 
- **offset** | **int32** | Page offset (default 0) | 
-
-### Return type
-
-[**ListCompanyPlansResponse**](ListCompanyPlansResponse.md)
 
 ### Authorization
 

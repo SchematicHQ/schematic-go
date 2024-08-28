@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AudienceType** | **string** |  | 
+**AudienceType** | Pointer to **NullableString** |  | [optional] 
 **BillingProduct** | Pointer to [**BillingProductDetailResponseData**](BillingProductDetailResponseData.md) |  | [optional] 
 **CompanyCount** | **int32** |  | 
 **CreatedAt** | **time.Time** |  | 
@@ -12,15 +12,17 @@ Name | Type | Description | Notes
 **Features** | [**[]FeatureDetailResponseData**](FeatureDetailResponseData.md) |  | 
 **Icon** | **string** |  | 
 **Id** | **string** |  | 
+**MonthlyPrice** | Pointer to [**BillingPriceResponseData**](BillingPriceResponseData.md) |  | [optional] 
 **Name** | **string** |  | 
 **PlanType** | **string** |  | 
 **UpdatedAt** | **time.Time** |  | 
+**YearlyPrice** | Pointer to [**BillingPriceResponseData**](BillingPriceResponseData.md) |  | [optional] 
 
 ## Methods
 
 ### NewPlanDetailResponseData
 
-`func NewPlanDetailResponseData(audienceType string, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, icon string, id string, name string, planType string, updatedAt time.Time, ) *PlanDetailResponseData`
+`func NewPlanDetailResponseData(companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, icon string, id string, name string, planType string, updatedAt time.Time, ) *PlanDetailResponseData`
 
 NewPlanDetailResponseData instantiates a new PlanDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -54,7 +56,22 @@ and a boolean to check if the value has been set.
 
 SetAudienceType sets AudienceType field to given value.
 
+### HasAudienceType
 
+`func (o *PlanDetailResponseData) HasAudienceType() bool`
+
+HasAudienceType returns a boolean if a field has been set.
+
+### SetAudienceTypeNil
+
+`func (o *PlanDetailResponseData) SetAudienceTypeNil(b bool)`
+
+ SetAudienceTypeNil sets the value for AudienceType to be an explicit nil
+
+### UnsetAudienceType
+`func (o *PlanDetailResponseData) UnsetAudienceType()`
+
+UnsetAudienceType ensures that no value is present for AudienceType, not even an explicit nil
 ### GetBillingProduct
 
 `func (o *PlanDetailResponseData) GetBillingProduct() BillingProductDetailResponseData`
@@ -200,6 +217,31 @@ and a boolean to check if the value has been set.
 SetId sets Id field to given value.
 
 
+### GetMonthlyPrice
+
+`func (o *PlanDetailResponseData) GetMonthlyPrice() BillingPriceResponseData`
+
+GetMonthlyPrice returns the MonthlyPrice field if non-nil, zero value otherwise.
+
+### GetMonthlyPriceOk
+
+`func (o *PlanDetailResponseData) GetMonthlyPriceOk() (*BillingPriceResponseData, bool)`
+
+GetMonthlyPriceOk returns a tuple with the MonthlyPrice field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMonthlyPrice
+
+`func (o *PlanDetailResponseData) SetMonthlyPrice(v BillingPriceResponseData)`
+
+SetMonthlyPrice sets MonthlyPrice field to given value.
+
+### HasMonthlyPrice
+
+`func (o *PlanDetailResponseData) HasMonthlyPrice() bool`
+
+HasMonthlyPrice returns a boolean if a field has been set.
+
 ### GetName
 
 `func (o *PlanDetailResponseData) GetName() string`
@@ -259,6 +301,31 @@ and a boolean to check if the value has been set.
 
 SetUpdatedAt sets UpdatedAt field to given value.
 
+
+### GetYearlyPrice
+
+`func (o *PlanDetailResponseData) GetYearlyPrice() BillingPriceResponseData`
+
+GetYearlyPrice returns the YearlyPrice field if non-nil, zero value otherwise.
+
+### GetYearlyPriceOk
+
+`func (o *PlanDetailResponseData) GetYearlyPriceOk() (*BillingPriceResponseData, bool)`
+
+GetYearlyPriceOk returns a tuple with the YearlyPrice field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetYearlyPrice
+
+`func (o *PlanDetailResponseData) SetYearlyPrice(v BillingPriceResponseData)`
+
+SetYearlyPrice sets YearlyPrice field to given value.
+
+### HasYearlyPrice
+
+`func (o *PlanDetailResponseData) HasYearlyPrice() bool`
+
+HasYearlyPrice returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

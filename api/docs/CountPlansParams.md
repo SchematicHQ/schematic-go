@@ -5,9 +5,11 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CompanyId** | Pointer to **string** |  | [optional] 
+**HasProductId** | Pointer to **bool** | Filter out plans that do not have a billing product ID | [optional] 
 **Ids** | Pointer to **[]string** |  | [optional] 
 **Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
 **Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
+**PlanType** | Pointer to **string** | Filter by plan type | [optional] 
 **Q** | Pointer to **string** |  | [optional] 
 **WithoutEntitlementFor** | Pointer to **string** | Filter out plans that already have a plan entitlement for the specified feature ID | [optional] 
 
@@ -54,6 +56,31 @@ SetCompanyId sets CompanyId field to given value.
 `func (o *CountPlansParams) HasCompanyId() bool`
 
 HasCompanyId returns a boolean if a field has been set.
+
+### GetHasProductId
+
+`func (o *CountPlansParams) GetHasProductId() bool`
+
+GetHasProductId returns the HasProductId field if non-nil, zero value otherwise.
+
+### GetHasProductIdOk
+
+`func (o *CountPlansParams) GetHasProductIdOk() (*bool, bool)`
+
+GetHasProductIdOk returns a tuple with the HasProductId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetHasProductId
+
+`func (o *CountPlansParams) SetHasProductId(v bool)`
+
+SetHasProductId sets HasProductId field to given value.
+
+### HasHasProductId
+
+`func (o *CountPlansParams) HasHasProductId() bool`
+
+HasHasProductId returns a boolean if a field has been set.
 
 ### GetIds
 
@@ -129,6 +156,31 @@ SetOffset sets Offset field to given value.
 `func (o *CountPlansParams) HasOffset() bool`
 
 HasOffset returns a boolean if a field has been set.
+
+### GetPlanType
+
+`func (o *CountPlansParams) GetPlanType() string`
+
+GetPlanType returns the PlanType field if non-nil, zero value otherwise.
+
+### GetPlanTypeOk
+
+`func (o *CountPlansParams) GetPlanTypeOk() (*string, bool)`
+
+GetPlanTypeOk returns a tuple with the PlanType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPlanType
+
+`func (o *CountPlansParams) SetPlanType(v string)`
+
+SetPlanType sets PlanType field to given value.
+
+### HasPlanType
+
+`func (o *CountPlansParams) HasPlanType() bool`
+
+HasPlanType returns a boolean if a field has been set.
 
 ### GetQ
 

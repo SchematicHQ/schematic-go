@@ -66,6 +66,8 @@ type APIClient struct {
 
 	FeaturesAPI FeaturesAPI
 
+	PlangroupsAPI PlangroupsAPI
+
 	PlansAPI PlansAPI
 
 	WebhooksAPI WebhooksAPI
@@ -96,6 +98,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.EntitlementsAPI = (*EntitlementsAPIService)(&c.common)
 	c.EventsAPI = (*EventsAPIService)(&c.common)
 	c.FeaturesAPI = (*FeaturesAPIService)(&c.common)
+	c.PlangroupsAPI = (*PlangroupsAPIService)(&c.common)
 	c.PlansAPI = (*PlansAPIService)(&c.common)
 	c.WebhooksAPI = (*WebhooksAPIService)(&c.common)
 
@@ -449,7 +452,6 @@ func (c *APIClient) prepareRequest(
 	for header, value := range c.cfg.DefaultHeader {
 		localVarRequest.Header.Add(header, value)
 	}
-
 	return localVarRequest, nil
 }
 
@@ -526,6 +528,18 @@ func addFile(w *multipart.Writer, fieldName, path string) error {
 	_, err = io.Copy(part, file)
 
 	return err
+}
+
+// Prevent trying to import "fmt"
+func reportError(format string, a ...interface{}) error {
+	return fmt.Errorf(format, a...)
+}
+
+// A wrapper for strict JSON decoding
+func newStrictDecoder(data []byte) *json.Decoder {
+	dec := json.NewDecoder(bytes.NewBuffer(data))
+	dec.DisallowUnknownFields()
+	return dec
 }
 
 // Set request body from an interface{}

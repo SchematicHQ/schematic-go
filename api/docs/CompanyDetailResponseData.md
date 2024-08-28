@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AddOns** | [**[]PreviewObject**](PreviewObject.md) |  | 
+**AddOns** | [**[]BillingPlan**](BillingPlan.md) |  | 
 **CreatedAt** | **time.Time** |  | 
 **EntityTraits** | [**[]EntityTraitDetailResponseData**](EntityTraitDetailResponseData.md) |  | 
 **EnvironmentId** | **string** |  | 
@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **LastSeenAt** | Pointer to **NullableTime** |  | [optional] 
 **LogoUrl** | Pointer to **NullableString** |  | [optional] 
 **Name** | **string** |  | 
-**Plan** | Pointer to [**PreviewObject**](PreviewObject.md) |  | [optional] 
+**Plan** | Pointer to [**BillingPlan**](BillingPlan.md) |  | [optional] 
 **Plans** | [**[]PreviewObject**](PreviewObject.md) |  | 
 **Traits** | Pointer to **map[string]interface{}** | A map of trait names to trait values | [optional] 
 **UpdatedAt** | **time.Time** |  | 
@@ -23,7 +23,7 @@ Name | Type | Description | Notes
 
 ### NewCompanyDetailResponseData
 
-`func NewCompanyDetailResponseData(addOns []PreviewObject, createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, plans []PreviewObject, updatedAt time.Time, userCount int32, ) *CompanyDetailResponseData`
+`func NewCompanyDetailResponseData(addOns []BillingPlan, createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, plans []PreviewObject, updatedAt time.Time, userCount int32, ) *CompanyDetailResponseData`
 
 NewCompanyDetailResponseData instantiates a new CompanyDetailResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -40,20 +40,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetAddOns
 
-`func (o *CompanyDetailResponseData) GetAddOns() []PreviewObject`
+`func (o *CompanyDetailResponseData) GetAddOns() []BillingPlan`
 
 GetAddOns returns the AddOns field if non-nil, zero value otherwise.
 
 ### GetAddOnsOk
 
-`func (o *CompanyDetailResponseData) GetAddOnsOk() (*[]PreviewObject, bool)`
+`func (o *CompanyDetailResponseData) GetAddOnsOk() (*[]BillingPlan, bool)`
 
 GetAddOnsOk returns a tuple with the AddOns field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAddOns
 
-`func (o *CompanyDetailResponseData) SetAddOns(v []PreviewObject)`
+`func (o *CompanyDetailResponseData) SetAddOns(v []BillingPlan)`
 
 SetAddOns sets AddOns field to given value.
 
@@ -250,20 +250,20 @@ SetName sets Name field to given value.
 
 ### GetPlan
 
-`func (o *CompanyDetailResponseData) GetPlan() PreviewObject`
+`func (o *CompanyDetailResponseData) GetPlan() BillingPlan`
 
 GetPlan returns the Plan field if non-nil, zero value otherwise.
 
 ### GetPlanOk
 
-`func (o *CompanyDetailResponseData) GetPlanOk() (*PreviewObject, bool)`
+`func (o *CompanyDetailResponseData) GetPlanOk() (*BillingPlan, bool)`
 
 GetPlanOk returns a tuple with the Plan field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPlan
 
-`func (o *CompanyDetailResponseData) SetPlan(v PreviewObject)`
+`func (o *CompanyDetailResponseData) SetPlan(v BillingPlan)`
 
 SetPlan sets Plan field to given value.
 

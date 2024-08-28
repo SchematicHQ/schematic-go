@@ -19,9 +19,9 @@ import (
 // checks if the PlanDetailResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &PlanDetailResponseData{}
 
-// PlanDetailResponseData The updated resource
+// PlanDetailResponseData struct for PlanDetailResponseData
 type PlanDetailResponseData struct {
-	AudienceType         string                            `json:"audience_type"`
+	AudienceType         NullableString                    `json:"audience_type,omitempty"`
 	BillingProduct       *BillingProductDetailResponseData `json:"billing_product,omitempty"`
 	CompanyCount         int32                             `json:"company_count"`
 	CreatedAt            time.Time                         `json:"created_at"`
@@ -29,9 +29,11 @@ type PlanDetailResponseData struct {
 	Features             []FeatureDetailResponseData       `json:"features"`
 	Icon                 string                            `json:"icon"`
 	Id                   string                            `json:"id"`
+	MonthlyPrice         *BillingPriceResponseData         `json:"monthly_price,omitempty"`
 	Name                 string                            `json:"name"`
 	PlanType             string                            `json:"plan_type"`
 	UpdatedAt            time.Time                         `json:"updated_at"`
+	YearlyPrice          *BillingPriceResponseData         `json:"yearly_price,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -41,9 +43,8 @@ type _PlanDetailResponseData PlanDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPlanDetailResponseData(audienceType string, companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, icon string, id string, name string, planType string, updatedAt time.Time) *PlanDetailResponseData {
+func NewPlanDetailResponseData(companyCount int32, createdAt time.Time, description string, features []FeatureDetailResponseData, icon string, id string, name string, planType string, updatedAt time.Time) *PlanDetailResponseData {
 	this := PlanDetailResponseData{}
-	this.AudienceType = audienceType
 	this.CompanyCount = companyCount
 	this.CreatedAt = createdAt
 	this.Description = description
@@ -64,28 +65,47 @@ func NewPlanDetailResponseDataWithDefaults() *PlanDetailResponseData {
 	return &this
 }
 
-// GetAudienceType returns the AudienceType field value
+// GetAudienceType returns the AudienceType field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *PlanDetailResponseData) GetAudienceType() string {
-	if o == nil {
+	if o == nil || IsNil(o.AudienceType.Get()) {
 		var ret string
 		return ret
 	}
-
-	return o.AudienceType
+	return *o.AudienceType.Get()
 }
 
-// GetAudienceTypeOk returns a tuple with the AudienceType field value
+// GetAudienceTypeOk returns a tuple with the AudienceType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *PlanDetailResponseData) GetAudienceTypeOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.AudienceType, true
+	return o.AudienceType.Get(), o.AudienceType.IsSet()
 }
 
-// SetAudienceType sets field value
+// HasAudienceType returns a boolean if a field has been set.
+func (o *PlanDetailResponseData) HasAudienceType() bool {
+	if o != nil && o.AudienceType.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetAudienceType gets a reference to the given NullableString and assigns it to the AudienceType field.
 func (o *PlanDetailResponseData) SetAudienceType(v string) {
-	o.AudienceType = v
+	o.AudienceType.Set(&v)
+}
+
+// SetAudienceTypeNil sets the value for AudienceType to be an explicit nil
+func (o *PlanDetailResponseData) SetAudienceTypeNil() {
+	o.AudienceType.Set(nil)
+}
+
+// UnsetAudienceType ensures that no value is present for AudienceType, not even an explicit nil
+func (o *PlanDetailResponseData) UnsetAudienceType() {
+	o.AudienceType.Unset()
 }
 
 // GetBillingProduct returns the BillingProduct field value if set, zero value otherwise.
@@ -264,6 +284,38 @@ func (o *PlanDetailResponseData) SetId(v string) {
 	o.Id = v
 }
 
+// GetMonthlyPrice returns the MonthlyPrice field value if set, zero value otherwise.
+func (o *PlanDetailResponseData) GetMonthlyPrice() BillingPriceResponseData {
+	if o == nil || IsNil(o.MonthlyPrice) {
+		var ret BillingPriceResponseData
+		return ret
+	}
+	return *o.MonthlyPrice
+}
+
+// GetMonthlyPriceOk returns a tuple with the MonthlyPrice field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PlanDetailResponseData) GetMonthlyPriceOk() (*BillingPriceResponseData, bool) {
+	if o == nil || IsNil(o.MonthlyPrice) {
+		return nil, false
+	}
+	return o.MonthlyPrice, true
+}
+
+// HasMonthlyPrice returns a boolean if a field has been set.
+func (o *PlanDetailResponseData) HasMonthlyPrice() bool {
+	if o != nil && !IsNil(o.MonthlyPrice) {
+		return true
+	}
+
+	return false
+}
+
+// SetMonthlyPrice gets a reference to the given BillingPriceResponseData and assigns it to the MonthlyPrice field.
+func (o *PlanDetailResponseData) SetMonthlyPrice(v BillingPriceResponseData) {
+	o.MonthlyPrice = &v
+}
+
 // GetName returns the Name field value
 func (o *PlanDetailResponseData) GetName() string {
 	if o == nil {
@@ -336,6 +388,38 @@ func (o *PlanDetailResponseData) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
+// GetYearlyPrice returns the YearlyPrice field value if set, zero value otherwise.
+func (o *PlanDetailResponseData) GetYearlyPrice() BillingPriceResponseData {
+	if o == nil || IsNil(o.YearlyPrice) {
+		var ret BillingPriceResponseData
+		return ret
+	}
+	return *o.YearlyPrice
+}
+
+// GetYearlyPriceOk returns a tuple with the YearlyPrice field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PlanDetailResponseData) GetYearlyPriceOk() (*BillingPriceResponseData, bool) {
+	if o == nil || IsNil(o.YearlyPrice) {
+		return nil, false
+	}
+	return o.YearlyPrice, true
+}
+
+// HasYearlyPrice returns a boolean if a field has been set.
+func (o *PlanDetailResponseData) HasYearlyPrice() bool {
+	if o != nil && !IsNil(o.YearlyPrice) {
+		return true
+	}
+
+	return false
+}
+
+// SetYearlyPrice gets a reference to the given BillingPriceResponseData and assigns it to the YearlyPrice field.
+func (o *PlanDetailResponseData) SetYearlyPrice(v BillingPriceResponseData) {
+	o.YearlyPrice = &v
+}
+
 func (o PlanDetailResponseData) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -346,7 +430,9 @@ func (o PlanDetailResponseData) MarshalJSON() ([]byte, error) {
 
 func (o PlanDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["audience_type"] = o.AudienceType
+	if o.AudienceType.IsSet() {
+		toSerialize["audience_type"] = o.AudienceType.Get()
+	}
 	if !IsNil(o.BillingProduct) {
 		toSerialize["billing_product"] = o.BillingProduct
 	}
@@ -356,9 +442,15 @@ func (o PlanDetailResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["features"] = o.Features
 	toSerialize["icon"] = o.Icon
 	toSerialize["id"] = o.Id
+	if !IsNil(o.MonthlyPrice) {
+		toSerialize["monthly_price"] = o.MonthlyPrice
+	}
 	toSerialize["name"] = o.Name
 	toSerialize["plan_type"] = o.PlanType
 	toSerialize["updated_at"] = o.UpdatedAt
+	if !IsNil(o.YearlyPrice) {
+		toSerialize["yearly_price"] = o.YearlyPrice
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -372,7 +464,6 @@ func (o *PlanDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"audience_type",
 		"company_count",
 		"created_at",
 		"description",
@@ -419,9 +510,11 @@ func (o *PlanDetailResponseData) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "features")
 		delete(additionalProperties, "icon")
 		delete(additionalProperties, "id")
+		delete(additionalProperties, "monthly_price")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "plan_type")
 		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "yearly_price")
 		o.AdditionalProperties = additionalProperties
 	}
 

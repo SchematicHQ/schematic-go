@@ -7,14 +7,17 @@ Name | Type | Description | Notes
 **CustomerExternalId** | **string** |  | 
 **ExpiredAt** | Pointer to **NullableTime** |  | [optional] 
 **Interval** | **string** |  | 
-**Products** | [**[]BillingProductResponseData**](BillingProductResponseData.md) |  | 
+**LatestInvoice** | Pointer to [**BillingInvoiceResponseData**](BillingInvoiceResponseData.md) |  | [optional] 
+**PaymentMethod** | Pointer to [**BillingPaymentMethodResponseData**](BillingPaymentMethodResponseData.md) |  | [optional] 
+**Products** | [**[]BillingProductForSubscriptionResponseData**](BillingProductForSubscriptionResponseData.md) |  | 
 **SubscriptionExternalId** | **string** |  | 
+**TotalPrice** | **int32** |  | 
 
 ## Methods
 
 ### NewCompanySubscriptionResponseData
 
-`func NewCompanySubscriptionResponseData(customerExternalId string, interval string, products []BillingProductResponseData, subscriptionExternalId string, ) *CompanySubscriptionResponseData`
+`func NewCompanySubscriptionResponseData(customerExternalId string, interval string, products []BillingProductForSubscriptionResponseData, subscriptionExternalId string, totalPrice int32, ) *CompanySubscriptionResponseData`
 
 NewCompanySubscriptionResponseData instantiates a new CompanySubscriptionResponseData object
 This constructor will assign default values to properties that have it defined,
@@ -104,22 +107,72 @@ and a boolean to check if the value has been set.
 SetInterval sets Interval field to given value.
 
 
+### GetLatestInvoice
+
+`func (o *CompanySubscriptionResponseData) GetLatestInvoice() BillingInvoiceResponseData`
+
+GetLatestInvoice returns the LatestInvoice field if non-nil, zero value otherwise.
+
+### GetLatestInvoiceOk
+
+`func (o *CompanySubscriptionResponseData) GetLatestInvoiceOk() (*BillingInvoiceResponseData, bool)`
+
+GetLatestInvoiceOk returns a tuple with the LatestInvoice field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLatestInvoice
+
+`func (o *CompanySubscriptionResponseData) SetLatestInvoice(v BillingInvoiceResponseData)`
+
+SetLatestInvoice sets LatestInvoice field to given value.
+
+### HasLatestInvoice
+
+`func (o *CompanySubscriptionResponseData) HasLatestInvoice() bool`
+
+HasLatestInvoice returns a boolean if a field has been set.
+
+### GetPaymentMethod
+
+`func (o *CompanySubscriptionResponseData) GetPaymentMethod() BillingPaymentMethodResponseData`
+
+GetPaymentMethod returns the PaymentMethod field if non-nil, zero value otherwise.
+
+### GetPaymentMethodOk
+
+`func (o *CompanySubscriptionResponseData) GetPaymentMethodOk() (*BillingPaymentMethodResponseData, bool)`
+
+GetPaymentMethodOk returns a tuple with the PaymentMethod field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPaymentMethod
+
+`func (o *CompanySubscriptionResponseData) SetPaymentMethod(v BillingPaymentMethodResponseData)`
+
+SetPaymentMethod sets PaymentMethod field to given value.
+
+### HasPaymentMethod
+
+`func (o *CompanySubscriptionResponseData) HasPaymentMethod() bool`
+
+HasPaymentMethod returns a boolean if a field has been set.
+
 ### GetProducts
 
-`func (o *CompanySubscriptionResponseData) GetProducts() []BillingProductResponseData`
+`func (o *CompanySubscriptionResponseData) GetProducts() []BillingProductForSubscriptionResponseData`
 
 GetProducts returns the Products field if non-nil, zero value otherwise.
 
 ### GetProductsOk
 
-`func (o *CompanySubscriptionResponseData) GetProductsOk() (*[]BillingProductResponseData, bool)`
+`func (o *CompanySubscriptionResponseData) GetProductsOk() (*[]BillingProductForSubscriptionResponseData, bool)`
 
 GetProductsOk returns a tuple with the Products field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetProducts
 
-`func (o *CompanySubscriptionResponseData) SetProducts(v []BillingProductResponseData)`
+`func (o *CompanySubscriptionResponseData) SetProducts(v []BillingProductForSubscriptionResponseData)`
 
 SetProducts sets Products field to given value.
 
@@ -142,6 +195,26 @@ and a boolean to check if the value has been set.
 `func (o *CompanySubscriptionResponseData) SetSubscriptionExternalId(v string)`
 
 SetSubscriptionExternalId sets SubscriptionExternalId field to given value.
+
+
+### GetTotalPrice
+
+`func (o *CompanySubscriptionResponseData) GetTotalPrice() int32`
+
+GetTotalPrice returns the TotalPrice field if non-nil, zero value otherwise.
+
+### GetTotalPriceOk
+
+`func (o *CompanySubscriptionResponseData) GetTotalPriceOk() (*int32, bool)`
+
+GetTotalPriceOk returns a tuple with the TotalPrice field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTotalPrice
+
+`func (o *CompanySubscriptionResponseData) SetTotalPrice(v int32)`
+
+SetTotalPrice sets TotalPrice field to given value.
 
 
 

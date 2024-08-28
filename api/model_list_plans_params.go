@@ -19,13 +19,17 @@ var _ MappedNullable = &ListPlansParams{}
 
 // ListPlansParams Input parameters
 type ListPlansParams struct {
-	CompanyId *string  `json:"company_id,omitempty"`
-	Ids       []string `json:"ids,omitempty"`
+	CompanyId *string `json:"company_id,omitempty"`
+	// Filter out plans that do not have a billing product ID
+	HasProductId *bool    `json:"has_product_id,omitempty"`
+	Ids          []string `json:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int32  `json:"offset,omitempty"`
-	Q      *string `json:"q,omitempty"`
+	Offset *int32 `json:"offset,omitempty"`
+	// Filter by plan type
+	PlanType *string `json:"plan_type,omitempty"`
+	Q        *string `json:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty"`
 	AdditionalProperties  map[string]interface{}
@@ -80,6 +84,38 @@ func (o *ListPlansParams) HasCompanyId() bool {
 // SetCompanyId gets a reference to the given string and assigns it to the CompanyId field.
 func (o *ListPlansParams) SetCompanyId(v string) {
 	o.CompanyId = &v
+}
+
+// GetHasProductId returns the HasProductId field value if set, zero value otherwise.
+func (o *ListPlansParams) GetHasProductId() bool {
+	if o == nil || IsNil(o.HasProductId) {
+		var ret bool
+		return ret
+	}
+	return *o.HasProductId
+}
+
+// GetHasProductIdOk returns a tuple with the HasProductId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListPlansParams) GetHasProductIdOk() (*bool, bool) {
+	if o == nil || IsNil(o.HasProductId) {
+		return nil, false
+	}
+	return o.HasProductId, true
+}
+
+// HasHasProductId returns a boolean if a field has been set.
+func (o *ListPlansParams) HasHasProductId() bool {
+	if o != nil && !IsNil(o.HasProductId) {
+		return true
+	}
+
+	return false
+}
+
+// SetHasProductId gets a reference to the given bool and assigns it to the HasProductId field.
+func (o *ListPlansParams) SetHasProductId(v bool) {
+	o.HasProductId = &v
 }
 
 // GetIds returns the Ids field value if set, zero value otherwise.
@@ -178,6 +214,38 @@ func (o *ListPlansParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetPlanType returns the PlanType field value if set, zero value otherwise.
+func (o *ListPlansParams) GetPlanType() string {
+	if o == nil || IsNil(o.PlanType) {
+		var ret string
+		return ret
+	}
+	return *o.PlanType
+}
+
+// GetPlanTypeOk returns a tuple with the PlanType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListPlansParams) GetPlanTypeOk() (*string, bool) {
+	if o == nil || IsNil(o.PlanType) {
+		return nil, false
+	}
+	return o.PlanType, true
+}
+
+// HasPlanType returns a boolean if a field has been set.
+func (o *ListPlansParams) HasPlanType() bool {
+	if o != nil && !IsNil(o.PlanType) {
+		return true
+	}
+
+	return false
+}
+
+// SetPlanType gets a reference to the given string and assigns it to the PlanType field.
+func (o *ListPlansParams) SetPlanType(v string) {
+	o.PlanType = &v
+}
+
 // GetQ returns the Q field value if set, zero value otherwise.
 func (o *ListPlansParams) GetQ() string {
 	if o == nil || IsNil(o.Q) {
@@ -255,6 +323,9 @@ func (o ListPlansParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CompanyId) {
 		toSerialize["company_id"] = o.CompanyId
 	}
+	if !IsNil(o.HasProductId) {
+		toSerialize["has_product_id"] = o.HasProductId
+	}
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
@@ -263,6 +334,9 @@ func (o ListPlansParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.PlanType) {
+		toSerialize["plan_type"] = o.PlanType
 	}
 	if !IsNil(o.Q) {
 		toSerialize["q"] = o.Q
@@ -293,9 +367,11 @@ func (o *ListPlansParams) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "has_product_id")
 		delete(additionalProperties, "ids")
 		delete(additionalProperties, "limit")
 		delete(additionalProperties, "offset")
+		delete(additionalProperties, "plan_type")
 		delete(additionalProperties, "q")
 		delete(additionalProperties, "without_entitlement_for")
 		o.AdditionalProperties = additionalProperties

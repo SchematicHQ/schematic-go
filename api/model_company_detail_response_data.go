@@ -21,7 +21,7 @@ var _ MappedNullable = &CompanyDetailResponseData{}
 
 // CompanyDetailResponseData struct for CompanyDetailResponseData
 type CompanyDetailResponseData struct {
-	AddOns        []PreviewObject                 `json:"add_ons"`
+	AddOns        []BillingPlan                   `json:"add_ons"`
 	CreatedAt     time.Time                       `json:"created_at"`
 	EntityTraits  []EntityTraitDetailResponseData `json:"entity_traits"`
 	EnvironmentId string                          `json:"environment_id"`
@@ -30,7 +30,7 @@ type CompanyDetailResponseData struct {
 	LastSeenAt    NullableTime                    `json:"last_seen_at,omitempty"`
 	LogoUrl       NullableString                  `json:"logo_url,omitempty"`
 	Name          string                          `json:"name"`
-	Plan          *PreviewObject                  `json:"plan,omitempty"`
+	Plan          *BillingPlan                    `json:"plan,omitempty"`
 	Plans         []PreviewObject                 `json:"plans"`
 	// A map of trait names to trait values
 	Traits               map[string]interface{} `json:"traits,omitempty"`
@@ -45,7 +45,7 @@ type _CompanyDetailResponseData CompanyDetailResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCompanyDetailResponseData(addOns []PreviewObject, createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, plans []PreviewObject, updatedAt time.Time, userCount int32) *CompanyDetailResponseData {
+func NewCompanyDetailResponseData(addOns []BillingPlan, createdAt time.Time, entityTraits []EntityTraitDetailResponseData, environmentId string, id string, keys []EntityKeyDetailResponseData, name string, plans []PreviewObject, updatedAt time.Time, userCount int32) *CompanyDetailResponseData {
 	this := CompanyDetailResponseData{}
 	this.AddOns = addOns
 	this.CreatedAt = createdAt
@@ -69,9 +69,9 @@ func NewCompanyDetailResponseDataWithDefaults() *CompanyDetailResponseData {
 }
 
 // GetAddOns returns the AddOns field value
-func (o *CompanyDetailResponseData) GetAddOns() []PreviewObject {
+func (o *CompanyDetailResponseData) GetAddOns() []BillingPlan {
 	if o == nil {
-		var ret []PreviewObject
+		var ret []BillingPlan
 		return ret
 	}
 
@@ -80,7 +80,7 @@ func (o *CompanyDetailResponseData) GetAddOns() []PreviewObject {
 
 // GetAddOnsOk returns a tuple with the AddOns field value
 // and a boolean to check if the value has been set.
-func (o *CompanyDetailResponseData) GetAddOnsOk() ([]PreviewObject, bool) {
+func (o *CompanyDetailResponseData) GetAddOnsOk() ([]BillingPlan, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -88,7 +88,7 @@ func (o *CompanyDetailResponseData) GetAddOnsOk() ([]PreviewObject, bool) {
 }
 
 // SetAddOns sets field value
-func (o *CompanyDetailResponseData) SetAddOns(v []PreviewObject) {
+func (o *CompanyDetailResponseData) SetAddOns(v []BillingPlan) {
 	o.AddOns = v
 }
 
@@ -323,9 +323,9 @@ func (o *CompanyDetailResponseData) SetName(v string) {
 }
 
 // GetPlan returns the Plan field value if set, zero value otherwise.
-func (o *CompanyDetailResponseData) GetPlan() PreviewObject {
+func (o *CompanyDetailResponseData) GetPlan() BillingPlan {
 	if o == nil || IsNil(o.Plan) {
-		var ret PreviewObject
+		var ret BillingPlan
 		return ret
 	}
 	return *o.Plan
@@ -333,7 +333,7 @@ func (o *CompanyDetailResponseData) GetPlan() PreviewObject {
 
 // GetPlanOk returns a tuple with the Plan field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CompanyDetailResponseData) GetPlanOk() (*PreviewObject, bool) {
+func (o *CompanyDetailResponseData) GetPlanOk() (*BillingPlan, bool) {
 	if o == nil || IsNil(o.Plan) {
 		return nil, false
 	}
@@ -349,8 +349,8 @@ func (o *CompanyDetailResponseData) HasPlan() bool {
 	return false
 }
 
-// SetPlan gets a reference to the given PreviewObject and assigns it to the Plan field.
-func (o *CompanyDetailResponseData) SetPlan(v PreviewObject) {
+// SetPlan gets a reference to the given BillingPlan and assigns it to the Plan field.
+func (o *CompanyDetailResponseData) SetPlan(v BillingPlan) {
 	o.Plan = &v
 }
 

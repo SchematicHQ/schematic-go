@@ -19,7 +19,7 @@ Method | HTTP request | Description
 
 ## CountPlans
 
-> CountPlansResponse CountPlans(ctx).CompanyId(companyId).Ids(ids).Q(q).WithoutEntitlementFor(withoutEntitlementFor).Limit(limit).Offset(offset).Execute()
+> CountPlansResponse CountPlans(ctx).CompanyId(companyId).Ids(ids).Q(q).PlanType(planType).HasProductId(hasProductId).WithoutEntitlementFor(withoutEntitlementFor).Limit(limit).Offset(offset).Execute()
 
 Count plans
 
@@ -44,11 +44,13 @@ func main() {
 	companyId := "companyId_example" // string |  (optional)
 	ids := []string{"Inner_example"} // []string |  (optional)
 	q := "q_example" // string |  (optional)
+	planType := "planType_example" // string | Filter by plan type (optional)
+	hasProductId := true // bool | Filter out plans that do not have a billing product ID (optional)
 	withoutEntitlementFor := "withoutEntitlementFor_example" // string | Filter out plans that already have a plan entitlement for the specified feature ID (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().PlansAPI.CountPlans(context.Background()).CompanyId(companyId).Ids(ids).Q(q).WithoutEntitlementFor(withoutEntitlementFor).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().PlansAPI.CountPlans(context.Background()).CompanyId(companyId).Ids(ids).Q(q).PlanType(planType).HasProductId(hasProductId).WithoutEntitlementFor(withoutEntitlementFor).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `PlansAPI.CountPlans``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -72,6 +74,8 @@ Name | Type | Description  | Notes
  **companyId** | **string** |  | 
  **ids** | **[]string** |  | 
  **q** | **string** |  | 
+ **planType** | **string** | Filter by plan type | 
+ **hasProductId** | **bool** | Filter out plans that do not have a billing product ID | 
  **withoutEntitlementFor** | **string** | Filter out plans that already have a plan entitlement for the specified feature ID | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
@@ -447,7 +451,7 @@ Name | Type | Description  | Notes
 
 ## ListPlans
 
-> ListPlansResponse ListPlans(ctx).CompanyId(companyId).Ids(ids).Q(q).WithoutEntitlementFor(withoutEntitlementFor).Limit(limit).Offset(offset).Execute()
+> ListPlansResponse ListPlans(ctx).CompanyId(companyId).Ids(ids).Q(q).PlanType(planType).HasProductId(hasProductId).WithoutEntitlementFor(withoutEntitlementFor).Limit(limit).Offset(offset).Execute()
 
 List plans
 
@@ -472,11 +476,13 @@ func main() {
 	companyId := "companyId_example" // string |  (optional)
 	ids := []string{"Inner_example"} // []string |  (optional)
 	q := "q_example" // string |  (optional)
+	planType := "planType_example" // string | Filter by plan type (optional)
+	hasProductId := true // bool | Filter out plans that do not have a billing product ID (optional)
 	withoutEntitlementFor := "withoutEntitlementFor_example" // string | Filter out plans that already have a plan entitlement for the specified feature ID (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().PlansAPI.ListPlans(context.Background()).CompanyId(companyId).Ids(ids).Q(q).WithoutEntitlementFor(withoutEntitlementFor).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().PlansAPI.ListPlans(context.Background()).CompanyId(companyId).Ids(ids).Q(q).PlanType(planType).HasProductId(hasProductId).WithoutEntitlementFor(withoutEntitlementFor).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `PlansAPI.ListPlans``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -500,6 +506,8 @@ Name | Type | Description  | Notes
  **companyId** | **string** |  | 
  **ids** | **[]string** |  | 
  **q** | **string** |  | 
+ **planType** | **string** | Filter by plan type | 
+ **hasProductId** | **bool** | Filter out plans that do not have a billing product ID | 
  **withoutEntitlementFor** | **string** | Filter out plans that already have a plan entitlement for the specified feature ID | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
@@ -620,7 +628,7 @@ func main() {
 	defer client.Close()
 
 	planId := "planId_example" // string | plan_id
-	updatePlanRequestBody := *schematicapi.NewUpdatePlanRequestBody("AudienceType_example", "Name_example") // UpdatePlanRequestBody | 
+	updatePlanRequestBody := *schematicapi.NewUpdatePlanRequestBody("Name_example") // UpdatePlanRequestBody | 
 
 	resp, r, err := client.API().PlansAPI.UpdatePlan(context.Background(), planId).UpdatePlanRequestBody(updatePlanRequestBody).Execute()
 	if err != nil {

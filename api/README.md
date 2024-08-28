@@ -24,11 +24,15 @@ Class | Method | HTTP request | Description
 *BillingAPI* | [**CountCustomers**](docs/BillingAPI.md#countcustomers) | **Get** /billing/customers/count | Count customers
 *BillingAPI* | [**ListBillingProducts**](docs/BillingAPI.md#listbillingproducts) | **Get** /billing/products | List billing products
 *BillingAPI* | [**ListCustomers**](docs/BillingAPI.md#listcustomers) | **Get** /billing/customers | List customers
+*BillingAPI* | [**ListInvoices**](docs/BillingAPI.md#listinvoices) | **Get** /billing/invoices | List invoices
+*BillingAPI* | [**ListPaymentMethods**](docs/BillingAPI.md#listpaymentmethods) | **Get** /billing/payment-methods | List payment methods
 *BillingAPI* | [**ListProductPrices**](docs/BillingAPI.md#listproductprices) | **Get** /billing/product/prices | List product prices
 *BillingAPI* | [**UpsertBillingCustomer**](docs/BillingAPI.md#upsertbillingcustomer) | **Post** /billing/customer/upsert | Upsert billing customer
 *BillingAPI* | [**UpsertBillingPrice**](docs/BillingAPI.md#upsertbillingprice) | **Post** /billing/price/upsert | Upsert billing price
 *BillingAPI* | [**UpsertBillingProduct**](docs/BillingAPI.md#upsertbillingproduct) | **Post** /billing/product/upsert | Upsert billing product
 *BillingAPI* | [**UpsertBillingSubscription**](docs/BillingAPI.md#upsertbillingsubscription) | **Post** /billing/subscription/upsert | Upsert billing subscription
+*BillingAPI* | [**UpsertInvoice**](docs/BillingAPI.md#upsertinvoice) | **Post** /billing/invoices | Upsert invoice
+*BillingAPI* | [**UpsertPaymentMethod**](docs/BillingAPI.md#upsertpaymentmethod) | **Post** /billing/payment-methods | Upsert payment method
 *CompaniesAPI* | [**CountCompanies**](docs/CompaniesAPI.md#countcompanies) | **Get** /companies/count | Count companies
 *CompaniesAPI* | [**CountEntityKeyDefinitions**](docs/CompaniesAPI.md#countentitykeydefinitions) | **Get** /entity-key-definitions/count | Count entity key definitions
 *CompaniesAPI* | [**CountEntityTraitDefinitions**](docs/CompaniesAPI.md#countentitytraitdefinitions) | **Get** /entity-trait-definitions/count | Count entity trait definitions
@@ -50,7 +54,6 @@ Class | Method | HTTP request | Description
 *CompaniesAPI* | [**GetUser**](docs/CompaniesAPI.md#getuser) | **Get** /users/{user_id} | Get user
 *CompaniesAPI* | [**ListCompanies**](docs/CompaniesAPI.md#listcompanies) | **Get** /companies | List companies
 *CompaniesAPI* | [**ListCompanyMemberships**](docs/CompaniesAPI.md#listcompanymemberships) | **Get** /company-memberships | List company memberships
-*CompaniesAPI* | [**ListCompanyPlans**](docs/CompaniesAPI.md#listcompanyplans) | **Get** /company-plans | List company plans
 *CompaniesAPI* | [**ListEntityKeyDefinitions**](docs/CompaniesAPI.md#listentitykeydefinitions) | **Get** /entity-key-definitions | List entity key definitions
 *CompaniesAPI* | [**ListEntityTraitDefinitions**](docs/CompaniesAPI.md#listentitytraitdefinitions) | **Get** /entity-trait-definitions | List entity trait definitions
 *CompaniesAPI* | [**ListUsers**](docs/CompaniesAPI.md#listusers) | **Get** /users | List users
@@ -65,8 +68,8 @@ Class | Method | HTTP request | Description
 *ComponentsAPI* | [**CreateComponent**](docs/ComponentsAPI.md#createcomponent) | **Post** /components | Create component
 *ComponentsAPI* | [**DeleteComponent**](docs/ComponentsAPI.md#deletecomponent) | **Delete** /components/{component_id} | Delete component
 *ComponentsAPI* | [**GetComponent**](docs/ComponentsAPI.md#getcomponent) | **Get** /components/{component_id} | Get component
-*ComponentsAPI* | [**HydrateComponent**](docs/ComponentsAPI.md#hydratecomponent) | **Get** /components/{component_id}/hydrate | Hydrate component
 *ComponentsAPI* | [**ListComponents**](docs/ComponentsAPI.md#listcomponents) | **Get** /components | List components
+*ComponentsAPI* | [**PreviewComponentData**](docs/ComponentsAPI.md#previewcomponentdata) | **Get** /components/preview-data | Preview component data
 *ComponentsAPI* | [**UpdateComponent**](docs/ComponentsAPI.md#updatecomponent) | **Put** /components/{component_id} | Update component
 *CrmAPI* | [**ListCrmProducts**](docs/CrmAPI.md#listcrmproducts) | **Get** /crm/products | List crm products
 *CrmAPI* | [**UpsertCrmDeal**](docs/CrmAPI.md#upsertcrmdeal) | **Post** /crm/deals/upsert | Upsert crm deal
@@ -119,6 +122,9 @@ Class | Method | HTTP request | Description
 *FeaturesAPI* | [**UpdateFeature**](docs/FeaturesAPI.md#updatefeature) | **Put** /features/{feature_id} | Update feature
 *FeaturesAPI* | [**UpdateFlag**](docs/FeaturesAPI.md#updateflag) | **Put** /flags/{flag_id} | Update flag
 *FeaturesAPI* | [**UpdateFlagRules**](docs/FeaturesAPI.md#updateflagrules) | **Put** /flags/{flag_id}/rules | Update flag rules
+*PlangroupsAPI* | [**CreatePlanGroup**](docs/PlangroupsAPI.md#createplangroup) | **Post** /plan-groups | Create plan group
+*PlangroupsAPI* | [**GetPlanGroup**](docs/PlangroupsAPI.md#getplangroup) | **Get** /plan-groups | Get plan group
+*PlangroupsAPI* | [**UpdatePlanGroup**](docs/PlangroupsAPI.md#updateplangroup) | **Put** /plan-groups/{plan_group_id} | Update plan group
 *PlansAPI* | [**CountPlans**](docs/PlansAPI.md#countplans) | **Get** /plans/count | Count plans
 *PlansAPI* | [**CreatePlan**](docs/PlansAPI.md#createplan) | **Post** /plans | Create plan
 *PlansAPI* | [**DeleteAudience**](docs/PlansAPI.md#deleteaudience) | **Delete** /plan-audiences/{plan_audience_id} | Delete audience
@@ -151,8 +157,14 @@ Class | Method | HTTP request | Description
  - [BillingCustomerResponseData](docs/BillingCustomerResponseData.md)
  - [BillingCustomerSubscription](docs/BillingCustomerSubscription.md)
  - [BillingCustomerWithSubscriptionsResponseData](docs/BillingCustomerWithSubscriptionsResponseData.md)
+ - [BillingInvoiceRequestBody](docs/BillingInvoiceRequestBody.md)
+ - [BillingInvoiceResponseData](docs/BillingInvoiceResponseData.md)
+ - [BillingPaymentMethodRequestBody](docs/BillingPaymentMethodRequestBody.md)
+ - [BillingPaymentMethodResponseData](docs/BillingPaymentMethodResponseData.md)
+ - [BillingPlan](docs/BillingPlan.md)
  - [BillingPriceResponseData](docs/BillingPriceResponseData.md)
  - [BillingProductDetailResponseData](docs/BillingProductDetailResponseData.md)
+ - [BillingProductForSubscriptionResponseData](docs/BillingProductForSubscriptionResponseData.md)
  - [BillingProductPlanResponseData](docs/BillingProductPlanResponseData.md)
  - [BillingProductPricing](docs/BillingProductPricing.md)
  - [BillingProductResponseData](docs/BillingProductResponseData.md)
@@ -168,7 +180,7 @@ Class | Method | HTTP request | Description
  - [CompanyMembershipDetailResponseData](docs/CompanyMembershipDetailResponseData.md)
  - [CompanyMembershipResponseData](docs/CompanyMembershipResponseData.md)
  - [CompanyOverrideResponseData](docs/CompanyOverrideResponseData.md)
- - [CompanyPlanResponseData](docs/CompanyPlanResponseData.md)
+ - [CompanyPlanDetailResponseData](docs/CompanyPlanDetailResponseData.md)
  - [CompanyResponseData](docs/CompanyResponseData.md)
  - [CompanySubscriptionResponseData](docs/CompanySubscriptionResponseData.md)
  - [ComponentHydrateResponseData](docs/ComponentHydrateResponseData.md)
@@ -215,6 +227,8 @@ Class | Method | HTTP request | Description
  - [CreateApiKeyRequestBody](docs/CreateApiKeyRequestBody.md)
  - [CreateApiKeyResponse](docs/CreateApiKeyResponse.md)
  - [CreateBillingCustomerRequestBody](docs/CreateBillingCustomerRequestBody.md)
+ - [CreateBillingInvoiceRequestBody](docs/CreateBillingInvoiceRequestBody.md)
+ - [CreateBillingPaymentMethodRequestBody](docs/CreateBillingPaymentMethodRequestBody.md)
  - [CreateBillingPriceRequestBody](docs/CreateBillingPriceRequestBody.md)
  - [CreateBillingProductRequestBody](docs/CreateBillingProductRequestBody.md)
  - [CreateBillingSubscriptionsRequestBody](docs/CreateBillingSubscriptionsRequestBody.md)
@@ -244,6 +258,8 @@ Class | Method | HTTP request | Description
  - [CreateOrUpdateRuleRequestBody](docs/CreateOrUpdateRuleRequestBody.md)
  - [CreatePlanEntitlementRequestBody](docs/CreatePlanEntitlementRequestBody.md)
  - [CreatePlanEntitlementResponse](docs/CreatePlanEntitlementResponse.md)
+ - [CreatePlanGroupRequestBody](docs/CreatePlanGroupRequestBody.md)
+ - [CreatePlanGroupResponse](docs/CreatePlanGroupResponse.md)
  - [CreatePlanRequestBody](docs/CreatePlanRequestBody.md)
  - [CreatePlanResponse](docs/CreatePlanResponse.md)
  - [CreateReqCommon](docs/CreateReqCommon.md)
@@ -321,12 +337,12 @@ Class | Method | HTTP request | Description
  - [GetOrCreateCompanyMembershipResponse](docs/GetOrCreateCompanyMembershipResponse.md)
  - [GetOrCreateEntityTraitDefinitionResponse](docs/GetOrCreateEntityTraitDefinitionResponse.md)
  - [GetPlanEntitlementResponse](docs/GetPlanEntitlementResponse.md)
+ - [GetPlanGroupResponse](docs/GetPlanGroupResponse.md)
  - [GetPlanResponse](docs/GetPlanResponse.md)
  - [GetSegmentIntegrationStatusResponse](docs/GetSegmentIntegrationStatusResponse.md)
  - [GetUserResponse](docs/GetUserResponse.md)
  - [GetWebhookEventResponse](docs/GetWebhookEventResponse.md)
  - [GetWebhookResponse](docs/GetWebhookResponse.md)
- - [HydrateComponentResponse](docs/HydrateComponentResponse.md)
  - [IssueTemporaryAccessTokenRequestBody](docs/IssueTemporaryAccessTokenRequestBody.md)
  - [IssueTemporaryAccessTokenResponse](docs/IssueTemporaryAccessTokenResponse.md)
  - [IssueTemporaryAccessTokenResponseData](docs/IssueTemporaryAccessTokenResponseData.md)
@@ -345,8 +361,6 @@ Class | Method | HTTP request | Description
  - [ListCompanyMembershipsResponse](docs/ListCompanyMembershipsResponse.md)
  - [ListCompanyOverridesParams](docs/ListCompanyOverridesParams.md)
  - [ListCompanyOverridesResponse](docs/ListCompanyOverridesResponse.md)
- - [ListCompanyPlansParams](docs/ListCompanyPlansParams.md)
- - [ListCompanyPlansResponse](docs/ListCompanyPlansResponse.md)
  - [ListComponentsParams](docs/ListComponentsParams.md)
  - [ListComponentsResponse](docs/ListComponentsResponse.md)
  - [ListCrmProductsParams](docs/ListCrmProductsParams.md)
@@ -371,8 +385,12 @@ Class | Method | HTTP request | Description
  - [ListFeaturesResponse](docs/ListFeaturesResponse.md)
  - [ListFlagsParams](docs/ListFlagsParams.md)
  - [ListFlagsResponse](docs/ListFlagsResponse.md)
+ - [ListInvoicesParams](docs/ListInvoicesParams.md)
+ - [ListInvoicesResponse](docs/ListInvoicesResponse.md)
  - [ListMetricCountsParams](docs/ListMetricCountsParams.md)
  - [ListMetricCountsResponse](docs/ListMetricCountsResponse.md)
+ - [ListPaymentMethodsParams](docs/ListPaymentMethodsParams.md)
+ - [ListPaymentMethodsResponse](docs/ListPaymentMethodsResponse.md)
  - [ListPlanEntitlementsParams](docs/ListPlanEntitlementsParams.md)
  - [ListPlanEntitlementsResponse](docs/ListPlanEntitlementsResponse.md)
  - [ListPlansParams](docs/ListPlansParams.md)
@@ -395,7 +413,12 @@ Class | Method | HTTP request | Description
  - [PlanAudienceResponseData](docs/PlanAudienceResponseData.md)
  - [PlanDetailResponseData](docs/PlanDetailResponseData.md)
  - [PlanEntitlementResponseData](docs/PlanEntitlementResponseData.md)
+ - [PlanGroupDetailResponseData](docs/PlanGroupDetailResponseData.md)
+ - [PlanGroupPlanDetailResponseData](docs/PlanGroupPlanDetailResponseData.md)
+ - [PlanGroupResponseData](docs/PlanGroupResponseData.md)
  - [PlanResponseData](docs/PlanResponseData.md)
+ - [PreviewComponentDataParams](docs/PreviewComponentDataParams.md)
+ - [PreviewComponentDataResponse](docs/PreviewComponentDataResponse.md)
  - [PreviewObject](docs/PreviewObject.md)
  - [RawEventBatchResponseData](docs/RawEventBatchResponseData.md)
  - [RawEventResponseData](docs/RawEventResponseData.md)
@@ -408,6 +431,7 @@ Class | Method | HTTP request | Description
  - [RuleResponseData](docs/RuleResponseData.md)
  - [RulesDetailResponseData](docs/RulesDetailResponseData.md)
  - [SegmentStatusResp](docs/SegmentStatusResp.md)
+ - [StripeEmbedInfo](docs/StripeEmbedInfo.md)
  - [TemporaryAccessTokenResponseData](docs/TemporaryAccessTokenResponseData.md)
  - [UpdateApiKeyRequestBody](docs/UpdateApiKeyRequestBody.md)
  - [UpdateApiKeyResponse](docs/UpdateApiKeyResponse.md)
@@ -428,6 +452,8 @@ Class | Method | HTTP request | Description
  - [UpdateFlagRulesResponse](docs/UpdateFlagRulesResponse.md)
  - [UpdatePlanEntitlementRequestBody](docs/UpdatePlanEntitlementRequestBody.md)
  - [UpdatePlanEntitlementResponse](docs/UpdatePlanEntitlementResponse.md)
+ - [UpdatePlanGroupRequestBody](docs/UpdatePlanGroupRequestBody.md)
+ - [UpdatePlanGroupResponse](docs/UpdatePlanGroupResponse.md)
  - [UpdatePlanRequestBody](docs/UpdatePlanRequestBody.md)
  - [UpdatePlanResponse](docs/UpdatePlanResponse.md)
  - [UpdateReqCommon](docs/UpdateReqCommon.md)
@@ -446,7 +472,9 @@ Class | Method | HTTP request | Description
  - [UpsertCrmDealResponse](docs/UpsertCrmDealResponse.md)
  - [UpsertCrmProductResponse](docs/UpsertCrmProductResponse.md)
  - [UpsertDealLineItemAssociationResponse](docs/UpsertDealLineItemAssociationResponse.md)
+ - [UpsertInvoiceResponse](docs/UpsertInvoiceResponse.md)
  - [UpsertLineItemResponse](docs/UpsertLineItemResponse.md)
+ - [UpsertPaymentMethodResponse](docs/UpsertPaymentMethodResponse.md)
  - [UpsertTraitRequestBody](docs/UpsertTraitRequestBody.md)
  - [UpsertUserRequestBody](docs/UpsertUserRequestBody.md)
  - [UpsertUserResponse](docs/UpsertUserResponse.md)

@@ -19,10 +19,10 @@ var _ MappedNullable = &UpdateComponentRequestBody{}
 
 // UpdateComponentRequestBody struct for UpdateComponentRequestBody
 type UpdateComponentRequestBody struct {
-	Ast                  []int32        `json:"ast,omitempty"`
-	EntityType           NullableString `json:"entity_type,omitempty"`
-	Name                 NullableString `json:"name,omitempty"`
-	State                NullableString `json:"state,omitempty"`
+	Ast                  *map[string]float32 `json:"ast,omitempty"`
+	EntityType           NullableString      `json:"entity_type,omitempty"`
+	Name                 NullableString      `json:"name,omitempty"`
+	State                NullableString      `json:"state,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -45,19 +45,18 @@ func NewUpdateComponentRequestBodyWithDefaults() *UpdateComponentRequestBody {
 	return &this
 }
 
-// GetAst returns the Ast field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *UpdateComponentRequestBody) GetAst() []int32 {
-	if o == nil {
-		var ret []int32
+// GetAst returns the Ast field value if set, zero value otherwise.
+func (o *UpdateComponentRequestBody) GetAst() map[string]float32 {
+	if o == nil || IsNil(o.Ast) {
+		var ret map[string]float32
 		return ret
 	}
-	return o.Ast
+	return *o.Ast
 }
 
 // GetAstOk returns a tuple with the Ast field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *UpdateComponentRequestBody) GetAstOk() ([]int32, bool) {
+func (o *UpdateComponentRequestBody) GetAstOk() (*map[string]float32, bool) {
 	if o == nil || IsNil(o.Ast) {
 		return nil, false
 	}
@@ -73,9 +72,9 @@ func (o *UpdateComponentRequestBody) HasAst() bool {
 	return false
 }
 
-// SetAst gets a reference to the given []int32 and assigns it to the Ast field.
-func (o *UpdateComponentRequestBody) SetAst(v []int32) {
-	o.Ast = v
+// SetAst gets a reference to the given map[string]float32 and assigns it to the Ast field.
+func (o *UpdateComponentRequestBody) SetAst(v map[string]float32) {
+	o.Ast = &v
 }
 
 // GetEntityType returns the EntityType field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -217,7 +216,7 @@ func (o UpdateComponentRequestBody) MarshalJSON() ([]byte, error) {
 
 func (o UpdateComponentRequestBody) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Ast != nil {
+	if !IsNil(o.Ast) {
 		toSerialize["ast"] = o.Ast
 	}
 	if o.EntityType.IsSet() {

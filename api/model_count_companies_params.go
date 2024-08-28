@@ -29,7 +29,9 @@ type CountCompaniesParams struct {
 	Q *string `json:"q,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty"`
-	AdditionalProperties      map[string]interface{}
+	// Filter out companies that have a plan
+	WithoutPlan          *bool `json:"without_plan,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CountCompaniesParams CountCompaniesParams
@@ -243,6 +245,38 @@ func (o *CountCompaniesParams) SetWithoutFeatureOverrideFor(v string) {
 	o.WithoutFeatureOverrideFor = &v
 }
 
+// GetWithoutPlan returns the WithoutPlan field value if set, zero value otherwise.
+func (o *CountCompaniesParams) GetWithoutPlan() bool {
+	if o == nil || IsNil(o.WithoutPlan) {
+		var ret bool
+		return ret
+	}
+	return *o.WithoutPlan
+}
+
+// GetWithoutPlanOk returns a tuple with the WithoutPlan field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CountCompaniesParams) GetWithoutPlanOk() (*bool, bool) {
+	if o == nil || IsNil(o.WithoutPlan) {
+		return nil, false
+	}
+	return o.WithoutPlan, true
+}
+
+// HasWithoutPlan returns a boolean if a field has been set.
+func (o *CountCompaniesParams) HasWithoutPlan() bool {
+	if o != nil && !IsNil(o.WithoutPlan) {
+		return true
+	}
+
+	return false
+}
+
+// SetWithoutPlan gets a reference to the given bool and assigns it to the WithoutPlan field.
+func (o *CountCompaniesParams) SetWithoutPlan(v bool) {
+	o.WithoutPlan = &v
+}
+
 func (o CountCompaniesParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -270,6 +304,9 @@ func (o CountCompaniesParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.WithoutFeatureOverrideFor) {
 		toSerialize["without_feature_override_for"] = o.WithoutFeatureOverrideFor
+	}
+	if !IsNil(o.WithoutPlan) {
+		toSerialize["without_plan"] = o.WithoutPlan
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -299,6 +336,7 @@ func (o *CountCompaniesParams) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "plan_id")
 		delete(additionalProperties, "q")
 		delete(additionalProperties, "without_feature_override_for")
+		delete(additionalProperties, "without_plan")
 		o.AdditionalProperties = additionalProperties
 	}
 

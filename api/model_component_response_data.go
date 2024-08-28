@@ -19,15 +19,15 @@ import (
 // checks if the ComponentResponseData type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ComponentResponseData{}
 
-// ComponentResponseData struct for ComponentResponseData
+// ComponentResponseData The updated resource
 type ComponentResponseData struct {
-	Ast                  []int32   `json:"ast"`
-	CreatedAt            time.Time `json:"created_at"`
-	Id                   string    `json:"id"`
-	Name                 string    `json:"name"`
-	State                string    `json:"state"`
-	Type                 string    `json:"type"`
-	UpdatedAt            time.Time `json:"updated_at"`
+	Ast                  *map[string]float32 `json:"ast,omitempty"`
+	CreatedAt            time.Time           `json:"created_at"`
+	Id                   string              `json:"id"`
+	Name                 string              `json:"name"`
+	State                string              `json:"state"`
+	Type                 string              `json:"type"`
+	UpdatedAt            time.Time           `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -37,9 +37,8 @@ type _ComponentResponseData ComponentResponseData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewComponentResponseData(ast []int32, createdAt time.Time, id string, name string, state string, type_ string, updatedAt time.Time) *ComponentResponseData {
+func NewComponentResponseData(createdAt time.Time, id string, name string, state string, type_ string, updatedAt time.Time) *ComponentResponseData {
 	this := ComponentResponseData{}
-	this.Ast = ast
 	this.CreatedAt = createdAt
 	this.Id = id
 	this.Name = name
@@ -57,28 +56,36 @@ func NewComponentResponseDataWithDefaults() *ComponentResponseData {
 	return &this
 }
 
-// GetAst returns the Ast field value
-func (o *ComponentResponseData) GetAst() []int32 {
-	if o == nil {
-		var ret []int32
+// GetAst returns the Ast field value if set, zero value otherwise.
+func (o *ComponentResponseData) GetAst() map[string]float32 {
+	if o == nil || IsNil(o.Ast) {
+		var ret map[string]float32
 		return ret
 	}
-
-	return o.Ast
+	return *o.Ast
 }
 
-// GetAstOk returns a tuple with the Ast field value
+// GetAstOk returns a tuple with the Ast field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ComponentResponseData) GetAstOk() ([]int32, bool) {
-	if o == nil {
+func (o *ComponentResponseData) GetAstOk() (*map[string]float32, bool) {
+	if o == nil || IsNil(o.Ast) {
 		return nil, false
 	}
 	return o.Ast, true
 }
 
-// SetAst sets field value
-func (o *ComponentResponseData) SetAst(v []int32) {
-	o.Ast = v
+// HasAst returns a boolean if a field has been set.
+func (o *ComponentResponseData) HasAst() bool {
+	if o != nil && !IsNil(o.Ast) {
+		return true
+	}
+
+	return false
+}
+
+// SetAst gets a reference to the given map[string]float32 and assigns it to the Ast field.
+func (o *ComponentResponseData) SetAst(v map[string]float32) {
+	o.Ast = &v
 }
 
 // GetCreatedAt returns the CreatedAt field value
@@ -235,7 +242,9 @@ func (o ComponentResponseData) MarshalJSON() ([]byte, error) {
 
 func (o ComponentResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["ast"] = o.Ast
+	if !IsNil(o.Ast) {
+		toSerialize["ast"] = o.Ast
+	}
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
@@ -255,7 +264,6 @@ func (o *ComponentResponseData) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"ast",
 		"created_at",
 		"id",
 		"name",

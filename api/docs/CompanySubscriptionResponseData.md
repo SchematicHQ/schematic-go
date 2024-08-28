@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 **CustomerExternalId** | **string** |  | 
 **ExpiredAt** | Pointer to **NullableTime** |  | [optional] 
 **Interval** | **string** |  | 
-**LatestInvoice** | Pointer to [**BillingInvoiceResponseData**](BillingInvoiceResponseData.md) |  | [optional] 
-**PaymentMethod** | Pointer to [**BillingPaymentMethodResponseData**](BillingPaymentMethodResponseData.md) |  | [optional] 
+**LatestInvoice** | Pointer to [**InvoiceResponseData**](InvoiceResponseData.md) |  | [optional] 
+**PaymentMethod** | Pointer to [**PaymentMethodResponseData**](PaymentMethodResponseData.md) |  | [optional] 
 **Products** | [**[]BillingProductForSubscriptionResponseData**](BillingProductForSubscriptionResponseData.md) |  | 
 **SubscriptionExternalId** | **string** |  | 
 **TotalPrice** | **int32** |  | 
@@ -109,20 +109,20 @@ SetInterval sets Interval field to given value.
 
 ### GetLatestInvoice
 
-`func (o *CompanySubscriptionResponseData) GetLatestInvoice() BillingInvoiceResponseData`
+`func (o *CompanySubscriptionResponseData) GetLatestInvoice() InvoiceResponseData`
 
 GetLatestInvoice returns the LatestInvoice field if non-nil, zero value otherwise.
 
 ### GetLatestInvoiceOk
 
-`func (o *CompanySubscriptionResponseData) GetLatestInvoiceOk() (*BillingInvoiceResponseData, bool)`
+`func (o *CompanySubscriptionResponseData) GetLatestInvoiceOk() (*InvoiceResponseData, bool)`
 
 GetLatestInvoiceOk returns a tuple with the LatestInvoice field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetLatestInvoice
 
-`func (o *CompanySubscriptionResponseData) SetLatestInvoice(v BillingInvoiceResponseData)`
+`func (o *CompanySubscriptionResponseData) SetLatestInvoice(v InvoiceResponseData)`
 
 SetLatestInvoice sets LatestInvoice field to given value.
 
@@ -134,20 +134,20 @@ HasLatestInvoice returns a boolean if a field has been set.
 
 ### GetPaymentMethod
 
-`func (o *CompanySubscriptionResponseData) GetPaymentMethod() BillingPaymentMethodResponseData`
+`func (o *CompanySubscriptionResponseData) GetPaymentMethod() PaymentMethodResponseData`
 
 GetPaymentMethod returns the PaymentMethod field if non-nil, zero value otherwise.
 
 ### GetPaymentMethodOk
 
-`func (o *CompanySubscriptionResponseData) GetPaymentMethodOk() (*BillingPaymentMethodResponseData, bool)`
+`func (o *CompanySubscriptionResponseData) GetPaymentMethodOk() (*PaymentMethodResponseData, bool)`
 
 GetPaymentMethodOk returns a tuple with the PaymentMethod field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPaymentMethod
 
-`func (o *CompanySubscriptionResponseData) SetPaymentMethod(v BillingPaymentMethodResponseData)`
+`func (o *CompanySubscriptionResponseData) SetPaymentMethod(v PaymentMethodResponseData)`
 
 SetPaymentMethod sets PaymentMethod field to given value.
 

@@ -20,7 +20,7 @@ var _ MappedNullable = &UpsertInvoiceResponse{}
 
 // UpsertInvoiceResponse struct for UpsertInvoiceResponse
 type UpsertInvoiceResponse struct {
-	Data BillingInvoiceResponseData `json:"data"`
+	Data InvoiceResponseData `json:"data"`
 	// Input parameters
 	Params               map[string]interface{} `json:"params"`
 	AdditionalProperties map[string]interface{}
@@ -32,7 +32,7 @@ type _UpsertInvoiceResponse UpsertInvoiceResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUpsertInvoiceResponse(data BillingInvoiceResponseData, params map[string]interface{}) *UpsertInvoiceResponse {
+func NewUpsertInvoiceResponse(data InvoiceResponseData, params map[string]interface{}) *UpsertInvoiceResponse {
 	this := UpsertInvoiceResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewUpsertInvoiceResponseWithDefaults() *UpsertInvoiceResponse {
 }
 
 // GetData returns the Data field value
-func (o *UpsertInvoiceResponse) GetData() BillingInvoiceResponseData {
+func (o *UpsertInvoiceResponse) GetData() InvoiceResponseData {
 	if o == nil {
-		var ret BillingInvoiceResponseData
+		var ret InvoiceResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *UpsertInvoiceResponse) GetData() BillingInvoiceResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *UpsertInvoiceResponse) GetDataOk() (*BillingInvoiceResponseData, bool) {
+func (o *UpsertInvoiceResponse) GetDataOk() (*InvoiceResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *UpsertInvoiceResponse) GetDataOk() (*BillingInvoiceResponseData, bool) 
 }
 
 // SetData sets field value
-func (o *UpsertInvoiceResponse) SetData(v BillingInvoiceResponseData) {
+func (o *UpsertInvoiceResponse) SetData(v InvoiceResponseData) {
 	o.Data = v
 }
 

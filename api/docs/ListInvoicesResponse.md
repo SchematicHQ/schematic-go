@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]BillingInvoiceResponseData**](BillingInvoiceResponseData.md) | The returned resources | 
+**Data** | [**[]InvoiceResponseData**](InvoiceResponseData.md) | The returned resources | 
 **Params** | [**ListInvoicesParams**](ListInvoicesParams.md) |  | 
 
 ## Methods
 
 ### NewListInvoicesResponse
 
-`func NewListInvoicesResponse(data []BillingInvoiceResponseData, params ListInvoicesParams, ) *ListInvoicesResponse`
+`func NewListInvoicesResponse(data []InvoiceResponseData, params ListInvoicesParams, ) *ListInvoicesResponse`
 
 NewListInvoicesResponse instantiates a new ListInvoicesResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *ListInvoicesResponse) GetData() []BillingInvoiceResponseData`
+`func (o *ListInvoicesResponse) GetData() []InvoiceResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *ListInvoicesResponse) GetDataOk() (*[]BillingInvoiceResponseData, bool)`
+`func (o *ListInvoicesResponse) GetDataOk() (*[]InvoiceResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *ListInvoicesResponse) SetData(v []BillingInvoiceResponseData)`
+`func (o *ListInvoicesResponse) SetData(v []InvoiceResponseData)`
 
 SetData sets Data field to given value.
 

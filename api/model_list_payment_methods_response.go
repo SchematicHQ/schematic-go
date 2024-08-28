@@ -21,8 +21,8 @@ var _ MappedNullable = &ListPaymentMethodsResponse{}
 // ListPaymentMethodsResponse struct for ListPaymentMethodsResponse
 type ListPaymentMethodsResponse struct {
 	// The returned resources
-	Data                 []BillingPaymentMethodResponseData `json:"data"`
-	Params               ListPaymentMethodsParams           `json:"params"`
+	Data                 []PaymentMethodResponseData `json:"data"`
+	Params               ListPaymentMethodsParams    `json:"params"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -32,7 +32,7 @@ type _ListPaymentMethodsResponse ListPaymentMethodsResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListPaymentMethodsResponse(data []BillingPaymentMethodResponseData, params ListPaymentMethodsParams) *ListPaymentMethodsResponse {
+func NewListPaymentMethodsResponse(data []PaymentMethodResponseData, params ListPaymentMethodsParams) *ListPaymentMethodsResponse {
 	this := ListPaymentMethodsResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewListPaymentMethodsResponseWithDefaults() *ListPaymentMethodsResponse {
 }
 
 // GetData returns the Data field value
-func (o *ListPaymentMethodsResponse) GetData() []BillingPaymentMethodResponseData {
+func (o *ListPaymentMethodsResponse) GetData() []PaymentMethodResponseData {
 	if o == nil {
-		var ret []BillingPaymentMethodResponseData
+		var ret []PaymentMethodResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *ListPaymentMethodsResponse) GetData() []BillingPaymentMethodResponseDat
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *ListPaymentMethodsResponse) GetDataOk() ([]BillingPaymentMethodResponseData, bool) {
+func (o *ListPaymentMethodsResponse) GetDataOk() ([]PaymentMethodResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *ListPaymentMethodsResponse) GetDataOk() ([]BillingPaymentMethodResponse
 }
 
 // SetData sets field value
-func (o *ListPaymentMethodsResponse) SetData(v []BillingPaymentMethodResponseData) {
+func (o *ListPaymentMethodsResponse) SetData(v []PaymentMethodResponseData) {
 	o.Data = v
 }
 

@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]BillingPaymentMethodResponseData**](BillingPaymentMethodResponseData.md) | The returned resources | 
+**Data** | [**[]PaymentMethodResponseData**](PaymentMethodResponseData.md) | The returned resources | 
 **Params** | [**ListPaymentMethodsParams**](ListPaymentMethodsParams.md) |  | 
 
 ## Methods
 
 ### NewListPaymentMethodsResponse
 
-`func NewListPaymentMethodsResponse(data []BillingPaymentMethodResponseData, params ListPaymentMethodsParams, ) *ListPaymentMethodsResponse`
+`func NewListPaymentMethodsResponse(data []PaymentMethodResponseData, params ListPaymentMethodsParams, ) *ListPaymentMethodsResponse`
 
 NewListPaymentMethodsResponse instantiates a new ListPaymentMethodsResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *ListPaymentMethodsResponse) GetData() []BillingPaymentMethodResponseData`
+`func (o *ListPaymentMethodsResponse) GetData() []PaymentMethodResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *ListPaymentMethodsResponse) GetDataOk() (*[]BillingPaymentMethodResponseData, bool)`
+`func (o *ListPaymentMethodsResponse) GetDataOk() (*[]PaymentMethodResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *ListPaymentMethodsResponse) SetData(v []BillingPaymentMethodResponseData)`
+`func (o *ListPaymentMethodsResponse) SetData(v []PaymentMethodResponseData)`
 
 SetData sets Data field to given value.
 

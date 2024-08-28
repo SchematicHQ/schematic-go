@@ -20,7 +20,7 @@ var _ MappedNullable = &UpsertPaymentMethodResponse{}
 
 // UpsertPaymentMethodResponse struct for UpsertPaymentMethodResponse
 type UpsertPaymentMethodResponse struct {
-	Data BillingPaymentMethodResponseData `json:"data"`
+	Data PaymentMethodResponseData `json:"data"`
 	// Input parameters
 	Params               map[string]interface{} `json:"params"`
 	AdditionalProperties map[string]interface{}
@@ -32,7 +32,7 @@ type _UpsertPaymentMethodResponse UpsertPaymentMethodResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUpsertPaymentMethodResponse(data BillingPaymentMethodResponseData, params map[string]interface{}) *UpsertPaymentMethodResponse {
+func NewUpsertPaymentMethodResponse(data PaymentMethodResponseData, params map[string]interface{}) *UpsertPaymentMethodResponse {
 	this := UpsertPaymentMethodResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewUpsertPaymentMethodResponseWithDefaults() *UpsertPaymentMethodResponse {
 }
 
 // GetData returns the Data field value
-func (o *UpsertPaymentMethodResponse) GetData() BillingPaymentMethodResponseData {
+func (o *UpsertPaymentMethodResponse) GetData() PaymentMethodResponseData {
 	if o == nil {
-		var ret BillingPaymentMethodResponseData
+		var ret PaymentMethodResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *UpsertPaymentMethodResponse) GetData() BillingPaymentMethodResponseData
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *UpsertPaymentMethodResponse) GetDataOk() (*BillingPaymentMethodResponseData, bool) {
+func (o *UpsertPaymentMethodResponse) GetDataOk() (*PaymentMethodResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *UpsertPaymentMethodResponse) GetDataOk() (*BillingPaymentMethodResponse
 }
 
 // SetData sets field value
-func (o *UpsertPaymentMethodResponse) SetData(v BillingPaymentMethodResponseData) {
+func (o *UpsertPaymentMethodResponse) SetData(v PaymentMethodResponseData) {
 	o.Data = v
 }
 

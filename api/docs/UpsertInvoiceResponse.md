@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**BillingInvoiceResponseData**](BillingInvoiceResponseData.md) |  | 
+**Data** | [**InvoiceResponseData**](InvoiceResponseData.md) |  | 
 **Params** | **map[string]interface{}** | Input parameters | 
 
 ## Methods
 
 ### NewUpsertInvoiceResponse
 
-`func NewUpsertInvoiceResponse(data BillingInvoiceResponseData, params map[string]interface{}, ) *UpsertInvoiceResponse`
+`func NewUpsertInvoiceResponse(data InvoiceResponseData, params map[string]interface{}, ) *UpsertInvoiceResponse`
 
 NewUpsertInvoiceResponse instantiates a new UpsertInvoiceResponse object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetData
 
-`func (o *UpsertInvoiceResponse) GetData() BillingInvoiceResponseData`
+`func (o *UpsertInvoiceResponse) GetData() InvoiceResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *UpsertInvoiceResponse) GetDataOk() (*BillingInvoiceResponseData, bool)`
+`func (o *UpsertInvoiceResponse) GetDataOk() (*InvoiceResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *UpsertInvoiceResponse) SetData(v BillingInvoiceResponseData)`
+`func (o *UpsertInvoiceResponse) SetData(v InvoiceResponseData)`
 
 SetData sets Data field to given value.
 

@@ -798,25 +798,25 @@ func (a *BillingAPIService) ListCustomersExecute(r ApiListCustomersRequest) (*Li
 type ApiListInvoicesRequest struct {
 	ctx                    context.Context
 	ApiService             BillingAPI
-	customerExternalID     *string
-	companyID              *string
-	subscriptionExternalID *string
+	customerExternalId     *string
+	companyId              *string
+	subscriptionExternalId *string
 	limit                  *int32
 	offset                 *int32
 }
 
-func (r ApiListInvoicesRequest) CustomerExternalID(customerExternalID string) ApiListInvoicesRequest {
-	r.customerExternalID = &customerExternalID
+func (r ApiListInvoicesRequest) CustomerExternalId(customerExternalId string) ApiListInvoicesRequest {
+	r.customerExternalId = &customerExternalId
 	return r
 }
 
-func (r ApiListInvoicesRequest) CompanyID(companyID string) ApiListInvoicesRequest {
-	r.companyID = &companyID
+func (r ApiListInvoicesRequest) CompanyId(companyId string) ApiListInvoicesRequest {
+	r.companyId = &companyId
 	return r
 }
 
-func (r ApiListInvoicesRequest) SubscriptionExternalID(subscriptionExternalID string) ApiListInvoicesRequest {
-	r.subscriptionExternalID = &subscriptionExternalID
+func (r ApiListInvoicesRequest) SubscriptionExternalId(subscriptionExternalId string) ApiListInvoicesRequest {
+	r.subscriptionExternalId = &subscriptionExternalId
 	return r
 }
 
@@ -870,16 +870,16 @@ func (a *BillingAPIService) ListInvoicesExecute(r ApiListInvoicesRequest) (*List
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.customerExternalID == nil {
-		return localVarReturnValue, nil, reportError("customerExternalID is required and must be specified")
+	if r.customerExternalId == nil {
+		return localVarReturnValue, nil, reportError("customerExternalId is required and must be specified")
 	}
 
-	if r.companyID != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "CompanyID", r.companyID, "")
+	if r.companyId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "company_id", r.companyId, "")
 	}
-	parameterAddToHeaderOrQuery(localVarQueryParams, "CustomerExternalID", r.customerExternalID, "")
-	if r.subscriptionExternalID != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "SubscriptionExternalID", r.subscriptionExternalID, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "customer_external_id", r.customerExternalId, "")
+	if r.subscriptionExternalId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "subscription_external_id", r.subscriptionExternalId, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -1005,31 +1005,31 @@ func (a *BillingAPIService) ListInvoicesExecute(r ApiListInvoicesRequest) (*List
 type ApiListPaymentMethodsRequest struct {
 	ctx                    context.Context
 	ApiService             BillingAPI
-	customerExternalID     *string
-	companyID              *string
-	invoiceExternalID      *string
-	subscriptionExternalID *string
+	customerExternalId     *string
+	companyId              *string
+	invoiceExternalId      *string
+	subscriptionExternalId *string
 	limit                  *int32
 	offset                 *int32
 }
 
-func (r ApiListPaymentMethodsRequest) CustomerExternalID(customerExternalID string) ApiListPaymentMethodsRequest {
-	r.customerExternalID = &customerExternalID
+func (r ApiListPaymentMethodsRequest) CustomerExternalId(customerExternalId string) ApiListPaymentMethodsRequest {
+	r.customerExternalId = &customerExternalId
 	return r
 }
 
-func (r ApiListPaymentMethodsRequest) CompanyID(companyID string) ApiListPaymentMethodsRequest {
-	r.companyID = &companyID
+func (r ApiListPaymentMethodsRequest) CompanyId(companyId string) ApiListPaymentMethodsRequest {
+	r.companyId = &companyId
 	return r
 }
 
-func (r ApiListPaymentMethodsRequest) InvoiceExternalID(invoiceExternalID string) ApiListPaymentMethodsRequest {
-	r.invoiceExternalID = &invoiceExternalID
+func (r ApiListPaymentMethodsRequest) InvoiceExternalId(invoiceExternalId string) ApiListPaymentMethodsRequest {
+	r.invoiceExternalId = &invoiceExternalId
 	return r
 }
 
-func (r ApiListPaymentMethodsRequest) SubscriptionExternalID(subscriptionExternalID string) ApiListPaymentMethodsRequest {
-	r.subscriptionExternalID = &subscriptionExternalID
+func (r ApiListPaymentMethodsRequest) SubscriptionExternalId(subscriptionExternalId string) ApiListPaymentMethodsRequest {
+	r.subscriptionExternalId = &subscriptionExternalId
 	return r
 }
 
@@ -1083,19 +1083,19 @@ func (a *BillingAPIService) ListPaymentMethodsExecute(r ApiListPaymentMethodsReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.customerExternalID == nil {
-		return localVarReturnValue, nil, reportError("customerExternalID is required and must be specified")
+	if r.customerExternalId == nil {
+		return localVarReturnValue, nil, reportError("customerExternalId is required and must be specified")
 	}
 
-	if r.companyID != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "CompanyID", r.companyID, "")
+	if r.companyId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "company_id", r.companyId, "")
 	}
-	parameterAddToHeaderOrQuery(localVarQueryParams, "CustomerExternalID", r.customerExternalID, "")
-	if r.invoiceExternalID != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "InvoiceExternalID", r.invoiceExternalID, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "customer_external_id", r.customerExternalId, "")
+	if r.invoiceExternalId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "invoice_external_id", r.invoiceExternalId, "")
 	}
-	if r.subscriptionExternalID != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "SubscriptionExternalID", r.subscriptionExternalID, "")
+	if r.subscriptionExternalId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "subscription_external_id", r.subscriptionExternalId, "")
 	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
@@ -2113,13 +2113,13 @@ func (a *BillingAPIService) UpsertBillingSubscriptionExecute(r ApiUpsertBillingS
 }
 
 type ApiUpsertInvoiceRequest struct {
-	ctx                             context.Context
-	ApiService                      BillingAPI
-	createBillingInvoiceRequestBody *CreateBillingInvoiceRequestBody
+	ctx                      context.Context
+	ApiService               BillingAPI
+	createInvoiceRequestBody *CreateInvoiceRequestBody
 }
 
-func (r ApiUpsertInvoiceRequest) CreateBillingInvoiceRequestBody(createBillingInvoiceRequestBody CreateBillingInvoiceRequestBody) ApiUpsertInvoiceRequest {
-	r.createBillingInvoiceRequestBody = &createBillingInvoiceRequestBody
+func (r ApiUpsertInvoiceRequest) CreateInvoiceRequestBody(createInvoiceRequestBody CreateInvoiceRequestBody) ApiUpsertInvoiceRequest {
+	r.createInvoiceRequestBody = &createInvoiceRequestBody
 	return r
 }
 
@@ -2161,8 +2161,8 @@ func (a *BillingAPIService) UpsertInvoiceExecute(r ApiUpsertInvoiceRequest) (*Up
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createBillingInvoiceRequestBody == nil {
-		return localVarReturnValue, nil, reportError("createBillingInvoiceRequestBody is required and must be specified")
+	if r.createInvoiceRequestBody == nil {
+		return localVarReturnValue, nil, reportError("createInvoiceRequestBody is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -2183,7 +2183,7 @@ func (a *BillingAPIService) UpsertInvoiceExecute(r ApiUpsertInvoiceRequest) (*Up
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.createBillingInvoiceRequestBody
+	localVarPostBody = r.createInvoiceRequestBody
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
@@ -2283,13 +2283,13 @@ func (a *BillingAPIService) UpsertInvoiceExecute(r ApiUpsertInvoiceRequest) (*Up
 }
 
 type ApiUpsertPaymentMethodRequest struct {
-	ctx                                   context.Context
-	ApiService                            BillingAPI
-	createBillingPaymentMethodRequestBody *CreateBillingPaymentMethodRequestBody
+	ctx                            context.Context
+	ApiService                     BillingAPI
+	createPaymentMethodRequestBody *CreatePaymentMethodRequestBody
 }
 
-func (r ApiUpsertPaymentMethodRequest) CreateBillingPaymentMethodRequestBody(createBillingPaymentMethodRequestBody CreateBillingPaymentMethodRequestBody) ApiUpsertPaymentMethodRequest {
-	r.createBillingPaymentMethodRequestBody = &createBillingPaymentMethodRequestBody
+func (r ApiUpsertPaymentMethodRequest) CreatePaymentMethodRequestBody(createPaymentMethodRequestBody CreatePaymentMethodRequestBody) ApiUpsertPaymentMethodRequest {
+	r.createPaymentMethodRequestBody = &createPaymentMethodRequestBody
 	return r
 }
 
@@ -2331,8 +2331,8 @@ func (a *BillingAPIService) UpsertPaymentMethodExecute(r ApiUpsertPaymentMethodR
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createBillingPaymentMethodRequestBody == nil {
-		return localVarReturnValue, nil, reportError("createBillingPaymentMethodRequestBody is required and must be specified")
+	if r.createPaymentMethodRequestBody == nil {
+		return localVarReturnValue, nil, reportError("createPaymentMethodRequestBody is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -2353,7 +2353,7 @@ func (a *BillingAPIService) UpsertPaymentMethodExecute(r ApiUpsertPaymentMethodR
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.createBillingPaymentMethodRequestBody
+	localVarPostBody = r.createPaymentMethodRequestBody
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {

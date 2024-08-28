@@ -21,8 +21,8 @@ var _ MappedNullable = &ListInvoicesResponse{}
 // ListInvoicesResponse struct for ListInvoicesResponse
 type ListInvoicesResponse struct {
 	// The returned resources
-	Data                 []BillingInvoiceResponseData `json:"data"`
-	Params               ListInvoicesParams           `json:"params"`
+	Data                 []InvoiceResponseData `json:"data"`
+	Params               ListInvoicesParams    `json:"params"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -32,7 +32,7 @@ type _ListInvoicesResponse ListInvoicesResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewListInvoicesResponse(data []BillingInvoiceResponseData, params ListInvoicesParams) *ListInvoicesResponse {
+func NewListInvoicesResponse(data []InvoiceResponseData, params ListInvoicesParams) *ListInvoicesResponse {
 	this := ListInvoicesResponse{}
 	this.Data = data
 	this.Params = params
@@ -48,9 +48,9 @@ func NewListInvoicesResponseWithDefaults() *ListInvoicesResponse {
 }
 
 // GetData returns the Data field value
-func (o *ListInvoicesResponse) GetData() []BillingInvoiceResponseData {
+func (o *ListInvoicesResponse) GetData() []InvoiceResponseData {
 	if o == nil {
-		var ret []BillingInvoiceResponseData
+		var ret []InvoiceResponseData
 		return ret
 	}
 
@@ -59,7 +59,7 @@ func (o *ListInvoicesResponse) GetData() []BillingInvoiceResponseData {
 
 // GetDataOk returns a tuple with the Data field value
 // and a boolean to check if the value has been set.
-func (o *ListInvoicesResponse) GetDataOk() ([]BillingInvoiceResponseData, bool) {
+func (o *ListInvoicesResponse) GetDataOk() ([]InvoiceResponseData, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *ListInvoicesResponse) GetDataOk() ([]BillingInvoiceResponseData, bool) 
 }
 
 // SetData sets field value
-func (o *ListInvoicesResponse) SetData(v []BillingInvoiceResponseData) {
+func (o *ListInvoicesResponse) SetData(v []InvoiceResponseData) {
 	o.Data = v
 }
 

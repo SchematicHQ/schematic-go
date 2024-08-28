@@ -19,14 +19,14 @@ var _ MappedNullable = &ListInvoicesParams{}
 
 // ListInvoicesParams Input parameters
 type ListInvoicesParams struct {
-	CompanyID              *string `json:"CompanyID,omitempty"`
-	CustomerExternalID     *string `json:"CustomerExternalID,omitempty"`
-	SubscriptionExternalID *string `json:"SubscriptionExternalID,omitempty"`
+	CompanyId          *string `json:"company_id,omitempty"`
+	CustomerExternalId *string `json:"customer_external_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int32 `json:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset               *int32 `json:"offset,omitempty"`
-	AdditionalProperties map[string]interface{}
+	Offset                 *int32  `json:"offset,omitempty"`
+	SubscriptionExternalId *string `json:"subscription_external_id,omitempty"`
+	AdditionalProperties   map[string]interface{}
 }
 
 type _ListInvoicesParams ListInvoicesParams
@@ -48,100 +48,68 @@ func NewListInvoicesParamsWithDefaults() *ListInvoicesParams {
 	return &this
 }
 
-// GetCompanyID returns the CompanyID field value if set, zero value otherwise.
-func (o *ListInvoicesParams) GetCompanyID() string {
-	if o == nil || IsNil(o.CompanyID) {
+// GetCompanyId returns the CompanyId field value if set, zero value otherwise.
+func (o *ListInvoicesParams) GetCompanyId() string {
+	if o == nil || IsNil(o.CompanyId) {
 		var ret string
 		return ret
 	}
-	return *o.CompanyID
+	return *o.CompanyId
 }
 
-// GetCompanyIDOk returns a tuple with the CompanyID field value if set, nil otherwise
+// GetCompanyIdOk returns a tuple with the CompanyId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListInvoicesParams) GetCompanyIDOk() (*string, bool) {
-	if o == nil || IsNil(o.CompanyID) {
+func (o *ListInvoicesParams) GetCompanyIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompanyId) {
 		return nil, false
 	}
-	return o.CompanyID, true
+	return o.CompanyId, true
 }
 
-// HasCompanyID returns a boolean if a field has been set.
-func (o *ListInvoicesParams) HasCompanyID() bool {
-	if o != nil && !IsNil(o.CompanyID) {
+// HasCompanyId returns a boolean if a field has been set.
+func (o *ListInvoicesParams) HasCompanyId() bool {
+	if o != nil && !IsNil(o.CompanyId) {
 		return true
 	}
 
 	return false
 }
 
-// SetCompanyID gets a reference to the given string and assigns it to the CompanyID field.
-func (o *ListInvoicesParams) SetCompanyID(v string) {
-	o.CompanyID = &v
+// SetCompanyId gets a reference to the given string and assigns it to the CompanyId field.
+func (o *ListInvoicesParams) SetCompanyId(v string) {
+	o.CompanyId = &v
 }
 
-// GetCustomerExternalID returns the CustomerExternalID field value if set, zero value otherwise.
-func (o *ListInvoicesParams) GetCustomerExternalID() string {
-	if o == nil || IsNil(o.CustomerExternalID) {
+// GetCustomerExternalId returns the CustomerExternalId field value if set, zero value otherwise.
+func (o *ListInvoicesParams) GetCustomerExternalId() string {
+	if o == nil || IsNil(o.CustomerExternalId) {
 		var ret string
 		return ret
 	}
-	return *o.CustomerExternalID
+	return *o.CustomerExternalId
 }
 
-// GetCustomerExternalIDOk returns a tuple with the CustomerExternalID field value if set, nil otherwise
+// GetCustomerExternalIdOk returns a tuple with the CustomerExternalId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ListInvoicesParams) GetCustomerExternalIDOk() (*string, bool) {
-	if o == nil || IsNil(o.CustomerExternalID) {
+func (o *ListInvoicesParams) GetCustomerExternalIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CustomerExternalId) {
 		return nil, false
 	}
-	return o.CustomerExternalID, true
+	return o.CustomerExternalId, true
 }
 
-// HasCustomerExternalID returns a boolean if a field has been set.
-func (o *ListInvoicesParams) HasCustomerExternalID() bool {
-	if o != nil && !IsNil(o.CustomerExternalID) {
+// HasCustomerExternalId returns a boolean if a field has been set.
+func (o *ListInvoicesParams) HasCustomerExternalId() bool {
+	if o != nil && !IsNil(o.CustomerExternalId) {
 		return true
 	}
 
 	return false
 }
 
-// SetCustomerExternalID gets a reference to the given string and assigns it to the CustomerExternalID field.
-func (o *ListInvoicesParams) SetCustomerExternalID(v string) {
-	o.CustomerExternalID = &v
-}
-
-// GetSubscriptionExternalID returns the SubscriptionExternalID field value if set, zero value otherwise.
-func (o *ListInvoicesParams) GetSubscriptionExternalID() string {
-	if o == nil || IsNil(o.SubscriptionExternalID) {
-		var ret string
-		return ret
-	}
-	return *o.SubscriptionExternalID
-}
-
-// GetSubscriptionExternalIDOk returns a tuple with the SubscriptionExternalID field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ListInvoicesParams) GetSubscriptionExternalIDOk() (*string, bool) {
-	if o == nil || IsNil(o.SubscriptionExternalID) {
-		return nil, false
-	}
-	return o.SubscriptionExternalID, true
-}
-
-// HasSubscriptionExternalID returns a boolean if a field has been set.
-func (o *ListInvoicesParams) HasSubscriptionExternalID() bool {
-	if o != nil && !IsNil(o.SubscriptionExternalID) {
-		return true
-	}
-
-	return false
-}
-
-// SetSubscriptionExternalID gets a reference to the given string and assigns it to the SubscriptionExternalID field.
-func (o *ListInvoicesParams) SetSubscriptionExternalID(v string) {
-	o.SubscriptionExternalID = &v
+// SetCustomerExternalId gets a reference to the given string and assigns it to the CustomerExternalId field.
+func (o *ListInvoicesParams) SetCustomerExternalId(v string) {
+	o.CustomerExternalId = &v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -208,6 +176,38 @@ func (o *ListInvoicesParams) SetOffset(v int32) {
 	o.Offset = &v
 }
 
+// GetSubscriptionExternalId returns the SubscriptionExternalId field value if set, zero value otherwise.
+func (o *ListInvoicesParams) GetSubscriptionExternalId() string {
+	if o == nil || IsNil(o.SubscriptionExternalId) {
+		var ret string
+		return ret
+	}
+	return *o.SubscriptionExternalId
+}
+
+// GetSubscriptionExternalIdOk returns a tuple with the SubscriptionExternalId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListInvoicesParams) GetSubscriptionExternalIdOk() (*string, bool) {
+	if o == nil || IsNil(o.SubscriptionExternalId) {
+		return nil, false
+	}
+	return o.SubscriptionExternalId, true
+}
+
+// HasSubscriptionExternalId returns a boolean if a field has been set.
+func (o *ListInvoicesParams) HasSubscriptionExternalId() bool {
+	if o != nil && !IsNil(o.SubscriptionExternalId) {
+		return true
+	}
+
+	return false
+}
+
+// SetSubscriptionExternalId gets a reference to the given string and assigns it to the SubscriptionExternalId field.
+func (o *ListInvoicesParams) SetSubscriptionExternalId(v string) {
+	o.SubscriptionExternalId = &v
+}
+
 func (o ListInvoicesParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -218,20 +218,20 @@ func (o ListInvoicesParams) MarshalJSON() ([]byte, error) {
 
 func (o ListInvoicesParams) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.CompanyID) {
-		toSerialize["CompanyID"] = o.CompanyID
+	if !IsNil(o.CompanyId) {
+		toSerialize["company_id"] = o.CompanyId
 	}
-	if !IsNil(o.CustomerExternalID) {
-		toSerialize["CustomerExternalID"] = o.CustomerExternalID
-	}
-	if !IsNil(o.SubscriptionExternalID) {
-		toSerialize["SubscriptionExternalID"] = o.SubscriptionExternalID
+	if !IsNil(o.CustomerExternalId) {
+		toSerialize["customer_external_id"] = o.CustomerExternalId
 	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit
 	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
+	}
+	if !IsNil(o.SubscriptionExternalId) {
+		toSerialize["subscription_external_id"] = o.SubscriptionExternalId
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -255,11 +255,11 @@ func (o *ListInvoicesParams) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "CompanyID")
-		delete(additionalProperties, "CustomerExternalID")
-		delete(additionalProperties, "SubscriptionExternalID")
+		delete(additionalProperties, "company_id")
+		delete(additionalProperties, "customer_external_id")
 		delete(additionalProperties, "limit")
 		delete(additionalProperties, "offset")
+		delete(additionalProperties, "subscription_external_id")
 		o.AdditionalProperties = additionalProperties
 	}
 

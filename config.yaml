@@ -7,10 +7,10 @@ additionalProperties:
   disallowAdditionalPropertiesIfNotPresent: false
   generateInterfaces: true
   goImportAlias: schematicapi
-  httpUserAgent: schematic-go@1.0.6
+  httpUserAgent: schematic-go@1.0.15
   isGoSubmodule: true
   packageName: api
-  packageVersion: 1.0.6
+  packageVersion: 1.0.15
   withGoMod: false
 gitHost: github.com
 gitUserId: SchematicHQ

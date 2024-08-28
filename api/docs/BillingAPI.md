@@ -246,7 +246,7 @@ Name | Type | Description  | Notes
 
 ## ListInvoices
 
-> ListInvoicesResponse ListInvoices(ctx).CustomerExternalID(customerExternalID).CompanyID(companyID).SubscriptionExternalID(subscriptionExternalID).Limit(limit).Offset(offset).Execute()
+> ListInvoicesResponse ListInvoices(ctx).CustomerExternalId(customerExternalId).CompanyId(companyId).SubscriptionExternalId(subscriptionExternalId).Limit(limit).Offset(offset).Execute()
 
 List invoices
 
@@ -268,13 +268,13 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	customerExternalID := "customerExternalID_example" // string | 
-	companyID := "companyID_example" // string |  (optional)
-	subscriptionExternalID := "subscriptionExternalID_example" // string |  (optional)
+	customerExternalId := "customerExternalId_example" // string | 
+	companyId := "companyId_example" // string |  (optional)
+	subscriptionExternalId := "subscriptionExternalId_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().BillingAPI.ListInvoices(context.Background()).CustomerExternalID(customerExternalID).CompanyID(companyID).SubscriptionExternalID(subscriptionExternalID).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().BillingAPI.ListInvoices(context.Background()).CustomerExternalId(customerExternalId).CompanyId(companyId).SubscriptionExternalId(subscriptionExternalId).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.ListInvoices``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -295,9 +295,9 @@ Other parameters are passed through a pointer to a apiListInvoicesRequest struct
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **customerExternalID** | **string** |  | 
- **companyID** | **string** |  | 
- **subscriptionExternalID** | **string** |  | 
+ **customerExternalId** | **string** |  | 
+ **companyId** | **string** |  | 
+ **subscriptionExternalId** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -321,7 +321,7 @@ Name | Type | Description  | Notes
 
 ## ListPaymentMethods
 
-> ListPaymentMethodsResponse ListPaymentMethods(ctx).CustomerExternalID(customerExternalID).CompanyID(companyID).InvoiceExternalID(invoiceExternalID).SubscriptionExternalID(subscriptionExternalID).Limit(limit).Offset(offset).Execute()
+> ListPaymentMethodsResponse ListPaymentMethods(ctx).CustomerExternalId(customerExternalId).CompanyId(companyId).InvoiceExternalId(invoiceExternalId).SubscriptionExternalId(subscriptionExternalId).Limit(limit).Offset(offset).Execute()
 
 List payment methods
 
@@ -343,14 +343,14 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	customerExternalID := "customerExternalID_example" // string | 
-	companyID := "companyID_example" // string |  (optional)
-	invoiceExternalID := "invoiceExternalID_example" // string |  (optional)
-	subscriptionExternalID := "subscriptionExternalID_example" // string |  (optional)
+	customerExternalId := "customerExternalId_example" // string | 
+	companyId := "companyId_example" // string |  (optional)
+	invoiceExternalId := "invoiceExternalId_example" // string |  (optional)
+	subscriptionExternalId := "subscriptionExternalId_example" // string |  (optional)
 	limit := int32(100) // int32 | Page limit (default 100) (optional)
 	offset := int32(0) // int32 | Page offset (default 0) (optional)
 
-	resp, r, err := client.API().BillingAPI.ListPaymentMethods(context.Background()).CustomerExternalID(customerExternalID).CompanyID(companyID).InvoiceExternalID(invoiceExternalID).SubscriptionExternalID(subscriptionExternalID).Limit(limit).Offset(offset).Execute()
+	resp, r, err := client.API().BillingAPI.ListPaymentMethods(context.Background()).CustomerExternalId(customerExternalId).CompanyId(companyId).InvoiceExternalId(invoiceExternalId).SubscriptionExternalId(subscriptionExternalId).Limit(limit).Offset(offset).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.ListPaymentMethods``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -371,10 +371,10 @@ Other parameters are passed through a pointer to a apiListPaymentMethodsRequest 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **customerExternalID** | **string** |  | 
- **companyID** | **string** |  | 
- **invoiceExternalID** | **string** |  | 
- **subscriptionExternalID** | **string** |  | 
+ **customerExternalId** | **string** |  | 
+ **companyId** | **string** |  | 
+ **invoiceExternalId** | **string** |  | 
+ **subscriptionExternalId** | **string** |  | 
  **limit** | **int32** | Page limit (default 100) | 
  **offset** | **int32** | Page offset (default 0) | 
 
@@ -742,7 +742,7 @@ Name | Type | Description  | Notes
 
 ## UpsertInvoice
 
-> UpsertInvoiceResponse UpsertInvoice(ctx).CreateBillingInvoiceRequestBody(createBillingInvoiceRequestBody).Execute()
+> UpsertInvoiceResponse UpsertInvoice(ctx).CreateInvoiceRequestBody(createInvoiceRequestBody).Execute()
 
 Upsert invoice
 
@@ -764,9 +764,9 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createBillingInvoiceRequestBody := *schematicapi.NewCreateBillingInvoiceRequestBody(int32(123), int32(123), int32(123), "CollectionMethod_example", "Currency_example", "CustomerExternalId_example", "ExternalId_example", int32(123)) // CreateBillingInvoiceRequestBody | 
+	createInvoiceRequestBody := *schematicapi.NewCreateInvoiceRequestBody(int32(123), int32(123), int32(123), "CollectionMethod_example", "Currency_example", "CustomerExternalId_example", "ExternalId_example", int32(123)) // CreateInvoiceRequestBody | 
 
-	resp, r, err := client.API().BillingAPI.UpsertInvoice(context.Background()).CreateBillingInvoiceRequestBody(createBillingInvoiceRequestBody).Execute()
+	resp, r, err := client.API().BillingAPI.UpsertInvoice(context.Background()).CreateInvoiceRequestBody(createInvoiceRequestBody).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.UpsertInvoice``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -787,7 +787,7 @@ Other parameters are passed through a pointer to a apiUpsertInvoiceRequest struc
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createBillingInvoiceRequestBody** | [**CreateBillingInvoiceRequestBody**](CreateBillingInvoiceRequestBody.md) |  | 
+ **createInvoiceRequestBody** | [**CreateInvoiceRequestBody**](CreateInvoiceRequestBody.md) |  | 
 
 ### Return type
 
@@ -809,7 +809,7 @@ Name | Type | Description  | Notes
 
 ## UpsertPaymentMethod
 
-> UpsertPaymentMethodResponse UpsertPaymentMethod(ctx).CreateBillingPaymentMethodRequestBody(createBillingPaymentMethodRequestBody).Execute()
+> UpsertPaymentMethodResponse UpsertPaymentMethod(ctx).CreatePaymentMethodRequestBody(createPaymentMethodRequestBody).Execute()
 
 Upsert payment method
 
@@ -831,9 +831,9 @@ func main() {
 	client := schematic.NewClient(apiKey)
 	defer client.Close()
 
-	createBillingPaymentMethodRequestBody := *schematicapi.NewCreateBillingPaymentMethodRequestBody("CustomerExternalId_example", "ExternalId_example", "PaymentMethodType_example") // CreateBillingPaymentMethodRequestBody | 
+	createPaymentMethodRequestBody := *schematicapi.NewCreatePaymentMethodRequestBody("CustomerExternalId_example", "ExternalId_example", "PaymentMethodType_example") // CreatePaymentMethodRequestBody | 
 
-	resp, r, err := client.API().BillingAPI.UpsertPaymentMethod(context.Background()).CreateBillingPaymentMethodRequestBody(createBillingPaymentMethodRequestBody).Execute()
+	resp, r, err := client.API().BillingAPI.UpsertPaymentMethod(context.Background()).CreatePaymentMethodRequestBody(createPaymentMethodRequestBody).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.UpsertPaymentMethod``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -854,7 +854,7 @@ Other parameters are passed through a pointer to a apiUpsertPaymentMethodRequest
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createBillingPaymentMethodRequestBody** | [**CreateBillingPaymentMethodRequestBody**](CreateBillingPaymentMethodRequestBody.md) |  | 
+ **createPaymentMethodRequestBody** | [**CreatePaymentMethodRequestBody**](CreatePaymentMethodRequestBody.md) |  | 
 
 ### Return type
 

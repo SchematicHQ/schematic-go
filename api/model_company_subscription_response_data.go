@@ -24,8 +24,8 @@ type CompanySubscriptionResponseData struct {
 	CustomerExternalId     string                                      `json:"customer_external_id"`
 	ExpiredAt              NullableTime                                `json:"expired_at,omitempty"`
 	Interval               string                                      `json:"interval"`
-	LatestInvoice          *BillingInvoiceResponseData                 `json:"latest_invoice,omitempty"`
-	PaymentMethod          *BillingPaymentMethodResponseData           `json:"payment_method,omitempty"`
+	LatestInvoice          *InvoiceResponseData                        `json:"latest_invoice,omitempty"`
+	PaymentMethod          *PaymentMethodResponseData                  `json:"payment_method,omitempty"`
 	Products               []BillingProductForSubscriptionResponseData `json:"products"`
 	SubscriptionExternalId string                                      `json:"subscription_external_id"`
 	TotalPrice             int32                                       `json:"total_price"`
@@ -148,9 +148,9 @@ func (o *CompanySubscriptionResponseData) SetInterval(v string) {
 }
 
 // GetLatestInvoice returns the LatestInvoice field value if set, zero value otherwise.
-func (o *CompanySubscriptionResponseData) GetLatestInvoice() BillingInvoiceResponseData {
+func (o *CompanySubscriptionResponseData) GetLatestInvoice() InvoiceResponseData {
 	if o == nil || IsNil(o.LatestInvoice) {
-		var ret BillingInvoiceResponseData
+		var ret InvoiceResponseData
 		return ret
 	}
 	return *o.LatestInvoice
@@ -158,7 +158,7 @@ func (o *CompanySubscriptionResponseData) GetLatestInvoice() BillingInvoiceRespo
 
 // GetLatestInvoiceOk returns a tuple with the LatestInvoice field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CompanySubscriptionResponseData) GetLatestInvoiceOk() (*BillingInvoiceResponseData, bool) {
+func (o *CompanySubscriptionResponseData) GetLatestInvoiceOk() (*InvoiceResponseData, bool) {
 	if o == nil || IsNil(o.LatestInvoice) {
 		return nil, false
 	}
@@ -174,15 +174,15 @@ func (o *CompanySubscriptionResponseData) HasLatestInvoice() bool {
 	return false
 }
 
-// SetLatestInvoice gets a reference to the given BillingInvoiceResponseData and assigns it to the LatestInvoice field.
-func (o *CompanySubscriptionResponseData) SetLatestInvoice(v BillingInvoiceResponseData) {
+// SetLatestInvoice gets a reference to the given InvoiceResponseData and assigns it to the LatestInvoice field.
+func (o *CompanySubscriptionResponseData) SetLatestInvoice(v InvoiceResponseData) {
 	o.LatestInvoice = &v
 }
 
 // GetPaymentMethod returns the PaymentMethod field value if set, zero value otherwise.
-func (o *CompanySubscriptionResponseData) GetPaymentMethod() BillingPaymentMethodResponseData {
+func (o *CompanySubscriptionResponseData) GetPaymentMethod() PaymentMethodResponseData {
 	if o == nil || IsNil(o.PaymentMethod) {
-		var ret BillingPaymentMethodResponseData
+		var ret PaymentMethodResponseData
 		return ret
 	}
 	return *o.PaymentMethod
@@ -190,7 +190,7 @@ func (o *CompanySubscriptionResponseData) GetPaymentMethod() BillingPaymentMetho
 
 // GetPaymentMethodOk returns a tuple with the PaymentMethod field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CompanySubscriptionResponseData) GetPaymentMethodOk() (*BillingPaymentMethodResponseData, bool) {
+func (o *CompanySubscriptionResponseData) GetPaymentMethodOk() (*PaymentMethodResponseData, bool) {
 	if o == nil || IsNil(o.PaymentMethod) {
 		return nil, false
 	}
@@ -206,8 +206,8 @@ func (o *CompanySubscriptionResponseData) HasPaymentMethod() bool {
 	return false
 }
 
-// SetPaymentMethod gets a reference to the given BillingPaymentMethodResponseData and assigns it to the PaymentMethod field.
-func (o *CompanySubscriptionResponseData) SetPaymentMethod(v BillingPaymentMethodResponseData) {
+// SetPaymentMethod gets a reference to the given PaymentMethodResponseData and assigns it to the PaymentMethod field.
+func (o *CompanySubscriptionResponseData) SetPaymentMethod(v PaymentMethodResponseData) {
 	o.PaymentMethod = &v
 }
 

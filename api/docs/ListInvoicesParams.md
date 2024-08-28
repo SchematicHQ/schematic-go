@@ -4,11 +4,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**CompanyID** | Pointer to **string** |  | [optional] 
-**CustomerExternalID** | Pointer to **string** |  | [optional] 
-**SubscriptionExternalID** | Pointer to **string** |  | [optional] 
+**CompanyId** | Pointer to **string** |  | [optional] 
+**CustomerExternalId** | Pointer to **string** |  | [optional] 
 **Limit** | Pointer to **int32** | Page limit (default 100) | [optional] 
 **Offset** | Pointer to **int32** | Page offset (default 0) | [optional] 
+**SubscriptionExternalId** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -29,80 +29,55 @@ NewListInvoicesParamsWithDefaults instantiates a new ListInvoicesParams object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetCompanyID
+### GetCompanyId
 
-`func (o *ListInvoicesParams) GetCompanyID() string`
+`func (o *ListInvoicesParams) GetCompanyId() string`
 
-GetCompanyID returns the CompanyID field if non-nil, zero value otherwise.
+GetCompanyId returns the CompanyId field if non-nil, zero value otherwise.
 
-### GetCompanyIDOk
+### GetCompanyIdOk
 
-`func (o *ListInvoicesParams) GetCompanyIDOk() (*string, bool)`
+`func (o *ListInvoicesParams) GetCompanyIdOk() (*string, bool)`
 
-GetCompanyIDOk returns a tuple with the CompanyID field if it's non-nil, zero value otherwise
+GetCompanyIdOk returns a tuple with the CompanyId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetCompanyID
+### SetCompanyId
 
-`func (o *ListInvoicesParams) SetCompanyID(v string)`
+`func (o *ListInvoicesParams) SetCompanyId(v string)`
 
-SetCompanyID sets CompanyID field to given value.
+SetCompanyId sets CompanyId field to given value.
 
-### HasCompanyID
+### HasCompanyId
 
-`func (o *ListInvoicesParams) HasCompanyID() bool`
+`func (o *ListInvoicesParams) HasCompanyId() bool`
 
-HasCompanyID returns a boolean if a field has been set.
+HasCompanyId returns a boolean if a field has been set.
 
-### GetCustomerExternalID
+### GetCustomerExternalId
 
-`func (o *ListInvoicesParams) GetCustomerExternalID() string`
+`func (o *ListInvoicesParams) GetCustomerExternalId() string`
 
-GetCustomerExternalID returns the CustomerExternalID field if non-nil, zero value otherwise.
+GetCustomerExternalId returns the CustomerExternalId field if non-nil, zero value otherwise.
 
-### GetCustomerExternalIDOk
+### GetCustomerExternalIdOk
 
-`func (o *ListInvoicesParams) GetCustomerExternalIDOk() (*string, bool)`
+`func (o *ListInvoicesParams) GetCustomerExternalIdOk() (*string, bool)`
 
-GetCustomerExternalIDOk returns a tuple with the CustomerExternalID field if it's non-nil, zero value otherwise
+GetCustomerExternalIdOk returns a tuple with the CustomerExternalId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetCustomerExternalID
+### SetCustomerExternalId
 
-`func (o *ListInvoicesParams) SetCustomerExternalID(v string)`
+`func (o *ListInvoicesParams) SetCustomerExternalId(v string)`
 
-SetCustomerExternalID sets CustomerExternalID field to given value.
+SetCustomerExternalId sets CustomerExternalId field to given value.
 
-### HasCustomerExternalID
+### HasCustomerExternalId
 
-`func (o *ListInvoicesParams) HasCustomerExternalID() bool`
+`func (o *ListInvoicesParams) HasCustomerExternalId() bool`
 
-HasCustomerExternalID returns a boolean if a field has been set.
-
-### GetSubscriptionExternalID
-
-`func (o *ListInvoicesParams) GetSubscriptionExternalID() string`
-
-GetSubscriptionExternalID returns the SubscriptionExternalID field if non-nil, zero value otherwise.
-
-### GetSubscriptionExternalIDOk
-
-`func (o *ListInvoicesParams) GetSubscriptionExternalIDOk() (*string, bool)`
-
-GetSubscriptionExternalIDOk returns a tuple with the SubscriptionExternalID field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetSubscriptionExternalID
-
-`func (o *ListInvoicesParams) SetSubscriptionExternalID(v string)`
-
-SetSubscriptionExternalID sets SubscriptionExternalID field to given value.
-
-### HasSubscriptionExternalID
-
-`func (o *ListInvoicesParams) HasSubscriptionExternalID() bool`
-
-HasSubscriptionExternalID returns a boolean if a field has been set.
+HasCustomerExternalId returns a boolean if a field has been set.
 
 ### GetLimit
 
@@ -153,6 +128,31 @@ SetOffset sets Offset field to given value.
 `func (o *ListInvoicesParams) HasOffset() bool`
 
 HasOffset returns a boolean if a field has been set.
+
+### GetSubscriptionExternalId
+
+`func (o *ListInvoicesParams) GetSubscriptionExternalId() string`
+
+GetSubscriptionExternalId returns the SubscriptionExternalId field if non-nil, zero value otherwise.
+
+### GetSubscriptionExternalIdOk
+
+`func (o *ListInvoicesParams) GetSubscriptionExternalIdOk() (*string, bool)`
+
+GetSubscriptionExternalIdOk returns a tuple with the SubscriptionExternalId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSubscriptionExternalId
+
+`func (o *ListInvoicesParams) SetSubscriptionExternalId(v string)`
+
+SetSubscriptionExternalId sets SubscriptionExternalId field to given value.
+
+### HasSubscriptionExternalId
+
+`func (o *ListInvoicesParams) HasSubscriptionExternalId() bool`
+
+HasSubscriptionExternalId returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

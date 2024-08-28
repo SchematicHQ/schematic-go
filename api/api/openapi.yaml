@@ -938,21 +938,21 @@ paths:
       parameters:
       - explode: true
         in: query
-        name: CompanyID
+        name: company_id
         required: false
         schema:
           type: string
         style: form
       - explode: true
         in: query
-        name: CustomerExternalID
+        name: customer_external_id
         required: true
         schema:
           type: string
         style: form
       - explode: true
         in: query
-        name: SubscriptionExternalID
+        name: subscription_external_id
         required: false
         schema:
           type: string
@@ -1017,7 +1017,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBillingInvoiceRequestBody'
+              $ref: '#/components/schemas/CreateInvoiceRequestBody'
         required: true
       responses:
         "201":
@@ -1059,28 +1059,28 @@ paths:
       parameters:
       - explode: true
         in: query
-        name: CompanyID
+        name: company_id
         required: false
         schema:
           type: string
         style: form
       - explode: true
         in: query
-        name: CustomerExternalID
+        name: customer_external_id
         required: true
         schema:
           type: string
         style: form
       - explode: true
         in: query
-        name: InvoiceExternalID
+        name: invoice_external_id
         required: false
         schema:
           type: string
         style: form
       - explode: true
         in: query
-        name: SubscriptionExternalID
+        name: subscription_external_id
         required: false
         schema:
           type: string
@@ -1145,7 +1145,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBillingPaymentMethodRequestBody'
+              $ref: '#/components/schemas/CreatePaymentMethodRequestBody'
         required: true
       responses:
         "201":
@@ -8793,207 +8793,6 @@ components:
       - updated_at
       title: BillingCustomerWithSubscriptionsResponseData
       type: object
-    BillingInvoiceRequestBody:
-      properties:
-        amount_due:
-          type: integer
-        amount_paid:
-          type: integer
-        amount_remaining:
-          type: integer
-        collection_method:
-          type: string
-        company_id:
-          nullable: true
-          type: string
-        currency:
-          type: string
-        customer_external_id:
-          type: string
-        due_date:
-          format: date-time
-          nullable: true
-          type: string
-        subscription_external_id:
-          nullable: true
-          type: string
-        subtotal:
-          type: integer
-      required:
-      - amount_due
-      - amount_paid
-      - amount_remaining
-      - collection_method
-      - currency
-      - customer_external_id
-      - subtotal
-      title: BillingInvoiceRequestBody
-      type: object
-    BillingInvoiceResponseData:
-      example:
-        amount_paid: 6
-        amount_remaining: 1
-        customer_external_id: customer_external_id
-        company_id: company_id
-        environment_id: environment_id
-        due_date: 2000-01-23T04:56:07.000+00:00
-        created_at: 2000-01-23T04:56:07.000+00:00
-        external_id: external_id
-        subscription_external_id: subscription_external_id
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        subtotal: 5
-        collection_method: collection_method
-        amount_due: 0
-        currency: currency
-        id: id
-      properties:
-        amount_due:
-          type: integer
-        amount_paid:
-          type: integer
-        amount_remaining:
-          type: integer
-        collection_method:
-          type: string
-        company_id:
-          nullable: true
-          type: string
-        created_at:
-          format: date-time
-          type: string
-        currency:
-          type: string
-        customer_external_id:
-          type: string
-        due_date:
-          format: date-time
-          nullable: true
-          type: string
-        environment_id:
-          type: string
-        external_id:
-          type: string
-        id:
-          type: string
-        subscription_external_id:
-          nullable: true
-          type: string
-        subtotal:
-          type: integer
-        updated_at:
-          format: date-time
-          type: string
-      required:
-      - amount_due
-      - amount_paid
-      - amount_remaining
-      - collection_method
-      - created_at
-      - currency
-      - customer_external_id
-      - environment_id
-      - external_id
-      - id
-      - subtotal
-      - updated_at
-      title: BillingInvoiceResponseData
-      type: object
-    BillingPaymentMethodRequestBody:
-      properties:
-        card_brand:
-          nullable: true
-          type: string
-        card_exp_month:
-          nullable: true
-          type: integer
-        card_exp_year:
-          nullable: true
-          type: integer
-        card_last4:
-          nullable: true
-          type: string
-        company_id:
-          nullable: true
-          type: string
-        customer_external_id:
-          type: string
-        invoice_external_id:
-          nullable: true
-          type: string
-        payment_method_type:
-          type: string
-        subscription_external_id:
-          nullable: true
-          type: string
-      required:
-      - customer_external_id
-      - payment_method_type
-      title: BillingPaymentMethodRequestBody
-      type: object
-    BillingPaymentMethodResponseData:
-      example:
-        payment_method_type: payment_method_type
-        customer_external_id: customer_external_id
-        company_id: company_id
-        environment_id: environment_id
-        card_last4: card_last4
-        created_at: 2000-01-23T04:56:07.000+00:00
-        external_id: external_id
-        subscription_external_id: subscription_external_id
-        card_exp_year: 6
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        card_brand: card_brand
-        card_exp_month: 0
-        id: id
-        invoice_external_id: invoice_external_id
-      properties:
-        card_brand:
-          nullable: true
-          type: string
-        card_exp_month:
-          nullable: true
-          type: integer
-        card_exp_year:
-          nullable: true
-          type: integer
-        card_last4:
-          nullable: true
-          type: string
-        company_id:
-          nullable: true
-          type: string
-        created_at:
-          format: date-time
-          type: string
-        customer_external_id:
-          type: string
-        environment_id:
-          type: string
-        external_id:
-          type: string
-        id:
-          type: string
-        invoice_external_id:
-          nullable: true
-          type: string
-        payment_method_type:
-          type: string
-        subscription_external_id:
-          nullable: true
-          type: string
-        updated_at:
-          format: date-time
-          type: string
-      required:
-      - created_at
-      - customer_external_id
-      - environment_id
-      - external_id
-      - id
-      - payment_method_type
-      - updated_at
-      title: BillingPaymentMethodResponseData
-      type: object
     BillingPlan:
       example:
         image_url: image_url
@@ -12713,9 +12512,9 @@ components:
         interval:
           type: string
         latest_invoice:
-          $ref: '#/components/schemas/BillingInvoiceResponseData'
+          $ref: '#/components/schemas/InvoiceResponseData'
         payment_method:
-          $ref: '#/components/schemas/BillingPaymentMethodResponseData'
+          $ref: '#/components/schemas/PaymentMethodResponseData'
         products:
           items:
             $ref: '#/components/schemas/BillingProductForSubscriptionResponseData'
@@ -20995,103 +20794,6 @@ components:
       - name
       title: CreateBillingCustomerRequestBody
       type: object
-    CreateBillingInvoiceRequestBody:
-      example:
-        amount_paid: 6
-        amount_remaining: 1
-        customer_external_id: customer_external_id
-        company_id: company_id
-        subtotal: 5
-        collection_method: collection_method
-        due_date: 2000-01-23T04:56:07.000+00:00
-        amount_due: 0
-        currency: currency
-        external_id: external_id
-        subscription_external_id: subscription_external_id
-      properties:
-        amount_due:
-          type: integer
-        amount_paid:
-          type: integer
-        amount_remaining:
-          type: integer
-        collection_method:
-          type: string
-        company_id:
-          nullable: true
-          type: string
-        currency:
-          type: string
-        customer_external_id:
-          type: string
-        due_date:
-          format: date-time
-          nullable: true
-          type: string
-        external_id:
-          type: string
-        subscription_external_id:
-          nullable: true
-          type: string
-        subtotal:
-          type: integer
-      required:
-      - amount_due
-      - amount_paid
-      - amount_remaining
-      - collection_method
-      - currency
-      - customer_external_id
-      - external_id
-      - subtotal
-      title: CreateBillingInvoiceRequestBody
-      type: object
-    CreateBillingPaymentMethodRequestBody:
-      example:
-        payment_method_type: payment_method_type
-        card_exp_year: 6
-        customer_external_id: customer_external_id
-        company_id: company_id
-        card_brand: card_brand
-        card_last4: card_last4
-        external_id: external_id
-        card_exp_month: 0
-        invoice_external_id: invoice_external_id
-        subscription_external_id: subscription_external_id
-      properties:
-        card_brand:
-          nullable: true
-          type: string
-        card_exp_month:
-          nullable: true
-          type: integer
-        card_exp_year:
-          nullable: true
-          type: integer
-        card_last4:
-          nullable: true
-          type: string
-        company_id:
-          nullable: true
-          type: string
-        customer_external_id:
-          type: string
-        external_id:
-          type: string
-        invoice_external_id:
-          nullable: true
-          type: string
-        payment_method_type:
-          type: string
-        subscription_external_id:
-          nullable: true
-          type: string
-      required:
-      - customer_external_id
-      - external_id
-      - payment_method_type
-      title: CreateBillingPaymentMethodRequestBody
-      type: object
     CreateBillingPriceRequestBody:
       example:
         price_external_id: price_external_id
@@ -21589,6 +21291,53 @@ components:
       - name
       title: CreateFlagRequestBody
       type: object
+    CreateInvoiceRequestBody:
+      example:
+        amount_paid: 6
+        amount_remaining: 1
+        customer_external_id: customer_external_id
+        subtotal: 5
+        collection_method: collection_method
+        due_date: 2000-01-23T04:56:07.000+00:00
+        amount_due: 0
+        currency: currency
+        external_id: external_id
+        subscription_external_id: subscription_external_id
+      properties:
+        amount_due:
+          type: integer
+        amount_paid:
+          type: integer
+        amount_remaining:
+          type: integer
+        collection_method:
+          type: string
+        currency:
+          type: string
+        customer_external_id:
+          type: string
+        due_date:
+          format: date-time
+          nullable: true
+          type: string
+        external_id:
+          type: string
+        subscription_external_id:
+          nullable: true
+          type: string
+        subtotal:
+          type: integer
+      required:
+      - amount_due
+      - amount_paid
+      - amount_remaining
+      - collection_method
+      - currency
+      - customer_external_id
+      - external_id
+      - subtotal
+      title: CreateInvoiceRequestBody
+      type: object
     CreateOrUpdateConditionGroupRequestBody:
       example:
         flag_id: flag_id
@@ -21877,6 +21626,48 @@ components:
       - priority
       - value
       title: CreateOrUpdateRuleRequestBody
+      type: object
+    CreatePaymentMethodRequestBody:
+      example:
+        payment_method_type: payment_method_type
+        card_exp_year: 6
+        customer_external_id: customer_external_id
+        card_brand: card_brand
+        card_last4: card_last4
+        external_id: external_id
+        card_exp_month: 0
+        invoice_external_id: invoice_external_id
+        subscription_external_id: subscription_external_id
+      properties:
+        card_brand:
+          nullable: true
+          type: string
+        card_exp_month:
+          nullable: true
+          type: integer
+        card_exp_year:
+          nullable: true
+          type: integer
+        card_last4:
+          nullable: true
+          type: string
+        customer_external_id:
+          type: string
+        external_id:
+          type: string
+        invoice_external_id:
+          nullable: true
+          type: string
+        payment_method_type:
+          type: string
+        subscription_external_id:
+          nullable: true
+          type: string
+      required:
+      - customer_external_id
+      - external_id
+      - payment_method_type
+      title: CreatePaymentMethodRequestBody
       type: object
     CreatePlanEntitlementRequestBody:
       example:
@@ -31730,6 +31521,108 @@ components:
       - user_id
       title: GetOrCreateCompanyMembershipRequestBody
       type: object
+    InvoiceRequestBody:
+      properties:
+        amount_due:
+          type: integer
+        amount_paid:
+          type: integer
+        amount_remaining:
+          type: integer
+        collection_method:
+          type: string
+        currency:
+          type: string
+        customer_external_id:
+          type: string
+        due_date:
+          format: date-time
+          nullable: true
+          type: string
+        subscription_external_id:
+          nullable: true
+          type: string
+        subtotal:
+          type: integer
+      required:
+      - amount_due
+      - amount_paid
+      - amount_remaining
+      - collection_method
+      - currency
+      - customer_external_id
+      - subtotal
+      title: InvoiceRequestBody
+      type: object
+    InvoiceResponseData:
+      example:
+        amount_paid: 6
+        amount_remaining: 1
+        customer_external_id: customer_external_id
+        company_id: company_id
+        environment_id: environment_id
+        due_date: 2000-01-23T04:56:07.000+00:00
+        created_at: 2000-01-23T04:56:07.000+00:00
+        external_id: external_id
+        subscription_external_id: subscription_external_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        subtotal: 5
+        collection_method: collection_method
+        amount_due: 0
+        currency: currency
+        id: id
+      properties:
+        amount_due:
+          type: integer
+        amount_paid:
+          type: integer
+        amount_remaining:
+          type: integer
+        collection_method:
+          type: string
+        company_id:
+          nullable: true
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        currency:
+          type: string
+        customer_external_id:
+          type: string
+        due_date:
+          format: date-time
+          nullable: true
+          type: string
+        environment_id:
+          type: string
+        external_id:
+          type: string
+        id:
+          type: string
+        subscription_external_id:
+          nullable: true
+          type: string
+        subtotal:
+          type: integer
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - amount_due
+      - amount_paid
+      - amount_remaining
+      - collection_method
+      - created_at
+      - currency
+      - customer_external_id
+      - environment_id
+      - external_id
+      - id
+      - subtotal
+      - updated_at
+      title: InvoiceResponseData
+      type: object
     IssueTemporaryAccessTokenRequestBody:
       example:
         lookup:
@@ -31851,6 +31744,99 @@ components:
           nullable: true
           type: integer
       title: PaginationFilter
+      type: object
+    PaymentMethodRequestBody:
+      properties:
+        card_brand:
+          nullable: true
+          type: string
+        card_exp_month:
+          nullable: true
+          type: integer
+        card_exp_year:
+          nullable: true
+          type: integer
+        card_last4:
+          nullable: true
+          type: string
+        customer_external_id:
+          type: string
+        invoice_external_id:
+          nullable: true
+          type: string
+        payment_method_type:
+          type: string
+        subscription_external_id:
+          nullable: true
+          type: string
+      required:
+      - customer_external_id
+      - payment_method_type
+      title: PaymentMethodRequestBody
+      type: object
+    PaymentMethodResponseData:
+      example:
+        payment_method_type: payment_method_type
+        customer_external_id: customer_external_id
+        company_id: company_id
+        environment_id: environment_id
+        card_last4: card_last4
+        created_at: 2000-01-23T04:56:07.000+00:00
+        external_id: external_id
+        subscription_external_id: subscription_external_id
+        card_exp_year: 6
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        card_brand: card_brand
+        card_exp_month: 0
+        id: id
+        invoice_external_id: invoice_external_id
+      properties:
+        card_brand:
+          nullable: true
+          type: string
+        card_exp_month:
+          nullable: true
+          type: integer
+        card_exp_year:
+          nullable: true
+          type: integer
+        card_last4:
+          nullable: true
+          type: string
+        company_id:
+          nullable: true
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        customer_external_id:
+          type: string
+        environment_id:
+          type: string
+        external_id:
+          type: string
+        id:
+          type: string
+        invoice_external_id:
+          nullable: true
+          type: string
+        payment_method_type:
+          type: string
+        subscription_external_id:
+          nullable: true
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - created_at
+      - customer_external_id
+      - environment_id
+      - external_id
+      - id
+      - payment_method_type
+      - updated_at
+      title: PaymentMethodResponseData
       type: object
     PlanAudienceDetailResponseData:
       description: The updated resource
@@ -49429,17 +49415,15 @@ components:
     ListInvoicesParams:
       description: Input parameters
       example:
-        CustomerExternalID: CustomerExternalID
-        CompanyID: CompanyID
+        customer_external_id: customer_external_id
+        company_id: company_id
         offset: 0
         limit: 100
-        SubscriptionExternalID: SubscriptionExternalID
+        subscription_external_id: subscription_external_id
       properties:
-        CompanyID:
+        company_id:
           type: string
-        CustomerExternalID:
-          type: string
-        SubscriptionExternalID:
+        customer_external_id:
           type: string
         limit:
           description: Page limit (default 100)
@@ -49449,6 +49433,8 @@ components:
           description: Page offset (default 0)
           example: 0
           type: integer
+        subscription_external_id:
+          type: string
       title: ListInvoicesParams
       type: object
     ListInvoicesResponse:
@@ -49485,16 +49471,16 @@ components:
           currency: currency
           id: id
         params:
-          CustomerExternalID: CustomerExternalID
-          CompanyID: CompanyID
+          customer_external_id: customer_external_id
+          company_id: company_id
           offset: 0
           limit: 100
-          SubscriptionExternalID: SubscriptionExternalID
+          subscription_external_id: subscription_external_id
       properties:
         data:
           description: The returned resources
           items:
-            $ref: '#/components/schemas/BillingInvoiceResponseData'
+            $ref: '#/components/schemas/InvoiceResponseData'
           title: ListInvoicesResponseData
           type: array
         params:
@@ -49525,7 +49511,7 @@ components:
         params: "{}"
       properties:
         data:
-          $ref: '#/components/schemas/BillingInvoiceResponseData'
+          $ref: '#/components/schemas/InvoiceResponseData'
         params:
           description: Input parameters
           title: UpsertInvoiceParams
@@ -49538,20 +49524,18 @@ components:
     ListPaymentMethodsParams:
       description: Input parameters
       example:
-        CustomerExternalID: CustomerExternalID
-        CompanyID: CompanyID
-        InvoiceExternalID: InvoiceExternalID
+        customer_external_id: customer_external_id
+        company_id: company_id
         offset: 0
         limit: 100
-        SubscriptionExternalID: SubscriptionExternalID
+        invoice_external_id: invoice_external_id
+        subscription_external_id: subscription_external_id
       properties:
-        CompanyID:
+        company_id:
           type: string
-        CustomerExternalID:
+        customer_external_id:
           type: string
-        InvoiceExternalID:
-          type: string
-        SubscriptionExternalID:
+        invoice_external_id:
           type: string
         limit:
           description: Page limit (default 100)
@@ -49561,6 +49545,8 @@ components:
           description: Page offset (default 0)
           example: 0
           type: integer
+        subscription_external_id:
+          type: string
       title: ListPaymentMethodsParams
       type: object
     ListPaymentMethodsResponse:
@@ -49595,17 +49581,17 @@ components:
           id: id
           invoice_external_id: invoice_external_id
         params:
-          CustomerExternalID: CustomerExternalID
-          CompanyID: CompanyID
-          InvoiceExternalID: InvoiceExternalID
+          customer_external_id: customer_external_id
+          company_id: company_id
           offset: 0
           limit: 100
-          SubscriptionExternalID: SubscriptionExternalID
+          invoice_external_id: invoice_external_id
+          subscription_external_id: subscription_external_id
       properties:
         data:
           description: The returned resources
           items:
-            $ref: '#/components/schemas/BillingPaymentMethodResponseData'
+            $ref: '#/components/schemas/PaymentMethodResponseData'
           title: ListPaymentMethodsResponseData
           type: array
         params:
@@ -49635,7 +49621,7 @@ components:
         params: "{}"
       properties:
         data:
-          $ref: '#/components/schemas/BillingPaymentMethodResponseData'
+          $ref: '#/components/schemas/PaymentMethodResponseData'
         params:
           description: Input parameters
           title: UpsertPaymentMethodParams

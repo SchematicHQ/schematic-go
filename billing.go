@@ -5,8 +5,9 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	core "github.com/schematichq/schematic-go/core"
 	time "time"
+
+	core "github.com/schematichq/schematic-go/core"
 )
 
 type CountBillingProductsRequest struct {

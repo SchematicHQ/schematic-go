@@ -7,11 +7,12 @@ import (
 	context "context"
 	json "encoding/json"
 	errors "errors"
+	io "io"
+	http "net/http"
+
 	schematicgo "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
 	option "github.com/schematichq/schematic-go/option"
-	io "io"
-	http "net/http"
 )
 
 type Client struct {

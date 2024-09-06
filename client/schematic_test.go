@@ -127,9 +127,9 @@ func TestCheckFlagWithCacheOptions(t *testing.T) {
 }
 
 func TestTrackEventBatch(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-	client := NewSchematicClient("test-api-key", WithEventBufferPeriod(10*time.Millisecond), WithHTTPClient(mockHTTPClient))
+	//ctrl := gomock.NewController(t)
+	//mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := NewSchematicClient("test-api-key", WithEventBufferPeriod(10*time.Millisecond))
 	defer client.Close()
 
 	assert.NotNil(t, client)

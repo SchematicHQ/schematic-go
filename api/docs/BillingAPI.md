@@ -4,6 +4,7 @@ All URIs are relative to *https://api.schematichq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**CountBillingProducts**](BillingAPI.md#CountBillingProducts) | **Get** /billing/products/count | Count billing products
 [**CountCustomers**](BillingAPI.md#CountCustomers) | **Get** /billing/customers/count | Count customers
 [**ListBillingProducts**](BillingAPI.md#ListBillingProducts) | **Get** /billing/products | List billing products
 [**ListCustomers**](BillingAPI.md#ListCustomers) | **Get** /billing/customers | List customers
@@ -17,6 +18,81 @@ Method | HTTP request | Description
 [**UpsertInvoice**](BillingAPI.md#UpsertInvoice) | **Post** /billing/invoices | Upsert invoice
 [**UpsertPaymentMethod**](BillingAPI.md#UpsertPaymentMethod) | **Post** /billing/payment-methods | Upsert payment method
 
+
+
+## CountBillingProducts
+
+> CountBillingProductsResponse CountBillingProducts(ctx).Ids(ids).Name(name).Q(q).Limit(limit).Offset(offset).Execute()
+
+Count billing products
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	schematicapi "github.com/SchematicHQ/schematic-go/api"
+	"github.com/SchematicHQ/schematic-go"
+)
+
+func main() {
+	apiKey := os.Getenv("SCHEMATIC_API_KEY")
+	client := schematic.NewClient(apiKey)
+	defer client.Close()
+
+	ids := []string{"Inner_example"} // []string |  (optional)
+	name := "name_example" // string |  (optional)
+	q := "q_example" // string |  (optional)
+	limit := int32(100) // int32 | Page limit (default 100) (optional)
+	offset := int32(0) // int32 | Page offset (default 0) (optional)
+
+	resp, r, err := client.API().BillingAPI.CountBillingProducts(context.Background()).Ids(ids).Name(name).Q(q).Limit(limit).Offset(offset).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BillingAPI.CountBillingProducts``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CountBillingProducts`: CountBillingProductsResponse
+	fmt.Fprintf(os.Stdout, "Response from `BillingAPI.CountBillingProducts`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCountBillingProductsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ids** | **[]string** |  | 
+ **name** | **string** |  | 
+ **q** | **string** |  | 
+ **limit** | **int32** | Page limit (default 100) | 
+ **offset** | **int32** | Page offset (default 0) | 
+
+### Return type
+
+[**CountBillingProductsResponse**](CountBillingProductsResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
 
 ## CountCustomers

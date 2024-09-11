@@ -21,17 +21,18 @@ var _ MappedNullable = &CreateInvoiceRequestBody{}
 
 // CreateInvoiceRequestBody struct for CreateInvoiceRequestBody
 type CreateInvoiceRequestBody struct {
-	AmountDue              int32          `json:"amount_due"`
-	AmountPaid             int32          `json:"amount_paid"`
-	AmountRemaining        int32          `json:"amount_remaining"`
-	CollectionMethod       string         `json:"collection_method"`
-	Currency               string         `json:"currency"`
-	CustomerExternalId     string         `json:"customer_external_id"`
-	DueDate                NullableTime   `json:"due_date,omitempty"`
-	ExternalId             string         `json:"external_id"`
-	SubscriptionExternalId NullableString `json:"subscription_external_id,omitempty"`
-	Subtotal               int32          `json:"subtotal"`
-	AdditionalProperties   map[string]interface{}
+	AmountDue               int32          `json:"amount_due"`
+	AmountPaid              int32          `json:"amount_paid"`
+	AmountRemaining         int32          `json:"amount_remaining"`
+	CollectionMethod        string         `json:"collection_method"`
+	Currency                string         `json:"currency"`
+	CustomerExternalId      string         `json:"customer_external_id"`
+	DueDate                 NullableTime   `json:"due_date,omitempty"`
+	ExternalId              string         `json:"external_id"`
+	PaymentMethodExternalId NullableString `json:"payment_method_external_id,omitempty"`
+	SubscriptionExternalId  NullableString `json:"subscription_external_id,omitempty"`
+	Subtotal                int32          `json:"subtotal"`
+	AdditionalProperties    map[string]interface{}
 }
 
 type _CreateInvoiceRequestBody CreateInvoiceRequestBody
@@ -272,6 +273,49 @@ func (o *CreateInvoiceRequestBody) SetExternalId(v string) {
 	o.ExternalId = v
 }
 
+// GetPaymentMethodExternalId returns the PaymentMethodExternalId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *CreateInvoiceRequestBody) GetPaymentMethodExternalId() string {
+	if o == nil || IsNil(o.PaymentMethodExternalId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.PaymentMethodExternalId.Get()
+}
+
+// GetPaymentMethodExternalIdOk returns a tuple with the PaymentMethodExternalId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *CreateInvoiceRequestBody) GetPaymentMethodExternalIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.PaymentMethodExternalId.Get(), o.PaymentMethodExternalId.IsSet()
+}
+
+// HasPaymentMethodExternalId returns a boolean if a field has been set.
+func (o *CreateInvoiceRequestBody) HasPaymentMethodExternalId() bool {
+	if o != nil && o.PaymentMethodExternalId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetPaymentMethodExternalId gets a reference to the given NullableString and assigns it to the PaymentMethodExternalId field.
+func (o *CreateInvoiceRequestBody) SetPaymentMethodExternalId(v string) {
+	o.PaymentMethodExternalId.Set(&v)
+}
+
+// SetPaymentMethodExternalIdNil sets the value for PaymentMethodExternalId to be an explicit nil
+func (o *CreateInvoiceRequestBody) SetPaymentMethodExternalIdNil() {
+	o.PaymentMethodExternalId.Set(nil)
+}
+
+// UnsetPaymentMethodExternalId ensures that no value is present for PaymentMethodExternalId, not even an explicit nil
+func (o *CreateInvoiceRequestBody) UnsetPaymentMethodExternalId() {
+	o.PaymentMethodExternalId.Unset()
+}
+
 // GetSubscriptionExternalId returns the SubscriptionExternalId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *CreateInvoiceRequestBody) GetSubscriptionExternalId() string {
 	if o == nil || IsNil(o.SubscriptionExternalId.Get()) {
@@ -359,6 +403,9 @@ func (o CreateInvoiceRequestBody) ToMap() (map[string]interface{}, error) {
 		toSerialize["due_date"] = o.DueDate.Get()
 	}
 	toSerialize["external_id"] = o.ExternalId
+	if o.PaymentMethodExternalId.IsSet() {
+		toSerialize["payment_method_external_id"] = o.PaymentMethodExternalId.Get()
+	}
 	if o.SubscriptionExternalId.IsSet() {
 		toSerialize["subscription_external_id"] = o.SubscriptionExternalId.Get()
 	}
@@ -421,6 +468,7 @@ func (o *CreateInvoiceRequestBody) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "customer_external_id")
 		delete(additionalProperties, "due_date")
 		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "payment_method_external_id")
 		delete(additionalProperties, "subscription_external_id")
 		delete(additionalProperties, "subtotal")
 		o.AdditionalProperties = additionalProperties

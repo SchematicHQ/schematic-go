@@ -988,6 +988,36 @@ func (m *MockBillingAPI) EXPECT() *MockBillingAPIMockRecorder {
 	return m.recorder
 }
 
+// CountBillingProducts mocks base method.
+func (m *MockBillingAPI) CountBillingProducts(arg0 context.Context) api.ApiCountBillingProductsRequest {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountBillingProducts", arg0)
+	ret0, _ := ret[0].(api.ApiCountBillingProductsRequest)
+	return ret0
+}
+
+// CountBillingProducts indicates an expected call of CountBillingProducts.
+func (mr *MockBillingAPIMockRecorder) CountBillingProducts(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountBillingProducts", reflect.TypeOf((*MockBillingAPI)(nil).CountBillingProducts), arg0)
+}
+
+// CountBillingProductsExecute mocks base method.
+func (m *MockBillingAPI) CountBillingProductsExecute(arg0 api.ApiCountBillingProductsRequest) (*api.CountBillingProductsResponse, *http.Response, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountBillingProductsExecute", arg0)
+	ret0, _ := ret[0].(*api.CountBillingProductsResponse)
+	ret1, _ := ret[1].(*http.Response)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CountBillingProductsExecute indicates an expected call of CountBillingProductsExecute.
+func (mr *MockBillingAPIMockRecorder) CountBillingProductsExecute(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountBillingProductsExecute", reflect.TypeOf((*MockBillingAPI)(nil).CountBillingProductsExecute), arg0)
+}
+
 // CountCustomers mocks base method.
 func (m *MockBillingAPI) CountCustomers(arg0 context.Context) api.ApiCountCustomersRequest {
 	m.ctrl.T.Helper()

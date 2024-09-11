@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CustomerEkey** | Pointer to **NullableString** |  | [optional] 
 **PublishableKey** | **string** |  | 
+**SetupIntentClientSecret** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -81,6 +82,41 @@ and a boolean to check if the value has been set.
 SetPublishableKey sets PublishableKey field to given value.
 
 
+### GetSetupIntentClientSecret
+
+`func (o *StripeEmbedInfo) GetSetupIntentClientSecret() string`
+
+GetSetupIntentClientSecret returns the SetupIntentClientSecret field if non-nil, zero value otherwise.
+
+### GetSetupIntentClientSecretOk
+
+`func (o *StripeEmbedInfo) GetSetupIntentClientSecretOk() (*string, bool)`
+
+GetSetupIntentClientSecretOk returns a tuple with the SetupIntentClientSecret field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSetupIntentClientSecret
+
+`func (o *StripeEmbedInfo) SetSetupIntentClientSecret(v string)`
+
+SetSetupIntentClientSecret sets SetupIntentClientSecret field to given value.
+
+### HasSetupIntentClientSecret
+
+`func (o *StripeEmbedInfo) HasSetupIntentClientSecret() bool`
+
+HasSetupIntentClientSecret returns a boolean if a field has been set.
+
+### SetSetupIntentClientSecretNil
+
+`func (o *StripeEmbedInfo) SetSetupIntentClientSecretNil(b bool)`
+
+ SetSetupIntentClientSecretNil sets the value for SetupIntentClientSecret to be an explicit nil
+
+### UnsetSetupIntentClientSecret
+`func (o *StripeEmbedInfo) UnsetSetupIntentClientSecret()`
+
+UnsetSetupIntentClientSecret ensures that no value is present for SetupIntentClientSecret, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

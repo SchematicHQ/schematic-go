@@ -21,6 +21,7 @@ Class | Method | HTTP request | Description
 *AccountsAPI* | [**ListEnvironments**](docs/AccountsAPI.md#listenvironments) | **Get** /environments | List environments
 *AccountsAPI* | [**UpdateApiKey**](docs/AccountsAPI.md#updateapikey) | **Put** /api-keys/{api_key_id} | Update api key
 *AccountsAPI* | [**UpdateEnvironment**](docs/AccountsAPI.md#updateenvironment) | **Put** /environments/{environment_id} | Update environment
+*BillingAPI* | [**CountBillingProducts**](docs/BillingAPI.md#countbillingproducts) | **Get** /billing/products/count | Count billing products
 *BillingAPI* | [**CountCustomers**](docs/BillingAPI.md#countcustomers) | **Get** /billing/customers/count | Count customers
 *BillingAPI* | [**ListBillingProducts**](docs/BillingAPI.md#listbillingproducts) | **Get** /billing/products | List billing products
 *BillingAPI* | [**ListCustomers**](docs/BillingAPI.md#listcustomers) | **Get** /billing/customers | List customers
@@ -187,6 +188,8 @@ Class | Method | HTTP request | Description
  - [CountApiRequestsResponse](docs/CountApiRequestsResponse.md)
  - [CountAudienceCompaniesResponse](docs/CountAudienceCompaniesResponse.md)
  - [CountAudienceUsersResponse](docs/CountAudienceUsersResponse.md)
+ - [CountBillingProductsParams](docs/CountBillingProductsParams.md)
+ - [CountBillingProductsResponse](docs/CountBillingProductsResponse.md)
  - [CountCompaniesParams](docs/CountCompaniesParams.md)
  - [CountCompaniesResponse](docs/CountCompaniesResponse.md)
  - [CountCompanyOverridesParams](docs/CountCompanyOverridesParams.md)

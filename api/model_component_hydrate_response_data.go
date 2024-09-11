@@ -26,6 +26,7 @@ type ComponentHydrateResponseData struct {
 	FeatureUsage         *FeatureUsageDetailResponseData  `json:"feature_usage,omitempty"`
 	StripeEmbed          *StripeEmbedInfo                 `json:"stripe_embed,omitempty"`
 	Subscription         *CompanySubscriptionResponseData `json:"subscription,omitempty"`
+	UpcomingInvoice      *InvoiceResponseData             `json:"upcoming_invoice,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -233,6 +234,38 @@ func (o *ComponentHydrateResponseData) SetSubscription(v CompanySubscriptionResp
 	o.Subscription = &v
 }
 
+// GetUpcomingInvoice returns the UpcomingInvoice field value if set, zero value otherwise.
+func (o *ComponentHydrateResponseData) GetUpcomingInvoice() InvoiceResponseData {
+	if o == nil || IsNil(o.UpcomingInvoice) {
+		var ret InvoiceResponseData
+		return ret
+	}
+	return *o.UpcomingInvoice
+}
+
+// GetUpcomingInvoiceOk returns a tuple with the UpcomingInvoice field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentHydrateResponseData) GetUpcomingInvoiceOk() (*InvoiceResponseData, bool) {
+	if o == nil || IsNil(o.UpcomingInvoice) {
+		return nil, false
+	}
+	return o.UpcomingInvoice, true
+}
+
+// HasUpcomingInvoice returns a boolean if a field has been set.
+func (o *ComponentHydrateResponseData) HasUpcomingInvoice() bool {
+	if o != nil && !IsNil(o.UpcomingInvoice) {
+		return true
+	}
+
+	return false
+}
+
+// SetUpcomingInvoice gets a reference to the given InvoiceResponseData and assigns it to the UpcomingInvoice field.
+func (o *ComponentHydrateResponseData) SetUpcomingInvoice(v InvoiceResponseData) {
+	o.UpcomingInvoice = &v
+}
+
 func (o ComponentHydrateResponseData) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -258,6 +291,9 @@ func (o ComponentHydrateResponseData) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Subscription) {
 		toSerialize["subscription"] = o.Subscription
+	}
+	if !IsNil(o.UpcomingInvoice) {
+		toSerialize["upcoming_invoice"] = o.UpcomingInvoice
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -308,6 +344,7 @@ func (o *ComponentHydrateResponseData) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "feature_usage")
 		delete(additionalProperties, "stripe_embed")
 		delete(additionalProperties, "subscription")
+		delete(additionalProperties, "upcoming_invoice")
 		o.AdditionalProperties = additionalProperties
 	}
 

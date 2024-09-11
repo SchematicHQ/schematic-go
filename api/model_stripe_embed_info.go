@@ -20,9 +20,10 @@ var _ MappedNullable = &StripeEmbedInfo{}
 
 // StripeEmbedInfo struct for StripeEmbedInfo
 type StripeEmbedInfo struct {
-	CustomerEkey         NullableString `json:"customer_ekey,omitempty"`
-	PublishableKey       string         `json:"publishable_key"`
-	AdditionalProperties map[string]interface{}
+	CustomerEkey            NullableString `json:"customer_ekey,omitempty"`
+	PublishableKey          string         `json:"publishable_key"`
+	SetupIntentClientSecret NullableString `json:"setup_intent_client_secret,omitempty"`
+	AdditionalProperties    map[string]interface{}
 }
 
 type _StripeEmbedInfo StripeEmbedInfo
@@ -112,6 +113,49 @@ func (o *StripeEmbedInfo) SetPublishableKey(v string) {
 	o.PublishableKey = v
 }
 
+// GetSetupIntentClientSecret returns the SetupIntentClientSecret field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *StripeEmbedInfo) GetSetupIntentClientSecret() string {
+	if o == nil || IsNil(o.SetupIntentClientSecret.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SetupIntentClientSecret.Get()
+}
+
+// GetSetupIntentClientSecretOk returns a tuple with the SetupIntentClientSecret field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *StripeEmbedInfo) GetSetupIntentClientSecretOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SetupIntentClientSecret.Get(), o.SetupIntentClientSecret.IsSet()
+}
+
+// HasSetupIntentClientSecret returns a boolean if a field has been set.
+func (o *StripeEmbedInfo) HasSetupIntentClientSecret() bool {
+	if o != nil && o.SetupIntentClientSecret.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSetupIntentClientSecret gets a reference to the given NullableString and assigns it to the SetupIntentClientSecret field.
+func (o *StripeEmbedInfo) SetSetupIntentClientSecret(v string) {
+	o.SetupIntentClientSecret.Set(&v)
+}
+
+// SetSetupIntentClientSecretNil sets the value for SetupIntentClientSecret to be an explicit nil
+func (o *StripeEmbedInfo) SetSetupIntentClientSecretNil() {
+	o.SetupIntentClientSecret.Set(nil)
+}
+
+// UnsetSetupIntentClientSecret ensures that no value is present for SetupIntentClientSecret, not even an explicit nil
+func (o *StripeEmbedInfo) UnsetSetupIntentClientSecret() {
+	o.SetupIntentClientSecret.Unset()
+}
+
 func (o StripeEmbedInfo) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -126,6 +170,9 @@ func (o StripeEmbedInfo) ToMap() (map[string]interface{}, error) {
 		toSerialize["customer_ekey"] = o.CustomerEkey.Get()
 	}
 	toSerialize["publishable_key"] = o.PublishableKey
+	if o.SetupIntentClientSecret.IsSet() {
+		toSerialize["setup_intent_client_secret"] = o.SetupIntentClientSecret.Get()
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -171,6 +218,7 @@ func (o *StripeEmbedInfo) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "customer_ekey")
 		delete(additionalProperties, "publishable_key")
+		delete(additionalProperties, "setup_intent_client_secret")
 		o.AdditionalProperties = additionalProperties
 	}
 

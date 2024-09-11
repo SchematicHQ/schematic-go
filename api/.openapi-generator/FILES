@@ -60,6 +60,8 @@ docs/CountApiRequestsParams.md
 docs/CountApiRequestsResponse.md
 docs/CountAudienceCompaniesResponse.md
 docs/CountAudienceUsersResponse.md
+docs/CountBillingProductsParams.md
+docs/CountBillingProductsResponse.md
 docs/CountCompaniesParams.md
 docs/CountCompaniesResponse.md
 docs/CountCompanyOverridesParams.md
@@ -405,6 +407,8 @@ model_count_api_requests_params.go
 model_count_api_requests_response.go
 model_count_audience_companies_response.go
 model_count_audience_users_response.go
+model_count_billing_products_params.go
+model_count_billing_products_response.go
 model_count_companies_params.go
 model_count_companies_response.go
 model_count_company_overrides_params.go

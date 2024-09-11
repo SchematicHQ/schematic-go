@@ -21,22 +21,23 @@ var _ MappedNullable = &InvoiceResponseData{}
 
 // InvoiceResponseData struct for InvoiceResponseData
 type InvoiceResponseData struct {
-	AmountDue              int32          `json:"amount_due"`
-	AmountPaid             int32          `json:"amount_paid"`
-	AmountRemaining        int32          `json:"amount_remaining"`
-	CollectionMethod       string         `json:"collection_method"`
-	CompanyId              NullableString `json:"company_id,omitempty"`
-	CreatedAt              time.Time      `json:"created_at"`
-	Currency               string         `json:"currency"`
-	CustomerExternalId     string         `json:"customer_external_id"`
-	DueDate                NullableTime   `json:"due_date,omitempty"`
-	EnvironmentId          string         `json:"environment_id"`
-	ExternalId             string         `json:"external_id"`
-	Id                     string         `json:"id"`
-	SubscriptionExternalId NullableString `json:"subscription_external_id,omitempty"`
-	Subtotal               int32          `json:"subtotal"`
-	UpdatedAt              time.Time      `json:"updated_at"`
-	AdditionalProperties   map[string]interface{}
+	AmountDue               int32          `json:"amount_due"`
+	AmountPaid              int32          `json:"amount_paid"`
+	AmountRemaining         int32          `json:"amount_remaining"`
+	CollectionMethod        string         `json:"collection_method"`
+	CompanyId               NullableString `json:"company_id,omitempty"`
+	CreatedAt               time.Time      `json:"created_at"`
+	Currency                string         `json:"currency"`
+	CustomerExternalId      string         `json:"customer_external_id"`
+	DueDate                 NullableTime   `json:"due_date,omitempty"`
+	EnvironmentId           string         `json:"environment_id"`
+	ExternalId              string         `json:"external_id"`
+	Id                      string         `json:"id"`
+	PaymentMethodExternalId NullableString `json:"payment_method_external_id,omitempty"`
+	SubscriptionExternalId  NullableString `json:"subscription_external_id,omitempty"`
+	Subtotal                int32          `json:"subtotal"`
+	UpdatedAt               time.Time      `json:"updated_at"`
+	AdditionalProperties    map[string]interface{}
 }
 
 type _InvoiceResponseData InvoiceResponseData
@@ -396,6 +397,49 @@ func (o *InvoiceResponseData) SetId(v string) {
 	o.Id = v
 }
 
+// GetPaymentMethodExternalId returns the PaymentMethodExternalId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *InvoiceResponseData) GetPaymentMethodExternalId() string {
+	if o == nil || IsNil(o.PaymentMethodExternalId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.PaymentMethodExternalId.Get()
+}
+
+// GetPaymentMethodExternalIdOk returns a tuple with the PaymentMethodExternalId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *InvoiceResponseData) GetPaymentMethodExternalIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.PaymentMethodExternalId.Get(), o.PaymentMethodExternalId.IsSet()
+}
+
+// HasPaymentMethodExternalId returns a boolean if a field has been set.
+func (o *InvoiceResponseData) HasPaymentMethodExternalId() bool {
+	if o != nil && o.PaymentMethodExternalId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetPaymentMethodExternalId gets a reference to the given NullableString and assigns it to the PaymentMethodExternalId field.
+func (o *InvoiceResponseData) SetPaymentMethodExternalId(v string) {
+	o.PaymentMethodExternalId.Set(&v)
+}
+
+// SetPaymentMethodExternalIdNil sets the value for PaymentMethodExternalId to be an explicit nil
+func (o *InvoiceResponseData) SetPaymentMethodExternalIdNil() {
+	o.PaymentMethodExternalId.Set(nil)
+}
+
+// UnsetPaymentMethodExternalId ensures that no value is present for PaymentMethodExternalId, not even an explicit nil
+func (o *InvoiceResponseData) UnsetPaymentMethodExternalId() {
+	o.PaymentMethodExternalId.Unset()
+}
+
 // GetSubscriptionExternalId returns the SubscriptionExternalId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *InvoiceResponseData) GetSubscriptionExternalId() string {
 	if o == nil || IsNil(o.SubscriptionExternalId.Get()) {
@@ -513,6 +557,9 @@ func (o InvoiceResponseData) ToMap() (map[string]interface{}, error) {
 	toSerialize["environment_id"] = o.EnvironmentId
 	toSerialize["external_id"] = o.ExternalId
 	toSerialize["id"] = o.Id
+	if o.PaymentMethodExternalId.IsSet() {
+		toSerialize["payment_method_external_id"] = o.PaymentMethodExternalId.Get()
+	}
 	if o.SubscriptionExternalId.IsSet() {
 		toSerialize["subscription_external_id"] = o.SubscriptionExternalId.Get()
 	}
@@ -584,6 +631,7 @@ func (o *InvoiceResponseData) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "environment_id")
 		delete(additionalProperties, "external_id")
 		delete(additionalProperties, "id")
+		delete(additionalProperties, "payment_method_external_id")
 		delete(additionalProperties, "subscription_external_id")
 		delete(additionalProperties, "subtotal")
 		delete(additionalProperties, "updated_at")

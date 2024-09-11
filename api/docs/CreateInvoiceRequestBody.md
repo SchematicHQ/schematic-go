@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **CustomerExternalId** | **string** |  | 
 **DueDate** | Pointer to **NullableTime** |  | [optional] 
 **ExternalId** | **string** |  | 
+**PaymentMethodExternalId** | Pointer to **NullableString** |  | [optional] 
 **SubscriptionExternalId** | Pointer to **NullableString** |  | [optional] 
 **Subtotal** | **int32** |  | 
 
@@ -209,6 +210,41 @@ and a boolean to check if the value has been set.
 SetExternalId sets ExternalId field to given value.
 
 
+### GetPaymentMethodExternalId
+
+`func (o *CreateInvoiceRequestBody) GetPaymentMethodExternalId() string`
+
+GetPaymentMethodExternalId returns the PaymentMethodExternalId field if non-nil, zero value otherwise.
+
+### GetPaymentMethodExternalIdOk
+
+`func (o *CreateInvoiceRequestBody) GetPaymentMethodExternalIdOk() (*string, bool)`
+
+GetPaymentMethodExternalIdOk returns a tuple with the PaymentMethodExternalId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPaymentMethodExternalId
+
+`func (o *CreateInvoiceRequestBody) SetPaymentMethodExternalId(v string)`
+
+SetPaymentMethodExternalId sets PaymentMethodExternalId field to given value.
+
+### HasPaymentMethodExternalId
+
+`func (o *CreateInvoiceRequestBody) HasPaymentMethodExternalId() bool`
+
+HasPaymentMethodExternalId returns a boolean if a field has been set.
+
+### SetPaymentMethodExternalIdNil
+
+`func (o *CreateInvoiceRequestBody) SetPaymentMethodExternalIdNil(b bool)`
+
+ SetPaymentMethodExternalIdNil sets the value for PaymentMethodExternalId to be an explicit nil
+
+### UnsetPaymentMethodExternalId
+`func (o *CreateInvoiceRequestBody) UnsetPaymentMethodExternalId()`
+
+UnsetPaymentMethodExternalId ensures that no value is present for PaymentMethodExternalId, not even an explicit nil
 ### GetSubscriptionExternalId
 
 `func (o *CreateInvoiceRequestBody) GetSubscriptionExternalId() string`

@@ -42,7 +42,7 @@ func main() {
   cacheTTL := 1 * time.Millisecond
   client := schematicclient.SchematicClient(
     apiKey,
-    schematic.WithLocalFlagCheckCache(cacheSize, cacheTTL),
+    schematicclient.WithLocalFlagCheckCache(cacheSize, cacheTTL),
   )
   defer client.Close()
 }
@@ -59,7 +59,7 @@ import (
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  client := schematicclient.SchematicClient(apiKey, schematic.WithDisabledFlagCheckCache())
+  client := schematicclient.SchematicClient(apiKey, schematicclient.WithDisabledFlagCheckCache())
   defer client.Close()
 }
 ```
@@ -75,7 +75,7 @@ import (
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  client := schematicclient.SchematicClient(apiKey, schematic.WithDefaultFlagValues(map[string]bool{
+  client := schematicclient.SchematicClient(apiKey, schematicclient.WithDefaultFlagValues(map[string]bool{
     "some-flag-key": true,
   }))
   defer client.Close()
@@ -182,7 +182,7 @@ func main() {
       "is_active":  true,
     },
   })
-  resp, err := client.API().Companies.UpsertCompany(context.Background(body)
+  resp, err := client.API().Companies.UpsertCompany(context.Background, body)
 }
 ```
 
@@ -293,7 +293,7 @@ import (
 )
 
 func main() {
-  client := schematicclient.NewSchematicClient("", schematic.WithDefaultFlagValues(map[string]bool{
+  client := schematicclient.NewSchematicClient("", schematicclient.WithDefaultFlagValues(map[string]bool{
     "some-flag-key": true,
   }))
   defer client.Close()
@@ -312,28 +312,6 @@ func TestSomeFunctionality(t *testing.T) {
   defer client.Close()
 
   client.SetFlagDefault("some-flag-key", true)
-
-  // test code that expects the flag to be on
-}
-```
-
-### Mocks
-
-If you prefer, you can also use mocks:
-
-```go
-import (
-  "testing"
-
-  "go.uber.org/mock/gomock"
-  schematicmocks "github.com/SchematicHQ/schematic-go/mocks"
-)
-
-
-func TestSomeFunctionality(t *testing.T) {
-  ctrl := gomock.NewController(t)
-  schematic := schematicmocks.NewMockClient(ctrl)
-  client.EXPECT().CheckFlag(context.Background(), gomock.Any(), "some-flag-key").Return(true)
 
   // test code that expects the flag to be on
 }

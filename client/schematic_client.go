@@ -13,7 +13,7 @@ import (
 	"github.com/schematichq/schematic-go/logger"
 )
 
-type client struct {
+type SchematicClient struct {
 	*Client
 
 	clientOptions           []core.RequestOption
@@ -28,7 +28,7 @@ type client struct {
 	workerInterval          time.Duration
 }
 
-func NewSchematicClient(apiKey string, opts ...ClientOpt) SchematicClient {
+func NewSchematicClient(apiKey string, opts ...ClientOpt) *SchematicClient {
 	var apiConfig []core.RequestOption
 
 	if apiKey != "" {
@@ -37,7 +37,7 @@ func NewSchematicClient(apiKey string, opts ...ClientOpt) SchematicClient {
 		opts = append(opts, WithOfflineMode())
 	}
 
-	client := &client{
+	client := &SchematicClient{
 		clientOptions:           apiConfig,
 		flagCheckCacheProviders: make([]schematicgo.CacheProvider[bool], 0),
 		errors:                  make(chan error, 100),
@@ -70,15 +70,11 @@ func NewSchematicClient(apiKey string, opts ...ClientOpt) SchematicClient {
 	return client
 }
 
-func (c *client) AddFlagCheckCacheProvider(ctx context.Context, provider schematicgo.CacheProvider[bool]) {
+func (c *SchematicClient) AddFlagCheckCacheProvider(ctx context.Context, provider schematicgo.CacheProvider[bool]) {
 	c.flagCheckCacheProviders = append(c.flagCheckCacheProviders, provider)
 }
 
-func (c *client) API() *Client {
-	return c.Client
-}
-
-func (c *client) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Printf("ERROR: Panic occurred while checking flag %v", r)
@@ -121,7 +117,7 @@ func (c *client) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRe
 	return resp.Data.Value
 }
 
-func (c *client) Close() {
+func (c *SchematicClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Printf("ERROR: Panic occurred while closing client %v", r)
@@ -131,7 +127,7 @@ func (c *client) Close() {
 	close(c.stopWorker)
 }
 
-func (c *client) Identify(
+func (c *SchematicClient) Identify(
 	ctx context.Context,
 	body *schematicgo.EventBodyIdentify,
 ) {
@@ -145,29 +141,29 @@ func (c *client) Identify(
 	}
 }
 
-func (c *client) SetAPIClient(apiClient *Client) {
+func (c *SchematicClient) SetAPIClient(apiClient *Client) {
 	c.Client = apiClient
 }
 
-func (c *client) SetAPIHost(ctx context.Context, host string) {
+func (c *SchematicClient) SetAPIHost(ctx context.Context, host string) {
 	c.clientOptions = append(c.clientOptions, &core.BaseURLOption{BaseURL: host})
 
 	// In case this is called after initialization, recreate the API client
 	c.Client = NewClient(c.clientOptions...)
 }
 
-func (c *client) SetEventBufferPeriod(period time.Duration) {
+func (c *SchematicClient) SetEventBufferPeriod(period time.Duration) {
 	c.eventBufferPeriod = &period
 }
 
-func (c *client) SetFlagDefault(
+func (c *SchematicClient) SetFlagDefault(
 	flag string,
 	value bool,
 ) {
 	c.flagDefaults[flag] = value
 }
 
-func (c *client) SetFlagDefaults(
+func (c *SchematicClient) SetFlagDefaults(
 	values map[string]bool,
 ) {
 	for flag, value := range values {
@@ -175,7 +171,7 @@ func (c *client) SetFlagDefaults(
 	}
 }
 
-func (c *client) SetOfflineMode() {
+func (c *SchematicClient) SetOfflineMode() {
 	c.isOffline = true
 
 	c.clientOptions = append(c.clientOptions, &core.HTTPClientOption{
@@ -183,13 +179,13 @@ func (c *client) SetOfflineMode() {
 	})
 }
 
-func (c *client) SetHTTPClient(httpClient core.HTTPClient) {
+func (c *SchematicClient) SetHTTPClient(httpClient core.HTTPClient) {
 	c.clientOptions = append(c.clientOptions, &core.HTTPClientOption{
 		HTTPClient: httpClient,
 	})
 }
 
-func (c *client) Track(
+func (c *SchematicClient) Track(
 	ctx context.Context,
 	body *schematicgo.EventBodyTrack,
 ) {
@@ -203,7 +199,7 @@ func (c *client) Track(
 	}
 }
 
-func (c *client) enqueueEvent(
+func (c *SchematicClient) enqueueEvent(
 	eventType string,
 	body schematicgo.EventBody,
 ) error {
@@ -225,7 +221,7 @@ func (c *client) enqueueEvent(
 	return nil
 }
 
-func (c *client) getFlagDefault(
+func (c *SchematicClient) getFlagDefault(
 	flag string,
 ) bool {
 	if value, ok := c.flagDefaults[flag]; ok {
@@ -235,7 +231,7 @@ func (c *client) getFlagDefault(
 	return false
 }
 
-func (c *client) worker() {
+func (c *SchematicClient) worker() {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Printf("ERROR: Panic occurred in worker %v", r)

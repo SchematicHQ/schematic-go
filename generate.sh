@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# Run the OpenAPI generator
-GO_POST_PROCESS_FILE="gofmt -w" openapi-generator generate -c config.yaml
-
 # Run the MockGen commands
-mockgen -destination=mocks/api_mocks.go -package=mocks github.com/SchematicHQ/schematic-go/api HTTPClient,AccountsAPI,WebhooksAPI,CrmAPI,BillingAPI,CompaniesAPI,EntitlementsAPI,EventsAPI,FeaturesAPI,PlansAPI,PlangroupsAPI
-mockgen -source=schematic.go -destination=mocks/client_mock.go -package=mocks
+#mockgen -destination=mocks/mocks.go -package=mocks github.com/schematichq/schematic-go/client SchematicClient # Accounts,WebhooksAPI,CrmAPI,BillingAPI,CompaniesAPI,EntitlementsAPI,EventsAPI,FeaturesAPI,PlansAPI,PlangroupsAPI
+# mockgen -source=client/schematic.go -destination=mocks/client_mock.go -package=mocks
+mockgen -source=core/core.go -destination=mocks/http_mock.go -package=mocks HTTPClient

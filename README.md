@@ -5,7 +5,7 @@
 1. Install the Go library:
 
 ```bash
-go get github.com/SchematicHQ/schematic-go
+go get github.com/schematichq/schematic-go
 ```
 
 2. [Issue an API key](https://docs.schematichq.com/quickstart#create-an-api-key) for the appropriate environment using the [Schematic app](https://app.schematichq.com/settings/api-keys). Be sure to capture the secret key when you issue the API key; you'll only see this key once, and this is what you'll use with the Schematic Go library.
@@ -16,12 +16,12 @@ go get github.com/SchematicHQ/schematic-go
 import (
   "os"
 
-  "github.com/SchematicHQ/schematic-go"
+  schematicclient "github.com/schematichq/schematic-go/client"
 )
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  client := schematic.NewClient(apiKey)
+  client := schematicclient.SchematicClient(apiKey)
   defer client.Close()
 }
 ```
@@ -33,16 +33,16 @@ import (
   "os"
   "time"
 
-  "github.com/SchematicHQ/schematic-go"
+  schematicclient "github.com/schematichq/schematic-go/client"
 )
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
   cacheSize := 100
   cacheTTL := 1 * time.Millisecond
-  client := schematic.NewClient(
+  client := schematicclient.SchematicClient(
     apiKey,
-    schematic.WithLocalFlagCheckCache(cacheSize, cacheTTL),
+    schematicclient.WithLocalFlagCheckCache(cacheSize, cacheTTL),
   )
   defer client.Close()
 }
@@ -54,12 +54,12 @@ You can also disable local caching entirely with an initialization option; bear 
 import (
   "os"
 
-  "github.com/SchematicHQ/schematic-go"
+  schematicclient "github.com/schematichq/schematic-go/client"
 )
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  client := schematic.NewClient(apiKey, schematic.WithDisabledFlagCheckCache())
+  client := schematicclient.SchematicClient(apiKey, schematicclient.WithDisabledFlagCheckCache())
   defer client.Close()
 }
 ```
@@ -70,12 +70,12 @@ You may want to specify default flag values for your application, which will be 
 import (
   "os"
 
-  "github.com/SchematicHQ/schematic-go"
+  schematicclient "github.com/schematichq/schematic-go/client"
 )
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  client := schematic.NewClient(apiKey, schematic.WithDefaultFlagValues(map[string]bool{
+  client := schematicclient.SchematicClient(apiKey, schematicclient.WithDefaultFlagValues(map[string]bool{
     "some-flag-key": true,
   }))
   defer client.Close()
@@ -93,14 +93,15 @@ import (
   "context"
   "os"
 
-  "github.com/SchematicHQ/schematic-go"
+  schematicclient "github.com/schematichq/schematic-go/client"
+  schematicgo "github.com/schematichq/schematic-go/"
 )
 
 func main() {
-  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematicclient.NewSchematicClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
-  client.Identify(context.Background(), &schematic.EventBodyIdentify{
+  client.Identify(context.Background(), &schematicgo.EventBodyIdentify{
     Event: "some-action",
     Company: map[string]any{
       "id": "your-company-id",
@@ -130,14 +131,15 @@ import (
   "context"
   "os"
 
-  "github.com/SchematicHQ/schematic-go"
+  schematicclient "github.com/schematichq/schematic-go/client"
+  schematicgo "github.com/schematichq/schematic-go/"
 )
 
 func main() {
-  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematicclient.SchematicClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
-  client.Track(context.Background(), &schematic.EventBodyTrack{
+  client.Track(context.Background(), &schematicgo.EventBodyTrack{
     Event: "some-action",
     Company: map[string]any{
       "id": "your-company-id",
@@ -161,15 +163,15 @@ import (
   "context"
   "os"
 
-  "github.com/SchematicHQ/schematic-go"
-  schematicapi "github.com/SchematicHQ/schematic-go/api"
+  schematicclient "github.com/schematichq/schematic-go/client"
+  schematicgo "github.com/schematichq/schematic-go/"
 )
 
 func main() {
-  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematicclient.SchematicClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
-  body := &schematicapi.UpsertCompanyRequestBody{
+  body := &schematicgo.UpsertCompanyRequestBody{
     Keys: map[string]any{
       "id": "your-company-id",
     },
@@ -180,7 +182,7 @@ func main() {
       "is_active":  true,
     },
   })
-  resp, r, err := client.API().CompaniesAPI.UpsertCompany(context.Background()).UpsertCompanyRequestBody(*body).Execute()
+  resp, err := client.API().Companies.UpsertCompany(context.Background, body)
 }
 ```
 
@@ -196,15 +198,15 @@ import (
   "context"
   "os"
 
-  "github.com/SchematicHQ/schematic-go"
-  schematicapi "github.com/SchematicHQ/schematic-go/api"
+  schematicclient "github.com/SchematicHQ/schematic-go/client"
+  schematicgo "github.com/SchematicHQ/schematic-go/"
 )
 
 func main() {
-  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematicclient.NewSchematicClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
-  body := &schematicapi.UpsertUserRequestBody{
+  body := &schematicgo.UpsertUserRequestBody{
     Keys: map[string]any{
       "email":   "wcoyote@acme.net",
       "user-id": "your-user-id",
@@ -220,7 +222,7 @@ func main() {
     },
   })
 
-  resp, r, err := client.API().CompaniesAPI.UpsertUser(context.Background()).UpsertUserRequestBody(*body).Execute()
+  resp, err := client.API().Companies.UpsertUser(context.Background(), body)
 }
 ```
 
@@ -235,15 +237,16 @@ When checking a flag, you'll provide keys for a company and/or keys for a user. 
 import (
   "context"
   "os"
-
-  "github.com/SchematicHQ/schematic-go"
+  
+  schematicclient "github.com/schematichq/schematic-go/client"
+  schematicgo "github.com/schematichq/schematic-go/"
 )
 
 func main() {
-  client := schematic.NewClient(os.Getenv("SCHEMATIC_API_KEY"))
+  client := schematicclient.NewSchematicClient(os.Getenv("SCHEMATIC_API_KEY"))
   defer client.Close()
 
-  evaluationCtx := schematic.CheckFlagRequestBody{
+  evaluationCtx := schematicgo.CheckFlagRequestBody{
     Company: map[string]any{
       "id": "your-company-id",
     },
@@ -273,11 +276,11 @@ In development or testing environments, you may want to avoid making network req
 
 ```go
 import (
-  "github.com/SchematicHQ/schematic-go"
+  schematicclient "github.com/schematichq/schematic-go/client"
 )
 
 func main() {
-  client := schematic.NewClient("")
+  client := schematicclient.NewSchematicClient("")
   defer client.Close()
 }
 ```
@@ -286,11 +289,11 @@ Offline mode works well with flag defaults:
 
 ```go
 import (
-  "github.com/SchematicHQ/schematic-go"
+  schematicclient "github.com/schematichq/schematic-go/client"
 )
 
 func main() {
-  client := schematic.NewClient("", schematic.WithDefaultFlagValues(map[string]bool{
+  client := schematicclient.NewSchematicClient("", schematicclient.WithDefaultFlagValues(map[string]bool{
     "some-flag-key": true,
   }))
   defer client.Close()
@@ -301,36 +304,14 @@ In an automated testing context, you may also want to use offline mode and speci
 
 ```go
 import (
-  "github.com/SchematicHQ/schematic-go"
+  schematicclient "github.com/schematichq/schematic-go/client"
 )
 
 func TestSomeFunctionality(t *testing.T) {
-  client := schematic.NewClient("")
+  client := schematicclient.NewSchematicClient("")
   defer client.Close()
 
   client.SetFlagDefault("some-flag-key", true)
-
-  // test code that expects the flag to be on
-}
-```
-
-### Mocks
-
-If you prefer, you can also use mocks:
-
-```go
-import (
-  "testing"
-
-  "go.uber.org/mock/gomock"
-  schematicmocks "github.com/SchematicHQ/schematic-go/mocks"
-)
-
-
-func TestSomeFunctionality(t *testing.T) {
-  ctrl := gomock.NewController(t)
-  schematic := schematicmocks.NewMockClient(ctrl)
-  client.EXPECT().CheckFlag(context.Background(), gomock.Any(), "some-flag-key").Return(true)
 
   // test code that expects the flag to be on
 }

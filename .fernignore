@@ -3,6 +3,7 @@
 README.md
 buffer/buffer.go
 cache/cache.go
+custom_types.go
 client/opts.go
 client/schematic_client.go
 client/schematic_client_test.go

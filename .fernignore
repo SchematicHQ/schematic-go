@@ -1,0 +1,20 @@
+# Specify files that shouldn't be modified by Fern
+
+
+buffer/*
+cache/*
+client/opts.go
+client/schematic_client.go
+client/*
+client/schematic.go
+flags/*
+http/*
+logger/*
+
+
+generate.go
+generate.sh
+README.md
+
+
+mocks/*

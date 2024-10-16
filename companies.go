@@ -9,9 +9,11 @@ import (
 )
 
 type CountCompaniesRequest struct {
-	IDs    []*string `json:"-" url:"ids,omitempty"`
-	PlanID *string   `json:"-" url:"plan_id,omitempty"`
-	// Search filter
+	// Filter companies by multiple company IDs (starts with comp\_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter companies by plan ID (starts with plan\_)
+	PlanID *string `json:"-" url:"plan_id,omitempty"`
+	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"-" url:"without_feature_override_for,omitempty"`
@@ -36,8 +38,8 @@ type CountEntityKeyDefinitionsRequest struct {
 type CountEntityTraitDefinitionsRequest struct {
 	EntityType *CountEntityTraitDefinitionsRequestEntityType `json:"-" url:"entity_type,omitempty"`
 	IDs        []*string                                     `json:"-" url:"ids,omitempty"`
-	TraitType  *CountEntityTraitDefinitionsRequestTraitType  `json:"-" url:"trait_type,omitempty"`
 	Q          *string                                       `json:"-" url:"q,omitempty"`
+	TraitType  *CountEntityTraitDefinitionsRequestTraitType  `json:"-" url:"trait_type,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -45,10 +47,13 @@ type CountEntityTraitDefinitionsRequest struct {
 }
 
 type CountUsersRequest struct {
-	CompanyID *string   `json:"-" url:"company_id,omitempty"`
-	IDs       []*string `json:"-" url:"ids,omitempty"`
-	PlanID    *string   `json:"-" url:"plan_id,omitempty"`
-	// Search filter
+	// Filter users by company ID (starts with comp\_)
+	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Filter users by multiple user IDs (starts with user\_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter users by plan ID (starts with plan\_)
+	PlanID *string `json:"-" url:"plan_id,omitempty"`
+	// Search for users by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
@@ -95,9 +100,11 @@ type CreateEntityTraitDefinitionRequestBody struct {
 }
 
 type ListCompaniesRequest struct {
-	IDs    []*string `json:"-" url:"ids,omitempty"`
-	PlanID *string   `json:"-" url:"plan_id,omitempty"`
-	// Search filter
+	// Filter companies by multiple company IDs (starts with comp\_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter companies by plan ID (starts with plan\_)
+	PlanID *string `json:"-" url:"plan_id,omitempty"`
+	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"-" url:"without_feature_override_for,omitempty"`
@@ -131,8 +138,8 @@ type ListEntityKeyDefinitionsRequest struct {
 type ListEntityTraitDefinitionsRequest struct {
 	EntityType *ListEntityTraitDefinitionsRequestEntityType `json:"-" url:"entity_type,omitempty"`
 	IDs        []*string                                    `json:"-" url:"ids,omitempty"`
-	TraitType  *ListEntityTraitDefinitionsRequestTraitType  `json:"-" url:"trait_type,omitempty"`
 	Q          *string                                      `json:"-" url:"q,omitempty"`
+	TraitType  *ListEntityTraitDefinitionsRequestTraitType  `json:"-" url:"trait_type,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -140,10 +147,13 @@ type ListEntityTraitDefinitionsRequest struct {
 }
 
 type ListUsersRequest struct {
-	CompanyID *string   `json:"-" url:"company_id,omitempty"`
-	IDs       []*string `json:"-" url:"ids,omitempty"`
-	PlanID    *string   `json:"-" url:"plan_id,omitempty"`
-	// Search filter
+	// Filter users by company ID (starts with comp\_)
+	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Filter users by multiple user IDs (starts with user\_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter users by plan ID (starts with plan\_)
+	PlanID *string `json:"-" url:"plan_id,omitempty"`
+	// Search for users by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`

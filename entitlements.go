@@ -9,12 +9,18 @@ import (
 )
 
 type CountCompanyOverridesRequest struct {
-	CompanyID  *string   `json:"-" url:"company_id,omitempty"`
+	// Filter company overrides by a single company ID (starting with comp\_)
+	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Filter company overrides by multiple company IDs (starting with comp\_)
 	CompanyIDs []*string `json:"-" url:"company_ids,omitempty"`
-	FeatureID  *string   `json:"-" url:"feature_id,omitempty"`
+	// Filter company overrides by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"-" url:"feature_id,omitempty"`
+	// Filter company overrides by multiple feature IDs (starting with feat\_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	IDs        []*string `json:"-" url:"ids,omitempty"`
-	Q          *string   `json:"-" url:"q,omitempty"`
+	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Search for company overrides by feature or company name
+	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -31,10 +37,11 @@ type CountFeatureCompaniesRequest struct {
 }
 
 type CountFeatureUsageRequest struct {
-	CompanyID   *string            `json:"-" url:"company_id,omitempty"`
-	CompanyKeys map[string]*string `json:"-" url:"company_keys,omitempty"`
-	FeatureIDs  []*string          `json:"-" url:"feature_ids,omitempty"`
-	Q           *string            `json:"-" url:"q,omitempty"`
+	CompanyID                   *string           `json:"-" url:"company_id,omitempty"`
+	CompanyKeys                 map[string]string `json:"-" url:"company_keys,omitempty"`
+	FeatureIDs                  []*string         `json:"-" url:"feature_ids,omitempty"`
+	Q                           *string           `json:"-" url:"q,omitempty"`
+	WithoutNegativeEntitlements *bool             `json:"-" url:"without_negative_entitlements,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -51,12 +58,18 @@ type CountFeatureUsersRequest struct {
 }
 
 type CountPlanEntitlementsRequest struct {
-	FeatureID  *string   `json:"-" url:"feature_id,omitempty"`
+	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"-" url:"feature_id,omitempty"`
+	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	IDs        []*string `json:"-" url:"ids,omitempty"`
-	PlanID     *string   `json:"-" url:"plan_id,omitempty"`
-	PlanIDs    []*string `json:"-" url:"plan_ids,omitempty"`
-	Q          *string   `json:"-" url:"q,omitempty"`
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	PlanID *string `json:"-" url:"plan_id,omitempty"`
+	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
+	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
+	// Search for plan entitlements by feature or company name
+	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -89,12 +102,18 @@ type GetFeatureUsageByCompanyRequest struct {
 }
 
 type ListCompanyOverridesRequest struct {
-	CompanyID  *string   `json:"-" url:"company_id,omitempty"`
+	// Filter company overrides by a single company ID (starting with comp\_)
+	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Filter company overrides by multiple company IDs (starting with comp\_)
 	CompanyIDs []*string `json:"-" url:"company_ids,omitempty"`
-	FeatureID  *string   `json:"-" url:"feature_id,omitempty"`
+	// Filter company overrides by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"-" url:"feature_id,omitempty"`
+	// Filter company overrides by multiple feature IDs (starting with feat\_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	IDs        []*string `json:"-" url:"ids,omitempty"`
-	Q          *string   `json:"-" url:"q,omitempty"`
+	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Search for company overrides by feature or company name
+	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -111,10 +130,11 @@ type ListFeatureCompaniesRequest struct {
 }
 
 type ListFeatureUsageRequest struct {
-	CompanyID   *string            `json:"-" url:"company_id,omitempty"`
-	CompanyKeys map[string]*string `json:"-" url:"company_keys,omitempty"`
-	FeatureIDs  []*string          `json:"-" url:"feature_ids,omitempty"`
-	Q           *string            `json:"-" url:"q,omitempty"`
+	CompanyID                   *string           `json:"-" url:"company_id,omitempty"`
+	CompanyKeys                 map[string]string `json:"-" url:"company_keys,omitempty"`
+	FeatureIDs                  []*string         `json:"-" url:"feature_ids,omitempty"`
+	Q                           *string           `json:"-" url:"q,omitempty"`
+	WithoutNegativeEntitlements *bool             `json:"-" url:"without_negative_entitlements,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -131,12 +151,18 @@ type ListFeatureUsersRequest struct {
 }
 
 type ListPlanEntitlementsRequest struct {
-	FeatureID  *string   `json:"-" url:"feature_id,omitempty"`
+	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"-" url:"feature_id,omitempty"`
+	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	IDs        []*string `json:"-" url:"ids,omitempty"`
-	PlanID     *string   `json:"-" url:"plan_id,omitempty"`
-	PlanIDs    []*string `json:"-" url:"plan_ids,omitempty"`
-	Q          *string   `json:"-" url:"q,omitempty"`
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	PlanID *string `json:"-" url:"plan_id,omitempty"`
+	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
+	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
+	// Search for plan entitlements by feature or company name
+	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -361,6 +387,7 @@ func (c *CountPlanEntitlementsResponse) String() string {
 type CreateCompanyOverrideRequestBodyMetricPeriod string
 
 const (
+	CreateCompanyOverrideRequestBodyMetricPeriodBilling      CreateCompanyOverrideRequestBodyMetricPeriod = "billing"
 	CreateCompanyOverrideRequestBodyMetricPeriodCurrentMonth CreateCompanyOverrideRequestBodyMetricPeriod = "current_month"
 	CreateCompanyOverrideRequestBodyMetricPeriodCurrentWeek  CreateCompanyOverrideRequestBodyMetricPeriod = "current_week"
 	CreateCompanyOverrideRequestBodyMetricPeriodCurrentDay   CreateCompanyOverrideRequestBodyMetricPeriod = "current_day"
@@ -368,6 +395,8 @@ const (
 
 func NewCreateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (CreateCompanyOverrideRequestBodyMetricPeriod, error) {
 	switch s {
+	case "billing":
+		return CreateCompanyOverrideRequestBodyMetricPeriodBilling, nil
 	case "current_month":
 		return CreateCompanyOverrideRequestBodyMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -457,6 +486,7 @@ func (c *CreateCompanyOverrideResponse) String() string {
 type CreatePlanEntitlementRequestBodyMetricPeriod string
 
 const (
+	CreatePlanEntitlementRequestBodyMetricPeriodBilling      CreatePlanEntitlementRequestBodyMetricPeriod = "billing"
 	CreatePlanEntitlementRequestBodyMetricPeriodCurrentMonth CreatePlanEntitlementRequestBodyMetricPeriod = "current_month"
 	CreatePlanEntitlementRequestBodyMetricPeriodCurrentWeek  CreatePlanEntitlementRequestBodyMetricPeriod = "current_week"
 	CreatePlanEntitlementRequestBodyMetricPeriodCurrentDay   CreatePlanEntitlementRequestBodyMetricPeriod = "current_day"
@@ -464,6 +494,8 @@ const (
 
 func NewCreatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (CreatePlanEntitlementRequestBodyMetricPeriod, error) {
 	switch s {
+	case "billing":
+		return CreatePlanEntitlementRequestBodyMetricPeriodBilling, nil
 	case "current_month":
 		return CreatePlanEntitlementRequestBodyMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -988,6 +1020,7 @@ func (l *ListPlanEntitlementsResponse) String() string {
 type UpdateCompanyOverrideRequestBodyMetricPeriod string
 
 const (
+	UpdateCompanyOverrideRequestBodyMetricPeriodBilling      UpdateCompanyOverrideRequestBodyMetricPeriod = "billing"
 	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentMonth UpdateCompanyOverrideRequestBodyMetricPeriod = "current_month"
 	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentWeek  UpdateCompanyOverrideRequestBodyMetricPeriod = "current_week"
 	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentDay   UpdateCompanyOverrideRequestBodyMetricPeriod = "current_day"
@@ -995,6 +1028,8 @@ const (
 
 func NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (UpdateCompanyOverrideRequestBodyMetricPeriod, error) {
 	switch s {
+	case "billing":
+		return UpdateCompanyOverrideRequestBodyMetricPeriodBilling, nil
 	case "current_month":
 		return UpdateCompanyOverrideRequestBodyMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -1084,6 +1119,7 @@ func (u *UpdateCompanyOverrideResponse) String() string {
 type UpdatePlanEntitlementRequestBodyMetricPeriod string
 
 const (
+	UpdatePlanEntitlementRequestBodyMetricPeriodBilling      UpdatePlanEntitlementRequestBodyMetricPeriod = "billing"
 	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentMonth UpdatePlanEntitlementRequestBodyMetricPeriod = "current_month"
 	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentWeek  UpdatePlanEntitlementRequestBodyMetricPeriod = "current_week"
 	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentDay   UpdatePlanEntitlementRequestBodyMetricPeriod = "current_day"
@@ -1091,6 +1127,8 @@ const (
 
 func NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (UpdatePlanEntitlementRequestBodyMetricPeriod, error) {
 	switch s {
+	case "billing":
+		return UpdatePlanEntitlementRequestBodyMetricPeriodBilling, nil
 	case "current_month":
 		return UpdatePlanEntitlementRequestBodyMetricPeriodCurrentMonth, nil
 	case "current_week":

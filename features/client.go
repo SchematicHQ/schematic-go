@@ -7,12 +7,11 @@ import (
 	context "context"
 	json "encoding/json"
 	errors "errors"
-	io "io"
-	http "net/http"
-
 	schematicgo "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
 	option "github.com/schematichq/schematic-go/option"
+	io "io"
+	http "net/http"
 )
 
 type Client struct {
@@ -52,6 +51,7 @@ func (c *Client) CountAudienceCompanies(
 	endpointURL := baseURL + "/audience/count-companies"
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -97,14 +97,16 @@ func (c *Client) CountAudienceCompanies(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPost,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -129,6 +131,7 @@ func (c *Client) CountAudienceUsers(
 	endpointURL := baseURL + "/audience/count-users"
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -174,14 +177,16 @@ func (c *Client) CountAudienceUsers(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPost,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -206,6 +211,7 @@ func (c *Client) ListAudienceCompanies(
 	endpointURL := baseURL + "/audience/get-companies"
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -251,14 +257,16 @@ func (c *Client) ListAudienceCompanies(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPost,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -283,6 +291,7 @@ func (c *Client) ListAudienceUsers(
 	endpointURL := baseURL + "/audience/get-users"
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -328,14 +337,16 @@ func (c *Client) ListAudienceUsers(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPost,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -413,13 +424,15 @@ func (c *Client) ListFeatures(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -444,6 +457,7 @@ func (c *Client) CreateFeature(
 	endpointURL := baseURL + "/features"
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -489,14 +503,16 @@ func (c *Client) CreateFeature(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPost,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -567,13 +583,15 @@ func (c *Client) GetFeature(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -600,6 +618,7 @@ func (c *Client) UpdateFeature(
 	endpointURL := core.EncodeURL(baseURL+"/features/%v", featureID)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -652,14 +671,16 @@ func (c *Client) UpdateFeature(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPut,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPut,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -730,13 +751,15 @@ func (c *Client) DeleteFeature(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodDelete,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -814,13 +837,15 @@ func (c *Client) CountFeatures(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -898,13 +923,15 @@ func (c *Client) ListFlags(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -929,6 +956,7 @@ func (c *Client) CreateFlag(
 	endpointURL := baseURL + "/flags"
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -974,14 +1002,16 @@ func (c *Client) CreateFlag(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPost,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -1052,13 +1082,15 @@ func (c *Client) GetFlag(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -1085,6 +1117,7 @@ func (c *Client) UpdateFlag(
 	endpointURL := core.EncodeURL(baseURL+"/flags/%v", flagID)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -1137,14 +1170,16 @@ func (c *Client) UpdateFlag(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPut,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPut,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -1215,13 +1250,15 @@ func (c *Client) DeleteFlag(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodDelete,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -1248,6 +1285,7 @@ func (c *Client) UpdateFlagRules(
 	endpointURL := core.EncodeURL(baseURL+"/flags/%v/rules", flagID)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -1300,14 +1338,16 @@ func (c *Client) UpdateFlagRules(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPut,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPut,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -1334,6 +1374,7 @@ func (c *Client) CheckFlag(
 	endpointURL := core.EncodeURL(baseURL+"/flags/%v/check", key)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -1379,14 +1420,16 @@ func (c *Client) CheckFlag(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPost,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -1411,6 +1454,7 @@ func (c *Client) CheckFlags(
 	endpointURL := baseURL + "/flags/check"
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -1456,14 +1500,16 @@ func (c *Client) CheckFlags(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPost,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -1541,13 +1587,15 @@ func (c *Client) CountFlags(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err

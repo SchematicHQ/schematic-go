@@ -104,13 +104,15 @@ func (c *Client) ListComponents(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -135,6 +137,7 @@ func (c *Client) CreateComponent(
 	endpointURL := baseURL + "/components"
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -180,14 +183,16 @@ func (c *Client) CreateComponent(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPost,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -258,13 +263,15 @@ func (c *Client) GetComponent(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -291,6 +298,7 @@ func (c *Client) UpdateComponent(
 	endpointURL := core.EncodeURL(baseURL+"/components/%v", componentID)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Set("Content-Type", "application/json")
 
 	errorDecoder := func(statusCode int, body io.Reader) error {
 		raw, err := io.ReadAll(body)
@@ -343,14 +351,16 @@ func (c *Client) UpdateComponent(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodPut,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Request:      request,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodPut,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -421,13 +431,15 @@ func (c *Client) DeleteComponent(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodDelete,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -505,13 +517,15 @@ func (c *Client) CountComponents(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err
@@ -589,13 +603,15 @@ func (c *Client) PreviewComponentData(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:          endpointURL,
-			Method:       http.MethodGet,
-			MaxAttempts:  options.MaxAttempts,
-			Headers:      headers,
-			Client:       options.HTTPClient,
-			Response:     &response,
-			ErrorDecoder: errorDecoder,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    errorDecoder,
 		},
 	); err != nil {
 		return nil, err

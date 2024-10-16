@@ -9,6 +9,7 @@ import (
 )
 
 type CreatePlanGroupRequestBody struct {
+	AddOnIDs      []string `json:"add_on_ids,omitempty" url:"-"`
 	DefaultPlanID *string  `json:"default_plan_id,omitempty" url:"-"`
 	PlanIDs       []string `json:"plan_ids,omitempty" url:"-"`
 }
@@ -143,6 +144,7 @@ func (u *UpdatePlanGroupResponse) String() string {
 }
 
 type UpdatePlanGroupRequestBody struct {
+	AddOnIDs      []string `json:"add_on_ids,omitempty" url:"-"`
 	DefaultPlanID *string  `json:"default_plan_id,omitempty" url:"-"`
 	PlanIDs       []string `json:"plan_ids,omitempty" url:"-"`
 }

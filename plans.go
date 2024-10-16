@@ -9,15 +9,17 @@ import (
 )
 
 type CountPlansRequest struct {
-	CompanyID *string   `json:"-" url:"company_id,omitempty"`
-	IDs       []*string `json:"-" url:"ids,omitempty"`
-	Q         *string   `json:"-" url:"q,omitempty"`
+	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Filter out plans that do not have a billing product ID
+	HasProductID *bool     `json:"-" url:"has_product_id,omitempty"`
+	IDs          []*string `json:"-" url:"ids,omitempty"`
 	// Filter by plan type
 	PlanType *CountPlansRequestPlanType `json:"-" url:"plan_type,omitempty"`
-	// Filter out plans that do not have a billing product ID
-	HasProductID *bool `json:"-" url:"has_product_id,omitempty"`
+	Q        *string                    `json:"-" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
+	// Filter out plans that have a billing product ID
+	WithoutProductID *bool `json:"-" url:"without_product_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -32,15 +34,17 @@ type CreatePlanRequestBody struct {
 }
 
 type ListPlansRequest struct {
-	CompanyID *string   `json:"-" url:"company_id,omitempty"`
-	IDs       []*string `json:"-" url:"ids,omitempty"`
-	Q         *string   `json:"-" url:"q,omitempty"`
+	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Filter out plans that do not have a billing product ID
+	HasProductID *bool     `json:"-" url:"has_product_id,omitempty"`
+	IDs          []*string `json:"-" url:"ids,omitempty"`
 	// Filter by plan type
 	PlanType *ListPlansRequestPlanType `json:"-" url:"plan_type,omitempty"`
-	// Filter out plans that do not have a billing product ID
-	HasProductID *bool `json:"-" url:"has_product_id,omitempty"`
+	Q        *string                   `json:"-" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
+	// Filter out plans that have a billing product ID
+	WithoutProductID *bool `json:"-" url:"without_product_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)

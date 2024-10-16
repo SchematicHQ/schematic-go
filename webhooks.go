@@ -9,9 +9,9 @@ import (
 )
 
 type CountWebhookEventsRequest struct {
-	WebhookID *string   `json:"-" url:"webhook_id,omitempty"`
 	IDs       []*string `json:"-" url:"ids,omitempty"`
 	Q         *string   `json:"-" url:"q,omitempty"`
+	WebhookID *string   `json:"-" url:"webhook_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -33,9 +33,9 @@ type CreateWebhookRequestBody struct {
 }
 
 type ListWebhookEventsRequest struct {
-	WebhookID *string   `json:"-" url:"webhook_id,omitempty"`
 	IDs       []*string `json:"-" url:"ids,omitempty"`
 	Q         *string   `json:"-" url:"q,omitempty"`
+	WebhookID *string   `json:"-" url:"webhook_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)

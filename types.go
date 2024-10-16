@@ -481,6 +481,7 @@ func (b *BillingCustomerResponseData) String() string {
 }
 
 type BillingCustomerSubscription struct {
+	Currency   string     `json:"currency" url:"currency"`
 	ExpiredAt  *time.Time `json:"expired_at,omitempty" url:"expired_at,omitempty"`
 	TotalPrice int        `json:"total_price" url:"total_price"`
 
@@ -611,53 +612,8 @@ func (b *BillingCustomerWithSubscriptionsResponseData) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
-type BillingPlan struct {
-	Description *string `json:"description,omitempty" url:"description,omitempty"`
-	ID          string  `json:"id" url:"id"`
-	ImageURL    *string `json:"image_url,omitempty" url:"image_url,omitempty"`
-	Name        string  `json:"name" url:"name"`
-	PlanPeriod  *string `json:"plan_period,omitempty" url:"plan_period,omitempty"`
-	PlanPrice   *int    `json:"plan_price,omitempty" url:"plan_price,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (b *BillingPlan) GetExtraProperties() map[string]interface{} {
-	return b.extraProperties
-}
-
-func (b *BillingPlan) UnmarshalJSON(data []byte) error {
-	type unmarshaler BillingPlan
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*b = BillingPlan(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *b)
-	if err != nil {
-		return err
-	}
-	b.extraProperties = extraProperties
-
-	b._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (b *BillingPlan) String() string {
-	if len(b._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(b._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(b); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", b)
-}
-
 type BillingPriceResponseData struct {
+	Currency        string `json:"currency" url:"currency"`
 	ExternalPriceID string `json:"external_price_id" url:"external_price_id"`
 	ID              string `json:"id" url:"id"`
 	Interval        string `json:"interval" url:"interval"`
@@ -775,18 +731,19 @@ func (b *BillingProductDetailResponseData) String() string {
 }
 
 type BillingProductForSubscriptionResponseData struct {
-	AccountID      string    `json:"account_id" url:"account_id"`
-	CreatedAt      time.Time `json:"created_at" url:"created_at"`
-	Currency       string    `json:"currency" url:"currency"`
-	EnvironmentID  string    `json:"environment_id" url:"environment_id"`
-	ExternalID     string    `json:"external_id" url:"external_id"`
-	ID             string    `json:"id" url:"id"`
-	Interval       *string   `json:"interval,omitempty" url:"interval,omitempty"`
-	Name           string    `json:"name" url:"name"`
-	Price          float64   `json:"price" url:"price"`
-	Quantity       float64   `json:"quantity" url:"quantity"`
-	SubscriptionID string    `json:"subscription_id" url:"subscription_id"`
-	UpdatedAt      time.Time `json:"updated_at" url:"updated_at"`
+	AccountID       string    `json:"account_id" url:"account_id"`
+	CreatedAt       time.Time `json:"created_at" url:"created_at"`
+	Currency        string    `json:"currency" url:"currency"`
+	EnvironmentID   string    `json:"environment_id" url:"environment_id"`
+	ExternalID      string    `json:"external_id" url:"external_id"`
+	ID              string    `json:"id" url:"id"`
+	Interval        string    `json:"interval" url:"interval"`
+	Name            string    `json:"name" url:"name"`
+	Price           float64   `json:"price" url:"price"`
+	PriceExternalID string    `json:"price_external_id" url:"price_external_id"`
+	Quantity        float64   `json:"quantity" url:"quantity"`
+	SubscriptionID  string    `json:"subscription_id" url:"subscription_id"`
+	UpdatedAt       time.Time `json:"updated_at" url:"updated_at"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -896,10 +853,11 @@ func (b *BillingProductPlanResponseData) String() string {
 }
 
 type BillingProductPricing struct {
-	Interval          *string `json:"interval,omitempty" url:"interval,omitempty"`
-	Price             int     `json:"price" url:"price"`
-	PriceExternalID   *string `json:"price_external_id,omitempty" url:"price_external_id,omitempty"`
-	ProductExternalID string  `json:"product_external_id" url:"product_external_id"`
+	Currency          string `json:"currency" url:"currency"`
+	Interval          string `json:"interval" url:"interval"`
+	Price             int    `json:"price" url:"price"`
+	PriceExternalID   string `json:"price_external_id" url:"price_external_id"`
+	ProductExternalID string `json:"product_external_id" url:"product_external_id"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -1011,11 +969,13 @@ func (b *BillingProductResponseData) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
-// The created resource
 type BillingSubscriptionResponseData struct {
+	Currency   string     `json:"currency" url:"currency"`
 	ExpiredAt  *time.Time `json:"expired_at,omitempty" url:"expired_at,omitempty"`
 	ExternalID string     `json:"external_id" url:"external_id"`
-	ID         int        `json:"id" url:"id"`
+	ID         string     `json:"id" url:"id"`
+	Interval   string     `json:"interval" url:"interval"`
+	TotalPrice int        `json:"total_price" url:"total_price"`
 	UpdatedAt  time.Time  `json:"updated_at" url:"updated_at"`
 
 	extraProperties map[string]interface{}
@@ -1126,8 +1086,8 @@ func (c *CheckFlagOutputWithFlagKey) String() string {
 }
 
 type CheckFlagRequestBody struct {
-	Company map[string]*string `json:"company,omitempty" url:"company,omitempty"`
-	User    map[string]*string `json:"user,omitempty" url:"user,omitempty"`
+	Company map[string]string `json:"company,omitempty" url:"company,omitempty"`
+	User    map[string]string `json:"user,omitempty" url:"user,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -1302,17 +1262,18 @@ func (c *CompanyCrmDealsResponseData) String() string {
 }
 
 type CompanyDetailResponseData struct {
-	AddOns        []*BillingPlan                   `json:"add_ons,omitempty" url:"add_ons,omitempty"`
-	CreatedAt     time.Time                        `json:"created_at" url:"created_at"`
-	EntityTraits  []*EntityTraitDetailResponseData `json:"entity_traits,omitempty" url:"entity_traits,omitempty"`
-	EnvironmentID string                           `json:"environment_id" url:"environment_id"`
-	ID            string                           `json:"id" url:"id"`
-	Keys          []*EntityKeyDetailResponseData   `json:"keys,omitempty" url:"keys,omitempty"`
-	LastSeenAt    *time.Time                       `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	LogoURL       *string                          `json:"logo_url,omitempty" url:"logo_url,omitempty"`
-	Name          string                           `json:"name" url:"name"`
-	Plan          *BillingPlan                     `json:"plan,omitempty" url:"plan,omitempty"`
-	Plans         []*PreviewObject                 `json:"plans,omitempty" url:"plans,omitempty"`
+	AddOns               []*CompanyPlanWithBillingSubView   `json:"add_ons,omitempty" url:"add_ons,omitempty"`
+	BillingSubscriptions []*BillingSubscriptionResponseData `json:"billing_subscriptions,omitempty" url:"billing_subscriptions,omitempty"`
+	CreatedAt            time.Time                          `json:"created_at" url:"created_at"`
+	EntityTraits         []*EntityTraitDetailResponseData   `json:"entity_traits,omitempty" url:"entity_traits,omitempty"`
+	EnvironmentID        string                             `json:"environment_id" url:"environment_id"`
+	ID                   string                             `json:"id" url:"id"`
+	Keys                 []*EntityKeyDetailResponseData     `json:"keys,omitempty" url:"keys,omitempty"`
+	LastSeenAt           *time.Time                         `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
+	LogoURL              *string                            `json:"logo_url,omitempty" url:"logo_url,omitempty"`
+	Name                 string                             `json:"name" url:"name"`
+	Plan                 *CompanyPlanWithBillingSubView     `json:"plan,omitempty" url:"plan,omitempty"`
+	Plans                []*GenericPreviewObject            `json:"plans,omitempty" url:"plans,omitempty"`
 	// A map of trait names to trait values
 	Traits    map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
 	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
@@ -1606,6 +1567,7 @@ type CompanyPlanDetailResponseData struct {
 	Features       []*FeatureDetailResponseData      `json:"features,omitempty" url:"features,omitempty"`
 	Icon           string                            `json:"icon" url:"icon"`
 	ID             string                            `json:"id" url:"id"`
+	IsDefault      bool                              `json:"is_default" url:"is_default"`
 	MonthlyPrice   *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name           string                            `json:"name" url:"name"`
 	PlanType       string                            `json:"plan_type" url:"plan_type"`
@@ -1662,6 +1624,53 @@ func (c *CompanyPlanDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyPlanDetailResponseData) String() string {
+	if len(c._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CompanyPlanWithBillingSubView struct {
+	BillingProductID *string `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
+	Description      *string `json:"description,omitempty" url:"description,omitempty"`
+	ID               string  `json:"id" url:"id"`
+	ImageURL         *string `json:"image_url,omitempty" url:"image_url,omitempty"`
+	Name             string  `json:"name" url:"name"`
+	PlanPeriod       *string `json:"plan_period,omitempty" url:"plan_period,omitempty"`
+	PlanPrice        *int    `json:"plan_price,omitempty" url:"plan_price,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (c *CompanyPlanWithBillingSubView) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CompanyPlanWithBillingSubView) UnmarshalJSON(data []byte) error {
+	type unmarshaler CompanyPlanWithBillingSubView
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CompanyPlanWithBillingSubView(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+
+	c._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyPlanWithBillingSubView) String() string {
 	if len(c._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
 			return value
@@ -1747,12 +1756,14 @@ func (c *CompanyResponseData) String() string {
 }
 
 type CompanySubscriptionResponseData struct {
+	Currency               string                                       `json:"currency" url:"currency"`
 	CustomerExternalID     string                                       `json:"customer_external_id" url:"customer_external_id"`
 	ExpiredAt              *time.Time                                   `json:"expired_at,omitempty" url:"expired_at,omitempty"`
 	Interval               string                                       `json:"interval" url:"interval"`
 	LatestInvoice          *InvoiceResponseData                         `json:"latest_invoice,omitempty" url:"latest_invoice,omitempty"`
 	PaymentMethod          *PaymentMethodResponseData                   `json:"payment_method,omitempty" url:"payment_method,omitempty"`
 	Products               []*BillingProductForSubscriptionResponseData `json:"products,omitempty" url:"products,omitempty"`
+	Status                 string                                       `json:"status" url:"status"`
 	SubscriptionExternalID string                                       `json:"subscription_external_id" url:"subscription_external_id"`
 	TotalPrice             int                                          `json:"total_price" url:"total_price"`
 
@@ -1812,7 +1823,6 @@ func (c *CompanySubscriptionResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// The returned resource
 type ComponentHydrateResponseData struct {
 	ActivePlans     []*CompanyPlanDetailResponseData `json:"active_plans,omitempty" url:"active_plans,omitempty"`
 	Company         *CompanyDetailResponseData       `json:"company,omitempty" url:"company,omitempty"`
@@ -1849,6 +1859,55 @@ func (c *ComponentHydrateResponseData) UnmarshalJSON(data []byte) error {
 }
 
 func (c *ComponentHydrateResponseData) String() string {
+	if len(c._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The returned resource
+type ComponentPreviewResponseData struct {
+	ActivePlans     []*CompanyPlanDetailResponseData `json:"active_plans,omitempty" url:"active_plans,omitempty"`
+	Company         *CompanyDetailResponseData       `json:"company,omitempty" url:"company,omitempty"`
+	Component       *ComponentResponseData           `json:"component,omitempty" url:"component,omitempty"`
+	FeatureUsage    *FeatureUsageDetailResponseData  `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	Invoices        []*InvoiceResponseData           `json:"invoices,omitempty" url:"invoices,omitempty"`
+	StripeEmbed     *StripeEmbedInfo                 `json:"stripe_embed,omitempty" url:"stripe_embed,omitempty"`
+	Subscription    *CompanySubscriptionResponseData `json:"subscription,omitempty" url:"subscription,omitempty"`
+	UpcomingInvoice *InvoiceResponseData             `json:"upcoming_invoice,omitempty" url:"upcoming_invoice,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (c *ComponentPreviewResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *ComponentPreviewResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler ComponentPreviewResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = ComponentPreviewResponseData(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+
+	c._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ComponentPreviewResponseData) String() string {
 	if len(c._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
 			return value
@@ -2219,6 +2278,7 @@ const (
 	CreateOrUpdateConditionRequestBodyConditionTypePlan           CreateOrUpdateConditionRequestBodyConditionType = "plan"
 	CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct CreateOrUpdateConditionRequestBodyConditionType = "billing_product"
 	CreateOrUpdateConditionRequestBodyConditionTypeCrmProduct     CreateOrUpdateConditionRequestBodyConditionType = "crm_product"
+	CreateOrUpdateConditionRequestBodyConditionTypeBasePlan       CreateOrUpdateConditionRequestBodyConditionType = "base_plan"
 )
 
 func NewCreateOrUpdateConditionRequestBodyConditionTypeFromString(s string) (CreateOrUpdateConditionRequestBodyConditionType, error) {
@@ -2237,6 +2297,8 @@ func NewCreateOrUpdateConditionRequestBodyConditionTypeFromString(s string) (Cre
 		return CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct, nil
 	case "crm_product":
 		return CreateOrUpdateConditionRequestBodyConditionTypeCrmProduct, nil
+	case "base_plan":
+		return CreateOrUpdateConditionRequestBodyConditionTypeBasePlan, nil
 	}
 	var t CreateOrUpdateConditionRequestBodyConditionType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -2250,6 +2312,7 @@ func (c CreateOrUpdateConditionRequestBodyConditionType) Ptr() *CreateOrUpdateCo
 type CreateOrUpdateConditionRequestBodyMetricPeriod string
 
 const (
+	CreateOrUpdateConditionRequestBodyMetricPeriodBilling      CreateOrUpdateConditionRequestBodyMetricPeriod = "billing"
 	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentMonth CreateOrUpdateConditionRequestBodyMetricPeriod = "current_month"
 	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentWeek  CreateOrUpdateConditionRequestBodyMetricPeriod = "current_week"
 	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentDay   CreateOrUpdateConditionRequestBodyMetricPeriod = "current_day"
@@ -2257,6 +2320,8 @@ const (
 
 func NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString(s string) (CreateOrUpdateConditionRequestBodyMetricPeriod, error) {
 	switch s {
+	case "billing":
+		return CreateOrUpdateConditionRequestBodyMetricPeriodBilling, nil
 	case "current_month":
 		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -2275,12 +2340,14 @@ func (c CreateOrUpdateConditionRequestBodyMetricPeriod) Ptr() *CreateOrUpdateCon
 type CreateOrUpdateConditionRequestBodyOperator string
 
 const (
-	CreateOrUpdateConditionRequestBodyOperatorEq  CreateOrUpdateConditionRequestBodyOperator = "eq"
-	CreateOrUpdateConditionRequestBodyOperatorNe  CreateOrUpdateConditionRequestBodyOperator = "ne"
-	CreateOrUpdateConditionRequestBodyOperatorGt  CreateOrUpdateConditionRequestBodyOperator = "gt"
-	CreateOrUpdateConditionRequestBodyOperatorGte CreateOrUpdateConditionRequestBodyOperator = "gte"
-	CreateOrUpdateConditionRequestBodyOperatorLt  CreateOrUpdateConditionRequestBodyOperator = "lt"
-	CreateOrUpdateConditionRequestBodyOperatorLte CreateOrUpdateConditionRequestBodyOperator = "lte"
+	CreateOrUpdateConditionRequestBodyOperatorEq       CreateOrUpdateConditionRequestBodyOperator = "eq"
+	CreateOrUpdateConditionRequestBodyOperatorNe       CreateOrUpdateConditionRequestBodyOperator = "ne"
+	CreateOrUpdateConditionRequestBodyOperatorGt       CreateOrUpdateConditionRequestBodyOperator = "gt"
+	CreateOrUpdateConditionRequestBodyOperatorGte      CreateOrUpdateConditionRequestBodyOperator = "gte"
+	CreateOrUpdateConditionRequestBodyOperatorLt       CreateOrUpdateConditionRequestBodyOperator = "lt"
+	CreateOrUpdateConditionRequestBodyOperatorLte      CreateOrUpdateConditionRequestBodyOperator = "lte"
+	CreateOrUpdateConditionRequestBodyOperatorIsEmpty  CreateOrUpdateConditionRequestBodyOperator = "is_empty"
+	CreateOrUpdateConditionRequestBodyOperatorNotEmpty CreateOrUpdateConditionRequestBodyOperator = "not_empty"
 )
 
 func NewCreateOrUpdateConditionRequestBodyOperatorFromString(s string) (CreateOrUpdateConditionRequestBodyOperator, error) {
@@ -2297,6 +2364,10 @@ func NewCreateOrUpdateConditionRequestBodyOperatorFromString(s string) (CreateOr
 		return CreateOrUpdateConditionRequestBodyOperatorLt, nil
 	case "lte":
 		return CreateOrUpdateConditionRequestBodyOperatorLte, nil
+	case "is_empty":
+		return CreateOrUpdateConditionRequestBodyOperatorIsEmpty, nil
+	case "not_empty":
+		return CreateOrUpdateConditionRequestBodyOperatorNotEmpty, nil
 	}
 	var t CreateOrUpdateConditionRequestBodyOperator
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -2484,6 +2555,7 @@ func (c *CreateReqCommon) String() string {
 type CreateReqCommonMetricPeriod string
 
 const (
+	CreateReqCommonMetricPeriodBilling      CreateReqCommonMetricPeriod = "billing"
 	CreateReqCommonMetricPeriodCurrentMonth CreateReqCommonMetricPeriod = "current_month"
 	CreateReqCommonMetricPeriodCurrentWeek  CreateReqCommonMetricPeriod = "current_week"
 	CreateReqCommonMetricPeriodCurrentDay   CreateReqCommonMetricPeriod = "current_day"
@@ -2491,6 +2563,8 @@ const (
 
 func NewCreateReqCommonMetricPeriodFromString(s string) (CreateReqCommonMetricPeriod, error) {
 	switch s {
+	case "billing":
+		return CreateReqCommonMetricPeriodBilling, nil
 	case "current_month":
 		return CreateReqCommonMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -3532,9 +3606,9 @@ type EventBodyFlagCheck struct {
 	// The reason why the value was returned
 	Reason string `json:"reason" url:"reason"`
 	// Key-value pairs used to to identify company for which the flag was checked
-	ReqCompany map[string]*string `json:"req_company,omitempty" url:"req_company,omitempty"`
+	ReqCompany map[string]string `json:"req_company,omitempty" url:"req_company,omitempty"`
 	// Key-value pairs used to to identify user for which the flag was checked
-	ReqUser map[string]*string `json:"req_user,omitempty" url:"req_user,omitempty"`
+	ReqUser map[string]string `json:"req_user,omitempty" url:"req_user,omitempty"`
 	// Schematic rule ID (starting with 'rule\_') of the rule that matched for the flag, if any
 	RuleID *string `json:"rule_id,omitempty" url:"rule_id,omitempty"`
 	// Schematic user ID (starting with 'user\_') of the user evaluated, if any
@@ -4576,16 +4650,62 @@ func (f *FlagResponseData) String() string {
 	return fmt.Sprintf("%#v", f)
 }
 
+type GenericPreviewObject struct {
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	ID          string  `json:"id" url:"id"`
+	ImageURL    *string `json:"image_url,omitempty" url:"image_url,omitempty"`
+	Name        string  `json:"name" url:"name"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GenericPreviewObject) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GenericPreviewObject) UnmarshalJSON(data []byte) error {
+	type unmarshaler GenericPreviewObject
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GenericPreviewObject(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GenericPreviewObject) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 type InvoiceRequestBody struct {
-	AmountDue              int        `json:"amount_due" url:"amount_due"`
-	AmountPaid             int        `json:"amount_paid" url:"amount_paid"`
-	AmountRemaining        int        `json:"amount_remaining" url:"amount_remaining"`
-	CollectionMethod       string     `json:"collection_method" url:"collection_method"`
-	Currency               string     `json:"currency" url:"currency"`
-	CustomerExternalID     string     `json:"customer_external_id" url:"customer_external_id"`
-	DueDate                *time.Time `json:"due_date,omitempty" url:"due_date,omitempty"`
-	SubscriptionExternalID *string    `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
-	Subtotal               int        `json:"subtotal" url:"subtotal"`
+	AmountDue               int        `json:"amount_due" url:"amount_due"`
+	AmountPaid              int        `json:"amount_paid" url:"amount_paid"`
+	AmountRemaining         int        `json:"amount_remaining" url:"amount_remaining"`
+	CollectionMethod        string     `json:"collection_method" url:"collection_method"`
+	Currency                string     `json:"currency" url:"currency"`
+	CustomerExternalID      string     `json:"customer_external_id" url:"customer_external_id"`
+	DueDate                 *time.Time `json:"due_date,omitempty" url:"due_date,omitempty"`
+	PaymentMethodExternalID *string    `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
+	SubscriptionExternalID  *string    `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
+	Subtotal                int        `json:"subtotal" url:"subtotal"`
+	URL                     *string    `json:"url,omitempty" url:"url,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -4644,21 +4764,23 @@ func (i *InvoiceRequestBody) String() string {
 }
 
 type InvoiceResponseData struct {
-	AmountDue              int        `json:"amount_due" url:"amount_due"`
-	AmountPaid             int        `json:"amount_paid" url:"amount_paid"`
-	AmountRemaining        int        `json:"amount_remaining" url:"amount_remaining"`
-	CollectionMethod       string     `json:"collection_method" url:"collection_method"`
-	CompanyID              *string    `json:"company_id,omitempty" url:"company_id,omitempty"`
-	CreatedAt              time.Time  `json:"created_at" url:"created_at"`
-	Currency               string     `json:"currency" url:"currency"`
-	CustomerExternalID     string     `json:"customer_external_id" url:"customer_external_id"`
-	DueDate                *time.Time `json:"due_date,omitempty" url:"due_date,omitempty"`
-	EnvironmentID          string     `json:"environment_id" url:"environment_id"`
-	ExternalID             string     `json:"external_id" url:"external_id"`
-	ID                     string     `json:"id" url:"id"`
-	SubscriptionExternalID *string    `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
-	Subtotal               int        `json:"subtotal" url:"subtotal"`
-	UpdatedAt              time.Time  `json:"updated_at" url:"updated_at"`
+	AmountDue               int        `json:"amount_due" url:"amount_due"`
+	AmountPaid              int        `json:"amount_paid" url:"amount_paid"`
+	AmountRemaining         int        `json:"amount_remaining" url:"amount_remaining"`
+	CollectionMethod        string     `json:"collection_method" url:"collection_method"`
+	CompanyID               *string    `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CreatedAt               time.Time  `json:"created_at" url:"created_at"`
+	Currency                string     `json:"currency" url:"currency"`
+	CustomerExternalID      string     `json:"customer_external_id" url:"customer_external_id"`
+	DueDate                 *time.Time `json:"due_date,omitempty" url:"due_date,omitempty"`
+	EnvironmentID           string     `json:"environment_id" url:"environment_id"`
+	ExternalID              *string    `json:"external_id,omitempty" url:"external_id,omitempty"`
+	ID                      string     `json:"id" url:"id"`
+	PaymentMethodExternalID *string    `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
+	SubscriptionExternalID  *string    `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
+	Subtotal                int        `json:"subtotal" url:"subtotal"`
+	UpdatedAt               time.Time  `json:"updated_at" url:"updated_at"`
+	URL                     *string    `json:"url,omitempty" url:"url,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -4954,12 +5076,16 @@ func (p *PaginationFilter) String() string {
 }
 
 type PaymentMethodRequestBody struct {
+	AccountLast4           *string `json:"account_last4,omitempty" url:"account_last4,omitempty"`
+	AccountName            *string `json:"account_name,omitempty" url:"account_name,omitempty"`
+	BankName               *string `json:"bank_name,omitempty" url:"bank_name,omitempty"`
+	BillingEmail           *string `json:"billing_email,omitempty" url:"billing_email,omitempty"`
+	BillingName            *string `json:"billing_name,omitempty" url:"billing_name,omitempty"`
 	CardBrand              *string `json:"card_brand,omitempty" url:"card_brand,omitempty"`
 	CardExpMonth           *int    `json:"card_exp_month,omitempty" url:"card_exp_month,omitempty"`
 	CardExpYear            *int    `json:"card_exp_year,omitempty" url:"card_exp_year,omitempty"`
 	CardLast4              *string `json:"card_last4,omitempty" url:"card_last4,omitempty"`
 	CustomerExternalID     string  `json:"customer_external_id" url:"customer_external_id"`
-	InvoiceExternalID      *string `json:"invoice_external_id,omitempty" url:"invoice_external_id,omitempty"`
 	PaymentMethodType      string  `json:"payment_method_type" url:"payment_method_type"`
 	SubscriptionExternalID *string `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 
@@ -5002,6 +5128,11 @@ func (p *PaymentMethodRequestBody) String() string {
 }
 
 type PaymentMethodResponseData struct {
+	AccountLast4           *string   `json:"account_last4,omitempty" url:"account_last4,omitempty"`
+	AccountName            *string   `json:"account_name,omitempty" url:"account_name,omitempty"`
+	BankName               *string   `json:"bank_name,omitempty" url:"bank_name,omitempty"`
+	BillingEmail           *string   `json:"billing_email,omitempty" url:"billing_email,omitempty"`
+	BillingName            *string   `json:"billing_name,omitempty" url:"billing_name,omitempty"`
 	CardBrand              *string   `json:"card_brand,omitempty" url:"card_brand,omitempty"`
 	CardExpMonth           *int      `json:"card_exp_month,omitempty" url:"card_exp_month,omitempty"`
 	CardExpYear            *int      `json:"card_exp_year,omitempty" url:"card_exp_year,omitempty"`
@@ -5012,7 +5143,6 @@ type PaymentMethodResponseData struct {
 	EnvironmentID          string    `json:"environment_id" url:"environment_id"`
 	ExternalID             string    `json:"external_id" url:"external_id"`
 	ID                     string    `json:"id" url:"id"`
-	InvoiceExternalID      *string   `json:"invoice_external_id,omitempty" url:"invoice_external_id,omitempty"`
 	PaymentMethodType      string    `json:"payment_method_type" url:"payment_method_type"`
 	SubscriptionExternalID *string   `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 	UpdatedAt              time.Time `json:"updated_at" url:"updated_at"`
@@ -5233,6 +5363,7 @@ type PlanDetailResponseData struct {
 	Features       []*FeatureDetailResponseData      `json:"features,omitempty" url:"features,omitempty"`
 	Icon           string                            `json:"icon" url:"icon"`
 	ID             string                            `json:"id" url:"id"`
+	IsDefault      bool                              `json:"is_default" url:"is_default"`
 	MonthlyPrice   *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name           string                            `json:"name" url:"name"`
 	PlanType       string                            `json:"plan_type" url:"plan_type"`
@@ -5500,6 +5631,7 @@ func (p *PlanGroupPlanDetailResponseData) String() string {
 
 // The updated resource
 type PlanGroupResponseData struct {
+	AddOnIDs      []string `json:"add_on_ids,omitempty" url:"add_on_ids,omitempty"`
 	DefaultPlanID *string  `json:"default_plan_id,omitempty" url:"default_plan_id,omitempty"`
 	ID            string   `json:"id" url:"id"`
 	PlanIDs       []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
@@ -6357,8 +6489,8 @@ func (s *SegmentStatusResp) String() string {
 }
 
 type StripeEmbedInfo struct {
-	CustomerEkey   *string `json:"customer_ekey,omitempty" url:"customer_ekey,omitempty"`
-	PublishableKey string  `json:"publishable_key" url:"publishable_key"`
+	PublishableKey          string  `json:"publishable_key" url:"publishable_key"`
+	SetupIntentClientSecret *string `json:"setup_intent_client_secret,omitempty" url:"setup_intent_client_secret,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -6519,6 +6651,7 @@ func (u *UpdateReqCommon) String() string {
 type UpdateReqCommonMetricPeriod string
 
 const (
+	UpdateReqCommonMetricPeriodBilling      UpdateReqCommonMetricPeriod = "billing"
 	UpdateReqCommonMetricPeriodCurrentMonth UpdateReqCommonMetricPeriod = "current_month"
 	UpdateReqCommonMetricPeriodCurrentWeek  UpdateReqCommonMetricPeriod = "current_week"
 	UpdateReqCommonMetricPeriodCurrentDay   UpdateReqCommonMetricPeriod = "current_day"
@@ -6526,6 +6659,8 @@ const (
 
 func NewUpdateReqCommonMetricPeriodFromString(s string) (UpdateReqCommonMetricPeriod, error) {
 	switch s {
+	case "billing":
+		return UpdateReqCommonMetricPeriodBilling, nil
 	case "current_month":
 		return UpdateReqCommonMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -7474,6 +7609,56 @@ func (l *ListEnvironmentsParams) String() string {
 }
 
 // Input parameters
+type CountBillingProductsParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Name  *string `json:"name,omitempty" url:"name,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter products that are not linked to any plan
+	WithoutLinkedToPlan *bool `json:"without_linked_to_plan,omitempty" url:"without_linked_to_plan,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (c *CountBillingProductsParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountBillingProductsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountBillingProductsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountBillingProductsParams(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+
+	c._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountBillingProductsParams) String() string {
+	if len(c._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
 type CountCustomersParams struct {
 	FailedToImport *bool `json:"failed_to_import,omitempty" url:"failed_to_import,omitempty"`
 	// Page limit (default 100)
@@ -7530,6 +7715,8 @@ type ListBillingProductsParams struct {
 	// Page offset (default 0)
 	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter products that are not linked to any plan
+	WithoutLinkedToPlan *bool `json:"without_linked_to_plan,omitempty" url:"without_linked_to_plan,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -7669,7 +7856,6 @@ func (l *ListInvoicesParams) String() string {
 type ListPaymentMethodsParams struct {
 	CompanyID          *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CustomerExternalID *string `json:"customer_external_id,omitempty" url:"customer_external_id,omitempty"`
-	InvoiceExternalID  *string `json:"invoice_external_id,omitempty" url:"invoice_external_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -7723,6 +7909,8 @@ type ListProductPricesParams struct {
 	// Page offset (default 0)
 	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter products that are not linked to any plan
+	WithoutLinkedToPlan *bool `json:"without_linked_to_plan,omitempty" url:"without_linked_to_plan,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -7764,13 +7952,15 @@ func (l *ListProductPricesParams) String() string {
 
 // Input parameters
 type CountCompaniesParams struct {
+	// Filter companies by multiple company IDs (starts with comp\_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter companies by plan ID (starts with plan\_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	// Search filter
+	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
@@ -7992,14 +8182,17 @@ func (c CountEntityTraitDefinitionsResponseParamsTraitType) Ptr() *CountEntityTr
 
 // Input parameters
 type CountUsersParams struct {
-	CompanyID *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
-	IDs       []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Filter users by company ID (starts with comp\_)
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter users by multiple user IDs (starts with user\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter users by plan ID (starts with plan\_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	// Search filter
+	// Search for users by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -8182,13 +8375,15 @@ func (g *GetEntityTraitValuesParams) String() string {
 
 // Input parameters
 type ListCompaniesParams struct {
+	// Filter companies by multiple company IDs (starts with comp\_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter companies by plan ID (starts with plan\_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	// Search filter
+	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
@@ -8457,14 +8652,17 @@ func (l ListEntityTraitDefinitionsResponseParamsTraitType) Ptr() *ListEntityTrai
 
 // Input parameters
 type ListUsersParams struct {
-	CompanyID *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
-	IDs       []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Filter users by company ID (starts with comp\_)
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter users by multiple user IDs (starts with user\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter users by plan ID (starts with plan\_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	// Search filter
+	// Search for users by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -8773,16 +8971,22 @@ func (l *ListCrmProductsParams) String() string {
 
 // Input parameters
 type CountCompanyOverridesParams struct {
-	CompanyID  *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter company overrides by a single company ID (starting with comp\_)
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter company overrides by multiple company IDs (starting with comp\_)
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
-	FeatureID  *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter company overrides by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter company overrides by multiple feature IDs (starting with feat\_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
-	IDs        []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search for company overrides by feature or company name
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -8877,8 +9081,9 @@ type CountFeatureUsageParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset                      *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q                           *string `json:"q,omitempty" url:"q,omitempty"`
+	WithoutNegativeEntitlements *bool   `json:"without_negative_entitlements,omitempty" url:"without_negative_entitlements,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -8967,16 +9172,22 @@ func (c *CountFeatureUsersParams) String() string {
 
 // Input parameters
 type CountPlanEntitlementsParams struct {
-	FeatureID  *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
-	IDs        []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset  *int     `json:"offset,omitempty" url:"offset,omitempty"`
-	PlanID  *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
-	Q       *string  `json:"q,omitempty" url:"q,omitempty"`
+	// Search for plan entitlements by feature or company name
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -9060,16 +9271,22 @@ func (g *GetFeatureUsageByCompanyParams) String() string {
 
 // Input parameters
 type ListCompanyOverridesParams struct {
-	CompanyID  *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter company overrides by a single company ID (starting with comp\_)
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter company overrides by multiple company IDs (starting with comp\_)
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
-	FeatureID  *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter company overrides by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter company overrides by multiple feature IDs (starting with feat\_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
-	IDs        []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search for company overrides by feature or company name
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -9164,8 +9381,9 @@ type ListFeatureUsageParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset                      *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q                           *string `json:"q,omitempty" url:"q,omitempty"`
+	WithoutNegativeEntitlements *bool   `json:"without_negative_entitlements,omitempty" url:"without_negative_entitlements,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -9254,16 +9472,22 @@ func (l *ListFeatureUsersParams) String() string {
 
 // Input parameters
 type ListPlanEntitlementsParams struct {
-	FeatureID  *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
-	IDs        []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset  *int     `json:"offset,omitempty" url:"offset,omitempty"`
-	PlanID  *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
-	Q       *string  `json:"q,omitempty" url:"q,omitempty"`
+	// Search for plan entitlements by feature or company name
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -9688,6 +9912,8 @@ type CountPlansParams struct {
 	Q        *string                           `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
+	// Filter out plans that have a billing product ID
+	WithoutProductID *bool `json:"without_product_id,omitempty" url:"without_product_id,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -9765,6 +9991,8 @@ type ListPlansParams struct {
 	Q        *string                          `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
+	// Filter out plans that have a billing product ID
+	WithoutProductID *bool `json:"without_product_id,omitempty" url:"without_product_id,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage

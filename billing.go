@@ -9,6 +9,18 @@ import (
 	time "time"
 )
 
+type CountBillingProductsRequest struct {
+	IDs  []*string `json:"-" url:"ids,omitempty"`
+	Name *string   `json:"-" url:"name,omitempty"`
+	Q    *string   `json:"-" url:"q,omitempty"`
+	// Filter products that are not linked to any plan
+	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
 type CountCustomersRequest struct {
 	Name           *string `json:"-" url:"name,omitempty"`
 	FailedToImport *bool   `json:"-" url:"failed_to_import,omitempty"`
@@ -23,6 +35,8 @@ type ListBillingProductsRequest struct {
 	IDs  []*string `json:"-" url:"ids,omitempty"`
 	Name *string   `json:"-" url:"name,omitempty"`
 	Q    *string   `json:"-" url:"q,omitempty"`
+	// Filter products that are not linked to any plan
+	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -52,7 +66,6 @@ type ListInvoicesRequest struct {
 type ListPaymentMethodsRequest struct {
 	CompanyID              *string `json:"-" url:"company_id,omitempty"`
 	CustomerExternalID     string  `json:"-" url:"customer_external_id"`
-	InvoiceExternalID      *string `json:"-" url:"invoice_external_id,omitempty"`
 	SubscriptionExternalID *string `json:"-" url:"subscription_external_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
@@ -64,10 +77,55 @@ type ListProductPricesRequest struct {
 	IDs  []*string `json:"-" url:"ids,omitempty"`
 	Name *string   `json:"-" url:"name,omitempty"`
 	Q    *string   `json:"-" url:"q,omitempty"`
+	// Filter products that are not linked to any plan
+	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
+type CountBillingProductsResponse struct {
+	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *CountBillingProductsParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (c *CountBillingProductsResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountBillingProductsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountBillingProductsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountBillingProductsResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+
+	c._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountBillingProductsResponse) String() string {
+	if len(c._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 type CountCustomersResponse struct {
@@ -601,6 +659,7 @@ type CreateBillingCustomerRequestBody struct {
 }
 
 type CreateBillingPriceRequestBody struct {
+	Currency          string `json:"currency" url:"-"`
 	Interval          string `json:"interval" url:"-"`
 	Price             int    `json:"price" url:"-"`
 	PriceExternalID   string `json:"price_external_id" url:"-"`
@@ -616,10 +675,13 @@ type CreateBillingProductRequestBody struct {
 }
 
 type CreateBillingSubscriptionsRequestBody struct {
+	Currency               string                   `json:"currency" url:"-"`
 	CustomerExternalID     string                   `json:"customer_external_id" url:"-"`
 	ExpiredAt              time.Time                `json:"expired_at" url:"-"`
 	Interval               *string                  `json:"interval,omitempty" url:"-"`
 	Metadata               map[string]interface{}   `json:"metadata,omitempty" url:"-"`
+	PeriodEnd              *int                     `json:"period_end,omitempty" url:"-"`
+	PeriodStart            *int                     `json:"period_start,omitempty" url:"-"`
 	ProductExternalIDs     []*BillingProductPricing `json:"product_external_ids,omitempty" url:"-"`
 	Status                 *string                  `json:"status,omitempty" url:"-"`
 	SubscriptionExternalID string                   `json:"subscription_external_id" url:"-"`
@@ -649,16 +711,18 @@ func (c *CreateBillingSubscriptionsRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 type CreateInvoiceRequestBody struct {
-	AmountDue              int        `json:"amount_due" url:"-"`
-	AmountPaid             int        `json:"amount_paid" url:"-"`
-	AmountRemaining        int        `json:"amount_remaining" url:"-"`
-	CollectionMethod       string     `json:"collection_method" url:"-"`
-	Currency               string     `json:"currency" url:"-"`
-	CustomerExternalID     string     `json:"customer_external_id" url:"-"`
-	DueDate                *time.Time `json:"due_date,omitempty" url:"-"`
-	ExternalID             string     `json:"external_id" url:"-"`
-	SubscriptionExternalID *string    `json:"subscription_external_id,omitempty" url:"-"`
-	Subtotal               int        `json:"subtotal" url:"-"`
+	AmountDue               int        `json:"amount_due" url:"-"`
+	AmountPaid              int        `json:"amount_paid" url:"-"`
+	AmountRemaining         int        `json:"amount_remaining" url:"-"`
+	CollectionMethod        string     `json:"collection_method" url:"-"`
+	Currency                string     `json:"currency" url:"-"`
+	CustomerExternalID      string     `json:"customer_external_id" url:"-"`
+	DueDate                 *time.Time `json:"due_date,omitempty" url:"-"`
+	ExternalID              *string    `json:"external_id,omitempty" url:"-"`
+	PaymentMethodExternalID *string    `json:"payment_method_external_id,omitempty" url:"-"`
+	SubscriptionExternalID  *string    `json:"subscription_external_id,omitempty" url:"-"`
+	Subtotal                int        `json:"subtotal" url:"-"`
+	URL                     *string    `json:"url,omitempty" url:"-"`
 }
 
 func (c *CreateInvoiceRequestBody) UnmarshalJSON(data []byte) error {
@@ -684,13 +748,17 @@ func (c *CreateInvoiceRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 type CreatePaymentMethodRequestBody struct {
+	AccountLast4           *string `json:"account_last4,omitempty" url:"-"`
+	AccountName            *string `json:"account_name,omitempty" url:"-"`
+	BankName               *string `json:"bank_name,omitempty" url:"-"`
+	BillingEmail           *string `json:"billing_email,omitempty" url:"-"`
+	BillingName            *string `json:"billing_name,omitempty" url:"-"`
 	CardBrand              *string `json:"card_brand,omitempty" url:"-"`
 	CardExpMonth           *int    `json:"card_exp_month,omitempty" url:"-"`
 	CardExpYear            *int    `json:"card_exp_year,omitempty" url:"-"`
 	CardLast4              *string `json:"card_last4,omitempty" url:"-"`
 	CustomerExternalID     string  `json:"customer_external_id" url:"-"`
 	ExternalID             string  `json:"external_id" url:"-"`
-	InvoiceExternalID      *string `json:"invoice_external_id,omitempty" url:"-"`
 	PaymentMethodType      string  `json:"payment_method_type" url:"-"`
 	SubscriptionExternalID *string `json:"subscription_external_id,omitempty" url:"-"`
 }

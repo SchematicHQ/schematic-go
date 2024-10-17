@@ -27,8 +27,8 @@ func TestFlagCheckCacheKey(t *testing.T) {
 		{
 			name: "Empty context and flag key",
 			evalCtx: &schematicgo.CheckFlagRequestBody{
-				Company: map[string]*string{},
-				User:    map[string]*string{},
+				Company: map[string]string{},
+				User:    map[string]string{},
 			},
 			flagKey:  "",
 			expected: "f:",
@@ -36,13 +36,13 @@ func TestFlagCheckCacheKey(t *testing.T) {
 		{
 			name: "Context with company and user data",
 			evalCtx: &schematicgo.CheckFlagRequestBody{
-				Company: map[string]*string{
-					"id":   &id1,
-					"name": &acme,
+				Company: map[string]string{
+					"id":   id1,
+					"name": acme,
 				},
-				User: map[string]*string{
-					"id":    &id2,
-					"email": &emailJohn,
+				User: map[string]string{
+					"id":    id2,
+					"email": emailJohn,
 				},
 			},
 			flagKey:  "feature_flag_1",
@@ -51,11 +51,11 @@ func TestFlagCheckCacheKey(t *testing.T) {
 		{
 			name: "Context with only company data",
 			evalCtx: &schematicgo.CheckFlagRequestBody{
-				Company: map[string]*string{
-					"id":   &id3,
-					"name": &xyz,
+				Company: map[string]string{
+					"id":   id3,
+					"name": xyz,
 				},
-				User: map[string]*string{},
+				User: map[string]string{},
 			},
 			flagKey:  "feature_flag_2",
 			expected: "f:feature_flag_2;c:id:789;c:name:XYZ Corp.",
@@ -63,10 +63,10 @@ func TestFlagCheckCacheKey(t *testing.T) {
 		{
 			name: "Context with only user data",
 			evalCtx: &schematicgo.CheckFlagRequestBody{
-				Company: map[string]*string{},
-				User: map[string]*string{
-					"id":    &id4,
-					"email": &emailJane,
+				Company: map[string]string{},
+				User: map[string]string{
+					"id":    id4,
+					"email": emailJane,
 				},
 			},
 			flagKey:  "feature_flag_3",

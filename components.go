@@ -274,7 +274,7 @@ func (l *ListComponentsResponse) String() string {
 }
 
 type PreviewComponentDataResponse struct {
-	Data *ComponentHydrateResponseData `json:"data,omitempty" url:"data,omitempty"`
+	Data *ComponentPreviewResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *PreviewComponentDataParams `json:"params,omitempty" url:"params,omitempty"`
 

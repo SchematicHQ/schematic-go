@@ -19,7 +19,7 @@ func FlagCheckCacheKey(evalCtx *schematicgo.CheckFlagRequestBody, flagKey string
 	}
 	sort.Strings(companyKeys)
 	for _, k := range companyKeys {
-		sb.WriteString(fmt.Sprintf("c:%s:%s;", k, *evalCtx.Company[k]))
+		sb.WriteString(fmt.Sprintf("c:%s:%s;", k, evalCtx.Company[k]))
 	}
 
 	userKeys := make([]string, 0, len(evalCtx.User))
@@ -28,7 +28,7 @@ func FlagCheckCacheKey(evalCtx *schematicgo.CheckFlagRequestBody, flagKey string
 	}
 	sort.Strings(userKeys)
 	for _, k := range userKeys {
-		sb.WriteString(fmt.Sprintf("u:%s:%s;", k, *evalCtx.User[k]))
+		sb.WriteString(fmt.Sprintf("u:%s:%s;", k, evalCtx.User[k]))
 	}
 
 	return strings.TrimRight(sb.String(), ";")

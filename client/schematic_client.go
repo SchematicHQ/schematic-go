@@ -81,6 +81,10 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 		}
 	}()
 
+	if c.isOffline {
+		return c.getFlagDefault(flagKey)
+	}
+
 	// If nil, check flag with empty context
 	if evalCtx == nil {
 		evalCtx = &schematicgo.CheckFlagRequestBody{}
@@ -93,8 +97,7 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 		}
 	}
 
-	resp, err := c.Client.Features.CheckFlag(ctx, flagKey, evalCtx)
-
+	resp, err := c.Features.CheckFlag(ctx, flagKey, evalCtx)
 	if err != nil {
 		c.errors <- err
 
@@ -209,6 +212,10 @@ func (c *SchematicClient) enqueueEvent(
 		}
 	}()
 
+	if c.isOffline {
+		return nil
+	}
+
 	now := time.Now().UTC()
 	eventBody := &schematicgo.CreateEventRequestBody{
 		EventType: schematicgo.CreateEventRequestBodyEventType(eventType),
@@ -239,7 +246,7 @@ func (c *SchematicClient) worker() {
 	}()
 
 	buffer := buffer.NewEventBuffer(
-		c.Client.Events,
+		c.Events,
 		c.errors,
 		c.logger,
 		c.eventBufferPeriod,

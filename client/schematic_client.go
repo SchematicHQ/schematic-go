@@ -9,18 +9,17 @@ import (
 	"github.com/schematichq/schematic-go/cache"
 	core "github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/flags"
-	"github.com/schematichq/schematic-go/http"
 	"github.com/schematichq/schematic-go/logger"
+	option "github.com/schematichq/schematic-go/option"
 )
 
 type SchematicClient struct {
 	*Client
 
-	clientOptions           []core.RequestOption
 	errors                  chan error
 	eventBufferPeriod       *time.Duration
 	events                  chan *schematicgo.CreateEventRequestBody
-	flagCheckCacheProviders []schematicgo.CacheProvider[bool]
+	flagCheckCacheProviders []schematicgo.BoolCacheProvider
 	flagDefaults            map[string]bool
 	isOffline               bool
 	logger                  schematicgo.Logger
@@ -28,50 +27,37 @@ type SchematicClient struct {
 	workerInterval          time.Duration
 }
 
-func NewSchematicClient(apiKey string, opts ...ClientOpt) *SchematicClient {
-	var apiConfig []core.RequestOption
-
-	if apiKey != "" {
-		apiConfig = append(apiConfig, &core.APIKeyOption{APIKey: apiKey})
-	} else {
-		opts = append(opts, WithOfflineMode())
+func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
+	options := core.NewRequestOptions(opts...)
+	if options.APIKey == "" {
+		// If no API key provideed, assume offline mode if no API key provided
+		opts = append(opts, core.WithOfflineMode())
 	}
 
+	// If no caching behavior is specified, assume a default behavior
+	if len(options.FlagCheckCacheProviders) == 0 {
+		opts = append(opts, core.WithFlagCheckCacheProvider(cache.NewDefaultCache[bool]()))
+	}
+
+	// Rebuild options struct in case we added any new options above
+	options = core.NewRequestOptions(opts...)
+
 	client := &SchematicClient{
-		clientOptions:           apiConfig,
-		flagCheckCacheProviders: make([]schematicgo.CacheProvider[bool], 0),
+		Client:                  NewClient(opts...),
 		errors:                  make(chan error, 100),
+		eventBufferPeriod:       options.EventBufferPeriod,
 		events:                  make(chan *schematicgo.CreateEventRequestBody, 100),
-		flagDefaults:            make(map[string]bool),
+		flagCheckCacheProviders: options.FlagCheckCacheProviders,
+		flagDefaults:            options.FlagDefaults,
 		logger:                  logger.NewDefaultLogger(),
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
-	}
-
-	// Apply initialization options
-	ctx := context.Background()
-	for _, opt := range opts {
-		if err := opt.Apply(ctx, client); err != nil {
-			client.errors <- err
-		}
-	}
-
-	// Once initialization options are applied, we can create the API client
-	client.Client = NewClient(client.clientOptions...)
-
-	// If no caching behavior is specified, assume a default behavior
-	if len(client.flagCheckCacheProviders) == 0 {
-		client.flagCheckCacheProviders = append(client.flagCheckCacheProviders, cache.NewDefaultCache[bool]())
 	}
 
 	// Start background worker which handles async error logging and event buffering
 	go client.worker()
 
 	return client
-}
-
-func (c *SchematicClient) AddFlagCheckCacheProvider(ctx context.Context, provider schematicgo.CacheProvider[bool]) {
-	c.flagCheckCacheProviders = append(c.flagCheckCacheProviders, provider)
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
@@ -144,25 +130,13 @@ func (c *SchematicClient) Identify(
 	}
 }
 
-func (c *SchematicClient) SetAPIClient(apiClient *Client) {
-	c.Client = apiClient
-}
-
-func (c *SchematicClient) SetAPIHost(ctx context.Context, host string) {
-	c.clientOptions = append(c.clientOptions, &core.BaseURLOption{BaseURL: host})
-
-	// In case this is called after initialization, recreate the API client
-	c.Client = NewClient(c.clientOptions...)
-}
-
-func (c *SchematicClient) SetEventBufferPeriod(period time.Duration) {
-	c.eventBufferPeriod = &period
-}
-
 func (c *SchematicClient) SetFlagDefault(
 	flag string,
 	value bool,
 ) {
+	if c.flagDefaults == nil {
+		c.flagDefaults = make(map[string]bool)
+	}
 	c.flagDefaults[flag] = value
 }
 
@@ -172,20 +146,6 @@ func (c *SchematicClient) SetFlagDefaults(
 	for flag, value := range values {
 		c.SetFlagDefault(flag, value)
 	}
-}
-
-func (c *SchematicClient) SetOfflineMode() {
-	c.isOffline = true
-
-	c.clientOptions = append(c.clientOptions, &core.HTTPClientOption{
-		HTTPClient: http.NoopClient{},
-	})
-}
-
-func (c *SchematicClient) SetHTTPClient(httpClient core.HTTPClient) {
-	c.clientOptions = append(c.clientOptions, &core.HTTPClientOption{
-		HTTPClient: httpClient,
-	})
 }
 
 func (c *SchematicClient) Track(
@@ -231,6 +191,10 @@ func (c *SchematicClient) enqueueEvent(
 func (c *SchematicClient) getFlagDefault(
 	flag string,
 ) bool {
+	if c.flagDefaults == nil {
+		return false
+	}
+
 	if value, ok := c.flagDefaults[flag]; ok {
 		return value
 	}

@@ -13,21 +13,22 @@ import (
 	schematicgo "github.com/schematichq/schematic-go"
 	schematicclient "github.com/schematichq/schematic-go/client"
 	"github.com/schematichq/schematic-go/mocks"
+	option "github.com/schematichq/schematic-go/option"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewSchematicClient(t *testing.T) {
-	client := schematicclient.NewSchematicClient("test-api-key")
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"))
 	defer client.Close()
+
 	assert.NotNil(t, client)
 }
 
 func TestCheckFlagWithCacheHit(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-	client := schematicclient.NewSchematicClient("test-api-key", schematicclient.WithHTTPClient(mockHTTPClient))
-
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithHTTPClient(mockHTTPClient))
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -61,7 +62,7 @@ func TestCheckFlagWithCacheHit(t *testing.T) {
 func TestCheckFlagWithNoCache(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-	client := schematicclient.NewSchematicClient("test-api-key", schematicclient.WithDisableFlagCheckCache(), schematicclient.WithHTTPClient(mockHTTPClient))
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithDisableFlagCheckCache(), option.WithHTTPClient(mockHTTPClient))
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -94,7 +95,7 @@ func TestCheckFlagWithCacheOptions(t *testing.T) {
 	cacheMaxSize := 1000
 	ctrl := gomock.NewController(t)
 	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-	client := schematicclient.NewSchematicClient("test-api-key", schematicclient.WithLocalFlagCheckCache(cacheMaxSize, cacheTTL), schematicclient.WithHTTPClient(mockHTTPClient))
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithLocalFlagCheckCache(cacheMaxSize, cacheTTL), option.WithHTTPClient(mockHTTPClient))
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -130,7 +131,7 @@ func TestCheckFlagWithCacheOptions(t *testing.T) {
 func TestTrackEventBatch(t *testing.T) {
 	//ctrl := gomock.NewController(t)
 	//mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-	client := schematicclient.NewSchematicClient("test-api-key", schematicclient.WithEventBufferPeriod(10*time.Millisecond))
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithEventBufferPeriod(10*time.Millisecond))
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -144,7 +145,7 @@ func TestTrackEventBatch(t *testing.T) {
 func TestMultipleEventBatches(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-	client := schematicclient.NewSchematicClient("test-api-key", schematicclient.WithEventBufferPeriod(10*time.Millisecond), schematicclient.WithHTTPClient(mockHTTPClient))
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithEventBufferPeriod(10*time.Millisecond), option.WithHTTPClient(mockHTTPClient))
 	defer client.Close()
 
 	assert.NotNil(t, client)
@@ -177,7 +178,7 @@ func TestMultipleEventBatches(t *testing.T) {
 }
 
 func TestCheckFlagOfflineMode(t *testing.T) {
-	client := schematicclient.NewSchematicClient("")
+	client := schematicclient.NewSchematicClient()
 	client.SetFlagDefault("test-flag", true)
 	defer client.Close()
 

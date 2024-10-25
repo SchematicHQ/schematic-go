@@ -3,9 +3,10 @@
 package option
 
 import (
-	core "github.com/schematichq/schematic-go/core"
 	http "net/http"
 	url "net/url"
+
+	core "github.com/schematichq/schematic-go/core"
 )
 
 // RequestOption adapts the behavior of an indivdual request.

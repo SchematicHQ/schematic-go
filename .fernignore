@@ -3,8 +3,9 @@
 README.md
 buffer/buffer.go
 cache/cache.go
+core/request_option.go
+core/custom_options.go
 custom_types.go
-client/opts.go
 client/schematic_client.go
 client/schematic_client_test.go
 flags/flags.go
@@ -14,3 +15,4 @@ generate.sh
 http/offline.go
 logger/logger.go
 mocks/http_mock.go
+option/custom_options.go

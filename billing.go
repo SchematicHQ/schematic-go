@@ -63,6 +63,14 @@ type ListInvoicesRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
+type ListMetersRequest struct {
+	DisplayName *string `json:"-" url:"display_name,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
 type ListPaymentMethodsRequest struct {
 	CompanyID              *string `json:"-" url:"company_id,omitempty"`
 	CustomerExternalID     string  `json:"-" url:"customer_external_id"`
@@ -169,6 +177,49 @@ func (c *CountCustomersResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+type DeleteProductPriceResponse struct {
+	Data *DeleteResponse `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (d *DeleteProductPriceResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeleteProductPriceResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteProductPriceResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteProductPriceResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+
+	d._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteProductPriceResponse) String() string {
+	if len(d._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
 }
 
 type ListBillingProductsResponse struct {
@@ -303,6 +354,50 @@ func (l *ListInvoicesResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
+type ListMetersResponse struct {
+	// The returned resources
+	Data []*BillingMeterResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *ListMetersParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (l *ListMetersResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListMetersResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListMetersResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListMetersResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+
+	l._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListMetersResponse) String() string {
+	if len(l._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
 type ListPaymentMethodsResponse struct {
 	// The returned resources
 	Data []*PaymentMethodResponseData `json:"data,omitempty" url:"data,omitempty"`
@@ -423,6 +518,49 @@ func (u *UpsertBillingCustomerResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (u *UpsertBillingCustomerResponse) String() string {
+	if len(u._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+type UpsertBillingMeterResponse struct {
+	Data *BillingMeterResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (u *UpsertBillingMeterResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpsertBillingMeterResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpsertBillingMeterResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpsertBillingMeterResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+
+	u._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpsertBillingMeterResponse) String() string {
 	if len(u._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
 			return value
@@ -658,12 +796,21 @@ type CreateBillingCustomerRequestBody struct {
 	Name           string            `json:"name" url:"-"`
 }
 
+type CreateMeterRequestBody struct {
+	DisplayName     string `json:"display_name" url:"-"`
+	EventName       string `json:"event_name" url:"-"`
+	EventPayloadKey string `json:"event_payload_key" url:"-"`
+	ExternalID      string `json:"external_id" url:"-"`
+}
+
 type CreateBillingPriceRequestBody struct {
-	Currency          string `json:"currency" url:"-"`
-	Interval          string `json:"interval" url:"-"`
-	Price             int    `json:"price" url:"-"`
-	PriceExternalID   string `json:"price_external_id" url:"-"`
-	ProductExternalID string `json:"product_external_id" url:"-"`
+	Currency          string  `json:"currency" url:"-"`
+	Interval          string  `json:"interval" url:"-"`
+	MeterID           *string `json:"meter_id,omitempty" url:"-"`
+	Price             int     `json:"price" url:"-"`
+	PriceExternalID   string  `json:"price_external_id" url:"-"`
+	ProductExternalID string  `json:"product_external_id" url:"-"`
+	UsageType         string  `json:"usage_type" url:"-"`
 }
 
 type CreateBillingProductRequestBody struct {

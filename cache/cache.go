@@ -7,6 +7,11 @@ import (
 	"time"
 )
 
+type CacheProvider[T any] interface {
+	Get(ctx context.Context, key string) (T, bool)
+	Set(ctx context.Context, key string, val T, ttlOverride *time.Duration) error
+}
+
 const defaultCacheSize = 1000 // 1000 records
 const defaultCacheTTL = 5 * time.Second
 

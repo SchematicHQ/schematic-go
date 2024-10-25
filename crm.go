@@ -262,12 +262,12 @@ type CreateCrmDealLineItemAssociationRequestBody struct {
 }
 
 type CreateCrmLineItemRequestBody struct {
-	TermMonth          *int    `json:"TermMonth,omitempty" url:"-"`
 	Amount             string  `json:"amount" url:"-"`
 	DiscountPercentage *string `json:"discount_percentage,omitempty" url:"-"`
 	Interval           string  `json:"interval" url:"-"`
 	LineItemExternalID string  `json:"line_item_external_id" url:"-"`
 	ProductExternalID  string  `json:"product_external_id" url:"-"`
 	Quantity           int     `json:"quantity" url:"-"`
+	TermMonth          *int    `json:"term_month,omitempty" url:"-"`
 	TotalDiscount      *string `json:"total_discount,omitempty" url:"-"`
 }

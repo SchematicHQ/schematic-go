@@ -62,7 +62,8 @@ type CountUsersRequest struct {
 }
 
 type GetActiveCompanySubscriptionRequest struct {
-	CompanyID string `json:"-" url:"company_id"`
+	CompanyID  *string   `json:"-" url:"company_id,omitempty"`
+	CompanyIDs []*string `json:"-" url:"company_ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)

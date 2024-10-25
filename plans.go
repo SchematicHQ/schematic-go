@@ -562,7 +562,7 @@ type UpdatePlanRequestBody struct {
 }
 
 type UpsertBillingProductRequestBody struct {
-	BillingProductID string  `json:"billing_product_id" url:"-"`
+	BillingProductID *string `json:"billing_product_id,omitempty" url:"-"`
 	MonthlyPriceID   *string `json:"monthly_price_id,omitempty" url:"-"`
 	YearlyPriceID    *string `json:"yearly_price_id,omitempty" url:"-"`
 }

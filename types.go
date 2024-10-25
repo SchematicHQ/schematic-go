@@ -5,9 +5,8 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	time "time"
-
 	core "github.com/schematichq/schematic-go/core"
+	time "time"
 )
 
 type APIError struct {
@@ -482,9 +481,12 @@ func (b *BillingCustomerResponseData) String() string {
 }
 
 type BillingCustomerSubscription struct {
-	Currency   string     `json:"currency" url:"currency"`
-	ExpiredAt  *time.Time `json:"expired_at,omitempty" url:"expired_at,omitempty"`
-	TotalPrice int        `json:"total_price" url:"total_price"`
+	Currency     string     `json:"currency" url:"currency"`
+	ExpiredAt    *time.Time `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	Interval     string     `json:"interval" url:"interval"`
+	MeteredUsage bool       `json:"metered_usage" url:"metered_usage"`
+	PerUnitPrice int        `json:"per_unit_price" url:"per_unit_price"`
+	TotalPrice   int        `json:"total_price" url:"total_price"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -613,6 +615,51 @@ func (b *BillingCustomerWithSubscriptionsResponseData) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
+type BillingMeterResponseData struct {
+	DispalyName     string `json:"dispaly_name" url:"dispaly_name"`
+	EventName       string `json:"event_name" url:"event_name"`
+	EventPayloadKey string `json:"event_payload_key" url:"event_payload_key"`
+	ExternalPriceID string `json:"external_price_id" url:"external_price_id"`
+	ID              string `json:"id" url:"id"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (b *BillingMeterResponseData) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingMeterResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler BillingMeterResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BillingMeterResponseData(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+
+	b._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingMeterResponseData) String() string {
+	if len(b._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(b._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
 type BillingPriceResponseData struct {
 	Currency        string `json:"currency" url:"currency"`
 	ExternalPriceID string `json:"external_price_id" url:"external_price_id"`
@@ -659,7 +706,6 @@ func (b *BillingPriceResponseData) String() string {
 }
 
 type BillingProductDetailResponseData struct {
-	Prices        []*BillingPriceResponseData `json:"Prices,omitempty" url:"Prices,omitempty"`
 	AccountID     string                      `json:"account_id" url:"account_id"`
 	CreatedAt     time.Time                   `json:"created_at" url:"created_at"`
 	Currency      string                      `json:"currency" url:"currency"`
@@ -667,6 +713,7 @@ type BillingProductDetailResponseData struct {
 	ExternalID    string                      `json:"external_id" url:"external_id"`
 	Name          string                      `json:"name" url:"name"`
 	Price         float64                     `json:"price" url:"price"`
+	Prices        []*BillingPriceResponseData `json:"prices,omitempty" url:"prices,omitempty"`
 	ProductID     string                      `json:"product_id" url:"product_id"`
 	Quantity      float64                     `json:"quantity" url:"quantity"`
 	UpdatedAt     time.Time                   `json:"updated_at" url:"updated_at"`
@@ -732,19 +779,20 @@ func (b *BillingProductDetailResponseData) String() string {
 }
 
 type BillingProductForSubscriptionResponseData struct {
-	AccountID       string    `json:"account_id" url:"account_id"`
 	CreatedAt       time.Time `json:"created_at" url:"created_at"`
 	Currency        string    `json:"currency" url:"currency"`
 	EnvironmentID   string    `json:"environment_id" url:"environment_id"`
 	ExternalID      string    `json:"external_id" url:"external_id"`
 	ID              string    `json:"id" url:"id"`
 	Interval        string    `json:"interval" url:"interval"`
+	MeterID         *string   `json:"meter_id,omitempty" url:"meter_id,omitempty"`
 	Name            string    `json:"name" url:"name"`
-	Price           float64   `json:"price" url:"price"`
+	Price           int       `json:"price" url:"price"`
 	PriceExternalID string    `json:"price_external_id" url:"price_external_id"`
 	Quantity        float64   `json:"quantity" url:"quantity"`
 	SubscriptionID  string    `json:"subscription_id" url:"subscription_id"`
 	UpdatedAt       time.Time `json:"updated_at" url:"updated_at"`
+	UsageType       string    `json:"usage_type" url:"usage_type"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -854,11 +902,14 @@ func (b *BillingProductPlanResponseData) String() string {
 }
 
 type BillingProductPricing struct {
-	Currency          string `json:"currency" url:"currency"`
-	Interval          string `json:"interval" url:"interval"`
-	Price             int    `json:"price" url:"price"`
-	PriceExternalID   string `json:"price_external_id" url:"price_external_id"`
-	ProductExternalID string `json:"product_external_id" url:"product_external_id"`
+	Currency          string  `json:"currency" url:"currency"`
+	Interval          string  `json:"interval" url:"interval"`
+	MeterID           *string `json:"meter_id,omitempty" url:"meter_id,omitempty"`
+	Price             int     `json:"price" url:"price"`
+	PriceExternalID   string  `json:"price_external_id" url:"price_external_id"`
+	ProductExternalID string  `json:"product_external_id" url:"product_external_id"`
+	Quantity          int     `json:"quantity" url:"quantity"`
+	UsageType         string  `json:"usage_type" url:"usage_type"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -971,13 +1022,19 @@ func (b *BillingProductResponseData) String() string {
 }
 
 type BillingSubscriptionResponseData struct {
-	Currency   string     `json:"currency" url:"currency"`
-	ExpiredAt  *time.Time `json:"expired_at,omitempty" url:"expired_at,omitempty"`
-	ExternalID string     `json:"external_id" url:"external_id"`
-	ID         string     `json:"id" url:"id"`
-	Interval   string     `json:"interval" url:"interval"`
-	TotalPrice int        `json:"total_price" url:"total_price"`
-	UpdatedAt  time.Time  `json:"updated_at" url:"updated_at"`
+	CompanyID              *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CreatedAt              time.Time              `json:"created_at" url:"created_at"`
+	Currency               string                 `json:"currency" url:"currency"`
+	CustomerExternalID     string                 `json:"customer_external_id" url:"customer_external_id"`
+	ExpiredAt              *time.Time             `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	ID                     string                 `json:"id" url:"id"`
+	Interval               string                 `json:"interval" url:"interval"`
+	Metadata               map[string]interface{} `json:"metadata,omitempty" url:"metadata,omitempty"`
+	PeriodEnd              int                    `json:"period_end" url:"period_end"`
+	PeriodStart            int                    `json:"period_start" url:"period_start"`
+	Status                 string                 `json:"status" url:"status"`
+	SubscriptionExternalID string                 `json:"subscription_external_id" url:"subscription_external_id"`
+	TotalPrice             int                    `json:"total_price" url:"total_price"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -991,8 +1048,8 @@ func (b *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) error {
 	type embed BillingSubscriptionResponseData
 	var unmarshaler = struct {
 		embed
+		CreatedAt *core.DateTime `json:"created_at"`
 		ExpiredAt *core.DateTime `json:"expired_at,omitempty"`
-		UpdatedAt *core.DateTime `json:"updated_at"`
 	}{
 		embed: embed(*b),
 	}
@@ -1000,8 +1057,8 @@ func (b *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*b = BillingSubscriptionResponseData(unmarshaler.embed)
+	b.CreatedAt = unmarshaler.CreatedAt.Time()
 	b.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
-	b.UpdatedAt = unmarshaler.UpdatedAt.Time()
 
 	extraProperties, err := core.ExtractExtraProperties(data, *b)
 	if err != nil {
@@ -1017,17 +1074,95 @@ func (b *BillingSubscriptionResponseData) MarshalJSON() ([]byte, error) {
 	type embed BillingSubscriptionResponseData
 	var marshaler = struct {
 		embed
+		CreatedAt *core.DateTime `json:"created_at"`
 		ExpiredAt *core.DateTime `json:"expired_at,omitempty"`
-		UpdatedAt *core.DateTime `json:"updated_at"`
 	}{
 		embed:     embed(*b),
+		CreatedAt: core.NewDateTime(b.CreatedAt),
 		ExpiredAt: core.NewOptionalDateTime(b.ExpiredAt),
-		UpdatedAt: core.NewDateTime(b.UpdatedAt),
 	}
 	return json.Marshal(marshaler)
 }
 
 func (b *BillingSubscriptionResponseData) String() string {
+	if len(b._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(b._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+type BillingSubscriptionView struct {
+	CompanyID              *string                                      `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CreatedAt              time.Time                                    `json:"created_at" url:"created_at"`
+	Currency               string                                       `json:"currency" url:"currency"`
+	CustomerExternalID     string                                       `json:"customer_external_id" url:"customer_external_id"`
+	ExpiredAt              *time.Time                                   `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	ID                     string                                       `json:"id" url:"id"`
+	Interval               string                                       `json:"interval" url:"interval"`
+	LatestInvoice          *InvoiceResponseData                         `json:"latest_invoice,omitempty" url:"latest_invoice,omitempty"`
+	Metadata               map[string]interface{}                       `json:"metadata,omitempty" url:"metadata,omitempty"`
+	PaymentMethod          *PaymentMethodResponseData                   `json:"payment_method,omitempty" url:"payment_method,omitempty"`
+	PeriodEnd              int                                          `json:"period_end" url:"period_end"`
+	PeriodStart            int                                          `json:"period_start" url:"period_start"`
+	Products               []*BillingProductForSubscriptionResponseData `json:"products,omitempty" url:"products,omitempty"`
+	Status                 string                                       `json:"status" url:"status"`
+	SubscriptionExternalID string                                       `json:"subscription_external_id" url:"subscription_external_id"`
+	TotalPrice             int                                          `json:"total_price" url:"total_price"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (b *BillingSubscriptionView) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingSubscriptionView) UnmarshalJSON(data []byte) error {
+	type embed BillingSubscriptionView
+	var unmarshaler = struct {
+		embed
+		CreatedAt *core.DateTime `json:"created_at"`
+		ExpiredAt *core.DateTime `json:"expired_at,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingSubscriptionView(unmarshaler.embed)
+	b.CreatedAt = unmarshaler.CreatedAt.Time()
+	b.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
+
+	extraProperties, err := core.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+
+	b._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingSubscriptionView) MarshalJSON() ([]byte, error) {
+	type embed BillingSubscriptionView
+	var marshaler = struct {
+		embed
+		CreatedAt *core.DateTime `json:"created_at"`
+		ExpiredAt *core.DateTime `json:"expired_at,omitempty"`
+	}{
+		embed:     embed(*b),
+		CreatedAt: core.NewDateTime(b.CreatedAt),
+		ExpiredAt: core.NewOptionalDateTime(b.ExpiredAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (b *BillingSubscriptionView) String() string {
 	if len(b._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(b._rawJSON); err == nil {
 			return value
@@ -1263,18 +1398,18 @@ func (c *CompanyCrmDealsResponseData) String() string {
 }
 
 type CompanyDetailResponseData struct {
-	AddOns               []*CompanyPlanWithBillingSubView   `json:"add_ons,omitempty" url:"add_ons,omitempty"`
-	BillingSubscriptions []*BillingSubscriptionResponseData `json:"billing_subscriptions,omitempty" url:"billing_subscriptions,omitempty"`
-	CreatedAt            time.Time                          `json:"created_at" url:"created_at"`
-	EntityTraits         []*EntityTraitDetailResponseData   `json:"entity_traits,omitempty" url:"entity_traits,omitempty"`
-	EnvironmentID        string                             `json:"environment_id" url:"environment_id"`
-	ID                   string                             `json:"id" url:"id"`
-	Keys                 []*EntityKeyDetailResponseData     `json:"keys,omitempty" url:"keys,omitempty"`
-	LastSeenAt           *time.Time                         `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	LogoURL              *string                            `json:"logo_url,omitempty" url:"logo_url,omitempty"`
-	Name                 string                             `json:"name" url:"name"`
-	Plan                 *CompanyPlanWithBillingSubView     `json:"plan,omitempty" url:"plan,omitempty"`
-	Plans                []*GenericPreviewObject            `json:"plans,omitempty" url:"plans,omitempty"`
+	AddOns               []*CompanyPlanWithBillingSubView `json:"add_ons,omitempty" url:"add_ons,omitempty"`
+	BillingSubscriptions []*BillingSubscriptionView       `json:"billing_subscriptions,omitempty" url:"billing_subscriptions,omitempty"`
+	CreatedAt            time.Time                        `json:"created_at" url:"created_at"`
+	EntityTraits         []*EntityTraitDetailResponseData `json:"entity_traits,omitempty" url:"entity_traits,omitempty"`
+	EnvironmentID        string                           `json:"environment_id" url:"environment_id"`
+	ID                   string                           `json:"id" url:"id"`
+	Keys                 []*EntityKeyDetailResponseData   `json:"keys,omitempty" url:"keys,omitempty"`
+	LastSeenAt           *time.Time                       `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
+	LogoURL              *string                          `json:"logo_url,omitempty" url:"logo_url,omitempty"`
+	Name                 string                           `json:"name" url:"name"`
+	Plan                 *CompanyPlanWithBillingSubView   `json:"plan,omitempty" url:"plan,omitempty"`
+	Plans                []*GenericPreviewObject          `json:"plans,omitempty" url:"plans,omitempty"`
 	// A map of trait names to trait values
 	Traits    map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
 	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
@@ -1824,8 +1959,51 @@ func (c *CompanySubscriptionResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type ComponentCapabilities struct {
+	Checkout bool `json:"checkout" url:"checkout"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (c *ComponentCapabilities) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *ComponentCapabilities) UnmarshalJSON(data []byte) error {
+	type unmarshaler ComponentCapabilities
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = ComponentCapabilities(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+
+	c._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ComponentCapabilities) String() string {
+	if len(c._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 type ComponentHydrateResponseData struct {
+	ActiveAddOns    []*CompanyPlanDetailResponseData `json:"active_add_ons,omitempty" url:"active_add_ons,omitempty"`
 	ActivePlans     []*CompanyPlanDetailResponseData `json:"active_plans,omitempty" url:"active_plans,omitempty"`
+	Capabilities    *ComponentCapabilities           `json:"capabilities,omitempty" url:"capabilities,omitempty"`
 	Company         *CompanyDetailResponseData       `json:"company,omitempty" url:"company,omitempty"`
 	Component       *ComponentResponseData           `json:"component,omitempty" url:"component,omitempty"`
 	FeatureUsage    *FeatureUsageDetailResponseData  `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
@@ -1873,7 +2051,9 @@ func (c *ComponentHydrateResponseData) String() string {
 
 // The returned resource
 type ComponentPreviewResponseData struct {
+	ActiveAddOns    []*CompanyPlanDetailResponseData `json:"active_add_ons,omitempty" url:"active_add_ons,omitempty"`
 	ActivePlans     []*CompanyPlanDetailResponseData `json:"active_plans,omitempty" url:"active_plans,omitempty"`
+	Capabilities    *ComponentCapabilities           `json:"capabilities,omitempty" url:"capabilities,omitempty"`
 	Company         *CompanyDetailResponseData       `json:"company,omitempty" url:"company,omitempty"`
 	Component       *ComponentResponseData           `json:"component,omitempty" url:"component,omitempty"`
 	FeatureUsage    *FeatureUsageDetailResponseData  `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
@@ -4963,6 +5143,49 @@ func (k *KeysRequestBody) String() string {
 	return fmt.Sprintf("%#v", k)
 }
 
+type MeterRequestBody struct {
+	DisplayName     string `json:"display_name" url:"display_name"`
+	EventName       string `json:"event_name" url:"event_name"`
+	EventPayloadKey string `json:"event_payload_key" url:"event_payload_key"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (m *MeterRequestBody) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *MeterRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler MeterRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MeterRequestBody(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+
+	m._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MeterRequestBody) String() string {
+	if len(m._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(m._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
 type MetricCountsHourlyResponseData struct {
 	CompanyID     *string   `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CreatedAt     time.Time `json:"created_at" url:"created_at"`
@@ -6386,7 +6609,7 @@ func (r *RuleResponseData) String() string {
 
 // The updated resource
 type RulesDetailResponseData struct {
-	Flag  *FlagResponseData         `json:"Flag,omitempty" url:"Flag,omitempty"`
+	Flag  *FlagResponseData         `json:"flag,omitempty" url:"flag,omitempty"`
 	Rules []*RuleDetailResponseData `json:"rules,omitempty" url:"rules,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -7854,6 +8077,52 @@ func (l *ListInvoicesParams) String() string {
 }
 
 // Input parameters
+type ListMetersParams struct {
+	DisplayName *string `json:"display_name,omitempty" url:"display_name,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (l *ListMetersParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListMetersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListMetersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListMetersParams(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+
+	l._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListMetersParams) String() string {
+	if len(l._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
 type ListPaymentMethodsParams struct {
 	CompanyID          *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CustomerExternalID *string `json:"customer_external_id,omitempty" url:"customer_external_id,omitempty"`
@@ -8236,7 +8505,8 @@ func (c *CountUsersParams) String() string {
 
 // Input parameters
 type GetActiveCompanySubscriptionParams struct {
-	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyID  *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)

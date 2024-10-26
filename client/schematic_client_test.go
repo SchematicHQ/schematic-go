@@ -177,8 +177,33 @@ func TestMultipleEventBatches(t *testing.T) {
 	time.Sleep(20 * time.Millisecond)
 }
 
-func TestCheckFlagOfflineMode(t *testing.T) {
-	client := schematicclient.NewSchematicClient()
+func TestCheckFlagOfflineModeNoAPIKeyOption(t *testing.T) {
+	// Passing mock HTTP client, which we expect to be replaced by a NoopClient internally. This test will fail if any calls are made to the mock client.
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(option.WithHTTPClient(mockHTTPClient))
+	client.SetFlagDefault("test-flag", true)
+	defer client.Close()
+
+	assert.True(t, client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag"))
+}
+
+func TestCheckFlagOfflineModeEmptyAPIKey(t *testing.T) {
+	// Passing mock HTTP client, which we expect to be replaced by a NoopClient internally. This test will fail if any calls are made to the mock client.
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(option.WithAPIKey(""), option.WithHTTPClient(mockHTTPClient))
+	client.SetFlagDefault("test-flag", true)
+	defer client.Close()
+
+	assert.True(t, client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag"))
+}
+
+func TestCheckFlagOfflineModeOption(t *testing.T) {
+	// Passing mock HTTP client, which we expect to be replaced by a NoopClient internally. This test will fail if any calls are made to the mock client.
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(option.WithOfflineMode(), option.WithHTTPClient(mockHTTPClient))
 	client.SetFlagDefault("test-flag", true)
 	defer client.Close()
 

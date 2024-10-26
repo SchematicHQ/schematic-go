@@ -16,3 +16,7 @@ func (c NoopClient) Do(*gohttp.Request) (*gohttp.Response, error) {
 		Body:       io.NopCloser(strings.NewReader("")),
 	}, nil
 }
+
+func NewNoopClient() NoopClient {
+	return NoopClient{}
+}

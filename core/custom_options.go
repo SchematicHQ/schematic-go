@@ -4,6 +4,7 @@ import (
 	"time"
 
 	cache "github.com/schematichq/schematic-go/cache"
+	"github.com/schematichq/schematic-go/http"
 )
 
 // Specify default flag values
@@ -86,6 +87,7 @@ type ClientOptOfflineMode struct {
 
 func (c ClientOptOfflineMode) applyRequestOptions(opts *RequestOptions) {
 	opts.OfflineMode = c.isOffline
+	opts.HTTPClient = http.NewNoopClient()
 }
 
 func WithOfflineMode() RequestOption {

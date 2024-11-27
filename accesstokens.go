@@ -5,12 +5,142 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	core "github.com/schematichq/schematic-go/core"
+	internal "github.com/schematichq/schematic-go/internal"
+	time "time"
 )
 
 type IssueTemporaryAccessTokenRequestBody struct {
 	Lookup       map[string]string `json:"lookup,omitempty" url:"-"`
 	ResourceType string            `json:"resource_type" url:"-"`
+}
+
+// The created resource
+type IssueTemporaryAccessTokenResponseData struct {
+	APIKeyID      string    `json:"api_key_id" url:"api_key_id"`
+	CreatedAt     time.Time `json:"created_at" url:"created_at"`
+	EnvironmentID string    `json:"environment_id" url:"environment_id"`
+	ExpiredAt     time.Time `json:"expired_at" url:"expired_at"`
+	ID            string    `json:"id" url:"id"`
+	ResourceType  string    `json:"resource_type" url:"resource_type"`
+	Token         string    `json:"token" url:"token"`
+	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetAPIKeyID() string {
+	if i == nil {
+		return ""
+	}
+	return i.APIKeyID
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetCreatedAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.CreatedAt
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetEnvironmentID() string {
+	if i == nil {
+		return ""
+	}
+	return i.EnvironmentID
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetExpiredAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.ExpiredAt
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetID() string {
+	if i == nil {
+		return ""
+	}
+	return i.ID
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetResourceType() string {
+	if i == nil {
+		return ""
+	}
+	return i.ResourceType
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetToken() string {
+	if i == nil {
+		return ""
+	}
+	return i.Token
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetUpdatedAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.UpdatedAt
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetExtraProperties() map[string]interface{} {
+	return i.extraProperties
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) UnmarshalJSON(data []byte) error {
+	type embed IssueTemporaryAccessTokenResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		ExpiredAt *internal.DateTime `json:"expired_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*i),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*i = IssueTemporaryAccessTokenResponseData(unmarshaler.embed)
+	i.CreatedAt = unmarshaler.CreatedAt.Time()
+	i.ExpiredAt = unmarshaler.ExpiredAt.Time()
+	i.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) MarshalJSON() ([]byte, error) {
+	type embed IssueTemporaryAccessTokenResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		ExpiredAt *internal.DateTime `json:"expired_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*i),
+		CreatedAt: internal.NewDateTime(i.CreatedAt),
+		ExpiredAt: internal.NewDateTime(i.ExpiredAt),
+		UpdatedAt: internal.NewDateTime(i.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) String() string {
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
 }
 
 type IssueTemporaryAccessTokenResponse struct {
@@ -19,7 +149,21 @@ type IssueTemporaryAccessTokenResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (i *IssueTemporaryAccessTokenResponse) GetData() *IssueTemporaryAccessTokenResponseData {
+	if i == nil {
+		return nil
+	}
+	return i.Data
+}
+
+func (i *IssueTemporaryAccessTokenResponse) GetParams() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.Params
 }
 
 func (i *IssueTemporaryAccessTokenResponse) GetExtraProperties() map[string]interface{} {
@@ -33,24 +177,22 @@ func (i *IssueTemporaryAccessTokenResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*i = IssueTemporaryAccessTokenResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *i)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
 	if err != nil {
 		return err
 	}
 	i.extraProperties = extraProperties
-
-	i._rawJSON = json.RawMessage(data)
+	i.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (i *IssueTemporaryAccessTokenResponse) String() string {
-	if len(i._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(i._rawJSON); err == nil {
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(i); err == nil {
+	if value, err := internal.StringifyJSON(i); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", i)

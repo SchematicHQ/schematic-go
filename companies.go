@@ -5,7 +5,8 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	core "github.com/schematichq/schematic-go/core"
+	internal "github.com/schematichq/schematic-go/internal"
+	time "time"
 )
 
 type CountCompaniesRequest struct {
@@ -172,13 +173,778 @@ type LookupUserRequest struct {
 	Keys map[string]interface{} `json:"-" url:"keys,omitempty"`
 }
 
+type CompanyCrmDealsResponseData struct {
+	DealArr        string             `json:"deal_arr" url:"deal_arr"`
+	DealExternalID string             `json:"deal_external_id" url:"deal_external_id"`
+	DealMrr        string             `json:"deal_mrr" url:"deal_mrr"`
+	DealName       *string            `json:"deal_name,omitempty" url:"deal_name,omitempty"`
+	LineItems      []*CrmDealLineItem `json:"line_items,omitempty" url:"line_items,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyCrmDealsResponseData) GetDealArr() string {
+	if c == nil {
+		return ""
+	}
+	return c.DealArr
+}
+
+func (c *CompanyCrmDealsResponseData) GetDealExternalID() string {
+	if c == nil {
+		return ""
+	}
+	return c.DealExternalID
+}
+
+func (c *CompanyCrmDealsResponseData) GetDealMrr() string {
+	if c == nil {
+		return ""
+	}
+	return c.DealMrr
+}
+
+func (c *CompanyCrmDealsResponseData) GetDealName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.DealName
+}
+
+func (c *CompanyCrmDealsResponseData) GetLineItems() []*CrmDealLineItem {
+	if c == nil {
+		return nil
+	}
+	return c.LineItems
+}
+
+func (c *CompanyCrmDealsResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CompanyCrmDealsResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CompanyCrmDealsResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CompanyCrmDealsResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyCrmDealsResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CrmDealLineItem struct {
+	BillingFrequency   string    `json:"billing_frequency" url:"billing_frequency"`
+	CreatedAt          time.Time `json:"created_at" url:"created_at"`
+	Currency           string    `json:"currency" url:"currency"`
+	Description        string    `json:"description" url:"description"`
+	DiscountPercentage *Decimal  `json:"discount_percentage,omitempty" url:"discount_percentage,omitempty"`
+	ID                 string    `json:"id" url:"id"`
+	Name               string    `json:"name" url:"name"`
+	Price              float64   `json:"price" url:"price"`
+	Quantity           int       `json:"quantity" url:"quantity"`
+	TermMonth          *int      `json:"term_month,omitempty" url:"term_month,omitempty"`
+	TotalDiscount      *Decimal  `json:"total_discount,omitempty" url:"total_discount,omitempty"`
+	UpdatedAt          time.Time `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CrmDealLineItem) GetBillingFrequency() string {
+	if c == nil {
+		return ""
+	}
+	return c.BillingFrequency
+}
+
+func (c *CrmDealLineItem) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CrmDealLineItem) GetCurrency() string {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CrmDealLineItem) GetDescription() string {
+	if c == nil {
+		return ""
+	}
+	return c.Description
+}
+
+func (c *CrmDealLineItem) GetDiscountPercentage() *Decimal {
+	if c == nil {
+		return nil
+	}
+	return c.DiscountPercentage
+}
+
+func (c *CrmDealLineItem) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CrmDealLineItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CrmDealLineItem) GetPrice() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Price
+}
+
+func (c *CrmDealLineItem) GetQuantity() int {
+	if c == nil {
+		return 0
+	}
+	return c.Quantity
+}
+
+func (c *CrmDealLineItem) GetTermMonth() *int {
+	if c == nil {
+		return nil
+	}
+	return c.TermMonth
+}
+
+func (c *CrmDealLineItem) GetTotalDiscount() *Decimal {
+	if c == nil {
+		return nil
+	}
+	return c.TotalDiscount
+}
+
+func (c *CrmDealLineItem) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CrmDealLineItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CrmDealLineItem) UnmarshalJSON(data []byte) error {
+	type embed CrmDealLineItem
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CrmDealLineItem(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CrmDealLineItem) MarshalJSON() ([]byte, error) {
+	type embed CrmDealLineItem
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CrmDealLineItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type Decimal = map[string]interface{}
+
+type EntityTraitValue struct {
+	DefinitionID string `json:"definition_id" url:"definition_id"`
+	Value        string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EntityTraitValue) GetDefinitionID() string {
+	if e == nil {
+		return ""
+	}
+	return e.DefinitionID
+}
+
+func (e *EntityTraitValue) GetValue() string {
+	if e == nil {
+		return ""
+	}
+	return e.Value
+}
+
+func (e *EntityTraitValue) GetExtraProperties() map[string]interface{} {
+	return e.extraProperties
+}
+
+func (e *EntityTraitValue) UnmarshalJSON(data []byte) error {
+	type unmarshaler EntityTraitValue
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EntityTraitValue(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EntityTraitValue) String() string {
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+type KeysRequestBody struct {
+	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (k *KeysRequestBody) GetKeys() map[string]string {
+	if k == nil {
+		return nil
+	}
+	return k.Keys
+}
+
+func (k *KeysRequestBody) GetExtraProperties() map[string]interface{} {
+	return k.extraProperties
+}
+
+func (k *KeysRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler KeysRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*k = KeysRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *k)
+	if err != nil {
+		return err
+	}
+	k.extraProperties = extraProperties
+	k.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (k *KeysRequestBody) String() string {
+	if len(k.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(k.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(k); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", k)
+}
+
+type UpsertCompanyRequestBody struct {
+	// If you know the Schematic ID, you can use that here instead of keys
+	ID         *string           `json:"id,omitempty" url:"id,omitempty"`
+	Keys       map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
+	LastSeenAt *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
+	Name       *string           `json:"name,omitempty" url:"name,omitempty"`
+	// A map of trait names to trait values
+	Traits     map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+	UpdateOnly *bool                  `json:"update_only,omitempty" url:"update_only,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertCompanyRequestBody) GetID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.ID
+}
+
+func (u *UpsertCompanyRequestBody) GetKeys() map[string]string {
+	if u == nil {
+		return nil
+	}
+	return u.Keys
+}
+
+func (u *UpsertCompanyRequestBody) GetLastSeenAt() *time.Time {
+	if u == nil {
+		return nil
+	}
+	return u.LastSeenAt
+}
+
+func (u *UpsertCompanyRequestBody) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpsertCompanyRequestBody) GetTraits() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Traits
+}
+
+func (u *UpsertCompanyRequestBody) GetUpdateOnly() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.UpdateOnly
+}
+
+func (u *UpsertCompanyRequestBody) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpsertCompanyRequestBody) UnmarshalJSON(data []byte) error {
+	type embed UpsertCompanyRequestBody
+	var unmarshaler = struct {
+		embed
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+	}{
+		embed: embed(*u),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*u = UpsertCompanyRequestBody(unmarshaler.embed)
+	u.LastSeenAt = unmarshaler.LastSeenAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpsertCompanyRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpsertCompanyRequestBody
+	var marshaler = struct {
+		embed
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+	}{
+		embed:      embed(*u),
+		LastSeenAt: internal.NewOptionalDateTime(u.LastSeenAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (u *UpsertCompanyRequestBody) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+type UpsertTraitRequestBody struct {
+	// Amount to increment the trait by (positive or negative)
+	Incr *int `json:"incr,omitempty" url:"incr,omitempty"`
+	// Key/value pairs too identify a company or user
+	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
+	// Value to set the trait to
+	Set *string `json:"set,omitempty" url:"set,omitempty"`
+	// Name of the trait to update
+	Trait string `json:"trait" url:"trait"`
+	// Unless this is set, the company or user will be created if it does not already exist
+	UpdateOnly *bool `json:"update_only,omitempty" url:"update_only,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertTraitRequestBody) GetIncr() *int {
+	if u == nil {
+		return nil
+	}
+	return u.Incr
+}
+
+func (u *UpsertTraitRequestBody) GetKeys() map[string]string {
+	if u == nil {
+		return nil
+	}
+	return u.Keys
+}
+
+func (u *UpsertTraitRequestBody) GetSet() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Set
+}
+
+func (u *UpsertTraitRequestBody) GetTrait() string {
+	if u == nil {
+		return ""
+	}
+	return u.Trait
+}
+
+func (u *UpsertTraitRequestBody) GetUpdateOnly() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.UpdateOnly
+}
+
+func (u *UpsertTraitRequestBody) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpsertTraitRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpsertTraitRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpsertTraitRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpsertTraitRequestBody) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+type UpsertUserRequestBody struct {
+	// Optionally specify company using key/value pairs
+	Company map[string]string `json:"company,omitempty" url:"company,omitempty"`
+	// Optionally specify company using Schematic company ID
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// If you know the Schematic ID, you can use that here instead of keys
+	ID         *string           `json:"id,omitempty" url:"id,omitempty"`
+	Keys       map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
+	LastSeenAt *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
+	Name       *string           `json:"name,omitempty" url:"name,omitempty"`
+	// A map of trait names to trait values
+	Traits     map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+	UpdateOnly *bool                  `json:"update_only,omitempty" url:"update_only,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertUserRequestBody) GetCompany() map[string]string {
+	if u == nil {
+		return nil
+	}
+	return u.Company
+}
+
+func (u *UpsertUserRequestBody) GetCompanyID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.CompanyID
+}
+
+func (u *UpsertUserRequestBody) GetID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.ID
+}
+
+func (u *UpsertUserRequestBody) GetKeys() map[string]string {
+	if u == nil {
+		return nil
+	}
+	return u.Keys
+}
+
+func (u *UpsertUserRequestBody) GetLastSeenAt() *time.Time {
+	if u == nil {
+		return nil
+	}
+	return u.LastSeenAt
+}
+
+func (u *UpsertUserRequestBody) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpsertUserRequestBody) GetTraits() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Traits
+}
+
+func (u *UpsertUserRequestBody) GetUpdateOnly() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.UpdateOnly
+}
+
+func (u *UpsertUserRequestBody) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpsertUserRequestBody) UnmarshalJSON(data []byte) error {
+	type embed UpsertUserRequestBody
+	var unmarshaler = struct {
+		embed
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+	}{
+		embed: embed(*u),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*u = UpsertUserRequestBody(unmarshaler.embed)
+	u.LastSeenAt = unmarshaler.LastSeenAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpsertUserRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpsertUserRequestBody
+	var marshaler = struct {
+		embed
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+	}{
+		embed:      embed(*u),
+		LastSeenAt: internal.NewOptionalDateTime(u.LastSeenAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (u *UpsertUserRequestBody) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Input parameters
+type CountCompaniesParams struct {
+	// Filter companies by multiple company IDs (starts with comp\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter companies by plan ID (starts with plan\_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter out companies that already have a company override for the specified feature ID
+	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
+	// Filter out companies that have a plan
+	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompaniesParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountCompaniesParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountCompaniesParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountCompaniesParams) GetPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanID
+}
+
+func (c *CountCompaniesParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountCompaniesParams) GetWithoutFeatureOverrideFor() *string {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutFeatureOverrideFor
+}
+
+func (c *CountCompaniesParams) GetWithoutPlan() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutPlan
+}
+
+func (c *CountCompaniesParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCompaniesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCompaniesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCompaniesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCompaniesParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 type CountCompaniesResponse struct {
 	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *CountCompaniesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompaniesResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountCompaniesResponse) GetParams() *CountCompaniesParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountCompaniesResponse) GetExtraProperties() map[string]interface{} {
@@ -192,24 +958,103 @@ func (c *CountCompaniesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountCompaniesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountCompaniesResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+type CountEntityKeyDefinitionsParams struct {
+	EntityType *CountEntityKeyDefinitionsResponseParamsEntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
+	IDs        []string                                           `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountEntityKeyDefinitionsParams) GetEntityType() *CountEntityKeyDefinitionsResponseParamsEntityType {
+	if c == nil {
+		return nil
+	}
+	return c.EntityType
+}
+
+func (c *CountEntityKeyDefinitionsParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountEntityKeyDefinitionsParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountEntityKeyDefinitionsParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountEntityKeyDefinitionsParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountEntityKeyDefinitionsParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountEntityKeyDefinitionsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountEntityKeyDefinitionsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountEntityKeyDefinitionsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountEntityKeyDefinitionsParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -243,7 +1088,21 @@ type CountEntityKeyDefinitionsResponse struct {
 	Params *CountEntityKeyDefinitionsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountEntityKeyDefinitionsResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountEntityKeyDefinitionsResponse) GetParams() *CountEntityKeyDefinitionsParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountEntityKeyDefinitionsResponse) GetExtraProperties() map[string]interface{} {
@@ -257,24 +1116,133 @@ func (c *CountEntityKeyDefinitionsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountEntityKeyDefinitionsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountEntityKeyDefinitionsResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CountEntityKeyDefinitionsResponseParamsEntityType string
+
+const (
+	CountEntityKeyDefinitionsResponseParamsEntityTypeCompany CountEntityKeyDefinitionsResponseParamsEntityType = "company"
+	CountEntityKeyDefinitionsResponseParamsEntityTypeUser    CountEntityKeyDefinitionsResponseParamsEntityType = "user"
+)
+
+func NewCountEntityKeyDefinitionsResponseParamsEntityTypeFromString(s string) (CountEntityKeyDefinitionsResponseParamsEntityType, error) {
+	switch s {
+	case "company":
+		return CountEntityKeyDefinitionsResponseParamsEntityTypeCompany, nil
+	case "user":
+		return CountEntityKeyDefinitionsResponseParamsEntityTypeUser, nil
+	}
+	var t CountEntityKeyDefinitionsResponseParamsEntityType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CountEntityKeyDefinitionsResponseParamsEntityType) Ptr() *CountEntityKeyDefinitionsResponseParamsEntityType {
+	return &c
+}
+
+// Input parameters
+type CountEntityTraitDefinitionsParams struct {
+	EntityType *CountEntityTraitDefinitionsResponseParamsEntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
+	IDs        []string                                             `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int                                                `json:"offset,omitempty" url:"offset,omitempty"`
+	Q         *string                                             `json:"q,omitempty" url:"q,omitempty"`
+	TraitType *CountEntityTraitDefinitionsResponseParamsTraitType `json:"trait_type,omitempty" url:"trait_type,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountEntityTraitDefinitionsParams) GetEntityType() *CountEntityTraitDefinitionsResponseParamsEntityType {
+	if c == nil {
+		return nil
+	}
+	return c.EntityType
+}
+
+func (c *CountEntityTraitDefinitionsParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountEntityTraitDefinitionsParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountEntityTraitDefinitionsParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountEntityTraitDefinitionsParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountEntityTraitDefinitionsParams) GetTraitType() *CountEntityTraitDefinitionsResponseParamsTraitType {
+	if c == nil {
+		return nil
+	}
+	return c.TraitType
+}
+
+func (c *CountEntityTraitDefinitionsParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountEntityTraitDefinitionsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountEntityTraitDefinitionsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountEntityTraitDefinitionsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountEntityTraitDefinitionsParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -342,7 +1310,21 @@ type CountEntityTraitDefinitionsResponse struct {
 	Params *CountEntityTraitDefinitionsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountEntityTraitDefinitionsResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountEntityTraitDefinitionsResponse) GetParams() *CountEntityTraitDefinitionsParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountEntityTraitDefinitionsResponse) GetExtraProperties() map[string]interface{} {
@@ -356,24 +1338,171 @@ func (c *CountEntityTraitDefinitionsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountEntityTraitDefinitionsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountEntityTraitDefinitionsResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CountEntityTraitDefinitionsResponseParamsEntityType string
+
+const (
+	CountEntityTraitDefinitionsResponseParamsEntityTypeCompany CountEntityTraitDefinitionsResponseParamsEntityType = "company"
+	CountEntityTraitDefinitionsResponseParamsEntityTypeUser    CountEntityTraitDefinitionsResponseParamsEntityType = "user"
+)
+
+func NewCountEntityTraitDefinitionsResponseParamsEntityTypeFromString(s string) (CountEntityTraitDefinitionsResponseParamsEntityType, error) {
+	switch s {
+	case "company":
+		return CountEntityTraitDefinitionsResponseParamsEntityTypeCompany, nil
+	case "user":
+		return CountEntityTraitDefinitionsResponseParamsEntityTypeUser, nil
+	}
+	var t CountEntityTraitDefinitionsResponseParamsEntityType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CountEntityTraitDefinitionsResponseParamsEntityType) Ptr() *CountEntityTraitDefinitionsResponseParamsEntityType {
+	return &c
+}
+
+type CountEntityTraitDefinitionsResponseParamsTraitType string
+
+const (
+	CountEntityTraitDefinitionsResponseParamsTraitTypeBoolean  CountEntityTraitDefinitionsResponseParamsTraitType = "boolean"
+	CountEntityTraitDefinitionsResponseParamsTraitTypeCurrency CountEntityTraitDefinitionsResponseParamsTraitType = "currency"
+	CountEntityTraitDefinitionsResponseParamsTraitTypeDate     CountEntityTraitDefinitionsResponseParamsTraitType = "date"
+	CountEntityTraitDefinitionsResponseParamsTraitTypeNumber   CountEntityTraitDefinitionsResponseParamsTraitType = "number"
+	CountEntityTraitDefinitionsResponseParamsTraitTypeString   CountEntityTraitDefinitionsResponseParamsTraitType = "string"
+	CountEntityTraitDefinitionsResponseParamsTraitTypeURL      CountEntityTraitDefinitionsResponseParamsTraitType = "url"
+)
+
+func NewCountEntityTraitDefinitionsResponseParamsTraitTypeFromString(s string) (CountEntityTraitDefinitionsResponseParamsTraitType, error) {
+	switch s {
+	case "boolean":
+		return CountEntityTraitDefinitionsResponseParamsTraitTypeBoolean, nil
+	case "currency":
+		return CountEntityTraitDefinitionsResponseParamsTraitTypeCurrency, nil
+	case "date":
+		return CountEntityTraitDefinitionsResponseParamsTraitTypeDate, nil
+	case "number":
+		return CountEntityTraitDefinitionsResponseParamsTraitTypeNumber, nil
+	case "string":
+		return CountEntityTraitDefinitionsResponseParamsTraitTypeString, nil
+	case "url":
+		return CountEntityTraitDefinitionsResponseParamsTraitTypeURL, nil
+	}
+	var t CountEntityTraitDefinitionsResponseParamsTraitType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CountEntityTraitDefinitionsResponseParamsTraitType) Ptr() *CountEntityTraitDefinitionsResponseParamsTraitType {
+	return &c
+}
+
+// Input parameters
+type CountUsersParams struct {
+	// Filter users by company ID (starts with comp\_)
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter users by multiple user IDs (starts with user\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter users by plan ID (starts with plan\_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Search for users by name, keys or string traits
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountUsersParams) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CountUsersParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountUsersParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountUsersParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountUsersParams) GetPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanID
+}
+
+func (c *CountUsersParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountUsersParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountUsersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountUsersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountUsersParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountUsersParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -385,7 +1514,21 @@ type CountUsersResponse struct {
 	Params *CountUsersParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountUsersResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountUsersResponse) GetParams() *CountUsersParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountUsersResponse) GetExtraProperties() map[string]interface{} {
@@ -399,24 +1542,22 @@ func (c *CountUsersResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountUsersResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountUsersResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -428,7 +1569,21 @@ type CreateCompanyResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateCompanyResponse) GetData() *CompanyDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateCompanyResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CreateCompanyResponse) GetExtraProperties() map[string]interface{} {
@@ -442,24 +1597,22 @@ func (c *CreateCompanyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CreateCompanyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CreateCompanyResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -527,7 +1680,21 @@ type CreateUserResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateUserResponse) GetData() *UserDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateUserResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CreateUserResponse) GetExtraProperties() map[string]interface{} {
@@ -541,24 +1708,22 @@ func (c *CreateUserResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CreateUserResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CreateUserResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -570,7 +1735,21 @@ type DeleteCompanyByKeysResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteCompanyByKeysResponse) GetData() *CompanyResponseData {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteCompanyByKeysResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteCompanyByKeysResponse) GetExtraProperties() map[string]interface{} {
@@ -584,24 +1763,22 @@ func (d *DeleteCompanyByKeysResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteCompanyByKeysResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteCompanyByKeysResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
@@ -613,7 +1790,21 @@ type DeleteCompanyMembershipResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteCompanyMembershipResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteCompanyMembershipResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteCompanyMembershipResponse) GetExtraProperties() map[string]interface{} {
@@ -627,24 +1818,22 @@ func (d *DeleteCompanyMembershipResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteCompanyMembershipResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteCompanyMembershipResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
@@ -656,7 +1845,21 @@ type DeleteCompanyResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteCompanyResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteCompanyResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteCompanyResponse) GetExtraProperties() map[string]interface{} {
@@ -670,24 +1873,22 @@ func (d *DeleteCompanyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteCompanyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteCompanyResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
@@ -699,7 +1900,21 @@ type DeleteUserByKeysResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteUserByKeysResponse) GetData() *UserResponseData {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteUserByKeysResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteUserByKeysResponse) GetExtraProperties() map[string]interface{} {
@@ -713,24 +1928,22 @@ func (d *DeleteUserByKeysResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteUserByKeysResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteUserByKeysResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
@@ -742,7 +1955,21 @@ type DeleteUserResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteUserResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteUserResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteUserResponse) GetExtraProperties() map[string]interface{} {
@@ -756,27 +1983,98 @@ func (d *DeleteUserResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteUserResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteUserResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
+}
+
+// Input parameters
+type GetActiveCompanySubscriptionParams struct {
+	CompanyID  *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetActiveCompanySubscriptionParams) GetCompanyID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.CompanyID
+}
+
+func (g *GetActiveCompanySubscriptionParams) GetCompanyIDs() []string {
+	if g == nil {
+		return nil
+	}
+	return g.CompanyIDs
+}
+
+func (g *GetActiveCompanySubscriptionParams) GetLimit() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Limit
+}
+
+func (g *GetActiveCompanySubscriptionParams) GetOffset() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Offset
+}
+
+func (g *GetActiveCompanySubscriptionParams) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetActiveCompanySubscriptionParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetActiveCompanySubscriptionParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetActiveCompanySubscriptionParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetActiveCompanySubscriptionParams) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
 }
 
 type GetActiveCompanySubscriptionResponse struct {
@@ -786,7 +2084,21 @@ type GetActiveCompanySubscriptionResponse struct {
 	Params *GetActiveCompanySubscriptionParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetActiveCompanySubscriptionResponse) GetData() []*CompanySubscriptionResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetActiveCompanySubscriptionResponse) GetParams() *GetActiveCompanySubscriptionParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetActiveCompanySubscriptionResponse) GetExtraProperties() map[string]interface{} {
@@ -800,24 +2112,95 @@ func (g *GetActiveCompanySubscriptionResponse) UnmarshalJSON(data []byte) error 
 		return err
 	}
 	*g = GetActiveCompanySubscriptionResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetActiveCompanySubscriptionResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type GetActiveDealsParams struct {
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	DealStage *string `json:"deal_stage,omitempty" url:"deal_stage,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetActiveDealsParams) GetCompanyID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.CompanyID
+}
+
+func (g *GetActiveDealsParams) GetDealStage() *string {
+	if g == nil {
+		return nil
+	}
+	return g.DealStage
+}
+
+func (g *GetActiveDealsParams) GetLimit() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Limit
+}
+
+func (g *GetActiveDealsParams) GetOffset() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Offset
+}
+
+func (g *GetActiveDealsParams) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetActiveDealsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetActiveDealsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetActiveDealsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetActiveDealsParams) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -830,7 +2213,21 @@ type GetActiveDealsResponse struct {
 	Params *GetActiveDealsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetActiveDealsResponse) GetData() []*CompanyCrmDealsResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetActiveDealsResponse) GetParams() *GetActiveDealsParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetActiveDealsResponse) GetExtraProperties() map[string]interface{} {
@@ -844,24 +2241,22 @@ func (g *GetActiveDealsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetActiveDealsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetActiveDealsResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -873,7 +2268,21 @@ type GetCompanyResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCompanyResponse) GetData() *CompanyDetailResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetCompanyResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetCompanyResponse) GetExtraProperties() map[string]interface{} {
@@ -887,24 +2296,22 @@ func (g *GetCompanyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetCompanyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetCompanyResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -916,7 +2323,21 @@ type GetEntityTraitDefinitionResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEntityTraitDefinitionResponse) GetData() *EntityTraitDefinitionResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetEntityTraitDefinitionResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetEntityTraitDefinitionResponse) GetExtraProperties() map[string]interface{} {
@@ -930,24 +2351,95 @@ func (g *GetEntityTraitDefinitionResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetEntityTraitDefinitionResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetEntityTraitDefinitionResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type GetEntityTraitValuesParams struct {
+	DefinitionID *string `json:"definition_id,omitempty" url:"definition_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEntityTraitValuesParams) GetDefinitionID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.DefinitionID
+}
+
+func (g *GetEntityTraitValuesParams) GetLimit() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Limit
+}
+
+func (g *GetEntityTraitValuesParams) GetOffset() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Offset
+}
+
+func (g *GetEntityTraitValuesParams) GetQ() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Q
+}
+
+func (g *GetEntityTraitValuesParams) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetEntityTraitValuesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetEntityTraitValuesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetEntityTraitValuesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetEntityTraitValuesParams) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -960,7 +2452,21 @@ type GetEntityTraitValuesResponse struct {
 	Params *GetEntityTraitValuesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEntityTraitValuesResponse) GetData() []*EntityTraitValue {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetEntityTraitValuesResponse) GetParams() *GetEntityTraitValuesParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetEntityTraitValuesResponse) GetExtraProperties() map[string]interface{} {
@@ -974,24 +2480,22 @@ func (g *GetEntityTraitValuesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetEntityTraitValuesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetEntityTraitValuesResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -1003,7 +2507,21 @@ type GetOrCreateCompanyMembershipResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetOrCreateCompanyMembershipResponse) GetData() *CompanyMembershipDetailResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetOrCreateCompanyMembershipResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetOrCreateCompanyMembershipResponse) GetExtraProperties() map[string]interface{} {
@@ -1017,24 +2535,22 @@ func (g *GetOrCreateCompanyMembershipResponse) UnmarshalJSON(data []byte) error 
 		return err
 	}
 	*g = GetOrCreateCompanyMembershipResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetOrCreateCompanyMembershipResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -1046,7 +2562,21 @@ type GetOrCreateEntityTraitDefinitionResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetOrCreateEntityTraitDefinitionResponse) GetData() *EntityTraitDefinitionResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetOrCreateEntityTraitDefinitionResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetOrCreateEntityTraitDefinitionResponse) GetExtraProperties() map[string]interface{} {
@@ -1060,24 +2590,22 @@ func (g *GetOrCreateEntityTraitDefinitionResponse) UnmarshalJSON(data []byte) er
 		return err
 	}
 	*g = GetOrCreateEntityTraitDefinitionResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetOrCreateEntityTraitDefinitionResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -1089,7 +2617,21 @@ type GetUserResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetUserResponse) GetData() *UserDetailResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetUserResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetUserResponse) GetExtraProperties() map[string]interface{} {
@@ -1103,27 +2645,127 @@ func (g *GetUserResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetUserResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetUserResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type ListCompaniesParams struct {
+	// Filter companies by multiple company IDs (starts with comp\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter companies by plan ID (starts with plan\_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter out companies that already have a company override for the specified feature ID
+	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
+	// Filter out companies that have a plan
+	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompaniesParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListCompaniesParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCompaniesParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCompaniesParams) GetPlanID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanID
+}
+
+func (l *ListCompaniesParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListCompaniesParams) GetWithoutFeatureOverrideFor() *string {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutFeatureOverrideFor
+}
+
+func (l *ListCompaniesParams) GetWithoutPlan() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutPlan
+}
+
+func (l *ListCompaniesParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCompaniesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompaniesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompaniesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompaniesParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 type ListCompaniesResponse struct {
@@ -1133,7 +2775,21 @@ type ListCompaniesResponse struct {
 	Params *ListCompaniesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompaniesResponse) GetData() []*CompanyDetailResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCompaniesResponse) GetParams() *ListCompaniesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListCompaniesResponse) GetExtraProperties() map[string]interface{} {
@@ -1147,24 +2803,95 @@ func (l *ListCompaniesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListCompaniesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListCompaniesResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListCompanyMembershipsParams struct {
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyMembershipsParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListCompanyMembershipsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCompanyMembershipsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCompanyMembershipsParams) GetUserID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.UserID
+}
+
+func (l *ListCompanyMembershipsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCompanyMembershipsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompanyMembershipsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompanyMembershipsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompanyMembershipsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -1177,7 +2904,21 @@ type ListCompanyMembershipsResponse struct {
 	Params *ListCompanyMembershipsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyMembershipsResponse) GetData() []*CompanyMembershipDetailResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCompanyMembershipsResponse) GetParams() *ListCompanyMembershipsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListCompanyMembershipsResponse) GetExtraProperties() map[string]interface{} {
@@ -1191,24 +2932,103 @@ func (l *ListCompanyMembershipsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListCompanyMembershipsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListCompanyMembershipsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListEntityKeyDefinitionsParams struct {
+	EntityType *ListEntityKeyDefinitionsResponseParamsEntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
+	IDs        []string                                          `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListEntityKeyDefinitionsParams) GetEntityType() *ListEntityKeyDefinitionsResponseParamsEntityType {
+	if l == nil {
+		return nil
+	}
+	return l.EntityType
+}
+
+func (l *ListEntityKeyDefinitionsParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListEntityKeyDefinitionsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListEntityKeyDefinitionsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListEntityKeyDefinitionsParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListEntityKeyDefinitionsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListEntityKeyDefinitionsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListEntityKeyDefinitionsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListEntityKeyDefinitionsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListEntityKeyDefinitionsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -1243,7 +3063,21 @@ type ListEntityKeyDefinitionsResponse struct {
 	Params *ListEntityKeyDefinitionsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListEntityKeyDefinitionsResponse) GetData() []*EntityKeyDefinitionResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListEntityKeyDefinitionsResponse) GetParams() *ListEntityKeyDefinitionsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListEntityKeyDefinitionsResponse) GetExtraProperties() map[string]interface{} {
@@ -1257,24 +3091,133 @@ func (l *ListEntityKeyDefinitionsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListEntityKeyDefinitionsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListEntityKeyDefinitionsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+type ListEntityKeyDefinitionsResponseParamsEntityType string
+
+const (
+	ListEntityKeyDefinitionsResponseParamsEntityTypeCompany ListEntityKeyDefinitionsResponseParamsEntityType = "company"
+	ListEntityKeyDefinitionsResponseParamsEntityTypeUser    ListEntityKeyDefinitionsResponseParamsEntityType = "user"
+)
+
+func NewListEntityKeyDefinitionsResponseParamsEntityTypeFromString(s string) (ListEntityKeyDefinitionsResponseParamsEntityType, error) {
+	switch s {
+	case "company":
+		return ListEntityKeyDefinitionsResponseParamsEntityTypeCompany, nil
+	case "user":
+		return ListEntityKeyDefinitionsResponseParamsEntityTypeUser, nil
+	}
+	var t ListEntityKeyDefinitionsResponseParamsEntityType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListEntityKeyDefinitionsResponseParamsEntityType) Ptr() *ListEntityKeyDefinitionsResponseParamsEntityType {
+	return &l
+}
+
+// Input parameters
+type ListEntityTraitDefinitionsParams struct {
+	EntityType *ListEntityTraitDefinitionsResponseParamsEntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
+	IDs        []string                                            `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int                                               `json:"offset,omitempty" url:"offset,omitempty"`
+	Q         *string                                            `json:"q,omitempty" url:"q,omitempty"`
+	TraitType *ListEntityTraitDefinitionsResponseParamsTraitType `json:"trait_type,omitempty" url:"trait_type,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListEntityTraitDefinitionsParams) GetEntityType() *ListEntityTraitDefinitionsResponseParamsEntityType {
+	if l == nil {
+		return nil
+	}
+	return l.EntityType
+}
+
+func (l *ListEntityTraitDefinitionsParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListEntityTraitDefinitionsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListEntityTraitDefinitionsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListEntityTraitDefinitionsParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListEntityTraitDefinitionsParams) GetTraitType() *ListEntityTraitDefinitionsResponseParamsTraitType {
+	if l == nil {
+		return nil
+	}
+	return l.TraitType
+}
+
+func (l *ListEntityTraitDefinitionsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListEntityTraitDefinitionsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListEntityTraitDefinitionsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListEntityTraitDefinitionsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListEntityTraitDefinitionsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -1343,7 +3286,21 @@ type ListEntityTraitDefinitionsResponse struct {
 	Params *ListEntityTraitDefinitionsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListEntityTraitDefinitionsResponse) GetData() []*EntityTraitDefinitionResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListEntityTraitDefinitionsResponse) GetParams() *ListEntityTraitDefinitionsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListEntityTraitDefinitionsResponse) GetExtraProperties() map[string]interface{} {
@@ -1357,24 +3314,171 @@ func (l *ListEntityTraitDefinitionsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListEntityTraitDefinitionsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListEntityTraitDefinitionsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+type ListEntityTraitDefinitionsResponseParamsEntityType string
+
+const (
+	ListEntityTraitDefinitionsResponseParamsEntityTypeCompany ListEntityTraitDefinitionsResponseParamsEntityType = "company"
+	ListEntityTraitDefinitionsResponseParamsEntityTypeUser    ListEntityTraitDefinitionsResponseParamsEntityType = "user"
+)
+
+func NewListEntityTraitDefinitionsResponseParamsEntityTypeFromString(s string) (ListEntityTraitDefinitionsResponseParamsEntityType, error) {
+	switch s {
+	case "company":
+		return ListEntityTraitDefinitionsResponseParamsEntityTypeCompany, nil
+	case "user":
+		return ListEntityTraitDefinitionsResponseParamsEntityTypeUser, nil
+	}
+	var t ListEntityTraitDefinitionsResponseParamsEntityType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListEntityTraitDefinitionsResponseParamsEntityType) Ptr() *ListEntityTraitDefinitionsResponseParamsEntityType {
+	return &l
+}
+
+type ListEntityTraitDefinitionsResponseParamsTraitType string
+
+const (
+	ListEntityTraitDefinitionsResponseParamsTraitTypeBoolean  ListEntityTraitDefinitionsResponseParamsTraitType = "boolean"
+	ListEntityTraitDefinitionsResponseParamsTraitTypeCurrency ListEntityTraitDefinitionsResponseParamsTraitType = "currency"
+	ListEntityTraitDefinitionsResponseParamsTraitTypeDate     ListEntityTraitDefinitionsResponseParamsTraitType = "date"
+	ListEntityTraitDefinitionsResponseParamsTraitTypeNumber   ListEntityTraitDefinitionsResponseParamsTraitType = "number"
+	ListEntityTraitDefinitionsResponseParamsTraitTypeString   ListEntityTraitDefinitionsResponseParamsTraitType = "string"
+	ListEntityTraitDefinitionsResponseParamsTraitTypeURL      ListEntityTraitDefinitionsResponseParamsTraitType = "url"
+)
+
+func NewListEntityTraitDefinitionsResponseParamsTraitTypeFromString(s string) (ListEntityTraitDefinitionsResponseParamsTraitType, error) {
+	switch s {
+	case "boolean":
+		return ListEntityTraitDefinitionsResponseParamsTraitTypeBoolean, nil
+	case "currency":
+		return ListEntityTraitDefinitionsResponseParamsTraitTypeCurrency, nil
+	case "date":
+		return ListEntityTraitDefinitionsResponseParamsTraitTypeDate, nil
+	case "number":
+		return ListEntityTraitDefinitionsResponseParamsTraitTypeNumber, nil
+	case "string":
+		return ListEntityTraitDefinitionsResponseParamsTraitTypeString, nil
+	case "url":
+		return ListEntityTraitDefinitionsResponseParamsTraitTypeURL, nil
+	}
+	var t ListEntityTraitDefinitionsResponseParamsTraitType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListEntityTraitDefinitionsResponseParamsTraitType) Ptr() *ListEntityTraitDefinitionsResponseParamsTraitType {
+	return &l
+}
+
+// Input parameters
+type ListUsersParams struct {
+	// Filter users by company ID (starts with comp\_)
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter users by multiple user IDs (starts with user\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter users by plan ID (starts with plan\_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Search for users by name, keys or string traits
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListUsersParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListUsersParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListUsersParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListUsersParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListUsersParams) GetPlanID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanID
+}
+
+func (l *ListUsersParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListUsersParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListUsersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListUsersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListUsersParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListUsersParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -1387,7 +3491,21 @@ type ListUsersResponse struct {
 	Params *ListUsersParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListUsersResponse) GetData() []*UserDetailResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListUsersResponse) GetParams() *ListUsersParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListUsersResponse) GetExtraProperties() map[string]interface{} {
@@ -1401,24 +3519,69 @@ func (l *ListUsersResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListUsersResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListUsersResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type LookupCompanyParams struct {
+	Keys map[string]interface{} `json:"keys,omitempty" url:"keys,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *LookupCompanyParams) GetKeys() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.Keys
+}
+
+func (l *LookupCompanyParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *LookupCompanyParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler LookupCompanyParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = LookupCompanyParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *LookupCompanyParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -1430,7 +3593,21 @@ type LookupCompanyResponse struct {
 	Params *LookupCompanyParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *LookupCompanyResponse) GetData() *CompanyDetailResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *LookupCompanyResponse) GetParams() *LookupCompanyParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *LookupCompanyResponse) GetExtraProperties() map[string]interface{} {
@@ -1444,24 +3621,69 @@ func (l *LookupCompanyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = LookupCompanyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *LookupCompanyResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type LookupUserParams struct {
+	Keys map[string]interface{} `json:"keys,omitempty" url:"keys,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *LookupUserParams) GetKeys() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.Keys
+}
+
+func (l *LookupUserParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *LookupUserParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler LookupUserParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = LookupUserParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *LookupUserParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -1473,7 +3695,21 @@ type LookupUserResponse struct {
 	Params *LookupUserParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *LookupUserResponse) GetData() *UserDetailResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *LookupUserResponse) GetParams() *LookupUserParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *LookupUserResponse) GetExtraProperties() map[string]interface{} {
@@ -1487,24 +3723,22 @@ func (l *LookupUserResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = LookupUserResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *LookupUserResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -1550,7 +3784,21 @@ type UpdateEntityTraitDefinitionResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateEntityTraitDefinitionResponse) GetData() *EntityTraitDefinitionResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateEntityTraitDefinitionResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpdateEntityTraitDefinitionResponse) GetExtraProperties() map[string]interface{} {
@@ -1564,24 +3812,22 @@ func (u *UpdateEntityTraitDefinitionResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpdateEntityTraitDefinitionResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpdateEntityTraitDefinitionResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -1593,7 +3839,21 @@ type UpsertCompanyResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertCompanyResponse) GetData() *CompanyDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertCompanyResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertCompanyResponse) GetExtraProperties() map[string]interface{} {
@@ -1607,24 +3867,22 @@ func (u *UpsertCompanyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertCompanyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertCompanyResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -1636,7 +3894,21 @@ type UpsertCompanyTraitResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertCompanyTraitResponse) GetData() *CompanyDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertCompanyTraitResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertCompanyTraitResponse) GetExtraProperties() map[string]interface{} {
@@ -1650,24 +3922,22 @@ func (u *UpsertCompanyTraitResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertCompanyTraitResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertCompanyTraitResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -1679,7 +3949,21 @@ type UpsertUserResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertUserResponse) GetData() *UserDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertUserResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertUserResponse) GetExtraProperties() map[string]interface{} {
@@ -1693,24 +3977,22 @@ func (u *UpsertUserResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertUserResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertUserResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -1722,7 +4004,21 @@ type UpsertUserTraitResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertUserTraitResponse) GetData() *UserDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertUserTraitResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertUserTraitResponse) GetExtraProperties() map[string]interface{} {
@@ -1736,24 +4032,22 @@ func (u *UpsertUserTraitResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertUserTraitResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertUserTraitResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)

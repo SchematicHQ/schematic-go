@@ -5,16 +5,21 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	core "github.com/schematichq/schematic-go/core"
+	internal "github.com/schematichq/schematic-go/internal"
 	time "time"
 )
 
 type CountBillingProductsRequest struct {
-	IDs  []*string `json:"-" url:"ids,omitempty"`
-	Name *string   `json:"-" url:"name,omitempty"`
-	Q    *string   `json:"-" url:"q,omitempty"`
+	IDs            []*string `json:"-" url:"ids,omitempty"`
+	Name           *string   `json:"-" url:"name,omitempty"`
+	Q              *string   `json:"-" url:"q,omitempty"`
+	PriceUsageType *string   `json:"-" url:"price_usage_type,omitempty"`
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
+	// Filter products that have zero price for free subscription type
+	WithZeroPrice *bool `json:"-" url:"with_zero_price,omitempty"`
+	// Filter products that have prices
+	WithPricesOnly *bool `json:"-" url:"with_prices_only,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -32,11 +37,16 @@ type CountCustomersRequest struct {
 }
 
 type ListBillingProductsRequest struct {
-	IDs  []*string `json:"-" url:"ids,omitempty"`
-	Name *string   `json:"-" url:"name,omitempty"`
-	Q    *string   `json:"-" url:"q,omitempty"`
+	IDs            []*string `json:"-" url:"ids,omitempty"`
+	Name           *string   `json:"-" url:"name,omitempty"`
+	Q              *string   `json:"-" url:"q,omitempty"`
+	PriceUsageType *string   `json:"-" url:"price_usage_type,omitempty"`
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
+	// Filter products that have zero price for free subscription type
+	WithZeroPrice *bool `json:"-" url:"with_zero_price,omitempty"`
+	// Filter products that have prices
+	WithPricesOnly *bool `json:"-" url:"with_prices_only,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -82,15 +92,1000 @@ type ListPaymentMethodsRequest struct {
 }
 
 type ListProductPricesRequest struct {
-	IDs  []*string `json:"-" url:"ids,omitempty"`
-	Name *string   `json:"-" url:"name,omitempty"`
-	Q    *string   `json:"-" url:"q,omitempty"`
+	IDs            []*string `json:"-" url:"ids,omitempty"`
+	Name           *string   `json:"-" url:"name,omitempty"`
+	Q              *string   `json:"-" url:"q,omitempty"`
+	PriceUsageType *string   `json:"-" url:"price_usage_type,omitempty"`
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
+	// Filter products that have zero price for free subscription type
+	WithZeroPrice *bool `json:"-" url:"with_zero_price,omitempty"`
+	// Filter products that have prices
+	WithPricesOnly *bool `json:"-" url:"with_prices_only,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
+type SearchBillingPricesRequest struct {
+	IDs       []*string `json:"-" url:"ids,omitempty"`
+	Interval  *string   `json:"-" url:"interval,omitempty"`
+	UsageType *string   `json:"-" url:"usage_type,omitempty"`
+	Price     *int      `json:"-" url:"price,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
+// The created resource
+type BillingCustomerResponseData struct {
+	CompanyID      *string    `json:"company_id,omitempty" url:"company_id,omitempty"`
+	DeletedAt      *time.Time `json:"deleted_at,omitempty" url:"deleted_at,omitempty"`
+	Email          string     `json:"email" url:"email"`
+	ExternalID     string     `json:"external_id" url:"external_id"`
+	FailedToImport bool       `json:"failed_to_import" url:"failed_to_import"`
+	ID             string     `json:"id" url:"id"`
+	Name           string     `json:"name" url:"name"`
+	UpdatedAt      time.Time  `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingCustomerResponseData) GetCompanyID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.CompanyID
+}
+
+func (b *BillingCustomerResponseData) GetDeletedAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.DeletedAt
+}
+
+func (b *BillingCustomerResponseData) GetEmail() string {
+	if b == nil {
+		return ""
+	}
+	return b.Email
+}
+
+func (b *BillingCustomerResponseData) GetExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ExternalID
+}
+
+func (b *BillingCustomerResponseData) GetFailedToImport() bool {
+	if b == nil {
+		return false
+	}
+	return b.FailedToImport
+}
+
+func (b *BillingCustomerResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingCustomerResponseData) GetName() string {
+	if b == nil {
+		return ""
+	}
+	return b.Name
+}
+
+func (b *BillingCustomerResponseData) GetUpdatedAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.UpdatedAt
+}
+
+func (b *BillingCustomerResponseData) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingCustomerResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingCustomerResponseData
+	var unmarshaler = struct {
+		embed
+		DeletedAt *internal.DateTime `json:"deleted_at,omitempty"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingCustomerResponseData(unmarshaler.embed)
+	b.DeletedAt = unmarshaler.DeletedAt.TimePtr()
+	b.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingCustomerResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingCustomerResponseData
+	var marshaler = struct {
+		embed
+		DeletedAt *internal.DateTime `json:"deleted_at,omitempty"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*b),
+		DeletedAt: internal.NewOptionalDateTime(b.DeletedAt),
+		UpdatedAt: internal.NewDateTime(b.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (b *BillingCustomerResponseData) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+type BillingCustomerSubscription struct {
+	Currency     string     `json:"currency" url:"currency"`
+	ExpiredAt    *time.Time `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	Interval     string     `json:"interval" url:"interval"`
+	MeteredUsage bool       `json:"metered_usage" url:"metered_usage"`
+	PerUnitPrice int        `json:"per_unit_price" url:"per_unit_price"`
+	TotalPrice   int        `json:"total_price" url:"total_price"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingCustomerSubscription) GetCurrency() string {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingCustomerSubscription) GetExpiredAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.ExpiredAt
+}
+
+func (b *BillingCustomerSubscription) GetInterval() string {
+	if b == nil {
+		return ""
+	}
+	return b.Interval
+}
+
+func (b *BillingCustomerSubscription) GetMeteredUsage() bool {
+	if b == nil {
+		return false
+	}
+	return b.MeteredUsage
+}
+
+func (b *BillingCustomerSubscription) GetPerUnitPrice() int {
+	if b == nil {
+		return 0
+	}
+	return b.PerUnitPrice
+}
+
+func (b *BillingCustomerSubscription) GetTotalPrice() int {
+	if b == nil {
+		return 0
+	}
+	return b.TotalPrice
+}
+
+func (b *BillingCustomerSubscription) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingCustomerSubscription) UnmarshalJSON(data []byte) error {
+	type embed BillingCustomerSubscription
+	var unmarshaler = struct {
+		embed
+		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingCustomerSubscription(unmarshaler.embed)
+	b.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingCustomerSubscription) MarshalJSON() ([]byte, error) {
+	type embed BillingCustomerSubscription
+	var marshaler = struct {
+		embed
+		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+	}{
+		embed:     embed(*b),
+		ExpiredAt: internal.NewOptionalDateTime(b.ExpiredAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (b *BillingCustomerSubscription) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+type BillingCustomerWithSubscriptionsResponseData struct {
+	CompanyID      *string                        `json:"company_id,omitempty" url:"company_id,omitempty"`
+	DeletedAt      *time.Time                     `json:"deleted_at,omitempty" url:"deleted_at,omitempty"`
+	Email          string                         `json:"email" url:"email"`
+	ExternalID     string                         `json:"external_id" url:"external_id"`
+	FailedToImport bool                           `json:"failed_to_import" url:"failed_to_import"`
+	ID             string                         `json:"id" url:"id"`
+	Name           string                         `json:"name" url:"name"`
+	Subscriptions  []*BillingCustomerSubscription `json:"subscriptions,omitempty" url:"subscriptions,omitempty"`
+	UpdatedAt      time.Time                      `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetCompanyID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.CompanyID
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetDeletedAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.DeletedAt
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetEmail() string {
+	if b == nil {
+		return ""
+	}
+	return b.Email
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ExternalID
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetFailedToImport() bool {
+	if b == nil {
+		return false
+	}
+	return b.FailedToImport
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetName() string {
+	if b == nil {
+		return ""
+	}
+	return b.Name
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetSubscriptions() []*BillingCustomerSubscription {
+	if b == nil {
+		return nil
+	}
+	return b.Subscriptions
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetUpdatedAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.UpdatedAt
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingCustomerWithSubscriptionsResponseData
+	var unmarshaler = struct {
+		embed
+		DeletedAt *internal.DateTime `json:"deleted_at,omitempty"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingCustomerWithSubscriptionsResponseData(unmarshaler.embed)
+	b.DeletedAt = unmarshaler.DeletedAt.TimePtr()
+	b.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingCustomerWithSubscriptionsResponseData
+	var marshaler = struct {
+		embed
+		DeletedAt *internal.DateTime `json:"deleted_at,omitempty"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*b),
+		DeletedAt: internal.NewOptionalDateTime(b.DeletedAt),
+		UpdatedAt: internal.NewDateTime(b.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (b *BillingCustomerWithSubscriptionsResponseData) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+type BillingMeterResponseData struct {
+	DispalyName     string `json:"dispaly_name" url:"dispaly_name"`
+	EventName       string `json:"event_name" url:"event_name"`
+	EventPayloadKey string `json:"event_payload_key" url:"event_payload_key"`
+	ExternalPriceID string `json:"external_price_id" url:"external_price_id"`
+	ID              string `json:"id" url:"id"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingMeterResponseData) GetDispalyName() string {
+	if b == nil {
+		return ""
+	}
+	return b.DispalyName
+}
+
+func (b *BillingMeterResponseData) GetEventName() string {
+	if b == nil {
+		return ""
+	}
+	return b.EventName
+}
+
+func (b *BillingMeterResponseData) GetEventPayloadKey() string {
+	if b == nil {
+		return ""
+	}
+	return b.EventPayloadKey
+}
+
+func (b *BillingMeterResponseData) GetExternalPriceID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ExternalPriceID
+}
+
+func (b *BillingMeterResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingMeterResponseData) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingMeterResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler BillingMeterResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BillingMeterResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingMeterResponseData) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+type BillingProductPricing struct {
+	Currency          string  `json:"currency" url:"currency"`
+	Interval          string  `json:"interval" url:"interval"`
+	MeterID           *string `json:"meter_id,omitempty" url:"meter_id,omitempty"`
+	Price             int     `json:"price" url:"price"`
+	PriceExternalID   string  `json:"price_external_id" url:"price_external_id"`
+	ProductExternalID string  `json:"product_external_id" url:"product_external_id"`
+	Quantity          int     `json:"quantity" url:"quantity"`
+	UsageType         string  `json:"usage_type" url:"usage_type"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingProductPricing) GetCurrency() string {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingProductPricing) GetInterval() string {
+	if b == nil {
+		return ""
+	}
+	return b.Interval
+}
+
+func (b *BillingProductPricing) GetMeterID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.MeterID
+}
+
+func (b *BillingProductPricing) GetPrice() int {
+	if b == nil {
+		return 0
+	}
+	return b.Price
+}
+
+func (b *BillingProductPricing) GetPriceExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.PriceExternalID
+}
+
+func (b *BillingProductPricing) GetProductExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ProductExternalID
+}
+
+func (b *BillingProductPricing) GetQuantity() int {
+	if b == nil {
+		return 0
+	}
+	return b.Quantity
+}
+
+func (b *BillingProductPricing) GetUsageType() string {
+	if b == nil {
+		return ""
+	}
+	return b.UsageType
+}
+
+func (b *BillingProductPricing) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingProductPricing) UnmarshalJSON(data []byte) error {
+	type unmarshaler BillingProductPricing
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BillingProductPricing(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingProductPricing) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+type BillingProductResponseData struct {
+	AccountID     string    `json:"account_id" url:"account_id"`
+	CreatedAt     time.Time `json:"created_at" url:"created_at"`
+	Currency      string    `json:"currency" url:"currency"`
+	EnvironmentID string    `json:"environment_id" url:"environment_id"`
+	ExternalID    string    `json:"external_id" url:"external_id"`
+	Name          string    `json:"name" url:"name"`
+	Price         float64   `json:"price" url:"price"`
+	ProductID     string    `json:"product_id" url:"product_id"`
+	Quantity      float64   `json:"quantity" url:"quantity"`
+	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingProductResponseData) GetAccountID() string {
+	if b == nil {
+		return ""
+	}
+	return b.AccountID
+}
+
+func (b *BillingProductResponseData) GetCreatedAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.CreatedAt
+}
+
+func (b *BillingProductResponseData) GetCurrency() string {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingProductResponseData) GetEnvironmentID() string {
+	if b == nil {
+		return ""
+	}
+	return b.EnvironmentID
+}
+
+func (b *BillingProductResponseData) GetExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ExternalID
+}
+
+func (b *BillingProductResponseData) GetName() string {
+	if b == nil {
+		return ""
+	}
+	return b.Name
+}
+
+func (b *BillingProductResponseData) GetPrice() float64 {
+	if b == nil {
+		return 0
+	}
+	return b.Price
+}
+
+func (b *BillingProductResponseData) GetProductID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ProductID
+}
+
+func (b *BillingProductResponseData) GetQuantity() float64 {
+	if b == nil {
+		return 0
+	}
+	return b.Quantity
+}
+
+func (b *BillingProductResponseData) GetUpdatedAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.UpdatedAt
+}
+
+func (b *BillingProductResponseData) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingProductResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingProductResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingProductResponseData(unmarshaler.embed)
+	b.CreatedAt = unmarshaler.CreatedAt.Time()
+	b.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingProductResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingProductResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*b),
+		CreatedAt: internal.NewDateTime(b.CreatedAt),
+		UpdatedAt: internal.NewDateTime(b.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (b *BillingProductResponseData) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+type BillingSubscriptionResponseData struct {
+	CompanyID              *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CreatedAt              time.Time              `json:"created_at" url:"created_at"`
+	Currency               string                 `json:"currency" url:"currency"`
+	CustomerExternalID     string                 `json:"customer_external_id" url:"customer_external_id"`
+	ExpiredAt              *time.Time             `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	ID                     string                 `json:"id" url:"id"`
+	Interval               string                 `json:"interval" url:"interval"`
+	Metadata               map[string]interface{} `json:"metadata,omitempty" url:"metadata,omitempty"`
+	PeriodEnd              int                    `json:"period_end" url:"period_end"`
+	PeriodStart            int                    `json:"period_start" url:"period_start"`
+	Status                 string                 `json:"status" url:"status"`
+	SubscriptionExternalID string                 `json:"subscription_external_id" url:"subscription_external_id"`
+	TotalPrice             int                    `json:"total_price" url:"total_price"`
+	TrialEnd               *int                   `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingSubscriptionResponseData) GetCompanyID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.CompanyID
+}
+
+func (b *BillingSubscriptionResponseData) GetCreatedAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.CreatedAt
+}
+
+func (b *BillingSubscriptionResponseData) GetCurrency() string {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingSubscriptionResponseData) GetCustomerExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.CustomerExternalID
+}
+
+func (b *BillingSubscriptionResponseData) GetExpiredAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.ExpiredAt
+}
+
+func (b *BillingSubscriptionResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingSubscriptionResponseData) GetInterval() string {
+	if b == nil {
+		return ""
+	}
+	return b.Interval
+}
+
+func (b *BillingSubscriptionResponseData) GetMetadata() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.Metadata
+}
+
+func (b *BillingSubscriptionResponseData) GetPeriodEnd() int {
+	if b == nil {
+		return 0
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingSubscriptionResponseData) GetPeriodStart() int {
+	if b == nil {
+		return 0
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingSubscriptionResponseData) GetStatus() string {
+	if b == nil {
+		return ""
+	}
+	return b.Status
+}
+
+func (b *BillingSubscriptionResponseData) GetSubscriptionExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.SubscriptionExternalID
+}
+
+func (b *BillingSubscriptionResponseData) GetTotalPrice() int {
+	if b == nil {
+		return 0
+	}
+	return b.TotalPrice
+}
+
+func (b *BillingSubscriptionResponseData) GetTrialEnd() *int {
+	if b == nil {
+		return nil
+	}
+	return b.TrialEnd
+}
+
+func (b *BillingSubscriptionResponseData) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingSubscriptionResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingSubscriptionResponseData(unmarshaler.embed)
+	b.CreatedAt = unmarshaler.CreatedAt.Time()
+	b.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingSubscriptionResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingSubscriptionResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+	}{
+		embed:     embed(*b),
+		CreatedAt: internal.NewDateTime(b.CreatedAt),
+		ExpiredAt: internal.NewOptionalDateTime(b.ExpiredAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (b *BillingSubscriptionResponseData) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+// Input parameters
+type CountBillingProductsParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Name  *string `json:"name,omitempty" url:"name,omitempty"`
+	// Page offset (default 0)
+	Offset         *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	PriceUsageType *string `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
+	Q              *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter products that have prices
+	WithPricesOnly *bool `json:"with_prices_only,omitempty" url:"with_prices_only,omitempty"`
+	// Filter products that have zero price for free subscription type
+	WithZeroPrice *bool `json:"with_zero_price,omitempty" url:"with_zero_price,omitempty"`
+	// Filter products that are not linked to any plan
+	WithoutLinkedToPlan *bool `json:"without_linked_to_plan,omitempty" url:"without_linked_to_plan,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountBillingProductsParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountBillingProductsParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountBillingProductsParams) GetName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Name
+}
+
+func (c *CountBillingProductsParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountBillingProductsParams) GetPriceUsageType() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PriceUsageType
+}
+
+func (c *CountBillingProductsParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountBillingProductsParams) GetWithPricesOnly() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithPricesOnly
+}
+
+func (c *CountBillingProductsParams) GetWithZeroPrice() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithZeroPrice
+}
+
+func (c *CountBillingProductsParams) GetWithoutLinkedToPlan() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutLinkedToPlan
+}
+
+func (c *CountBillingProductsParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountBillingProductsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountBillingProductsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountBillingProductsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountBillingProductsParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 type CountBillingProductsResponse struct {
@@ -99,7 +1094,21 @@ type CountBillingProductsResponse struct {
 	Params *CountBillingProductsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountBillingProductsResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountBillingProductsResponse) GetParams() *CountBillingProductsParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountBillingProductsResponse) GetExtraProperties() map[string]interface{} {
@@ -113,24 +1122,103 @@ func (c *CountBillingProductsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountBillingProductsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountBillingProductsResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+type CountCustomersParams struct {
+	FailedToImport *bool `json:"failed_to_import,omitempty" url:"failed_to_import,omitempty"`
+	// Page limit (default 100)
+	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Name  *string `json:"name,omitempty" url:"name,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCustomersParams) GetFailedToImport() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.FailedToImport
+}
+
+func (c *CountCustomersParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountCustomersParams) GetName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Name
+}
+
+func (c *CountCustomersParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountCustomersParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountCustomersParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCustomersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCustomersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCustomersParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCustomersParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -142,7 +1230,21 @@ type CountCustomersResponse struct {
 	Params *CountCustomersParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCustomersResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountCustomersResponse) GetParams() *CountCustomersParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountCustomersResponse) GetExtraProperties() map[string]interface{} {
@@ -156,24 +1258,22 @@ func (c *CountCustomersResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountCustomersResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountCustomersResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -185,7 +1285,21 @@ type DeleteProductPriceResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteProductPriceResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteProductPriceResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteProductPriceResponse) GetExtraProperties() map[string]interface{} {
@@ -199,27 +1313,141 @@ func (d *DeleteProductPriceResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteProductPriceResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteProductPriceResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
+}
+
+// Input parameters
+type ListBillingProductsParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Name  *string `json:"name,omitempty" url:"name,omitempty"`
+	// Page offset (default 0)
+	Offset         *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	PriceUsageType *string `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
+	Q              *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter products that have prices
+	WithPricesOnly *bool `json:"with_prices_only,omitempty" url:"with_prices_only,omitempty"`
+	// Filter products that have zero price for free subscription type
+	WithZeroPrice *bool `json:"with_zero_price,omitempty" url:"with_zero_price,omitempty"`
+	// Filter products that are not linked to any plan
+	WithoutLinkedToPlan *bool `json:"without_linked_to_plan,omitempty" url:"without_linked_to_plan,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListBillingProductsParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListBillingProductsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListBillingProductsParams) GetName() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Name
+}
+
+func (l *ListBillingProductsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListBillingProductsParams) GetPriceUsageType() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PriceUsageType
+}
+
+func (l *ListBillingProductsParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListBillingProductsParams) GetWithPricesOnly() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithPricesOnly
+}
+
+func (l *ListBillingProductsParams) GetWithZeroPrice() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithZeroPrice
+}
+
+func (l *ListBillingProductsParams) GetWithoutLinkedToPlan() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutLinkedToPlan
+}
+
+func (l *ListBillingProductsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListBillingProductsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListBillingProductsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListBillingProductsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListBillingProductsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 type ListBillingProductsResponse struct {
@@ -229,7 +1457,21 @@ type ListBillingProductsResponse struct {
 	Params *ListBillingProductsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListBillingProductsResponse) GetData() []*BillingProductDetailResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListBillingProductsResponse) GetParams() *ListBillingProductsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListBillingProductsResponse) GetExtraProperties() map[string]interface{} {
@@ -243,24 +1485,103 @@ func (l *ListBillingProductsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListBillingProductsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListBillingProductsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListCustomersParams struct {
+	FailedToImport *bool `json:"failed_to_import,omitempty" url:"failed_to_import,omitempty"`
+	// Page limit (default 100)
+	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Name  *string `json:"name,omitempty" url:"name,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCustomersParams) GetFailedToImport() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.FailedToImport
+}
+
+func (l *ListCustomersParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCustomersParams) GetName() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Name
+}
+
+func (l *ListCustomersParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCustomersParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListCustomersParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCustomersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCustomersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCustomersParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCustomersParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -273,7 +1594,21 @@ type ListCustomersResponse struct {
 	Params *ListCustomersParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCustomersResponse) GetData() []*BillingCustomerWithSubscriptionsResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCustomersResponse) GetParams() *ListCustomersParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListCustomersResponse) GetExtraProperties() map[string]interface{} {
@@ -287,24 +1622,103 @@ func (l *ListCustomersResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListCustomersResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListCustomersResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListInvoicesParams struct {
+	CompanyID          *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CustomerExternalID *string `json:"customer_external_id,omitempty" url:"customer_external_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset                 *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	SubscriptionExternalID *string `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListInvoicesParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListInvoicesParams) GetCustomerExternalID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CustomerExternalID
+}
+
+func (l *ListInvoicesParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListInvoicesParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListInvoicesParams) GetSubscriptionExternalID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.SubscriptionExternalID
+}
+
+func (l *ListInvoicesParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListInvoicesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListInvoicesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListInvoicesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListInvoicesParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -317,7 +1731,21 @@ type ListInvoicesResponse struct {
 	Params *ListInvoicesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListInvoicesResponse) GetData() []*InvoiceResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListInvoicesResponse) GetParams() *ListInvoicesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListInvoicesResponse) GetExtraProperties() map[string]interface{} {
@@ -331,24 +1759,87 @@ func (l *ListInvoicesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListInvoicesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListInvoicesResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListMetersParams struct {
+	DisplayName *string `json:"display_name,omitempty" url:"display_name,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListMetersParams) GetDisplayName() *string {
+	if l == nil {
+		return nil
+	}
+	return l.DisplayName
+}
+
+func (l *ListMetersParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListMetersParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListMetersParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListMetersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListMetersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListMetersParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListMetersParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -361,7 +1852,21 @@ type ListMetersResponse struct {
 	Params *ListMetersParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListMetersResponse) GetData() []*BillingMeterResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListMetersResponse) GetParams() *ListMetersParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListMetersResponse) GetExtraProperties() map[string]interface{} {
@@ -375,24 +1880,103 @@ func (l *ListMetersResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListMetersResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListMetersResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListPaymentMethodsParams struct {
+	CompanyID          *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CustomerExternalID *string `json:"customer_external_id,omitempty" url:"customer_external_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset                 *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	SubscriptionExternalID *string `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPaymentMethodsParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListPaymentMethodsParams) GetCustomerExternalID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CustomerExternalID
+}
+
+func (l *ListPaymentMethodsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListPaymentMethodsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListPaymentMethodsParams) GetSubscriptionExternalID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.SubscriptionExternalID
+}
+
+func (l *ListPaymentMethodsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListPaymentMethodsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListPaymentMethodsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListPaymentMethodsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListPaymentMethodsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -405,7 +1989,21 @@ type ListPaymentMethodsResponse struct {
 	Params *ListPaymentMethodsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPaymentMethodsResponse) GetData() []*PaymentMethodResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListPaymentMethodsResponse) GetParams() *ListPaymentMethodsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListPaymentMethodsResponse) GetExtraProperties() map[string]interface{} {
@@ -419,24 +2017,138 @@ func (l *ListPaymentMethodsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListPaymentMethodsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListPaymentMethodsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListProductPricesParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Name  *string `json:"name,omitempty" url:"name,omitempty"`
+	// Page offset (default 0)
+	Offset         *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	PriceUsageType *string `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
+	Q              *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter products that have prices
+	WithPricesOnly *bool `json:"with_prices_only,omitempty" url:"with_prices_only,omitempty"`
+	// Filter products that have zero price for free subscription type
+	WithZeroPrice *bool `json:"with_zero_price,omitempty" url:"with_zero_price,omitempty"`
+	// Filter products that are not linked to any plan
+	WithoutLinkedToPlan *bool `json:"without_linked_to_plan,omitempty" url:"without_linked_to_plan,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListProductPricesParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListProductPricesParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListProductPricesParams) GetName() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Name
+}
+
+func (l *ListProductPricesParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListProductPricesParams) GetPriceUsageType() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PriceUsageType
+}
+
+func (l *ListProductPricesParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListProductPricesParams) GetWithPricesOnly() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithPricesOnly
+}
+
+func (l *ListProductPricesParams) GetWithZeroPrice() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithZeroPrice
+}
+
+func (l *ListProductPricesParams) GetWithoutLinkedToPlan() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutLinkedToPlan
+}
+
+func (l *ListProductPricesParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListProductPricesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListProductPricesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListProductPricesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListProductPricesParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -449,7 +2161,21 @@ type ListProductPricesResponse struct {
 	Params *ListProductPricesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListProductPricesResponse) GetData() []*BillingPriceResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListProductPricesResponse) GetParams() *ListProductPricesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListProductPricesResponse) GetExtraProperties() map[string]interface{} {
@@ -463,27 +2189,170 @@ func (l *ListProductPricesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListProductPricesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListProductPricesResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type SearchBillingPricesParams struct {
+	IDs      []string `json:"ids,omitempty" url:"ids,omitempty"`
+	Interval *string  `json:"interval,omitempty" url:"interval,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Price     *int    `json:"price,omitempty" url:"price,omitempty"`
+	UsageType *string `json:"usage_type,omitempty" url:"usage_type,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *SearchBillingPricesParams) GetIDs() []string {
+	if s == nil {
+		return nil
+	}
+	return s.IDs
+}
+
+func (s *SearchBillingPricesParams) GetInterval() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Interval
+}
+
+func (s *SearchBillingPricesParams) GetLimit() *int {
+	if s == nil {
+		return nil
+	}
+	return s.Limit
+}
+
+func (s *SearchBillingPricesParams) GetOffset() *int {
+	if s == nil {
+		return nil
+	}
+	return s.Offset
+}
+
+func (s *SearchBillingPricesParams) GetPrice() *int {
+	if s == nil {
+		return nil
+	}
+	return s.Price
+}
+
+func (s *SearchBillingPricesParams) GetUsageType() *string {
+	if s == nil {
+		return nil
+	}
+	return s.UsageType
+}
+
+func (s *SearchBillingPricesParams) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *SearchBillingPricesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler SearchBillingPricesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = SearchBillingPricesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SearchBillingPricesParams) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+type SearchBillingPricesResponse struct {
+	// The returned resources
+	Data []*BillingPriceView `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *SearchBillingPricesParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *SearchBillingPricesResponse) GetData() []*BillingPriceView {
+	if s == nil {
+		return nil
+	}
+	return s.Data
+}
+
+func (s *SearchBillingPricesResponse) GetParams() *SearchBillingPricesParams {
+	if s == nil {
+		return nil
+	}
+	return s.Params
+}
+
+func (s *SearchBillingPricesResponse) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *SearchBillingPricesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler SearchBillingPricesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = SearchBillingPricesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SearchBillingPricesResponse) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
 }
 
 type UpsertBillingCustomerResponse struct {
@@ -492,7 +2361,21 @@ type UpsertBillingCustomerResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertBillingCustomerResponse) GetData() *BillingCustomerResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertBillingCustomerResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertBillingCustomerResponse) GetExtraProperties() map[string]interface{} {
@@ -506,24 +2389,22 @@ func (u *UpsertBillingCustomerResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertBillingCustomerResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertBillingCustomerResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -535,7 +2416,21 @@ type UpsertBillingMeterResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertBillingMeterResponse) GetData() *BillingMeterResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertBillingMeterResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertBillingMeterResponse) GetExtraProperties() map[string]interface{} {
@@ -549,24 +2444,22 @@ func (u *UpsertBillingMeterResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertBillingMeterResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertBillingMeterResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -578,7 +2471,21 @@ type UpsertBillingPriceResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertBillingPriceResponse) GetData() *BillingPriceResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertBillingPriceResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertBillingPriceResponse) GetExtraProperties() map[string]interface{} {
@@ -592,24 +2499,22 @@ func (u *UpsertBillingPriceResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertBillingPriceResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertBillingPriceResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -621,7 +2526,21 @@ type UpsertBillingProductResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertBillingProductResponse) GetData() *BillingProductResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertBillingProductResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertBillingProductResponse) GetExtraProperties() map[string]interface{} {
@@ -635,24 +2554,22 @@ func (u *UpsertBillingProductResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertBillingProductResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertBillingProductResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -664,7 +2581,21 @@ type UpsertBillingSubscriptionResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertBillingSubscriptionResponse) GetData() *BillingSubscriptionResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertBillingSubscriptionResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertBillingSubscriptionResponse) GetExtraProperties() map[string]interface{} {
@@ -678,24 +2609,22 @@ func (u *UpsertBillingSubscriptionResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertBillingSubscriptionResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertBillingSubscriptionResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -707,7 +2636,21 @@ type UpsertInvoiceResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertInvoiceResponse) GetData() *InvoiceResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertInvoiceResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertInvoiceResponse) GetExtraProperties() map[string]interface{} {
@@ -721,24 +2664,22 @@ func (u *UpsertInvoiceResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertInvoiceResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertInvoiceResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -750,7 +2691,21 @@ type UpsertPaymentMethodResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertPaymentMethodResponse) GetData() *PaymentMethodResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertPaymentMethodResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertPaymentMethodResponse) GetExtraProperties() map[string]interface{} {
@@ -764,24 +2719,22 @@ func (u *UpsertPaymentMethodResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertPaymentMethodResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertPaymentMethodResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -833,6 +2786,7 @@ type CreateBillingSubscriptionsRequestBody struct {
 	Status                 *string                  `json:"status,omitempty" url:"-"`
 	SubscriptionExternalID string                   `json:"subscription_external_id" url:"-"`
 	TotalPrice             int                      `json:"total_price" url:"-"`
+	TrialEnd               *int                     `json:"trial_end,omitempty" url:"-"`
 }
 
 func (c *CreateBillingSubscriptionsRequestBody) UnmarshalJSON(data []byte) error {
@@ -849,10 +2803,10 @@ func (c *CreateBillingSubscriptionsRequestBody) MarshalJSON() ([]byte, error) {
 	type embed CreateBillingSubscriptionsRequestBody
 	var marshaler = struct {
 		embed
-		ExpiredAt *core.DateTime `json:"expired_at"`
+		ExpiredAt *internal.DateTime `json:"expired_at"`
 	}{
 		embed:     embed(*c),
-		ExpiredAt: core.NewDateTime(c.ExpiredAt),
+		ExpiredAt: internal.NewDateTime(c.ExpiredAt),
 	}
 	return json.Marshal(marshaler)
 }
@@ -886,10 +2840,10 @@ func (c *CreateInvoiceRequestBody) MarshalJSON() ([]byte, error) {
 	type embed CreateInvoiceRequestBody
 	var marshaler = struct {
 		embed
-		DueDate *core.DateTime `json:"due_date,omitempty"`
+		DueDate *internal.DateTime `json:"due_date,omitempty"`
 	}{
 		embed:   embed(*c),
-		DueDate: core.NewOptionalDateTime(c.DueDate),
+		DueDate: internal.NewOptionalDateTime(c.DueDate),
 	}
 	return json.Marshal(marshaler)
 }

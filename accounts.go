@@ -5,7 +5,8 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	core "github.com/schematichq/schematic-go/core"
+	internal "github.com/schematichq/schematic-go/internal"
+	time "time"
 )
 
 type CountAPIKeysRequest struct {
@@ -65,13 +66,977 @@ type ListEnvironmentsRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
+// The created resource
+type APIKeyCreateResponseData struct {
+	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
+	Description   *string    `json:"description,omitempty" url:"description,omitempty"`
+	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID            string     `json:"id" url:"id"`
+	LastUsedAt    *time.Time `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
+	Name          string     `json:"name" url:"name"`
+	Scopes        []string   `json:"scopes,omitempty" url:"scopes,omitempty"`
+	Secret        string     `json:"secret" url:"secret"`
+	UpdatedAt     time.Time  `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *APIKeyCreateResponseData) GetCreatedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.CreatedAt
+}
+
+func (a *APIKeyCreateResponseData) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *APIKeyCreateResponseData) GetEnvironmentID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.EnvironmentID
+}
+
+func (a *APIKeyCreateResponseData) GetID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ID
+}
+
+func (a *APIKeyCreateResponseData) GetLastUsedAt() *time.Time {
+	if a == nil {
+		return nil
+	}
+	return a.LastUsedAt
+}
+
+func (a *APIKeyCreateResponseData) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *APIKeyCreateResponseData) GetScopes() []string {
+	if a == nil {
+		return nil
+	}
+	return a.Scopes
+}
+
+func (a *APIKeyCreateResponseData) GetSecret() string {
+	if a == nil {
+		return ""
+	}
+	return a.Secret
+}
+
+func (a *APIKeyCreateResponseData) GetUpdatedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.UpdatedAt
+}
+
+func (a *APIKeyCreateResponseData) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *APIKeyCreateResponseData) UnmarshalJSON(data []byte) error {
+	type embed APIKeyCreateResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastUsedAt *internal.DateTime `json:"last_used_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = APIKeyCreateResponseData(unmarshaler.embed)
+	a.CreatedAt = unmarshaler.CreatedAt.Time()
+	a.LastUsedAt = unmarshaler.LastUsedAt.TimePtr()
+	a.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *APIKeyCreateResponseData) MarshalJSON() ([]byte, error) {
+	type embed APIKeyCreateResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastUsedAt *internal.DateTime `json:"last_used_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed:      embed(*a),
+		CreatedAt:  internal.NewDateTime(a.CreatedAt),
+		LastUsedAt: internal.NewOptionalDateTime(a.LastUsedAt),
+		UpdatedAt:  internal.NewDateTime(a.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (a *APIKeyCreateResponseData) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type APIKeyRequestListResponseData struct {
+	APIKeyID          string     `json:"api_key_id" url:"api_key_id"`
+	EndedAt           *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	EnvironmentID     *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID                string     `json:"id" url:"id"`
+	Method            string     `json:"method" url:"method"`
+	ReqBody           *string    `json:"req_body,omitempty" url:"req_body,omitempty"`
+	RequestType       *string    `json:"request_type,omitempty" url:"request_type,omitempty"`
+	ResourceID        *int       `json:"resource_id,omitempty" url:"resource_id,omitempty"`
+	ResourceIDString  *string    `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
+	ResourceName      *string    `json:"resource_name,omitempty" url:"resource_name,omitempty"`
+	ResourceType      *string    `json:"resource_type,omitempty" url:"resource_type,omitempty"`
+	RespCode          *int       `json:"resp_code,omitempty" url:"resp_code,omitempty"`
+	SecondaryResource *string    `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
+	StartedAt         time.Time  `json:"started_at" url:"started_at"`
+	URL               string     `json:"url" url:"url"`
+	UserName          *string    `json:"user_name,omitempty" url:"user_name,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *APIKeyRequestListResponseData) GetAPIKeyID() string {
+	if a == nil {
+		return ""
+	}
+	return a.APIKeyID
+}
+
+func (a *APIKeyRequestListResponseData) GetEndedAt() *time.Time {
+	if a == nil {
+		return nil
+	}
+	return a.EndedAt
+}
+
+func (a *APIKeyRequestListResponseData) GetEnvironmentID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.EnvironmentID
+}
+
+func (a *APIKeyRequestListResponseData) GetID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ID
+}
+
+func (a *APIKeyRequestListResponseData) GetMethod() string {
+	if a == nil {
+		return ""
+	}
+	return a.Method
+}
+
+func (a *APIKeyRequestListResponseData) GetReqBody() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ReqBody
+}
+
+func (a *APIKeyRequestListResponseData) GetRequestType() *string {
+	if a == nil {
+		return nil
+	}
+	return a.RequestType
+}
+
+func (a *APIKeyRequestListResponseData) GetResourceID() *int {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceID
+}
+
+func (a *APIKeyRequestListResponseData) GetResourceIDString() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceIDString
+}
+
+func (a *APIKeyRequestListResponseData) GetResourceName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceName
+}
+
+func (a *APIKeyRequestListResponseData) GetResourceType() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceType
+}
+
+func (a *APIKeyRequestListResponseData) GetRespCode() *int {
+	if a == nil {
+		return nil
+	}
+	return a.RespCode
+}
+
+func (a *APIKeyRequestListResponseData) GetSecondaryResource() *string {
+	if a == nil {
+		return nil
+	}
+	return a.SecondaryResource
+}
+
+func (a *APIKeyRequestListResponseData) GetStartedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.StartedAt
+}
+
+func (a *APIKeyRequestListResponseData) GetURL() string {
+	if a == nil {
+		return ""
+	}
+	return a.URL
+}
+
+func (a *APIKeyRequestListResponseData) GetUserName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.UserName
+}
+
+func (a *APIKeyRequestListResponseData) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *APIKeyRequestListResponseData) UnmarshalJSON(data []byte) error {
+	type embed APIKeyRequestListResponseData
+	var unmarshaler = struct {
+		embed
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		StartedAt *internal.DateTime `json:"started_at"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = APIKeyRequestListResponseData(unmarshaler.embed)
+	a.EndedAt = unmarshaler.EndedAt.TimePtr()
+	a.StartedAt = unmarshaler.StartedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *APIKeyRequestListResponseData) MarshalJSON() ([]byte, error) {
+	type embed APIKeyRequestListResponseData
+	var marshaler = struct {
+		embed
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		StartedAt *internal.DateTime `json:"started_at"`
+	}{
+		embed:     embed(*a),
+		EndedAt:   internal.NewOptionalDateTime(a.EndedAt),
+		StartedAt: internal.NewDateTime(a.StartedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (a *APIKeyRequestListResponseData) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The returned resource
+type APIKeyRequestResponseData struct {
+	APIKeyID          string     `json:"api_key_id" url:"api_key_id"`
+	EndedAt           *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	EnvironmentID     *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID                string     `json:"id" url:"id"`
+	Method            string     `json:"method" url:"method"`
+	ReqBody           *string    `json:"req_body,omitempty" url:"req_body,omitempty"`
+	RequestType       *string    `json:"request_type,omitempty" url:"request_type,omitempty"`
+	ResourceID        *int       `json:"resource_id,omitempty" url:"resource_id,omitempty"`
+	ResourceIDString  *string    `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
+	ResourceName      *string    `json:"resource_name,omitempty" url:"resource_name,omitempty"`
+	ResourceType      *string    `json:"resource_type,omitempty" url:"resource_type,omitempty"`
+	RespBody          *string    `json:"resp_body,omitempty" url:"resp_body,omitempty"`
+	RespCode          *int       `json:"resp_code,omitempty" url:"resp_code,omitempty"`
+	SecondaryResource *string    `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
+	StartedAt         time.Time  `json:"started_at" url:"started_at"`
+	URL               string     `json:"url" url:"url"`
+	UserAgent         *string    `json:"user_agent,omitempty" url:"user_agent,omitempty"`
+	UserID            *string    `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserName          *string    `json:"user_name,omitempty" url:"user_name,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *APIKeyRequestResponseData) GetAPIKeyID() string {
+	if a == nil {
+		return ""
+	}
+	return a.APIKeyID
+}
+
+func (a *APIKeyRequestResponseData) GetEndedAt() *time.Time {
+	if a == nil {
+		return nil
+	}
+	return a.EndedAt
+}
+
+func (a *APIKeyRequestResponseData) GetEnvironmentID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.EnvironmentID
+}
+
+func (a *APIKeyRequestResponseData) GetID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ID
+}
+
+func (a *APIKeyRequestResponseData) GetMethod() string {
+	if a == nil {
+		return ""
+	}
+	return a.Method
+}
+
+func (a *APIKeyRequestResponseData) GetReqBody() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ReqBody
+}
+
+func (a *APIKeyRequestResponseData) GetRequestType() *string {
+	if a == nil {
+		return nil
+	}
+	return a.RequestType
+}
+
+func (a *APIKeyRequestResponseData) GetResourceID() *int {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceID
+}
+
+func (a *APIKeyRequestResponseData) GetResourceIDString() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceIDString
+}
+
+func (a *APIKeyRequestResponseData) GetResourceName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceName
+}
+
+func (a *APIKeyRequestResponseData) GetResourceType() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceType
+}
+
+func (a *APIKeyRequestResponseData) GetRespBody() *string {
+	if a == nil {
+		return nil
+	}
+	return a.RespBody
+}
+
+func (a *APIKeyRequestResponseData) GetRespCode() *int {
+	if a == nil {
+		return nil
+	}
+	return a.RespCode
+}
+
+func (a *APIKeyRequestResponseData) GetSecondaryResource() *string {
+	if a == nil {
+		return nil
+	}
+	return a.SecondaryResource
+}
+
+func (a *APIKeyRequestResponseData) GetStartedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.StartedAt
+}
+
+func (a *APIKeyRequestResponseData) GetURL() string {
+	if a == nil {
+		return ""
+	}
+	return a.URL
+}
+
+func (a *APIKeyRequestResponseData) GetUserAgent() *string {
+	if a == nil {
+		return nil
+	}
+	return a.UserAgent
+}
+
+func (a *APIKeyRequestResponseData) GetUserID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.UserID
+}
+
+func (a *APIKeyRequestResponseData) GetUserName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.UserName
+}
+
+func (a *APIKeyRequestResponseData) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *APIKeyRequestResponseData) UnmarshalJSON(data []byte) error {
+	type embed APIKeyRequestResponseData
+	var unmarshaler = struct {
+		embed
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		StartedAt *internal.DateTime `json:"started_at"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = APIKeyRequestResponseData(unmarshaler.embed)
+	a.EndedAt = unmarshaler.EndedAt.TimePtr()
+	a.StartedAt = unmarshaler.StartedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *APIKeyRequestResponseData) MarshalJSON() ([]byte, error) {
+	type embed APIKeyRequestResponseData
+	var marshaler = struct {
+		embed
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		StartedAt *internal.DateTime `json:"started_at"`
+	}{
+		embed:     embed(*a),
+		EndedAt:   internal.NewOptionalDateTime(a.EndedAt),
+		StartedAt: internal.NewDateTime(a.StartedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (a *APIKeyRequestResponseData) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The updated resource
+type APIKeyResponseData struct {
+	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
+	Description   *string    `json:"description,omitempty" url:"description,omitempty"`
+	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID            string     `json:"id" url:"id"`
+	LastUsedAt    *time.Time `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
+	Name          string     `json:"name" url:"name"`
+	Scopes        []string   `json:"scopes,omitempty" url:"scopes,omitempty"`
+	UpdatedAt     time.Time  `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *APIKeyResponseData) GetCreatedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.CreatedAt
+}
+
+func (a *APIKeyResponseData) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *APIKeyResponseData) GetEnvironmentID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.EnvironmentID
+}
+
+func (a *APIKeyResponseData) GetID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ID
+}
+
+func (a *APIKeyResponseData) GetLastUsedAt() *time.Time {
+	if a == nil {
+		return nil
+	}
+	return a.LastUsedAt
+}
+
+func (a *APIKeyResponseData) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *APIKeyResponseData) GetScopes() []string {
+	if a == nil {
+		return nil
+	}
+	return a.Scopes
+}
+
+func (a *APIKeyResponseData) GetUpdatedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.UpdatedAt
+}
+
+func (a *APIKeyResponseData) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *APIKeyResponseData) UnmarshalJSON(data []byte) error {
+	type embed APIKeyResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastUsedAt *internal.DateTime `json:"last_used_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = APIKeyResponseData(unmarshaler.embed)
+	a.CreatedAt = unmarshaler.CreatedAt.Time()
+	a.LastUsedAt = unmarshaler.LastUsedAt.TimePtr()
+	a.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *APIKeyResponseData) MarshalJSON() ([]byte, error) {
+	type embed APIKeyResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastUsedAt *internal.DateTime `json:"last_used_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed:      embed(*a),
+		CreatedAt:  internal.NewDateTime(a.CreatedAt),
+		LastUsedAt: internal.NewOptionalDateTime(a.LastUsedAt),
+		UpdatedAt:  internal.NewDateTime(a.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (a *APIKeyResponseData) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The created resource
+type EnvironmentDetailResponseData struct {
+	APIKeys         []*APIKeyResponseData `json:"api_keys,omitempty" url:"api_keys,omitempty"`
+	CreatedAt       time.Time             `json:"created_at" url:"created_at"`
+	EnvironmentType string                `json:"environment_type" url:"environment_type"`
+	ID              string                `json:"id" url:"id"`
+	Name            string                `json:"name" url:"name"`
+	UpdatedAt       time.Time             `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EnvironmentDetailResponseData) GetAPIKeys() []*APIKeyResponseData {
+	if e == nil {
+		return nil
+	}
+	return e.APIKeys
+}
+
+func (e *EnvironmentDetailResponseData) GetCreatedAt() time.Time {
+	if e == nil {
+		return time.Time{}
+	}
+	return e.CreatedAt
+}
+
+func (e *EnvironmentDetailResponseData) GetEnvironmentType() string {
+	if e == nil {
+		return ""
+	}
+	return e.EnvironmentType
+}
+
+func (e *EnvironmentDetailResponseData) GetID() string {
+	if e == nil {
+		return ""
+	}
+	return e.ID
+}
+
+func (e *EnvironmentDetailResponseData) GetName() string {
+	if e == nil {
+		return ""
+	}
+	return e.Name
+}
+
+func (e *EnvironmentDetailResponseData) GetUpdatedAt() time.Time {
+	if e == nil {
+		return time.Time{}
+	}
+	return e.UpdatedAt
+}
+
+func (e *EnvironmentDetailResponseData) GetExtraProperties() map[string]interface{} {
+	return e.extraProperties
+}
+
+func (e *EnvironmentDetailResponseData) UnmarshalJSON(data []byte) error {
+	type embed EnvironmentDetailResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*e),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*e = EnvironmentDetailResponseData(unmarshaler.embed)
+	e.CreatedAt = unmarshaler.CreatedAt.Time()
+	e.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EnvironmentDetailResponseData) MarshalJSON() ([]byte, error) {
+	type embed EnvironmentDetailResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*e),
+		CreatedAt: internal.NewDateTime(e.CreatedAt),
+		UpdatedAt: internal.NewDateTime(e.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (e *EnvironmentDetailResponseData) String() string {
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+// The updated resource
+type EnvironmentResponseData struct {
+	CreatedAt       time.Time `json:"created_at" url:"created_at"`
+	EnvironmentType string    `json:"environment_type" url:"environment_type"`
+	ID              string    `json:"id" url:"id"`
+	Name            string    `json:"name" url:"name"`
+	UpdatedAt       time.Time `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EnvironmentResponseData) GetCreatedAt() time.Time {
+	if e == nil {
+		return time.Time{}
+	}
+	return e.CreatedAt
+}
+
+func (e *EnvironmentResponseData) GetEnvironmentType() string {
+	if e == nil {
+		return ""
+	}
+	return e.EnvironmentType
+}
+
+func (e *EnvironmentResponseData) GetID() string {
+	if e == nil {
+		return ""
+	}
+	return e.ID
+}
+
+func (e *EnvironmentResponseData) GetName() string {
+	if e == nil {
+		return ""
+	}
+	return e.Name
+}
+
+func (e *EnvironmentResponseData) GetUpdatedAt() time.Time {
+	if e == nil {
+		return time.Time{}
+	}
+	return e.UpdatedAt
+}
+
+func (e *EnvironmentResponseData) GetExtraProperties() map[string]interface{} {
+	return e.extraProperties
+}
+
+func (e *EnvironmentResponseData) UnmarshalJSON(data []byte) error {
+	type embed EnvironmentResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*e),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*e = EnvironmentResponseData(unmarshaler.embed)
+	e.CreatedAt = unmarshaler.CreatedAt.Time()
+	e.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EnvironmentResponseData) MarshalJSON() ([]byte, error) {
+	type embed EnvironmentResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*e),
+		CreatedAt: internal.NewDateTime(e.CreatedAt),
+		UpdatedAt: internal.NewDateTime(e.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (e *EnvironmentResponseData) String() string {
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+// Input parameters
+type CountAPIKeysParams struct {
+	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset             *int  `json:"offset,omitempty" url:"offset,omitempty"`
+	RequireEnvironment *bool `json:"require_environment,omitempty" url:"require_environment,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountAPIKeysParams) GetEnvironmentID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EnvironmentID
+}
+
+func (c *CountAPIKeysParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountAPIKeysParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountAPIKeysParams) GetRequireEnvironment() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.RequireEnvironment
+}
+
+func (c *CountAPIKeysParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountAPIKeysParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountAPIKeysParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountAPIKeysParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountAPIKeysParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 type CountAPIKeysResponse struct {
 	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *CountAPIKeysParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountAPIKeysResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountAPIKeysResponse) GetParams() *CountAPIKeysParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountAPIKeysResponse) GetExtraProperties() map[string]interface{} {
@@ -85,24 +1050,103 @@ func (c *CountAPIKeysResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountAPIKeysResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountAPIKeysResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+type CountAPIRequestsParams struct {
+	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset      *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q           *string `json:"q,omitempty" url:"q,omitempty"`
+	RequestType *string `json:"request_type,omitempty" url:"request_type,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountAPIRequestsParams) GetEnvironmentID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EnvironmentID
+}
+
+func (c *CountAPIRequestsParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountAPIRequestsParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountAPIRequestsParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountAPIRequestsParams) GetRequestType() *string {
+	if c == nil {
+		return nil
+	}
+	return c.RequestType
+}
+
+func (c *CountAPIRequestsParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountAPIRequestsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountAPIRequestsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountAPIRequestsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountAPIRequestsParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -114,7 +1158,21 @@ type CountAPIRequestsResponse struct {
 	Params *CountAPIRequestsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountAPIRequestsResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountAPIRequestsResponse) GetParams() *CountAPIRequestsParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountAPIRequestsResponse) GetExtraProperties() map[string]interface{} {
@@ -128,24 +1186,22 @@ func (c *CountAPIRequestsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountAPIRequestsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountAPIRequestsResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -157,7 +1213,21 @@ type CreateAPIKeyResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateAPIKeyResponse) GetData() *APIKeyCreateResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateAPIKeyResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CreateAPIKeyResponse) GetExtraProperties() map[string]interface{} {
@@ -171,24 +1241,22 @@ func (c *CreateAPIKeyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CreateAPIKeyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CreateAPIKeyResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -225,7 +1293,21 @@ type CreateEnvironmentResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateEnvironmentResponse) GetData() *EnvironmentDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateEnvironmentResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CreateEnvironmentResponse) GetExtraProperties() map[string]interface{} {
@@ -239,24 +1321,22 @@ func (c *CreateEnvironmentResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CreateEnvironmentResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CreateEnvironmentResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -268,7 +1348,21 @@ type DeleteAPIKeyResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteAPIKeyResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteAPIKeyResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteAPIKeyResponse) GetExtraProperties() map[string]interface{} {
@@ -282,24 +1376,22 @@ func (d *DeleteAPIKeyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteAPIKeyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteAPIKeyResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
@@ -311,7 +1403,21 @@ type DeleteEnvironmentResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteEnvironmentResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteEnvironmentResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteEnvironmentResponse) GetExtraProperties() map[string]interface{} {
@@ -325,24 +1431,22 @@ func (d *DeleteEnvironmentResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteEnvironmentResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteEnvironmentResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
@@ -354,7 +1458,21 @@ type GetAPIKeyResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetAPIKeyResponse) GetData() *APIKeyResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetAPIKeyResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetAPIKeyResponse) GetExtraProperties() map[string]interface{} {
@@ -368,24 +1486,22 @@ func (g *GetAPIKeyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetAPIKeyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetAPIKeyResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -397,7 +1513,21 @@ type GetAPIRequestResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetAPIRequestResponse) GetData() *APIKeyRequestResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetAPIRequestResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetAPIRequestResponse) GetExtraProperties() map[string]interface{} {
@@ -411,24 +1541,22 @@ func (g *GetAPIRequestResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetAPIRequestResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetAPIRequestResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -440,7 +1568,21 @@ type GetEnvironmentResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEnvironmentResponse) GetData() *EnvironmentResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetEnvironmentResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetEnvironmentResponse) GetExtraProperties() map[string]interface{} {
@@ -454,27 +1596,98 @@ func (g *GetEnvironmentResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetEnvironmentResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetEnvironmentResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type ListAPIKeysParams struct {
+	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset             *int  `json:"offset,omitempty" url:"offset,omitempty"`
+	RequireEnvironment *bool `json:"require_environment,omitempty" url:"require_environment,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListAPIKeysParams) GetEnvironmentID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.EnvironmentID
+}
+
+func (l *ListAPIKeysParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListAPIKeysParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListAPIKeysParams) GetRequireEnvironment() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.RequireEnvironment
+}
+
+func (l *ListAPIKeysParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListAPIKeysParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListAPIKeysParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListAPIKeysParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListAPIKeysParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 type ListAPIKeysResponse struct {
@@ -484,7 +1697,21 @@ type ListAPIKeysResponse struct {
 	Params *ListAPIKeysParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListAPIKeysResponse) GetData() []*APIKeyResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListAPIKeysResponse) GetParams() *ListAPIKeysParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListAPIKeysResponse) GetExtraProperties() map[string]interface{} {
@@ -498,24 +1725,103 @@ func (l *ListAPIKeysResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListAPIKeysResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListAPIKeysResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListAPIRequestsParams struct {
+	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset      *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q           *string `json:"q,omitempty" url:"q,omitempty"`
+	RequestType *string `json:"request_type,omitempty" url:"request_type,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListAPIRequestsParams) GetEnvironmentID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.EnvironmentID
+}
+
+func (l *ListAPIRequestsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListAPIRequestsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListAPIRequestsParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListAPIRequestsParams) GetRequestType() *string {
+	if l == nil {
+		return nil
+	}
+	return l.RequestType
+}
+
+func (l *ListAPIRequestsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListAPIRequestsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListAPIRequestsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListAPIRequestsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListAPIRequestsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -528,7 +1834,21 @@ type ListAPIRequestsResponse struct {
 	Params *ListAPIRequestsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListAPIRequestsResponse) GetData() []*APIKeyRequestListResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListAPIRequestsResponse) GetParams() *ListAPIRequestsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListAPIRequestsResponse) GetExtraProperties() map[string]interface{} {
@@ -542,24 +1862,87 @@ func (l *ListAPIRequestsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListAPIRequestsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListAPIRequestsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListEnvironmentsParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListEnvironmentsParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListEnvironmentsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListEnvironmentsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListEnvironmentsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListEnvironmentsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListEnvironmentsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListEnvironmentsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListEnvironmentsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -572,7 +1955,21 @@ type ListEnvironmentsResponse struct {
 	Params *ListEnvironmentsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListEnvironmentsResponse) GetData() []*EnvironmentResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListEnvironmentsResponse) GetParams() *ListEnvironmentsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListEnvironmentsResponse) GetExtraProperties() map[string]interface{} {
@@ -586,24 +1983,22 @@ func (l *ListEnvironmentsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListEnvironmentsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListEnvironmentsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -615,7 +2010,21 @@ type UpdateAPIKeyResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAPIKeyResponse) GetData() *APIKeyResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateAPIKeyResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpdateAPIKeyResponse) GetExtraProperties() map[string]interface{} {
@@ -629,24 +2038,22 @@ func (u *UpdateAPIKeyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpdateAPIKeyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpdateAPIKeyResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -683,7 +2090,21 @@ type UpdateEnvironmentResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateEnvironmentResponse) GetData() *EnvironmentResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateEnvironmentResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpdateEnvironmentResponse) GetExtraProperties() map[string]interface{} {
@@ -697,24 +2118,22 @@ func (u *UpdateEnvironmentResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpdateEnvironmentResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpdateEnvironmentResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)

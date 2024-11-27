@@ -5,7 +5,8 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	core "github.com/schematichq/schematic-go/core"
+	internal "github.com/schematichq/schematic-go/internal"
+	time "time"
 )
 
 type ListCrmProductsRequest struct {
@@ -17,6 +18,478 @@ type ListCrmProductsRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
+// The created resource
+type CrmDealResponseData struct {
+	AccountID         string    `json:"account_id" url:"account_id"`
+	Arr               string    `json:"arr" url:"arr"`
+	CompanyExternalID *string   `json:"company_external_id,omitempty" url:"company_external_id,omitempty"`
+	CreatedAt         time.Time `json:"created_at" url:"created_at"`
+	DealExternalID    string    `json:"deal_external_id" url:"deal_external_id"`
+	DealID            string    `json:"deal_id" url:"deal_id"`
+	EnvironmentID     string    `json:"environment_id" url:"environment_id"`
+	Mrr               string    `json:"mrr" url:"mrr"`
+	Name              *string   `json:"name,omitempty" url:"name,omitempty"`
+	ProductExternalID *string   `json:"product_external_id,omitempty" url:"product_external_id,omitempty"`
+	UpdatedAt         time.Time `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CrmDealResponseData) GetAccountID() string {
+	if c == nil {
+		return ""
+	}
+	return c.AccountID
+}
+
+func (c *CrmDealResponseData) GetArr() string {
+	if c == nil {
+		return ""
+	}
+	return c.Arr
+}
+
+func (c *CrmDealResponseData) GetCompanyExternalID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyExternalID
+}
+
+func (c *CrmDealResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CrmDealResponseData) GetDealExternalID() string {
+	if c == nil {
+		return ""
+	}
+	return c.DealExternalID
+}
+
+func (c *CrmDealResponseData) GetDealID() string {
+	if c == nil {
+		return ""
+	}
+	return c.DealID
+}
+
+func (c *CrmDealResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *CrmDealResponseData) GetMrr() string {
+	if c == nil {
+		return ""
+	}
+	return c.Mrr
+}
+
+func (c *CrmDealResponseData) GetName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Name
+}
+
+func (c *CrmDealResponseData) GetProductExternalID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ProductExternalID
+}
+
+func (c *CrmDealResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CrmDealResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CrmDealResponseData) UnmarshalJSON(data []byte) error {
+	type embed CrmDealResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CrmDealResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CrmDealResponseData) MarshalJSON() ([]byte, error) {
+	type embed CrmDealResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CrmDealResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The created resource
+type CrmLineItemResponseData struct {
+	AccountID         string    `json:"account_id" url:"account_id"`
+	CreatedAt         time.Time `json:"created_at" url:"created_at"`
+	DealID            *string   `json:"deal_id,omitempty" url:"deal_id,omitempty"`
+	EnvironmentID     string    `json:"environment_id" url:"environment_id"`
+	ProductExternalID *string   `json:"product_external_id,omitempty" url:"product_external_id,omitempty"`
+	UpdatedAt         time.Time `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CrmLineItemResponseData) GetAccountID() string {
+	if c == nil {
+		return ""
+	}
+	return c.AccountID
+}
+
+func (c *CrmLineItemResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CrmLineItemResponseData) GetDealID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.DealID
+}
+
+func (c *CrmLineItemResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *CrmLineItemResponseData) GetProductExternalID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ProductExternalID
+}
+
+func (c *CrmLineItemResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CrmLineItemResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CrmLineItemResponseData) UnmarshalJSON(data []byte) error {
+	type embed CrmLineItemResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CrmLineItemResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CrmLineItemResponseData) MarshalJSON() ([]byte, error) {
+	type embed CrmLineItemResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CrmLineItemResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The created resource
+type CrmProductResponseData struct {
+	AccountID     string    `json:"account_id" url:"account_id"`
+	CreatedAt     time.Time `json:"created_at" url:"created_at"`
+	Currency      string    `json:"currency" url:"currency"`
+	EnvironmentID string    `json:"environment_id" url:"environment_id"`
+	ExternalID    string    `json:"external_id" url:"external_id"`
+	Name          string    `json:"name" url:"name"`
+	Price         string    `json:"price" url:"price"`
+	ProductID     string    `json:"product_id" url:"product_id"`
+	Quantity      float64   `json:"quantity" url:"quantity"`
+	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CrmProductResponseData) GetAccountID() string {
+	if c == nil {
+		return ""
+	}
+	return c.AccountID
+}
+
+func (c *CrmProductResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CrmProductResponseData) GetCurrency() string {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CrmProductResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *CrmProductResponseData) GetExternalID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ExternalID
+}
+
+func (c *CrmProductResponseData) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CrmProductResponseData) GetPrice() string {
+	if c == nil {
+		return ""
+	}
+	return c.Price
+}
+
+func (c *CrmProductResponseData) GetProductID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ProductID
+}
+
+func (c *CrmProductResponseData) GetQuantity() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Quantity
+}
+
+func (c *CrmProductResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CrmProductResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CrmProductResponseData) UnmarshalJSON(data []byte) error {
+	type embed CrmProductResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CrmProductResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CrmProductResponseData) MarshalJSON() ([]byte, error) {
+	type embed CrmProductResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CrmProductResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+type ListCrmProductsParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Name  *string `json:"name,omitempty" url:"name,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCrmProductsParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListCrmProductsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCrmProductsParams) GetName() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Name
+}
+
+func (l *ListCrmProductsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCrmProductsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCrmProductsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCrmProductsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCrmProductsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCrmProductsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
 type ListCrmProductsResponse struct {
 	// The returned resources
 	Data []*CrmProductResponseData `json:"data,omitempty" url:"data,omitempty"`
@@ -24,7 +497,21 @@ type ListCrmProductsResponse struct {
 	Params *ListCrmProductsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCrmProductsResponse) GetData() []*CrmProductResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCrmProductsResponse) GetParams() *ListCrmProductsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListCrmProductsResponse) GetExtraProperties() map[string]interface{} {
@@ -38,24 +525,22 @@ func (l *ListCrmProductsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListCrmProductsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListCrmProductsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -67,7 +552,21 @@ type UpsertCrmDealResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertCrmDealResponse) GetData() *CrmDealResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertCrmDealResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertCrmDealResponse) GetExtraProperties() map[string]interface{} {
@@ -81,24 +580,22 @@ func (u *UpsertCrmDealResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertCrmDealResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertCrmDealResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -110,7 +607,21 @@ type UpsertCrmProductResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertCrmProductResponse) GetData() *CrmProductResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertCrmProductResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertCrmProductResponse) GetExtraProperties() map[string]interface{} {
@@ -124,24 +635,22 @@ func (u *UpsertCrmProductResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertCrmProductResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertCrmProductResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -153,7 +662,21 @@ type UpsertDealLineItemAssociationResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertDealLineItemAssociationResponse) GetData() *CrmLineItemResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertDealLineItemAssociationResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertDealLineItemAssociationResponse) GetExtraProperties() map[string]interface{} {
@@ -167,24 +690,22 @@ func (u *UpsertDealLineItemAssociationResponse) UnmarshalJSON(data []byte) error
 		return err
 	}
 	*u = UpsertDealLineItemAssociationResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertDealLineItemAssociationResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -196,7 +717,21 @@ type UpsertLineItemResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertLineItemResponse) GetData() *CrmLineItemResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertLineItemResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpsertLineItemResponse) GetExtraProperties() map[string]interface{} {
@@ -210,24 +745,22 @@ func (u *UpsertLineItemResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpsertLineItemResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpsertLineItemResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)

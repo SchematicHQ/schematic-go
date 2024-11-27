@@ -5,7 +5,7 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	core "github.com/schematichq/schematic-go/core"
+	internal "github.com/schematichq/schematic-go/internal"
 	time "time"
 )
 
@@ -34,19 +34,1005 @@ type ListEventsRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
-type ListMetricCountsRequest struct {
-	StartTime     *time.Time `json:"-" url:"start_time,omitempty"`
-	EndTime       *time.Time `json:"-" url:"end_time,omitempty"`
-	EventSubtype  *string    `json:"-" url:"event_subtype,omitempty"`
-	EventSubtypes []*string  `json:"-" url:"event_subtypes,omitempty"`
-	CompanyID     *string    `json:"-" url:"company_id,omitempty"`
-	CompanyIDs    []*string  `json:"-" url:"company_ids,omitempty"`
-	UserID        *string    `json:"-" url:"user_id,omitempty"`
-	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
-	// Page offset (default 0)
-	Offset   *int    `json:"-" url:"offset,omitempty"`
-	Grouping *string `json:"-" url:"grouping,omitempty"`
+type CreateEventRequestBody struct {
+	Body *EventBody `json:"body,omitempty" url:"body,omitempty"`
+	// Either 'identify' or 'track'
+	EventType CreateEventRequestBodyEventType `json:"event_type" url:"event_type"`
+	// Optionally provide a timestamp at which the event was sent to Schematic
+	SentAt *time.Time `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateEventRequestBody) GetBody() *EventBody {
+	if c == nil {
+		return nil
+	}
+	return c.Body
+}
+
+func (c *CreateEventRequestBody) GetEventType() CreateEventRequestBodyEventType {
+	if c == nil {
+		return ""
+	}
+	return c.EventType
+}
+
+func (c *CreateEventRequestBody) GetSentAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.SentAt
+}
+
+func (c *CreateEventRequestBody) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateEventRequestBody) UnmarshalJSON(data []byte) error {
+	type embed CreateEventRequestBody
+	var unmarshaler = struct {
+		embed
+		SentAt *internal.DateTime `json:"sent_at,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CreateEventRequestBody(unmarshaler.embed)
+	c.SentAt = unmarshaler.SentAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateEventRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateEventRequestBody
+	var marshaler = struct {
+		embed
+		SentAt *internal.DateTime `json:"sent_at,omitempty"`
+	}{
+		embed:  embed(*c),
+		SentAt: internal.NewOptionalDateTime(c.SentAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CreateEventRequestBody) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Either 'identify' or 'track'
+type CreateEventRequestBodyEventType string
+
+const (
+	CreateEventRequestBodyEventTypeIdentify  CreateEventRequestBodyEventType = "identify"
+	CreateEventRequestBodyEventTypeTrack     CreateEventRequestBodyEventType = "track"
+	CreateEventRequestBodyEventTypeFlagCheck CreateEventRequestBodyEventType = "flag_check"
+)
+
+func NewCreateEventRequestBodyEventTypeFromString(s string) (CreateEventRequestBodyEventType, error) {
+	switch s {
+	case "identify":
+		return CreateEventRequestBodyEventTypeIdentify, nil
+	case "track":
+		return CreateEventRequestBodyEventTypeTrack, nil
+	case "flag_check":
+		return CreateEventRequestBodyEventTypeFlagCheck, nil
+	}
+	var t CreateEventRequestBodyEventType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateEventRequestBodyEventType) Ptr() *CreateEventRequestBodyEventType {
+	return &c
+}
+
+type EventBody struct {
+	EventBodyTrack     *EventBodyTrack
+	EventBodyFlagCheck *EventBodyFlagCheck
+	EventBodyIdentify  *EventBodyIdentify
+
+	typ string
+}
+
+func (e *EventBody) GetEventBodyTrack() *EventBodyTrack {
+	if e == nil {
+		return nil
+	}
+	return e.EventBodyTrack
+}
+
+func (e *EventBody) GetEventBodyFlagCheck() *EventBodyFlagCheck {
+	if e == nil {
+		return nil
+	}
+	return e.EventBodyFlagCheck
+}
+
+func (e *EventBody) GetEventBodyIdentify() *EventBodyIdentify {
+	if e == nil {
+		return nil
+	}
+	return e.EventBodyIdentify
+}
+
+func (e *EventBody) UnmarshalJSON(data []byte) error {
+	valueEventBodyTrack := new(EventBodyTrack)
+	if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
+		e.typ = "EventBodyTrack"
+		e.EventBodyTrack = valueEventBodyTrack
+		return nil
+	}
+	valueEventBodyFlagCheck := new(EventBodyFlagCheck)
+	if err := json.Unmarshal(data, &valueEventBodyFlagCheck); err == nil {
+		e.typ = "EventBodyFlagCheck"
+		e.EventBodyFlagCheck = valueEventBodyFlagCheck
+		return nil
+	}
+	valueEventBodyIdentify := new(EventBodyIdentify)
+	if err := json.Unmarshal(data, &valueEventBodyIdentify); err == nil {
+		e.typ = "EventBodyIdentify"
+		e.EventBodyIdentify = valueEventBodyIdentify
+		return nil
+	}
+	return fmt.Errorf("%s cannot be deserialized as a %T", data, e)
+}
+
+func (e EventBody) MarshalJSON() ([]byte, error) {
+	if e.typ == "EventBodyTrack" || e.EventBodyTrack != nil {
+		return json.Marshal(e.EventBodyTrack)
+	}
+	if e.typ == "EventBodyFlagCheck" || e.EventBodyFlagCheck != nil {
+		return json.Marshal(e.EventBodyFlagCheck)
+	}
+	if e.typ == "EventBodyIdentify" || e.EventBodyIdentify != nil {
+		return json.Marshal(e.EventBodyIdentify)
+	}
+	return nil, fmt.Errorf("type %T does not include a non-empty union type", e)
+}
+
+type EventBodyVisitor interface {
+	VisitEventBodyTrack(*EventBodyTrack) error
+	VisitEventBodyFlagCheck(*EventBodyFlagCheck) error
+	VisitEventBodyIdentify(*EventBodyIdentify) error
+}
+
+func (e *EventBody) Accept(visitor EventBodyVisitor) error {
+	if e.typ == "EventBodyTrack" || e.EventBodyTrack != nil {
+		return visitor.VisitEventBodyTrack(e.EventBodyTrack)
+	}
+	if e.typ == "EventBodyFlagCheck" || e.EventBodyFlagCheck != nil {
+		return visitor.VisitEventBodyFlagCheck(e.EventBodyFlagCheck)
+	}
+	if e.typ == "EventBodyIdentify" || e.EventBodyIdentify != nil {
+		return visitor.VisitEventBodyIdentify(e.EventBodyIdentify)
+	}
+	return fmt.Errorf("type %T does not include a non-empty union type", e)
+}
+
+type EventBodyFlagCheck struct {
+	// Schematic company ID (starting with 'comp\_') of the company evaluated, if any
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Report an error that occurred during the flag check
+	Error *string `json:"error,omitempty" url:"error,omitempty"`
+	// Schematic flag ID (starting with 'flag\_') for the flag matching the key, if any
+	FlagID *string `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	// The key of the flag being checked
+	FlagKey string `json:"flag_key" url:"flag_key"`
+	// The reason why the value was returned
+	Reason string `json:"reason" url:"reason"`
+	// Key-value pairs used to to identify company for which the flag was checked
+	ReqCompany map[string]string `json:"req_company,omitempty" url:"req_company,omitempty"`
+	// Key-value pairs used to to identify user for which the flag was checked
+	ReqUser map[string]string `json:"req_user,omitempty" url:"req_user,omitempty"`
+	// Schematic rule ID (starting with 'rule\_') of the rule that matched for the flag, if any
+	RuleID *string `json:"rule_id,omitempty" url:"rule_id,omitempty"`
+	// Schematic user ID (starting with 'user\_') of the user evaluated, if any
+	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
+	// The value of the flag for the given company and/or user
+	Value bool `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EventBodyFlagCheck) GetCompanyID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.CompanyID
+}
+
+func (e *EventBodyFlagCheck) GetError() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Error
+}
+
+func (e *EventBodyFlagCheck) GetFlagID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.FlagID
+}
+
+func (e *EventBodyFlagCheck) GetFlagKey() string {
+	if e == nil {
+		return ""
+	}
+	return e.FlagKey
+}
+
+func (e *EventBodyFlagCheck) GetReason() string {
+	if e == nil {
+		return ""
+	}
+	return e.Reason
+}
+
+func (e *EventBodyFlagCheck) GetReqCompany() map[string]string {
+	if e == nil {
+		return nil
+	}
+	return e.ReqCompany
+}
+
+func (e *EventBodyFlagCheck) GetReqUser() map[string]string {
+	if e == nil {
+		return nil
+	}
+	return e.ReqUser
+}
+
+func (e *EventBodyFlagCheck) GetRuleID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.RuleID
+}
+
+func (e *EventBodyFlagCheck) GetUserID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.UserID
+}
+
+func (e *EventBodyFlagCheck) GetValue() bool {
+	if e == nil {
+		return false
+	}
+	return e.Value
+}
+
+func (e *EventBodyFlagCheck) GetExtraProperties() map[string]interface{} {
+	return e.extraProperties
+}
+
+func (e *EventBodyFlagCheck) UnmarshalJSON(data []byte) error {
+	type unmarshaler EventBodyFlagCheck
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EventBodyFlagCheck(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EventBodyFlagCheck) String() string {
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+type EventBodyIdentify struct {
+	// Information about the company associated with the user; required only if it is a new user
+	Company *EventBodyIdentifyCompany `json:"company,omitempty" url:"company,omitempty"`
+	// Key-value pairs to identify the user
+	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
+	// The display name of the user being identified; required only if it is a new user
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// A map of trait names to trait values
+	Traits map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EventBodyIdentify) GetCompany() *EventBodyIdentifyCompany {
+	if e == nil {
+		return nil
+	}
+	return e.Company
+}
+
+func (e *EventBodyIdentify) GetKeys() map[string]string {
+	if e == nil {
+		return nil
+	}
+	return e.Keys
+}
+
+func (e *EventBodyIdentify) GetName() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Name
+}
+
+func (e *EventBodyIdentify) GetTraits() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.Traits
+}
+
+func (e *EventBodyIdentify) GetExtraProperties() map[string]interface{} {
+	return e.extraProperties
+}
+
+func (e *EventBodyIdentify) UnmarshalJSON(data []byte) error {
+	type unmarshaler EventBodyIdentify
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EventBodyIdentify(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EventBodyIdentify) String() string {
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+// Information about the company associated with the user; required only if it is a new user
+type EventBodyIdentifyCompany struct {
+	// Key-value pairs to identify the company
+	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
+	// The display name of the company; required only if it is a new company
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// A map of trait names to trait values
+	Traits map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EventBodyIdentifyCompany) GetKeys() map[string]string {
+	if e == nil {
+		return nil
+	}
+	return e.Keys
+}
+
+func (e *EventBodyIdentifyCompany) GetName() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Name
+}
+
+func (e *EventBodyIdentifyCompany) GetTraits() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.Traits
+}
+
+func (e *EventBodyIdentifyCompany) GetExtraProperties() map[string]interface{} {
+	return e.extraProperties
+}
+
+func (e *EventBodyIdentifyCompany) UnmarshalJSON(data []byte) error {
+	type unmarshaler EventBodyIdentifyCompany
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EventBodyIdentifyCompany(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EventBodyIdentifyCompany) String() string {
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+type EventBodyTrack struct {
+	// Key-value pairs to identify company associated with track event
+	Company map[string]string `json:"company,omitempty" url:"company,omitempty"`
+	// The name of the type of track event
+	Event string `json:"event" url:"event"`
+	// A map of trait names to trait values
+	Traits map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+	// Key-value pairs to identify user associated with track event
+	User map[string]string `json:"user,omitempty" url:"user,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EventBodyTrack) GetCompany() map[string]string {
+	if e == nil {
+		return nil
+	}
+	return e.Company
+}
+
+func (e *EventBodyTrack) GetEvent() string {
+	if e == nil {
+		return ""
+	}
+	return e.Event
+}
+
+func (e *EventBodyTrack) GetTraits() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.Traits
+}
+
+func (e *EventBodyTrack) GetUser() map[string]string {
+	if e == nil {
+		return nil
+	}
+	return e.User
+}
+
+func (e *EventBodyTrack) GetExtraProperties() map[string]interface{} {
+	return e.extraProperties
+}
+
+func (e *EventBodyTrack) UnmarshalJSON(data []byte) error {
+	type unmarshaler EventBodyTrack
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EventBodyTrack(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EventBodyTrack) String() string {
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+type EventDetailResponseData struct {
+	APIKey        *string                `json:"api_key,omitempty" url:"api_key,omitempty"`
+	Body          map[string]interface{} `json:"body,omitempty" url:"body,omitempty"`
+	BodyPreview   string                 `json:"body_preview" url:"body_preview"`
+	CapturedAt    time.Time              `json:"captured_at" url:"captured_at"`
+	Company       *PreviewObject         `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID     *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EnrichedAt    *time.Time             `json:"enriched_at,omitempty" url:"enriched_at,omitempty"`
+	EnvironmentID *string                `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ErrorMessage  *string                `json:"error_message,omitempty" url:"error_message,omitempty"`
+	FeatureIDs    []string               `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	Features      []*PreviewObject       `json:"features,omitempty" url:"features,omitempty"`
+	ID            string                 `json:"id" url:"id"`
+	LoadedAt      *time.Time             `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
+	ProcessedAt   *time.Time             `json:"processed_at,omitempty" url:"processed_at,omitempty"`
+	SentAt        *time.Time             `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+	Status        string                 `json:"status" url:"status"`
+	Subtype       *string                `json:"subtype,omitempty" url:"subtype,omitempty"`
+	Type          string                 `json:"type" url:"type"`
+	UpdatedAt     time.Time              `json:"updated_at" url:"updated_at"`
+	User          *PreviewObject         `json:"user,omitempty" url:"user,omitempty"`
+	UserID        *string                `json:"user_id,omitempty" url:"user_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EventDetailResponseData) GetAPIKey() *string {
+	if e == nil {
+		return nil
+	}
+	return e.APIKey
+}
+
+func (e *EventDetailResponseData) GetBody() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.Body
+}
+
+func (e *EventDetailResponseData) GetBodyPreview() string {
+	if e == nil {
+		return ""
+	}
+	return e.BodyPreview
+}
+
+func (e *EventDetailResponseData) GetCapturedAt() time.Time {
+	if e == nil {
+		return time.Time{}
+	}
+	return e.CapturedAt
+}
+
+func (e *EventDetailResponseData) GetCompany() *PreviewObject {
+	if e == nil {
+		return nil
+	}
+	return e.Company
+}
+
+func (e *EventDetailResponseData) GetCompanyID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.CompanyID
+}
+
+func (e *EventDetailResponseData) GetEnrichedAt() *time.Time {
+	if e == nil {
+		return nil
+	}
+	return e.EnrichedAt
+}
+
+func (e *EventDetailResponseData) GetEnvironmentID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.EnvironmentID
+}
+
+func (e *EventDetailResponseData) GetErrorMessage() *string {
+	if e == nil {
+		return nil
+	}
+	return e.ErrorMessage
+}
+
+func (e *EventDetailResponseData) GetFeatureIDs() []string {
+	if e == nil {
+		return nil
+	}
+	return e.FeatureIDs
+}
+
+func (e *EventDetailResponseData) GetFeatures() []*PreviewObject {
+	if e == nil {
+		return nil
+	}
+	return e.Features
+}
+
+func (e *EventDetailResponseData) GetID() string {
+	if e == nil {
+		return ""
+	}
+	return e.ID
+}
+
+func (e *EventDetailResponseData) GetLoadedAt() *time.Time {
+	if e == nil {
+		return nil
+	}
+	return e.LoadedAt
+}
+
+func (e *EventDetailResponseData) GetProcessedAt() *time.Time {
+	if e == nil {
+		return nil
+	}
+	return e.ProcessedAt
+}
+
+func (e *EventDetailResponseData) GetSentAt() *time.Time {
+	if e == nil {
+		return nil
+	}
+	return e.SentAt
+}
+
+func (e *EventDetailResponseData) GetStatus() string {
+	if e == nil {
+		return ""
+	}
+	return e.Status
+}
+
+func (e *EventDetailResponseData) GetSubtype() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Subtype
+}
+
+func (e *EventDetailResponseData) GetType() string {
+	if e == nil {
+		return ""
+	}
+	return e.Type
+}
+
+func (e *EventDetailResponseData) GetUpdatedAt() time.Time {
+	if e == nil {
+		return time.Time{}
+	}
+	return e.UpdatedAt
+}
+
+func (e *EventDetailResponseData) GetUser() *PreviewObject {
+	if e == nil {
+		return nil
+	}
+	return e.User
+}
+
+func (e *EventDetailResponseData) GetUserID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.UserID
+}
+
+func (e *EventDetailResponseData) GetExtraProperties() map[string]interface{} {
+	return e.extraProperties
+}
+
+func (e *EventDetailResponseData) UnmarshalJSON(data []byte) error {
+	type embed EventDetailResponseData
+	var unmarshaler = struct {
+		embed
+		CapturedAt  *internal.DateTime `json:"captured_at"`
+		EnrichedAt  *internal.DateTime `json:"enriched_at,omitempty"`
+		LoadedAt    *internal.DateTime `json:"loaded_at,omitempty"`
+		ProcessedAt *internal.DateTime `json:"processed_at,omitempty"`
+		SentAt      *internal.DateTime `json:"sent_at,omitempty"`
+		UpdatedAt   *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*e),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*e = EventDetailResponseData(unmarshaler.embed)
+	e.CapturedAt = unmarshaler.CapturedAt.Time()
+	e.EnrichedAt = unmarshaler.EnrichedAt.TimePtr()
+	e.LoadedAt = unmarshaler.LoadedAt.TimePtr()
+	e.ProcessedAt = unmarshaler.ProcessedAt.TimePtr()
+	e.SentAt = unmarshaler.SentAt.TimePtr()
+	e.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EventDetailResponseData) MarshalJSON() ([]byte, error) {
+	type embed EventDetailResponseData
+	var marshaler = struct {
+		embed
+		CapturedAt  *internal.DateTime `json:"captured_at"`
+		EnrichedAt  *internal.DateTime `json:"enriched_at,omitempty"`
+		LoadedAt    *internal.DateTime `json:"loaded_at,omitempty"`
+		ProcessedAt *internal.DateTime `json:"processed_at,omitempty"`
+		SentAt      *internal.DateTime `json:"sent_at,omitempty"`
+		UpdatedAt   *internal.DateTime `json:"updated_at"`
+	}{
+		embed:       embed(*e),
+		CapturedAt:  internal.NewDateTime(e.CapturedAt),
+		EnrichedAt:  internal.NewOptionalDateTime(e.EnrichedAt),
+		LoadedAt:    internal.NewOptionalDateTime(e.LoadedAt),
+		ProcessedAt: internal.NewOptionalDateTime(e.ProcessedAt),
+		SentAt:      internal.NewOptionalDateTime(e.SentAt),
+		UpdatedAt:   internal.NewDateTime(e.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (e *EventDetailResponseData) String() string {
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+// The created resource
+type RawEventBatchResponseData struct {
+	Events []*RawEventResponseData `json:"events,omitempty" url:"events,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RawEventBatchResponseData) GetEvents() []*RawEventResponseData {
+	if r == nil {
+		return nil
+	}
+	return r.Events
+}
+
+func (r *RawEventBatchResponseData) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RawEventBatchResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler RawEventBatchResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RawEventBatchResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RawEventBatchResponseData) String() string {
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+type RawEventResponseData struct {
+	CapturedAt time.Time `json:"captured_at" url:"captured_at"`
+	EventID    *string   `json:"event_id,omitempty" url:"event_id,omitempty"`
+	RemoteAddr string    `json:"remote_addr" url:"remote_addr"`
+	RemoteIP   string    `json:"remote_ip" url:"remote_ip"`
+	UserAgent  string    `json:"user_agent" url:"user_agent"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RawEventResponseData) GetCapturedAt() time.Time {
+	if r == nil {
+		return time.Time{}
+	}
+	return r.CapturedAt
+}
+
+func (r *RawEventResponseData) GetEventID() *string {
+	if r == nil {
+		return nil
+	}
+	return r.EventID
+}
+
+func (r *RawEventResponseData) GetRemoteAddr() string {
+	if r == nil {
+		return ""
+	}
+	return r.RemoteAddr
+}
+
+func (r *RawEventResponseData) GetRemoteIP() string {
+	if r == nil {
+		return ""
+	}
+	return r.RemoteIP
+}
+
+func (r *RawEventResponseData) GetUserAgent() string {
+	if r == nil {
+		return ""
+	}
+	return r.UserAgent
+}
+
+func (r *RawEventResponseData) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RawEventResponseData) UnmarshalJSON(data []byte) error {
+	type embed RawEventResponseData
+	var unmarshaler = struct {
+		embed
+		CapturedAt *internal.DateTime `json:"captured_at"`
+	}{
+		embed: embed(*r),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*r = RawEventResponseData(unmarshaler.embed)
+	r.CapturedAt = unmarshaler.CapturedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RawEventResponseData) MarshalJSON() ([]byte, error) {
+	type embed RawEventResponseData
+	var marshaler = struct {
+		embed
+		CapturedAt *internal.DateTime `json:"captured_at"`
+	}{
+		embed:      embed(*r),
+		CapturedAt: internal.NewDateTime(r.CapturedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (r *RawEventResponseData) String() string {
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+// The returned resource
+type SegmentStatusResp struct {
+	Connected     bool       `json:"connected" url:"connected"`
+	EnvironmentID string     `json:"environment_id" url:"environment_id"`
+	LastEventAt   *time.Time `json:"last_event_at,omitempty" url:"last_event_at,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *SegmentStatusResp) GetConnected() bool {
+	if s == nil {
+		return false
+	}
+	return s.Connected
+}
+
+func (s *SegmentStatusResp) GetEnvironmentID() string {
+	if s == nil {
+		return ""
+	}
+	return s.EnvironmentID
+}
+
+func (s *SegmentStatusResp) GetLastEventAt() *time.Time {
+	if s == nil {
+		return nil
+	}
+	return s.LastEventAt
+}
+
+func (s *SegmentStatusResp) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *SegmentStatusResp) UnmarshalJSON(data []byte) error {
+	type embed SegmentStatusResp
+	var unmarshaler = struct {
+		embed
+		LastEventAt *internal.DateTime `json:"last_event_at,omitempty"`
+	}{
+		embed: embed(*s),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*s = SegmentStatusResp(unmarshaler.embed)
+	s.LastEventAt = unmarshaler.LastEventAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SegmentStatusResp) MarshalJSON() ([]byte, error) {
+	type embed SegmentStatusResp
+	var marshaler = struct {
+		embed
+		LastEventAt *internal.DateTime `json:"last_event_at,omitempty"`
+	}{
+		embed:       embed(*s),
+		LastEventAt: internal.NewOptionalDateTime(s.LastEventAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (s *SegmentStatusResp) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
 }
 
 type CreateEventBatchResponse struct {
@@ -55,7 +1041,21 @@ type CreateEventBatchResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateEventBatchResponse) GetData() *RawEventBatchResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateEventBatchResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CreateEventBatchResponse) GetExtraProperties() map[string]interface{} {
@@ -69,24 +1069,22 @@ func (c *CreateEventBatchResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CreateEventBatchResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CreateEventBatchResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -98,7 +1096,21 @@ type CreateEventResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateEventResponse) GetData() *RawEventResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateEventResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CreateEventResponse) GetExtraProperties() map[string]interface{} {
@@ -112,24 +1124,22 @@ func (c *CreateEventResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CreateEventResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CreateEventResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -141,7 +1151,21 @@ type GetEventResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEventResponse) GetData() *EventDetailResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetEventResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetEventResponse) GetExtraProperties() map[string]interface{} {
@@ -155,24 +1179,95 @@ func (g *GetEventResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetEventResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetEventResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type GetEventSummariesParams struct {
+	EventSubtypes []string `json:"event_subtypes,omitempty" url:"event_subtypes,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEventSummariesParams) GetEventSubtypes() []string {
+	if g == nil {
+		return nil
+	}
+	return g.EventSubtypes
+}
+
+func (g *GetEventSummariesParams) GetLimit() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Limit
+}
+
+func (g *GetEventSummariesParams) GetOffset() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Offset
+}
+
+func (g *GetEventSummariesParams) GetQ() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Q
+}
+
+func (g *GetEventSummariesParams) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetEventSummariesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetEventSummariesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetEventSummariesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetEventSummariesParams) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -185,7 +1280,21 @@ type GetEventSummariesResponse struct {
 	Params *GetEventSummariesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEventSummariesResponse) GetData() []*EventSummaryResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetEventSummariesResponse) GetParams() *GetEventSummariesParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetEventSummariesResponse) GetExtraProperties() map[string]interface{} {
@@ -199,24 +1308,22 @@ func (g *GetEventSummariesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetEventSummariesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetEventSummariesResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -228,7 +1335,21 @@ type GetEventSummaryBySubtypeResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEventSummaryBySubtypeResponse) GetData() *EventSummaryResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetEventSummaryBySubtypeResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetEventSummaryBySubtypeResponse) GetExtraProperties() map[string]interface{} {
@@ -242,24 +1363,22 @@ func (g *GetEventSummaryBySubtypeResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetEventSummaryBySubtypeResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetEventSummaryBySubtypeResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -271,7 +1390,21 @@ type GetSegmentIntegrationStatusResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetSegmentIntegrationStatusResponse) GetData() *SegmentStatusResp {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetSegmentIntegrationStatusResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetSegmentIntegrationStatusResponse) GetExtraProperties() map[string]interface{} {
@@ -285,27 +1418,122 @@ func (g *GetSegmentIntegrationStatusResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetSegmentIntegrationStatusResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetSegmentIntegrationStatusResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type ListEventsParams struct {
+	CompanyID    *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EventSubtype *string  `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	EventTypes   []string `json:"event_types,omitempty" url:"event_types,omitempty"`
+	FlagID       *string  `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListEventsParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListEventsParams) GetEventSubtype() *string {
+	if l == nil {
+		return nil
+	}
+	return l.EventSubtype
+}
+
+func (l *ListEventsParams) GetEventTypes() []string {
+	if l == nil {
+		return nil
+	}
+	return l.EventTypes
+}
+
+func (l *ListEventsParams) GetFlagID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.FlagID
+}
+
+func (l *ListEventsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListEventsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListEventsParams) GetUserID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.UserID
+}
+
+func (l *ListEventsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListEventsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListEventsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListEventsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListEventsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 type ListEventsResponse struct {
@@ -315,7 +1543,21 @@ type ListEventsResponse struct {
 	Params *ListEventsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListEventsResponse) GetData() []*EventDetailResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListEventsResponse) GetParams() *ListEventsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListEventsResponse) GetExtraProperties() map[string]interface{} {
@@ -329,68 +1571,22 @@ func (l *ListEventsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListEventsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListEventsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", l)
-}
-
-type ListMetricCountsResponse struct {
-	// The returned resources
-	Data []*MetricCountsHourlyResponseData `json:"data,omitempty" url:"data,omitempty"`
-	// Input parameters
-	Params *ListMetricCountsParams `json:"params,omitempty" url:"params,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (l *ListMetricCountsResponse) GetExtraProperties() map[string]interface{} {
-	return l.extraProperties
-}
-
-func (l *ListMetricCountsResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler ListMetricCountsResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*l = ListMetricCountsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
-	if err != nil {
-		return err
-	}
-	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (l *ListMetricCountsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)

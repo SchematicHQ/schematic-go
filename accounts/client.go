@@ -3,20 +3,17 @@
 package accounts
 
 import (
-	bytes "bytes"
 	context "context"
-	json "encoding/json"
-	errors "errors"
 	schematicgo "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
+	internal "github.com/schematichq/schematic-go/internal"
 	option "github.com/schematichq/schematic-go/option"
-	io "io"
 	http "net/http"
 )
 
 type Client struct {
 	baseURL string
-	caller  *core.Caller
+	caller  *internal.Caller
 	header  http.Header
 }
 
@@ -24,8 +21,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 	options := core.NewRequestOptions(opts...)
 	return &Client{
 		baseURL: options.BaseURL,
-		caller: core.NewCaller(
-			&core.CallerParams{
+		caller: internal.NewCaller(
+			&internal.CallerParams{
 				Client:      options.HTTPClient,
 				MaxAttempts: options.MaxAttempts,
 			},
@@ -40,79 +37,59 @@ func (c *Client) ListAPIKeys(
 	opts ...option.RequestOption,
 ) (*schematicgo.ListAPIKeysResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
 	endpointURL := baseURL + "/api-keys"
-
-	queryParams, err := core.QueryValues(request)
+	queryParams, err := internal.QueryValues(request)
 	if err != nil {
 		return nil, err
 	}
 	if len(queryParams) > 0 {
 		endpointURL += "?" + queryParams.Encode()
 	}
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.ListAPIKeysResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -126,73 +103,54 @@ func (c *Client) CreateAPIKey(
 	opts ...option.RequestOption,
 ) (*schematicgo.CreateAPIKeyResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
 	endpointURL := baseURL + "/api-keys"
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 	headers.Set("Content-Type", "application/json")
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.CreateAPIKeyResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPost,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Request:         request,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -207,71 +165,55 @@ func (c *Client) GetAPIKey(
 	opts ...option.RequestOption,
 ) (*schematicgo.GetAPIKeyResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/api-keys/%v", apiKeyID)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api-keys/%v",
+		apiKeyID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 404:
-			value := new(schematicgo.NotFoundError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.GetAPIKeyResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -287,80 +229,62 @@ func (c *Client) UpdateAPIKey(
 	opts ...option.RequestOption,
 ) (*schematicgo.UpdateAPIKeyResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/api-keys/%v", apiKeyID)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api-keys/%v",
+		apiKeyID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 	headers.Set("Content-Type", "application/json")
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 404:
-			value := new(schematicgo.NotFoundError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.UpdateAPIKeyResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPut,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Request:         request,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -375,71 +299,55 @@ func (c *Client) DeleteAPIKey(
 	opts ...option.RequestOption,
 ) (*schematicgo.DeleteAPIKeyResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/api-keys/%v", apiKeyID)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api-keys/%v",
+		apiKeyID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.DeleteAPIKeyResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodDelete,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -453,79 +361,59 @@ func (c *Client) CountAPIKeys(
 	opts ...option.RequestOption,
 ) (*schematicgo.CountAPIKeysResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
 	endpointURL := baseURL + "/api-keys/count"
-
-	queryParams, err := core.QueryValues(request)
+	queryParams, err := internal.QueryValues(request)
 	if err != nil {
 		return nil, err
 	}
 	if len(queryParams) > 0 {
 		endpointURL += "?" + queryParams.Encode()
 	}
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.CountAPIKeysResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -539,79 +427,59 @@ func (c *Client) ListAPIRequests(
 	opts ...option.RequestOption,
 ) (*schematicgo.ListAPIRequestsResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
 	endpointURL := baseURL + "/api-requests"
-
-	queryParams, err := core.QueryValues(request)
+	queryParams, err := internal.QueryValues(request)
 	if err != nil {
 		return nil, err
 	}
 	if len(queryParams) > 0 {
 		endpointURL += "?" + queryParams.Encode()
 	}
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.ListAPIRequestsResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -626,71 +494,55 @@ func (c *Client) GetAPIRequest(
 	opts ...option.RequestOption,
 ) (*schematicgo.GetAPIRequestResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/api-requests/%v", apiRequestID)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api-requests/%v",
+		apiRequestID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 404:
-			value := new(schematicgo.NotFoundError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.GetAPIRequestResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -704,79 +556,59 @@ func (c *Client) CountAPIRequests(
 	opts ...option.RequestOption,
 ) (*schematicgo.CountAPIRequestsResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
 	endpointURL := baseURL + "/api-requests/count"
-
-	queryParams, err := core.QueryValues(request)
+	queryParams, err := internal.QueryValues(request)
 	if err != nil {
 		return nil, err
 	}
 	if len(queryParams) > 0 {
 		endpointURL += "?" + queryParams.Encode()
 	}
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.CountAPIRequestsResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -790,79 +622,59 @@ func (c *Client) ListEnvironments(
 	opts ...option.RequestOption,
 ) (*schematicgo.ListEnvironmentsResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
 	endpointURL := baseURL + "/environments"
-
-	queryParams, err := core.QueryValues(request)
+	queryParams, err := internal.QueryValues(request)
 	if err != nil {
 		return nil, err
 	}
 	if len(queryParams) > 0 {
 		endpointURL += "?" + queryParams.Encode()
 	}
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.ListEnvironmentsResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -876,73 +688,54 @@ func (c *Client) CreateEnvironment(
 	opts ...option.RequestOption,
 ) (*schematicgo.CreateEnvironmentResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
 	endpointURL := baseURL + "/environments"
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 	headers.Set("Content-Type", "application/json")
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.CreateEnvironmentResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPost,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Request:         request,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -957,71 +750,55 @@ func (c *Client) GetEnvironment(
 	opts ...option.RequestOption,
 ) (*schematicgo.GetEnvironmentResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/environments/%v", environmentID)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/environments/%v",
+		environmentID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 404:
-			value := new(schematicgo.NotFoundError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.GetEnvironmentResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -1037,80 +814,62 @@ func (c *Client) UpdateEnvironment(
 	opts ...option.RequestOption,
 ) (*schematicgo.UpdateEnvironmentResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/environments/%v", environmentID)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/environments/%v",
+		environmentID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 	headers.Set("Content-Type", "application/json")
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 404:
-			value := new(schematicgo.NotFoundError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.UpdateEnvironmentResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPut,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Request:         request,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err
@@ -1125,71 +884,55 @@ func (c *Client) DeleteEnvironment(
 	opts ...option.RequestOption,
 ) (*schematicgo.DeleteEnvironmentResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/environments/%v", environmentID)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	errorDecoder := func(statusCode int, body io.Reader) error {
-		raw, err := io.ReadAll(body)
-		if err != nil {
-			return err
-		}
-		apiError := core.NewAPIError(statusCode, errors.New(string(raw)))
-		decoder := json.NewDecoder(bytes.NewReader(raw))
-		switch statusCode {
-		case 400:
-			value := new(schematicgo.BadRequestError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/environments/%v",
+		environmentID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
 			}
-			return value
-		case 401:
-			value := new(schematicgo.UnauthorizedError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
 			}
-			return value
-		case 403:
-			value := new(schematicgo.ForbiddenError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
 			}
-			return value
-		case 500:
-			value := new(schematicgo.InternalServerError)
-			value.APIError = apiError
-			if err := decoder.Decode(value); err != nil {
-				return apiError
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
 			}
-			return value
-		}
-		return apiError
+		},
 	}
 
 	var response *schematicgo.DeleteEnvironmentResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodDelete,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
-			ErrorDecoder:    errorDecoder,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
 		return nil, err

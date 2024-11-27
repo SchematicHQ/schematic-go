@@ -14,6 +14,7 @@ import (
 	entitlements "github.com/schematichq/schematic-go/entitlements"
 	events "github.com/schematichq/schematic-go/events"
 	features "github.com/schematichq/schematic-go/features"
+	internal "github.com/schematichq/schematic-go/internal"
 	option "github.com/schematichq/schematic-go/option"
 	plangroups "github.com/schematichq/schematic-go/plangroups"
 	plans "github.com/schematichq/schematic-go/plans"
@@ -23,7 +24,7 @@ import (
 
 type Client struct {
 	baseURL string
-	caller  *core.Caller
+	caller  *internal.Caller
 	header  http.Header
 
 	Accounts     *accounts.Client
@@ -44,8 +45,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 	options := core.NewRequestOptions(opts...)
 	return &Client{
 		baseURL: options.BaseURL,
-		caller: core.NewCaller(
-			&core.CallerParams{
+		caller: internal.NewCaller(
+			&internal.CallerParams{
 				Client:      options.HTTPClient,
 				MaxAttempts: options.MaxAttempts,
 			},
@@ -71,25 +72,24 @@ func (c *Client) GetCompanyPlans(
 	opts ...option.RequestOption,
 ) error {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.schematichq.com"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
 	endpointURL := baseURL + "/company-plans"
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,

@@ -5,7 +5,8 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	core "github.com/schematichq/schematic-go/core"
+	internal "github.com/schematichq/schematic-go/internal"
+	time "time"
 )
 
 type CountCompanyOverridesRequest struct {
@@ -70,6 +71,8 @@ type CountPlanEntitlementsRequest struct {
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
+	// Filter plan entitlements only with metered products
+	WithMeteredProducts *bool `json:"-" url:"with_metered_products,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -77,23 +80,55 @@ type CountPlanEntitlementsRequest struct {
 }
 
 type CreateCompanyOverrideRequestBody struct {
-	CompanyID    string                                        `json:"company_id" url:"-"`
-	FeatureID    string                                        `json:"feature_id" url:"-"`
-	MetricPeriod *CreateCompanyOverrideRequestBodyMetricPeriod `json:"metric_period,omitempty" url:"-"`
-	ValueBool    *bool                                         `json:"value_bool,omitempty" url:"-"`
-	ValueNumeric *int                                          `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID *string                                       `json:"value_trait_id,omitempty" url:"-"`
-	ValueType    CreateCompanyOverrideRequestBodyValueType     `json:"value_type" url:"-"`
+	CompanyID              string                                                  `json:"company_id" url:"-"`
+	ExpirationDate         *time.Time                                              `json:"expiration_date,omitempty" url:"-"`
+	FeatureID              string                                                  `json:"feature_id" url:"-"`
+	MeteredMonthlyPriceID  *string                                                 `json:"metered_monthly_price_id,omitempty" url:"-"`
+	MeteredYearlyPriceID   *string                                                 `json:"metered_yearly_price_id,omitempty" url:"-"`
+	MetricPeriod           *CreateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              CreateCompanyOverrideRequestBodyValueType               `json:"value_type" url:"-"`
+}
+
+func (c *CreateCompanyOverrideRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCompanyOverrideRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateCompanyOverrideRequestBody(body)
+	return nil
+}
+
+func (c *CreateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateCompanyOverrideRequestBody
+	var marshaler = struct {
+		embed
+		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
+	}{
+		embed:          embed(*c),
+		ExpirationDate: internal.NewOptionalDateTime(c.ExpirationDate),
+	}
+	return json.Marshal(marshaler)
 }
 
 type CreatePlanEntitlementRequestBody struct {
-	FeatureID    string                                        `json:"feature_id" url:"-"`
-	MetricPeriod *CreatePlanEntitlementRequestBodyMetricPeriod `json:"metric_period,omitempty" url:"-"`
-	PlanID       string                                        `json:"plan_id" url:"-"`
-	ValueBool    *bool                                         `json:"value_bool,omitempty" url:"-"`
-	ValueNumeric *int                                          `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID *string                                       `json:"value_trait_id,omitempty" url:"-"`
-	ValueType    CreatePlanEntitlementRequestBodyValueType     `json:"value_type" url:"-"`
+	FeatureID              string                                                  `json:"feature_id" url:"-"`
+	MeteredMonthlyPriceID  *string                                                 `json:"metered_monthly_price_id,omitempty" url:"-"`
+	MeteredYearlyPriceID   *string                                                 `json:"metered_yearly_price_id,omitempty" url:"-"`
+	MetricPeriod           *CreatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	MonthlyMeteredPriceID  *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
+	PlanID                 string                                                  `json:"plan_id" url:"-"`
+	PriceBehavior          *string                                                 `json:"price_behavior,omitempty" url:"-"`
+	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              CreatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
+	YearlyMeteredPriceID   *string                                                 `json:"yearly_metered_price_id,omitempty" url:"-"`
 }
 
 type GetFeatureUsageByCompanyRequest struct {
@@ -163,10 +198,708 @@ type ListPlanEntitlementsRequest struct {
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
+	// Filter plan entitlements only with metered products
+	WithMeteredProducts *bool `json:"-" url:"with_metered_products,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
+// The updated resource
+type CompanyOverrideResponseData struct {
+	Company                *CompanyDetailResponseData         `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID              string                             `json:"company_id" url:"company_id"`
+	CreatedAt              time.Time                          `json:"created_at" url:"created_at"`
+	EnvironmentID          string                             `json:"environment_id" url:"environment_id"`
+	ExpirationDate         *time.Time                         `json:"expiration_date,omitempty" url:"expiration_date,omitempty"`
+	Feature                *FeatureResponseData               `json:"feature,omitempty" url:"feature,omitempty"`
+	FeatureID              string                             `json:"feature_id" url:"feature_id"`
+	ID                     string                             `json:"id" url:"id"`
+	MetricPeriod           *string                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset *string                            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	RuleID                 *string                            `json:"rule_id,omitempty" url:"rule_id,omitempty"`
+	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
+	ValueBool              *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueNumeric           *int                               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueTrait             *EntityTraitDefinitionResponseData `json:"value_trait,omitempty" url:"value_trait,omitempty"`
+	ValueTraitID           *string                            `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
+	ValueType              string                             `json:"value_type" url:"value_type"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyOverrideResponseData) GetCompany() *CompanyDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Company
+}
+
+func (c *CompanyOverrideResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CompanyOverrideResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CompanyOverrideResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *CompanyOverrideResponseData) GetExpirationDate() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.ExpirationDate
+}
+
+func (c *CompanyOverrideResponseData) GetFeature() *FeatureResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Feature
+}
+
+func (c *CompanyOverrideResponseData) GetFeatureID() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureID
+}
+
+func (c *CompanyOverrideResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CompanyOverrideResponseData) GetMetricPeriod() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriod
+}
+
+func (c *CompanyOverrideResponseData) GetMetricPeriodMonthReset() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriodMonthReset
+}
+
+func (c *CompanyOverrideResponseData) GetRuleID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.RuleID
+}
+
+func (c *CompanyOverrideResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CompanyOverrideResponseData) GetValueBool() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ValueBool
+}
+
+func (c *CompanyOverrideResponseData) GetValueNumeric() *int {
+	if c == nil {
+		return nil
+	}
+	return c.ValueNumeric
+}
+
+func (c *CompanyOverrideResponseData) GetValueTrait() *EntityTraitDefinitionResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.ValueTrait
+}
+
+func (c *CompanyOverrideResponseData) GetValueTraitID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ValueTraitID
+}
+
+func (c *CompanyOverrideResponseData) GetValueType() string {
+	if c == nil {
+		return ""
+	}
+	return c.ValueType
+}
+
+func (c *CompanyOverrideResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CompanyOverrideResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyOverrideResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt      *internal.DateTime `json:"created_at"`
+		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
+		UpdatedAt      *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyOverrideResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.ExpirationDate = unmarshaler.ExpirationDate.TimePtr()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyOverrideResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyOverrideResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt      *internal.DateTime `json:"created_at"`
+		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
+		UpdatedAt      *internal.DateTime `json:"updated_at"`
+	}{
+		embed:          embed(*c),
+		CreatedAt:      internal.NewDateTime(c.CreatedAt),
+		ExpirationDate: internal.NewOptionalDateTime(c.ExpirationDate),
+		UpdatedAt:      internal.NewDateTime(c.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CompanyOverrideResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type FeatureCompanyResponseData struct {
+	// Whether further usage is permitted.
+	Access bool `json:"access" url:"access"`
+	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
+	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	// The type of allocation that is being used.
+	AllocationType  FeatureCompanyResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
+	Company         *CompanyDetailResponseData               `json:"company,omitempty" url:"company,omitempty"`
+	EntitlementID   string                                   `json:"entitlement_id" url:"entitlement_id"`
+	EntitlementType string                                   `json:"entitlement_type" url:"entitlement_type"`
+	Feature         *FeatureDetailResponseData               `json:"feature,omitempty" url:"feature,omitempty"`
+	// The time at which the metric will resets.
+	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
+	// If the period is current_month, when the month resets.
+	MonthReset *string `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	// The period over which usage is measured.
+	Period *string           `json:"period,omitempty" url:"period,omitempty"`
+	Plan   *PlanResponseData `json:"plan,omitempty" url:"plan,omitempty"`
+	// The amount of usage that has been consumed; a null value indicates that usage is not being measured.
+	Usage *int `json:"usage,omitempty" url:"usage,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FeatureCompanyResponseData) GetAccess() bool {
+	if f == nil {
+		return false
+	}
+	return f.Access
+}
+
+func (f *FeatureCompanyResponseData) GetAllocation() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Allocation
+}
+
+func (f *FeatureCompanyResponseData) GetAllocationType() FeatureCompanyResponseDataAllocationType {
+	if f == nil {
+		return ""
+	}
+	return f.AllocationType
+}
+
+func (f *FeatureCompanyResponseData) GetCompany() *CompanyDetailResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Company
+}
+
+func (f *FeatureCompanyResponseData) GetEntitlementID() string {
+	if f == nil {
+		return ""
+	}
+	return f.EntitlementID
+}
+
+func (f *FeatureCompanyResponseData) GetEntitlementType() string {
+	if f == nil {
+		return ""
+	}
+	return f.EntitlementType
+}
+
+func (f *FeatureCompanyResponseData) GetFeature() *FeatureDetailResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Feature
+}
+
+func (f *FeatureCompanyResponseData) GetMetricResetAt() *time.Time {
+	if f == nil {
+		return nil
+	}
+	return f.MetricResetAt
+}
+
+func (f *FeatureCompanyResponseData) GetMonthReset() *string {
+	if f == nil {
+		return nil
+	}
+	return f.MonthReset
+}
+
+func (f *FeatureCompanyResponseData) GetPeriod() *string {
+	if f == nil {
+		return nil
+	}
+	return f.Period
+}
+
+func (f *FeatureCompanyResponseData) GetPlan() *PlanResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Plan
+}
+
+func (f *FeatureCompanyResponseData) GetUsage() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Usage
+}
+
+func (f *FeatureCompanyResponseData) GetExtraProperties() map[string]interface{} {
+	return f.extraProperties
+}
+
+func (f *FeatureCompanyResponseData) UnmarshalJSON(data []byte) error {
+	type embed FeatureCompanyResponseData
+	var unmarshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed: embed(*f),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*f = FeatureCompanyResponseData(unmarshaler.embed)
+	f.MetricResetAt = unmarshaler.MetricResetAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FeatureCompanyResponseData) MarshalJSON() ([]byte, error) {
+	type embed FeatureCompanyResponseData
+	var marshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed:         embed(*f),
+		MetricResetAt: internal.NewOptionalDateTime(f.MetricResetAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (f *FeatureCompanyResponseData) String() string {
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
+}
+
+// The type of allocation that is being used.
+type FeatureCompanyResponseDataAllocationType string
+
+const (
+	FeatureCompanyResponseDataAllocationTypeBoolean   FeatureCompanyResponseDataAllocationType = "boolean"
+	FeatureCompanyResponseDataAllocationTypeNumeric   FeatureCompanyResponseDataAllocationType = "numeric"
+	FeatureCompanyResponseDataAllocationTypeTrait     FeatureCompanyResponseDataAllocationType = "trait"
+	FeatureCompanyResponseDataAllocationTypeUnlimited FeatureCompanyResponseDataAllocationType = "unlimited"
+)
+
+func NewFeatureCompanyResponseDataAllocationTypeFromString(s string) (FeatureCompanyResponseDataAllocationType, error) {
+	switch s {
+	case "boolean":
+		return FeatureCompanyResponseDataAllocationTypeBoolean, nil
+	case "numeric":
+		return FeatureCompanyResponseDataAllocationTypeNumeric, nil
+	case "trait":
+		return FeatureCompanyResponseDataAllocationTypeTrait, nil
+	case "unlimited":
+		return FeatureCompanyResponseDataAllocationTypeUnlimited, nil
+	}
+	var t FeatureCompanyResponseDataAllocationType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (f FeatureCompanyResponseDataAllocationType) Ptr() *FeatureCompanyResponseDataAllocationType {
+	return &f
+}
+
+type FeatureCompanyUserResponseData struct {
+	// Whether further usage is permitted.
+	Access bool `json:"access" url:"access"`
+	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
+	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	// The type of allocation that is being used.
+	AllocationType  FeatureCompanyUserResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
+	Company         *CompanyDetailResponseData                   `json:"company,omitempty" url:"company,omitempty"`
+	EntitlementID   string                                       `json:"entitlement_id" url:"entitlement_id"`
+	EntitlementType string                                       `json:"entitlement_type" url:"entitlement_type"`
+	Feature         *FeatureDetailResponseData                   `json:"feature,omitempty" url:"feature,omitempty"`
+	// The time at which the metric will resets.
+	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
+	// If the period is current_month, when the month resets.
+	MonthReset *string `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	// The period over which usage is measured.
+	Period *string           `json:"period,omitempty" url:"period,omitempty"`
+	Plan   *PlanResponseData `json:"plan,omitempty" url:"plan,omitempty"`
+	// The amount of usage that has been consumed; a null value indicates that usage is not being measured.
+	Usage *int              `json:"usage,omitempty" url:"usage,omitempty"`
+	User  *UserResponseData `json:"user,omitempty" url:"user,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FeatureCompanyUserResponseData) GetAccess() bool {
+	if f == nil {
+		return false
+	}
+	return f.Access
+}
+
+func (f *FeatureCompanyUserResponseData) GetAllocation() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Allocation
+}
+
+func (f *FeatureCompanyUserResponseData) GetAllocationType() FeatureCompanyUserResponseDataAllocationType {
+	if f == nil {
+		return ""
+	}
+	return f.AllocationType
+}
+
+func (f *FeatureCompanyUserResponseData) GetCompany() *CompanyDetailResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Company
+}
+
+func (f *FeatureCompanyUserResponseData) GetEntitlementID() string {
+	if f == nil {
+		return ""
+	}
+	return f.EntitlementID
+}
+
+func (f *FeatureCompanyUserResponseData) GetEntitlementType() string {
+	if f == nil {
+		return ""
+	}
+	return f.EntitlementType
+}
+
+func (f *FeatureCompanyUserResponseData) GetFeature() *FeatureDetailResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Feature
+}
+
+func (f *FeatureCompanyUserResponseData) GetMetricResetAt() *time.Time {
+	if f == nil {
+		return nil
+	}
+	return f.MetricResetAt
+}
+
+func (f *FeatureCompanyUserResponseData) GetMonthReset() *string {
+	if f == nil {
+		return nil
+	}
+	return f.MonthReset
+}
+
+func (f *FeatureCompanyUserResponseData) GetPeriod() *string {
+	if f == nil {
+		return nil
+	}
+	return f.Period
+}
+
+func (f *FeatureCompanyUserResponseData) GetPlan() *PlanResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Plan
+}
+
+func (f *FeatureCompanyUserResponseData) GetUsage() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Usage
+}
+
+func (f *FeatureCompanyUserResponseData) GetUser() *UserResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.User
+}
+
+func (f *FeatureCompanyUserResponseData) GetExtraProperties() map[string]interface{} {
+	return f.extraProperties
+}
+
+func (f *FeatureCompanyUserResponseData) UnmarshalJSON(data []byte) error {
+	type embed FeatureCompanyUserResponseData
+	var unmarshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed: embed(*f),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*f = FeatureCompanyUserResponseData(unmarshaler.embed)
+	f.MetricResetAt = unmarshaler.MetricResetAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FeatureCompanyUserResponseData) MarshalJSON() ([]byte, error) {
+	type embed FeatureCompanyUserResponseData
+	var marshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed:         embed(*f),
+		MetricResetAt: internal.NewOptionalDateTime(f.MetricResetAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (f *FeatureCompanyUserResponseData) String() string {
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
+}
+
+// The type of allocation that is being used.
+type FeatureCompanyUserResponseDataAllocationType string
+
+const (
+	FeatureCompanyUserResponseDataAllocationTypeBoolean   FeatureCompanyUserResponseDataAllocationType = "boolean"
+	FeatureCompanyUserResponseDataAllocationTypeNumeric   FeatureCompanyUserResponseDataAllocationType = "numeric"
+	FeatureCompanyUserResponseDataAllocationTypeTrait     FeatureCompanyUserResponseDataAllocationType = "trait"
+	FeatureCompanyUserResponseDataAllocationTypeUnlimited FeatureCompanyUserResponseDataAllocationType = "unlimited"
+)
+
+func NewFeatureCompanyUserResponseDataAllocationTypeFromString(s string) (FeatureCompanyUserResponseDataAllocationType, error) {
+	switch s {
+	case "boolean":
+		return FeatureCompanyUserResponseDataAllocationTypeBoolean, nil
+	case "numeric":
+		return FeatureCompanyUserResponseDataAllocationTypeNumeric, nil
+	case "trait":
+		return FeatureCompanyUserResponseDataAllocationTypeTrait, nil
+	case "unlimited":
+		return FeatureCompanyUserResponseDataAllocationTypeUnlimited, nil
+	}
+	var t FeatureCompanyUserResponseDataAllocationType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (f FeatureCompanyUserResponseDataAllocationType) Ptr() *FeatureCompanyUserResponseDataAllocationType {
+	return &f
+}
+
+// Input parameters
+type CountCompanyOverridesParams struct {
+	// Filter company overrides by a single company ID (starting with comp\_)
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter company overrides by multiple company IDs (starting with comp\_)
+	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	// Filter company overrides by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter company overrides by multiple feature IDs (starting with feat\_)
+	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search for company overrides by feature or company name
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompanyOverridesParams) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CountCompanyOverridesParams) GetCompanyIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyIDs
+}
+
+func (c *CountCompanyOverridesParams) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CountCompanyOverridesParams) GetFeatureIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureIDs
+}
+
+func (c *CountCompanyOverridesParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountCompanyOverridesParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountCompanyOverridesParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountCompanyOverridesParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountCompanyOverridesParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCompanyOverridesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCompanyOverridesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCompanyOverridesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCompanyOverridesParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 type CountCompanyOverridesResponse struct {
@@ -175,7 +908,21 @@ type CountCompanyOverridesResponse struct {
 	Params *CountCompanyOverridesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompanyOverridesResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountCompanyOverridesResponse) GetParams() *CountCompanyOverridesParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountCompanyOverridesResponse) GetExtraProperties() map[string]interface{} {
@@ -189,24 +936,95 @@ func (c *CountCompanyOverridesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountCompanyOverridesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountCompanyOverridesResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+type CountFeatureCompaniesParams struct {
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountFeatureCompaniesParams) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CountFeatureCompaniesParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountFeatureCompaniesParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountFeatureCompaniesParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountFeatureCompaniesParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountFeatureCompaniesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountFeatureCompaniesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountFeatureCompaniesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountFeatureCompaniesParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -218,7 +1036,21 @@ type CountFeatureCompaniesResponse struct {
 	Params *CountFeatureCompaniesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountFeatureCompaniesResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountFeatureCompaniesResponse) GetParams() *CountFeatureCompaniesParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountFeatureCompaniesResponse) GetExtraProperties() map[string]interface{} {
@@ -232,24 +1064,119 @@ func (c *CountFeatureCompaniesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountFeatureCompaniesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountFeatureCompaniesResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+type CountFeatureUsageParams struct {
+	CompanyID   *string           `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyKeys map[string]string `json:"company_keys,omitempty" url:"company_keys,omitempty"`
+	FeatureIDs  []string          `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset                      *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q                           *string `json:"q,omitempty" url:"q,omitempty"`
+	WithoutNegativeEntitlements *bool   `json:"without_negative_entitlements,omitempty" url:"without_negative_entitlements,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountFeatureUsageParams) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CountFeatureUsageParams) GetCompanyKeys() map[string]string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyKeys
+}
+
+func (c *CountFeatureUsageParams) GetFeatureIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureIDs
+}
+
+func (c *CountFeatureUsageParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountFeatureUsageParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountFeatureUsageParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountFeatureUsageParams) GetWithoutNegativeEntitlements() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutNegativeEntitlements
+}
+
+func (c *CountFeatureUsageParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountFeatureUsageParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountFeatureUsageParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountFeatureUsageParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountFeatureUsageParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -261,7 +1188,21 @@ type CountFeatureUsageResponse struct {
 	Params *CountFeatureUsageParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountFeatureUsageResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountFeatureUsageResponse) GetParams() *CountFeatureUsageParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountFeatureUsageResponse) GetExtraProperties() map[string]interface{} {
@@ -275,24 +1216,95 @@ func (c *CountFeatureUsageResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountFeatureUsageResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountFeatureUsageResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+type CountFeatureUsersParams struct {
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountFeatureUsersParams) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CountFeatureUsersParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountFeatureUsersParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountFeatureUsersParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountFeatureUsersParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountFeatureUsersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountFeatureUsersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountFeatureUsersParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountFeatureUsersParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -304,7 +1316,21 @@ type CountFeatureUsersResponse struct {
 	Params *CountFeatureUsersParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountFeatureUsersResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountFeatureUsersResponse) GetParams() *CountFeatureUsersParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountFeatureUsersResponse) GetExtraProperties() map[string]interface{} {
@@ -318,24 +1344,142 @@ func (c *CountFeatureUsersResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountFeatureUsersResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountFeatureUsersResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+type CountPlanEntitlementsParams struct {
+	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
+	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
+	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	// Search for plan entitlements by feature or company name
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter plan entitlements only with metered products
+	WithMeteredProducts *bool `json:"with_metered_products,omitempty" url:"with_metered_products,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountPlanEntitlementsParams) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CountPlanEntitlementsParams) GetFeatureIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureIDs
+}
+
+func (c *CountPlanEntitlementsParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountPlanEntitlementsParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountPlanEntitlementsParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountPlanEntitlementsParams) GetPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanID
+}
+
+func (c *CountPlanEntitlementsParams) GetPlanIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanIDs
+}
+
+func (c *CountPlanEntitlementsParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountPlanEntitlementsParams) GetWithMeteredProducts() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithMeteredProducts
+}
+
+func (c *CountPlanEntitlementsParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountPlanEntitlementsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountPlanEntitlementsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountPlanEntitlementsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountPlanEntitlementsParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -347,7 +1491,21 @@ type CountPlanEntitlementsResponse struct {
 	Params *CountPlanEntitlementsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountPlanEntitlementsResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountPlanEntitlementsResponse) GetParams() *CountPlanEntitlementsParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountPlanEntitlementsResponse) GetExtraProperties() map[string]interface{} {
@@ -361,24 +1519,22 @@ func (c *CountPlanEntitlementsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountPlanEntitlementsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountPlanEntitlementsResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -387,6 +1543,7 @@ func (c *CountPlanEntitlementsResponse) String() string {
 type CreateCompanyOverrideRequestBodyMetricPeriod string
 
 const (
+	CreateCompanyOverrideRequestBodyMetricPeriodAllTime      CreateCompanyOverrideRequestBodyMetricPeriod = "all_time"
 	CreateCompanyOverrideRequestBodyMetricPeriodBilling      CreateCompanyOverrideRequestBodyMetricPeriod = "billing"
 	CreateCompanyOverrideRequestBodyMetricPeriodCurrentMonth CreateCompanyOverrideRequestBodyMetricPeriod = "current_month"
 	CreateCompanyOverrideRequestBodyMetricPeriodCurrentWeek  CreateCompanyOverrideRequestBodyMetricPeriod = "current_week"
@@ -395,6 +1552,8 @@ const (
 
 func NewCreateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (CreateCompanyOverrideRequestBodyMetricPeriod, error) {
 	switch s {
+	case "all_time":
+		return CreateCompanyOverrideRequestBodyMetricPeriodAllTime, nil
 	case "billing":
 		return CreateCompanyOverrideRequestBodyMetricPeriodBilling, nil
 	case "current_month":
@@ -409,6 +1568,28 @@ func NewCreateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (Create
 }
 
 func (c CreateCompanyOverrideRequestBodyMetricPeriod) Ptr() *CreateCompanyOverrideRequestBodyMetricPeriod {
+	return &c
+}
+
+type CreateCompanyOverrideRequestBodyMetricPeriodMonthReset string
+
+const (
+	CreateCompanyOverrideRequestBodyMetricPeriodMonthResetFirstOfMonth CreateCompanyOverrideRequestBodyMetricPeriodMonthReset = "first_of_month"
+	CreateCompanyOverrideRequestBodyMetricPeriodMonthResetBillingCycle CreateCompanyOverrideRequestBodyMetricPeriodMonthReset = "billing_cycle"
+)
+
+func NewCreateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString(s string) (CreateCompanyOverrideRequestBodyMetricPeriodMonthReset, error) {
+	switch s {
+	case "first_of_month":
+		return CreateCompanyOverrideRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
+	case "billing_cycle":
+		return CreateCompanyOverrideRequestBodyMetricPeriodMonthResetBillingCycle, nil
+	}
+	var t CreateCompanyOverrideRequestBodyMetricPeriodMonthReset
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateCompanyOverrideRequestBodyMetricPeriodMonthReset) Ptr() *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset {
 	return &c
 }
 
@@ -446,7 +1627,21 @@ type CreateCompanyOverrideResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateCompanyOverrideResponse) GetData() *CompanyOverrideResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateCompanyOverrideResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CreateCompanyOverrideResponse) GetExtraProperties() map[string]interface{} {
@@ -460,24 +1655,22 @@ func (c *CreateCompanyOverrideResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CreateCompanyOverrideResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CreateCompanyOverrideResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -486,6 +1679,7 @@ func (c *CreateCompanyOverrideResponse) String() string {
 type CreatePlanEntitlementRequestBodyMetricPeriod string
 
 const (
+	CreatePlanEntitlementRequestBodyMetricPeriodAllTime      CreatePlanEntitlementRequestBodyMetricPeriod = "all_time"
 	CreatePlanEntitlementRequestBodyMetricPeriodBilling      CreatePlanEntitlementRequestBodyMetricPeriod = "billing"
 	CreatePlanEntitlementRequestBodyMetricPeriodCurrentMonth CreatePlanEntitlementRequestBodyMetricPeriod = "current_month"
 	CreatePlanEntitlementRequestBodyMetricPeriodCurrentWeek  CreatePlanEntitlementRequestBodyMetricPeriod = "current_week"
@@ -494,6 +1688,8 @@ const (
 
 func NewCreatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (CreatePlanEntitlementRequestBodyMetricPeriod, error) {
 	switch s {
+	case "all_time":
+		return CreatePlanEntitlementRequestBodyMetricPeriodAllTime, nil
 	case "billing":
 		return CreatePlanEntitlementRequestBodyMetricPeriodBilling, nil
 	case "current_month":
@@ -508,6 +1704,28 @@ func NewCreatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (Create
 }
 
 func (c CreatePlanEntitlementRequestBodyMetricPeriod) Ptr() *CreatePlanEntitlementRequestBodyMetricPeriod {
+	return &c
+}
+
+type CreatePlanEntitlementRequestBodyMetricPeriodMonthReset string
+
+const (
+	CreatePlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth CreatePlanEntitlementRequestBodyMetricPeriodMonthReset = "first_of_month"
+	CreatePlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle CreatePlanEntitlementRequestBodyMetricPeriodMonthReset = "billing_cycle"
+)
+
+func NewCreatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString(s string) (CreatePlanEntitlementRequestBodyMetricPeriodMonthReset, error) {
+	switch s {
+	case "first_of_month":
+		return CreatePlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
+	case "billing_cycle":
+		return CreatePlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle, nil
+	}
+	var t CreatePlanEntitlementRequestBodyMetricPeriodMonthReset
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreatePlanEntitlementRequestBodyMetricPeriodMonthReset) Ptr() *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset {
 	return &c
 }
 
@@ -545,7 +1763,21 @@ type CreatePlanEntitlementResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePlanEntitlementResponse) GetData() *PlanEntitlementResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreatePlanEntitlementResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CreatePlanEntitlementResponse) GetExtraProperties() map[string]interface{} {
@@ -559,24 +1791,22 @@ func (c *CreatePlanEntitlementResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CreatePlanEntitlementResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CreatePlanEntitlementResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -588,7 +1818,21 @@ type DeleteCompanyOverrideResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteCompanyOverrideResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteCompanyOverrideResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteCompanyOverrideResponse) GetExtraProperties() map[string]interface{} {
@@ -602,24 +1846,22 @@ func (d *DeleteCompanyOverrideResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteCompanyOverrideResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteCompanyOverrideResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
@@ -631,7 +1873,21 @@ type DeletePlanEntitlementResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletePlanEntitlementResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeletePlanEntitlementResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeletePlanEntitlementResponse) GetExtraProperties() map[string]interface{} {
@@ -645,24 +1901,22 @@ func (d *DeletePlanEntitlementResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeletePlanEntitlementResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeletePlanEntitlementResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
@@ -674,7 +1928,21 @@ type GetCompanyOverrideResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCompanyOverrideResponse) GetData() *CompanyOverrideResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetCompanyOverrideResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetCompanyOverrideResponse) GetExtraProperties() map[string]interface{} {
@@ -688,24 +1956,69 @@ func (g *GetCompanyOverrideResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetCompanyOverrideResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetCompanyOverrideResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type GetFeatureUsageByCompanyParams struct {
+	Keys map[string]interface{} `json:"keys,omitempty" url:"keys,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetFeatureUsageByCompanyParams) GetKeys() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Keys
+}
+
+func (g *GetFeatureUsageByCompanyParams) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetFeatureUsageByCompanyParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetFeatureUsageByCompanyParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetFeatureUsageByCompanyParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetFeatureUsageByCompanyParams) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -717,7 +2030,21 @@ type GetFeatureUsageByCompanyResponse struct {
 	Params *GetFeatureUsageByCompanyParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetFeatureUsageByCompanyResponse) GetData() *FeatureUsageDetailResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetFeatureUsageByCompanyResponse) GetParams() *GetFeatureUsageByCompanyParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetFeatureUsageByCompanyResponse) GetExtraProperties() map[string]interface{} {
@@ -731,24 +2058,22 @@ func (g *GetFeatureUsageByCompanyResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetFeatureUsageByCompanyResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetFeatureUsageByCompanyResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -760,7 +2085,21 @@ type GetPlanEntitlementResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetPlanEntitlementResponse) GetData() *PlanEntitlementResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetPlanEntitlementResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetPlanEntitlementResponse) GetExtraProperties() map[string]interface{} {
@@ -774,27 +2113,136 @@ func (g *GetPlanEntitlementResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetPlanEntitlementResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetPlanEntitlementResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type ListCompanyOverridesParams struct {
+	// Filter company overrides by a single company ID (starting with comp\_)
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter company overrides by multiple company IDs (starting with comp\_)
+	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	// Filter company overrides by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter company overrides by multiple feature IDs (starting with feat\_)
+	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search for company overrides by feature or company name
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyOverridesParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListCompanyOverridesParams) GetCompanyIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyIDs
+}
+
+func (l *ListCompanyOverridesParams) GetFeatureID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureID
+}
+
+func (l *ListCompanyOverridesParams) GetFeatureIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureIDs
+}
+
+func (l *ListCompanyOverridesParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListCompanyOverridesParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCompanyOverridesParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCompanyOverridesParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListCompanyOverridesParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCompanyOverridesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompanyOverridesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompanyOverridesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompanyOverridesParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 type ListCompanyOverridesResponse struct {
@@ -804,7 +2252,21 @@ type ListCompanyOverridesResponse struct {
 	Params *ListCompanyOverridesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyOverridesResponse) GetData() []*CompanyOverrideResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCompanyOverridesResponse) GetParams() *ListCompanyOverridesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListCompanyOverridesResponse) GetExtraProperties() map[string]interface{} {
@@ -818,24 +2280,95 @@ func (l *ListCompanyOverridesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListCompanyOverridesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListCompanyOverridesResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListFeatureCompaniesParams struct {
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListFeatureCompaniesParams) GetFeatureID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureID
+}
+
+func (l *ListFeatureCompaniesParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListFeatureCompaniesParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListFeatureCompaniesParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListFeatureCompaniesParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListFeatureCompaniesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListFeatureCompaniesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListFeatureCompaniesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListFeatureCompaniesParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -848,7 +2381,21 @@ type ListFeatureCompaniesResponse struct {
 	Params *ListFeatureCompaniesParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListFeatureCompaniesResponse) GetData() []*FeatureCompanyResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListFeatureCompaniesResponse) GetParams() *ListFeatureCompaniesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListFeatureCompaniesResponse) GetExtraProperties() map[string]interface{} {
@@ -862,24 +2409,119 @@ func (l *ListFeatureCompaniesResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListFeatureCompaniesResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListFeatureCompaniesResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListFeatureUsageParams struct {
+	CompanyID   *string           `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyKeys map[string]string `json:"company_keys,omitempty" url:"company_keys,omitempty"`
+	FeatureIDs  []string          `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset                      *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q                           *string `json:"q,omitempty" url:"q,omitempty"`
+	WithoutNegativeEntitlements *bool   `json:"without_negative_entitlements,omitempty" url:"without_negative_entitlements,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListFeatureUsageParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListFeatureUsageParams) GetCompanyKeys() map[string]string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyKeys
+}
+
+func (l *ListFeatureUsageParams) GetFeatureIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureIDs
+}
+
+func (l *ListFeatureUsageParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListFeatureUsageParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListFeatureUsageParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListFeatureUsageParams) GetWithoutNegativeEntitlements() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutNegativeEntitlements
+}
+
+func (l *ListFeatureUsageParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListFeatureUsageParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListFeatureUsageParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListFeatureUsageParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListFeatureUsageParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -892,7 +2534,21 @@ type ListFeatureUsageResponse struct {
 	Params *ListFeatureUsageParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListFeatureUsageResponse) GetData() []*FeatureUsageResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListFeatureUsageResponse) GetParams() *ListFeatureUsageParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListFeatureUsageResponse) GetExtraProperties() map[string]interface{} {
@@ -906,24 +2562,95 @@ func (l *ListFeatureUsageResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListFeatureUsageResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListFeatureUsageResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListFeatureUsersParams struct {
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListFeatureUsersParams) GetFeatureID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureID
+}
+
+func (l *ListFeatureUsersParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListFeatureUsersParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListFeatureUsersParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListFeatureUsersParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListFeatureUsersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListFeatureUsersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListFeatureUsersParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListFeatureUsersParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -936,7 +2663,21 @@ type ListFeatureUsersResponse struct {
 	Params *ListFeatureUsersParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListFeatureUsersResponse) GetData() []*FeatureCompanyUserResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListFeatureUsersResponse) GetParams() *ListFeatureUsersParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListFeatureUsersResponse) GetExtraProperties() map[string]interface{} {
@@ -950,24 +2691,142 @@ func (l *ListFeatureUsersResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListFeatureUsersResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListFeatureUsersResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListPlanEntitlementsParams struct {
+	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
+	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
+	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	// Search for plan entitlements by feature or company name
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter plan entitlements only with metered products
+	WithMeteredProducts *bool `json:"with_metered_products,omitempty" url:"with_metered_products,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPlanEntitlementsParams) GetFeatureID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureID
+}
+
+func (l *ListPlanEntitlementsParams) GetFeatureIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureIDs
+}
+
+func (l *ListPlanEntitlementsParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListPlanEntitlementsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListPlanEntitlementsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListPlanEntitlementsParams) GetPlanID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanID
+}
+
+func (l *ListPlanEntitlementsParams) GetPlanIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanIDs
+}
+
+func (l *ListPlanEntitlementsParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListPlanEntitlementsParams) GetWithMeteredProducts() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithMeteredProducts
+}
+
+func (l *ListPlanEntitlementsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListPlanEntitlementsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListPlanEntitlementsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListPlanEntitlementsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListPlanEntitlementsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -980,7 +2839,21 @@ type ListPlanEntitlementsResponse struct {
 	Params *ListPlanEntitlementsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPlanEntitlementsResponse) GetData() []*PlanEntitlementResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListPlanEntitlementsResponse) GetParams() *ListPlanEntitlementsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListPlanEntitlementsResponse) GetExtraProperties() map[string]interface{} {
@@ -994,24 +2867,22 @@ func (l *ListPlanEntitlementsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListPlanEntitlementsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListPlanEntitlementsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -1020,6 +2891,7 @@ func (l *ListPlanEntitlementsResponse) String() string {
 type UpdateCompanyOverrideRequestBodyMetricPeriod string
 
 const (
+	UpdateCompanyOverrideRequestBodyMetricPeriodAllTime      UpdateCompanyOverrideRequestBodyMetricPeriod = "all_time"
 	UpdateCompanyOverrideRequestBodyMetricPeriodBilling      UpdateCompanyOverrideRequestBodyMetricPeriod = "billing"
 	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentMonth UpdateCompanyOverrideRequestBodyMetricPeriod = "current_month"
 	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentWeek  UpdateCompanyOverrideRequestBodyMetricPeriod = "current_week"
@@ -1028,6 +2900,8 @@ const (
 
 func NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (UpdateCompanyOverrideRequestBodyMetricPeriod, error) {
 	switch s {
+	case "all_time":
+		return UpdateCompanyOverrideRequestBodyMetricPeriodAllTime, nil
 	case "billing":
 		return UpdateCompanyOverrideRequestBodyMetricPeriodBilling, nil
 	case "current_month":
@@ -1042,6 +2916,28 @@ func NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (Update
 }
 
 func (u UpdateCompanyOverrideRequestBodyMetricPeriod) Ptr() *UpdateCompanyOverrideRequestBodyMetricPeriod {
+	return &u
+}
+
+type UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset string
+
+const (
+	UpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFirstOfMonth UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset = "first_of_month"
+	UpdateCompanyOverrideRequestBodyMetricPeriodMonthResetBillingCycle UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset = "billing_cycle"
+)
+
+func NewUpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString(s string) (UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset, error) {
+	switch s {
+	case "first_of_month":
+		return UpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
+	case "billing_cycle":
+		return UpdateCompanyOverrideRequestBodyMetricPeriodMonthResetBillingCycle, nil
+	}
+	var t UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset) Ptr() *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset {
 	return &u
 }
 
@@ -1079,7 +2975,21 @@ type UpdateCompanyOverrideResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateCompanyOverrideResponse) GetData() *CompanyOverrideResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateCompanyOverrideResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpdateCompanyOverrideResponse) GetExtraProperties() map[string]interface{} {
@@ -1093,24 +3003,22 @@ func (u *UpdateCompanyOverrideResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpdateCompanyOverrideResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpdateCompanyOverrideResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
@@ -1119,6 +3027,7 @@ func (u *UpdateCompanyOverrideResponse) String() string {
 type UpdatePlanEntitlementRequestBodyMetricPeriod string
 
 const (
+	UpdatePlanEntitlementRequestBodyMetricPeriodAllTime      UpdatePlanEntitlementRequestBodyMetricPeriod = "all_time"
 	UpdatePlanEntitlementRequestBodyMetricPeriodBilling      UpdatePlanEntitlementRequestBodyMetricPeriod = "billing"
 	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentMonth UpdatePlanEntitlementRequestBodyMetricPeriod = "current_month"
 	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentWeek  UpdatePlanEntitlementRequestBodyMetricPeriod = "current_week"
@@ -1127,6 +3036,8 @@ const (
 
 func NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (UpdatePlanEntitlementRequestBodyMetricPeriod, error) {
 	switch s {
+	case "all_time":
+		return UpdatePlanEntitlementRequestBodyMetricPeriodAllTime, nil
 	case "billing":
 		return UpdatePlanEntitlementRequestBodyMetricPeriodBilling, nil
 	case "current_month":
@@ -1141,6 +3052,28 @@ func NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (Update
 }
 
 func (u UpdatePlanEntitlementRequestBodyMetricPeriod) Ptr() *UpdatePlanEntitlementRequestBodyMetricPeriod {
+	return &u
+}
+
+type UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset string
+
+const (
+	UpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset = "first_of_month"
+	UpdatePlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset = "billing_cycle"
+)
+
+func NewUpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString(s string) (UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset, error) {
+	switch s {
+	case "first_of_month":
+		return UpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
+	case "billing_cycle":
+		return UpdatePlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle, nil
+	}
+	var t UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset) Ptr() *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset {
 	return &u
 }
 
@@ -1178,7 +3111,21 @@ type UpdatePlanEntitlementResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatePlanEntitlementResponse) GetData() *PlanEntitlementResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdatePlanEntitlementResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpdatePlanEntitlementResponse) GetExtraProperties() map[string]interface{} {
@@ -1192,41 +3139,68 @@ func (u *UpdatePlanEntitlementResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpdatePlanEntitlementResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpdatePlanEntitlementResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
 }
 
 type UpdateCompanyOverrideRequestBody struct {
-	MetricPeriod *UpdateCompanyOverrideRequestBodyMetricPeriod `json:"metric_period,omitempty" url:"-"`
-	ValueBool    *bool                                         `json:"value_bool,omitempty" url:"-"`
-	ValueNumeric *int                                          `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID *string                                       `json:"value_trait_id,omitempty" url:"-"`
-	ValueType    UpdateCompanyOverrideRequestBodyValueType     `json:"value_type" url:"-"`
+	ExpirationDate         *time.Time                                              `json:"expiration_date,omitempty" url:"-"`
+	MeteredMonthlyPriceID  *string                                                 `json:"metered_monthly_price_id,omitempty" url:"-"`
+	MeteredYearlyPriceID   *string                                                 `json:"metered_yearly_price_id,omitempty" url:"-"`
+	MetricPeriod           *UpdateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              UpdateCompanyOverrideRequestBodyValueType               `json:"value_type" url:"-"`
+}
+
+func (u *UpdateCompanyOverrideRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCompanyOverrideRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateCompanyOverrideRequestBody(body)
+	return nil
+}
+
+func (u *UpdateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateCompanyOverrideRequestBody
+	var marshaler = struct {
+		embed
+		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
+	}{
+		embed:          embed(*u),
+		ExpirationDate: internal.NewOptionalDateTime(u.ExpirationDate),
+	}
+	return json.Marshal(marshaler)
 }
 
 type UpdatePlanEntitlementRequestBody struct {
-	MetricPeriod *UpdatePlanEntitlementRequestBodyMetricPeriod `json:"metric_period,omitempty" url:"-"`
-	ValueBool    *bool                                         `json:"value_bool,omitempty" url:"-"`
-	ValueNumeric *int                                          `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID *string                                       `json:"value_trait_id,omitempty" url:"-"`
-	ValueType    UpdatePlanEntitlementRequestBodyValueType     `json:"value_type" url:"-"`
+	MeteredMonthlyPriceID  *string                                                 `json:"metered_monthly_price_id,omitempty" url:"-"`
+	MeteredYearlyPriceID   *string                                                 `json:"metered_yearly_price_id,omitempty" url:"-"`
+	MetricPeriod           *UpdatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              UpdatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
 }

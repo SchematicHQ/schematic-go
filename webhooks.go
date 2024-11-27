@@ -5,7 +5,8 @@ package schematichq
 import (
 	json "encoding/json"
 	fmt "fmt"
-	core "github.com/schematichq/schematic-go/core"
+	internal "github.com/schematichq/schematic-go/internal"
+	time "time"
 )
 
 type CountWebhookEventsRequest struct {
@@ -50,13 +51,368 @@ type ListWebhooksRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
+type WebhookEventDetailResponseData struct {
+	CreatedAt    time.Time            `json:"created_at" url:"created_at"`
+	ID           string               `json:"id" url:"id"`
+	Payload      *string              `json:"payload,omitempty" url:"payload,omitempty"`
+	RequestType  string               `json:"request_type" url:"request_type"`
+	ResponseCode *int                 `json:"response_code,omitempty" url:"response_code,omitempty"`
+	SentAt       *time.Time           `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+	Status       string               `json:"status" url:"status"`
+	UpdatedAt    time.Time            `json:"updated_at" url:"updated_at"`
+	Webhook      *WebhookResponseData `json:"webhook,omitempty" url:"webhook,omitempty"`
+	WebhookID    string               `json:"webhook_id" url:"webhook_id"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhookEventDetailResponseData) GetCreatedAt() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.CreatedAt
+}
+
+func (w *WebhookEventDetailResponseData) GetID() string {
+	if w == nil {
+		return ""
+	}
+	return w.ID
+}
+
+func (w *WebhookEventDetailResponseData) GetPayload() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Payload
+}
+
+func (w *WebhookEventDetailResponseData) GetRequestType() string {
+	if w == nil {
+		return ""
+	}
+	return w.RequestType
+}
+
+func (w *WebhookEventDetailResponseData) GetResponseCode() *int {
+	if w == nil {
+		return nil
+	}
+	return w.ResponseCode
+}
+
+func (w *WebhookEventDetailResponseData) GetSentAt() *time.Time {
+	if w == nil {
+		return nil
+	}
+	return w.SentAt
+}
+
+func (w *WebhookEventDetailResponseData) GetStatus() string {
+	if w == nil {
+		return ""
+	}
+	return w.Status
+}
+
+func (w *WebhookEventDetailResponseData) GetUpdatedAt() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.UpdatedAt
+}
+
+func (w *WebhookEventDetailResponseData) GetWebhook() *WebhookResponseData {
+	if w == nil {
+		return nil
+	}
+	return w.Webhook
+}
+
+func (w *WebhookEventDetailResponseData) GetWebhookID() string {
+	if w == nil {
+		return ""
+	}
+	return w.WebhookID
+}
+
+func (w *WebhookEventDetailResponseData) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhookEventDetailResponseData) UnmarshalJSON(data []byte) error {
+	type embed WebhookEventDetailResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		SentAt    *internal.DateTime `json:"sent_at,omitempty"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhookEventDetailResponseData(unmarshaler.embed)
+	w.CreatedAt = unmarshaler.CreatedAt.Time()
+	w.SentAt = unmarshaler.SentAt.TimePtr()
+	w.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhookEventDetailResponseData) MarshalJSON() ([]byte, error) {
+	type embed WebhookEventDetailResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		SentAt    *internal.DateTime `json:"sent_at,omitempty"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*w),
+		CreatedAt: internal.NewDateTime(w.CreatedAt),
+		SentAt:    internal.NewOptionalDateTime(w.SentAt),
+		UpdatedAt: internal.NewDateTime(w.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhookEventDetailResponseData) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhookResponseData struct {
+	CreatedAt    time.Time `json:"created_at" url:"created_at"`
+	ID           string    `json:"id" url:"id"`
+	Name         string    `json:"name" url:"name"`
+	RequestTypes []string  `json:"request_types,omitempty" url:"request_types,omitempty"`
+	Status       string    `json:"status" url:"status"`
+	UpdatedAt    time.Time `json:"updated_at" url:"updated_at"`
+	URL          string    `json:"url" url:"url"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhookResponseData) GetCreatedAt() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.CreatedAt
+}
+
+func (w *WebhookResponseData) GetID() string {
+	if w == nil {
+		return ""
+	}
+	return w.ID
+}
+
+func (w *WebhookResponseData) GetName() string {
+	if w == nil {
+		return ""
+	}
+	return w.Name
+}
+
+func (w *WebhookResponseData) GetRequestTypes() []string {
+	if w == nil {
+		return nil
+	}
+	return w.RequestTypes
+}
+
+func (w *WebhookResponseData) GetStatus() string {
+	if w == nil {
+		return ""
+	}
+	return w.Status
+}
+
+func (w *WebhookResponseData) GetUpdatedAt() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.UpdatedAt
+}
+
+func (w *WebhookResponseData) GetURL() string {
+	if w == nil {
+		return ""
+	}
+	return w.URL
+}
+
+func (w *WebhookResponseData) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhookResponseData) UnmarshalJSON(data []byte) error {
+	type embed WebhookResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhookResponseData(unmarshaler.embed)
+	w.CreatedAt = unmarshaler.CreatedAt.Time()
+	w.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhookResponseData) MarshalJSON() ([]byte, error) {
+	type embed WebhookResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*w),
+		CreatedAt: internal.NewDateTime(w.CreatedAt),
+		UpdatedAt: internal.NewDateTime(w.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhookResponseData) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// Input parameters
+type CountWebhookEventsParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q         *string `json:"q,omitempty" url:"q,omitempty"`
+	WebhookID *string `json:"webhook_id,omitempty" url:"webhook_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountWebhookEventsParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountWebhookEventsParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountWebhookEventsParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountWebhookEventsParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountWebhookEventsParams) GetWebhookID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.WebhookID
+}
+
+func (c *CountWebhookEventsParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountWebhookEventsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountWebhookEventsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountWebhookEventsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountWebhookEventsParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 type CountWebhookEventsResponse struct {
 	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *CountWebhookEventsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountWebhookEventsResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountWebhookEventsResponse) GetParams() *CountWebhookEventsParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountWebhookEventsResponse) GetExtraProperties() map[string]interface{} {
@@ -70,24 +426,87 @@ func (c *CountWebhookEventsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountWebhookEventsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountWebhookEventsResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+type CountWebhooksParams struct {
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountWebhooksParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountWebhooksParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountWebhooksParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountWebhooksParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountWebhooksParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountWebhooksParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountWebhooksParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountWebhooksParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -99,7 +518,21 @@ type CountWebhooksResponse struct {
 	Params *CountWebhooksParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CountWebhooksResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountWebhooksResponse) GetParams() *CountWebhooksParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CountWebhooksResponse) GetExtraProperties() map[string]interface{} {
@@ -113,24 +546,22 @@ func (c *CountWebhooksResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CountWebhooksResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CountWebhooksResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -227,7 +658,21 @@ type CreateWebhookResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateWebhookResponse) GetData() *WebhookResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateWebhookResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
 }
 
 func (c *CreateWebhookResponse) GetExtraProperties() map[string]interface{} {
@@ -241,24 +686,22 @@ func (c *CreateWebhookResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CreateWebhookResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *c)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
-
-	c._rawJSON = json.RawMessage(data)
+	c.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (c *CreateWebhookResponse) String() string {
-	if len(c._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(c._rawJSON); err == nil {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(c); err == nil {
+	if value, err := internal.StringifyJSON(c); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
@@ -270,7 +713,21 @@ type DeleteWebhookResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteWebhookResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteWebhookResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
 }
 
 func (d *DeleteWebhookResponse) GetExtraProperties() map[string]interface{} {
@@ -284,24 +741,22 @@ func (d *DeleteWebhookResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*d = DeleteWebhookResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
 	if err != nil {
 		return err
 	}
 	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
+	d.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (d *DeleteWebhookResponse) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(d); err == nil {
+	if value, err := internal.StringifyJSON(d); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
@@ -313,7 +768,21 @@ type GetWebhookEventResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetWebhookEventResponse) GetData() *WebhookEventDetailResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetWebhookEventResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetWebhookEventResponse) GetExtraProperties() map[string]interface{} {
@@ -327,24 +796,22 @@ func (g *GetWebhookEventResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetWebhookEventResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetWebhookEventResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
@@ -356,7 +823,21 @@ type GetWebhookResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (g *GetWebhookResponse) GetData() *WebhookResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetWebhookResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
 }
 
 func (g *GetWebhookResponse) GetExtraProperties() map[string]interface{} {
@@ -370,27 +851,106 @@ func (g *GetWebhookResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*g = GetWebhookResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
 	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (g *GetWebhookResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type ListWebhookEventsParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q         *string `json:"q,omitempty" url:"q,omitempty"`
+	WebhookID *string `json:"webhook_id,omitempty" url:"webhook_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListWebhookEventsParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListWebhookEventsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListWebhookEventsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListWebhookEventsParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListWebhookEventsParams) GetWebhookID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.WebhookID
+}
+
+func (l *ListWebhookEventsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListWebhookEventsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListWebhookEventsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListWebhookEventsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListWebhookEventsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 type ListWebhookEventsResponse struct {
@@ -400,7 +960,21 @@ type ListWebhookEventsResponse struct {
 	Params *ListWebhookEventsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListWebhookEventsResponse) GetData() []*WebhookEventDetailResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListWebhookEventsResponse) GetParams() *ListWebhookEventsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListWebhookEventsResponse) GetExtraProperties() map[string]interface{} {
@@ -414,24 +988,87 @@ func (l *ListWebhookEventsResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListWebhookEventsResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListWebhookEventsResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+type ListWebhooksParams struct {
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListWebhooksParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListWebhooksParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListWebhooksParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListWebhooksParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListWebhooksParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListWebhooksParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListWebhooksParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListWebhooksParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -444,7 +1081,21 @@ type ListWebhooksResponse struct {
 	Params *ListWebhooksParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (l *ListWebhooksResponse) GetData() []*WebhookResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListWebhooksResponse) GetParams() *ListWebhooksParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
 }
 
 func (l *ListWebhooksResponse) GetExtraProperties() map[string]interface{} {
@@ -458,24 +1109,22 @@ func (l *ListWebhooksResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = ListWebhooksResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
 	}
 	l.extraProperties = extraProperties
-
-	l._rawJSON = json.RawMessage(data)
+	l.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (l *ListWebhooksResponse) String() string {
-	if len(l._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(l); err == nil {
+	if value, err := internal.StringifyJSON(l); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
@@ -594,7 +1243,21 @@ type UpdateWebhookResponse struct {
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateWebhookResponse) GetData() *WebhookResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateWebhookResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
 }
 
 func (u *UpdateWebhookResponse) GetExtraProperties() map[string]interface{} {
@@ -608,24 +1271,22 @@ func (u *UpdateWebhookResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*u = UpdateWebhookResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *u)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
 	}
 	u.extraProperties = extraProperties
-
-	u._rawJSON = json.RawMessage(data)
+	u.rawJSON = json.RawMessage(data)
 	return nil
 }
 
 func (u *UpdateWebhookResponse) String() string {
-	if len(u._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(u._rawJSON); err == nil {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := core.StringifyJSON(u); err == nil {
+	if value, err := internal.StringifyJSON(u); err == nil {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)

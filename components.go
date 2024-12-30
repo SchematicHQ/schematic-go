@@ -322,6 +322,7 @@ type ComponentPreviewResponseData struct {
 	Invoices                     []*InvoiceResponseData               `json:"invoices,omitempty" url:"invoices,omitempty"`
 	StripeEmbed                  *StripeEmbedInfo                     `json:"stripe_embed,omitempty" url:"stripe_embed,omitempty"`
 	Subscription                 *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
+	TrialPaymentMethodRequired   *bool                                `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
 	UpcomingInvoice              *InvoiceResponseData                 `json:"upcoming_invoice,omitempty" url:"upcoming_invoice,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -396,6 +397,13 @@ func (c *ComponentPreviewResponseData) GetSubscription() *CompanySubscriptionRes
 		return nil
 	}
 	return c.Subscription
+}
+
+func (c *ComponentPreviewResponseData) GetTrialPaymentMethodRequired() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.TrialPaymentMethodRequired
 }
 
 func (c *ComponentPreviewResponseData) GetUpcomingInvoice() *InvoiceResponseData {

@@ -10,9 +10,9 @@ import (
 )
 
 type CountCompaniesRequest struct {
-	// Filter companies by multiple company IDs (starts with comp\_)
+	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
-	// Filter companies by plan ID (starts with plan\_)
+	// Filter companies by plan ID (starts with plan_)
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
@@ -48,11 +48,11 @@ type CountEntityTraitDefinitionsRequest struct {
 }
 
 type CountUsersRequest struct {
-	// Filter users by company ID (starts with comp\_)
+	// Filter users by company ID (starts with comp_)
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
-	// Filter users by multiple user IDs (starts with user\_)
+	// Filter users by multiple user IDs (starts with user_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
-	// Filter users by plan ID (starts with plan\_)
+	// Filter users by plan ID (starts with plan_)
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
 	// Search for users by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
@@ -102,9 +102,9 @@ type CreateEntityTraitDefinitionRequestBody struct {
 }
 
 type ListCompaniesRequest struct {
-	// Filter companies by multiple company IDs (starts with comp\_)
+	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
-	// Filter companies by plan ID (starts with plan\_)
+	// Filter companies by plan ID (starts with plan_)
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
@@ -149,11 +149,11 @@ type ListEntityTraitDefinitionsRequest struct {
 }
 
 type ListUsersRequest struct {
-	// Filter users by company ID (starts with comp\_)
+	// Filter users by company ID (starts with comp_)
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
-	// Filter users by multiple user IDs (starts with user\_)
+	// Filter users by multiple user IDs (starts with user_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
-	// Filter users by plan ID (starts with plan\_)
+	// Filter users by plan ID (starts with plan_)
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
 	// Search for users by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
@@ -824,13 +824,13 @@ func (u *UpsertUserRequestBody) String() string {
 
 // Input parameters
 type CountCompaniesParams struct {
-	// Filter companies by multiple company IDs (starts with comp\_)
+	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter companies by plan ID (starts with plan\_)
+	// Filter companies by plan ID (starts with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
@@ -1417,15 +1417,15 @@ func (c CountEntityTraitDefinitionsResponseParamsTraitType) Ptr() *CountEntityTr
 
 // Input parameters
 type CountUsersParams struct {
-	// Filter users by company ID (starts with comp\_)
+	// Filter users by company ID (starts with comp_)
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
-	// Filter users by multiple user IDs (starts with user\_)
+	// Filter users by multiple user IDs (starts with user_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter users by plan ID (starts with plan\_)
+	// Filter users by plan ID (starts with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Search for users by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
@@ -2668,13 +2668,13 @@ func (g *GetUserResponse) String() string {
 
 // Input parameters
 type ListCompaniesParams struct {
-	// Filter companies by multiple company IDs (starts with comp\_)
+	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter companies by plan ID (starts with plan\_)
+	// Filter companies by plan ID (starts with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
@@ -3393,15 +3393,15 @@ func (l ListEntityTraitDefinitionsResponseParamsTraitType) Ptr() *ListEntityTrai
 
 // Input parameters
 type ListUsersParams struct {
-	// Filter users by company ID (starts with comp\_)
+	// Filter users by company ID (starts with comp_)
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
-	// Filter users by multiple user IDs (starts with user\_)
+	// Filter users by multiple user IDs (starts with user_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter users by plan ID (starts with plan\_)
+	// Filter users by plan ID (starts with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Search for users by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`

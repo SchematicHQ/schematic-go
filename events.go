@@ -226,11 +226,11 @@ func (e *EventBody) Accept(visitor EventBodyVisitor) error {
 }
 
 type EventBodyFlagCheck struct {
-	// Schematic company ID (starting with 'comp\_') of the company evaluated, if any
+	// Schematic company ID (starting with 'comp_') of the company evaluated, if any
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	// Report an error that occurred during the flag check
 	Error *string `json:"error,omitempty" url:"error,omitempty"`
-	// Schematic flag ID (starting with 'flag\_') for the flag matching the key, if any
+	// Schematic flag ID (starting with 'flag_') for the flag matching the key, if any
 	FlagID *string `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	// The key of the flag being checked
 	FlagKey string `json:"flag_key" url:"flag_key"`
@@ -240,9 +240,9 @@ type EventBodyFlagCheck struct {
 	ReqCompany map[string]string `json:"req_company,omitempty" url:"req_company,omitempty"`
 	// Key-value pairs used to to identify user for which the flag was checked
 	ReqUser map[string]string `json:"req_user,omitempty" url:"req_user,omitempty"`
-	// Schematic rule ID (starting with 'rule\_') of the rule that matched for the flag, if any
+	// Schematic rule ID (starting with 'rule_') of the rule that matched for the flag, if any
 	RuleID *string `json:"rule_id,omitempty" url:"rule_id,omitempty"`
-	// Schematic user ID (starting with 'user\_') of the user evaluated, if any
+	// Schematic user ID (starting with 'user_') of the user evaluated, if any
 	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
 	// The value of the flag for the given company and/or user
 	Value bool `json:"value" url:"value"`
@@ -1318,61 +1318,6 @@ func (g *GetEventSummariesResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (g *GetEventSummariesResponse) String() string {
-	if len(g.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GetEventSummaryBySubtypeResponse struct {
-	Data *EventSummaryResponseData `json:"data,omitempty" url:"data,omitempty"`
-	// Input parameters
-	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (g *GetEventSummaryBySubtypeResponse) GetData() *EventSummaryResponseData {
-	if g == nil {
-		return nil
-	}
-	return g.Data
-}
-
-func (g *GetEventSummaryBySubtypeResponse) GetParams() map[string]interface{} {
-	if g == nil {
-		return nil
-	}
-	return g.Params
-}
-
-func (g *GetEventSummaryBySubtypeResponse) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GetEventSummaryBySubtypeResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler GetEventSummaryBySubtypeResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GetEventSummaryBySubtypeResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-	g.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GetEventSummaryBySubtypeResponse) String() string {
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value

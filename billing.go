@@ -120,6 +120,195 @@ type SearchBillingPricesRequest struct {
 }
 
 // The created resource
+type BillingCouponResponseData struct {
+	AccountID        string                 `json:"account_id" url:"account_id"`
+	AmountOff        *int                   `json:"amount_off,omitempty" url:"amount_off,omitempty"`
+	Currency         *string                `json:"currency,omitempty" url:"currency,omitempty"`
+	Duration         *string                `json:"duration,omitempty" url:"duration,omitempty"`
+	DurationInMonths *int                   `json:"duration_in_months,omitempty" url:"duration_in_months,omitempty"`
+	EnvironmentID    string                 `json:"environment_id" url:"environment_id"`
+	ExternalID       string                 `json:"external_id" url:"external_id"`
+	ID               string                 `json:"id" url:"id"`
+	IsActive         bool                   `json:"is_active" url:"is_active"`
+	MaxRedemptions   *int                   `json:"max_redemptions,omitempty" url:"max_redemptions,omitempty"`
+	Metadata         map[string]interface{} `json:"metadata,omitempty" url:"metadata,omitempty"`
+	Name             string                 `json:"name" url:"name"`
+	PercentOff       *int                   `json:"percent_off,omitempty" url:"percent_off,omitempty"`
+	TimesRedeemed    int                    `json:"times_redeemed" url:"times_redeemed"`
+	ValidFrom        *time.Time             `json:"valid_from,omitempty" url:"valid_from,omitempty"`
+	ValidUntil       *time.Time             `json:"valid_until,omitempty" url:"valid_until,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingCouponResponseData) GetAccountID() string {
+	if b == nil {
+		return ""
+	}
+	return b.AccountID
+}
+
+func (b *BillingCouponResponseData) GetAmountOff() *int {
+	if b == nil {
+		return nil
+	}
+	return b.AmountOff
+}
+
+func (b *BillingCouponResponseData) GetCurrency() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Currency
+}
+
+func (b *BillingCouponResponseData) GetDuration() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Duration
+}
+
+func (b *BillingCouponResponseData) GetDurationInMonths() *int {
+	if b == nil {
+		return nil
+	}
+	return b.DurationInMonths
+}
+
+func (b *BillingCouponResponseData) GetEnvironmentID() string {
+	if b == nil {
+		return ""
+	}
+	return b.EnvironmentID
+}
+
+func (b *BillingCouponResponseData) GetExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ExternalID
+}
+
+func (b *BillingCouponResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingCouponResponseData) GetIsActive() bool {
+	if b == nil {
+		return false
+	}
+	return b.IsActive
+}
+
+func (b *BillingCouponResponseData) GetMaxRedemptions() *int {
+	if b == nil {
+		return nil
+	}
+	return b.MaxRedemptions
+}
+
+func (b *BillingCouponResponseData) GetMetadata() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.Metadata
+}
+
+func (b *BillingCouponResponseData) GetName() string {
+	if b == nil {
+		return ""
+	}
+	return b.Name
+}
+
+func (b *BillingCouponResponseData) GetPercentOff() *int {
+	if b == nil {
+		return nil
+	}
+	return b.PercentOff
+}
+
+func (b *BillingCouponResponseData) GetTimesRedeemed() int {
+	if b == nil {
+		return 0
+	}
+	return b.TimesRedeemed
+}
+
+func (b *BillingCouponResponseData) GetValidFrom() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.ValidFrom
+}
+
+func (b *BillingCouponResponseData) GetValidUntil() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.ValidUntil
+}
+
+func (b *BillingCouponResponseData) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingCouponResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingCouponResponseData
+	var unmarshaler = struct {
+		embed
+		ValidFrom  *internal.DateTime `json:"valid_from,omitempty"`
+		ValidUntil *internal.DateTime `json:"valid_until,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingCouponResponseData(unmarshaler.embed)
+	b.ValidFrom = unmarshaler.ValidFrom.TimePtr()
+	b.ValidUntil = unmarshaler.ValidUntil.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingCouponResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingCouponResponseData
+	var marshaler = struct {
+		embed
+		ValidFrom  *internal.DateTime `json:"valid_from,omitempty"`
+		ValidUntil *internal.DateTime `json:"valid_until,omitempty"`
+	}{
+		embed:      embed(*b),
+		ValidFrom:  internal.NewOptionalDateTime(b.ValidFrom),
+		ValidUntil: internal.NewOptionalDateTime(b.ValidUntil),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (b *BillingCouponResponseData) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+// The created resource
 type BillingCustomerResponseData struct {
 	CompanyID      *string    `json:"company_id,omitempty" url:"company_id,omitempty"`
 	DeletedAt      *time.Time `json:"deleted_at,omitempty" url:"deleted_at,omitempty"`
@@ -800,143 +989,87 @@ func (b *BillingProductResponseData) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
-type BillingSubscriptionResponseData struct {
-	CompanyID              *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
-	CreatedAt              time.Time              `json:"created_at" url:"created_at"`
-	Currency               string                 `json:"currency" url:"currency"`
-	CustomerExternalID     string                 `json:"customer_external_id" url:"customer_external_id"`
-	ExpiredAt              *time.Time             `json:"expired_at,omitempty" url:"expired_at,omitempty"`
-	ID                     string                 `json:"id" url:"id"`
-	Interval               string                 `json:"interval" url:"interval"`
-	Metadata               map[string]interface{} `json:"metadata,omitempty" url:"metadata,omitempty"`
-	PeriodEnd              int                    `json:"period_end" url:"period_end"`
-	PeriodStart            int                    `json:"period_start" url:"period_start"`
-	Status                 string                 `json:"status" url:"status"`
-	SubscriptionExternalID string                 `json:"subscription_external_id" url:"subscription_external_id"`
-	TotalPrice             int                    `json:"total_price" url:"total_price"`
-	TrialEnd               *int                   `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+type BillingSubscriptionDiscount struct {
+	CouponExternalID    string     `json:"coupon_external_id" url:"coupon_external_id"`
+	CustomerFacingCode  *string    `json:"customer_facing_code,omitempty" url:"customer_facing_code,omitempty"`
+	EndedAt             *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	ExternalID          string     `json:"external_id" url:"external_id"`
+	IsActive            bool       `json:"is_active" url:"is_active"`
+	PromoCodeExternalID *string    `json:"promo_code_external_id,omitempty" url:"promo_code_external_id,omitempty"`
+	StartedAt           time.Time  `json:"started_at" url:"started_at"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (b *BillingSubscriptionResponseData) GetCompanyID() *string {
+func (b *BillingSubscriptionDiscount) GetCouponExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.CouponExternalID
+}
+
+func (b *BillingSubscriptionDiscount) GetCustomerFacingCode() *string {
 	if b == nil {
 		return nil
 	}
-	return b.CompanyID
+	return b.CustomerFacingCode
 }
 
-func (b *BillingSubscriptionResponseData) GetCreatedAt() time.Time {
+func (b *BillingSubscriptionDiscount) GetEndedAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.EndedAt
+}
+
+func (b *BillingSubscriptionDiscount) GetExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ExternalID
+}
+
+func (b *BillingSubscriptionDiscount) GetIsActive() bool {
+	if b == nil {
+		return false
+	}
+	return b.IsActive
+}
+
+func (b *BillingSubscriptionDiscount) GetPromoCodeExternalID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.PromoCodeExternalID
+}
+
+func (b *BillingSubscriptionDiscount) GetStartedAt() time.Time {
 	if b == nil {
 		return time.Time{}
 	}
-	return b.CreatedAt
+	return b.StartedAt
 }
 
-func (b *BillingSubscriptionResponseData) GetCurrency() string {
-	if b == nil {
-		return ""
-	}
-	return b.Currency
-}
-
-func (b *BillingSubscriptionResponseData) GetCustomerExternalID() string {
-	if b == nil {
-		return ""
-	}
-	return b.CustomerExternalID
-}
-
-func (b *BillingSubscriptionResponseData) GetExpiredAt() *time.Time {
-	if b == nil {
-		return nil
-	}
-	return b.ExpiredAt
-}
-
-func (b *BillingSubscriptionResponseData) GetID() string {
-	if b == nil {
-		return ""
-	}
-	return b.ID
-}
-
-func (b *BillingSubscriptionResponseData) GetInterval() string {
-	if b == nil {
-		return ""
-	}
-	return b.Interval
-}
-
-func (b *BillingSubscriptionResponseData) GetMetadata() map[string]interface{} {
-	if b == nil {
-		return nil
-	}
-	return b.Metadata
-}
-
-func (b *BillingSubscriptionResponseData) GetPeriodEnd() int {
-	if b == nil {
-		return 0
-	}
-	return b.PeriodEnd
-}
-
-func (b *BillingSubscriptionResponseData) GetPeriodStart() int {
-	if b == nil {
-		return 0
-	}
-	return b.PeriodStart
-}
-
-func (b *BillingSubscriptionResponseData) GetStatus() string {
-	if b == nil {
-		return ""
-	}
-	return b.Status
-}
-
-func (b *BillingSubscriptionResponseData) GetSubscriptionExternalID() string {
-	if b == nil {
-		return ""
-	}
-	return b.SubscriptionExternalID
-}
-
-func (b *BillingSubscriptionResponseData) GetTotalPrice() int {
-	if b == nil {
-		return 0
-	}
-	return b.TotalPrice
-}
-
-func (b *BillingSubscriptionResponseData) GetTrialEnd() *int {
-	if b == nil {
-		return nil
-	}
-	return b.TrialEnd
-}
-
-func (b *BillingSubscriptionResponseData) GetExtraProperties() map[string]interface{} {
+func (b *BillingSubscriptionDiscount) GetExtraProperties() map[string]interface{} {
 	return b.extraProperties
 }
 
-func (b *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) error {
-	type embed BillingSubscriptionResponseData
+func (b *BillingSubscriptionDiscount) UnmarshalJSON(data []byte) error {
+	type embed BillingSubscriptionDiscount
 	var unmarshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		StartedAt *internal.DateTime `json:"started_at"`
 	}{
 		embed: embed(*b),
 	}
 	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*b = BillingSubscriptionResponseData(unmarshaler.embed)
-	b.CreatedAt = unmarshaler.CreatedAt.Time()
-	b.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
+	*b = BillingSubscriptionDiscount(unmarshaler.embed)
+	b.EndedAt = unmarshaler.EndedAt.TimePtr()
+	b.StartedAt = unmarshaler.StartedAt.Time()
 	extraProperties, err := internal.ExtractExtraProperties(data, *b)
 	if err != nil {
 		return err
@@ -946,21 +1079,21 @@ func (b *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (b *BillingSubscriptionResponseData) MarshalJSON() ([]byte, error) {
-	type embed BillingSubscriptionResponseData
+func (b *BillingSubscriptionDiscount) MarshalJSON() ([]byte, error) {
+	type embed BillingSubscriptionDiscount
 	var marshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		StartedAt *internal.DateTime `json:"started_at"`
 	}{
 		embed:     embed(*b),
-		CreatedAt: internal.NewDateTime(b.CreatedAt),
-		ExpiredAt: internal.NewOptionalDateTime(b.ExpiredAt),
+		EndedAt:   internal.NewOptionalDateTime(b.EndedAt),
+		StartedAt: internal.NewDateTime(b.StartedAt),
 	}
 	return json.Marshal(marshaler)
 }
 
-func (b *BillingSubscriptionResponseData) String() string {
+func (b *BillingSubscriptionDiscount) String() string {
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2355,6 +2488,61 @@ func (s *SearchBillingPricesResponse) String() string {
 	return fmt.Sprintf("%#v", s)
 }
 
+type UpsertBillingCouponResponse struct {
+	Data *BillingCouponResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertBillingCouponResponse) GetData() *BillingCouponResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertBillingCouponResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpsertBillingCouponResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpsertBillingCouponResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpsertBillingCouponResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpsertBillingCouponResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpsertBillingCouponResponse) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
 type UpsertBillingCustomerResponse struct {
 	Data *BillingCustomerResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -2740,6 +2928,18 @@ func (u *UpsertPaymentMethodResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
+type CreateCouponRequestBody struct {
+	AmountOff        int     `json:"amount_off" url:"-"`
+	Currency         *string `json:"currency,omitempty" url:"-"`
+	Duration         string  `json:"duration" url:"-"`
+	DurationInMonths int     `json:"duration_in_months" url:"-"`
+	ExternalID       string  `json:"external_id" url:"-"`
+	MaxRedemptions   int     `json:"max_redemptions" url:"-"`
+	Name             string  `json:"name" url:"-"`
+	PercentOff       float64 `json:"percent_off" url:"-"`
+	TimesRedeemed    int     `json:"times_redeemed" url:"-"`
+}
+
 type CreateBillingCustomerRequestBody struct {
 	CompanyID      *string           `json:"company_id,omitempty" url:"-"`
 	Email          string            `json:"email" url:"-"`
@@ -2775,18 +2975,20 @@ type CreateBillingProductRequestBody struct {
 }
 
 type CreateBillingSubscriptionsRequestBody struct {
-	Currency               string                   `json:"currency" url:"-"`
-	CustomerExternalID     string                   `json:"customer_external_id" url:"-"`
-	ExpiredAt              time.Time                `json:"expired_at" url:"-"`
-	Interval               *string                  `json:"interval,omitempty" url:"-"`
-	Metadata               map[string]interface{}   `json:"metadata,omitempty" url:"-"`
-	PeriodEnd              *int                     `json:"period_end,omitempty" url:"-"`
-	PeriodStart            *int                     `json:"period_start,omitempty" url:"-"`
-	ProductExternalIDs     []*BillingProductPricing `json:"product_external_ids,omitempty" url:"-"`
-	Status                 *string                  `json:"status,omitempty" url:"-"`
-	SubscriptionExternalID string                   `json:"subscription_external_id" url:"-"`
-	TotalPrice             int                      `json:"total_price" url:"-"`
-	TrialEnd               *int                     `json:"trial_end,omitempty" url:"-"`
+	Currency               string                         `json:"currency" url:"-"`
+	CustomerExternalID     string                         `json:"customer_external_id" url:"-"`
+	Discounts              []*BillingSubscriptionDiscount `json:"discounts,omitempty" url:"-"`
+	ExpiredAt              time.Time                      `json:"expired_at" url:"-"`
+	Interval               *string                        `json:"interval,omitempty" url:"-"`
+	Metadata               map[string]interface{}         `json:"metadata,omitempty" url:"-"`
+	PeriodEnd              *int                           `json:"period_end,omitempty" url:"-"`
+	PeriodStart            *int                           `json:"period_start,omitempty" url:"-"`
+	ProductExternalIDs     []*BillingProductPricing       `json:"product_external_ids,omitempty" url:"-"`
+	Status                 *string                        `json:"status,omitempty" url:"-"`
+	SubscriptionExternalID string                         `json:"subscription_external_id" url:"-"`
+	TotalPrice             int                            `json:"total_price" url:"-"`
+	TrialEnd               *int                           `json:"trial_end,omitempty" url:"-"`
+	TrialEndSetting        *string                        `json:"trial_end_setting,omitempty" url:"-"`
 }
 
 func (c *CreateBillingSubscriptionsRequestBody) UnmarshalJSON(data []byte) error {

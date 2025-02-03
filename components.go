@@ -318,10 +318,12 @@ type ComponentPreviewResponseData struct {
 	Capabilities                 *ComponentCapabilities               `json:"capabilities,omitempty" url:"capabilities,omitempty"`
 	Company                      *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
 	Component                    *ComponentResponseData               `json:"component,omitempty" url:"component,omitempty"`
+	DefaultPlan                  *PlanDetailResponseData              `json:"default_plan,omitempty" url:"default_plan,omitempty"`
 	FeatureUsage                 *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
 	Invoices                     []*InvoiceResponseData               `json:"invoices,omitempty" url:"invoices,omitempty"`
 	StripeEmbed                  *StripeEmbedInfo                     `json:"stripe_embed,omitempty" url:"stripe_embed,omitempty"`
 	Subscription                 *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
+	TrialPaymentMethodRequired   *bool                                `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
 	UpcomingInvoice              *InvoiceResponseData                 `json:"upcoming_invoice,omitempty" url:"upcoming_invoice,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -370,6 +372,13 @@ func (c *ComponentPreviewResponseData) GetComponent() *ComponentResponseData {
 	return c.Component
 }
 
+func (c *ComponentPreviewResponseData) GetDefaultPlan() *PlanDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.DefaultPlan
+}
+
 func (c *ComponentPreviewResponseData) GetFeatureUsage() *FeatureUsageDetailResponseData {
 	if c == nil {
 		return nil
@@ -396,6 +405,13 @@ func (c *ComponentPreviewResponseData) GetSubscription() *CompanySubscriptionRes
 		return nil
 	}
 	return c.Subscription
+}
+
+func (c *ComponentPreviewResponseData) GetTrialPaymentMethodRequired() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.TrialPaymentMethodRequired
 }
 
 func (c *ComponentPreviewResponseData) GetUpcomingInvoice() *InvoiceResponseData {
@@ -606,108 +622,6 @@ func (s *StripeEmbedInfo) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", s)
-}
-
-type UsageBasedEntitlementResponseData struct {
-	FeatureID              string            `json:"feature_id" url:"feature_id"`
-	MeteredPrice           *BillingPriceView `json:"metered_price,omitempty" url:"metered_price,omitempty"`
-	MetricPeriod           *string           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
-	MetricPeriodMonthReset *string           `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	PriceBehavior          *string           `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
-	ValueBool              *bool             `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueNumeric           *int              `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	ValueType              string            `json:"value_type" url:"value_type"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (u *UsageBasedEntitlementResponseData) GetFeatureID() string {
-	if u == nil {
-		return ""
-	}
-	return u.FeatureID
-}
-
-func (u *UsageBasedEntitlementResponseData) GetMeteredPrice() *BillingPriceView {
-	if u == nil {
-		return nil
-	}
-	return u.MeteredPrice
-}
-
-func (u *UsageBasedEntitlementResponseData) GetMetricPeriod() *string {
-	if u == nil {
-		return nil
-	}
-	return u.MetricPeriod
-}
-
-func (u *UsageBasedEntitlementResponseData) GetMetricPeriodMonthReset() *string {
-	if u == nil {
-		return nil
-	}
-	return u.MetricPeriodMonthReset
-}
-
-func (u *UsageBasedEntitlementResponseData) GetPriceBehavior() *string {
-	if u == nil {
-		return nil
-	}
-	return u.PriceBehavior
-}
-
-func (u *UsageBasedEntitlementResponseData) GetValueBool() *bool {
-	if u == nil {
-		return nil
-	}
-	return u.ValueBool
-}
-
-func (u *UsageBasedEntitlementResponseData) GetValueNumeric() *int {
-	if u == nil {
-		return nil
-	}
-	return u.ValueNumeric
-}
-
-func (u *UsageBasedEntitlementResponseData) GetValueType() string {
-	if u == nil {
-		return ""
-	}
-	return u.ValueType
-}
-
-func (u *UsageBasedEntitlementResponseData) GetExtraProperties() map[string]interface{} {
-	return u.extraProperties
-}
-
-func (u *UsageBasedEntitlementResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler UsageBasedEntitlementResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*u = UsageBasedEntitlementResponseData(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *u)
-	if err != nil {
-		return err
-	}
-	u.extraProperties = extraProperties
-	u.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (u *UsageBasedEntitlementResponseData) String() string {
-	if len(u.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(u); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", u)
 }
 
 // Input parameters

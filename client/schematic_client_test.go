@@ -129,26 +129,63 @@ func TestCheckFlagWithCacheOptions(t *testing.T) {
 }
 
 func TestTrackEventBatch(t *testing.T) {
-	//ctrl := gomock.NewController(t)
-	//mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithEventBufferPeriod(10*time.Millisecond))
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithEventBufferPeriod(10*time.Millisecond), option.WithHTTPClient(mockHTTPClient))
+	assert.NotNil(t, client)
 	defer client.Close()
 
-	assert.NotNil(t, client)
+	// expect a single call to the API for the batch
+	responseBody := &schematicgo.CreateEventBatchResponse{
+		Data: &schematicgo.RawEventBatchResponseData{
+			Events: []*schematicgo.RawEventResponseData{},
+		},
+	}
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil)
 
 	ctx := context.Background()
 	client.Track(ctx, &schematicgo.EventBodyTrack{Event: "foo", Company: map[string]string{"foo": "bar"}})
 	client.Track(ctx, &schematicgo.EventBodyTrack{Event: "bar", Company: map[string]string{"foo": "bar"}})
-	time.Sleep(11 * time.Millisecond)
+	time.Sleep(20 * time.Millisecond)
+}
+
+func TestTrackEventWithQuantity(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithEventBufferPeriod(10*time.Millisecond), option.WithHTTPClient(mockHTTPClient))
+	assert.NotNil(t, client)
+	defer client.Close()
+
+	responseBody := &schematicgo.CreateEventBatchResponse{
+		Data: &schematicgo.RawEventBatchResponseData{
+			Events: []*schematicgo.RawEventResponseData{},
+		},
+	}
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil)
+
+	ctx := context.Background()
+	client.Track(ctx, &schematicgo.EventBodyTrack{Event: "bar", Company: map[string]string{"foo": "bar"}, Quantity: schematicgo.Int(100)})
+	time.Sleep(20 * time.Millisecond)
 }
 
 func TestMultipleEventBatches(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithEventBufferPeriod(10*time.Millisecond), option.WithHTTPClient(mockHTTPClient))
-	defer client.Close()
-
 	assert.NotNil(t, client)
+	defer client.Close()
 
 	responseBody := &schematicgo.CreateEventBatchResponse{
 		Data: &schematicgo.RawEventBatchResponseData{

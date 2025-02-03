@@ -147,108 +147,6 @@ func (a *AudienceRequestBody) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
-type CheckFlagOutputWithFlagKey struct {
-	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
-	Error     *string `json:"error,omitempty" url:"error,omitempty"`
-	Flag      string  `json:"flag" url:"flag"`
-	FlagID    *string `json:"flag_id,omitempty" url:"flag_id,omitempty"`
-	Reason    string  `json:"reason" url:"reason"`
-	RuleID    *string `json:"rule_id,omitempty" url:"rule_id,omitempty"`
-	UserID    *string `json:"user_id,omitempty" url:"user_id,omitempty"`
-	Value     bool    `json:"value" url:"value"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CheckFlagOutputWithFlagKey) GetCompanyID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.CompanyID
-}
-
-func (c *CheckFlagOutputWithFlagKey) GetError() *string {
-	if c == nil {
-		return nil
-	}
-	return c.Error
-}
-
-func (c *CheckFlagOutputWithFlagKey) GetFlag() string {
-	if c == nil {
-		return ""
-	}
-	return c.Flag
-}
-
-func (c *CheckFlagOutputWithFlagKey) GetFlagID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.FlagID
-}
-
-func (c *CheckFlagOutputWithFlagKey) GetReason() string {
-	if c == nil {
-		return ""
-	}
-	return c.Reason
-}
-
-func (c *CheckFlagOutputWithFlagKey) GetRuleID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.RuleID
-}
-
-func (c *CheckFlagOutputWithFlagKey) GetUserID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.UserID
-}
-
-func (c *CheckFlagOutputWithFlagKey) GetValue() bool {
-	if c == nil {
-		return false
-	}
-	return c.Value
-}
-
-func (c *CheckFlagOutputWithFlagKey) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CheckFlagOutputWithFlagKey) UnmarshalJSON(data []byte) error {
-	type unmarshaler CheckFlagOutputWithFlagKey
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CheckFlagOutputWithFlagKey(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CheckFlagOutputWithFlagKey) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
 type CheckFlagRequestBody struct {
 	Company map[string]string `json:"company,omitempty" url:"company,omitempty"`
 	User    map[string]string `json:"user,omitempty" url:"user,omitempty"`
@@ -305,13 +203,32 @@ func (c *CheckFlagRequestBody) String() string {
 
 // The returned resource
 type CheckFlagResponseData struct {
+	// If company keys were provided and matched a company, its ID
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
-	Error     *string `json:"error,omitempty" url:"error,omitempty"`
-	FlagID    *string `json:"flag_id,omitempty" url:"flag_id,omitempty"`
-	Reason    string  `json:"reason" url:"reason"`
-	RuleID    *string `json:"rule_id,omitempty" url:"rule_id,omitempty"`
-	UserID    *string `json:"user_id,omitempty" url:"user_id,omitempty"`
-	Value     bool    `json:"value" url:"value"`
+	// If an error occurred while checking the flag, the error message
+	Error *string `json:"error,omitempty" url:"error,omitempty"`
+	// If a numeric feature entitlement rule was matched, its allocation
+	FeatureAllocation *int `json:"feature_allocation,omitempty" url:"feature_allocation,omitempty"`
+	// If a numeric feature entitlement rule was matched, the company's usage
+	FeatureUsage *int `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	// For event-based feature entitlement rules, the period over which usage is tracked (current_month, current_day, current_week, all_time)
+	FeatureUsagePeriod *string `json:"feature_usage_period,omitempty" url:"feature_usage_period,omitempty"`
+	// For event-based feature entitlement rules, when the usage period will reset
+	FeatureUsageResetAt *time.Time `json:"feature_usage_reset_at,omitempty" url:"feature_usage_reset_at,omitempty"`
+	// The key used to check the flag
+	Flag string `json:"flag" url:"flag"`
+	// If a flag was found, its ID
+	FlagID *string `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	// A human-readable explanation of the result
+	Reason string `json:"reason" url:"reason"`
+	// If a rule was found, its ID
+	RuleID *string `json:"rule_id,omitempty" url:"rule_id,omitempty"`
+	// If a rule was found, its type
+	RuleType *string `json:"rule_type,omitempty" url:"rule_type,omitempty"`
+	// If user keys were provided and matched a user, its ID
+	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
+	// A boolean flag check result; for feature entitlements, this represents whether further consumption of the feature is permitted
+	Value bool `json:"value" url:"value"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -329,6 +246,41 @@ func (c *CheckFlagResponseData) GetError() *string {
 		return nil
 	}
 	return c.Error
+}
+
+func (c *CheckFlagResponseData) GetFeatureAllocation() *int {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureAllocation
+}
+
+func (c *CheckFlagResponseData) GetFeatureUsage() *int {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureUsage
+}
+
+func (c *CheckFlagResponseData) GetFeatureUsagePeriod() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureUsagePeriod
+}
+
+func (c *CheckFlagResponseData) GetFeatureUsageResetAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureUsageResetAt
+}
+
+func (c *CheckFlagResponseData) GetFlag() string {
+	if c == nil {
+		return ""
+	}
+	return c.Flag
 }
 
 func (c *CheckFlagResponseData) GetFlagID() *string {
@@ -352,6 +304,13 @@ func (c *CheckFlagResponseData) GetRuleID() *string {
 	return c.RuleID
 }
 
+func (c *CheckFlagResponseData) GetRuleType() *string {
+	if c == nil {
+		return nil
+	}
+	return c.RuleType
+}
+
 func (c *CheckFlagResponseData) GetUserID() *string {
 	if c == nil {
 		return nil
@@ -371,12 +330,18 @@ func (c *CheckFlagResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckFlagResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler CheckFlagResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed CheckFlagResponseData
+	var unmarshaler = struct {
+		embed
+		FeatureUsageResetAt *internal.DateTime `json:"feature_usage_reset_at,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*c = CheckFlagResponseData(value)
+	*c = CheckFlagResponseData(unmarshaler.embed)
+	c.FeatureUsageResetAt = unmarshaler.FeatureUsageResetAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
@@ -384,6 +349,18 @@ func (c *CheckFlagResponseData) UnmarshalJSON(data []byte) error {
 	c.extraProperties = extraProperties
 	c.rawJSON = json.RawMessage(data)
 	return nil
+}
+
+func (c *CheckFlagResponseData) MarshalJSON() ([]byte, error) {
+	type embed CheckFlagResponseData
+	var marshaler = struct {
+		embed
+		FeatureUsageResetAt *internal.DateTime `json:"feature_usage_reset_at,omitempty"`
+	}{
+		embed:               embed(*c),
+		FeatureUsageResetAt: internal.NewOptionalDateTime(c.FeatureUsageResetAt),
+	}
+	return json.Marshal(marshaler)
 }
 
 func (c *CheckFlagResponseData) String() string {
@@ -400,13 +377,13 @@ func (c *CheckFlagResponseData) String() string {
 
 // The created resource
 type CheckFlagsResponseData struct {
-	Flags []*CheckFlagOutputWithFlagKey `json:"flags,omitempty" url:"flags,omitempty"`
+	Flags []*CheckFlagResponseData `json:"flags,omitempty" url:"flags,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (c *CheckFlagsResponseData) GetFlags() []*CheckFlagOutputWithFlagKey {
+func (c *CheckFlagsResponseData) GetFlags() []*CheckFlagResponseData {
 	if c == nil {
 		return nil
 	}

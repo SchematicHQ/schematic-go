@@ -593,6 +593,7 @@ const (
 	CreateWebhookRequestBodyRequestTypesItemFeatureDeleted         CreateWebhookRequestBodyRequestTypesItem = "feature.deleted"
 	CreateWebhookRequestBodyRequestTypesItemFlagDeleted            CreateWebhookRequestBodyRequestTypesItem = "flag.deleted"
 	CreateWebhookRequestBodyRequestTypesItemTestSend               CreateWebhookRequestBodyRequestTypesItem = "test.send"
+	CreateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded CreateWebhookRequestBodyRequestTypesItem = "subscription.trial.ended"
 )
 
 func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebhookRequestBodyRequestTypesItem, error) {
@@ -643,6 +644,8 @@ func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebh
 		return CreateWebhookRequestBodyRequestTypesItemFlagDeleted, nil
 	case "test.send":
 		return CreateWebhookRequestBodyRequestTypesItemTestSend, nil
+	case "subscription.trial.ended":
+		return CreateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded, nil
 	}
 	var t CreateWebhookRequestBodyRequestTypesItem
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1156,6 +1159,7 @@ const (
 	UpdateWebhookRequestBodyRequestTypesItemFeatureDeleted         UpdateWebhookRequestBodyRequestTypesItem = "feature.deleted"
 	UpdateWebhookRequestBodyRequestTypesItemFlagDeleted            UpdateWebhookRequestBodyRequestTypesItem = "flag.deleted"
 	UpdateWebhookRequestBodyRequestTypesItemTestSend               UpdateWebhookRequestBodyRequestTypesItem = "test.send"
+	UpdateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded UpdateWebhookRequestBodyRequestTypesItem = "subscription.trial.ended"
 )
 
 func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebhookRequestBodyRequestTypesItem, error) {
@@ -1206,6 +1210,8 @@ func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebh
 		return UpdateWebhookRequestBodyRequestTypesItemFlagDeleted, nil
 	case "test.send":
 		return UpdateWebhookRequestBodyRequestTypesItemTestSend, nil
+	case "subscription.trial.ended":
+		return UpdateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded, nil
 	}
 	var t UpdateWebhookRequestBodyRequestTypesItem
 	return "", fmt.Errorf("%s is not a valid %T", s, t)

@@ -3,10 +3,10 @@
 package client
 
 import (
-	context "context"
 	accesstokens "github.com/schematichq/schematic-go/accesstokens"
 	accounts "github.com/schematichq/schematic-go/accounts"
 	billing "github.com/schematichq/schematic-go/billing"
+	checkout "github.com/schematichq/schematic-go/checkout"
 	companies "github.com/schematichq/schematic-go/companies"
 	components "github.com/schematichq/schematic-go/components"
 	core "github.com/schematichq/schematic-go/core"
@@ -30,12 +30,13 @@ type Client struct {
 	Accounts     *accounts.Client
 	Features     *features.Client
 	Billing      *billing.Client
+	Checkout     *checkout.Client
 	Companies    *companies.Client
 	Entitlements *entitlements.Client
+	Plans        *plans.Client
 	Components   *components.Client
 	Crm          *crm.Client
 	Events       *events.Client
-	Plans        *plans.Client
 	Plangroups   *plangroups.Client
 	Accesstokens *accesstokens.Client
 	Webhooks     *webhooks.Client
@@ -55,47 +56,15 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Accounts:     accounts.NewClient(opts...),
 		Features:     features.NewClient(opts...),
 		Billing:      billing.NewClient(opts...),
+		Checkout:     checkout.NewClient(opts...),
 		Companies:    companies.NewClient(opts...),
 		Entitlements: entitlements.NewClient(opts...),
+		Plans:        plans.NewClient(opts...),
 		Components:   components.NewClient(opts...),
 		Crm:          crm.NewClient(opts...),
 		Events:       events.NewClient(opts...),
-		Plans:        plans.NewClient(opts...),
 		Plangroups:   plangroups.NewClient(opts...),
 		Accesstokens: accesstokens.NewClient(opts...),
 		Webhooks:     webhooks.NewClient(opts...),
 	}
-}
-
-func (c *Client) GetCompanyPlans(
-	ctx context.Context,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-	baseURL := internal.ResolveBaseURL(
-		options.BaseURL,
-		c.baseURL,
-		"https://api.schematichq.com",
-	)
-	endpointURL := baseURL + "/company-plans"
-	headers := internal.MergeHeaders(
-		c.header.Clone(),
-		options.ToHeader(),
-	)
-
-	if err := c.caller.Call(
-		ctx,
-		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodGet,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
 }

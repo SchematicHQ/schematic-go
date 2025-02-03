@@ -21,6 +21,8 @@ type CountPlansRequest struct {
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a billing product ID
 	WithoutProductID *bool `json:"-" url:"without_product_id,omitempty"`
+	// Filter out plans that have a paid billing product ID
+	WithoutPaidProductID *bool `json:"-" url:"without_paid_product_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -46,6 +48,8 @@ type ListPlansRequest struct {
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a billing product ID
 	WithoutProductID *bool `json:"-" url:"without_product_id,omitempty"`
+	// Filter out plans that have a paid billing product ID
+	WithoutPaidProductID *bool `json:"-" url:"without_paid_product_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -312,202 +316,6 @@ func (p *PlanAudienceDetailResponseData) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
-type PlanDetailResponseData struct {
-	AudienceType   *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
-	BillingProduct *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
-	CompanyCount   int                               `json:"company_count" url:"company_count"`
-	CreatedAt      time.Time                         `json:"created_at" url:"created_at"`
-	Description    string                            `json:"description" url:"description"`
-	Features       []*FeatureDetailResponseData      `json:"features,omitempty" url:"features,omitempty"`
-	Icon           string                            `json:"icon" url:"icon"`
-	ID             string                            `json:"id" url:"id"`
-	IsDefault      bool                              `json:"is_default" url:"is_default"`
-	IsFree         bool                              `json:"is_free" url:"is_free"`
-	IsTrialable    bool                              `json:"is_trialable" url:"is_trialable"`
-	MonthlyPrice   *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	Name           string                            `json:"name" url:"name"`
-	PlanType       string                            `json:"plan_type" url:"plan_type"`
-	TrialDays      *int                              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
-	UpdatedAt      time.Time                         `json:"updated_at" url:"updated_at"`
-	YearlyPrice    *BillingPriceResponseData         `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (p *PlanDetailResponseData) GetAudienceType() *string {
-	if p == nil {
-		return nil
-	}
-	return p.AudienceType
-}
-
-func (p *PlanDetailResponseData) GetBillingProduct() *BillingProductDetailResponseData {
-	if p == nil {
-		return nil
-	}
-	return p.BillingProduct
-}
-
-func (p *PlanDetailResponseData) GetCompanyCount() int {
-	if p == nil {
-		return 0
-	}
-	return p.CompanyCount
-}
-
-func (p *PlanDetailResponseData) GetCreatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.CreatedAt
-}
-
-func (p *PlanDetailResponseData) GetDescription() string {
-	if p == nil {
-		return ""
-	}
-	return p.Description
-}
-
-func (p *PlanDetailResponseData) GetFeatures() []*FeatureDetailResponseData {
-	if p == nil {
-		return nil
-	}
-	return p.Features
-}
-
-func (p *PlanDetailResponseData) GetIcon() string {
-	if p == nil {
-		return ""
-	}
-	return p.Icon
-}
-
-func (p *PlanDetailResponseData) GetID() string {
-	if p == nil {
-		return ""
-	}
-	return p.ID
-}
-
-func (p *PlanDetailResponseData) GetIsDefault() bool {
-	if p == nil {
-		return false
-	}
-	return p.IsDefault
-}
-
-func (p *PlanDetailResponseData) GetIsFree() bool {
-	if p == nil {
-		return false
-	}
-	return p.IsFree
-}
-
-func (p *PlanDetailResponseData) GetIsTrialable() bool {
-	if p == nil {
-		return false
-	}
-	return p.IsTrialable
-}
-
-func (p *PlanDetailResponseData) GetMonthlyPrice() *BillingPriceResponseData {
-	if p == nil {
-		return nil
-	}
-	return p.MonthlyPrice
-}
-
-func (p *PlanDetailResponseData) GetName() string {
-	if p == nil {
-		return ""
-	}
-	return p.Name
-}
-
-func (p *PlanDetailResponseData) GetPlanType() string {
-	if p == nil {
-		return ""
-	}
-	return p.PlanType
-}
-
-func (p *PlanDetailResponseData) GetTrialDays() *int {
-	if p == nil {
-		return nil
-	}
-	return p.TrialDays
-}
-
-func (p *PlanDetailResponseData) GetUpdatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.UpdatedAt
-}
-
-func (p *PlanDetailResponseData) GetYearlyPrice() *BillingPriceResponseData {
-	if p == nil {
-		return nil
-	}
-	return p.YearlyPrice
-}
-
-func (p *PlanDetailResponseData) GetExtraProperties() map[string]interface{} {
-	return p.extraProperties
-}
-
-func (p *PlanDetailResponseData) UnmarshalJSON(data []byte) error {
-	type embed PlanDetailResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*p),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*p = PlanDetailResponseData(unmarshaler.embed)
-	p.CreatedAt = unmarshaler.CreatedAt.Time()
-	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *p)
-	if err != nil {
-		return err
-	}
-	p.extraProperties = extraProperties
-	p.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (p *PlanDetailResponseData) MarshalJSON() ([]byte, error) {
-	type embed PlanDetailResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*p),
-		CreatedAt: internal.NewDateTime(p.CreatedAt),
-		UpdatedAt: internal.NewDateTime(p.UpdatedAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (p *PlanDetailResponseData) String() string {
-	if len(p.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(p); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", p)
-}
-
 // Input parameters
 type CountPlansParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -523,6 +331,8 @@ type CountPlansParams struct {
 	Q        *string                           `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
+	// Filter out plans that have a paid billing product ID
+	WithoutPaidProductID *bool `json:"without_paid_product_id,omitempty" url:"without_paid_product_id,omitempty"`
 	// Filter out plans that have a billing product ID
 	WithoutProductID *bool `json:"without_product_id,omitempty" url:"without_product_id,omitempty"`
 
@@ -584,6 +394,13 @@ func (c *CountPlansParams) GetWithoutEntitlementFor() *string {
 		return nil
 	}
 	return c.WithoutEntitlementFor
+}
+
+func (c *CountPlansParams) GetWithoutPaidProductID() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutPaidProductID
 }
 
 func (c *CountPlansParams) GetWithoutProductID() *bool {
@@ -1038,6 +855,8 @@ type ListPlansParams struct {
 	Q        *string                          `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
+	// Filter out plans that have a paid billing product ID
+	WithoutPaidProductID *bool `json:"without_paid_product_id,omitempty" url:"without_paid_product_id,omitempty"`
 	// Filter out plans that have a billing product ID
 	WithoutProductID *bool `json:"without_product_id,omitempty" url:"without_product_id,omitempty"`
 
@@ -1099,6 +918,13 @@ func (l *ListPlansParams) GetWithoutEntitlementFor() *string {
 		return nil
 	}
 	return l.WithoutEntitlementFor
+}
+
+func (l *ListPlansParams) GetWithoutPaidProductID() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutPaidProductID
 }
 
 func (l *ListPlansParams) GetWithoutProductID() *bool {
@@ -1297,6 +1123,61 @@ func (u *UpdateAudienceResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
+type UpdateCompanyPlansResponse struct {
+	Data *CompanyDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateCompanyPlansResponse) GetData() *CompanyDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateCompanyPlansResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpdateCompanyPlansResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateCompanyPlansResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCompanyPlansResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateCompanyPlansResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateCompanyPlansResponse) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
 type UpdatePlanResponse struct {
 	Data *PlanDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -1410,6 +1291,11 @@ func (u *UpsertBillingProductPlanResponse) String() string {
 type UpdateAudienceRequestBody struct {
 	ConditionGroups []*CreateOrUpdateConditionGroupRequestBody `json:"condition_groups,omitempty" url:"-"`
 	Conditions      []*CreateOrUpdateConditionRequestBody      `json:"conditions,omitempty" url:"-"`
+}
+
+type UpdateCompanyPlansRequestBody struct {
+	AddOnIDs   []string `json:"add_on_ids,omitempty" url:"-"`
+	BasePlanID *string  `json:"base_plan_id,omitempty" url:"-"`
 }
 
 type UpdatePlanRequestBody struct {

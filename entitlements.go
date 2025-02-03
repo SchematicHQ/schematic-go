@@ -10,16 +10,18 @@ import (
 )
 
 type CountCompanyOverridesRequest struct {
-	// Filter company overrides by a single company ID (starting with comp\_)
+	// Filter company overrides by a single company ID (starting with comp_)
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
-	// Filter company overrides by multiple company IDs (starting with comp\_)
+	// Filter company overrides by multiple company IDs (starting with comp_)
 	CompanyIDs []*string `json:"-" url:"company_ids,omitempty"`
-	// Filter company overrides by a single feature ID (starting with feat\_)
+	// Filter company overrides by a single feature ID (starting with feat_)
 	FeatureID *string `json:"-" url:"feature_id,omitempty"`
-	// Filter company overrides by multiple feature IDs (starting with feat\_)
+	// Filter company overrides by multiple feature IDs (starting with feat_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	// Filter company overrides by multiple company override IDs (starting with cmov_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter company overrides by whether they have not expired
+	WithoutExpired *bool `json:"-" url:"without_expired,omitempty"`
 	// Search for company overrides by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
@@ -59,15 +61,15 @@ type CountFeatureUsersRequest struct {
 }
 
 type CountPlanEntitlementsRequest struct {
-	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	// Filter plan entitlements by a single feature ID (starting with feat_)
 	FeatureID *string `json:"-" url:"feature_id,omitempty"`
-	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
+	// Filter plan entitlements by multiple feature IDs (starting with feat_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
-	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	// Filter plan entitlements by a single plan ID (starting with plan_)
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
-	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
+	// Filter plan entitlements by multiple plan IDs (starting with plan_)
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
@@ -83,8 +85,6 @@ type CreateCompanyOverrideRequestBody struct {
 	CompanyID              string                                                  `json:"company_id" url:"-"`
 	ExpirationDate         *time.Time                                              `json:"expiration_date,omitempty" url:"-"`
 	FeatureID              string                                                  `json:"feature_id" url:"-"`
-	MeteredMonthlyPriceID  *string                                                 `json:"metered_monthly_price_id,omitempty" url:"-"`
-	MeteredYearlyPriceID   *string                                                 `json:"metered_yearly_price_id,omitempty" url:"-"`
 	MetricPeriod           *CreateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
@@ -117,8 +117,6 @@ func (c *CreateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 
 type CreatePlanEntitlementRequestBody struct {
 	FeatureID              string                                                  `json:"feature_id" url:"-"`
-	MeteredMonthlyPriceID  *string                                                 `json:"metered_monthly_price_id,omitempty" url:"-"`
-	MeteredYearlyPriceID   *string                                                 `json:"metered_yearly_price_id,omitempty" url:"-"`
 	MetricPeriod           *CreatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	MonthlyMeteredPriceID  *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
@@ -137,16 +135,18 @@ type GetFeatureUsageByCompanyRequest struct {
 }
 
 type ListCompanyOverridesRequest struct {
-	// Filter company overrides by a single company ID (starting with comp\_)
+	// Filter company overrides by a single company ID (starting with comp_)
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
-	// Filter company overrides by multiple company IDs (starting with comp\_)
+	// Filter company overrides by multiple company IDs (starting with comp_)
 	CompanyIDs []*string `json:"-" url:"company_ids,omitempty"`
-	// Filter company overrides by a single feature ID (starting with feat\_)
+	// Filter company overrides by a single feature ID (starting with feat_)
 	FeatureID *string `json:"-" url:"feature_id,omitempty"`
-	// Filter company overrides by multiple feature IDs (starting with feat\_)
+	// Filter company overrides by multiple feature IDs (starting with feat_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	// Filter company overrides by multiple company override IDs (starting with cmov_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter company overrides by whether they have not expired
+	WithoutExpired *bool `json:"-" url:"without_expired,omitempty"`
 	// Search for company overrides by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
@@ -186,15 +186,15 @@ type ListFeatureUsersRequest struct {
 }
 
 type ListPlanEntitlementsRequest struct {
-	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	// Filter plan entitlements by a single feature ID (starting with feat_)
 	FeatureID *string `json:"-" url:"feature_id,omitempty"`
-	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
+	// Filter plan entitlements by multiple feature IDs (starting with feat_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
-	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	// Filter plan entitlements by a single plan ID (starting with plan_)
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
-	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
+	// Filter plan entitlements by multiple plan IDs (starting with plan_)
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
@@ -219,6 +219,7 @@ type CompanyOverrideResponseData struct {
 	MetricPeriod           *string                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *string                            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	RuleID                 *string                            `json:"rule_id,omitempty" url:"rule_id,omitempty"`
+	RuleIDUsageExceeded    *string                            `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
 	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
 	ValueBool              *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
 	ValueNumeric           *int                               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
@@ -305,6 +306,13 @@ func (c *CompanyOverrideResponseData) GetRuleID() *string {
 		return nil
 	}
 	return c.RuleID
+}
+
+func (c *CompanyOverrideResponseData) GetRuleIDUsageExceeded() *string {
+	if c == nil {
+		return nil
+	}
+	return c.RuleIDUsageExceeded
 }
 
 func (c *CompanyOverrideResponseData) GetUpdatedAt() time.Time {
@@ -413,11 +421,12 @@ type FeatureCompanyResponseData struct {
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
 	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// The type of allocation that is being used.
-	AllocationType  FeatureCompanyResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
-	Company         *CompanyDetailResponseData               `json:"company,omitempty" url:"company,omitempty"`
-	EntitlementID   string                                   `json:"entitlement_id" url:"entitlement_id"`
-	EntitlementType string                                   `json:"entitlement_type" url:"entitlement_type"`
-	Feature         *FeatureDetailResponseData               `json:"feature,omitempty" url:"feature,omitempty"`
+	AllocationType            FeatureCompanyResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
+	Company                   *CompanyDetailResponseData               `json:"company,omitempty" url:"company,omitempty"`
+	EntitlementExpirationDate *time.Time                               `json:"entitlement_expiration_date,omitempty" url:"entitlement_expiration_date,omitempty"`
+	EntitlementID             string                                   `json:"entitlement_id" url:"entitlement_id"`
+	EntitlementType           string                                   `json:"entitlement_type" url:"entitlement_type"`
+	Feature                   *FeatureDetailResponseData               `json:"feature,omitempty" url:"feature,omitempty"`
 	// The time at which the metric will resets.
 	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
 	// If the period is current_month, when the month resets.
@@ -458,6 +467,13 @@ func (f *FeatureCompanyResponseData) GetCompany() *CompanyDetailResponseData {
 		return nil
 	}
 	return f.Company
+}
+
+func (f *FeatureCompanyResponseData) GetEntitlementExpirationDate() *time.Time {
+	if f == nil {
+		return nil
+	}
+	return f.EntitlementExpirationDate
 }
 
 func (f *FeatureCompanyResponseData) GetEntitlementID() string {
@@ -524,7 +540,8 @@ func (f *FeatureCompanyResponseData) UnmarshalJSON(data []byte) error {
 	type embed FeatureCompanyResponseData
 	var unmarshaler = struct {
 		embed
-		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+		EntitlementExpirationDate *internal.DateTime `json:"entitlement_expiration_date,omitempty"`
+		MetricResetAt             *internal.DateTime `json:"metric_reset_at,omitempty"`
 	}{
 		embed: embed(*f),
 	}
@@ -532,6 +549,7 @@ func (f *FeatureCompanyResponseData) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*f = FeatureCompanyResponseData(unmarshaler.embed)
+	f.EntitlementExpirationDate = unmarshaler.EntitlementExpirationDate.TimePtr()
 	f.MetricResetAt = unmarshaler.MetricResetAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *f)
 	if err != nil {
@@ -546,10 +564,12 @@ func (f *FeatureCompanyResponseData) MarshalJSON() ([]byte, error) {
 	type embed FeatureCompanyResponseData
 	var marshaler = struct {
 		embed
-		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+		EntitlementExpirationDate *internal.DateTime `json:"entitlement_expiration_date,omitempty"`
+		MetricResetAt             *internal.DateTime `json:"metric_reset_at,omitempty"`
 	}{
-		embed:         embed(*f),
-		MetricResetAt: internal.NewOptionalDateTime(f.MetricResetAt),
+		embed:                     embed(*f),
+		EntitlementExpirationDate: internal.NewOptionalDateTime(f.EntitlementExpirationDate),
+		MetricResetAt:             internal.NewOptionalDateTime(f.MetricResetAt),
 	}
 	return json.Marshal(marshaler)
 }
@@ -793,15 +813,15 @@ func (f FeatureCompanyUserResponseDataAllocationType) Ptr() *FeatureCompanyUserR
 
 // Input parameters
 type CountCompanyOverridesParams struct {
-	// Filter company overrides by a single company ID (starting with comp\_)
+	// Filter company overrides by a single company ID (starting with comp_)
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
-	// Filter company overrides by multiple company IDs (starting with comp\_)
+	// Filter company overrides by multiple company IDs (starting with comp_)
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
-	// Filter company overrides by a single feature ID (starting with feat\_)
+	// Filter company overrides by a single feature ID (starting with feat_)
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	// Filter company overrides by multiple feature IDs (starting with feat\_)
+	// Filter company overrides by multiple feature IDs (starting with feat_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
-	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	// Filter company overrides by multiple company override IDs (starting with cmov_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
@@ -809,6 +829,8 @@ type CountCompanyOverridesParams struct {
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
 	// Search for company overrides by feature or company name
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter company overrides by whether they have not expired
+	WithoutExpired *bool `json:"without_expired,omitempty" url:"without_expired,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -868,6 +890,13 @@ func (c *CountCompanyOverridesParams) GetQ() *string {
 		return nil
 	}
 	return c.Q
+}
+
+func (c *CountCompanyOverridesParams) GetWithoutExpired() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutExpired
 }
 
 func (c *CountCompanyOverridesParams) GetExtraProperties() map[string]interface{} {
@@ -1367,19 +1396,19 @@ func (c *CountFeatureUsersResponse) String() string {
 
 // Input parameters
 type CountPlanEntitlementsParams struct {
-	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	// Filter plan entitlements by a single feature ID (starting with feat_)
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
+	// Filter plan entitlements by multiple feature IDs (starting with feat_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
-	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	// Filter plan entitlements by a single plan ID (starting with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
+	// Filter plan entitlements by multiple plan IDs (starting with plan_)
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
@@ -1544,7 +1573,6 @@ type CreateCompanyOverrideRequestBodyMetricPeriod string
 
 const (
 	CreateCompanyOverrideRequestBodyMetricPeriodAllTime      CreateCompanyOverrideRequestBodyMetricPeriod = "all_time"
-	CreateCompanyOverrideRequestBodyMetricPeriodBilling      CreateCompanyOverrideRequestBodyMetricPeriod = "billing"
 	CreateCompanyOverrideRequestBodyMetricPeriodCurrentMonth CreateCompanyOverrideRequestBodyMetricPeriod = "current_month"
 	CreateCompanyOverrideRequestBodyMetricPeriodCurrentWeek  CreateCompanyOverrideRequestBodyMetricPeriod = "current_week"
 	CreateCompanyOverrideRequestBodyMetricPeriodCurrentDay   CreateCompanyOverrideRequestBodyMetricPeriod = "current_day"
@@ -1554,8 +1582,6 @@ func NewCreateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (Create
 	switch s {
 	case "all_time":
 		return CreateCompanyOverrideRequestBodyMetricPeriodAllTime, nil
-	case "billing":
-		return CreateCompanyOverrideRequestBodyMetricPeriodBilling, nil
 	case "current_month":
 		return CreateCompanyOverrideRequestBodyMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -1680,7 +1706,6 @@ type CreatePlanEntitlementRequestBodyMetricPeriod string
 
 const (
 	CreatePlanEntitlementRequestBodyMetricPeriodAllTime      CreatePlanEntitlementRequestBodyMetricPeriod = "all_time"
-	CreatePlanEntitlementRequestBodyMetricPeriodBilling      CreatePlanEntitlementRequestBodyMetricPeriod = "billing"
 	CreatePlanEntitlementRequestBodyMetricPeriodCurrentMonth CreatePlanEntitlementRequestBodyMetricPeriod = "current_month"
 	CreatePlanEntitlementRequestBodyMetricPeriodCurrentWeek  CreatePlanEntitlementRequestBodyMetricPeriod = "current_week"
 	CreatePlanEntitlementRequestBodyMetricPeriodCurrentDay   CreatePlanEntitlementRequestBodyMetricPeriod = "current_day"
@@ -1690,8 +1715,6 @@ func NewCreatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (Create
 	switch s {
 	case "all_time":
 		return CreatePlanEntitlementRequestBodyMetricPeriodAllTime, nil
-	case "billing":
-		return CreatePlanEntitlementRequestBodyMetricPeriodBilling, nil
 	case "current_month":
 		return CreatePlanEntitlementRequestBodyMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -2136,15 +2159,15 @@ func (g *GetPlanEntitlementResponse) String() string {
 
 // Input parameters
 type ListCompanyOverridesParams struct {
-	// Filter company overrides by a single company ID (starting with comp\_)
+	// Filter company overrides by a single company ID (starting with comp_)
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
-	// Filter company overrides by multiple company IDs (starting with comp\_)
+	// Filter company overrides by multiple company IDs (starting with comp_)
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
-	// Filter company overrides by a single feature ID (starting with feat\_)
+	// Filter company overrides by a single feature ID (starting with feat_)
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	// Filter company overrides by multiple feature IDs (starting with feat\_)
+	// Filter company overrides by multiple feature IDs (starting with feat_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
-	// Filter company overrides by multiple company override IDs (starting with cmov\_)
+	// Filter company overrides by multiple company override IDs (starting with cmov_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
@@ -2152,6 +2175,8 @@ type ListCompanyOverridesParams struct {
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
 	// Search for company overrides by feature or company name
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter company overrides by whether they have not expired
+	WithoutExpired *bool `json:"without_expired,omitempty" url:"without_expired,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -2211,6 +2236,13 @@ func (l *ListCompanyOverridesParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListCompanyOverridesParams) GetWithoutExpired() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutExpired
 }
 
 func (l *ListCompanyOverridesParams) GetExtraProperties() map[string]interface{} {
@@ -2714,19 +2746,19 @@ func (l *ListFeatureUsersResponse) String() string {
 
 // Input parameters
 type ListPlanEntitlementsParams struct {
-	// Filter plan entitlements by a single feature ID (starting with feat\_)
+	// Filter plan entitlements by a single feature ID (starting with feat_)
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	// Filter plan entitlements by multiple feature IDs (starting with feat\_)
+	// Filter plan entitlements by multiple feature IDs (starting with feat_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
-	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl\_)
+	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter plan entitlements by a single plan ID (starting with plan\_)
+	// Filter plan entitlements by a single plan ID (starting with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	// Filter plan entitlements by multiple plan IDs (starting with plan\_)
+	// Filter plan entitlements by multiple plan IDs (starting with plan_)
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
@@ -2892,7 +2924,6 @@ type UpdateCompanyOverrideRequestBodyMetricPeriod string
 
 const (
 	UpdateCompanyOverrideRequestBodyMetricPeriodAllTime      UpdateCompanyOverrideRequestBodyMetricPeriod = "all_time"
-	UpdateCompanyOverrideRequestBodyMetricPeriodBilling      UpdateCompanyOverrideRequestBodyMetricPeriod = "billing"
 	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentMonth UpdateCompanyOverrideRequestBodyMetricPeriod = "current_month"
 	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentWeek  UpdateCompanyOverrideRequestBodyMetricPeriod = "current_week"
 	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentDay   UpdateCompanyOverrideRequestBodyMetricPeriod = "current_day"
@@ -2902,8 +2933,6 @@ func NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (Update
 	switch s {
 	case "all_time":
 		return UpdateCompanyOverrideRequestBodyMetricPeriodAllTime, nil
-	case "billing":
-		return UpdateCompanyOverrideRequestBodyMetricPeriodBilling, nil
 	case "current_month":
 		return UpdateCompanyOverrideRequestBodyMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -3028,7 +3057,6 @@ type UpdatePlanEntitlementRequestBodyMetricPeriod string
 
 const (
 	UpdatePlanEntitlementRequestBodyMetricPeriodAllTime      UpdatePlanEntitlementRequestBodyMetricPeriod = "all_time"
-	UpdatePlanEntitlementRequestBodyMetricPeriodBilling      UpdatePlanEntitlementRequestBodyMetricPeriod = "billing"
 	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentMonth UpdatePlanEntitlementRequestBodyMetricPeriod = "current_month"
 	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentWeek  UpdatePlanEntitlementRequestBodyMetricPeriod = "current_week"
 	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentDay   UpdatePlanEntitlementRequestBodyMetricPeriod = "current_day"
@@ -3038,8 +3066,6 @@ func NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (Update
 	switch s {
 	case "all_time":
 		return UpdatePlanEntitlementRequestBodyMetricPeriodAllTime, nil
-	case "billing":
-		return UpdatePlanEntitlementRequestBodyMetricPeriodBilling, nil
 	case "current_month":
 		return UpdatePlanEntitlementRequestBodyMetricPeriodCurrentMonth, nil
 	case "current_week":
@@ -3162,8 +3188,6 @@ func (u *UpdatePlanEntitlementResponse) String() string {
 
 type UpdateCompanyOverrideRequestBody struct {
 	ExpirationDate         *time.Time                                              `json:"expiration_date,omitempty" url:"-"`
-	MeteredMonthlyPriceID  *string                                                 `json:"metered_monthly_price_id,omitempty" url:"-"`
-	MeteredYearlyPriceID   *string                                                 `json:"metered_yearly_price_id,omitempty" url:"-"`
 	MetricPeriod           *UpdateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
@@ -3195,12 +3219,13 @@ func (u *UpdateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 type UpdatePlanEntitlementRequestBody struct {
-	MeteredMonthlyPriceID  *string                                                 `json:"metered_monthly_price_id,omitempty" url:"-"`
-	MeteredYearlyPriceID   *string                                                 `json:"metered_yearly_price_id,omitempty" url:"-"`
 	MetricPeriod           *UpdatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	MonthlyMeteredPriceID  *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
+	PriceBehavior          *string                                                 `json:"price_behavior,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
 	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              UpdatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
+	YearlyMeteredPriceID   *string                                                 `json:"yearly_metered_price_id,omitempty" url:"-"`
 }

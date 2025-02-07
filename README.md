@@ -109,10 +109,10 @@ func main() {
 
   client.Identify(context.Background(), &schematicgo.EventBodyIdentify{
     Event: "some-action",
-    Company: map[string]any{
+    Company: map[string]string{
       "id": "your-company-id",
     },
-    User: map[string]any{
+    User: map[string]string{
       "email":   "wcoyote@acme.net",
       "user-id": "your-user-id",
     },
@@ -149,10 +149,10 @@ func main() {
 
   client.Track(context.Background(), &schematicgo.EventBodyTrack{
     Event: "some-action",
-    Company: map[string]any{
+    Company: map[string]string{
       "id": "your-company-id",
     },
-    User: map[string]any{
+    User: map[string]string{
       "email":   "wcoyote@acme.net",
       "user-id": "your-user-id",
     },
@@ -181,10 +181,10 @@ func main() {
 
   client.Track(context.Background(), &schematicgo.EventBodyTrack{
     Event: "query-tokens",
-    Company: map[string]any{
+    Company: map[string]stringh{
       "id": "your-company-id",
     },
-    User: map[string]any{
+    User: map[string]string{
       "email":   "wcoyote@acme.net",
       "user-id": "your-user-id",
     },
@@ -213,7 +213,7 @@ func main() {
   defer client.Close()
 
   body := &schematicgo.UpsertCompanyRequestBody{
-    Keys: map[string]any{
+    Keys: map[string]string{
       "id": "your-company-id",
     },
     Name: "Acme Widgets, Inc.",
@@ -250,11 +250,11 @@ func main() {
   defer client.Close()
 
   body := &schematicgo.UpsertUserRequestBody{
-    Keys: map[string]any{
+    Keys: map[string]string{
       "email":   "wcoyote@acme.net",
       "user-id": "your-user-id",
     },
-    Company: map[string]any{
+    Company: map[string]string{
       "id": "your-company-id",
     },
     Name: "Wile E. Coyote",
@@ -292,10 +292,10 @@ func main() {
   defer client.Close()
 
   evaluationCtx := schematicgo.CheckFlagRequestBody{
-    Company: map[string]any{
+    Company: map[string]string{
       "id": "your-company-id",
     },
-    User: map[string]any{
+    User: map[string]string{
       "email":   "wcoyote@acme.net",
       "user-id": "your-user-id",
     },

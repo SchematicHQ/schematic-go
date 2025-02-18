@@ -10,10 +10,10 @@ import (
 )
 
 type CountBillingProductsRequest struct {
-	IDs            []*string `json:"-" url:"ids,omitempty"`
-	Name           *string   `json:"-" url:"name,omitempty"`
-	Q              *string   `json:"-" url:"q,omitempty"`
-	PriceUsageType *string   `json:"-" url:"price_usage_type,omitempty"`
+	IDs            []*string                                  `json:"-" url:"ids,omitempty"`
+	Name           *string                                    `json:"-" url:"name,omitempty"`
+	Q              *string                                    `json:"-" url:"q,omitempty"`
+	PriceUsageType *CountBillingProductsRequestPriceUsageType `json:"-" url:"price_usage_type,omitempty"`
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
 	// Filter products that have zero price for free subscription type
@@ -37,16 +37,25 @@ type CountCustomersRequest struct {
 }
 
 type ListBillingProductsRequest struct {
-	IDs            []*string `json:"-" url:"ids,omitempty"`
-	Name           *string   `json:"-" url:"name,omitempty"`
-	Q              *string   `json:"-" url:"q,omitempty"`
-	PriceUsageType *string   `json:"-" url:"price_usage_type,omitempty"`
+	IDs            []*string                                 `json:"-" url:"ids,omitempty"`
+	Name           *string                                   `json:"-" url:"name,omitempty"`
+	Q              *string                                   `json:"-" url:"q,omitempty"`
+	PriceUsageType *ListBillingProductsRequestPriceUsageType `json:"-" url:"price_usage_type,omitempty"`
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
 	// Filter products that have zero price for free subscription type
 	WithZeroPrice *bool `json:"-" url:"with_zero_price,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"-" url:"with_prices_only,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
+type ListCouponsRequest struct {
+	IsActive *bool   `json:"-" url:"is_active,omitempty"`
+	Q        *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -92,10 +101,10 @@ type ListPaymentMethodsRequest struct {
 }
 
 type ListProductPricesRequest struct {
-	IDs            []*string `json:"-" url:"ids,omitempty"`
-	Name           *string   `json:"-" url:"name,omitempty"`
-	Q              *string   `json:"-" url:"q,omitempty"`
-	PriceUsageType *string   `json:"-" url:"price_usage_type,omitempty"`
+	IDs            []*string                               `json:"-" url:"ids,omitempty"`
+	Name           *string                                 `json:"-" url:"name,omitempty"`
+	Q              *string                                 `json:"-" url:"q,omitempty"`
+	PriceUsageType *ListProductPricesRequestPriceUsageType `json:"-" url:"price_usage_type,omitempty"`
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
 	// Filter products that have zero price for free subscription type
@@ -119,7 +128,6 @@ type SearchBillingPricesRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
-// The created resource
 type BillingCouponResponseData struct {
 	AccountID        string                 `json:"account_id" url:"account_id"`
 	AmountOff        *int                   `json:"amount_off,omitempty" url:"amount_off,omitempty"`
@@ -1112,9 +1120,9 @@ type CountBillingProductsParams struct {
 	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
 	// Page offset (default 0)
-	Offset         *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	PriceUsageType *string `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
-	Q              *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset         *int                                              `json:"offset,omitempty" url:"offset,omitempty"`
+	PriceUsageType *CountBillingProductsResponseParamsPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
+	Q              *string                                           `json:"q,omitempty" url:"q,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"with_prices_only,omitempty" url:"with_prices_only,omitempty"`
 	// Filter products that have zero price for free subscription type
@@ -1154,7 +1162,7 @@ func (c *CountBillingProductsParams) GetOffset() *int {
 	return c.Offset
 }
 
-func (c *CountBillingProductsParams) GetPriceUsageType() *string {
+func (c *CountBillingProductsParams) GetPriceUsageType() *CountBillingProductsResponseParamsPriceUsageType {
 	if c == nil {
 		return nil
 	}
@@ -1221,6 +1229,28 @@ func (c *CountBillingProductsParams) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CountBillingProductsRequestPriceUsageType string
+
+const (
+	CountBillingProductsRequestPriceUsageTypeLicensed CountBillingProductsRequestPriceUsageType = "licensed"
+	CountBillingProductsRequestPriceUsageTypeMetered  CountBillingProductsRequestPriceUsageType = "metered"
+)
+
+func NewCountBillingProductsRequestPriceUsageTypeFromString(s string) (CountBillingProductsRequestPriceUsageType, error) {
+	switch s {
+	case "licensed":
+		return CountBillingProductsRequestPriceUsageTypeLicensed, nil
+	case "metered":
+		return CountBillingProductsRequestPriceUsageTypeMetered, nil
+	}
+	var t CountBillingProductsRequestPriceUsageType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CountBillingProductsRequestPriceUsageType) Ptr() *CountBillingProductsRequestPriceUsageType {
+	return &c
+}
+
 type CountBillingProductsResponse struct {
 	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -1274,6 +1304,28 @@ func (c *CountBillingProductsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+type CountBillingProductsResponseParamsPriceUsageType string
+
+const (
+	CountBillingProductsResponseParamsPriceUsageTypeLicensed CountBillingProductsResponseParamsPriceUsageType = "licensed"
+	CountBillingProductsResponseParamsPriceUsageTypeMetered  CountBillingProductsResponseParamsPriceUsageType = "metered"
+)
+
+func NewCountBillingProductsResponseParamsPriceUsageTypeFromString(s string) (CountBillingProductsResponseParamsPriceUsageType, error) {
+	switch s {
+	case "licensed":
+		return CountBillingProductsResponseParamsPriceUsageTypeLicensed, nil
+	case "metered":
+		return CountBillingProductsResponseParamsPriceUsageTypeMetered, nil
+	}
+	var t CountBillingProductsResponseParamsPriceUsageType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CountBillingProductsResponseParamsPriceUsageType) Ptr() *CountBillingProductsResponseParamsPriceUsageType {
+	return &c
 }
 
 // Input parameters
@@ -1412,6 +1464,28 @@ func (c *CountCustomersResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreateBillingPriceRequestBodyUsageType string
+
+const (
+	CreateBillingPriceRequestBodyUsageTypeLicensed CreateBillingPriceRequestBodyUsageType = "licensed"
+	CreateBillingPriceRequestBodyUsageTypeMetered  CreateBillingPriceRequestBodyUsageType = "metered"
+)
+
+func NewCreateBillingPriceRequestBodyUsageTypeFromString(s string) (CreateBillingPriceRequestBodyUsageType, error) {
+	switch s {
+	case "licensed":
+		return CreateBillingPriceRequestBodyUsageTypeLicensed, nil
+	case "metered":
+		return CreateBillingPriceRequestBodyUsageTypeMetered, nil
+	}
+	var t CreateBillingPriceRequestBodyUsageType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateBillingPriceRequestBodyUsageType) Ptr() *CreateBillingPriceRequestBodyUsageType {
+	return &c
+}
+
 type DeleteProductPriceResponse struct {
 	Data *DeleteResponse `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -1474,9 +1548,9 @@ type ListBillingProductsParams struct {
 	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
 	// Page offset (default 0)
-	Offset         *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	PriceUsageType *string `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
-	Q              *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset         *int                                             `json:"offset,omitempty" url:"offset,omitempty"`
+	PriceUsageType *ListBillingProductsResponseParamsPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
+	Q              *string                                          `json:"q,omitempty" url:"q,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"with_prices_only,omitempty" url:"with_prices_only,omitempty"`
 	// Filter products that have zero price for free subscription type
@@ -1516,7 +1590,7 @@ func (l *ListBillingProductsParams) GetOffset() *int {
 	return l.Offset
 }
 
-func (l *ListBillingProductsParams) GetPriceUsageType() *string {
+func (l *ListBillingProductsParams) GetPriceUsageType() *ListBillingProductsResponseParamsPriceUsageType {
 	if l == nil {
 		return nil
 	}
@@ -1583,6 +1657,28 @@ func (l *ListBillingProductsParams) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
+type ListBillingProductsRequestPriceUsageType string
+
+const (
+	ListBillingProductsRequestPriceUsageTypeLicensed ListBillingProductsRequestPriceUsageType = "licensed"
+	ListBillingProductsRequestPriceUsageTypeMetered  ListBillingProductsRequestPriceUsageType = "metered"
+)
+
+func NewListBillingProductsRequestPriceUsageTypeFromString(s string) (ListBillingProductsRequestPriceUsageType, error) {
+	switch s {
+	case "licensed":
+		return ListBillingProductsRequestPriceUsageTypeLicensed, nil
+	case "metered":
+		return ListBillingProductsRequestPriceUsageTypeMetered, nil
+	}
+	var t ListBillingProductsRequestPriceUsageType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListBillingProductsRequestPriceUsageType) Ptr() *ListBillingProductsRequestPriceUsageType {
+	return &l
+}
+
 type ListBillingProductsResponse struct {
 	// The returned resources
 	Data []*BillingProductDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
@@ -1628,6 +1724,157 @@ func (l *ListBillingProductsResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (l *ListBillingProductsResponse) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+type ListBillingProductsResponseParamsPriceUsageType string
+
+const (
+	ListBillingProductsResponseParamsPriceUsageTypeLicensed ListBillingProductsResponseParamsPriceUsageType = "licensed"
+	ListBillingProductsResponseParamsPriceUsageTypeMetered  ListBillingProductsResponseParamsPriceUsageType = "metered"
+)
+
+func NewListBillingProductsResponseParamsPriceUsageTypeFromString(s string) (ListBillingProductsResponseParamsPriceUsageType, error) {
+	switch s {
+	case "licensed":
+		return ListBillingProductsResponseParamsPriceUsageTypeLicensed, nil
+	case "metered":
+		return ListBillingProductsResponseParamsPriceUsageTypeMetered, nil
+	}
+	var t ListBillingProductsResponseParamsPriceUsageType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListBillingProductsResponseParamsPriceUsageType) Ptr() *ListBillingProductsResponseParamsPriceUsageType {
+	return &l
+}
+
+// Input parameters
+type ListCouponsParams struct {
+	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCouponsParams) GetIsActive() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.IsActive
+}
+
+func (l *ListCouponsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCouponsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCouponsParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListCouponsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCouponsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCouponsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCouponsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCouponsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+type ListCouponsResponse struct {
+	// The returned resources
+	Data []*BillingCouponResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *ListCouponsParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCouponsResponse) GetData() []*BillingCouponResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCouponsResponse) GetParams() *ListCouponsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListCouponsResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCouponsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCouponsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCouponsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCouponsResponse) String() string {
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2178,9 +2425,9 @@ type ListProductPricesParams struct {
 	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
 	// Page offset (default 0)
-	Offset         *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	PriceUsageType *string `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
-	Q              *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset         *int                                           `json:"offset,omitempty" url:"offset,omitempty"`
+	PriceUsageType *ListProductPricesResponseParamsPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
+	Q              *string                                        `json:"q,omitempty" url:"q,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"with_prices_only,omitempty" url:"with_prices_only,omitempty"`
 	// Filter products that have zero price for free subscription type
@@ -2220,7 +2467,7 @@ func (l *ListProductPricesParams) GetOffset() *int {
 	return l.Offset
 }
 
-func (l *ListProductPricesParams) GetPriceUsageType() *string {
+func (l *ListProductPricesParams) GetPriceUsageType() *ListProductPricesResponseParamsPriceUsageType {
 	if l == nil {
 		return nil
 	}
@@ -2287,6 +2534,28 @@ func (l *ListProductPricesParams) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
+type ListProductPricesRequestPriceUsageType string
+
+const (
+	ListProductPricesRequestPriceUsageTypeLicensed ListProductPricesRequestPriceUsageType = "licensed"
+	ListProductPricesRequestPriceUsageTypeMetered  ListProductPricesRequestPriceUsageType = "metered"
+)
+
+func NewListProductPricesRequestPriceUsageTypeFromString(s string) (ListProductPricesRequestPriceUsageType, error) {
+	switch s {
+	case "licensed":
+		return ListProductPricesRequestPriceUsageTypeLicensed, nil
+	case "metered":
+		return ListProductPricesRequestPriceUsageTypeMetered, nil
+	}
+	var t ListProductPricesRequestPriceUsageType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListProductPricesRequestPriceUsageType) Ptr() *ListProductPricesRequestPriceUsageType {
+	return &l
+}
+
 type ListProductPricesResponse struct {
 	// The returned resources
 	Data []*BillingPriceResponseData `json:"data,omitempty" url:"data,omitempty"`
@@ -2341,6 +2610,28 @@ func (l *ListProductPricesResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+type ListProductPricesResponseParamsPriceUsageType string
+
+const (
+	ListProductPricesResponseParamsPriceUsageTypeLicensed ListProductPricesResponseParamsPriceUsageType = "licensed"
+	ListProductPricesResponseParamsPriceUsageTypeMetered  ListProductPricesResponseParamsPriceUsageType = "metered"
+)
+
+func NewListProductPricesResponseParamsPriceUsageTypeFromString(s string) (ListProductPricesResponseParamsPriceUsageType, error) {
+	switch s {
+	case "licensed":
+		return ListProductPricesResponseParamsPriceUsageTypeLicensed, nil
+	case "metered":
+		return ListProductPricesResponseParamsPriceUsageTypeMetered, nil
+	}
+	var t ListProductPricesResponseParamsPriceUsageType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListProductPricesResponseParamsPriceUsageType) Ptr() *ListProductPricesResponseParamsPriceUsageType {
+	return &l
 }
 
 // Input parameters
@@ -2957,14 +3248,14 @@ type CreateMeterRequestBody struct {
 }
 
 type CreateBillingPriceRequestBody struct {
-	Currency          string  `json:"currency" url:"-"`
-	Interval          string  `json:"interval" url:"-"`
-	IsActive          bool    `json:"is_active" url:"-"`
-	MeterID           *string `json:"meter_id,omitempty" url:"-"`
-	Price             int     `json:"price" url:"-"`
-	PriceExternalID   string  `json:"price_external_id" url:"-"`
-	ProductExternalID string  `json:"product_external_id" url:"-"`
-	UsageType         string  `json:"usage_type" url:"-"`
+	Currency          string                                 `json:"currency" url:"-"`
+	Interval          string                                 `json:"interval" url:"-"`
+	IsActive          bool                                   `json:"is_active" url:"-"`
+	MeterID           *string                                `json:"meter_id,omitempty" url:"-"`
+	Price             int                                    `json:"price" url:"-"`
+	PriceExternalID   string                                 `json:"price_external_id" url:"-"`
+	ProductExternalID string                                 `json:"product_external_id" url:"-"`
+	UsageType         CreateBillingPriceRequestBodyUsageType `json:"usage_type" url:"-"`
 }
 
 type CreateBillingProductRequestBody struct {

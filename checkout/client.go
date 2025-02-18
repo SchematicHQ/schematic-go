@@ -94,8 +94,7 @@ func (c *Client) Internal(
 
 func (c *Client) GetCheckoutData(
 	ctx context.Context,
-	// checkout_internal_id
-	checkoutInternalID string,
+	request *schematicgo.CheckoutDataRequestBody,
 	opts ...option.RequestOption,
 ) (*schematicgo.GetCheckoutDataResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -104,15 +103,18 @@ func (c *Client) GetCheckoutData(
 		c.baseURL,
 		"https://api.schematichq.com",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/checkout-internal/%v/data",
-		checkoutInternalID,
-	)
+	endpointURL := baseURL + "/checkout-internal/data"
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
 	)
+	headers.Set("Content-Type", "application/json")
 	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
+			}
+		},
 		401: func(apiError *core.APIError) error {
 			return &schematicgo.UnauthorizedError{
 				APIError: apiError,
@@ -120,11 +122,6 @@ func (c *Client) GetCheckoutData(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
-				APIError: apiError,
-			}
-		},
-		404: func(apiError *core.APIError) error {
-			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -140,12 +137,13 @@ func (c *Client) GetCheckoutData(
 		ctx,
 		&internal.CallParams{
 			URL:             endpointURL,
-			Method:          http.MethodGet,
+			Method:          http.MethodPost,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
+			Request:         request,
 			Response:        &response,
 			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},

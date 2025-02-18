@@ -9,14 +9,20 @@ import (
 	time "time"
 )
 
+type CheckoutDataRequestBody struct {
+	CompanyID      string  `json:"company_id" url:"-"`
+	SelectedPlanID *string `json:"selected_plan_id,omitempty" url:"-"`
+}
+
 type ChangeSubscriptionInternalRequestBody struct {
-	AddOnIDs        []*UpdateAddOnRequestBody        `json:"add_on_ids,omitempty" url:"add_on_ids,omitempty"`
-	CompanyID       string                           `json:"company_id" url:"company_id"`
-	NewPlanID       string                           `json:"new_plan_id" url:"new_plan_id"`
-	NewPriceID      string                           `json:"new_price_id" url:"new_price_id"`
-	PayInAdvance    []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance,omitempty" url:"pay_in_advance,omitempty"`
-	PaymentMethodID *string                          `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
-	PromoCode       *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
+	AddOnIDs         []*UpdateAddOnRequestBody        `json:"add_on_ids,omitempty" url:"add_on_ids,omitempty"`
+	CompanyID        string                           `json:"company_id" url:"company_id"`
+	CouponExternalID *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
+	NewPlanID        string                           `json:"new_plan_id" url:"new_plan_id"`
+	NewPriceID       string                           `json:"new_price_id" url:"new_price_id"`
+	PayInAdvance     []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance,omitempty" url:"pay_in_advance,omitempty"`
+	PaymentMethodID  *string                          `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
+	PromoCode        *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -34,6 +40,13 @@ func (c *ChangeSubscriptionInternalRequestBody) GetCompanyID() string {
 		return ""
 	}
 	return c.CompanyID
+}
+
+func (c *ChangeSubscriptionInternalRequestBody) GetCouponExternalID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CouponExternalID
 }
 
 func (c *ChangeSubscriptionInternalRequestBody) GetNewPlanID() string {
@@ -103,14 +116,16 @@ func (c *ChangeSubscriptionInternalRequestBody) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// The returned resource
+// The requested resource
 type CheckoutDataResponseData struct {
-	ActiveAddOns                 []*PlanDetailResponseData            `json:"active_add_ons,omitempty" url:"active_add_ons,omitempty"`
-	ActivePlan                   *PlanDetailResponseData              `json:"active_plan,omitempty" url:"active_plan,omitempty"`
-	ActiveUsageBasedEntitlements []*UsageBasedEntitlementResponseData `json:"active_usage_based_entitlements,omitempty" url:"active_usage_based_entitlements,omitempty"`
-	Company                      *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
-	FeatureUsage                 *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
-	Subscription                 *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
+	ActiveAddOns                   []*PlanDetailResponseData            `json:"active_add_ons,omitempty" url:"active_add_ons,omitempty"`
+	ActivePlan                     *PlanDetailResponseData              `json:"active_plan,omitempty" url:"active_plan,omitempty"`
+	ActiveUsageBasedEntitlements   []*UsageBasedEntitlementResponseData `json:"active_usage_based_entitlements,omitempty" url:"active_usage_based_entitlements,omitempty"`
+	Company                        *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
+	FeatureUsage                   *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	SelectedPlan                   *PlanDetailResponseData              `json:"selected_plan,omitempty" url:"selected_plan,omitempty"`
+	SelectedUsageBasedEntitlements []*UsageBasedEntitlementResponseData `json:"selected_usage_based_entitlements,omitempty" url:"selected_usage_based_entitlements,omitempty"`
+	Subscription                   *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -149,6 +164,20 @@ func (c *CheckoutDataResponseData) GetFeatureUsage() *FeatureUsageDetailResponse
 		return nil
 	}
 	return c.FeatureUsage
+}
+
+func (c *CheckoutDataResponseData) GetSelectedPlan() *PlanDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.SelectedPlan
+}
+
+func (c *CheckoutDataResponseData) GetSelectedUsageBasedEntitlements() []*UsageBasedEntitlementResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.SelectedUsageBasedEntitlements
 }
 
 func (c *CheckoutDataResponseData) GetSubscription() *CompanySubscriptionResponseData {

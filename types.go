@@ -1348,12 +1348,13 @@ func (b *BillingSubscriptionView) String() string {
 }
 
 type ChangeSubscriptionRequestBody struct {
-	AddOnIDs        []*UpdateAddOnRequestBody        `json:"add_on_ids,omitempty" url:"add_on_ids,omitempty"`
-	NewPlanID       string                           `json:"new_plan_id" url:"new_plan_id"`
-	NewPriceID      string                           `json:"new_price_id" url:"new_price_id"`
-	PayInAdvance    []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance,omitempty" url:"pay_in_advance,omitempty"`
-	PaymentMethodID *string                          `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
-	PromoCode       *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
+	AddOnIDs         []*UpdateAddOnRequestBody        `json:"add_on_ids,omitempty" url:"add_on_ids,omitempty"`
+	CouponExternalID *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
+	NewPlanID        string                           `json:"new_plan_id" url:"new_plan_id"`
+	NewPriceID       string                           `json:"new_price_id" url:"new_price_id"`
+	PayInAdvance     []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance,omitempty" url:"pay_in_advance,omitempty"`
+	PaymentMethodID  *string                          `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
+	PromoCode        *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1364,6 +1365,13 @@ func (c *ChangeSubscriptionRequestBody) GetAddOnIDs() []*UpdateAddOnRequestBody 
 		return nil
 	}
 	return c.AddOnIDs
+}
+
+func (c *ChangeSubscriptionRequestBody) GetCouponExternalID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CouponExternalID
 }
 
 func (c *ChangeSubscriptionRequestBody) GetNewPlanID() string {

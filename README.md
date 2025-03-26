@@ -393,6 +393,40 @@ func TestSomeFunctionality(t *testing.T) {
 }
 ```
 
+## Webhook Verification
+
+Schematic can send webhooks to notify your application of events. To ensure the security of these webhooks, Schematic signs each request using HMAC-SHA256. The Go SDK provides utility functions to verify these signatures.
+
+### Verifying Webhook Signatures
+
+When your application receives a webhook request from Schematic, you should verify its signature to ensure it's authentic. The SDK provides a simple function to verify webhook signatures:
+
+```go
+import (
+  "net/http"
+
+  "github.com/schematichq/schematic-go/webhooks"
+)
+
+func yourWebhookHandler(w http.ResponseWriter, r *http.Request) {
+  // Each webhook has a distinct secret; you can access this via the Schematic app
+  webhookSecret := "your-webhook-secret"
+
+  // Verify the webhook signature
+  // The request body is preserved for later reading
+  err := webhooks.VerifyWebhookSignature(r, webhookSecret)
+  if err != nil {
+    // The signature is invalid or there was another error
+    http.Error(w, "Invalid signature", http.StatusBadRequest)
+    return
+  }
+
+  // The signature is valid, process the webhook...
+}
+```
+
+If you want to verify a webhook signature outside of the context of a web request, you can also do that using the `webhooks.VerifySignature` function.
+
 ## Errors
 
 Structured error types are returned from API calls that return non-success status codes. For example,

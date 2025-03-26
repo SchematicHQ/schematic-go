@@ -165,6 +165,15 @@ This call is non-blocking and there is no response to check.
 If you want to record large numbers of the same event at once, or perhaps measure usage in terms of a unit like tokens or memory, you can optionally specify a quantity for your event:
 
 ```go
+import (
+  "context"
+  "os"
+
+  option "github.com/schematichq/schematic-go/option"
+  schematicclient "github.com/schematichq/schematic-go/client"
+  schematicgo "github.com/schematichq/schematic-go"
+)
+
 client.Track(context.Background(), &schematicgo.EventBodyTrack{
   Event: "query-tokens",
   Company: map[string]stringh{

@@ -174,17 +174,23 @@ import (
   schematicgo "github.com/schematichq/schematic-go"
 )
 
-client.Track(context.Background(), &schematicgo.EventBodyTrack{
-  Event: "query-tokens",
-  Company: map[string]stringh{
-    "id": "your-company-id",
-  },
-  User: map[string]string{
-    "email":   "wcoyote@acme.net",
-    "user-id": "your-user-id",
-  },
-  Quantity: schematicgo.Int(1500),
-})
+func main() {
+  apiKey := os.Getenv("SCHEMATIC_API_KEY")
+  client := schematicclient.NewSchematicClient(option.WithAPIKey(apiKey))
+  defer client.Close()
+
+  client.Track(context.Background(), &schematicgo.EventBodyTrack{
+    Event: "query-tokens",
+    Company: map[string]string{
+      "id": "your-company-id",
+    },
+    User: map[string]string{
+      "email":   "wcoyote@acme.net",
+      "user-id": "your-user-id",
+    },
+    Quantity: schematicgo.Int(1500),
+  })
+}
 ```
 
 ### Creating and updating companies

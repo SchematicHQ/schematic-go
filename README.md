@@ -181,7 +181,7 @@ func main() {
 
   client.Track(context.Background(), &schematicgo.EventBodyTrack{
     Event: "query-tokens",
-    Company: map[string]stringh{
+    Company: map[string]string{
       "id": "your-company-id",
     },
     User: map[string]string{

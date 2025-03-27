@@ -11,10 +11,10 @@ import (
 )
 
 // WebhookSignatureHeader is the HTTP header containing the webhook signature
-const WebhookSignatureHeader = "Schematic-Signature"
+const WebhookSignatureHeader = "X-Schematic-Webhook-Signature"
 
 // WebhookTimestampHeader is the HTTP header containing the webhook timestamp
-const WebhookTimestampHeader = "Schematic-Timestamp"
+const WebhookTimestampHeader = "X-Schematic-Webhook-Timestamp"
 
 // ErrInvalidSignature is returned when the webhook signature is invalid
 var ErrInvalidSignature = errors.New("invalid webhook signature")
@@ -88,3 +88,4 @@ func VerifyWebhookSignature(r *http.Request, secret string) error {
 	// Verify the signature
 	return VerifySignature(body, signature, timestamp, secret)
 }
+

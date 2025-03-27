@@ -122,6 +122,7 @@ type CreatePlanEntitlementRequestBody struct {
 	MonthlyMeteredPriceID  *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
 	PlanID                 string                                                  `json:"plan_id" url:"-"`
 	PriceBehavior          *string                                                 `json:"price_behavior,omitempty" url:"-"`
+	SoftLimit              *int                                                    `json:"soft_limit,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
 	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
@@ -3223,6 +3224,7 @@ type UpdatePlanEntitlementRequestBody struct {
 	MetricPeriodMonthReset *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	MonthlyMeteredPriceID  *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
 	PriceBehavior          *string                                                 `json:"price_behavior,omitempty" url:"-"`
+	SoftLimit              *int                                                    `json:"soft_limit,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
 	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`

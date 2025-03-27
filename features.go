@@ -41,6 +41,8 @@ type CreateFeatureRequestBody struct {
 	LifecyclePhase *string                             `json:"lifecycle_phase,omitempty" url:"-"`
 	MaintainerID   *string                             `json:"maintainer_id,omitempty" url:"-"`
 	Name           string                              `json:"name" url:"-"`
+	PluralName     *string                             `json:"plural_name,omitempty" url:"-"`
+	SingularName   *string                             `json:"singular_name,omitempty" url:"-"`
 	TraitID        *string                             `json:"trait_id,omitempty" url:"-"`
 }
 
@@ -2393,6 +2395,8 @@ type UpdateFeatureRequestBody struct {
 	LifecyclePhase *string                              `json:"lifecycle_phase,omitempty" url:"-"`
 	MaintainerID   *string                              `json:"maintainer_id,omitempty" url:"-"`
 	Name           *string                              `json:"name,omitempty" url:"-"`
+	PluralName     *string                              `json:"plural_name,omitempty" url:"-"`
+	SingularName   *string                              `json:"singular_name,omitempty" url:"-"`
 	TraitID        *string                              `json:"trait_id,omitempty" url:"-"`
 }
 

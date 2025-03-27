@@ -200,6 +200,7 @@ type WebhookResponseData struct {
 	ID           string    `json:"id" url:"id"`
 	Name         string    `json:"name" url:"name"`
 	RequestTypes []string  `json:"request_types,omitempty" url:"request_types,omitempty"`
+	Secret       string    `json:"secret" url:"secret"`
 	Status       string    `json:"status" url:"status"`
 	UpdatedAt    time.Time `json:"updated_at" url:"updated_at"`
 	URL          string    `json:"url" url:"url"`
@@ -234,6 +235,13 @@ func (w *WebhookResponseData) GetRequestTypes() []string {
 		return nil
 	}
 	return w.RequestTypes
+}
+
+func (w *WebhookResponseData) GetSecret() string {
+	if w == nil {
+		return ""
+	}
+	return w.Secret
 }
 
 func (w *WebhookResponseData) GetStatus() string {

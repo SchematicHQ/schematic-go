@@ -219,11 +219,11 @@ func (c *Client) UpsertBillingCustomer(
 	return response, nil
 }
 
-func (c *Client) ListCustomers(
+func (c *Client) ListCustomersWithSubscriptions(
 	ctx context.Context,
-	request *schematicgo.ListCustomersRequest,
+	request *schematicgo.ListCustomersWithSubscriptionsRequest,
 	opts ...option.RequestOption,
-) (*schematicgo.ListCustomersResponse, error) {
+) (*schematicgo.ListCustomersWithSubscriptionsResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -265,7 +265,7 @@ func (c *Client) ListCustomers(
 		},
 	}
 
-	var response *schematicgo.ListCustomersResponse
+	var response *schematicgo.ListCustomersWithSubscriptionsResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

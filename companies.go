@@ -699,10 +699,14 @@ func (u *UpsertTraitRequestBody) String() string {
 }
 
 type UpsertUserRequestBody struct {
-	// Optionally specify company using key/value pairs
+	// Optionally specify companies using array of key/value pairs
+	Companies []map[string]string `json:"companies,omitempty" url:"companies,omitempty"`
+	// Add user to this company. Takes priority over companies. For exhaustive list of companies, use companies
 	Company map[string]string `json:"company,omitempty" url:"company,omitempty"`
-	// Optionally specify company using Schematic company ID
+	// Add user to this company. Takes priority over company_ids. For exhaustive list of companies, use company_ids
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Optionally specify companies using Schematic company ID
+	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// If you know the Schematic ID, you can use that here instead of keys
 	ID         *string           `json:"id,omitempty" url:"id,omitempty"`
 	Keys       map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
@@ -714,6 +718,13 @@ type UpsertUserRequestBody struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (u *UpsertUserRequestBody) GetCompanies() []map[string]string {
+	if u == nil {
+		return nil
+	}
+	return u.Companies
 }
 
 func (u *UpsertUserRequestBody) GetCompany() map[string]string {
@@ -728,6 +739,13 @@ func (u *UpsertUserRequestBody) GetCompanyID() *string {
 		return nil
 	}
 	return u.CompanyID
+}
+
+func (u *UpsertUserRequestBody) GetCompanyIDs() []string {
+	if u == nil {
+		return nil
+	}
+	return u.CompanyIDs
 }
 
 func (u *UpsertUserRequestBody) GetID() *string {

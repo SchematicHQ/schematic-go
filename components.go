@@ -39,6 +39,7 @@ type PreviewComponentDataRequest struct {
 type CompanyPlanDetailResponseData struct {
 	AudienceType     *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	BillingProduct   *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
+	ChargeType       string                            `json:"charge_type" url:"charge_type"`
 	CompanyCanTrial  bool                              `json:"company_can_trial" url:"company_can_trial"`
 	CompanyCount     int                               `json:"company_count" url:"company_count"`
 	CreatedAt        time.Time                         `json:"created_at" url:"created_at"`
@@ -56,6 +57,7 @@ type CompanyPlanDetailResponseData struct {
 	IsTrialable      bool                              `json:"is_trialable" url:"is_trialable"`
 	MonthlyPrice     *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name             string                            `json:"name" url:"name"`
+	OneTimePrice     *BillingPriceResponseData         `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	PlanType         string                            `json:"plan_type" url:"plan_type"`
 	TrialDays        *int                              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt        time.Time                         `json:"updated_at" url:"updated_at"`
@@ -78,6 +80,13 @@ func (c *CompanyPlanDetailResponseData) GetBillingProduct() *BillingProductDetai
 		return nil
 	}
 	return c.BillingProduct
+}
+
+func (c *CompanyPlanDetailResponseData) GetChargeType() string {
+	if c == nil {
+		return ""
+	}
+	return c.ChargeType
 }
 
 func (c *CompanyPlanDetailResponseData) GetCompanyCanTrial() bool {
@@ -197,6 +206,13 @@ func (c *CompanyPlanDetailResponseData) GetName() string {
 		return ""
 	}
 	return c.Name
+}
+
+func (c *CompanyPlanDetailResponseData) GetOneTimePrice() *BillingPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.OneTimePrice
 }
 
 func (c *CompanyPlanDetailResponseData) GetPlanType() string {

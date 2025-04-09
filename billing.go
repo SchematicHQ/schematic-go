@@ -16,10 +16,14 @@ type CountBillingProductsRequest struct {
 	PriceUsageType *CountBillingProductsRequestPriceUsageType `json:"-" url:"price_usage_type,omitempty"`
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
+	// Filter products that are one time charges
+	WithOneTimeCharges *bool `json:"-" url:"with_one_time_charges,omitempty"`
 	// Filter products that have zero price for free subscription type
 	WithZeroPrice *bool `json:"-" url:"with_zero_price,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"-" url:"with_prices_only,omitempty"`
+	// Filter products that are active
+	IsActive *bool `json:"-" url:"is_active,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -27,9 +31,10 @@ type CountBillingProductsRequest struct {
 }
 
 type CountCustomersRequest struct {
-	Name           *string `json:"-" url:"name,omitempty"`
-	FailedToImport *bool   `json:"-" url:"failed_to_import,omitempty"`
-	Q              *string `json:"-" url:"q,omitempty"`
+	CompanyIDs     []*string `json:"-" url:"company_ids,omitempty"`
+	Name           *string   `json:"-" url:"name,omitempty"`
+	FailedToImport *bool     `json:"-" url:"failed_to_import,omitempty"`
+	Q              *string   `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -43,10 +48,14 @@ type ListBillingProductsRequest struct {
 	PriceUsageType *ListBillingProductsRequestPriceUsageType `json:"-" url:"price_usage_type,omitempty"`
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
+	// Filter products that are one time charges
+	WithOneTimeCharges *bool `json:"-" url:"with_one_time_charges,omitempty"`
 	// Filter products that have zero price for free subscription type
 	WithZeroPrice *bool `json:"-" url:"with_zero_price,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"-" url:"with_prices_only,omitempty"`
+	// Filter products that are active
+	IsActive *bool `json:"-" url:"is_active,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -62,10 +71,11 @@ type ListCouponsRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
-type ListCustomersRequest struct {
-	Name           *string `json:"-" url:"name,omitempty"`
-	FailedToImport *bool   `json:"-" url:"failed_to_import,omitempty"`
-	Q              *string `json:"-" url:"q,omitempty"`
+type ListCustomersWithSubscriptionsRequest struct {
+	CompanyIDs     []*string `json:"-" url:"company_ids,omitempty"`
+	Name           *string   `json:"-" url:"name,omitempty"`
+	FailedToImport *bool     `json:"-" url:"failed_to_import,omitempty"`
+	Q              *string   `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -106,10 +116,14 @@ type ListProductPricesRequest struct {
 	PriceUsageType *ListProductPricesRequestPriceUsageType `json:"-" url:"price_usage_type,omitempty"`
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
+	// Filter products that are one time charges
+	WithOneTimeCharges *bool `json:"-" url:"with_one_time_charges,omitempty"`
 	// Filter products that have zero price for free subscription type
 	WithZeroPrice *bool `json:"-" url:"with_zero_price,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"-" url:"with_prices_only,omitempty"`
+	// Filter products that are active
+	IsActive *bool `json:"-" url:"is_active,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -759,7 +773,9 @@ type BillingProductPricing struct {
 	Currency          string                         `json:"currency" url:"currency"`
 	Interval          string                         `json:"interval" url:"interval"`
 	MeterID           *string                        `json:"meter_id,omitempty" url:"meter_id,omitempty"`
+	PackageSize       *int                           `json:"package_size,omitempty" url:"package_size,omitempty"`
 	Price             int                            `json:"price" url:"price"`
+	PriceDecimal      *string                        `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
 	PriceExternalID   string                         `json:"price_external_id" url:"price_external_id"`
 	ProductExternalID string                         `json:"product_external_id" url:"product_external_id"`
 	Quantity          int                            `json:"quantity" url:"quantity"`
@@ -790,11 +806,25 @@ func (b *BillingProductPricing) GetMeterID() *string {
 	return b.MeterID
 }
 
+func (b *BillingProductPricing) GetPackageSize() *int {
+	if b == nil {
+		return nil
+	}
+	return b.PackageSize
+}
+
 func (b *BillingProductPricing) GetPrice() int {
 	if b == nil {
 		return 0
 	}
 	return b.Price
+}
+
+func (b *BillingProductPricing) GetPriceDecimal() *string {
+	if b == nil {
+		return nil
+	}
+	return b.PriceDecimal
 }
 
 func (b *BillingProductPricing) GetPriceExternalID() string {
@@ -877,146 +907,6 @@ func NewBillingProductPricingUsageTypeFromString(s string) (BillingProductPricin
 
 func (b BillingProductPricingUsageType) Ptr() *BillingProductPricingUsageType {
 	return &b
-}
-
-type BillingProductResponseData struct {
-	AccountID     string    `json:"account_id" url:"account_id"`
-	CreatedAt     time.Time `json:"created_at" url:"created_at"`
-	Currency      string    `json:"currency" url:"currency"`
-	EnvironmentID string    `json:"environment_id" url:"environment_id"`
-	ExternalID    string    `json:"external_id" url:"external_id"`
-	Name          string    `json:"name" url:"name"`
-	Price         float64   `json:"price" url:"price"`
-	ProductID     string    `json:"product_id" url:"product_id"`
-	Quantity      float64   `json:"quantity" url:"quantity"`
-	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (b *BillingProductResponseData) GetAccountID() string {
-	if b == nil {
-		return ""
-	}
-	return b.AccountID
-}
-
-func (b *BillingProductResponseData) GetCreatedAt() time.Time {
-	if b == nil {
-		return time.Time{}
-	}
-	return b.CreatedAt
-}
-
-func (b *BillingProductResponseData) GetCurrency() string {
-	if b == nil {
-		return ""
-	}
-	return b.Currency
-}
-
-func (b *BillingProductResponseData) GetEnvironmentID() string {
-	if b == nil {
-		return ""
-	}
-	return b.EnvironmentID
-}
-
-func (b *BillingProductResponseData) GetExternalID() string {
-	if b == nil {
-		return ""
-	}
-	return b.ExternalID
-}
-
-func (b *BillingProductResponseData) GetName() string {
-	if b == nil {
-		return ""
-	}
-	return b.Name
-}
-
-func (b *BillingProductResponseData) GetPrice() float64 {
-	if b == nil {
-		return 0
-	}
-	return b.Price
-}
-
-func (b *BillingProductResponseData) GetProductID() string {
-	if b == nil {
-		return ""
-	}
-	return b.ProductID
-}
-
-func (b *BillingProductResponseData) GetQuantity() float64 {
-	if b == nil {
-		return 0
-	}
-	return b.Quantity
-}
-
-func (b *BillingProductResponseData) GetUpdatedAt() time.Time {
-	if b == nil {
-		return time.Time{}
-	}
-	return b.UpdatedAt
-}
-
-func (b *BillingProductResponseData) GetExtraProperties() map[string]interface{} {
-	return b.extraProperties
-}
-
-func (b *BillingProductResponseData) UnmarshalJSON(data []byte) error {
-	type embed BillingProductResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*b),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*b = BillingProductResponseData(unmarshaler.embed)
-	b.CreatedAt = unmarshaler.CreatedAt.Time()
-	b.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *b)
-	if err != nil {
-		return err
-	}
-	b.extraProperties = extraProperties
-	b.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (b *BillingProductResponseData) MarshalJSON() ([]byte, error) {
-	type embed BillingProductResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*b),
-		CreatedAt: internal.NewDateTime(b.CreatedAt),
-		UpdatedAt: internal.NewDateTime(b.UpdatedAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (b *BillingProductResponseData) String() string {
-	if len(b.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(b); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", b)
 }
 
 type BillingSubscriptionDiscount struct {
@@ -1136,10 +1026,11 @@ func (b *BillingSubscriptionDiscount) String() string {
 }
 
 type CreateBillingPriceTierRequestBody struct {
-	FlatAmount      *int   `json:"flat_amount,omitempty" url:"flat_amount,omitempty"`
-	PerUnitPrice    *int   `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
-	PriceExternalID string `json:"price_external_id" url:"price_external_id"`
-	UpTo            *int   `json:"up_to,omitempty" url:"up_to,omitempty"`
+	FlatAmount      *int    `json:"flat_amount,omitempty" url:"flat_amount,omitempty"`
+	PerUnitDecimal  *string `json:"per_unit_decimal,omitempty" url:"per_unit_decimal,omitempty"`
+	PerUnitPrice    *int    `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
+	PriceExternalID string  `json:"price_external_id" url:"price_external_id"`
+	UpTo            *int    `json:"up_to,omitempty" url:"up_to,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1150,6 +1041,13 @@ func (c *CreateBillingPriceTierRequestBody) GetFlatAmount() *int {
 		return nil
 	}
 	return c.FlatAmount
+}
+
+func (c *CreateBillingPriceTierRequestBody) GetPerUnitDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PerUnitDecimal
 }
 
 func (c *CreateBillingPriceTierRequestBody) GetPerUnitPrice() *int {
@@ -1208,6 +1106,8 @@ func (c *CreateBillingPriceTierRequestBody) String() string {
 // Input parameters
 type CountBillingProductsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Filter products that are active
+	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
 	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
@@ -1215,6 +1115,8 @@ type CountBillingProductsParams struct {
 	Offset         *int                                              `json:"offset,omitempty" url:"offset,omitempty"`
 	PriceUsageType *CountBillingProductsResponseParamsPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
 	Q              *string                                           `json:"q,omitempty" url:"q,omitempty"`
+	// Filter products that are one time charges
+	WithOneTimeCharges *bool `json:"with_one_time_charges,omitempty" url:"with_one_time_charges,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"with_prices_only,omitempty" url:"with_prices_only,omitempty"`
 	// Filter products that have zero price for free subscription type
@@ -1231,6 +1133,13 @@ func (c *CountBillingProductsParams) GetIDs() []string {
 		return nil
 	}
 	return c.IDs
+}
+
+func (c *CountBillingProductsParams) GetIsActive() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.IsActive
 }
 
 func (c *CountBillingProductsParams) GetLimit() *int {
@@ -1266,6 +1175,13 @@ func (c *CountBillingProductsParams) GetQ() *string {
 		return nil
 	}
 	return c.Q
+}
+
+func (c *CountBillingProductsParams) GetWithOneTimeCharges() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithOneTimeCharges
 }
 
 func (c *CountBillingProductsParams) GetWithPricesOnly() *bool {
@@ -1422,7 +1338,8 @@ func (c CountBillingProductsResponseParamsPriceUsageType) Ptr() *CountBillingPro
 
 // Input parameters
 type CountCustomersParams struct {
-	FailedToImport *bool `json:"failed_to_import,omitempty" url:"failed_to_import,omitempty"`
+	CompanyIDs     []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	FailedToImport *bool    `json:"failed_to_import,omitempty" url:"failed_to_import,omitempty"`
 	// Page limit (default 100)
 	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
@@ -1432,6 +1349,13 @@ type CountCustomersParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CountCustomersParams) GetCompanyIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyIDs
 }
 
 func (c *CountCustomersParams) GetFailedToImport() *bool {
@@ -1554,6 +1478,28 @@ func (c *CountCustomersResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+type CreateBillingPriceRequestBodyBillingScheme string
+
+const (
+	CreateBillingPriceRequestBodyBillingSchemePerUnit CreateBillingPriceRequestBodyBillingScheme = "per_unit"
+	CreateBillingPriceRequestBodyBillingSchemeTiered  CreateBillingPriceRequestBodyBillingScheme = "tiered"
+)
+
+func NewCreateBillingPriceRequestBodyBillingSchemeFromString(s string) (CreateBillingPriceRequestBodyBillingScheme, error) {
+	switch s {
+	case "per_unit":
+		return CreateBillingPriceRequestBodyBillingSchemePerUnit, nil
+	case "tiered":
+		return CreateBillingPriceRequestBodyBillingSchemeTiered, nil
+	}
+	var t CreateBillingPriceRequestBodyBillingScheme
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateBillingPriceRequestBodyBillingScheme) Ptr() *CreateBillingPriceRequestBodyBillingScheme {
+	return &c
 }
 
 type CreateBillingPriceRequestBodyTierMode string
@@ -1735,6 +1681,8 @@ func (d *DeleteProductPriceResponse) String() string {
 // Input parameters
 type ListBillingProductsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Filter products that are active
+	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
 	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
@@ -1742,6 +1690,8 @@ type ListBillingProductsParams struct {
 	Offset         *int                                             `json:"offset,omitempty" url:"offset,omitempty"`
 	PriceUsageType *ListBillingProductsResponseParamsPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
 	Q              *string                                          `json:"q,omitempty" url:"q,omitempty"`
+	// Filter products that are one time charges
+	WithOneTimeCharges *bool `json:"with_one_time_charges,omitempty" url:"with_one_time_charges,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"with_prices_only,omitempty" url:"with_prices_only,omitempty"`
 	// Filter products that have zero price for free subscription type
@@ -1758,6 +1708,13 @@ func (l *ListBillingProductsParams) GetIDs() []string {
 		return nil
 	}
 	return l.IDs
+}
+
+func (l *ListBillingProductsParams) GetIsActive() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.IsActive
 }
 
 func (l *ListBillingProductsParams) GetLimit() *int {
@@ -1793,6 +1750,13 @@ func (l *ListBillingProductsParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListBillingProductsParams) GetWithOneTimeCharges() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithOneTimeCharges
 }
 
 func (l *ListBillingProductsParams) GetWithPricesOnly() *bool {
@@ -2078,8 +2042,9 @@ func (l *ListCouponsResponse) String() string {
 }
 
 // Input parameters
-type ListCustomersParams struct {
-	FailedToImport *bool `json:"failed_to_import,omitempty" url:"failed_to_import,omitempty"`
+type ListCustomersWithSubscriptionsParams struct {
+	CompanyIDs     []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	FailedToImport *bool    `json:"failed_to_import,omitempty" url:"failed_to_import,omitempty"`
 	// Page limit (default 100)
 	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
@@ -2091,52 +2056,59 @@ type ListCustomersParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListCustomersParams) GetFailedToImport() *bool {
+func (l *ListCustomersWithSubscriptionsParams) GetCompanyIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyIDs
+}
+
+func (l *ListCustomersWithSubscriptionsParams) GetFailedToImport() *bool {
 	if l == nil {
 		return nil
 	}
 	return l.FailedToImport
 }
 
-func (l *ListCustomersParams) GetLimit() *int {
+func (l *ListCustomersWithSubscriptionsParams) GetLimit() *int {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListCustomersParams) GetName() *string {
+func (l *ListCustomersWithSubscriptionsParams) GetName() *string {
 	if l == nil {
 		return nil
 	}
 	return l.Name
 }
 
-func (l *ListCustomersParams) GetOffset() *int {
+func (l *ListCustomersWithSubscriptionsParams) GetOffset() *int {
 	if l == nil {
 		return nil
 	}
 	return l.Offset
 }
 
-func (l *ListCustomersParams) GetQ() *string {
+func (l *ListCustomersWithSubscriptionsParams) GetQ() *string {
 	if l == nil {
 		return nil
 	}
 	return l.Q
 }
 
-func (l *ListCustomersParams) GetExtraProperties() map[string]interface{} {
+func (l *ListCustomersWithSubscriptionsParams) GetExtraProperties() map[string]interface{} {
 	return l.extraProperties
 }
 
-func (l *ListCustomersParams) UnmarshalJSON(data []byte) error {
-	type unmarshaler ListCustomersParams
+func (l *ListCustomersWithSubscriptionsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCustomersWithSubscriptionsParams
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*l = ListCustomersParams(value)
+	*l = ListCustomersWithSubscriptionsParams(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
@@ -2146,7 +2118,7 @@ func (l *ListCustomersParams) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (l *ListCustomersParams) String() string {
+func (l *ListCustomersWithSubscriptionsParams) String() string {
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2158,41 +2130,41 @@ func (l *ListCustomersParams) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-type ListCustomersResponse struct {
+type ListCustomersWithSubscriptionsResponse struct {
 	// The returned resources
 	Data []*BillingCustomerWithSubscriptionsResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
-	Params *ListCustomersParams `json:"params,omitempty" url:"params,omitempty"`
+	Params *ListCustomersWithSubscriptionsParams `json:"params,omitempty" url:"params,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (l *ListCustomersResponse) GetData() []*BillingCustomerWithSubscriptionsResponseData {
+func (l *ListCustomersWithSubscriptionsResponse) GetData() []*BillingCustomerWithSubscriptionsResponseData {
 	if l == nil {
 		return nil
 	}
 	return l.Data
 }
 
-func (l *ListCustomersResponse) GetParams() *ListCustomersParams {
+func (l *ListCustomersWithSubscriptionsResponse) GetParams() *ListCustomersWithSubscriptionsParams {
 	if l == nil {
 		return nil
 	}
 	return l.Params
 }
 
-func (l *ListCustomersResponse) GetExtraProperties() map[string]interface{} {
+func (l *ListCustomersWithSubscriptionsResponse) GetExtraProperties() map[string]interface{} {
 	return l.extraProperties
 }
 
-func (l *ListCustomersResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler ListCustomersResponse
+func (l *ListCustomersWithSubscriptionsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCustomersWithSubscriptionsResponse
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*l = ListCustomersResponse(value)
+	*l = ListCustomersWithSubscriptionsResponse(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
@@ -2202,7 +2174,7 @@ func (l *ListCustomersResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (l *ListCustomersResponse) String() string {
+func (l *ListCustomersWithSubscriptionsResponse) String() string {
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2604,6 +2576,8 @@ func (l *ListPaymentMethodsResponse) String() string {
 // Input parameters
 type ListProductPricesParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Filter products that are active
+	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
 	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
@@ -2611,6 +2585,8 @@ type ListProductPricesParams struct {
 	Offset         *int                                           `json:"offset,omitempty" url:"offset,omitempty"`
 	PriceUsageType *ListProductPricesResponseParamsPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
 	Q              *string                                        `json:"q,omitempty" url:"q,omitempty"`
+	// Filter products that are one time charges
+	WithOneTimeCharges *bool `json:"with_one_time_charges,omitempty" url:"with_one_time_charges,omitempty"`
 	// Filter products that have prices
 	WithPricesOnly *bool `json:"with_prices_only,omitempty" url:"with_prices_only,omitempty"`
 	// Filter products that have zero price for free subscription type
@@ -2627,6 +2603,13 @@ func (l *ListProductPricesParams) GetIDs() []string {
 		return nil
 	}
 	return l.IDs
+}
+
+func (l *ListProductPricesParams) GetIsActive() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.IsActive
 }
 
 func (l *ListProductPricesParams) GetLimit() *int {
@@ -2662,6 +2645,13 @@ func (l *ListProductPricesParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListProductPricesParams) GetWithOneTimeCharges() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithOneTimeCharges
 }
 
 func (l *ListProductPricesParams) GetWithPricesOnly() *bool {
@@ -3484,26 +3474,27 @@ type CreateMeterRequestBody struct {
 }
 
 type CreateBillingPriceRequestBody struct {
-	Currency          string                                 `json:"currency" url:"-"`
-	ExternalAccountID string                                 `json:"external_account_id" url:"-"`
-	Interval          string                                 `json:"interval" url:"-"`
-	IsActive          bool                                   `json:"is_active" url:"-"`
-	MeterID           *string                                `json:"meter_id,omitempty" url:"-"`
-	Price             int                                    `json:"price" url:"-"`
-	PriceExternalID   string                                 `json:"price_external_id" url:"-"`
-	PriceTiers        []*CreateBillingPriceTierRequestBody   `json:"price_tiers,omitempty" url:"-"`
-	ProductExternalID string                                 `json:"product_external_id" url:"-"`
-	TierMode          *CreateBillingPriceRequestBodyTierMode `json:"tier_mode,omitempty" url:"-"`
-	UsageType         CreateBillingPriceRequestBodyUsageType `json:"usage_type" url:"-"`
+	BillingScheme     CreateBillingPriceRequestBodyBillingScheme `json:"billing_scheme" url:"-"`
+	Currency          string                                     `json:"currency" url:"-"`
+	ExternalAccountID string                                     `json:"external_account_id" url:"-"`
+	Interval          string                                     `json:"interval" url:"-"`
+	IsActive          bool                                       `json:"is_active" url:"-"`
+	MeterID           *string                                    `json:"meter_id,omitempty" url:"-"`
+	PackageSize       *int                                       `json:"package_size,omitempty" url:"-"`
+	Price             int                                        `json:"price" url:"-"`
+	PriceDecimal      *string                                    `json:"price_decimal,omitempty" url:"-"`
+	PriceExternalID   string                                     `json:"price_external_id" url:"-"`
+	PriceTiers        []*CreateBillingPriceTierRequestBody       `json:"price_tiers,omitempty" url:"-"`
+	ProductExternalID string                                     `json:"product_external_id" url:"-"`
+	TierMode          *CreateBillingPriceRequestBodyTierMode     `json:"tier_mode,omitempty" url:"-"`
+	UsageType         CreateBillingPriceRequestBodyUsageType     `json:"usage_type" url:"-"`
 }
 
 type CreateBillingProductRequestBody struct {
-	Active     bool    `json:"active" url:"-"`
-	Currency   string  `json:"currency" url:"-"`
 	ExternalID string  `json:"external_id" url:"-"`
+	IsActive   *bool   `json:"is_active,omitempty" url:"-"`
 	Name       string  `json:"name" url:"-"`
 	Price      float64 `json:"price" url:"-"`
-	Quantity   int     `json:"quantity" url:"-"`
 }
 
 type CreateBillingSubscriptionsRequestBody struct {

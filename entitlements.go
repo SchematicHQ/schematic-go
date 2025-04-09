@@ -116,18 +116,24 @@ func (c *CreateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 type CreatePlanEntitlementRequestBody struct {
-	FeatureID              string                                                  `json:"feature_id" url:"-"`
-	MetricPeriod           *CreatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
-	MonthlyMeteredPriceID  *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
-	PlanID                 string                                                  `json:"plan_id" url:"-"`
-	PriceBehavior          *string                                                 `json:"price_behavior,omitempty" url:"-"`
-	SoftLimit              *int                                                    `json:"soft_limit,omitempty" url:"-"`
-	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
-	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              CreatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
-	YearlyMeteredPriceID   *string                                                 `json:"yearly_metered_price_id,omitempty" url:"-"`
+	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
+	FeatureID               string                                                  `json:"feature_id" url:"-"`
+	MetricPeriod            *CreatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset  *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	MonthlyMeteredPriceID   *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
+	MonthlyUnitPrice        *int                                                    `json:"monthly_unit_price,omitempty" url:"-"`
+	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
+	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
+	PlanID                  string                                                  `json:"plan_id" url:"-"`
+	PriceBehavior           *string                                                 `json:"price_behavior,omitempty" url:"-"`
+	SoftLimit               *int                                                    `json:"soft_limit,omitempty" url:"-"`
+	ValueBool               *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueNumeric            *int                                                    `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID            *string                                                 `json:"value_trait_id,omitempty" url:"-"`
+	ValueType               CreatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
+	YearlyMeteredPriceID    *string                                                 `json:"yearly_metered_price_id,omitempty" url:"-"`
+	YearlyUnitPrice         *int                                                    `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPriceDecimal  *string                                                 `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 }
 
 type GetFeatureUsageByCompanyRequest struct {
@@ -3220,14 +3226,20 @@ func (u *UpdateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 type UpdatePlanEntitlementRequestBody struct {
-	MetricPeriod           *UpdatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
-	MonthlyMeteredPriceID  *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
-	PriceBehavior          *string                                                 `json:"price_behavior,omitempty" url:"-"`
-	SoftLimit              *int                                                    `json:"soft_limit,omitempty" url:"-"`
-	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
-	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              UpdatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
-	YearlyMeteredPriceID   *string                                                 `json:"yearly_metered_price_id,omitempty" url:"-"`
+	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
+	MetricPeriod            *UpdatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset  *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	MonthlyMeteredPriceID   *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
+	MonthlyUnitPrice        *int                                                    `json:"monthly_unit_price,omitempty" url:"-"`
+	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
+	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
+	PriceBehavior           *string                                                 `json:"price_behavior,omitempty" url:"-"`
+	SoftLimit               *int                                                    `json:"soft_limit,omitempty" url:"-"`
+	ValueBool               *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueNumeric            *int                                                    `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID            *string                                                 `json:"value_trait_id,omitempty" url:"-"`
+	ValueType               UpdatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
+	YearlyMeteredPriceID    *string                                                 `json:"yearly_metered_price_id,omitempty" url:"-"`
+	YearlyUnitPrice         *int                                                    `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPriceDecimal  *string                                                 `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 }

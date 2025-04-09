@@ -221,14 +221,16 @@ func (c *CheckoutDataResponseData) String() string {
 
 // The requested resource
 type PreviewSubscriptionChangeResponseData struct {
-	AmountOff        int        `json:"amount_off" url:"amount_off"`
-	DueNow           int        `json:"due_now" url:"due_now"`
-	NewCharges       int        `json:"new_charges" url:"new_charges"`
-	PercentOff       float64    `json:"percent_off" url:"percent_off"`
-	PeriodStart      time.Time  `json:"period_start" url:"period_start"`
-	PromoCodeApplied bool       `json:"promo_code_applied" url:"promo_code_applied"`
-	Proration        int        `json:"proration" url:"proration"`
-	TrialEnd         *time.Time `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	AmountOff        int                                     `json:"amount_off" url:"amount_off"`
+	DueNow           int                                     `json:"due_now" url:"due_now"`
+	Finance          *PreviewSubscriptionFinanceResponseData `json:"finance,omitempty" url:"finance,omitempty"`
+	NewCharges       int                                     `json:"new_charges" url:"new_charges"`
+	PercentOff       float64                                 `json:"percent_off" url:"percent_off"`
+	PeriodStart      time.Time                               `json:"period_start" url:"period_start"`
+	PromoCodeApplied bool                                    `json:"promo_code_applied" url:"promo_code_applied"`
+	Proration        int                                     `json:"proration" url:"proration"`
+	TrialEnd         *time.Time                              `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	UsageViolations  []*FeatureUsageResponseData             `json:"usage_violations,omitempty" url:"usage_violations,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -246,6 +248,13 @@ func (p *PreviewSubscriptionChangeResponseData) GetDueNow() int {
 		return 0
 	}
 	return p.DueNow
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetFinance() *PreviewSubscriptionFinanceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Finance
 }
 
 func (p *PreviewSubscriptionChangeResponseData) GetNewCharges() int {
@@ -288,6 +297,13 @@ func (p *PreviewSubscriptionChangeResponseData) GetTrialEnd() *time.Time {
 		return nil
 	}
 	return p.TrialEnd
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetUsageViolations() []*FeatureUsageResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.UsageViolations
 }
 
 func (p *PreviewSubscriptionChangeResponseData) GetExtraProperties() map[string]interface{} {
@@ -333,6 +349,130 @@ func (p *PreviewSubscriptionChangeResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PreviewSubscriptionChangeResponseData) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PreviewSubscriptionFinanceResponseData struct {
+	AmountOff        int        `json:"amount_off" url:"amount_off"`
+	DueNow           int        `json:"due_now" url:"due_now"`
+	NewCharges       int        `json:"new_charges" url:"new_charges"`
+	PercentOff       float64    `json:"percent_off" url:"percent_off"`
+	PeriodStart      time.Time  `json:"period_start" url:"period_start"`
+	PromoCodeApplied bool       `json:"promo_code_applied" url:"promo_code_applied"`
+	Proration        int        `json:"proration" url:"proration"`
+	TrialEnd         *time.Time `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetAmountOff() int {
+	if p == nil {
+		return 0
+	}
+	return p.AmountOff
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetDueNow() int {
+	if p == nil {
+		return 0
+	}
+	return p.DueNow
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetNewCharges() int {
+	if p == nil {
+		return 0
+	}
+	return p.NewCharges
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetPercentOff() float64 {
+	if p == nil {
+		return 0
+	}
+	return p.PercentOff
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetPeriodStart() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.PeriodStart
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetPromoCodeApplied() bool {
+	if p == nil {
+		return false
+	}
+	return p.PromoCodeApplied
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetProration() int {
+	if p == nil {
+		return 0
+	}
+	return p.Proration
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetTrialEnd() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.TrialEnd
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) UnmarshalJSON(data []byte) error {
+	type embed PreviewSubscriptionFinanceResponseData
+	var unmarshaler = struct {
+		embed
+		PeriodStart *internal.DateTime `json:"period_start"`
+		TrialEnd    *internal.DateTime `json:"trial_end,omitempty"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PreviewSubscriptionFinanceResponseData(unmarshaler.embed)
+	p.PeriodStart = unmarshaler.PeriodStart.Time()
+	p.TrialEnd = unmarshaler.TrialEnd.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) MarshalJSON() ([]byte, error) {
+	type embed PreviewSubscriptionFinanceResponseData
+	var marshaler = struct {
+		embed
+		PeriodStart *internal.DateTime `json:"period_start"`
+		TrialEnd    *internal.DateTime `json:"trial_end,omitempty"`
+	}{
+		embed:       embed(*p),
+		PeriodStart: internal.NewDateTime(p.PeriodStart),
+		TrialEnd:    internal.NewOptionalDateTime(p.TrialEnd),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) String() string {
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value

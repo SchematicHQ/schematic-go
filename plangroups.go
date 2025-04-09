@@ -365,6 +365,7 @@ func (p *PlanGroupDetailResponseData) String() string {
 type PlanGroupPlanDetailResponseData struct {
 	AudienceType     *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	BillingProduct   *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
+	ChargeType       string                            `json:"charge_type" url:"charge_type"`
 	CompanyCount     int                               `json:"company_count" url:"company_count"`
 	CreatedAt        time.Time                         `json:"created_at" url:"created_at"`
 	CustomPlanConfig *CustomPlanViewConfigResponseData `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
@@ -379,6 +380,7 @@ type PlanGroupPlanDetailResponseData struct {
 	IsTrialable      bool                              `json:"is_trialable" url:"is_trialable"`
 	MonthlyPrice     *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name             string                            `json:"name" url:"name"`
+	OneTimePrice     *BillingPriceResponseData         `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	PlanType         string                            `json:"plan_type" url:"plan_type"`
 	TrialDays        *int                              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt        time.Time                         `json:"updated_at" url:"updated_at"`
@@ -400,6 +402,13 @@ func (p *PlanGroupPlanDetailResponseData) GetBillingProduct() *BillingProductDet
 		return nil
 	}
 	return p.BillingProduct
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetChargeType() string {
+	if p == nil {
+		return ""
+	}
+	return p.ChargeType
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetCompanyCount() int {
@@ -498,6 +507,13 @@ func (p *PlanGroupPlanDetailResponseData) GetName() string {
 		return ""
 	}
 	return p.Name
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetOneTimePrice() *BillingPriceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.OneTimePrice
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetPlanType() string {

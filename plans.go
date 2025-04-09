@@ -60,9 +60,11 @@ type ListPlansRequest struct {
 type BillingProductPlanResponseData struct {
 	AccountID        string  `json:"account_id" url:"account_id"`
 	BillingProductID string  `json:"billing_product_id" url:"billing_product_id"`
+	ChargeType       string  `json:"charge_type" url:"charge_type"`
 	EnvironmentID    string  `json:"environment_id" url:"environment_id"`
 	IsTrialable      bool    `json:"is_trialable" url:"is_trialable"`
 	MonthlyPriceID   *string `json:"monthly_price_id,omitempty" url:"monthly_price_id,omitempty"`
+	OneTimePriceID   *string `json:"one_time_price_id,omitempty" url:"one_time_price_id,omitempty"`
 	PlanID           string  `json:"plan_id" url:"plan_id"`
 	TrialDays        *int    `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	YearlyPriceID    *string `json:"yearly_price_id,omitempty" url:"yearly_price_id,omitempty"`
@@ -85,6 +87,13 @@ func (b *BillingProductPlanResponseData) GetBillingProductID() string {
 	return b.BillingProductID
 }
 
+func (b *BillingProductPlanResponseData) GetChargeType() string {
+	if b == nil {
+		return ""
+	}
+	return b.ChargeType
+}
+
 func (b *BillingProductPlanResponseData) GetEnvironmentID() string {
 	if b == nil {
 		return ""
@@ -104,6 +113,13 @@ func (b *BillingProductPlanResponseData) GetMonthlyPriceID() *string {
 		return nil
 	}
 	return b.MonthlyPriceID
+}
+
+func (b *BillingProductPlanResponseData) GetOneTimePriceID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.OneTimePriceID
 }
 
 func (b *BillingProductPlanResponseData) GetPlanID() string {
@@ -1306,9 +1322,11 @@ type UpdatePlanRequestBody struct {
 
 type UpsertBillingProductRequestBody struct {
 	BillingProductID *string `json:"billing_product_id,omitempty" url:"-"`
+	ChargeType       *string `json:"charge_type,omitempty" url:"-"`
 	IsFreePlan       bool    `json:"is_free_plan" url:"-"`
 	IsTrialable      bool    `json:"is_trialable" url:"-"`
 	MonthlyPriceID   *string `json:"monthly_price_id,omitempty" url:"-"`
+	OneTimePriceID   *string `json:"one_time_price_id,omitempty" url:"-"`
 	TrialDays        *int    `json:"trial_days,omitempty" url:"-"`
 	YearlyPriceID    *string `json:"yearly_price_id,omitempty" url:"-"`
 }

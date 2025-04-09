@@ -49,6 +49,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		events:                  make(chan *schematicgo.CreateEventRequestBody, 100),
 		flagCheckCacheProviders: options.FlagCheckCacheProviders,
 		flagDefaults:            options.FlagDefaults,
+		isOffline:               options.OfflineMode,
 		logger:                  logger.NewDefaultLogger(),
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,

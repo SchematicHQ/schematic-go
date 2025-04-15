@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
@@ -30,6 +29,7 @@ type SchematicClient struct {
 	isOffline               bool
 	logger                  core.Logger
 	stopWorker              chan struct{}
+	useDataStream           bool
 	workerInterval          time.Duration
 }
 
@@ -52,11 +52,8 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	// Rebuild options struct in case we added any new options above
 	options = core.NewRequestOptions(opts...)
 
-	var dataStream *datastream.DataStreamClient
-	if options.UseDataStream {
-		dataStream = datastream.NewDataStream(options.BaseURL, options.Logger, options.APIKey, options.DatastreamOptions)
-		dataStream.Start()
-	}
+	// Pass API key as a query parameter to the WebSocket connection
+	dataStream := datastream.NewDataStream(options.BaseURL, options.APIKey)
 
 	client := &SchematicClient{
 		Client:                  NewClient(opts...),
@@ -69,18 +66,17 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		isOffline:               options.OfflineMode,
 		logger:                  options.Logger,
 		stopWorker:              make(chan struct{}),
+		useDataStream:           options.UseDataStream,
 		workerInterval:          5 * time.Second,
 		dataStream:              dataStream,
 	}
+
+	client.dataStream.Start()
 
 	// Start background worker which handles async error logging and event buffering
 	go client.worker()
 
 	return client
-}
-
-func (c *SchematicClient) useDataStream() bool {
-	return c.dataStream != nil
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
@@ -148,7 +144,7 @@ func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *sche
 	if evalCtx.Company != nil {
 		company, err = c.dataStream.GetCompany(ctx, evalCtx.Company)
 		if err != nil {
-			c.errors <- errors.New(fmt.Sprintf("Failed to get company from cache: %v", err))
+			c.logger.Printf("ERROR: Failed to get company from cache: %v", err)
 			return false
 		}
 	}
@@ -157,15 +153,16 @@ func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *sche
 	if evalCtx.User != nil {
 		user, err = c.dataStream.GetUser(ctx, evalCtx.User)
 		if err != nil {
-			c.errors <- errors.New(fmt.Sprintf("Failed to get user from cache: %v", err))
+			c.logger.Printf("ERROR: Failed to get user from cache: %v", err)
 			return false
 		}
 	}
 
+	// Flags should be loaded already
 	// Get flag here
 	flag, found := c.dataStream.GetFlag(ctx, flagKey)
 	if !found {
-		c.errors <- errors.New(fmt.Sprintf("Flag %s not found", flagKey))
+		c.logger.Printf("ERROR: Flag %s not found", flagKey)
 		return false
 	}
 

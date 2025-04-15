@@ -96,73 +96,16 @@ func WithOfflineMode() RequestOption {
 	}
 }
 
-type CustomLogger struct {
-	logger Logger
-}
-
-func (c CustomLogger) applyRequestOptions(opts *RequestOptions) {
-	opts.Logger = c.logger
-}
-func WithLogger(logger Logger) RequestOption {
-	return CustomLogger{logger: logger}
-}
-
-// Datastream options
-type DatastreamOption interface {
-	applyRequestOptions(opts *DatastreamOptions)
-}
-
-type DatastreamOptions struct {
-	CacheTTL      time.Duration
-	CacheProvider string
-}
-
-type CacheTTL struct {
-	ttl time.Duration
-}
-
-func (c CacheTTL) applyRequestOptions(opts *DatastreamOptions) {
-	opts.CacheTTL = c.ttl
-}
-
-func WithCacheTTL(ttl time.Duration) DatastreamOption {
-	return CacheTTL{ttl: ttl}
-}
-
-type CacheProvider struct {
-	provider string
-}
-
-func (c CacheProvider) applyRequestOptions(opts *DatastreamOptions) {
-	opts.CacheProvider = c.provider
-}
-
-func WithCacheProvider(provider string) DatastreamOption {
-	return CacheProvider{provider: provider}
-}
-
 type ClientOptUseDatastream struct {
 	enabled bool
-	options *DatastreamOptions
 }
 
 func (c ClientOptUseDatastream) applyRequestOptions(opts *RequestOptions) {
 	opts.UseDataStream = c.enabled
-	opts.DatastreamOptions = c.options
 }
 
-func WithDatastream(opts ...DatastreamOption) RequestOption {
-	dataStreamOptions := &DatastreamOptions{
-		CacheTTL:      24 * time.Hour,
-		CacheProvider: "local",
-	}
-
-	for _, opt := range opts {
-		opt.applyRequestOptions(dataStreamOptions)
-	}
-
-	return &ClientOptUseDatastream{
+func WithUseDatastream() RequestOption {
+	return ClientOptUseDatastream{
 		enabled: true,
-		options: dataStreamOptions,
 	}
 }

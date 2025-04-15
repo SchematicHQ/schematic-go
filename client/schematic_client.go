@@ -4,10 +4,12 @@ import (
 	"context"
 	"time"
 
+	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/buffer"
 	"github.com/schematichq/schematic-go/cache"
 	core "github.com/schematichq/schematic-go/core"
+	"github.com/schematichq/schematic-go/datastream"
 	"github.com/schematichq/schematic-go/flags"
 	"github.com/schematichq/schematic-go/logger"
 	option "github.com/schematichq/schematic-go/option"
@@ -16,6 +18,7 @@ import (
 type SchematicClient struct {
 	*Client
 
+	dataStream              *datastream.DataStreamClient
 	errors                  chan error
 	ctxErrors               chan *core.CtxError
 	eventBufferPeriod       *time.Duration
@@ -25,13 +28,14 @@ type SchematicClient struct {
 	isOffline               bool
 	logger                  core.Logger
 	stopWorker              chan struct{}
+	useDataStream           bool
 	workerInterval          time.Duration
 }
 
 func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	options := core.NewRequestOptions(opts...)
 	if options.APIKey == "" {
-		// If no API key provideed, assume offline mode if no API key provided
+		// If no API key provided, assume offline mode
 		opts = append(opts, core.WithOfflineMode())
 	}
 
@@ -47,6 +51,9 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	// Rebuild options struct in case we added any new options above
 	options = core.NewRequestOptions(opts...)
 
+	// Pass API key as a query parameter to the WebSocket connection
+	dataStream := datastream.NewDataStream(options.BaseURL, options.APIKey)
+
 	client := &SchematicClient{
 		Client:                  NewClient(opts...),
 		errors:                  make(chan error, 100),
@@ -58,8 +65,12 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		isOffline:               options.OfflineMode,
 		logger:                  logger.NewDefaultLogger(),
 		stopWorker:              make(chan struct{}),
+		useDataStream:           options.UseDataStream,
 		workerInterval:          5 * time.Second,
+		dataStream:              dataStream,
 	}
+
+	client.dataStream.Start()
 
 	// Start background worker which handles async error logging and event buffering
 	go client.worker()
@@ -68,6 +79,13 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+	if c.useDataStream {
+		return c.checkFlagDataStream(ctx, evalCtx, flagKey)
+	}
+	return c.checkFlag(ctx, evalCtx, flagKey)
+}
+
+func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
@@ -119,6 +137,46 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	return resp.Data.Value
 }
 
+func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+
+	var company *rulesengine.Company
+	var err error
+	if evalCtx.Company != nil {
+		company, err = c.dataStream.GetCompany(ctx, evalCtx.Company)
+		if err != nil {
+			c.logger.Printf("ERROR: Failed to get company from cache: %v", err)
+			return false
+		}
+	}
+
+	var user *rulesengine.User
+	if evalCtx.User != nil {
+		user, err = c.dataStream.GetUser(ctx, evalCtx.User)
+		if err != nil {
+			c.logger.Printf("ERROR: Failed to get user from cache: %v", err)
+			return false
+		}
+	}
+
+	// Flags should be loaded already
+	// Get flag here
+	flag, found := c.dataStream.GetFlag(ctx, flagKey)
+	if !found {
+		c.logger.Printf("ERROR: Flag %s not found", flagKey)
+		return false
+	}
+
+	// Evaluate against the rules engine
+	resp, err := rulesengine.CheckFlag(ctx, company, user, flag)
+	if err != nil {
+		c.errors <- err
+
+		return false
+	}
+
+	return resp.Value
+}
+
 func (c *SchematicClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
@@ -127,6 +185,10 @@ func (c *SchematicClient) Close() {
 	}()
 
 	close(c.stopWorker)
+
+	if c.dataStream != nil {
+		c.dataStream.Close()
+	}
 }
 
 func (c *SchematicClient) Identify(

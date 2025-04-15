@@ -13,3 +13,4 @@ var WithFlagCheckCacheProvider = core.WithFlagCheckCacheProvider
 var WithLocalFlagCheckCache = core.WithLocalFlagCheckCache
 var WithOfflineMode = core.WithOfflineMode
 var WithLogger = core.WithLogger
+var WithUseDatastream = core.WithUseDatastream

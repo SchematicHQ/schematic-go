@@ -106,3 +106,17 @@ func (c CustomLogger) applyRequestOptions(opts *RequestOptions) {
 func WithLogger(logger Logger) RequestOption {
 	return CustomLogger{logger: logger}
 }
+
+type ClientOptUseDatastream struct {
+	enabled bool
+}
+
+func (c ClientOptUseDatastream) applyRequestOptions(opts *RequestOptions) {
+	opts.UseDataStream = c.enabled
+}
+
+func WithUseDatastream() RequestOption {
+	return ClientOptUseDatastream{
+		enabled: true,
+	}
+}

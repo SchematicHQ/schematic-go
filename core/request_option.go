@@ -26,6 +26,7 @@ type RequestOptions struct {
 	QueryParameters url.Values
 	MaxAttempts     uint
 	APIKey          string
+	UseDataStream   bool
 
 	// Schematic custom request option fields
 	EventBufferPeriod       *time.Duration

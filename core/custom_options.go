@@ -95,3 +95,17 @@ func WithOfflineMode() RequestOption {
 		isOffline: true,
 	}
 }
+
+type ClientOptUseDatastream struct {
+	enabled bool
+}
+
+func (c ClientOptUseDatastream) applyRequestOptions(opts *RequestOptions) {
+	opts.UseDataStream = c.enabled
+}
+
+func WithUseDatastream() RequestOption {
+	return ClientOptUseDatastream{
+		enabled: true,
+	}
+}

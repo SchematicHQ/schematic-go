@@ -9,6 +9,9 @@ core/custom_options.go
 custom_types.go
 client/schematic_client.go
 client/schematic_client_test.go
+datastream/client.go
+datastream/types.go
+datastream/consts.go
 flags/flags.go
 flags/flags_test.go
 generate.go

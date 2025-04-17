@@ -3,7 +3,7 @@ package core
 import (
 	"time"
 
-	cache "github.com/schematichq/schematic-go/cache"
+	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/http"
 )
 
@@ -107,16 +107,62 @@ func WithLogger(logger Logger) RequestOption {
 	return CustomLogger{logger: logger}
 }
 
+// Datastream options
+type DatastreamOption interface {
+	applyRequestOptions(opts *DatastreamOptions)
+}
+
+type DatastreamOptions struct {
+	CacheTTL      time.Duration
+	CacheProvider string
+}
+
+type CacheTTL struct {
+	ttl time.Duration
+}
+
+func (c CacheTTL) applyRequestOptions(opts *DatastreamOptions) {
+	opts.CacheTTL = c.ttl
+}
+
+func WithCacheTTL(ttl time.Duration) DatastreamOption {
+	return CacheTTL{ttl: ttl}
+}
+
+type CacheProvider struct {
+	provider string
+}
+
+func (c CacheProvider) applyRequestOptions(opts *DatastreamOptions) {
+	opts.CacheProvider = c.provider
+}
+
+func WithCacheProvider(provider string) DatastreamOption {
+	return CacheProvider{provider: provider}
+}
+
 type ClientOptUseDatastream struct {
 	enabled bool
+	options *DatastreamOptions
 }
 
 func (c ClientOptUseDatastream) applyRequestOptions(opts *RequestOptions) {
 	opts.UseDataStream = c.enabled
+	opts.DatastreamOptions = c.options
 }
 
-func WithUseDatastream() RequestOption {
-	return ClientOptUseDatastream{
+func WithDatastream(opts ...DatastreamOption) RequestOption {
+	dataStreamOptons := &DatastreamOptions{
+		CacheTTL:      5 * time.Second,
+		CacheProvider: "local",
+	}
+
+	for _, opt := range opts {
+		opt.applyRequestOptions(dataStreamOptons)
+	}
+
+	return &ClientOptUseDatastream{
 		enabled: true,
+		options: dataStreamOptons,
 	}
 }

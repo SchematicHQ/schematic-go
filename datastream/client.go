@@ -11,19 +11,23 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
 	"github.com/schematichq/schematic-go/cache"
+	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/logger"
 )
 
-func NewDataStream(baseUrl string, apiKey string) *DataStreamClient {
-
-	flagCacheProvider := cache.NewDefaultCache[*rulesengine.Flag]()
-
-	companyCacheProvider := cache.NewDefaultCache[*rulesengine.Company]()
-
-	userCacheProvider := cache.NewDefaultCache[*rulesengine.User]()
+func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
+	var flagCacheProvider FlagCacheProvider
+	var companyCacheProvider CompanyCacheProvider
+	var userCacheProvider UserCacheProvider
+	if options.CacheProvider == defaultCacheProvider {
+		flagCacheProvider = cache.NewDefaultCache[*rulesengine.Flag]()
+		companyCacheProvider = cache.NewDefaultCache[*rulesengine.Company]()
+		userCacheProvider = cache.NewDefaultCache[*rulesengine.User]()
+	}
 
 	return &DataStreamClient{
 		apiKey:               apiKey,
+		cacheTTL:             options.CacheTTL,
 		done:                 make(chan bool),
 		reconnect:            make(chan bool),
 		logger:               logger.NewDefaultLogger(),
@@ -139,12 +143,6 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 }
 
 func (c *DataStreamClient) SendWebSocketMessage(ctx context.Context, req *DataStreamReq) error {
-	defer func() {
-		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while sending WebSocket message %v", r)
-		}
-	}()
-
 	if c.conn == nil {
 		return fmt.Errorf("WebSocket connection is not initialized")
 	}
@@ -234,7 +232,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	}
 
 	for _, flag := range flagsData {
-		ttl := defaultExpiration
+		ttl := c.cacheTTL
 		c.flagsCacheProvider.Set(ctx, flag.Key, flag, &ttl)
 	}
 }
@@ -253,7 +251,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 
 	for key, value := range company.Keys {
 		companyKey := resourceKeyToCacheKey("company", key, value)
-		ttl := defaultExpiration
+		ttl := c.cacheTTL
 		c.companyCacheProvider.Set(ctx, companyKey, company, &ttl)
 	}
 }
@@ -268,7 +266,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 
 	for key, value := range user.Keys {
 		companyKey := resourceKeyToCacheKey("user", key, value)
-		ttl := defaultExpiration
+		ttl := c.cacheTTL
 		c.userCacheProvider.Set(ctx, companyKey, user, &ttl)
 	}
 }
@@ -303,13 +301,11 @@ func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]strin
 		}
 	}()
 
-	for {
-		select {
-		case company := <-done:
-			return company, nil
-		case <-time.After(5 * time.Second):
-			return nil, fmt.Errorf("timeout while waiting for company data")
-		}
+	select {
+	case company := <-done:
+		return company, nil
+	case <-time.After(5 * time.Second):
+		return nil, fmt.Errorf("timeout while waiting for company data")
 	}
 }
 

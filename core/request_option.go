@@ -19,14 +19,15 @@ type RequestOption interface {
 // This type is primarily used by the generated code and is not meant
 // to be used directly; use the option package instead.
 type RequestOptions struct {
-	BaseURL         string
-	HTTPClient      HTTPClient
-	HTTPHeader      http.Header
-	BodyProperties  map[string]interface{}
-	QueryParameters url.Values
-	MaxAttempts     uint
-	APIKey          string
-	UseDataStream   bool
+	BaseURL           string
+	DatastreamOptions *DatastreamOptions
+	HTTPClient        HTTPClient
+	HTTPHeader        http.Header
+	BodyProperties    map[string]interface{}
+	QueryParameters   url.Values
+	MaxAttempts       uint
+	APIKey            string
+	UseDataStream     bool
 
 	// Schematic custom request option fields
 	EventBufferPeriod       *time.Duration

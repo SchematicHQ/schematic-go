@@ -29,7 +29,6 @@ type SchematicClient struct {
 	isOffline               bool
 	logger                  core.Logger
 	stopWorker              chan struct{}
-	useDataStream           bool
 	workerInterval          time.Duration
 }
 
@@ -52,8 +51,11 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	// Rebuild options struct in case we added any new options above
 	options = core.NewRequestOptions(opts...)
 
-	// Pass API key as a query parameter to the WebSocket connection
-	dataStream := datastream.NewDataStream(options.BaseURL, options.APIKey)
+	var dataStream *datastream.DataStreamClient
+	if options.UseDataStream {
+		dataStream = datastream.NewDataStream(options.BaseURL, options.APIKey, options.DatastreamOptions)
+		dataStream.Start()
+	}
 
 	client := &SchematicClient{
 		Client:                  NewClient(opts...),
@@ -66,17 +68,18 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		isOffline:               options.OfflineMode,
 		logger:                  options.Logger,
 		stopWorker:              make(chan struct{}),
-		useDataStream:           options.UseDataStream,
 		workerInterval:          5 * time.Second,
 		dataStream:              dataStream,
 	}
-
-	client.dataStream.Start()
 
 	// Start background worker which handles async error logging and event buffering
 	go client.worker()
 
 	return client
+}
+
+func (c *SchematicClient) useDataStream() bool {
+	return c.dataStream != nil
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {

@@ -2,6 +2,7 @@ package datastream
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
@@ -30,6 +31,7 @@ type DataStreamResp struct {
 }
 
 type DataStreamClient struct {
+	cacheTTL             time.Duration
 	conn                 *websocket.Conn
 	logger               schematicgo.Logger
 	done                 chan bool

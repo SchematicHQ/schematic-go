@@ -12,4 +12,6 @@ var WithEventBufferPeriod = core.WithEventBufferPeriod
 var WithFlagCheckCacheProvider = core.WithFlagCheckCacheProvider
 var WithLocalFlagCheckCache = core.WithLocalFlagCheckCache
 var WithOfflineMode = core.WithOfflineMode
-var WithUseDatastream = core.WithUseDatastream
+var WithDatastream = core.WithDatastream
+var WithCacheProvider = core.WithCacheProvider
+var WithCacheTTL = core.WithCacheTTL

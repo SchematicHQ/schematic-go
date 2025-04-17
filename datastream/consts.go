@@ -32,5 +32,6 @@ const (
 
 // Cache constants
 const (
-	defaultExpiration = 24 * time.Hour
+	defaultCacheProvider = "local"
+	defaultTTL           = 24 * time.Hour
 )

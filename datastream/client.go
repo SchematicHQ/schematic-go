@@ -71,7 +71,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 			continue
 		}
 
-		c.logger.Printf("INFO: Connected")
+		c.logger.Printf("INFO: Connected to Schematic WebSocket")
 		attempts = 0
 		c.conn = conn
 
@@ -83,7 +83,6 @@ func (c *DataStreamClient) ConnectAndRead() {
 		}
 
 		c.logger.Printf("INFO: Reconnecting to WebSocket...")
-
 	}
 }
 
@@ -114,8 +113,15 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 }
 
 func (c *DataStreamClient) readMessages(ctx context.Context) {
+	defer func() {
+		if r := recover(); r != nil {
+			c.logger.Printf("ERROR: Panic occurred in WebSocket reader %v", r)
+			c.reconnect <- true
+		}
+	}()
 	for {
-		_, message, err := c.conn.ReadMessage()
+		var message DataStreamResp
+		err := c.conn.ReadJSON(&message)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				c.logger.Printf("ERROR: Failed to read WebSocket message: %v", err)
@@ -123,7 +129,8 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 				return
 			}
 		}
-		err = c.handleMessageResponse(ctx, message)
+
+		err = c.handleMessageResponse(ctx, &message)
 		if err != nil {
 			c.logger.Printf("ERROR: Failed to handle WebSocket message: %v", err)
 			return
@@ -142,12 +149,9 @@ func (c *DataStreamClient) SendWebSocketMessage(ctx context.Context, req *DataSt
 		return fmt.Errorf("WebSocket connection is not initialized")
 	}
 
-	message, err := c.packageMessage(req)
-	if err != nil {
-		return err
-	}
+	message := c.packageMessage(req)
 
-	err = c.conn.WriteMessage(websocket.TextMessage, message)
+	err := c.conn.WriteJSON(message)
 	if err != nil {
 		c.logger.Printf("ERROR: Failed to send WebSocket message: %v", err)
 		return err
@@ -159,17 +163,17 @@ func (c *DataStreamClient) SendWebSocketMessage(ctx context.Context, req *DataSt
 func (c *DataStreamClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while closing DataStream %v", r)
+			c.logger.Printf("ERROR: Panic occurred while closing WebSocket %v", r)
 		}
 	}()
 
 	if c.conn != nil {
-		c.logger.Printf("INFO: Closing DataStream connection")
+		c.logger.Printf("INFO: Closing WebSocket connection")
 		c.conn.Close()
 	}
 
 	close(c.done)
-	c.logger.Printf("INFO: DataStream connection closed")
+	c.logger.Printf("INFO: WebSocket connection closed")
 }
 
 func getBaseURL(baseUrl string) string {
@@ -186,21 +190,20 @@ func getBaseURL(baseUrl string) string {
 	return url.Host
 }
 
-func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message []byte) error {
-	resp, err := c.unpackResponse(message)
-	if err != nil {
-		return err
+func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *DataStreamResp) error {
+	if message == nil {
+		return nil
 	}
 
-	switch resp.EntityType {
+	switch message.EntityType {
 	case string(EntityTypeCompany):
-		c.handleCompanyMessage(ctx, resp)
+		c.handleCompanyMessage(ctx, message)
 	case string(EntityTypeFlags):
-		c.handleFlagsMessage(ctx, resp)
+		c.handleFlagsMessage(ctx, message)
 	case string(EntityTypeUser):
-		c.handleUserMessage(ctx, resp)
+		c.handleUserMessage(ctx, message)
 	default:
-		c.logger.Printf("ERROR: Received unknown entity type: %s", resp.EntityType)
+		c.logger.Printf("ERROR: Received unknown entity type: %s", message.EntityType)
 	}
 
 	return nil
@@ -256,7 +259,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 }
 
 func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStreamResp) {
-	var user rulesengine.User
+	var user *rulesengine.User
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
 		c.logger.Printf("ERROR: Failed to unmarshal user data: %v", err)
@@ -266,7 +269,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 	for key, value := range user.Keys {
 		companyKey := resourceKeyToCacheKey("user", key, value)
 		ttl := defaultExpiration
-		c.userCacheProvider.Set(ctx, companyKey, &user, &ttl)
+		c.userCacheProvider.Set(ctx, companyKey, user, &ttl)
 	}
 }
 
@@ -284,12 +287,10 @@ func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]strin
 		Keys:       keys,
 	}
 
-	message, err := c.packageMessage(req)
+	err := c.SendWebSocketMessage(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-
-	c.conn.WriteMessage(websocket.TextMessage, message)
 
 	done := make(chan *rulesengine.Company, 1)
 	go func() {
@@ -302,11 +303,13 @@ func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]strin
 		}
 	}()
 
-	select {
-	case company := <-done:
-		return company, nil
-	case <-time.After(5 * time.Second):
-		return nil, fmt.Errorf("timeout while waiting for company data")
+	for {
+		select {
+		case company := <-done:
+			return company, nil
+		case <-time.After(5 * time.Second):
+			return nil, fmt.Errorf("timeout while waiting for company data")
+		}
 	}
 }
 
@@ -324,12 +327,10 @@ func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) 
 		Keys:       keys,
 	}
 
-	message, err := c.packageMessage(req)
+	err := c.SendWebSocketMessage(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-
-	c.conn.WriteMessage(websocket.TextMessage, message)
 
 	done := make(chan *rulesengine.User, 1)
 	go func() {
@@ -342,11 +343,13 @@ func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) 
 		}
 	}()
 
-	select {
-	case user := <-done:
-		return user, nil
-	case <-time.After(5 * time.Second):
-		return nil, fmt.Errorf("timeout while waiting for user data")
+	for {
+		select {
+		case user := <-done:
+			return user, nil
+		case <-time.After(5 * time.Second):
+			return nil, fmt.Errorf("timeout while waiting for user data")
+		}
 	}
 }
 
@@ -364,16 +367,10 @@ func (c *DataStreamClient) handlePong(string) error {
 	return nil
 }
 
-func (c *DataStreamClient) packageMessage(req *DataStreamReq) ([]byte, error) {
-	baseReq := DataStreamBaseReq{
+func (c *DataStreamClient) packageMessage(req *DataStreamReq) *DataStreamBaseReq {
+	return &DataStreamBaseReq{
 		Data: *req,
 	}
-
-	message, err := json.Marshal(baseReq)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal WebSocket message: %w", err)
-	}
-	return message, nil
 }
 
 func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *rulesengine.Company {
@@ -398,16 +395,6 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 	}
 
 	return nil
-}
-
-func (c *DataStreamClient) unpackResponse(message []byte) (*DataStreamResp, error) {
-	var resp DataStreamResp
-	err := json.Unmarshal(message, &resp)
-	if err != nil {
-		c.logger.Printf("ERROR: Failed to unmarshal WebSocket message: %v", err)
-		return nil, err
-	}
-	return &resp, nil
 }
 
 func resourceKeyToCacheKey(resourceType string, key string, value string) string {

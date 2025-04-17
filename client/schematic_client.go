@@ -4,10 +4,12 @@ import (
 	"context"
 	"time"
 
+	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/buffer"
 	"github.com/schematichq/schematic-go/cache"
 	core "github.com/schematichq/schematic-go/core"
+	"github.com/schematichq/schematic-go/datastream"
 	"github.com/schematichq/schematic-go/flags"
 	"github.com/schematichq/schematic-go/logger"
 	option "github.com/schematichq/schematic-go/option"
@@ -16,6 +18,7 @@ import (
 type SchematicClient struct {
 	*Client
 
+	dataStream              *datastream.DataStreamClient
 	errors                  chan error
 	eventBufferPeriod       *time.Duration
 	events                  chan *schematicgo.CreateEventRequestBody
@@ -30,7 +33,7 @@ type SchematicClient struct {
 func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	options := core.NewRequestOptions(opts...)
 	if options.APIKey == "" {
-		// If no API key provideed, assume offline mode if no API key provided
+		// If no API key provided, assume offline mode
 		opts = append(opts, core.WithOfflineMode())
 	}
 
@@ -41,6 +44,12 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 
 	// Rebuild options struct in case we added any new options above
 	options = core.NewRequestOptions(opts...)
+
+	var dataStream *datastream.DataStreamClient
+	if options.UseDataStream {
+		dataStream = datastream.NewDataStream(options.BaseURL, options.APIKey, options.DatastreamOptions)
+		dataStream.Start()
+	}
 
 	client := &SchematicClient{
 		Client:                  NewClient(opts...),
@@ -53,6 +62,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		logger:                  logger.NewDefaultLogger(),
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
+		dataStream:              dataStream,
 	}
 
 	// Start background worker which handles async error logging and event buffering
@@ -61,7 +71,18 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	return client
 }
 
+func (c *SchematicClient) useDataStream() bool {
+	return c.dataStream != nil
+}
+
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+	if c.useDataStream() {
+		return c.checkFlagDataStream(ctx, evalCtx, flagKey)
+	}
+	return c.checkFlag(ctx, evalCtx, flagKey)
+}
+
+func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Printf("ERROR: Panic occurred while checking flag %v", r)
@@ -107,6 +128,46 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	return resp.Data.Value
 }
 
+func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+
+	var company *rulesengine.Company
+	var err error
+	if evalCtx.Company != nil {
+		company, err = c.dataStream.GetCompany(ctx, evalCtx.Company)
+		if err != nil {
+			c.logger.Printf("ERROR: Failed to get company from cache: %v", err)
+			return false
+		}
+	}
+
+	var user *rulesengine.User
+	if evalCtx.User != nil {
+		user, err = c.dataStream.GetUser(ctx, evalCtx.User)
+		if err != nil {
+			c.logger.Printf("ERROR: Failed to get user from cache: %v", err)
+			return false
+		}
+	}
+
+	// Flags should be loaded already
+	// Get flag here
+	flag, found := c.dataStream.GetFlag(ctx, flagKey)
+	if !found {
+		c.logger.Printf("ERROR: Flag %s not found", flagKey)
+		return false
+	}
+
+	// Evaluate against the rules engine
+	resp, err := rulesengine.CheckFlag(ctx, company, user, flag)
+	if err != nil {
+		c.errors <- err
+
+		return false
+	}
+
+	return resp.Value
+}
+
 func (c *SchematicClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
@@ -115,6 +176,10 @@ func (c *SchematicClient) Close() {
 	}()
 
 	close(c.stopWorker)
+
+	if c.dataStream != nil {
+		c.dataStream.Close()
+	}
 }
 
 func (c *SchematicClient) Identify(

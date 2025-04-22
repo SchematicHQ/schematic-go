@@ -36,6 +36,9 @@ func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOption
 		companyCache:         make(map[string]*rulesengine.Company),
 		url:                  getBaseURL(baseUrl),
 		userCacheProvider:    userCacheProvider,
+
+		pendingCompanyRequests: make(map[string][]chan *rulesengine.Company),
+		pendingUserRequests:    make(map[string][]chan *rulesengine.User),
 	}
 }
 
@@ -233,7 +236,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 
 	for _, flag := range flagsData {
 		ttl := c.cacheTTL
-		c.flagsCacheProvider.Set(ctx, flag.Key, flag, &ttl)
+		c.flagsCacheProvider.Set(ctx, flagCacheKey(flag.Key), flag, &ttl)
 	}
 }
 
@@ -250,9 +253,26 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 	}
 
 	for key, value := range company.Keys {
-		companyKey := resourceKeyToCacheKey("company", key, value)
+		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		ttl := c.cacheTTL
 		c.companyCacheProvider.Set(ctx, companyKey, company, &ttl)
+	}
+
+	// Notify all goroutines waiting for this company
+	c.mu.Lock()
+	defer c.mu.Unlock() // For each relevant key, notify all waiting channels
+	for key, value := range company.Keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
+			for _, ch := range channels {
+				// Non-blocking send - if the channel is full, we'll just continue
+				select {
+				case ch <- company:
+				default:
+				}
+			} // Remove this set of channels as they've been notified
+			delete(c.pendingCompanyRequests, cacheKey)
+		}
 	}
 }
 
@@ -265,92 +285,117 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 	}
 
 	for key, value := range user.Keys {
-		companyKey := resourceKeyToCacheKey("user", key, value)
+		companyKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		ttl := c.cacheTTL
 		c.userCacheProvider.Set(ctx, companyKey, user, &ttl)
+	}
+
+	// Notify all goroutines waiting for this company
+	c.mu.Lock()
+	defer c.mu.Unlock() // For each relevant key, notify all waiting channels
+	for key, value := range user.Keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+		if channels, ok := c.pendingUserRequests[cacheKey]; ok {
+			for _, ch := range channels {
+				// Non-blocking send - if the channel is full, we'll just continue
+				select {
+				case ch <- user:
+				default:
+				}
+			} // Remove this set of channels as they've been notified
+			delete(c.pendingUserRequests, cacheKey)
+		}
 	}
 }
 
 func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]string) (*rulesengine.Company, error) {
-
 	company := c.getCompanyFromCache(keys)
 	if company != nil {
 		return company, nil
 	}
-	// If not found in cache, send a request to the server
-	// and wait for the response
 
-	req := &DataStreamReq{
-		EntityType: EntityTypeCompany,
-		Keys:       keys,
-	}
-
-	err := c.SendWebSocketMessage(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	done := make(chan *rulesengine.Company, 1)
-	go func() {
-		// TODO: Handle panic
-		for {
-			company := c.getCompanyFromCache(keys)
-			if company != nil {
-				done <- company
-			}
+	waitCh := make(chan *rulesengine.Company, 1) // Register the wait channel for each key
+	c.mu.Lock()
+	shouldSendRequest := true
+	for key, value := range keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value) // If there are already pending requests for this key, just add our channel
+		if existingChannels, ok := c.pendingCompanyRequests[cacheKey]; ok {
+			c.pendingCompanyRequests[cacheKey] = append(existingChannels, waitCh)
+			shouldSendRequest = false // Someone else already requested this
+		} else { // Register new channel
+			c.pendingCompanyRequests[cacheKey] = []chan *rulesengine.Company{waitCh}
 		}
-	}()
+	}
+	c.mu.Unlock()
+
+	if shouldSendRequest {
+		req := &DataStreamReq{
+			EntityType: EntityTypeCompany,
+			Keys:       keys,
+		}
+
+		err := c.SendWebSocketMessage(ctx, req)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	select {
-	case company := <-done:
+	case company := <-waitCh:
 		return company, nil
 	case <-time.After(5 * time.Second):
 		return nil, fmt.Errorf("timeout while waiting for company data")
+	case <-ctx.Done(): // TODO: Probably some channel cleanup, or else a separate sweeper process
+		return nil, ctx.Err()
 	}
 }
 
 func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) (*rulesengine.User, error) {
-
 	user := c.getUserFromCache(keys)
 	if user != nil {
 		return user, nil
 	}
-	// If not found in cache, send a request to the server
-	// and wait for the response
 
-	req := &DataStreamReq{
-		EntityType: EntityTypeUser,
-		Keys:       keys,
-	}
-
-	err := c.SendWebSocketMessage(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	done := make(chan *rulesengine.User, 1)
-	go func() {
-		// TODO: Handle panic
-		for {
-			user := c.getUserFromCache(keys)
-			if user != nil {
-				done <- user
-			}
+	waitCh := make(chan *rulesengine.User, 1) // Register the wait channel for each key
+	c.mu.Lock()
+	shouldSendRequest := true
+	for key, value := range keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value) // If there are already pending requests for this key, just add our channel
+		if existingChannels, ok := c.pendingUserRequests[cacheKey]; ok {
+			c.pendingUserRequests[cacheKey] = append(existingChannels, waitCh)
+			shouldSendRequest = false // Someone else already requested this
+		} else { // Register new channel
+			c.pendingUserRequests[cacheKey] = []chan *rulesengine.User{waitCh}
 		}
-	}()
+	}
+	c.mu.Unlock()
+
+	if shouldSendRequest {
+		req := &DataStreamReq{
+			EntityType: EntityTypeUser,
+			Keys:       keys,
+		}
+
+		err := c.SendWebSocketMessage(ctx, req)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	for {
 		select {
-		case user := <-done:
+		case user := <-waitCh:
 			return user, nil
 		case <-time.After(5 * time.Second):
 			return nil, fmt.Errorf("timeout while waiting for user data")
+		case <-ctx.Done():
+			return nil, ctx.Err()
 		}
 	}
 }
 
 func (c *DataStreamClient) GetFlag(ctx context.Context, key string) (*rulesengine.Flag, bool) {
-	flag, exists := c.flagsCacheProvider.Get(ctx, key)
+	flag, exists := c.flagsCacheProvider.Get(ctx, flagCacheKey(key))
 	if !exists {
 		return nil, false
 	}
@@ -371,7 +416,7 @@ func (c *DataStreamClient) packageMessage(req *DataStreamReq) *DataStreamBaseReq
 
 func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *rulesengine.Company {
 	for key, value := range keys {
-		companyKey := resourceKeyToCacheKey("company", key, value)
+		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		company, exists := c.companyCacheProvider.Get(context.Background(), companyKey)
 		if exists {
 			return company
@@ -383,7 +428,7 @@ func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *ruleseng
 
 func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine.User {
 	for key, value := range keys {
-		userKey := resourceKeyToCacheKey("user", key, value)
+		userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		user, exists := c.userCacheProvider.Get(context.Background(), userKey)
 		if exists {
 			return user
@@ -391,6 +436,10 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 	}
 
 	return nil
+}
+
+func flagCacheKey(key string) string {
+	return fmt.Sprintf("%s:%s", cacheKeyPrefixFlags, key)
 }
 
 func resourceKeyToCacheKey(resourceType string, key string, value string) string {

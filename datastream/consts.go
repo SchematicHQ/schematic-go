@@ -34,4 +34,8 @@ const (
 const (
 	defaultCacheProvider = "local"
 	defaultTTL           = 24 * time.Hour
+
+	cacheKeyPrefixCompany = "company"
+	cacheKeyPrefixFlags   = "flags"
+	cacheKeyPrefixUser    = "user"
 )

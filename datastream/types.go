@@ -2,6 +2,7 @@ package datastream
 
 import (
 	"encoding/json"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -42,4 +43,8 @@ type DataStreamClient struct {
 	companyCache         map[string]*rulesengine.Company
 	url                  string
 	apiKey               string
+
+	pendingCompanyRequests map[string][]chan *rulesengine.Company
+	pendingUserRequests    map[string][]chan *rulesengine.User
+	mu                     sync.RWMutex
 }

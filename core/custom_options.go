@@ -98,19 +98,19 @@ func WithOfflineMode() RequestOption {
 
 // Datastream options
 type DatastreamOption interface {
-	applyRequestOptions(opts *DatastreamOptions)
+	applyDatastreamOptions(opts *DatastreamOptions)
 }
 
 type DatastreamOptions struct {
-	CacheTTL      time.Duration
-	CacheProvider string
+	CacheTTL    time.Duration
+	CacheConfig CacheConfig
 }
 
 type CacheTTL struct {
 	ttl time.Duration
 }
 
-func (c CacheTTL) applyRequestOptions(opts *DatastreamOptions) {
+func (c CacheTTL) applyDatastreamOptions(opts *DatastreamOptions) {
 	opts.CacheTTL = c.ttl
 }
 
@@ -118,16 +118,38 @@ func WithCacheTTL(ttl time.Duration) DatastreamOption {
 	return CacheTTL{ttl: ttl}
 }
 
-type CacheProvider struct {
-	provider string
+// Define an interface for Redis options
+type CacheConfig interface {
+	GetAddresses() []string
+	applyDatastreamOptions(opts *RequestOptions)
 }
 
-func (c CacheProvider) applyRequestOptions(opts *DatastreamOptions) {
-	opts.CacheProvider = c.provider
+type RedisCacheConfig struct {
+	Addr string
 }
 
-func WithCacheProvider(provider string) DatastreamOption {
-	return CacheProvider{provider: provider}
+func (s RedisCacheConfig) GetAddresses() []string {
+	return []string{s.Addr}
+}
+
+func (s RedisCacheConfig) applyDatastreamOptions(opts *RequestOptions) {
+	opts.DatastreamOptions.CacheConfig = &s
+}
+
+type RedisCacheClusterOptions struct {
+	Addrs []string
+}
+
+func (c RedisCacheClusterOptions) GetAddresses() []string {
+	return c.Addrs
+}
+
+func (c RedisCacheClusterOptions) applyDatastreamOptions(opts *RequestOptions) {
+	opts.DatastreamOptions.CacheConfig = &c
+}
+
+func WithRedisCache(opts *CacheConfig) *CacheConfig {
+	return opts
 }
 
 type ClientOptUseDatastream struct {
@@ -141,17 +163,16 @@ func (c ClientOptUseDatastream) applyRequestOptions(opts *RequestOptions) {
 }
 
 func WithDatastream(opts ...DatastreamOption) RequestOption {
-	dataStreamOptons := &DatastreamOptions{
-		CacheTTL:      5 * time.Second,
-		CacheProvider: "local",
+	dataStreamOptions := &DatastreamOptions{
+		CacheTTL: 24 * time.Second,
 	}
 
 	for _, opt := range opts {
-		opt.applyRequestOptions(dataStreamOptons)
+		opt.applyDatastreamOptions(dataStreamOptions)
 	}
 
 	return &ClientOptUseDatastream{
 		enabled: true,
-		options: dataStreamOptons,
+		options: dataStreamOptions,
 	}
 }

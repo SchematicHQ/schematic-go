@@ -16,14 +16,8 @@ import (
 )
 
 func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
-	var flagCacheProvider FlagCacheProvider
-	var companyCacheProvider CompanyCacheProvider
-	var userCacheProvider UserCacheProvider
-	if options.CacheProvider == defaultCacheProvider {
-		flagCacheProvider = cache.NewDefaultCache[*rulesengine.Flag]()
-		companyCacheProvider = cache.NewDefaultCache[*rulesengine.Company]()
-		userCacheProvider = cache.NewDefaultCache[*rulesengine.User]()
-	}
+
+	flagCacheProvider, companyCacheProvider, userCacheProvider := getCacheProviders(options)
 
 	return &DataStreamClient{
 		apiKey:               apiKey,
@@ -37,6 +31,29 @@ func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOption
 		url:                  getBaseURL(baseUrl),
 		userCacheProvider:    userCacheProvider,
 	}
+}
+
+func getCacheProviders(opt *core.DatastreamOptions) (FlagCacheProvider, CompanyCacheProvider, UserCacheProvider) {
+	var flagCacheProvider FlagCacheProvider
+	var companyCacheProvider CompanyCacheProvider
+	var userCacheProvider UserCacheProvider
+
+	if opt.CacheConfig == nil {
+		flagCacheProvider = cache.NewLocalCache[*rulesengine.Flag](defaultCacheSize, opt.CacheTTL)
+		companyCacheProvider = cache.NewLocalCache[*rulesengine.Company](defaultCacheSize, opt.CacheTTL)
+		userCacheProvider = cache.NewLocalCache[*rulesengine.User](defaultCacheSize, opt.CacheTTL)
+
+		return flagCacheProvider, companyCacheProvider, userCacheProvider
+	}
+
+	switch opt.CacheConfig.(type) {
+	case core.RedisCacheConfig:
+		flagCacheProvider = cache.NewRedisCache[*rulesengine.Flag](opt.CacheConfig.GetAddresses(), opt.CacheTTL)
+		companyCacheProvider = cache.NewRedisCache[*rulesengine.Company](opt.CacheConfig.GetAddresses(), opt.CacheTTL)
+		userCacheProvider = cache.NewRedisCache[*rulesengine.User](opt.CacheConfig.GetAddresses(), opt.CacheTTL)
+	}
+
+	return flagCacheProvider, companyCacheProvider, userCacheProvider
 }
 
 func connect(addr string, apiKey string) (*websocket.Conn, error) {

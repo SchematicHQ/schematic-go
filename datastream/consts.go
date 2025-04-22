@@ -32,6 +32,10 @@ const (
 
 // Cache constants
 const (
-	defaultCacheProvider = "local"
-	defaultTTL           = 24 * time.Hour
+	defaultTTL       = 24 * time.Hour
+	defaultCacheSize = 1000
+
+	cacheKeyPrefixCompany = "company"
+	cacheKeyPrefixFlags   = "flags"
+	cacheKeyPrefixUser    = "user"
 )

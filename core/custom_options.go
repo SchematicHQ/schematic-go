@@ -3,6 +3,7 @@ package core
 import (
 	"time"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/http"
 )
@@ -120,35 +121,26 @@ func WithCacheTTL(ttl time.Duration) DatastreamOption {
 
 // Define an interface for Redis options
 type CacheConfig interface {
-	GetAddresses() []string
-	applyDatastreamOptions(opts *RequestOptions)
+	applyDatastreamOptions(opts *DatastreamOptions)
 }
 
 type RedisCacheConfig struct {
-	Addr string
+	*redis.Options
 }
 
-func (s RedisCacheConfig) GetAddresses() []string {
-	return []string{s.Addr}
+func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.CacheConfig = c
 }
 
-func (s RedisCacheConfig) applyDatastreamOptions(opts *RequestOptions) {
-	opts.DatastreamOptions.CacheConfig = &s
+type RedisCacheClusterConfig struct {
+	*redis.ClusterOptions
 }
 
-type RedisCacheClusterOptions struct {
-	Addrs []string
+func (c RedisCacheClusterConfig) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.CacheConfig = c
 }
 
-func (c RedisCacheClusterOptions) GetAddresses() []string {
-	return c.Addrs
-}
-
-func (c RedisCacheClusterOptions) applyDatastreamOptions(opts *RequestOptions) {
-	opts.DatastreamOptions.CacheConfig = &c
-}
-
-func WithRedisCache(opts *CacheConfig) *CacheConfig {
+func WithRedisCache(opts CacheConfig) CacheConfig {
 	return opts
 }
 

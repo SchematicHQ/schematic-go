@@ -13,5 +13,8 @@ var WithFlagCheckCacheProvider = core.WithFlagCheckCacheProvider
 var WithLocalFlagCheckCache = core.WithLocalFlagCheckCache
 var WithOfflineMode = core.WithOfflineMode
 var WithDatastream = core.WithDatastream
-var WithCacheProvider = core.WithRedisCache
+var WithRedisCache = core.WithRedisCache
 var WithCacheTTL = core.WithCacheTTL
+
+type RedisCacheConfig = core.RedisCacheConfig
+type RedisCacheClusterConfig = core.RedisCacheClusterConfig

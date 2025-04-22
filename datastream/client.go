@@ -10,7 +10,6 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
-	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/logger"
 )
@@ -31,29 +30,6 @@ func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOption
 		url:                  getBaseURL(baseUrl),
 		userCacheProvider:    userCacheProvider,
 	}
-}
-
-func getCacheProviders(opt *core.DatastreamOptions) (FlagCacheProvider, CompanyCacheProvider, UserCacheProvider) {
-	var flagCacheProvider FlagCacheProvider
-	var companyCacheProvider CompanyCacheProvider
-	var userCacheProvider UserCacheProvider
-
-	if opt.CacheConfig == nil {
-		flagCacheProvider = cache.NewLocalCache[*rulesengine.Flag](defaultCacheSize, opt.CacheTTL)
-		companyCacheProvider = cache.NewLocalCache[*rulesengine.Company](defaultCacheSize, opt.CacheTTL)
-		userCacheProvider = cache.NewLocalCache[*rulesengine.User](defaultCacheSize, opt.CacheTTL)
-
-		return flagCacheProvider, companyCacheProvider, userCacheProvider
-	}
-
-	switch opt.CacheConfig.(type) {
-	case core.RedisCacheConfig:
-		flagCacheProvider = cache.NewRedisCache[*rulesengine.Flag](opt.CacheConfig.GetAddresses(), opt.CacheTTL)
-		companyCacheProvider = cache.NewRedisCache[*rulesengine.Company](opt.CacheConfig.GetAddresses(), opt.CacheTTL)
-		userCacheProvider = cache.NewRedisCache[*rulesengine.User](opt.CacheConfig.GetAddresses(), opt.CacheTTL)
-	}
-
-	return flagCacheProvider, companyCacheProvider, userCacheProvider
 }
 
 func connect(addr string, apiKey string) (*websocket.Conn, error) {
@@ -135,6 +111,12 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 }
 
 func (c *DataStreamClient) readMessages(ctx context.Context) {
+	defer func() {
+		if r := recover(); r != nil {
+			c.logger.Printf("ERROR: Panic occurred in WebSocket reader %v", r)
+			c.reconnect <- false
+		}
+	}()
 	for {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {

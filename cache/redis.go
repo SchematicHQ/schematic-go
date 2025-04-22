@@ -13,22 +13,7 @@ type redisCache[T any] struct {
 	ttl    time.Duration
 }
 
-// NewRedisCache creates a new Redis-based cache provider.
-func NewRedisCache[T any](urls []string, ttl time.Duration) *redisCache[T] {
-	var client redis.UniversalClient
-
-	if len(urls) == 1 {
-		// Single Redis instance
-		client = redis.NewClient(&redis.Options{
-			Addr: urls[0],
-		})
-	} else {
-		// Redis cluster
-		client = redis.NewClusterClient(&redis.ClusterOptions{
-			Addrs: urls,
-		})
-	}
-
+func NewRedisCache[T any](client redis.UniversalClient, ttl time.Duration) *redisCache[T] {
 	return &redisCache[T]{
 		client: client,
 		ttl:    ttl,

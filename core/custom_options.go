@@ -153,7 +153,7 @@ func (c ClientOptUseDatastream) applyRequestOptions(opts *RequestOptions) {
 
 func WithDatastream(opts ...DatastreamOption) RequestOption {
 	dataStreamOptions := &DatastreamOptions{
-		CacheTTL:      5 * time.Second,
+		CacheTTL:      24 * time.Hour,
 		CacheProvider: "local",
 	}
 

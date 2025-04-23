@@ -101,7 +101,11 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(c.handlePong)
-	c.GetAllFlags(ctx)
+	err := c.GetAllFlags(ctx)
+	if err != nil {
+		c.logger.Printf("ERROR: Failed to get all flags: %v", err)
+		return true
+	}
 
 	for {
 		select {
@@ -212,16 +216,37 @@ func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *D
 }
 
 func (c *DataStreamClient) GetAllFlags(ctx context.Context) error {
+	// Check if there is already a pending request for flags
+	if c.pendingFlagRequest != nil {
+		return nil
+	}
+
+	waitCh := make(chan bool, 1)
+	c.mu.Lock()
+	c.pendingFlagRequest = waitCh
+	c.mu.Unlock()
+	defer func() {
+		c.pendingFlagRequest = nil
+		close(waitCh)
+	}()
+
 	req := &DataStreamReq{
 		EntityType: EntityTypeFlags,
 	}
-
 	err := c.SendWebSocketMessage(ctx, req)
 	if err != nil {
 		c.logger.Printf("ERROR: Failed to send WebSocket message: %v", err)
 		return err
 	}
 
+	select {
+	case <-waitCh:
+	case <-time.After(5 * time.Second):
+		return fmt.Errorf("timeout while waiting for flags data")
+	case <-ctx.Done():
+		c.pendingFlagRequest = nil
+		return ctx.Err()
+	}
 	return nil
 }
 
@@ -238,6 +263,10 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	for _, flag := range flagsData {
 		ttl := c.cacheTTL
 		c.flagsCacheProvider.Set(ctx, flagCacheKey(flag.Key), flag, &ttl)
+	}
+
+	if c.pendingFlagRequest != nil {
+		c.pendingFlagRequest <- true
 	}
 }
 
@@ -261,7 +290,8 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 
 	// Notify all goroutines waiting for this company
 	c.mu.Lock()
-	defer c.mu.Unlock() // For each relevant key, notify all waiting channels
+	defer c.mu.Unlock()
+	// For each relevant key, notify all waiting channels
 	for key, value := range company.Keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
@@ -293,7 +323,8 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 
 	// Notify all goroutines waiting for this company
 	c.mu.Lock()
-	defer c.mu.Unlock() // For each relevant key, notify all waiting channels
+	defer c.mu.Unlock()
+	// For each relevant key, notify all waiting channels
 	for key, value := range user.Keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		if channels, ok := c.pendingUserRequests[cacheKey]; ok {

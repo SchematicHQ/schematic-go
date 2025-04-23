@@ -46,5 +46,6 @@ type DataStreamClient struct {
 
 	pendingCompanyRequests map[string][]chan *rulesengine.Company
 	pendingUserRequests    map[string][]chan *rulesengine.User
+	pendingFlagRequest     chan bool
 	mu                     sync.RWMutex
 }

@@ -2,7 +2,7 @@ package datastream
 
 import "time"
 
-const defaultBaseURL = "ws://api.schematic.com"
+const defaultBaseURL = "api.schematic.com"
 
 type Action string
 

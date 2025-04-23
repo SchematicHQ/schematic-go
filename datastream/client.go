@@ -25,6 +25,11 @@ func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOption
 		userCacheProvider = cache.NewDefaultCache[*rulesengine.User]()
 	}
 
+	dataStreamUrl, err := getBaseURL(baseUrl)
+	if err != nil {
+		panic(fmt.Sprintf("failed to parse base URL: %v", err))
+	}
+
 	return &DataStreamClient{
 		apiKey:               apiKey,
 		cacheTTL:             options.CacheTTL,
@@ -34,7 +39,7 @@ func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOption
 		flagsCacheProvider:   flagCacheProvider,
 		companyCacheProvider: companyCacheProvider,
 		companyCache:         make(map[string]*rulesengine.Company),
-		url:                  getBaseURL(baseUrl),
+		url:                  dataStreamUrl,
 		userCacheProvider:    userCacheProvider,
 
 		pendingCompanyRequests: make(map[string][]chan *rulesengine.Company),
@@ -99,9 +104,13 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 		ticker.Stop()
 	}()
 
-	c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	err := c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	if err != nil {
+		c.logger.Printf("ERROR: Failed to set read deadline: %v", err)
+		return true
+	}
 	c.conn.SetPongHandler(c.handlePong)
-	err := c.GetAllFlags(ctx)
+	err = c.GetAllFlags(ctx)
 	if err != nil {
 		c.logger.Printf("ERROR: Failed to get all flags: %v", err)
 		return true
@@ -182,18 +191,17 @@ func (c *DataStreamClient) Close() {
 	c.logger.Printf("INFO: WebSocket connection closed")
 }
 
-func getBaseURL(baseUrl string) string {
+func getBaseURL(baseUrl string) (string, error) {
 	if baseUrl == "" {
-		return defaultBaseURL
+		return defaultBaseURL, nil
 	}
 
 	url, err := url.Parse(baseUrl)
 	if err != nil {
-		fmt.Printf("ERROR: Invalid base URL: %v", err)
-		return defaultBaseURL
+		return "", err
 	}
 
-	return url.Host
+	return url.Host, nil
 }
 
 func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *DataStreamResp) error {
@@ -449,8 +457,10 @@ func (c *DataStreamClient) GetFlag(ctx context.Context, key string) (*rulesengin
 }
 
 func (c *DataStreamClient) handlePong(string) error {
-	c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	//c.logger.Printf("setting read deadline %v", time.Now().Add(pongWait))
+	err := c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -2,6 +2,8 @@ package client
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/schematichq/rulesengine"
@@ -146,7 +148,7 @@ func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *sche
 	if evalCtx.Company != nil {
 		company, err = c.dataStream.GetCompany(ctx, evalCtx.Company)
 		if err != nil {
-			c.logger.Printf("ERROR: Failed to get company from cache: %v", err)
+			c.errors <- errors.New(fmt.Sprintf("Failed to get company from cache: %v", err))
 			return false
 		}
 	}
@@ -155,16 +157,15 @@ func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *sche
 	if evalCtx.User != nil {
 		user, err = c.dataStream.GetUser(ctx, evalCtx.User)
 		if err != nil {
-			c.logger.Printf("ERROR: Failed to get user from cache: %v", err)
+			c.errors <- errors.New(fmt.Sprintf("Failed to get user from cache: %v", err))
 			return false
 		}
 	}
 
-	// Flags should be loaded already
 	// Get flag here
 	flag, found := c.dataStream.GetFlag(ctx, flagKey)
 	if !found {
-		c.logger.Printf("ERROR: Flag %s not found", flagKey)
+		c.errors <- errors.New(fmt.Sprintf("Flag %s not found", flagKey))
 		return false
 	}
 

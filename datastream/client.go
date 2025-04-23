@@ -174,6 +174,7 @@ func (c *DataStreamClient) Close() {
 	}
 
 	close(c.done)
+	close(c.reconnect)
 	c.logger.Printf("INFO: WebSocket connection closed")
 }
 
@@ -315,10 +316,12 @@ func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]strin
 	}
 
 	waitCh := make(chan *rulesengine.Company, 1) // Register the wait channel for each key
+	cacheKeys := []string{}
 	c.mu.Lock()
 	shouldSendRequest := true
 	for key, value := range keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value) // If there are already pending requests for this key, just add our channel
+		cacheKeys = append(cacheKeys, cacheKey)
 		if existingChannels, ok := c.pendingCompanyRequests[cacheKey]; ok {
 			c.pendingCompanyRequests[cacheKey] = append(existingChannels, waitCh)
 			shouldSendRequest = false // Someone else already requested this
@@ -340,14 +343,20 @@ func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]strin
 		}
 	}
 
+	var err error
 	select {
 	case company := <-waitCh:
 		return company, nil
 	case <-time.After(5 * time.Second):
-		return nil, fmt.Errorf("timeout while waiting for company data")
-	case <-ctx.Done(): // TODO: Probably some channel cleanup, or else a separate sweeper process
-		return nil, ctx.Err()
+		err = fmt.Errorf("timeout while waiting for company data")
+	case <-ctx.Done():
+		err = ctx.Err()
 	}
+
+	// Clean up all channels involved in this request
+	c.cleanupPendingCompanyRequests(cacheKeys, waitCh)
+
+	return nil, err
 }
 
 func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) (*rulesengine.User, error) {
@@ -357,10 +366,12 @@ func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) 
 	}
 
 	waitCh := make(chan *rulesengine.User, 1) // Register the wait channel for each key
+	cacheKeys := []string{}
 	c.mu.Lock()
 	shouldSendRequest := true
 	for key, value := range keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value) // If there are already pending requests for this key, just add our channel
+		cacheKeys = append(cacheKeys, cacheKey)
 		if existingChannels, ok := c.pendingUserRequests[cacheKey]; ok {
 			c.pendingUserRequests[cacheKey] = append(existingChannels, waitCh)
 			shouldSendRequest = false // Someone else already requested this
@@ -382,16 +393,20 @@ func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) 
 		}
 	}
 
-	for {
-		select {
-		case user := <-waitCh:
-			return user, nil
-		case <-time.After(5 * time.Second):
-			return nil, fmt.Errorf("timeout while waiting for user data")
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		}
+	var err error
+	select {
+	case user := <-waitCh:
+		return user, nil
+	case <-time.After(5 * time.Second):
+		err = fmt.Errorf("timeout while waiting for user data")
+	case <-ctx.Done():
+		err = ctx.Err()
 	}
+
+	// Clean up all channels involved in this request
+	c.cleanupPendingUserRequests(cacheKeys, waitCh)
+
+	return nil, err
 }
 
 func (c *DataStreamClient) GetFlag(ctx context.Context, key string) (*rulesengine.Flag, bool) {
@@ -444,4 +459,50 @@ func flagCacheKey(key string) string {
 
 func resourceKeyToCacheKey(resourceType string, key string, value string) string {
 	return fmt.Sprintf("%s:%s:%s", resourceType, key, value)
+}
+
+// Helper function to clean up pending company requests
+func (c *DataStreamClient) cleanupPendingCompanyRequests(cacheKeys []string, waitCh chan *rulesengine.Company) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	for _, cacheKey := range cacheKeys {
+		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
+			// Remove the specific channel from the list
+			filteredChannels := []chan *rulesengine.Company{}
+			for _, ch := range channels {
+				if ch != waitCh {
+					filteredChannels = append(filteredChannels, ch)
+				}
+			}
+			if len(filteredChannels) > 0 {
+				c.pendingCompanyRequests[cacheKey] = filteredChannels
+			} else {
+				delete(c.pendingCompanyRequests, cacheKey)
+			}
+		}
+	}
+	close(waitCh) // Close the wait channel to signal that we're done with it
+}
+
+func (c *DataStreamClient) cleanupPendingUserRequests(cacheKeys []string, waitCh chan *rulesengine.User) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	for _, cacheKey := range cacheKeys {
+		if channels, ok := c.pendingUserRequests[cacheKey]; ok {
+			// Remove the specific channel from the list
+			filteredChannels := []chan *rulesengine.User{}
+			for _, ch := range channels {
+				if ch != waitCh {
+					filteredChannels = append(filteredChannels, ch)
+				}
+			}
+			if len(filteredChannels) > 0 {
+				c.pendingUserRequests[cacheKey] = filteredChannels
+			} else {
+				delete(c.pendingCompanyRequests, cacheKey)
+			}
+		}
+	}
+
+	close(waitCh) // Close the wait channel to signal that we're done with it
 }

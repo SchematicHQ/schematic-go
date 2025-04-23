@@ -141,7 +141,6 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 }
 
 func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
-
 	var company *rulesengine.Company
 	var err error
 	if evalCtx.Company != nil {

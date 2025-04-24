@@ -6,6 +6,7 @@ import (
 	"time"
 
 	schematicgo "github.com/schematichq/schematic-go"
+	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/events"
 )
 
@@ -26,7 +27,7 @@ type eventBuffer struct {
 	interval time.Duration
 
 	// logger
-	logger schematicgo.Logger
+	logger core.Logger
 
 	// max number of events to store in buffer
 	maxEvents int
@@ -45,7 +46,7 @@ type eventBuffer struct {
 func NewEventBuffer(
 	client *events.Client,
 	errors chan error,
-	logger schematicgo.Logger,
+	logger core.Logger,
 	_period *time.Duration,
 ) *eventBuffer {
 	period := defaultEventBufferPeriod

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	schematicgo "github.com/schematichq/schematic-go"
+	"github.com/schematichq/schematic-go/core"
 )
 
 type defaultLogger struct {
@@ -36,6 +36,6 @@ func (l defaultLogger) Debug(ctx context.Context, message string, args ...interf
 	l.logger.Printf("[DEBUG] %s", append([]interface{}{message}, args...)...)
 }
 
-func NewDefaultLogger() schematicgo.Logger {
+func NewDefaultLogger() core.Logger {
 	return defaultLogger{logger: log.New(os.Stderr, "schematic ", log.LstdFlags)}
 }

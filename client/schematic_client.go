@@ -22,7 +22,7 @@ type SchematicClient struct {
 	flagCheckCacheProviders []schematicgo.BoolCacheProvider
 	flagDefaults            map[string]bool
 	isOffline               bool
-	logger                  schematicgo.Logger
+	logger                  core.Logger
 	stopWorker              chan struct{}
 	workerInterval          time.Duration
 }
@@ -37,6 +37,10 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	// If no caching behavior is specified, assume a default behavior
 	if len(options.FlagCheckCacheProviders) == 0 {
 		opts = append(opts, core.WithFlagCheckCacheProvider(cache.NewDefaultCache[bool]()))
+	}
+
+	if options.Logger == nil {
+		opts = append(opts, core.WithLogger(logger.NewDefaultLogger()))
 	}
 
 	// Rebuild options struct in case we added any new options above

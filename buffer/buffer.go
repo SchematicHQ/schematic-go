@@ -123,7 +123,7 @@ func (b *eventBuffer) Push(event *schematicgo.CreateEventRequestBody) {
 	}
 
 	if b.stopped {
-		b.logger.Printf("ERROR: Event buffer is stopped, not accepting new events")
+		b.logger.Error(context.Background(), "Event buffer is stopped, not accepting new events")
 		return
 	}
 
@@ -140,7 +140,7 @@ func (b *eventBuffer) Push(event *schematicgo.CreateEventRequestBody) {
 func (b *eventBuffer) Stop() {
 	defer func() {
 		if r := recover(); r != nil {
-			b.logger.Printf("ERROR: Panic occurred while closing client %v", r)
+			b.logger.Error(context.Background(), "Panic occurred while closing client %v", r)
 		}
 	}()
 

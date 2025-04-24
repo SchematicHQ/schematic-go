@@ -64,7 +64,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while checking flag %v", r)
+			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
 		}
 	}()
 
@@ -110,7 +110,7 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 func (c *SchematicClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while closing client %v", r)
+			c.logger.Error(context.Background(), "Panic occurred while closing client %v", r)
 		}
 	}()
 
@@ -169,7 +169,7 @@ func (c *SchematicClient) enqueueEvent(
 ) error {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while enqueueing event %v", r)
+			c.logger.Error(context.Background(), "Panic occurred while enqueueing event %v", r)
 		}
 	}()
 
@@ -206,7 +206,7 @@ func (c *SchematicClient) getFlagDefault(
 func (c *SchematicClient) worker() {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred in worker %v", r)
+			c.logger.Error(context.Background(), "Panic occurred in worker %v", r)
 		}
 	}()
 
@@ -222,7 +222,7 @@ func (c *SchematicClient) worker() {
 		case event := <-c.events:
 			buffer.Push(event)
 		case err := <-c.errors:
-			c.logger.Printf("ERROR: %v", err)
+			c.logger.Error(context.Background(), "%v", err)
 		case <-c.stopWorker:
 			buffer.Stop()
 			return

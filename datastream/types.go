@@ -2,6 +2,7 @@ package datastream
 
 import (
 	"encoding/json"
+	"net/url"
 	"sync"
 	"time"
 
@@ -41,7 +42,7 @@ type DataStreamClient struct {
 	flagsCacheProvider   FlagCacheProvider
 	userCacheProvider    UserCacheProvider
 	companyCache         map[string]*rulesengine.Company
-	url                  string
+	url                  *url.URL
 	apiKey               string
 
 	pendingCompanyRequests map[string][]chan *rulesengine.Company

@@ -47,9 +47,8 @@ func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOption
 	}
 }
 
-func connect(addr string, apiKey string) (*websocket.Conn, error) {
-	u := url.URL{Scheme: "ws", Host: addr, Path: "/datastream"}
-	c, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{
+func connect(addr *url.URL, apiKey string) (*websocket.Conn, error) {
+	c, _, err := websocket.DefaultDialer.Dial(addr.String(), http.Header{
 		"X-Schematic-Api-Key": []string{apiKey},
 	})
 	return c, err
@@ -191,17 +190,25 @@ func (c *DataStreamClient) Close() {
 	c.logger.Printf("INFO: WebSocket connection closed")
 }
 
-func getBaseURL(baseUrl string) (string, error) {
+func getBaseURL(baseUrl string) (*url.URL, error) {
 	if baseUrl == "" {
-		return defaultBaseURL, nil
+		baseUrl = defaultBaseURL
 	}
 
 	url, err := url.Parse(baseUrl)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return url.Host, nil
+	if url.Scheme == "https" {
+		url.Scheme = "wss"
+	} else if url.Scheme == "http" {
+		url.Scheme = "ws"
+	}
+
+	url.Path = "/datastream"
+
+	return url, nil
 }
 
 func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *DataStreamResp) error {

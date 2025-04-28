@@ -84,6 +84,10 @@ func (c *SchematicClient) useDataStream() bool {
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+	if c.isOffline {
+		return c.getFlagDefault(flagKey)
+	}
+
 	if c.useDataStream() {
 		return c.checkFlagDataStream(ctx, evalCtx, flagKey)
 	}
@@ -96,10 +100,6 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
 		}
 	}()
-
-	if c.isOffline {
-		return c.getFlagDefault(flagKey)
-	}
 
 	// If nil, check flag with empty context
 	if evalCtx == nil {

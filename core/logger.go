@@ -8,3 +8,8 @@ type Logger interface {
 	Error(context.Context, string, ...any)
 	Warn(context.Context, string, ...any)
 }
+
+type CtxError struct {
+	Err error
+	Ctx context.Context
+}

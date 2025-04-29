@@ -12,3 +12,4 @@ var WithEventBufferPeriod = core.WithEventBufferPeriod
 var WithFlagCheckCacheProvider = core.WithFlagCheckCacheProvider
 var WithLocalFlagCheckCache = core.WithLocalFlagCheckCache
 var WithOfflineMode = core.WithOfflineMode
+var WithLogger = core.WithLogger

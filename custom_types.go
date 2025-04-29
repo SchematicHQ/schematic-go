@@ -5,7 +5,3 @@ import (
 )
 
 type BoolCacheProvider = cache.CacheProvider[bool]
-
-type Logger interface {
-	Printf(format string, args ...interface{})
-}

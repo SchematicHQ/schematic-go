@@ -6,6 +6,7 @@ import (
 	"time"
 
 	schematicgo "github.com/schematichq/schematic-go"
+	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/events"
 )
 
@@ -26,7 +27,7 @@ type eventBuffer struct {
 	interval time.Duration
 
 	// logger
-	logger schematicgo.Logger
+	logger core.Logger
 
 	// max number of events to store in buffer
 	maxEvents int
@@ -45,7 +46,7 @@ type eventBuffer struct {
 func NewEventBuffer(
 	client *events.Client,
 	errors chan error,
-	logger schematicgo.Logger,
+	logger core.Logger,
 	_period *time.Duration,
 ) *eventBuffer {
 	period := defaultEventBufferPeriod
@@ -123,7 +124,7 @@ func (b *eventBuffer) Push(event *schematicgo.CreateEventRequestBody) {
 	}
 
 	if b.stopped {
-		b.logger.Printf("ERROR: Event buffer is stopped, not accepting new events")
+		b.logger.Error(context.Background(), "Event buffer is stopped, not accepting new events")
 		return
 	}
 
@@ -140,7 +141,7 @@ func (b *eventBuffer) Push(event *schematicgo.CreateEventRequestBody) {
 func (b *eventBuffer) Stop() {
 	defer func() {
 		if r := recover(); r != nil {
-			b.logger.Printf("ERROR: Panic occurred while closing client %v", r)
+			b.logger.Error(context.Background(), "Panic occurred while closing client %v", r)
 		}
 	}()
 

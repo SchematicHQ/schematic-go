@@ -17,12 +17,13 @@ type SchematicClient struct {
 	*Client
 
 	errors                  chan error
+	ctxErrors               chan *core.CtxError
 	eventBufferPeriod       *time.Duration
 	events                  chan *schematicgo.CreateEventRequestBody
 	flagCheckCacheProviders []schematicgo.BoolCacheProvider
 	flagDefaults            map[string]bool
 	isOffline               bool
-	logger                  schematicgo.Logger
+	logger                  core.Logger
 	stopWorker              chan struct{}
 	workerInterval          time.Duration
 }
@@ -39,12 +40,17 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		opts = append(opts, core.WithFlagCheckCacheProvider(cache.NewDefaultCache[bool]()))
 	}
 
+	if options.Logger == nil {
+		opts = append(opts, core.WithLogger(logger.NewDefaultLogger()))
+	}
+
 	// Rebuild options struct in case we added any new options above
 	options = core.NewRequestOptions(opts...)
 
 	client := &SchematicClient{
 		Client:                  NewClient(opts...),
 		errors:                  make(chan error, 100),
+		ctxErrors:               make(chan *core.CtxError, 100),
 		eventBufferPeriod:       options.EventBufferPeriod,
 		events:                  make(chan *schematicgo.CreateEventRequestBody, 100),
 		flagCheckCacheProviders: options.FlagCheckCacheProviders,
@@ -64,7 +70,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while checking flag %v", r)
+			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
 		}
 	}()
 
@@ -86,7 +92,10 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 
 	resp, err := c.Features.CheckFlag(ctx, flagKey, evalCtx)
 	if err != nil {
-		c.errors <- err
+		c.ctxErrors <- &core.CtxError{
+			Ctx: ctx,
+			Err: err,
+		}
 
 		return c.getFlagDefault(flagKey)
 	}
@@ -99,7 +108,10 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	go func() {
 		for _, provider := range c.flagCheckCacheProviders {
 			if err := provider.Set(ctx, cacheKey, resp.Data.Value, nil); err != nil {
-				c.errors <- err
+				c.ctxErrors <- &core.CtxError{
+					Ctx: ctx,
+					Err: err,
+				}
 			}
 		}
 	}()
@@ -110,7 +122,7 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 func (c *SchematicClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while closing client %v", r)
+			c.logger.Error(context.Background(), "Panic occurred while closing client %v", r)
 		}
 	}()
 
@@ -127,7 +139,10 @@ func (c *SchematicClient) Identify(
 	}
 
 	if err := c.enqueueEvent("identify", eventBody); err != nil {
-		c.errors <- err
+		c.ctxErrors <- &core.CtxError{
+			Ctx: ctx,
+			Err: err,
+		}
 	}
 }
 
@@ -159,7 +174,10 @@ func (c *SchematicClient) Track(
 	}
 
 	if err := c.enqueueEvent("track", eventBody); err != nil {
-		c.errors <- err
+		c.ctxErrors <- &core.CtxError{
+			Ctx: ctx,
+			Err: err,
+		}
 	}
 }
 
@@ -169,7 +187,7 @@ func (c *SchematicClient) enqueueEvent(
 ) error {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while enqueueing event %v", r)
+			c.logger.Error(context.Background(), "Panic occurred while enqueueing event %v", r)
 		}
 	}()
 
@@ -206,7 +224,7 @@ func (c *SchematicClient) getFlagDefault(
 func (c *SchematicClient) worker() {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred in worker %v", r)
+			c.logger.Error(context.Background(), "Panic occurred in worker %v", r)
 		}
 	}()
 
@@ -222,7 +240,9 @@ func (c *SchematicClient) worker() {
 		case event := <-c.events:
 			buffer.Push(event)
 		case err := <-c.errors:
-			c.logger.Printf("ERROR: %v", err)
+			c.logger.Error(context.Background(), "%v", err)
+		case err := <-c.ctxErrors:
+			c.logger.Error(err.Ctx, "%v", err.Err)
 		case <-c.stopWorker:
 			buffer.Stop()
 			return

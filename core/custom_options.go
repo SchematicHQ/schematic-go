@@ -95,3 +95,14 @@ func WithOfflineMode() RequestOption {
 		isOffline: true,
 	}
 }
+
+type CustomLogger struct {
+	logger Logger
+}
+
+func (c CustomLogger) applyRequestOptions(opts *RequestOptions) {
+	opts.Logger = c.logger
+}
+func WithLogger(logger Logger) RequestOption {
+	return CustomLogger{logger: logger}
+}

@@ -54,7 +54,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 
 	var dataStream *datastream.DataStreamClient
 	if options.UseDataStream {
-		dataStream = datastream.NewDataStream(options.BaseURL, options.APIKey, options.DatastreamOptions)
+		dataStream = datastream.NewDataStream(options.BaseURL, options.Logger, options.APIKey, options.DatastreamOptions)
 		dataStream.Start()
 	}
 
@@ -67,7 +67,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		flagCheckCacheProviders: options.FlagCheckCacheProviders,
 		flagDefaults:            options.FlagDefaults,
 		isOffline:               options.OfflineMode,
-		logger:                  logger.NewDefaultLogger(),
+		logger:                  options.Logger,
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
 		dataStream:              dataStream,

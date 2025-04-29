@@ -12,10 +12,9 @@ import (
 	"github.com/schematichq/rulesengine"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
-	"github.com/schematichq/schematic-go/logger"
 )
 
-func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
+func NewDataStream(baseUrl string, logger core.Logger, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
 	var flagCacheProvider FlagCacheProvider
 	var companyCacheProvider CompanyCacheProvider
 	var userCacheProvider UserCacheProvider
@@ -35,7 +34,7 @@ func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOption
 		cacheTTL:             options.CacheTTL,
 		done:                 make(chan bool),
 		reconnect:            make(chan bool),
-		logger:               logger.NewDefaultLogger(),
+		logger:               logger,
 		flagsCacheProvider:   flagCacheProvider,
 		companyCacheProvider: companyCacheProvider,
 		companyCache:         make(map[string]*rulesengine.Company),

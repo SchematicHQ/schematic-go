@@ -59,30 +59,29 @@ func (c *DataStreamClient) Start() {
 }
 
 func (c *DataStreamClient) ConnectAndRead() {
+	ctx := context.Background()
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred in WebSocket handler %v", r)
+			c.logger.Error(ctx, fmt.Sprintf("Panic occurred in WebSocket handler %v", r))
 		}
 	}()
 	defer c.Close()
 
-	ctx := context.Background()
-
 	attempts := 0
 	for {
 		if attempts >= maxReconnectAttempts {
-			c.logger.Printf("ERROR: Unable to connect to server")
+			c.logger.Error(ctx, "Unable to connect to server")
 			return
 		}
 		conn, err := connect(c.url, c.apiKey)
 		if err != nil {
-			c.logger.Printf("ERROR: Failed to connect to WebSocket: %v", err)
+			c.logger.Error(ctx, fmt.Sprintf("Failed to connect to WebSocket: %v", err))
 			attempts += 1
 			time.Sleep(reconnectDelay)
 			continue
 		}
 
-		c.logger.Printf("INFO: Connected to Schematic WebSocket")
+		c.logger.Info(ctx, "Connected to Schematic WebSocket")
 		attempts = 0
 		c.conn = conn
 
@@ -93,7 +92,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 			return
 		}
 
-		c.logger.Printf("INFO: Reconnecting to WebSocket...")
+		c.logger.Info(ctx, "Reconnecting to WebSocket...")
 	}
 }
 
@@ -105,13 +104,13 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 
 	err := c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to set read deadline: %v", err)
+		c.logger.Error(ctx, fmt.Sprintf("Failed to set read deadline: %v", err))
 		return true
 	}
 	c.conn.SetPongHandler(c.handlePong)
 	err = c.GetAllFlags(ctx)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to get all flags: %v", err)
+		c.logger.Error(ctx, fmt.Sprintf("Failed to get all flags: %v", err))
 		return true
 	}
 
@@ -124,7 +123,7 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 		case <-ticker.C:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
-				c.logger.Printf("ERROR: Failed to send ping message: %v", err)
+				c.logger.Error(ctx, fmt.Sprintf("Failed to send ping message: %v", err))
 				return false
 			}
 		}
@@ -134,7 +133,7 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 func (c *DataStreamClient) readMessages(ctx context.Context) {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred in WebSocket reader %v", r)
+			c.logger.Error(ctx, fmt.Sprintf("Panic occurred in WebSocket reader %v", r))
 			c.reconnect <- true
 		}
 	}()
@@ -143,7 +142,7 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		err := c.conn.ReadJSON(&message)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				c.logger.Printf("ERROR: Failed to read WebSocket message: %v", err)
+				c.logger.Error(ctx, "Failed to read WebSocket message: %v", err)
 				c.reconnect <- true
 				return
 			}
@@ -151,7 +150,7 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 
 		err = c.handleMessageResponse(ctx, &message)
 		if err != nil {
-			c.logger.Printf("ERROR: Failed to handle WebSocket message: %v", err)
+			c.logger.Error(ctx, fmt.Sprintf("Failed to handle WebSocket message: %v", err))
 			return
 		}
 	}
@@ -166,7 +165,7 @@ func (c *DataStreamClient) SendWebSocketMessage(ctx context.Context, req *DataSt
 
 	err := c.conn.WriteJSON(message)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to send WebSocket message: %v", err)
+		c.logger.Error(ctx, fmt.Sprintf("Failed to send WebSocket message: %v", err))
 		return err
 	}
 
@@ -174,20 +173,21 @@ func (c *DataStreamClient) SendWebSocketMessage(ctx context.Context, req *DataSt
 }
 
 func (c *DataStreamClient) Close() {
+	ctx := context.Background()
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while closing WebSocket %v", r)
+			c.logger.Error(ctx, fmt.Sprintf("Panic occurred while closing WebSocket %v", r))
 		}
 	}()
 
 	if c.conn != nil {
-		c.logger.Printf("INFO: Closing WebSocket connection")
+		c.logger.Info(ctx, "Closing WebSocket connection")
 		c.conn.Close()
 	}
 
 	close(c.done)
 	close(c.reconnect)
-	c.logger.Printf("INFO: WebSocket connection closed")
+	c.logger.Info(ctx, "WebSocket connection closed")
 }
 
 func getBaseURL(baseUrl string) (*url.URL, error) {
@@ -224,7 +224,7 @@ func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *D
 	case string(EntityTypeUser):
 		c.handleUserMessage(ctx, message)
 	default:
-		c.logger.Printf("ERROR: Received unknown entity type: %s", message.EntityType)
+		c.logger.Error(ctx, fmt.Sprintf("Received unknown entity type: %s", message.EntityType))
 	}
 
 	return nil
@@ -250,7 +250,7 @@ func (c *DataStreamClient) GetAllFlags(ctx context.Context) error {
 	}
 	err := c.SendWebSocketMessage(ctx, req)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to send WebSocket message: %v", err)
+		c.logger.Error(ctx, fmt.Sprintf("Failed to send WebSocket message: %v", err))
 		return err
 	}
 
@@ -271,7 +271,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	var flagsData []*rulesengine.Flag
 	err := json.Unmarshal(flags, &flagsData)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to unmarshal flags data: %v", err)
+		c.logger.Error(ctx, fmt.Sprintf("Failed to unmarshal flags data: %v", err))
 		return
 	}
 
@@ -289,7 +289,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 	var company *rulesengine.Company
 	err := json.Unmarshal(resp.Data, &company)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to unmarshal company data: %v", err)
+		c.logger.Error(ctx, fmt.Sprintf("Failed to unmarshal company data: %v", err))
 		return
 	}
 
@@ -326,7 +326,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 	var user *rulesengine.User
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to unmarshal user data: %v", err)
+		c.logger.Error(ctx, fmt.Sprintf("Failed to unmarshal user data: %v", err))
 		return
 	}
 

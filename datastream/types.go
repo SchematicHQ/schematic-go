@@ -8,8 +8,8 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
-	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/cache"
+	"github.com/schematichq/schematic-go/core"
 )
 
 type CompanyCacheProvider cache.CacheProvider[*rulesengine.Company]
@@ -35,7 +35,7 @@ type DataStreamResp struct {
 type DataStreamClient struct {
 	cacheTTL             time.Duration
 	conn                 *websocket.Conn
-	logger               schematicgo.Logger
+	logger               core.Logger
 	done                 chan bool
 	reconnect            chan bool
 	companyCacheProvider CompanyCacheProvider

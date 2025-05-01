@@ -3,6 +3,7 @@ package datastream
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -120,8 +121,7 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 		case <-c.reconnect:
 			return false
 		case <-ticker.C:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := c.conn.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
+			if err := c.conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
 				c.logger.Error(ctx, fmt.Sprintf("Failed to send ping message: %v", err))
 				return false
 			}
@@ -134,6 +134,7 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Panic occurred in WebSocket reader %v", r))
 			c.reconnect <- true
+			return
 		}
 	}()
 	for {
@@ -141,16 +142,21 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		err := c.conn.ReadJSON(&message)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				c.logger.Error(ctx, "Failed to read WebSocket message: %v", err)
+				c.logger.Error(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
 				c.reconnect <- true
 				return
 			}
 		}
 
+		if message.EntityType == "" {
+			c.logger.Error(ctx, "Received empty message from WebSocket")
+			c.reconnect <- true
+			return
+		}
+
 		err = c.handleMessageResponse(ctx, &message)
 		if err != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Failed to handle WebSocket message: %v", err))
-			return
 		}
 	}
 }
@@ -223,7 +229,7 @@ func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *D
 	case string(EntityTypeUser):
 		c.handleUserMessage(ctx, message)
 	default:
-		c.logger.Error(ctx, fmt.Sprintf("Received unknown entity type: %s", message.EntityType))
+		return errors.New(fmt.Sprintf("Received unknown entity type: %s", message.EntityType))
 	}
 
 	return nil
@@ -365,13 +371,11 @@ func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]strin
 	c.mu.Lock()
 	shouldSendRequest := true
 	for key, value := range keys {
-		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value) // If there are already pending requests for this key, just add our channel
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		cacheKeys = append(cacheKeys, cacheKey)
 		if existingChannels, ok := c.pendingCompanyRequests[cacheKey]; ok {
 			c.pendingCompanyRequests[cacheKey] = append(existingChannels, waitCh)
 			shouldSendRequest = false // Someone else already requested this
-		} else { // Register new channel
-			c.pendingCompanyRequests[cacheKey] = []chan *rulesengine.Company{waitCh}
 		}
 	}
 	c.mu.Unlock()
@@ -386,6 +390,13 @@ func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]strin
 		if err != nil {
 			return nil, err
 		}
+
+		c.mu.Lock()
+		for key, value := range keys {
+			cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+			c.pendingCompanyRequests[cacheKey] = []chan *rulesengine.Company{waitCh}
+		}
+		c.mu.Unlock()
 	}
 
 	var err error
@@ -420,8 +431,6 @@ func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) 
 		if existingChannels, ok := c.pendingUserRequests[cacheKey]; ok {
 			c.pendingUserRequests[cacheKey] = append(existingChannels, waitCh)
 			shouldSendRequest = false // Someone else already requested this
-		} else { // Register new channel
-			c.pendingUserRequests[cacheKey] = []chan *rulesengine.User{waitCh}
 		}
 	}
 	c.mu.Unlock()
@@ -436,6 +445,13 @@ func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) 
 		if err != nil {
 			return nil, err
 		}
+
+		c.mu.Lock()
+		for key, value := range keys {
+			cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+			c.pendingUserRequests[cacheKey] = []chan *rulesengine.User{waitCh}
+		}
+		c.mu.Unlock()
 	}
 
 	var err error

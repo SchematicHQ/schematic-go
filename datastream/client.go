@@ -223,16 +223,14 @@ func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *D
 
 	switch message.EntityType {
 	case string(EntityTypeCompany):
-		c.handleCompanyMessage(ctx, message)
+		return c.handleCompanyMessage(ctx, message)
 	case string(EntityTypeFlags):
-		c.handleFlagsMessage(ctx, message)
+		return c.handleFlagsMessage(ctx, message)
 	case string(EntityTypeUser):
-		c.handleUserMessage(ctx, message)
+		return c.handleUserMessage(ctx, message)
 	default:
 		return errors.New(fmt.Sprintf("Received unknown entity type: %s", message.EntityType))
 	}
-
-	return nil
 }
 
 func (c *DataStreamClient) GetAllFlags(ctx context.Context) error {
@@ -270,14 +268,13 @@ func (c *DataStreamClient) GetAllFlags(ctx context.Context) error {
 	return nil
 }
 
-func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStreamResp) {
+func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStreamResp) error {
 	flags := resp.Data
 
 	var flagsData []*rulesengine.Flag
 	err := json.Unmarshal(flags, &flagsData)
 	if err != nil {
-		c.logger.Error(ctx, fmt.Sprintf("Failed to unmarshal flags data: %v", err))
-		return
+		return errors.New(fmt.Sprintf("Failed to unmarshal flags data: %v", err))
 	}
 
 	for _, flag := range flagsData {
@@ -288,18 +285,20 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	if c.pendingFlagRequest != nil {
 		c.pendingFlagRequest <- true
 	}
+
+	return nil
 }
 
-func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataStreamResp) {
+func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataStreamResp) error {
 	var company *rulesengine.Company
 	err := json.Unmarshal(resp.Data, &company)
 	if err != nil {
-		c.logger.Error(ctx, fmt.Sprintf("Failed to unmarshal company data: %v", err))
-		return
+		return errors.New(fmt.Sprintf("Failed to unmarshal company data: %v", err))
+
 	}
 
 	if company == nil {
-		return
+		return nil
 	}
 
 	for key, value := range company.Keys {
@@ -325,14 +324,15 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 			delete(c.pendingCompanyRequests, cacheKey)
 		}
 	}
+
+	return nil
 }
 
-func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStreamResp) {
+func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStreamResp) error {
 	var user *rulesengine.User
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
-		c.logger.Error(ctx, fmt.Sprintf("Failed to unmarshal user data: %v", err))
-		return
+		return errors.New(fmt.Sprintf("Failed to unmarshal user data: %v", err))
 	}
 
 	for key, value := range user.Keys {
@@ -358,6 +358,8 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 			delete(c.pendingUserRequests, cacheKey)
 		}
 	}
+
+	return nil
 }
 
 func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]string) (*rulesengine.Company, error) {

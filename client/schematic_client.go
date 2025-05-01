@@ -183,7 +183,7 @@ func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *sche
 func (c *SchematicClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(context.Background(), "Panic occurred while closing client %v", r)
+			c.logger.Error(context.Background(), fmt.Sprintf("Panic occurred while closing client %v", r))
 		}
 	}()
 
@@ -252,7 +252,7 @@ func (c *SchematicClient) enqueueEvent(
 ) error {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(context.Background(), "Panic occurred while enqueueing event %v", r)
+			c.logger.Error(context.Background(), fmt.Sprintf("Panic occurred while enqueueing event %v", r))
 		}
 	}()
 
@@ -289,7 +289,7 @@ func (c *SchematicClient) getFlagDefault(
 func (c *SchematicClient) worker() {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(context.Background(), "Panic occurred in worker %v", r)
+			c.logger.Error(context.Background(), fmt.Sprintf("Panic occurred in worker %v", r))
 		}
 	}()
 
@@ -305,7 +305,7 @@ func (c *SchematicClient) worker() {
 		case event := <-c.events:
 			buffer.Push(event)
 		case err := <-c.errors:
-			c.logger.Error(context.Background(), "%v", err)
+			c.logger.Error(context.Background(), fmt.Sprintf("%v", err))
 		case err := <-c.ctxErrors:
 			c.logger.Error(err.Ctx, "%v", err.Err)
 		case <-c.stopWorker:

@@ -148,7 +148,7 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 			}
 		}
 
-		if message.EntityType == "" {
+		if message.Data == nil {
 			c.logger.Error(ctx, "Received empty message from WebSocket")
 			c.reconnect <- true
 			return

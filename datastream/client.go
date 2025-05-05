@@ -62,7 +62,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 	ctx := context.Background()
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Panic occurred in WebSocket handler %v", r))
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket handler %v", r))
 		}
 	}()
 	defer c.Close()
@@ -132,8 +132,7 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 func (c *DataStreamClient) readMessages(ctx context.Context) {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Panic occurred in WebSocket reader %v", r))
-			c.reconnect <- true
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket reader %v", r))
 			return
 		}
 	}()
@@ -181,7 +180,7 @@ func (c *DataStreamClient) Close() {
 	ctx := context.Background()
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Panic occurred while closing WebSocket %v", r))
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred while closing WebSocket %v", r))
 		}
 	}()
 

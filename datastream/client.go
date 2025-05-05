@@ -20,10 +20,11 @@ func NewDataStream(baseUrl string, logger core.Logger, apiKey string, options *c
 	var companyCacheProvider CompanyCacheProvider
 	var userCacheProvider UserCacheProvider
 	if options.CacheProvider == defaultCacheProvider {
-		flagCacheProvider = cache.NewDefaultCache[*rulesengine.Flag]()
 		companyCacheProvider = cache.NewDefaultCache[*rulesengine.Company]()
 		userCacheProvider = cache.NewDefaultCache[*rulesengine.User]()
 	}
+
+	flagCacheProvider = cache.NewDefaultCache[*rulesengine.Flag]()
 
 	dataStreamUrl, err := getBaseURL(baseUrl)
 	if err != nil {
@@ -277,8 +278,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	}
 
 	for _, flag := range flagsData {
-		ttl := c.cacheTTL
-		c.flagsCacheProvider.Set(ctx, flagCacheKey(flag.Key), flag, &ttl)
+		c.flagsCacheProvider.Set(ctx, flagCacheKey(flag.Key), flag, nil)
 	}
 
 	if c.pendingFlagRequest != nil {

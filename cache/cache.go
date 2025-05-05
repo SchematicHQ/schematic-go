@@ -10,6 +10,7 @@ import (
 type CacheProvider[T any] interface {
 	Get(ctx context.Context, key string) (T, bool)
 	Set(ctx context.Context, key string, val T, ttlOverride *time.Duration) error
+	Delete(ctx context.Context, key string) error
 }
 
 const defaultCacheSize = 1000 // 1000 records
@@ -114,6 +115,23 @@ func (c *localCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 	}
 	element := c.lruList.PushFront(item)
 	c.cache[key] = element
+
+	return nil
+}
+
+// Delete removes an item from the cache by its key.
+func (c *localCache[T]) Delete(ctx context.Context, key string) error {
+	if c == nil || c.maxSize == 0 {
+		return nil
+	}
+
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if element, exists := c.cache[key]; exists {
+		c.lruList.Remove(element)
+		delete(c.cache, key)
+	}
 
 	return nil
 }

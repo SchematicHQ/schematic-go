@@ -301,6 +301,15 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 		return nil
 	}
 
+	if resp.MessageType == MessageTypeDelete {
+		// Remove the company from the cache
+		for key, value := range company.Keys {
+			companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+			c.companyCacheProvider.Delete(ctx, companyKey)
+		}
+		return nil
+	}
+
 	for key, value := range company.Keys {
 		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		ttl := c.cacheTTL
@@ -333,6 +342,19 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Failed to unmarshal user data: %v", err))
+	}
+
+	if user == nil {
+		return nil
+	}
+
+	if resp.MessageType == MessageTypeDelete {
+		// Remove the user from the cache
+		for key, value := range user.Keys {
+			userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+			c.userCacheProvider.Delete(ctx, userKey)
+			return nil
+		}
 	}
 
 	for key, value := range user.Keys {

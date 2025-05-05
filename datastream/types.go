@@ -17,8 +17,8 @@ type FlagCacheProvider cache.CacheProvider[*rulesengine.Flag]
 type UserCacheProvider cache.CacheProvider[*rulesengine.User]
 
 type DataStreamReq struct {
-	Action     Action            `json:"action" binding:"required,oneof=start stop"`
-	EntityType EntityType        `json:"entity_type" binding:"required,oneof=company flags user"`
+	Action     Action            `json:"action"`
+	EntityType EntityType        `json:"entity_type"`
 	Keys       map[string]string `json:"keys,omitempty"`
 }
 
@@ -27,9 +27,10 @@ type DataStreamBaseReq struct {
 }
 
 type DataStreamResp struct {
-	Data       json.RawMessage `json:"data"`
-	EntityID   *string         `json:"entity_id"`
-	EntityType string          `json:"entity_type"`
+	Data        json.RawMessage `json:"data"`
+	EntityID    *string         `json:"entity_id"`
+	EntityType  string          `json:"entity_type"`
+	MessageType MessageType     `json:"message_type"`
 }
 
 type DataStreamClient struct {
@@ -50,3 +51,11 @@ type DataStreamClient struct {
 	pendingFlagRequest     chan bool
 	mu                     sync.RWMutex
 }
+
+type MessageType int
+
+const (
+	MessageTypFull MessageType = iota
+	MessageTypePartial
+	MessageTypeDelete
+)

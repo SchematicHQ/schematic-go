@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net"
+	"math"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"time"
@@ -79,7 +80,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 		if err != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Failed to connect to WebSocket: %v", err))
 			attempts += 1
-			time.Sleep(reconnectDelay)
+			time.Sleep(calculateBackoffDelay(attempts))
 			continue
 		}
 
@@ -101,6 +102,18 @@ func (c *DataStreamClient) ConnectAndRead() {
 
 		c.logger.Info(ctx, "Reconnecting to WebSocket...")
 	}
+}
+
+func calculateBackoffDelay(attempt int) time.Duration {
+	// Add jitter to prevent synchronized reconnection attempts
+	jitter := time.Duration(rand.Int63n(int64(minReconnectDelay)))
+
+	// Exponential backoff with a cap
+	delay := time.Duration(math.Pow(2, float64(attempt-1)))*minReconnectDelay + jitter
+	if delay > maxReconnectDelay {
+		delay = maxReconnectDelay + jitter // Ensure jitter is added even when capped
+	}
+	return delay
 }
 
 func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
@@ -143,8 +156,12 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		_, m, err := c.conn.ReadMessage()
 
 		if err != nil {
-			var opErr *net.OpError
-			if errors.As(err, &opErr) {
+			// var opErr *net.OpError
+			// if errors.As(err, &opErr) {
+			// 	return
+			// }
+
+			if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
 				return
 			}
 
@@ -153,10 +170,13 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 			}
 
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				c.logger.Debug(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
 				return
 			}
-			c.logger.Debug(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
+
 			c.reconnect <- true
+			return
+
 		}
 
 		err = json.Unmarshal(m, &message)

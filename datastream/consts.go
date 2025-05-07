@@ -22,7 +22,8 @@ const (
 // Time constants for the WebSocket connection
 const (
 	maxReconnectAttempts = 5
-	reconnectDelay       = 2 * time.Second
+	minReconnectDelay    = 1 * time.Second
+	maxReconnectDelay    = 60 * time.Second
 	pongWait             = 30 * time.Second
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"net/url"
 	"time"
@@ -34,8 +35,8 @@ func NewDataStream(baseUrl string, logger core.Logger, apiKey string, options *c
 	return &DataStreamClient{
 		apiKey:               apiKey,
 		cacheTTL:             options.CacheTTL,
-		done:                 make(chan bool),
-		reconnect:            make(chan bool),
+		done:                 make(chan bool, 1),
+		reconnect:            make(chan bool, 1),
 		logger:               logger,
 		flagsCacheProvider:   flagCacheProvider,
 		companyCacheProvider: companyCacheProvider,
@@ -48,11 +49,11 @@ func NewDataStream(baseUrl string, logger core.Logger, apiKey string, options *c
 	}
 }
 
-func connect(addr *url.URL, apiKey string) (*websocket.Conn, error) {
-	c, _, err := websocket.DefaultDialer.Dial(addr.String(), http.Header{
-		"X-Schematic-Api-Key": []string{apiKey},
+func (c *DataStreamClient) connect() (*websocket.Conn, error) {
+	client, _, err := websocket.DefaultDialer.Dial(c.url.String(), http.Header{
+		"X-Schematic-Api-Key": []string{c.apiKey},
 	})
-	return c, err
+	return client, err
 }
 
 func (c *DataStreamClient) Start() {
@@ -61,12 +62,12 @@ func (c *DataStreamClient) Start() {
 
 func (c *DataStreamClient) ConnectAndRead() {
 	ctx := context.Background()
+
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket handler %v", r))
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket handler: %v", r))
 		}
 	}()
-	defer c.Close()
 
 	attempts := 0
 	for {
@@ -74,7 +75,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 			c.logger.Error(ctx, "Unable to connect to server")
 			return
 		}
-		conn, err := connect(c.url, c.apiKey)
+		conn, err := c.connect()
 		if err != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Failed to connect to WebSocket: %v", err))
 			attempts += 1
@@ -85,6 +86,11 @@ func (c *DataStreamClient) ConnectAndRead() {
 		c.logger.Info(ctx, "Connected to Schematic WebSocket")
 		attempts = 0
 		c.conn = conn
+
+		err = c.conn.SetReadDeadline(time.Now().Add(pongWait))
+		if err != nil {
+			c.logger.Error(ctx, fmt.Sprintf("Failed to set read deadline: %v", err))
+		}
 
 		go c.readMessages(ctx)
 		closed := c.handleWebSocketConnection(ctx)
@@ -103,13 +109,8 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 		ticker.Stop()
 	}()
 
-	err := c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	if err != nil {
-		c.logger.Error(ctx, fmt.Sprintf("Failed to set read deadline: %v", err))
-		return true
-	}
 	c.conn.SetPongHandler(c.handlePong)
-	err = c.GetAllFlags(ctx)
+	err := c.GetAllFlags(ctx)
 	if err != nil {
 		c.logger.Error(ctx, fmt.Sprintf("Failed to get all flags: %v", err))
 		return true
@@ -133,23 +134,30 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 func (c *DataStreamClient) readMessages(ctx context.Context) {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket reader %v", r))
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket reader: %v", r))
 			return
 		}
 	}()
 	for {
 		var message DataStreamResp
-		err := c.conn.ReadJSON(&message)
+		_, m, err := c.conn.ReadMessage()
+
 		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				c.logger.Error(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
-				c.reconnect <- true
+			var opErr *net.OpError
+			if errors.As(err, &opErr) {
 				return
 			}
+
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				return
+			}
+			c.logger.Debug(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
+			c.reconnect <- true
 		}
 
+		err = json.Unmarshal(m, &message)
 		if message.Data == nil {
-			c.logger.Error(ctx, "Received empty message from WebSocket")
+			c.logger.Debug(ctx, "Received empty message from WebSocket")
 			c.reconnect <- true
 			return
 		}
@@ -181,17 +189,18 @@ func (c *DataStreamClient) Close() {
 	ctx := context.Background()
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred while closing WebSocket %v", r))
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred while closing WebSocket: %v", r))
 		}
 	}()
+
+	close(c.done)
+	close(c.reconnect)
 
 	if c.conn != nil {
 		c.logger.Info(ctx, "Closing WebSocket connection")
 		c.conn.Close()
 	}
 
-	close(c.done)
-	close(c.reconnect)
 	c.logger.Info(ctx, "WebSocket connection closed")
 }
 

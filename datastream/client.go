@@ -3,41 +3,52 @@ package datastream
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
+	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
-	"github.com/schematichq/schematic-go/logger"
 )
 
-func NewDataStream(baseUrl string, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
+func NewDataStream(baseUrl string, logger core.Logger, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
 
-	flagCacheProvider, companyCacheProvider, userCacheProvider := getCacheProviders(options)
+	companyCacheProvider, userCacheProvider := getCacheProviders(options)
+
+	flagCacheProvider := cache.NewLocalCache[*rulesengine.Flag](1000, 1000*time.Hour)
+
+	dataStreamUrl, err := getBaseURL(baseUrl)
+	if err != nil {
+		panic(fmt.Sprintf("failed to parse base URL: %v", err))
+	}
 
 	return &DataStreamClient{
 		apiKey:               apiKey,
 		cacheTTL:             options.CacheTTL,
-		done:                 make(chan bool),
-		reconnect:            make(chan bool),
-		logger:               logger.NewDefaultLogger(),
+		done:                 make(chan bool, 1),
+		reconnect:            make(chan bool, 1),
+		logger:               logger,
 		flagsCacheProvider:   flagCacheProvider,
 		companyCacheProvider: companyCacheProvider,
 		companyCache:         make(map[string]*rulesengine.Company),
-		url:                  getBaseURL(baseUrl),
+		url:                  dataStreamUrl,
 		userCacheProvider:    userCacheProvider,
+
+		pendingCompanyRequests: make(map[string][]chan *rulesengine.Company),
+		pendingUserRequests:    make(map[string][]chan *rulesengine.User),
 	}
 }
 
-func connect(addr string, apiKey string) (*websocket.Conn, error) {
-	u := url.URL{Scheme: "ws", Host: addr, Path: "/datastream"}
-	c, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{
-		"X-Schematic-Api-Key": []string{apiKey},
+func (c *DataStreamClient) connect() (*websocket.Conn, error) {
+	client, _, err := websocket.DefaultDialer.Dial(c.url.String(), http.Header{
+		"X-Schematic-Api-Key": []string{c.apiKey},
 	})
-	return c, err
+	return client, err
 }
 
 func (c *DataStreamClient) Start() {
@@ -45,32 +56,36 @@ func (c *DataStreamClient) Start() {
 }
 
 func (c *DataStreamClient) ConnectAndRead() {
+	ctx := context.Background()
+
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred in WebSocket handler %v", r)
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket handler: %v", r))
 		}
 	}()
-	defer c.Close()
-
-	ctx := context.Background()
 
 	attempts := 0
 	for {
 		if attempts >= maxReconnectAttempts {
-			c.logger.Printf("ERROR: Unable to connect to server")
+			c.logger.Error(ctx, "Unable to connect to server")
 			return
 		}
-		conn, err := connect(c.url, c.apiKey)
+		conn, err := c.connect()
 		if err != nil {
-			c.logger.Printf("ERROR: Failed to connect to WebSocket: %v", err)
+			c.logger.Error(ctx, fmt.Sprintf("Failed to connect to WebSocket: %v", err))
 			attempts += 1
 			time.Sleep(reconnectDelay)
 			continue
 		}
 
-		c.logger.Printf("INFO: Connected")
+		c.logger.Info(ctx, "Connected to Schematic WebSocket")
 		attempts = 0
 		c.conn = conn
+
+		err = c.conn.SetReadDeadline(time.Now().Add(pongWait))
+		if err != nil {
+			c.logger.Error(ctx, fmt.Sprintf("Failed to set read deadline: %v", err))
+		}
 
 		go c.readMessages(ctx)
 		closed := c.handleWebSocketConnection(ctx)
@@ -79,8 +94,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 			return
 		}
 
-		c.logger.Printf("INFO: Reconnecting to WebSocket...")
-
+		c.logger.Info(ctx, "Reconnecting to WebSocket...")
 	}
 }
 
@@ -90,9 +104,12 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 		ticker.Stop()
 	}()
 
-	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(c.handlePong)
-	c.GetAllFlags(ctx)
+	err := c.GetAllFlags(ctx)
+	if err != nil {
+		c.logger.Error(ctx, fmt.Sprintf("Failed to get all flags: %v", err))
+		return true
+	}
 
 	for {
 		select {
@@ -101,9 +118,8 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 		case <-c.reconnect:
 			return false
 		case <-ticker.C:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := c.conn.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
-				c.logger.Printf("ERROR: Failed to send ping message: %v", err)
+			if err := c.conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
+				c.logger.Error(ctx, fmt.Sprintf("Failed to send ping message: %v", err))
 				return false
 			}
 		}
@@ -113,23 +129,37 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 func (c *DataStreamClient) readMessages(ctx context.Context) {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred in WebSocket reader %v", r)
-			c.reconnect <- false
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket reader: %v", r))
+			return
 		}
 	}()
 	for {
-		_, message, err := c.conn.ReadMessage()
+		var message DataStreamResp
+		_, m, err := c.conn.ReadMessage()
+
 		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				c.logger.Printf("ERROR: Failed to read WebSocket message: %v", err)
-				c.reconnect <- true
+			var opErr *net.OpError
+			if errors.As(err, &opErr) {
 				return
 			}
+
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				return
+			}
+			c.logger.Debug(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
+			c.reconnect <- true
 		}
-		err = c.handleMessageResponse(ctx, message)
-		if err != nil {
-			c.logger.Printf("ERROR: Failed to handle WebSocket message: %v", err)
+
+		err = json.Unmarshal(m, &message)
+		if message.Data == nil {
+			c.logger.Debug(ctx, "Received empty message from WebSocket")
+			c.reconnect <- true
 			return
+		}
+
+		err = c.handleMessageResponse(ctx, &message)
+		if err != nil {
+			c.logger.Error(ctx, fmt.Sprintf("Failed to handle WebSocket message: %v", err))
 		}
 	}
 }
@@ -139,14 +169,11 @@ func (c *DataStreamClient) SendWebSocketMessage(ctx context.Context, req *DataSt
 		return fmt.Errorf("WebSocket connection is not initialized")
 	}
 
-	message, err := c.packageMessage(req)
-	if err != nil {
-		return err
-	}
+	message := c.packageMessage(req)
 
-	err = c.conn.WriteMessage(websocket.TextMessage, message)
+	err := c.conn.WriteJSON(message)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to send WebSocket message: %v", err)
+		c.logger.Error(ctx, fmt.Sprintf("Failed to send WebSocket message: %v", err))
 		return err
 	}
 
@@ -154,201 +181,324 @@ func (c *DataStreamClient) SendWebSocketMessage(ctx context.Context, req *DataSt
 }
 
 func (c *DataStreamClient) Close() {
+	ctx := context.Background()
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Printf("ERROR: Panic occurred while closing DataStream %v", r)
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred while closing WebSocket: %v", r))
 		}
 	}()
 
+	close(c.done)
+	close(c.reconnect)
+
 	if c.conn != nil {
-		c.logger.Printf("INFO: Closing DataStream connection")
+		c.logger.Info(ctx, "Closing WebSocket connection")
 		c.conn.Close()
 	}
 
-	close(c.done)
-	c.logger.Printf("INFO: DataStream connection closed")
+	c.logger.Info(ctx, "WebSocket connection closed")
 }
 
-func getBaseURL(baseUrl string) string {
+func getBaseURL(baseUrl string) (*url.URL, error) {
 	if baseUrl == "" {
-		return defaultBaseURL
+		baseUrl = defaultBaseURL
 	}
 
 	url, err := url.Parse(baseUrl)
 	if err != nil {
-		fmt.Printf("ERROR: Invalid base URL: %v", err)
-		return defaultBaseURL
+		return nil, err
 	}
 
-	return url.Host
+	if url.Scheme == "https" {
+		url.Scheme = "wss"
+	} else if url.Scheme == "http" {
+		url.Scheme = "ws"
+	}
+
+	url.Path = "/datastream"
+
+	return url, nil
 }
 
-func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message []byte) error {
-	resp, err := c.unpackResponse(message)
-	if err != nil {
-		return err
+func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *DataStreamResp) error {
+	if message == nil {
+		return nil
 	}
 
-	switch resp.EntityType {
+	switch message.EntityType {
 	case string(EntityTypeCompany):
-		c.handleCompanyMessage(ctx, resp)
+		return c.handleCompanyMessage(ctx, message)
 	case string(EntityTypeFlags):
-		c.handleFlagsMessage(ctx, resp)
+		return c.handleFlagsMessage(ctx, message)
 	case string(EntityTypeUser):
-		c.handleUserMessage(ctx, resp)
+		return c.handleUserMessage(ctx, message)
 	default:
-		c.logger.Printf("ERROR: Received unknown entity type: %s", resp.EntityType)
+		return errors.New(fmt.Sprintf("Received unknown entity type: %s", message.EntityType))
 	}
-
-	return nil
 }
 
 func (c *DataStreamClient) GetAllFlags(ctx context.Context) error {
+	// Check if there is already a pending request for flags
+	if c.pendingFlagRequest != nil {
+		return nil
+	}
+
+	waitCh := make(chan bool, 1)
+	c.mu.Lock()
+	c.pendingFlagRequest = waitCh
+	c.mu.Unlock()
+	defer func() {
+		c.pendingFlagRequest = nil
+		close(waitCh)
+	}()
+
 	req := &DataStreamReq{
 		EntityType: EntityTypeFlags,
 	}
-
 	err := c.SendWebSocketMessage(ctx, req)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to send WebSocket message: %v", err)
+		c.logger.Error(ctx, fmt.Sprintf("Failed to send WebSocket message: %v", err))
 		return err
 	}
 
+	select {
+	case <-waitCh:
+	case <-time.After(5 * time.Second):
+		return fmt.Errorf("timeout while waiting for flags data")
+	case <-ctx.Done():
+		c.pendingFlagRequest = nil
+		return ctx.Err()
+	}
 	return nil
 }
 
-func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStreamResp) {
+func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStreamResp) error {
 	flags := resp.Data
 
 	var flagsData []*rulesengine.Flag
 	err := json.Unmarshal(flags, &flagsData)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to unmarshal flags data: %v", err)
-		return
+		return errors.New(fmt.Sprintf("Failed to unmarshal flags data: %v", err))
 	}
 
 	for _, flag := range flagsData {
-		ttl := c.cacheTTL
-		c.flagsCacheProvider.Set(ctx, flag.Key, flag, &ttl)
+		c.flagsCacheProvider.Set(ctx, flagCacheKey(flag.Key), flag, nil)
 	}
+
+	if c.pendingFlagRequest != nil {
+		c.pendingFlagRequest <- true
+	}
+
+	return nil
 }
 
-func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataStreamResp) {
+func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataStreamResp) error {
 	var company *rulesengine.Company
 	err := json.Unmarshal(resp.Data, &company)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to unmarshal company data: %v", err)
-		return
+		return errors.New(fmt.Sprintf("Failed to unmarshal company data: %v", err))
+
 	}
 
 	if company == nil {
-		return
+		return nil
+	}
+
+	if resp.MessageType == MessageTypeDelete {
+		// Remove the company from the cache
+		for key, value := range company.Keys {
+			companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+			c.companyCacheProvider.Delete(ctx, companyKey)
+		}
+		return nil
 	}
 
 	for key, value := range company.Keys {
-		companyKey := resourceKeyToCacheKey("company", key, value)
+		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		ttl := c.cacheTTL
 		c.companyCacheProvider.Set(ctx, companyKey, company, &ttl)
 	}
+
+	// Notify all goroutines waiting for this company
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	// For each relevant key, notify all waiting channels
+	for key, value := range company.Keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
+			for _, ch := range channels {
+				// Non-blocking send - if the channel is full, we'll just continue
+				select {
+				case ch <- company:
+				default:
+				}
+			} // Remove this set of channels as they've been notified
+			delete(c.pendingCompanyRequests, cacheKey)
+		}
+	}
+
+	return nil
 }
 
-func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStreamResp) {
-	var user rulesengine.User
+func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStreamResp) error {
+	var user *rulesengine.User
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
-		c.logger.Printf("ERROR: Failed to unmarshal user data: %v", err)
-		return
+		return errors.New(fmt.Sprintf("Failed to unmarshal user data: %v", err))
+	}
+
+	if user == nil {
+		return nil
+	}
+
+	if resp.MessageType == MessageTypeDelete {
+		// Remove the user from the cache
+		for key, value := range user.Keys {
+			userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+			c.userCacheProvider.Delete(ctx, userKey)
+			return nil
+		}
 	}
 
 	for key, value := range user.Keys {
-		companyKey := resourceKeyToCacheKey("user", key, value)
+		companyKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		ttl := c.cacheTTL
-		c.userCacheProvider.Set(ctx, companyKey, &user, &ttl)
+		c.userCacheProvider.Set(ctx, companyKey, user, &ttl)
 	}
+
+	// Notify all goroutines waiting for this company
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	// For each relevant key, notify all waiting channels
+	for key, value := range user.Keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+		if channels, ok := c.pendingUserRequests[cacheKey]; ok {
+			for _, ch := range channels {
+				// Non-blocking send - if the channel is full, we'll just continue
+				select {
+				case ch <- user:
+				default:
+				}
+			} // Remove this set of channels as they've been notified
+			delete(c.pendingUserRequests, cacheKey)
+		}
+	}
+
+	return nil
 }
 
 func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]string) (*rulesengine.Company, error) {
-
 	company := c.getCompanyFromCache(keys)
 	if company != nil {
 		return company, nil
 	}
-	// If not found in cache, send a request to the server
-	// and wait for the response
 
-	req := &DataStreamReq{
-		EntityType: EntityTypeCompany,
-		Keys:       keys,
-	}
-
-	message, err := c.packageMessage(req)
-	if err != nil {
-		return nil, err
-	}
-
-	c.conn.WriteMessage(websocket.TextMessage, message)
-
-	done := make(chan *rulesengine.Company, 1)
-	go func() {
-		// TODO: Handle panic
-		for {
-			company := c.getCompanyFromCache(keys)
-			if company != nil {
-				done <- company
-			}
+	waitCh := make(chan *rulesengine.Company, 1) // Register the wait channel for each key
+	cacheKeys := []string{}
+	c.mu.Lock()
+	shouldSendRequest := true
+	for key, value := range keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+		cacheKeys = append(cacheKeys, cacheKey)
+		if existingChannels, ok := c.pendingCompanyRequests[cacheKey]; ok {
+			c.pendingCompanyRequests[cacheKey] = append(existingChannels, waitCh)
+			shouldSendRequest = false // Someone else already requested this
 		}
-	}()
+	}
+	c.mu.Unlock()
 
+	if shouldSendRequest {
+		req := &DataStreamReq{
+			EntityType: EntityTypeCompany,
+			Keys:       keys,
+		}
+
+		err := c.SendWebSocketMessage(ctx, req)
+		if err != nil {
+			return nil, err
+		}
+
+		c.mu.Lock()
+		for key, value := range keys {
+			cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+			c.pendingCompanyRequests[cacheKey] = []chan *rulesengine.Company{waitCh}
+		}
+		c.mu.Unlock()
+	}
+
+	var err error
 	select {
-	case company := <-done:
+	case company := <-waitCh:
 		return company, nil
 	case <-time.After(5 * time.Second):
-		return nil, fmt.Errorf("timeout while waiting for company data")
+		err = fmt.Errorf("timeout while waiting for company data")
+	case <-ctx.Done():
+		err = ctx.Err()
 	}
+
+	// Clean up all channels involved in this request
+	c.cleanupPendingCompanyRequests(cacheKeys, waitCh)
+
+	return nil, err
 }
 
 func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) (*rulesengine.User, error) {
-
 	user := c.getUserFromCache(keys)
 	if user != nil {
 		return user, nil
 	}
-	// If not found in cache, send a request to the server
-	// and wait for the response
 
-	req := &DataStreamReq{
-		EntityType: EntityTypeUser,
-		Keys:       keys,
-	}
-
-	message, err := c.packageMessage(req)
-	if err != nil {
-		return nil, err
-	}
-
-	c.conn.WriteMessage(websocket.TextMessage, message)
-
-	done := make(chan *rulesengine.User, 1)
-	go func() {
-		// TODO: Handle panic
-		for {
-			user := c.getUserFromCache(keys)
-			if user != nil {
-				done <- user
-			}
+	waitCh := make(chan *rulesengine.User, 1) // Register the wait channel for each key
+	cacheKeys := []string{}
+	c.mu.Lock()
+	shouldSendRequest := true
+	for key, value := range keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value) // If there are already pending requests for this key, just add our channel
+		cacheKeys = append(cacheKeys, cacheKey)
+		if existingChannels, ok := c.pendingUserRequests[cacheKey]; ok {
+			c.pendingUserRequests[cacheKey] = append(existingChannels, waitCh)
+			shouldSendRequest = false // Someone else already requested this
 		}
-	}()
+	}
+	c.mu.Unlock()
 
+	if shouldSendRequest {
+		req := &DataStreamReq{
+			EntityType: EntityTypeUser,
+			Keys:       keys,
+		}
+
+		err := c.SendWebSocketMessage(ctx, req)
+		if err != nil {
+			return nil, err
+		}
+
+		c.mu.Lock()
+		for key, value := range keys {
+			cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+			c.pendingUserRequests[cacheKey] = []chan *rulesengine.User{waitCh}
+		}
+		c.mu.Unlock()
+	}
+
+	var err error
 	select {
-	case user := <-done:
+	case user := <-waitCh:
 		return user, nil
 	case <-time.After(5 * time.Second):
-		return nil, fmt.Errorf("timeout while waiting for user data")
+		err = fmt.Errorf("timeout while waiting for user data")
+	case <-ctx.Done():
+		err = ctx.Err()
 	}
+
+	// Clean up all channels involved in this request
+	c.cleanupPendingUserRequests(cacheKeys, waitCh)
+
+	return nil, err
 }
 
 func (c *DataStreamClient) GetFlag(ctx context.Context, key string) (*rulesengine.Flag, bool) {
-	flag, exists := c.flagsCacheProvider.Get(ctx, key)
+	flag, exists := c.flagsCacheProvider.Get(ctx, flagCacheKey(key))
 	if !exists {
 		return nil, false
 	}
@@ -356,26 +506,22 @@ func (c *DataStreamClient) GetFlag(ctx context.Context, key string) (*rulesengin
 }
 
 func (c *DataStreamClient) handlePong(string) error {
-	c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	//c.logger.Printf("setting read deadline %v", time.Now().Add(pongWait))
+	err := c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func (c *DataStreamClient) packageMessage(req *DataStreamReq) ([]byte, error) {
-	baseReq := DataStreamBaseReq{
+func (c *DataStreamClient) packageMessage(req *DataStreamReq) *DataStreamBaseReq {
+	return &DataStreamBaseReq{
 		Data: *req,
 	}
-
-	message, err := json.Marshal(baseReq)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal WebSocket message: %w", err)
-	}
-	return message, nil
 }
 
 func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *rulesengine.Company {
 	for key, value := range keys {
-		companyKey := resourceKeyToCacheKey("company", key, value)
+		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		company, exists := c.companyCacheProvider.Get(context.Background(), companyKey)
 		if exists {
 			return company
@@ -387,7 +533,7 @@ func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *ruleseng
 
 func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine.User {
 	for key, value := range keys {
-		userKey := resourceKeyToCacheKey("user", key, value)
+		userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		user, exists := c.userCacheProvider.Get(context.Background(), userKey)
 		if exists {
 			return user
@@ -397,16 +543,56 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 	return nil
 }
 
-func (c *DataStreamClient) unpackResponse(message []byte) (*DataStreamResp, error) {
-	var resp DataStreamResp
-	err := json.Unmarshal(message, &resp)
-	if err != nil {
-		c.logger.Printf("ERROR: Failed to unmarshal WebSocket message: %v", err)
-		return nil, err
-	}
-	return &resp, nil
+func flagCacheKey(key string) string {
+	return fmt.Sprintf("%s:%s", cacheKeyPrefixFlags, key)
 }
 
 func resourceKeyToCacheKey(resourceType string, key string, value string) string {
 	return fmt.Sprintf("%s:%s:%s", resourceType, key, value)
+}
+
+// Helper function to clean up pending company requests
+func (c *DataStreamClient) cleanupPendingCompanyRequests(cacheKeys []string, waitCh chan *rulesengine.Company) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	for _, cacheKey := range cacheKeys {
+		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
+			// Remove the specific channel from the list
+			filteredChannels := []chan *rulesengine.Company{}
+			for _, ch := range channels {
+				if ch != waitCh {
+					filteredChannels = append(filteredChannels, ch)
+				}
+			}
+			if len(filteredChannels) > 0 {
+				c.pendingCompanyRequests[cacheKey] = filteredChannels
+			} else {
+				delete(c.pendingCompanyRequests, cacheKey)
+			}
+		}
+	}
+	close(waitCh) // Close the wait channel to signal that we're done with it
+}
+
+func (c *DataStreamClient) cleanupPendingUserRequests(cacheKeys []string, waitCh chan *rulesengine.User) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	for _, cacheKey := range cacheKeys {
+		if channels, ok := c.pendingUserRequests[cacheKey]; ok {
+			// Remove the specific channel from the list
+			filteredChannels := []chan *rulesengine.User{}
+			for _, ch := range channels {
+				if ch != waitCh {
+					filteredChannels = append(filteredChannels, ch)
+				}
+			}
+			if len(filteredChannels) > 0 {
+				c.pendingUserRequests[cacheKey] = filteredChannels
+			} else {
+				delete(c.pendingCompanyRequests, cacheKey)
+			}
+		}
+	}
+
+	close(waitCh) // Close the wait channel to signal that we're done with it
 }

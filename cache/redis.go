@@ -59,3 +59,8 @@ func (r *redisCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 	// Store the value in Redis
 	return r.client.Set(ctx, key, data, ttl).Err()
 }
+
+func (r *redisCache[T]) Delete(ctx context.Context, key string) error {
+	// Delete the key from Redis
+	return r.client.Del(ctx, key).Err()
+}

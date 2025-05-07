@@ -2,12 +2,14 @@ package datastream
 
 import (
 	"encoding/json"
+	"net/url"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
-	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/cache"
+	"github.com/schematichq/schematic-go/core"
 )
 
 type CompanyCacheProvider cache.CacheProvider[*rulesengine.Company]
@@ -15,8 +17,8 @@ type FlagCacheProvider cache.CacheProvider[*rulesengine.Flag]
 type UserCacheProvider cache.CacheProvider[*rulesengine.User]
 
 type DataStreamReq struct {
-	Action     Action            `json:"action" binding:"required,oneof=start stop"`
-	EntityType EntityType        `json:"entity_type" binding:"required,oneof=company flags user"`
+	Action     Action            `json:"action"`
+	EntityType EntityType        `json:"entity_type"`
 	Keys       map[string]string `json:"keys,omitempty"`
 }
 
@@ -25,21 +27,35 @@ type DataStreamBaseReq struct {
 }
 
 type DataStreamResp struct {
-	Data       json.RawMessage `json:"data"`
-	EntityID   *string         `json:"entity_id"`
-	EntityType string          `json:"entity_type"`
+	Data        json.RawMessage `json:"data"`
+	EntityID    *string         `json:"entity_id"`
+	EntityType  string          `json:"entity_type"`
+	MessageType MessageType     `json:"message_type"`
 }
 
 type DataStreamClient struct {
 	cacheTTL             time.Duration
 	conn                 *websocket.Conn
-	logger               schematicgo.Logger
+	logger               core.Logger
 	done                 chan bool
 	reconnect            chan bool
 	companyCacheProvider CompanyCacheProvider
 	flagsCacheProvider   FlagCacheProvider
 	userCacheProvider    UserCacheProvider
 	companyCache         map[string]*rulesengine.Company
-	url                  string
+	url                  *url.URL
 	apiKey               string
+
+	pendingCompanyRequests map[string][]chan *rulesengine.Company
+	pendingUserRequests    map[string][]chan *rulesengine.User
+	pendingFlagRequest     chan bool
+	mu                     sync.RWMutex
 }
+
+type MessageType int
+
+const (
+	MessageTypFull MessageType = iota
+	MessageTypePartial
+	MessageTypeDelete
+)

@@ -3,7 +3,6 @@ package core
 import (
 	"time"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/http"
 )
@@ -97,6 +96,17 @@ func WithOfflineMode() RequestOption {
 	}
 }
 
+type CustomLogger struct {
+	logger Logger
+}
+
+func (c CustomLogger) applyRequestOptions(opts *RequestOptions) {
+	opts.Logger = c.logger
+}
+func WithLogger(logger Logger) RequestOption {
+	return CustomLogger{logger: logger}
+}
+
 // Datastream options
 type DatastreamOption interface {
 	applyDatastreamOptions(opts *DatastreamOptions)
@@ -125,7 +135,21 @@ type CacheConfig interface {
 }
 
 type RedisCacheConfig struct {
-	*redis.Options
+	Addr               string
+	DB                 int
+	Password           string
+	MaxRetries         int
+	MinRetryBackoff    time.Duration
+	MaxRetryBackoff    time.Duration
+	DialTimeout        time.Duration
+	ReadTimeout        time.Duration
+	WriteTimeout       time.Duration
+	PoolSize           int
+	MinIdleConns       int
+	MaxConnAge         time.Duration
+	PoolTimeout        time.Duration
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
 }
 
 func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
@@ -133,7 +157,24 @@ func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
 }
 
 type RedisCacheClusterConfig struct {
-	*redis.ClusterOptions
+	Addrs              []string
+	MaxRedirects       int
+	ReadOnly           bool
+	RouteByLatency     bool
+	RouteRandomly      bool
+	Password           string
+	MaxRetries         int
+	MinRetryBackoff    time.Duration
+	MaxRetryBackoff    time.Duration
+	DialTimeout        time.Duration
+	ReadTimeout        time.Duration
+	WriteTimeout       time.Duration
+	PoolSize           int
+	MinIdleConns       int
+	MaxConnAge         time.Duration
+	PoolTimeout        time.Duration
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
 }
 
 func (c RedisCacheClusterConfig) applyDatastreamOptions(opts *DatastreamOptions) {

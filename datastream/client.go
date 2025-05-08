@@ -21,7 +21,7 @@ func NewDataStream(baseUrl string, logger core.Logger, apiKey string, options *c
 
 	companyCacheProvider, userCacheProvider := getCacheProviders(options)
 
-	flagCacheProvider := cache.NewLocalCache[*rulesengine.Flag](1000, 1000*time.Hour)
+	flagCacheProvider := cache.NewLocalCache[*rulesengine.Flag](1000, -1)
 
 	dataStreamUrl, err := getBaseURL(baseUrl)
 	if err != nil {

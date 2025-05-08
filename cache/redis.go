@@ -56,6 +56,11 @@ func (r *redisCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 		ttl = *ttlOverride
 	}
 
+	// If TTL is 0 or negative, use no expiration
+	if ttl <= 0 {
+		return r.client.Set(ctx, key, val, 0).Err()
+	}
+
 	// Store the value in Redis
 	return r.client.Set(ctx, key, data, ttl).Err()
 }

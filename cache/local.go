@@ -41,7 +41,7 @@ func (c *localCache[T]) Get(ctx context.Context, key string) (T, bool) {
 	item := element.Value.(*cachedItem[T])
 
 	// Check if the item has expired
-	if time.Now().After(item.expiration) {
+	if !item.expiration.IsZero() && time.Now().After(item.expiration) {
 		c.mu.Lock()
 		c.lruList.Remove(element)
 		delete(c.cache, key)
@@ -67,6 +67,12 @@ func (c *localCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 		ttl = *ttlOverride
 	}
 
+	// If TTL is 0 or negative, set no expiration
+	var expiration time.Time
+	if ttl > 0 {
+		expiration = time.Now().Add(ttl)
+	}
+
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
@@ -75,7 +81,7 @@ func (c *localCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 		c.lruList.MoveToFront(element)
 		item := element.Value.(*cachedItem[T])
 		item.value = val
-		item.expiration = time.Now().Add(ttl)
+		item.expiration = expiration
 		return nil
 	}
 

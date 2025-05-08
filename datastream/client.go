@@ -18,15 +18,10 @@ import (
 )
 
 func NewDataStream(baseUrl string, logger core.Logger, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
-	var flagCacheProvider FlagCacheProvider
-	var companyCacheProvider CompanyCacheProvider
-	var userCacheProvider UserCacheProvider
-	if options.CacheProvider == defaultCacheProvider {
-		companyCacheProvider = cache.NewDefaultCache[*rulesengine.Company]()
-		userCacheProvider = cache.NewDefaultCache[*rulesengine.User]()
-	}
 
-	flagCacheProvider = cache.NewLocalCache[*rulesengine.Flag](1000, 1000*time.Hour)
+	companyCacheProvider, userCacheProvider := getCacheProviders(options)
+
+	flagCacheProvider := cache.NewLocalCache[*rulesengine.Flag](1000, 1000*time.Hour)
 
 	dataStreamUrl, err := getBaseURL(baseUrl)
 	if err != nil {

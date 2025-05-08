@@ -109,19 +109,19 @@ func WithLogger(logger Logger) RequestOption {
 
 // Datastream options
 type DatastreamOption interface {
-	applyRequestOptions(opts *DatastreamOptions)
+	applyDatastreamOptions(opts *DatastreamOptions)
 }
 
 type DatastreamOptions struct {
-	CacheTTL      time.Duration
-	CacheProvider string
+	CacheTTL    time.Duration
+	CacheConfig CacheConfig
 }
 
 type CacheTTL struct {
 	ttl time.Duration
 }
 
-func (c CacheTTL) applyRequestOptions(opts *DatastreamOptions) {
+func (c CacheTTL) applyDatastreamOptions(opts *DatastreamOptions) {
 	opts.CacheTTL = c.ttl
 }
 
@@ -129,16 +129,60 @@ func WithCacheTTL(ttl time.Duration) DatastreamOption {
 	return CacheTTL{ttl: ttl}
 }
 
-type CacheProvider struct {
-	provider string
+// Define an interface for Redis options
+type CacheConfig interface {
+	applyDatastreamOptions(opts *DatastreamOptions)
 }
 
-func (c CacheProvider) applyRequestOptions(opts *DatastreamOptions) {
-	opts.CacheProvider = c.provider
+type RedisCacheConfig struct {
+	Addr               string
+	DB                 int
+	Password           string
+	MaxRetries         int
+	MinRetryBackoff    time.Duration
+	MaxRetryBackoff    time.Duration
+	DialTimeout        time.Duration
+	ReadTimeout        time.Duration
+	WriteTimeout       time.Duration
+	PoolSize           int
+	MinIdleConns       int
+	MaxConnAge         time.Duration
+	PoolTimeout        time.Duration
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
 }
 
-func WithCacheProvider(provider string) DatastreamOption {
-	return CacheProvider{provider: provider}
+func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.CacheConfig = c
+}
+
+type RedisCacheClusterConfig struct {
+	Addrs              []string
+	MaxRedirects       int
+	ReadOnly           bool
+	RouteByLatency     bool
+	RouteRandomly      bool
+	Password           string
+	MaxRetries         int
+	MinRetryBackoff    time.Duration
+	MaxRetryBackoff    time.Duration
+	DialTimeout        time.Duration
+	ReadTimeout        time.Duration
+	WriteTimeout       time.Duration
+	PoolSize           int
+	MinIdleConns       int
+	MaxConnAge         time.Duration
+	PoolTimeout        time.Duration
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
+}
+
+func (c RedisCacheClusterConfig) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.CacheConfig = c
+}
+
+func WithRedisCache(opts CacheConfig) CacheConfig {
+	return opts
 }
 
 type ClientOptUseDatastream struct {
@@ -153,12 +197,11 @@ func (c ClientOptUseDatastream) applyRequestOptions(opts *RequestOptions) {
 
 func WithDatastream(opts ...DatastreamOption) RequestOption {
 	dataStreamOptions := &DatastreamOptions{
-		CacheTTL:      24 * time.Hour,
-		CacheProvider: "local",
+		CacheTTL: 24 * time.Hour,
 	}
 
 	for _, opt := range opts {
-		opt.applyRequestOptions(dataStreamOptions)
+		opt.applyDatastreamOptions(dataStreamOptions)
 	}
 
 	return &ClientOptUseDatastream{

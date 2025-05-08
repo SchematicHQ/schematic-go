@@ -2,7 +2,7 @@ package datastream
 
 import "time"
 
-const defaultBaseURL = "wss://api.schematichq.com"
+const defaultBaseURL = "wss://api.schematic.com"
 
 type Action string
 
@@ -33,8 +33,8 @@ const (
 
 // Cache constants
 const (
-	defaultCacheProvider = "local"
-	defaultTTL           = 24 * time.Hour
+	defaultTTL       = 24 * time.Hour
+	defaultCacheSize = 1000
 
 	cacheKeyPrefixCompany = "company"
 	cacheKeyPrefixFlags   = "flags"

@@ -287,7 +287,7 @@ func (c *DataStreamClient) GetAllFlags(ctx context.Context) error {
 
 	select {
 	case <-waitCh:
-	case <-time.After(5 * time.Second):
+	case <-time.After(resourceTimeout):
 		return fmt.Errorf("timeout while waiting for flags data")
 	case <-ctx.Done():
 		c.pendingFlagRequest = nil
@@ -454,7 +454,7 @@ func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]strin
 	select {
 	case company := <-waitCh:
 		return company, nil
-	case <-time.After(5 * time.Second):
+	case <-time.After(resourceTimeout):
 		err = fmt.Errorf("timeout while waiting for company data")
 	case <-ctx.Done():
 		err = ctx.Err()
@@ -509,7 +509,7 @@ func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) 
 	select {
 	case user := <-waitCh:
 		return user, nil
-	case <-time.After(5 * time.Second):
+	case <-time.After(resourceTimeout):
 		err = fmt.Errorf("timeout while waiting for user data")
 	case <-ctx.Done():
 		err = ctx.Err()

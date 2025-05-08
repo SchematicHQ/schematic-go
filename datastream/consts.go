@@ -29,6 +29,8 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 	// Time allowed to write a message to the peer.
 	writeWait = 10 * time.Second
+
+	resourceTimeout = 2 * time.Second
 )
 
 // Cache constants

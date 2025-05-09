@@ -2,12 +2,16 @@ package client
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
+	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/buffer"
 	"github.com/schematichq/schematic-go/cache"
 	core "github.com/schematichq/schematic-go/core"
+	"github.com/schematichq/schematic-go/datastream"
 	"github.com/schematichq/schematic-go/flags"
 	"github.com/schematichq/schematic-go/logger"
 	option "github.com/schematichq/schematic-go/option"
@@ -16,6 +20,7 @@ import (
 type SchematicClient struct {
 	*Client
 
+	dataStream              *datastream.DataStreamClient
 	errors                  chan error
 	ctxErrors               chan *core.CtxError
 	eventBufferPeriod       *time.Duration
@@ -31,7 +36,7 @@ type SchematicClient struct {
 func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	options := core.NewRequestOptions(opts...)
 	if options.APIKey == "" {
-		// If no API key provideed, assume offline mode if no API key provided
+		// If no API key provided, assume offline mode
 		opts = append(opts, core.WithOfflineMode())
 	}
 
@@ -47,6 +52,12 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	// Rebuild options struct in case we added any new options above
 	options = core.NewRequestOptions(opts...)
 
+	var dataStream *datastream.DataStreamClient
+	if options.UseDataStream {
+		dataStream = datastream.NewDataStreamClient(options.BaseURL, options.Logger, options.APIKey, options.DatastreamOptions)
+		dataStream.Start()
+	}
+
 	client := &SchematicClient{
 		Client:                  NewClient(opts...),
 		errors:                  make(chan error, 100),
@@ -56,9 +67,10 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		flagCheckCacheProviders: options.FlagCheckCacheProviders,
 		flagDefaults:            options.FlagDefaults,
 		isOffline:               options.OfflineMode,
-		logger:                  logger.NewDefaultLogger(),
+		logger:                  options.Logger,
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
+		dataStream:              dataStream,
 	}
 
 	// Start background worker which handles async error logging and event buffering
@@ -67,16 +79,27 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	return client
 }
 
+func (c *SchematicClient) useDataStream() bool {
+	return c.dataStream != nil
+}
+
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+	if c.isOffline {
+		return c.getFlagDefault(flagKey)
+	}
+
+	if c.useDataStream() {
+		return c.checkFlagDataStream(ctx, evalCtx, flagKey)
+	}
+	return c.checkFlag(ctx, evalCtx, flagKey)
+}
+
+func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
 		}
 	}()
-
-	if c.isOffline {
-		return c.getFlagDefault(flagKey)
-	}
 
 	// If nil, check flag with empty context
 	if evalCtx == nil {
@@ -119,14 +142,56 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	return resp.Data.Value
 }
 
+func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+	var company *rulesengine.Company
+	var err error
+	if evalCtx.Company != nil {
+		company, err = c.dataStream.GetCompany(ctx, evalCtx.Company)
+		if err != nil {
+			c.errors <- errors.New(fmt.Sprintf("Failed to get company from cache: %v", err))
+			return false
+		}
+	}
+
+	var user *rulesengine.User
+	if evalCtx.User != nil {
+		user, err = c.dataStream.GetUser(ctx, evalCtx.User)
+		if err != nil {
+			c.errors <- errors.New(fmt.Sprintf("Failed to get user from cache: %v", err))
+			return false
+		}
+	}
+
+	// Get flag here
+	flag, found := c.dataStream.GetFlag(ctx, flagKey)
+	if !found {
+		c.errors <- errors.New(fmt.Sprintf("Flag %s not found", flagKey))
+		return false
+	}
+
+	// Evaluate against the rules engine
+	resp, err := rulesengine.CheckFlag(ctx, company, user, flag)
+	if err != nil {
+		c.errors <- err
+
+		return false
+	}
+
+	return resp.Value
+}
+
 func (c *SchematicClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(context.Background(), "Panic occurred while closing client %v", r)
+			c.logger.Error(context.Background(), fmt.Sprintf("Panic occurred while closing client %v", r))
 		}
 	}()
 
 	close(c.stopWorker)
+
+	if c.dataStream != nil {
+		c.dataStream.Close()
+	}
 }
 
 func (c *SchematicClient) Identify(
@@ -187,7 +252,7 @@ func (c *SchematicClient) enqueueEvent(
 ) error {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(context.Background(), "Panic occurred while enqueueing event %v", r)
+			c.logger.Error(context.Background(), fmt.Sprintf("Panic occurred while enqueueing event %v", r))
 		}
 	}()
 
@@ -224,7 +289,7 @@ func (c *SchematicClient) getFlagDefault(
 func (c *SchematicClient) worker() {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(context.Background(), "Panic occurred in worker %v", r)
+			c.logger.Error(context.Background(), fmt.Sprintf("Panic occurred in worker %v", r))
 		}
 	}()
 
@@ -240,7 +305,7 @@ func (c *SchematicClient) worker() {
 		case event := <-c.events:
 			buffer.Push(event)
 		case err := <-c.errors:
-			c.logger.Error(context.Background(), "%v", err)
+			c.logger.Error(context.Background(), fmt.Sprintf("%v", err))
 		case err := <-c.ctxErrors:
 			c.logger.Error(err.Ctx, "%v", err.Err)
 		case <-c.stopWorker:

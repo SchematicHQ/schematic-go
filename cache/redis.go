@@ -69,3 +69,5 @@ func (r *redisCache[T]) Delete(ctx context.Context, key string) error {
 	// Delete the key from Redis
 	return r.client.Del(ctx, key).Err()
 }
+
+func (r *redisCache[T]) DeleteMissing(ctx context.Context, keys []string) {}

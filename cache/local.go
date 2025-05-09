@@ -3,6 +3,7 @@ package cache
 import (
 	"container/list"
 	"context"
+	"slices"
 	"sync"
 	"time"
 )
@@ -98,7 +99,7 @@ func (c *localCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 	item := &cachedItem[T]{
 		key:        key,
 		value:      val,
-		expiration: time.Now().Add(ttl),
+		expiration: expiration,
 	}
 	element := c.lruList.PushFront(item)
 	c.cache[key] = element
@@ -121,4 +122,18 @@ func (c *localCache[T]) Delete(ctx context.Context, key string) error {
 	}
 
 	return nil
+}
+
+func (c *localCache[T]) DeleteMissing(ctx context.Context, keys []string) {
+	if c == nil || c.maxSize == 0 {
+		return
+	}
+
+	for key := range c.cache {
+		found := slices.Contains(keys, key) // Check if the key is in the keys slice
+		if found {
+			continue // Skip keys that are in the keys slice
+		}
+		c.Delete(context.Background(), key) // Delete the key if it doesn't match any in the keys slice
+	}
 }

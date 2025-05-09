@@ -9,6 +9,7 @@ type CacheProvider[T any] interface {
 	Get(ctx context.Context, key string) (T, bool)
 	Set(ctx context.Context, key string, val T, ttlOverride *time.Duration) error
 	Delete(ctx context.Context, key string) error
+	DeleteMissing(ctx context.Context, keys []string)
 }
 
 const defaultCacheSize = 1000 // 1000 records

@@ -305,9 +305,14 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 		return errors.New(fmt.Sprintf("Failed to unmarshal flags data: %v", err))
 	}
 
+	var cacheKeys []string
 	for _, flag := range flagsData {
-		c.flagsCacheProvider.Set(ctx, flagCacheKey(flag.Key), flag, nil)
+		cacheKey := flagCacheKey(flag.Key)
+		c.flagsCacheProvider.Set(ctx, cacheKey, flag, nil)
+		cacheKeys = append(cacheKeys, cacheKey)
 	}
+
+	c.flagsCacheProvider.DeleteMissing(ctx, cacheKeys)
 
 	if c.pendingFlagRequest != nil {
 		c.pendingFlagRequest <- true

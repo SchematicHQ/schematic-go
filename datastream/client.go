@@ -17,7 +17,7 @@ import (
 	"github.com/schematichq/schematic-go/core"
 )
 
-func NewDataStream(baseUrl string, logger core.Logger, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
+func NewDataStreamClient(baseUrl string, logger core.Logger, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
 
 	companyCacheProvider, userCacheProvider := getCacheProviders(options)
 

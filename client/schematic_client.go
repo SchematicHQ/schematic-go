@@ -54,7 +54,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 
 	var dataStream *datastream.DataStreamClient
 	if options.UseDataStream {
-		dataStream = datastream.NewDataStream(options.BaseURL, options.Logger, options.APIKey, options.DatastreamOptions)
+		dataStream = datastream.NewDataStreamClient(options.BaseURL, options.Logger, options.APIKey, options.DatastreamOptions)
 		dataStream.Start()
 	}
 

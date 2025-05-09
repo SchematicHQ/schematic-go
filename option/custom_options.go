@@ -16,3 +16,6 @@ var WithLogger = core.WithLogger
 var WithDatastream = core.WithDatastream
 var WithRedisCache = core.WithRedisCache
 var WithCacheTTL = core.WithCacheTTL
+
+type RedisCacheConfig = core.RedisCacheConfig
+type RedisCacheClusterConfig = core.RedisCacheClusterConfig

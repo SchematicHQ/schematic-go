@@ -17,9 +17,17 @@ func getCacheProviders(opt *core.DatastreamOptions) (CompanyCacheProvider, UserC
 		config := opt.CacheConfig.(*core.RedisCacheConfig)
 		client := redis.NewClient(ToRedisOptions(config))
 		return buildRedisCache(client, opt)
+	case core.RedisCacheConfig:
+		config := opt.CacheConfig.(core.RedisCacheConfig)
+		client := redis.NewClient(ToRedisOptions(&config))
+		return buildRedisCache(client, opt)
 	case *core.RedisCacheClusterConfig:
 		config := opt.CacheConfig.(*core.RedisCacheClusterConfig)
 		client := redis.NewClusterClient(ToRedisClusterOptions(config))
+		return buildRedisCache(client, opt)
+	case core.RedisCacheClusterConfig:
+		config := opt.CacheConfig.(core.RedisCacheClusterConfig)
+		client := redis.NewClusterClient(ToRedisClusterOptions(&config))
 		return buildRedisCache(client, opt)
 	}
 

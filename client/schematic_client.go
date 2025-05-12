@@ -307,7 +307,7 @@ func (c *SchematicClient) worker() {
 		case err := <-c.errors:
 			c.logger.Error(context.Background(), fmt.Sprintf("%v", err))
 		case err := <-c.ctxErrors:
-			c.logger.Error(err.Ctx, "%v", err.Err)
+			c.logger.Error(err.Ctx, fmt.Sprintf("%v", err.Err))
 		case <-c.stopWorker:
 			buffer.Stop()
 			return

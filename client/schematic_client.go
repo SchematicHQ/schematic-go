@@ -2,11 +2,9 @@ package client
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
-	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/buffer"
 	"github.com/schematichq/schematic-go/cache"
@@ -89,7 +87,7 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	}
 
 	if c.useDataStream() {
-		return c.checkFlagDataStream(ctx, evalCtx, flagKey)
+		return c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
 	}
 	return c.checkFlag(ctx, evalCtx, flagKey)
 }
@@ -140,44 +138,6 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	}()
 
 	return resp.Data.Value
-}
-
-func (c *SchematicClient) checkFlagDataStream(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
-	var company *rulesengine.Company
-	var err error
-	if evalCtx.Company != nil {
-		company, err = c.dataStream.GetCompany(ctx, evalCtx.Company)
-		if err != nil {
-			c.errors <- errors.New(fmt.Sprintf("Failed to get company from cache: %v", err))
-			return false
-		}
-	}
-
-	var user *rulesengine.User
-	if evalCtx.User != nil {
-		user, err = c.dataStream.GetUser(ctx, evalCtx.User)
-		if err != nil {
-			c.errors <- errors.New(fmt.Sprintf("Failed to get user from cache: %v", err))
-			return false
-		}
-	}
-
-	// Get flag here
-	flag, found := c.dataStream.GetFlag(ctx, flagKey)
-	if !found {
-		c.errors <- errors.New(fmt.Sprintf("Flag %s not found", flagKey))
-		return false
-	}
-
-	// Evaluate against the rules engine
-	resp, err := rulesengine.CheckFlag(ctx, company, user, flag)
-	if err != nil {
-		c.errors <- err
-
-		return false
-	}
-
-	return resp.Value
 }
 
 func (c *SchematicClient) Close() {

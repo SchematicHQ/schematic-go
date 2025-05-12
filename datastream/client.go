@@ -7,12 +7,14 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"net"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
+schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
 )
@@ -36,6 +38,7 @@ func NewDataStreamClient(baseUrl string, logger core.Logger, apiKey string, opti
 		apiKey:               apiKey,
 		cacheTTL:             options.CacheTTL,
 		done:                 make(chan bool, 1),
+		ctxErrors:            make(chan *core.CtxError, 100),
 		reconnect:            make(chan bool, 1),
 		logger:               logger,
 		flagsCacheProvider:   flagCacheProvider,
@@ -122,7 +125,7 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 	}()
 
 	c.conn.SetPongHandler(c.handlePong)
-	err := c.GetAllFlags(ctx)
+	err := c.getAllFlags(ctx)
 	if err != nil {
 		c.logger.Error(ctx, fmt.Sprintf("Failed to get all flags: %v", err))
 		return true
@@ -134,6 +137,8 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 			return true
 		case <-c.reconnect:
 			return false
+		case err := <-c.ctxErrors:
+			c.logger.Error(err.Ctx, "%v", err.Err)
 		case <-ticker.C:
 			if err := c.conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
 				c.logger.Error(ctx, fmt.Sprintf("Failed to send ping message: %v", err))
@@ -146,7 +151,10 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 func (c *DataStreamClient) readMessages(ctx context.Context) {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket reader: %v", r))
+			c.ctxErrors <- &core.CtxError{
+				Ctx: ctx,
+				Err: errors.New(fmt.Sprintf("Fatal error occurred in WebSocket reader: %v", r)),
+			}
 			return
 		}
 	}()
@@ -155,10 +163,10 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		_, m, err := c.conn.ReadMessage()
 
 		if err != nil {
-			// var opErr *net.OpError
-			// if errors.As(err, &opErr) {
-			// 	return
-			// }
+			var opErr *net.OpError
+			if errors.As(err, &opErr) {
+				return
+			}
 
 			if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
 				return
@@ -187,7 +195,10 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 
 		err = c.handleMessageResponse(ctx, &message)
 		if err != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Failed to handle WebSocket message: %v", err))
+			c.ctxErrors <- &core.CtxError{
+				Ctx: ctx,
+				Err: errors.New(fmt.Sprintf("Failed to handle WebSocket message: %v", err)),
+			}
 		}
 	}
 }
@@ -263,41 +274,6 @@ func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *D
 	default:
 		return errors.New(fmt.Sprintf("Received unknown entity type: %s", message.EntityType))
 	}
-}
-
-func (c *DataStreamClient) GetAllFlags(ctx context.Context) error {
-	// Check if there is already a pending request for flags
-	if c.pendingFlagRequest != nil {
-		return nil
-	}
-
-	waitCh := make(chan bool, 1)
-	c.mu.Lock()
-	c.pendingFlagRequest = waitCh
-	c.mu.Unlock()
-	defer func() {
-		c.pendingFlagRequest = nil
-		close(waitCh)
-	}()
-
-	req := &DataStreamReq{
-		EntityType: EntityTypeFlags,
-	}
-	err := c.SendWebSocketMessage(ctx, req)
-	if err != nil {
-		c.logger.Error(ctx, fmt.Sprintf("Failed to send WebSocket message: %v", err))
-		return err
-	}
-
-	select {
-	case <-waitCh:
-	case <-time.After(resourceTimeout):
-		return fmt.Errorf("timeout while waiting for flags data")
-	case <-ctx.Done():
-		c.pendingFlagRequest = nil
-		return ctx.Err()
-	}
-	return nil
 }
 
 func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStreamResp) error {
@@ -420,7 +396,91 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 	return nil
 }
 
-func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]string) (*rulesengine.Company, error) {
+func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+	var company *rulesengine.Company
+	var err error
+	if evalCtx.Company != nil {
+		company, err = c.getCompany(ctx, evalCtx.Company)
+		if err != nil {
+			c.ctxErrors <- &core.CtxError{
+				Ctx: ctx,
+				Err: errors.New(fmt.Sprintf("Failed to get company from cache: %v", err)),
+			}
+			return false
+		}
+	}
+
+	var user *rulesengine.User
+	if evalCtx.User != nil {
+		user, err = c.getUser(ctx, evalCtx.User)
+		if err != nil {
+			c.ctxErrors <- &core.CtxError{
+				Ctx: ctx,
+				Err: errors.New(fmt.Sprintf("Failed to get user from cache: %v", err)),
+			}
+			return false
+		}
+	}
+
+	// Get flag here
+	flag, found := c.getFlag(ctx, flagKey)
+	if !found {
+		c.ctxErrors <- &core.CtxError{
+			Ctx: ctx,
+			Err: errors.New(fmt.Sprintf("Flag %s not found", flagKey)),
+		}
+		return false
+	}
+
+	// Evaluate against the rules engine
+	resp, err := rulesengine.CheckFlag(ctx, company, user, flag)
+	if err != nil {
+		c.ctxErrors <- &core.CtxError{
+			Ctx: ctx,
+			Err: err,
+		}
+		return false
+	}
+
+	return resp.Value
+}
+
+func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
+	// Check if there is already a pending request for flags
+	if c.pendingFlagRequest != nil {
+		return nil
+	}
+
+	waitCh := make(chan bool, 1)
+	c.mu.Lock()
+	c.pendingFlagRequest = waitCh
+	c.mu.Unlock()
+	defer func() {
+		c.pendingFlagRequest = nil
+		close(waitCh)
+	}()
+
+	req := &DataStreamReq{
+		EntityType: EntityTypeFlags,
+	}
+	err := c.SendWebSocketMessage(ctx, req)
+	if err != nil {
+		c.logger.Error(ctx, fmt.Sprintf("Failed to send WebSocket message: %v", err))
+		return err
+	}
+
+	select {
+	case <-waitCh:
+	case <-time.After(resourceTimeout):
+		return fmt.Errorf("timeout while waiting for flags data")
+	case <-ctx.Done():
+		c.pendingFlagRequest = nil
+		return ctx.Err()
+	}
+	return nil
+}
+
+func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]string) (*rulesengine.Company, error) {
 	company := c.getCompanyFromCache(keys)
 	if company != nil {
 		return company, nil
@@ -475,7 +535,7 @@ func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]strin
 	return nil, err
 }
 
-func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) (*rulesengine.User, error) {
+func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) (*rulesengine.User, error) {
 	user := c.getUserFromCache(keys)
 	if user != nil {
 		return user, nil
@@ -530,7 +590,7 @@ func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) 
 	return nil, err
 }
 
-func (c *DataStreamClient) GetFlag(ctx context.Context, key string) (*rulesengine.Flag, bool) {
+func (c *DataStreamClient) getFlag(ctx context.Context, key string) (*rulesengine.Flag, bool) {
 	flag, exists := c.flagsCacheProvider.Get(ctx, flagCacheKey(key))
 	if !exists {
 		return nil, false

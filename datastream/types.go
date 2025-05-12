@@ -38,6 +38,7 @@ type DataStreamClient struct {
 	conn                 *websocket.Conn
 	logger               core.Logger
 	done                 chan bool
+	ctxErrors            chan *core.CtxError
 	reconnect            chan bool
 	companyCacheProvider CompanyCacheProvider
 	flagsCacheProvider   FlagCacheProvider

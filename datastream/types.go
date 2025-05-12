@@ -40,6 +40,7 @@ type DataStreamClient struct {
 	done                 chan bool
 	ctxErrors            chan *core.CtxError
 	reconnect            chan bool
+	monitorChannel       chan bool
 	companyCacheProvider CompanyCacheProvider
 	flagsCacheProvider   FlagCacheProvider
 	userCacheProvider    UserCacheProvider

@@ -18,7 +18,9 @@ import (
 type SchematicClient struct {
 	*Client
 
-	dataStream              *datastream.DataStreamClient
+	datastreamClient        *datastream.DataStreamClient
+	datastreamConnected     bool
+	datastreamConnection    chan bool
 	errors                  chan error
 	ctxErrors               chan *core.CtxError
 	eventBufferPeriod       *time.Duration
@@ -50,11 +52,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	// Rebuild options struct in case we added any new options above
 	options = core.NewRequestOptions(opts...)
 
-	var dataStream *datastream.DataStreamClient
-	if options.UseDataStream {
-		dataStream = datastream.NewDataStreamClient(options.BaseURL, options.Logger, options.APIKey, options.DatastreamOptions)
-		dataStream.Start()
-	}
+	datastreamConnection := make(chan bool, 1)
 
 	client := &SchematicClient{
 		Client:                  NewClient(opts...),
@@ -68,17 +66,32 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		logger:                  options.Logger,
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
-		dataStream:              dataStream,
+		datastreamConnection:    datastreamConnection,
 	}
 
 	// Start background worker which handles async error logging and event buffering
 	go client.worker()
 
+	if options.UseDataStream {
+		go client.monitorDatastreamConnection()
+		client.datastreamClient = datastream.NewDataStreamClient(options.BaseURL, options.Logger, options.APIKey, datastreamConnection, options.DatastreamOptions)
+		client.datastreamClient.Start()
+	}
+
 	return client
 }
 
 func (c *SchematicClient) useDataStream() bool {
-	return c.dataStream != nil
+	return c.datastreamConnected
+}
+
+func (c *SchematicClient) monitorDatastreamConnection() {
+	for {
+		select {
+		case connected := <-c.datastreamConnection:
+			c.datastreamConnected = connected
+		}
+	}
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
@@ -149,8 +162,8 @@ func (c *SchematicClient) Close() {
 
 	close(c.stopWorker)
 
-	if c.dataStream != nil {
-		c.dataStream.Close()
+	if c.datastreamClient != nil {
+		c.datastreamClient.Close()
 	}
 }
 

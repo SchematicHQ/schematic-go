@@ -14,12 +14,12 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
-schematicgo "github.com/schematichq/schematic-go"
+	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
 )
 
-func NewDataStreamClient(baseUrl string, logger core.Logger, apiKey string, options *core.DatastreamOptions) *DataStreamClient {
+func NewDataStreamClient(baseUrl string, logger core.Logger, apiKey string, monitorChannel chan bool, options *core.DatastreamOptions) *DataStreamClient {
 
 	companyCacheProvider, userCacheProvider := getCacheProviders(options)
 
@@ -40,6 +40,7 @@ func NewDataStreamClient(baseUrl string, logger core.Logger, apiKey string, opti
 		done:                 make(chan bool, 1),
 		ctxErrors:            make(chan *core.CtxError, 100),
 		reconnect:            make(chan bool, 1),
+		monitorChannel:       monitorChannel,
 		logger:               logger,
 		flagsCacheProvider:   flagCacheProvider,
 		companyCacheProvider: companyCacheProvider,
@@ -76,12 +77,14 @@ func (c *DataStreamClient) ConnectAndRead() {
 	for {
 		if attempts >= maxReconnectAttempts {
 			c.logger.Error(ctx, "Unable to connect to server")
+			c.monitorChannel <- false
 			return
 		}
 		conn, err := c.connect()
 		if err != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Failed to connect to WebSocket: %v", err))
 			attempts += 1
+			c.monitorChannel <- false
 			time.Sleep(calculateBackoffDelay(attempts))
 			continue
 		}
@@ -89,6 +92,8 @@ func (c *DataStreamClient) ConnectAndRead() {
 		c.logger.Info(ctx, "Connected to Schematic WebSocket")
 		attempts = 0
 		c.conn = conn
+
+		c.monitorChannel <- true
 
 		err = c.conn.SetReadDeadline(time.Now().Add(pongWait))
 		if err != nil {
@@ -99,6 +104,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 		closed := c.handleWebSocketConnection(ctx)
 
 		if closed {
+			c.monitorChannel <- false
 			return
 		}
 

@@ -642,11 +642,11 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 }
 
 func flagCacheKey(key string) string {
-	return fmt.Sprintf("%s:%s", cacheKeyPrefixFlags, key)
+	return fmt.Sprintf("%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, key)
 }
 
 func resourceKeyToCacheKey(resourceType string, key string, value string) string {
-	return fmt.Sprintf("%s:%s:%s", resourceType, key, value)
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, resourceType, key, value)
 }
 
 // Helper function to clean up pending company requests

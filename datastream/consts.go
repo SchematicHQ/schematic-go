@@ -38,6 +38,7 @@ const (
 	defaultTTL       = 24 * time.Hour
 	defaultCacheSize = 1000
 
+	cacheKeyPrefix        = "schematic"
 	cacheKeyPrefixCompany = "company"
 	cacheKeyPrefixFlags   = "flags"
 	cacheKeyPrefixUser    = "user"

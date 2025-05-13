@@ -135,21 +135,32 @@ type CacheConfig interface {
 }
 
 type RedisCacheConfig struct {
-	Addr               string
-	DB                 int
-	Password           string
-	MaxRetries         int
-	MinRetryBackoff    time.Duration
-	MaxRetryBackoff    time.Duration
-	DialTimeout        time.Duration
-	ReadTimeout        time.Duration
-	WriteTimeout       time.Duration
-	PoolSize           int
-	MinIdleConns       int
-	MaxConnAge         time.Duration
-	PoolTimeout        time.Duration
-	IdleTimeout        time.Duration
-	IdleCheckFrequency time.Duration
+	Network               string
+	Addr                  string
+	ClientName            string
+	Protocol              int
+	Username              string
+	Password              string
+	DB                    int
+	MaxRetries            int
+	MinRetryBackoff       time.Duration
+	MaxRetryBackoff       time.Duration
+	DialTimeout           time.Duration
+	ReadTimeout           time.Duration
+	WriteTimeout          time.Duration
+	ContextTimeoutEnabled bool
+	PoolFIFO              bool
+	PoolSize              int
+	PoolTimeout           time.Duration
+	MinIdleConns          int
+	MaxIdleConns          int
+	MaxActiveConns        int
+	ConnMaxIdleTime       time.Duration
+	ConnMaxLifetime       time.Duration
+	DisableIndentity      bool
+	DisableIdentity       bool
+	IdentitySuffix        string
+	UnstableResp3         bool
 }
 
 func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
@@ -157,24 +168,32 @@ func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
 }
 
 type RedisCacheClusterConfig struct {
-	Addrs              []string
-	MaxRedirects       int
-	ReadOnly           bool
-	RouteByLatency     bool
-	RouteRandomly      bool
-	Password           string
-	MaxRetries         int
-	MinRetryBackoff    time.Duration
-	MaxRetryBackoff    time.Duration
-	DialTimeout        time.Duration
-	ReadTimeout        time.Duration
-	WriteTimeout       time.Duration
-	PoolSize           int
-	MinIdleConns       int
-	MaxConnAge         time.Duration
-	PoolTimeout        time.Duration
-	IdleTimeout        time.Duration
-	IdleCheckFrequency time.Duration
+	Addrs                 []string
+	MaxRedirects          int
+	RouteByLatency        bool
+	RouteRandomly         bool
+	Protocol              int
+	Username              string
+	Password              string
+	MaxRetries            int
+	MinRetryBackoff       time.Duration
+	MaxRetryBackoff       time.Duration
+	DialTimeout           time.Duration
+	ReadTimeout           time.Duration
+	WriteTimeout          time.Duration
+	ContextTimeoutEnabled bool
+	PoolFIFO              bool
+	PoolSize              int
+	PoolTimeout           time.Duration
+	MinIdleConns          int
+	MaxIdleConns          int
+	MaxActiveConns        int
+	ConnMaxIdleTime       time.Duration
+	ConnMaxLifetime       time.Duration
+	DisableIndentity      bool
+	DisableIdentity       bool
+	IdentitySuffix        string
+	UnstableResp3         bool
 }
 
 func (c RedisCacheClusterConfig) applyDatastreamOptions(opts *DatastreamOptions) {

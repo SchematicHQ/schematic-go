@@ -75,16 +75,15 @@ func (c *DataStreamClient) ConnectAndRead() {
 
 	attempts := 0
 	for {
-		if attempts >= maxReconnectAttempts {
-			c.logger.Error(ctx, "Unable to connect to server")
-			c.monitorChannel <- false
-			return
-		}
 		conn, err := c.connect()
 		if err != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Failed to connect to WebSocket: %v", err))
 			attempts += 1
 			c.monitorChannel <- false
+			if attempts >= maxReconnectAttempts {
+				c.logger.Error(ctx, "Unable to connect to server")
+				return
+			}
 			time.Sleep(calculateBackoffDelay(attempts))
 			continue
 		}

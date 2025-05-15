@@ -143,7 +143,7 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 		case <-c.reconnect:
 			return false
 		case err := <-c.ctxErrors:
-			c.logger.Error(err.Ctx, "%v", err.Err)
+			c.logger.Error(err.Ctx, fmt.Sprintf("%v", err.Err))
 		case <-ticker.C:
 			if err := c.conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
 				c.logger.Error(ctx, fmt.Sprintf("Failed to send ping message: %v", err))
@@ -184,6 +184,16 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 
 			c.reconnect <- true
 			return
+		}
+
+		var messageError DataStreamError
+		err = json.Unmarshal(m, &messageError)
+		if err == nil && messageError.Error != "" {
+			c.ctxErrors <- &core.CtxError{
+				Ctx: ctx,
+				Err: errors.New(fmt.Sprintf("Received error from WebSocket: %s", messageError.Error)),
+			}
+			continue
 		}
 
 		err = json.Unmarshal(m, &message)

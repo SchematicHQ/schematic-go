@@ -33,6 +33,11 @@ type DataStreamResp struct {
 	MessageType MessageType     `json:"message_type"`
 }
 
+type DataStreamError struct {
+	Code  int32  `json:"code"`
+	Error string `json:"error"`
+}
+
 type DataStreamClient struct {
 	cacheTTL             time.Duration
 	conn                 *websocket.Conn

@@ -184,7 +184,6 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 
 			c.reconnect <- true
 			return
-
 		}
 
 		err = json.Unmarshal(m, &message)

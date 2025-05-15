@@ -54,10 +54,10 @@ type DataStreamClient struct {
 	mu                     sync.RWMutex
 }
 
-type MessageType int
+type MessageType string
 
 const (
-	MessageTypFull MessageType = iota
-	MessageTypePartial
-	MessageTypeDelete
+	MessageTypFull     MessageType = "full"
+	MessageTypePartial MessageType = "partial"
+	MessageTypeDelete  MessageType = "delete"
 )

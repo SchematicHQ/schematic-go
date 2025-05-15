@@ -177,10 +177,6 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 				return
 			}
 
-			if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
-				return
-			}
-
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				c.logger.Debug(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
 				return
@@ -208,7 +204,7 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 	}
 }
 
-func (c *DataStreamClient) SendWebSocketMessage(ctx context.Context, req *DataStreamReq) error {
+func (c *DataStreamClient) sendWebSocketMessage(ctx context.Context, req *DataStreamReq) error {
 	if c.conn == nil {
 		return fmt.Errorf("WebSocket connection is not initialized")
 	}
@@ -311,7 +307,6 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 	err := json.Unmarshal(resp.Data, &company)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Failed to unmarshal company data: %v", err))
-
 	}
 
 	if company == nil {
@@ -468,7 +463,7 @@ func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
 	req := &DataStreamReq{
 		EntityType: EntityTypeFlags,
 	}
-	err := c.SendWebSocketMessage(ctx, req)
+	err := c.sendWebSocketMessage(ctx, req)
 	if err != nil {
 		c.logger.Error(ctx, fmt.Sprintf("Failed to send WebSocket message: %v", err))
 		return err
@@ -511,7 +506,7 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 			Keys:       keys,
 		}
 
-		err := c.SendWebSocketMessage(ctx, req)
+		err := c.sendWebSocketMessage(ctx, req)
 		if err != nil {
 			return nil, err
 		}
@@ -566,7 +561,7 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 			Keys:       keys,
 		}
 
-		err := c.SendWebSocketMessage(ctx, req)
+		err := c.sendWebSocketMessage(ctx, req)
 		if err != nil {
 			return nil, err
 		}
@@ -687,7 +682,7 @@ func (c *DataStreamClient) cleanupPendingUserRequests(cacheKeys []string, waitCh
 			if len(filteredChannels) > 0 {
 				c.pendingUserRequests[cacheKey] = filteredChannels
 			} else {
-				delete(c.pendingCompanyRequests, cacheKey)
+				delete(c.pendingUserRequests, cacheKey)
 			}
 		}
 	}

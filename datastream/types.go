@@ -34,7 +34,6 @@ type DataStreamResp struct {
 }
 
 type DataStreamError struct {
-	Code  int32  `json:"code"`
 	Error string `json:"error"`
 }
 
@@ -65,4 +64,5 @@ const (
 	MessageTypFull     MessageType = "full"
 	MessageTypePartial MessageType = "partial"
 	MessageTypeDelete  MessageType = "delete"
+	MessageTypeError   MessageType = "error"
 )

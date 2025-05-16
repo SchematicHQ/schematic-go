@@ -186,16 +186,6 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 			return
 		}
 
-		var messageError DataStreamError
-		err = json.Unmarshal(m, &messageError)
-		if err == nil && messageError.Error != "" {
-			c.ctxErrors <- &core.CtxError{
-				Ctx: ctx,
-				Err: errors.New(fmt.Sprintf("Received error from WebSocket: %s", messageError.Error)),
-			}
-			continue
-		}
-
 		err = json.Unmarshal(m, &message)
 		if message.Data == nil {
 			c.logger.Debug(ctx, "Received empty message from WebSocket")
@@ -272,6 +262,10 @@ func getBaseURL(baseUrl string) (*url.URL, error) {
 func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *DataStreamResp) error {
 	if message == nil {
 		return nil
+	}
+
+	if message.MessageType == MessageTypeError {
+		return c.handleErrorMessage(ctx, message)
 	}
 
 	switch message.EntityType {
@@ -403,6 +397,15 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 	}
 
 	return nil
+}
+
+func (c *DataStreamClient) handleErrorMessage(_ context.Context, resp *DataStreamResp) error {
+	var respError DataStreamError
+	err := json.Unmarshal(resp.Data, &respError)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Failed to unmarshal error message: %v", err))
+	}
+	return errors.New(fmt.Sprintf("%s", respError.Error))
 }
 
 func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {

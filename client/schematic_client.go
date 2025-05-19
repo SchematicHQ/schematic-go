@@ -52,6 +52,10 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	// Rebuild options struct in case we added any new options above
 	options = core.NewRequestOptions(opts...)
 
+	if setter, ok := options.Logger.(interface{ SetLevel(core.LogLevel) }); ok {
+		setter.SetLevel(options.LogLevel)
+	}
+
 	datastreamConnection := make(chan bool, 1)
 
 	client := &SchematicClient{

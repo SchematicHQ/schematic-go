@@ -19,3 +19,11 @@ var WithCacheTTL = core.WithCacheTTL
 
 type RedisCacheConfig = core.RedisCacheConfig
 type RedisCacheClusterConfig = core.RedisCacheClusterConfig
+type LogLevel = core.LogLevel
+
+const (
+	LogLevelDebug LogLevel = core.LogLevelDebug
+	LogLevelInfo  LogLevel = core.LogLevelInfo
+	LogLevelWarn  LogLevel = core.LogLevelWarn
+	LogLevelError LogLevel = core.LogLevelError
+)

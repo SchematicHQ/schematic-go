@@ -28,6 +28,7 @@ type RequestOptions struct {
 	MaxAttempts       uint
 	APIKey            string
 	Logger            Logger
+	LogLevel          LogLevel
 	UseDataStream     bool
 
 	// Schematic custom request option fields

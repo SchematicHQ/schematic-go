@@ -59,6 +59,14 @@ func (m *MockLogger) Warn(ctx context.Context, message string, args ...interface
 	m.warnMessages = append(m.warnMessages, message)
 }
 
+func (m *MockLogger) SetLevel(level core.LogLevel) {
+	// No-op for mock logger
+}
+func (m *MockLogger) GetLevel() core.LogLevel {
+	// No-op for mock logger
+	return core.LogLevelDebug
+}
+
 // Mock WebSocket server for testing
 func setupMockWebSocketServer() (*httptest.Server, chan string, chan string) {
 	var upgrader = websocket.Upgrader{

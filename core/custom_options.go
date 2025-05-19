@@ -107,6 +107,18 @@ func WithLogger(logger Logger) RequestOption {
 	return CustomLogger{logger: logger}
 }
 
+type LogLevelOption struct {
+	level LogLevel
+}
+
+func (o LogLevelOption) applyRequestOptions(opts *RequestOptions) {
+	opts.LogLevel = o.level
+}
+
+func WithLogLevel(level LogLevel) RequestOption {
+	return LogLevelOption{level: level}
+}
+
 // Datastream options
 type DatastreamOption interface {
 	applyDatastreamOptions(opts *DatastreamOptions)

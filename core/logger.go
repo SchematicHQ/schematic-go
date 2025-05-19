@@ -13,3 +13,12 @@ type CtxError struct {
 	Err error
 	Ctx context.Context
 }
+
+type LogLevel int
+
+const (
+	LogLevelDebug LogLevel = iota
+	LogLevelInfo
+	LogLevelWarn
+	LogLevelError
+)

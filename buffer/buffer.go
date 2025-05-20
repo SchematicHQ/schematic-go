@@ -2,6 +2,9 @@ package buffer
 
 import (
 	"context"
+	"fmt"
+	"math"
+	"math/rand"
 	"sync"
 	"time"
 
@@ -12,6 +15,8 @@ import (
 
 const defaultEventBufferPeriod = 5 * time.Second
 const maxEvents = 100
+const defaultMaxRetries = 3
+const defaultInitialRetryDelay = 1 * time.Second
 
 type eventBuffer struct {
 	// error logging channel
@@ -31,6 +36,10 @@ type eventBuffer struct {
 
 	// max number of events to store in buffer
 	maxEvents int
+
+	// retry configuration
+	maxRetries        int
+	initialRetryDelay time.Duration
 
 	// mutexes for flushing and pushing to the buffer
 	mutexFlush sync.Mutex
@@ -55,15 +64,17 @@ func NewEventBuffer(
 	}
 
 	buffer := &eventBuffer{
-		events:      []*schematicgo.CreateEventRequestBody{},
-		eventClient: client,
-		errors:      errors,
-		interval:    period,
-		logger:      logger,
-		maxEvents:   maxEvents,
-		mutexFlush:  sync.Mutex{},
-		mutexPush:   sync.Mutex{},
-		shutdown:    make(chan struct{}),
+		events:            []*schematicgo.CreateEventRequestBody{},
+		eventClient:       client,
+		errors:            errors,
+		interval:          period,
+		logger:            logger,
+		maxEvents:         maxEvents,
+		maxRetries:        defaultMaxRetries,
+		initialRetryDelay: defaultInitialRetryDelay,
+		mutexFlush:        sync.Mutex{},
+		mutexPush:         sync.Mutex{},
+		shutdown:          make(chan struct{}),
 	}
 
 	// Start ticker to flush events periodically
@@ -91,8 +102,53 @@ func (b *eventBuffer) flush() {
 		Events: events,
 	}
 
-	if _, err := b.eventClient.CreateEventBatch(context.Background(), req); err != nil {
-		b.errors <- err
+	// Initialize retry counter and success flag
+	retryCount := 0
+	success := false
+	var lastErr error
+
+	// Try with retries and exponential backoff
+	for retryCount <= b.maxRetries && !success {
+		if retryCount > 0 {
+			// Log retry attempt
+			b.logger.Info(context.Background(), fmt.Sprintf("Retrying event batch submission (attempt %d of %d)", retryCount, b.maxRetries))
+		}
+
+		// Attempt to send events
+		_, err := b.eventClient.CreateEventBatch(context.Background(), req)
+		if err == nil {
+			success = true
+		} else {
+			lastErr = err
+			retryCount++
+
+			if retryCount <= b.maxRetries {
+				// Calculate backoff with jitter
+				delay := float64(b.initialRetryDelay.Nanoseconds()) * math.Pow(2, float64(retryCount-1))
+				jitter := rand.Float64() * 0.1 * delay // 10% jitter
+				waitTime := time.Duration(delay + jitter)
+
+				b.logger.Warn(
+					context.Background(),
+					fmt.Sprintf("Event batch submission failed: %v. Retrying in %.2f seconds...",
+						err, float64(waitTime)/float64(time.Second)),
+				)
+
+				// Wait before retry
+				time.Sleep(waitTime)
+			}
+		}
+	}
+
+	// After all retries, if still not successful, log the error
+	if !success {
+		b.logger.Error(
+			context.Background(),
+			fmt.Sprintf("Event batch submission failed after %d retries: %v", b.maxRetries, lastErr),
+		)
+		b.errors <- lastErr
+	} else if retryCount > 0 {
+		b.logger.Info(context.Background(), fmt.Sprintf("Event batch submission succeeded after %d retries", retryCount))
 	}
 
 	b.events = b.events[:0]

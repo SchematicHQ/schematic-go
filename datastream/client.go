@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -649,11 +650,11 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 }
 
 func flagCacheKey(key string) string {
-	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, rulesEngineVersionKey, key)
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, rulesEngineVersionKey, strings.ToLower(key))
 }
 
 func resourceKeyToCacheKey(resourceType string, key string, value string) string {
-	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, rulesEngineVersionKey, key, value)
+	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, rulesEngineVersionKey, strings.ToLower(key), strings.ToLower(value))
 }
 
 // Helper function to clean up pending company requests

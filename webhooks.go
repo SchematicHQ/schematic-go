@@ -28,9 +28,10 @@ type CountWebhooksRequest struct {
 }
 
 type CreateWebhookRequestBody struct {
-	Name         string                                     `json:"name" url:"-"`
-	RequestTypes []CreateWebhookRequestBodyRequestTypesItem `json:"request_types,omitempty" url:"-"`
-	URL          string                                     `json:"url" url:"-"`
+	EntitlementTriggerConfigs []*EntitlementTriggerConfig                `json:"entitlement_trigger_configs,omitempty" url:"-"`
+	Name                      string                                     `json:"name" url:"-"`
+	RequestTypes              []CreateWebhookRequestBodyRequestTypesItem `json:"request_types,omitempty" url:"-"`
+	URL                       string                                     `json:"url" url:"-"`
 }
 
 type ListWebhookEventsRequest struct {
@@ -49,6 +50,52 @@ type ListWebhooksRequest struct {
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
+type EntitlementTriggerConfig struct {
+	FeatureID string `json:"feature_id" url:"feature_id"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EntitlementTriggerConfig) GetFeatureID() string {
+	if e == nil {
+		return ""
+	}
+	return e.FeatureID
+}
+
+func (e *EntitlementTriggerConfig) GetExtraProperties() map[string]interface{} {
+	return e.extraProperties
+}
+
+func (e *EntitlementTriggerConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler EntitlementTriggerConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EntitlementTriggerConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EntitlementTriggerConfig) String() string {
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
 }
 
 type WebhookEventDetailResponseData struct {
@@ -196,14 +243,15 @@ func (w *WebhookEventDetailResponseData) String() string {
 }
 
 type WebhookResponseData struct {
-	CreatedAt    time.Time `json:"created_at" url:"created_at"`
-	ID           string    `json:"id" url:"id"`
-	Name         string    `json:"name" url:"name"`
-	RequestTypes []string  `json:"request_types,omitempty" url:"request_types,omitempty"`
-	Secret       string    `json:"secret" url:"secret"`
-	Status       string    `json:"status" url:"status"`
-	UpdatedAt    time.Time `json:"updated_at" url:"updated_at"`
-	URL          string    `json:"url" url:"url"`
+	CreatedAt                 time.Time                   `json:"created_at" url:"created_at"`
+	EntitlementTriggerConfigs []*EntitlementTriggerConfig `json:"entitlement_trigger_configs,omitempty" url:"entitlement_trigger_configs,omitempty"`
+	ID                        string                      `json:"id" url:"id"`
+	Name                      string                      `json:"name" url:"name"`
+	RequestTypes              []string                    `json:"request_types,omitempty" url:"request_types,omitempty"`
+	Secret                    string                      `json:"secret" url:"secret"`
+	Status                    string                      `json:"status" url:"status"`
+	UpdatedAt                 time.Time                   `json:"updated_at" url:"updated_at"`
+	URL                       string                      `json:"url" url:"url"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -214,6 +262,13 @@ func (w *WebhookResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return w.CreatedAt
+}
+
+func (w *WebhookResponseData) GetEntitlementTriggerConfigs() []*EntitlementTriggerConfig {
+	if w == nil {
+		return nil
+	}
+	return w.EntitlementTriggerConfigs
 }
 
 func (w *WebhookResponseData) GetID() string {
@@ -578,30 +633,34 @@ func (c *CountWebhooksResponse) String() string {
 type CreateWebhookRequestBodyRequestTypesItem string
 
 const (
-	CreateWebhookRequestBodyRequestTypesItemCompanyUpdated         CreateWebhookRequestBodyRequestTypesItem = "company.updated"
-	CreateWebhookRequestBodyRequestTypesItemUserUpdated            CreateWebhookRequestBodyRequestTypesItem = "user.updated"
-	CreateWebhookRequestBodyRequestTypesItemPlanUpdated            CreateWebhookRequestBodyRequestTypesItem = "plan.updated"
-	CreateWebhookRequestBodyRequestTypesItemPlanEntitlementUpdated CreateWebhookRequestBodyRequestTypesItem = "plan.entitlement.updated"
-	CreateWebhookRequestBodyRequestTypesItemCompanyOverrideUpdated CreateWebhookRequestBodyRequestTypesItem = "company.override.updated"
-	CreateWebhookRequestBodyRequestTypesItemFeatureUpdated         CreateWebhookRequestBodyRequestTypesItem = "feature.updated"
-	CreateWebhookRequestBodyRequestTypesItemFlagUpdated            CreateWebhookRequestBodyRequestTypesItem = "flag.updated"
-	CreateWebhookRequestBodyRequestTypesItemFlagRulesUpdated       CreateWebhookRequestBodyRequestTypesItem = "flag_rules.updated"
-	CreateWebhookRequestBodyRequestTypesItemCompanyCreated         CreateWebhookRequestBodyRequestTypesItem = "company.created"
-	CreateWebhookRequestBodyRequestTypesItemUserCreated            CreateWebhookRequestBodyRequestTypesItem = "user.created"
-	CreateWebhookRequestBodyRequestTypesItemPlanCreated            CreateWebhookRequestBodyRequestTypesItem = "plan.created"
-	CreateWebhookRequestBodyRequestTypesItemPlanEntitlementCreated CreateWebhookRequestBodyRequestTypesItem = "plan.entitlement.created"
-	CreateWebhookRequestBodyRequestTypesItemCompanyOverrideCreated CreateWebhookRequestBodyRequestTypesItem = "company.override.created"
-	CreateWebhookRequestBodyRequestTypesItemFeatureCreated         CreateWebhookRequestBodyRequestTypesItem = "feature.created"
-	CreateWebhookRequestBodyRequestTypesItemFlagCreated            CreateWebhookRequestBodyRequestTypesItem = "flag.created"
-	CreateWebhookRequestBodyRequestTypesItemCompanyDeleted         CreateWebhookRequestBodyRequestTypesItem = "company.deleted"
-	CreateWebhookRequestBodyRequestTypesItemUserDeleted            CreateWebhookRequestBodyRequestTypesItem = "user.deleted"
-	CreateWebhookRequestBodyRequestTypesItemPlanDeleted            CreateWebhookRequestBodyRequestTypesItem = "plan.deleted"
-	CreateWebhookRequestBodyRequestTypesItemPlanEntitlementDeleted CreateWebhookRequestBodyRequestTypesItem = "plan.entitlement.deleted"
-	CreateWebhookRequestBodyRequestTypesItemCompanyOverrideDeleted CreateWebhookRequestBodyRequestTypesItem = "company.override.deleted"
-	CreateWebhookRequestBodyRequestTypesItemFeatureDeleted         CreateWebhookRequestBodyRequestTypesItem = "feature.deleted"
-	CreateWebhookRequestBodyRequestTypesItemFlagDeleted            CreateWebhookRequestBodyRequestTypesItem = "flag.deleted"
-	CreateWebhookRequestBodyRequestTypesItemTestSend               CreateWebhookRequestBodyRequestTypesItem = "test.send"
-	CreateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded CreateWebhookRequestBodyRequestTypesItem = "subscription.trial.ended"
+	CreateWebhookRequestBodyRequestTypesItemCompanyUpdated              CreateWebhookRequestBodyRequestTypesItem = "company.updated"
+	CreateWebhookRequestBodyRequestTypesItemUserUpdated                 CreateWebhookRequestBodyRequestTypesItem = "user.updated"
+	CreateWebhookRequestBodyRequestTypesItemPlanUpdated                 CreateWebhookRequestBodyRequestTypesItem = "plan.updated"
+	CreateWebhookRequestBodyRequestTypesItemPlanEntitlementUpdated      CreateWebhookRequestBodyRequestTypesItem = "plan.entitlement.updated"
+	CreateWebhookRequestBodyRequestTypesItemCompanyOverrideUpdated      CreateWebhookRequestBodyRequestTypesItem = "company.override.updated"
+	CreateWebhookRequestBodyRequestTypesItemFeatureUpdated              CreateWebhookRequestBodyRequestTypesItem = "feature.updated"
+	CreateWebhookRequestBodyRequestTypesItemFlagUpdated                 CreateWebhookRequestBodyRequestTypesItem = "flag.updated"
+	CreateWebhookRequestBodyRequestTypesItemFlagRulesUpdated            CreateWebhookRequestBodyRequestTypesItem = "flag_rules.updated"
+	CreateWebhookRequestBodyRequestTypesItemCompanyCreated              CreateWebhookRequestBodyRequestTypesItem = "company.created"
+	CreateWebhookRequestBodyRequestTypesItemUserCreated                 CreateWebhookRequestBodyRequestTypesItem = "user.created"
+	CreateWebhookRequestBodyRequestTypesItemPlanCreated                 CreateWebhookRequestBodyRequestTypesItem = "plan.created"
+	CreateWebhookRequestBodyRequestTypesItemPlanEntitlementCreated      CreateWebhookRequestBodyRequestTypesItem = "plan.entitlement.created"
+	CreateWebhookRequestBodyRequestTypesItemCompanyOverrideCreated      CreateWebhookRequestBodyRequestTypesItem = "company.override.created"
+	CreateWebhookRequestBodyRequestTypesItemFeatureCreated              CreateWebhookRequestBodyRequestTypesItem = "feature.created"
+	CreateWebhookRequestBodyRequestTypesItemFlagCreated                 CreateWebhookRequestBodyRequestTypesItem = "flag.created"
+	CreateWebhookRequestBodyRequestTypesItemCompanyDeleted              CreateWebhookRequestBodyRequestTypesItem = "company.deleted"
+	CreateWebhookRequestBodyRequestTypesItemUserDeleted                 CreateWebhookRequestBodyRequestTypesItem = "user.deleted"
+	CreateWebhookRequestBodyRequestTypesItemPlanDeleted                 CreateWebhookRequestBodyRequestTypesItem = "plan.deleted"
+	CreateWebhookRequestBodyRequestTypesItemPlanEntitlementDeleted      CreateWebhookRequestBodyRequestTypesItem = "plan.entitlement.deleted"
+	CreateWebhookRequestBodyRequestTypesItemCompanyOverrideDeleted      CreateWebhookRequestBodyRequestTypesItem = "company.override.deleted"
+	CreateWebhookRequestBodyRequestTypesItemFeatureDeleted              CreateWebhookRequestBodyRequestTypesItem = "feature.deleted"
+	CreateWebhookRequestBodyRequestTypesItemFlagDeleted                 CreateWebhookRequestBodyRequestTypesItem = "flag.deleted"
+	CreateWebhookRequestBodyRequestTypesItemTestSend                    CreateWebhookRequestBodyRequestTypesItem = "test.send"
+	CreateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded      CreateWebhookRequestBodyRequestTypesItem = "subscription.trial.ended"
+	CreateWebhookRequestBodyRequestTypesItemEntitlementLimitWarning     CreateWebhookRequestBodyRequestTypesItem = "entitlement.limit.warning"
+	CreateWebhookRequestBodyRequestTypesItemEntitlementLimitReached     CreateWebhookRequestBodyRequestTypesItem = "entitlement.limit.reached"
+	CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning CreateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.warning"
+	CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached CreateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.reached"
 )
 
 func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebhookRequestBodyRequestTypesItem, error) {
@@ -654,6 +713,14 @@ func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebh
 		return CreateWebhookRequestBodyRequestTypesItemTestSend, nil
 	case "subscription.trial.ended":
 		return CreateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded, nil
+	case "entitlement.limit.warning":
+		return CreateWebhookRequestBodyRequestTypesItemEntitlementLimitWarning, nil
+	case "entitlement.limit.reached":
+		return CreateWebhookRequestBodyRequestTypesItemEntitlementLimitReached, nil
+	case "entitlement.soft_limit.warning":
+		return CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning, nil
+	case "entitlement.soft_limit.reached":
+		return CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached, nil
 	}
 	var t CreateWebhookRequestBodyRequestTypesItem
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1144,30 +1211,34 @@ func (l *ListWebhooksResponse) String() string {
 type UpdateWebhookRequestBodyRequestTypesItem string
 
 const (
-	UpdateWebhookRequestBodyRequestTypesItemCompanyUpdated         UpdateWebhookRequestBodyRequestTypesItem = "company.updated"
-	UpdateWebhookRequestBodyRequestTypesItemUserUpdated            UpdateWebhookRequestBodyRequestTypesItem = "user.updated"
-	UpdateWebhookRequestBodyRequestTypesItemPlanUpdated            UpdateWebhookRequestBodyRequestTypesItem = "plan.updated"
-	UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementUpdated UpdateWebhookRequestBodyRequestTypesItem = "plan.entitlement.updated"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideUpdated UpdateWebhookRequestBodyRequestTypesItem = "company.override.updated"
-	UpdateWebhookRequestBodyRequestTypesItemFeatureUpdated         UpdateWebhookRequestBodyRequestTypesItem = "feature.updated"
-	UpdateWebhookRequestBodyRequestTypesItemFlagUpdated            UpdateWebhookRequestBodyRequestTypesItem = "flag.updated"
-	UpdateWebhookRequestBodyRequestTypesItemFlagRulesUpdated       UpdateWebhookRequestBodyRequestTypesItem = "flag_rules.updated"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyCreated         UpdateWebhookRequestBodyRequestTypesItem = "company.created"
-	UpdateWebhookRequestBodyRequestTypesItemUserCreated            UpdateWebhookRequestBodyRequestTypesItem = "user.created"
-	UpdateWebhookRequestBodyRequestTypesItemPlanCreated            UpdateWebhookRequestBodyRequestTypesItem = "plan.created"
-	UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementCreated UpdateWebhookRequestBodyRequestTypesItem = "plan.entitlement.created"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideCreated UpdateWebhookRequestBodyRequestTypesItem = "company.override.created"
-	UpdateWebhookRequestBodyRequestTypesItemFeatureCreated         UpdateWebhookRequestBodyRequestTypesItem = "feature.created"
-	UpdateWebhookRequestBodyRequestTypesItemFlagCreated            UpdateWebhookRequestBodyRequestTypesItem = "flag.created"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyDeleted         UpdateWebhookRequestBodyRequestTypesItem = "company.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemUserDeleted            UpdateWebhookRequestBodyRequestTypesItem = "user.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemPlanDeleted            UpdateWebhookRequestBodyRequestTypesItem = "plan.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementDeleted UpdateWebhookRequestBodyRequestTypesItem = "plan.entitlement.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideDeleted UpdateWebhookRequestBodyRequestTypesItem = "company.override.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemFeatureDeleted         UpdateWebhookRequestBodyRequestTypesItem = "feature.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemFlagDeleted            UpdateWebhookRequestBodyRequestTypesItem = "flag.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemTestSend               UpdateWebhookRequestBodyRequestTypesItem = "test.send"
-	UpdateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded UpdateWebhookRequestBodyRequestTypesItem = "subscription.trial.ended"
+	UpdateWebhookRequestBodyRequestTypesItemCompanyUpdated              UpdateWebhookRequestBodyRequestTypesItem = "company.updated"
+	UpdateWebhookRequestBodyRequestTypesItemUserUpdated                 UpdateWebhookRequestBodyRequestTypesItem = "user.updated"
+	UpdateWebhookRequestBodyRequestTypesItemPlanUpdated                 UpdateWebhookRequestBodyRequestTypesItem = "plan.updated"
+	UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementUpdated      UpdateWebhookRequestBodyRequestTypesItem = "plan.entitlement.updated"
+	UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideUpdated      UpdateWebhookRequestBodyRequestTypesItem = "company.override.updated"
+	UpdateWebhookRequestBodyRequestTypesItemFeatureUpdated              UpdateWebhookRequestBodyRequestTypesItem = "feature.updated"
+	UpdateWebhookRequestBodyRequestTypesItemFlagUpdated                 UpdateWebhookRequestBodyRequestTypesItem = "flag.updated"
+	UpdateWebhookRequestBodyRequestTypesItemFlagRulesUpdated            UpdateWebhookRequestBodyRequestTypesItem = "flag_rules.updated"
+	UpdateWebhookRequestBodyRequestTypesItemCompanyCreated              UpdateWebhookRequestBodyRequestTypesItem = "company.created"
+	UpdateWebhookRequestBodyRequestTypesItemUserCreated                 UpdateWebhookRequestBodyRequestTypesItem = "user.created"
+	UpdateWebhookRequestBodyRequestTypesItemPlanCreated                 UpdateWebhookRequestBodyRequestTypesItem = "plan.created"
+	UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementCreated      UpdateWebhookRequestBodyRequestTypesItem = "plan.entitlement.created"
+	UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideCreated      UpdateWebhookRequestBodyRequestTypesItem = "company.override.created"
+	UpdateWebhookRequestBodyRequestTypesItemFeatureCreated              UpdateWebhookRequestBodyRequestTypesItem = "feature.created"
+	UpdateWebhookRequestBodyRequestTypesItemFlagCreated                 UpdateWebhookRequestBodyRequestTypesItem = "flag.created"
+	UpdateWebhookRequestBodyRequestTypesItemCompanyDeleted              UpdateWebhookRequestBodyRequestTypesItem = "company.deleted"
+	UpdateWebhookRequestBodyRequestTypesItemUserDeleted                 UpdateWebhookRequestBodyRequestTypesItem = "user.deleted"
+	UpdateWebhookRequestBodyRequestTypesItemPlanDeleted                 UpdateWebhookRequestBodyRequestTypesItem = "plan.deleted"
+	UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementDeleted      UpdateWebhookRequestBodyRequestTypesItem = "plan.entitlement.deleted"
+	UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideDeleted      UpdateWebhookRequestBodyRequestTypesItem = "company.override.deleted"
+	UpdateWebhookRequestBodyRequestTypesItemFeatureDeleted              UpdateWebhookRequestBodyRequestTypesItem = "feature.deleted"
+	UpdateWebhookRequestBodyRequestTypesItemFlagDeleted                 UpdateWebhookRequestBodyRequestTypesItem = "flag.deleted"
+	UpdateWebhookRequestBodyRequestTypesItemTestSend                    UpdateWebhookRequestBodyRequestTypesItem = "test.send"
+	UpdateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded      UpdateWebhookRequestBodyRequestTypesItem = "subscription.trial.ended"
+	UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitWarning     UpdateWebhookRequestBodyRequestTypesItem = "entitlement.limit.warning"
+	UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitReached     UpdateWebhookRequestBodyRequestTypesItem = "entitlement.limit.reached"
+	UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning UpdateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.warning"
+	UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached UpdateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.reached"
 )
 
 func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebhookRequestBodyRequestTypesItem, error) {
@@ -1220,6 +1291,14 @@ func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebh
 		return UpdateWebhookRequestBodyRequestTypesItemTestSend, nil
 	case "subscription.trial.ended":
 		return UpdateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded, nil
+	case "entitlement.limit.warning":
+		return UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitWarning, nil
+	case "entitlement.limit.reached":
+		return UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitReached, nil
+	case "entitlement.soft_limit.warning":
+		return UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning, nil
+	case "entitlement.soft_limit.reached":
+		return UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached, nil
 	}
 	var t UpdateWebhookRequestBodyRequestTypesItem
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1307,8 +1386,9 @@ func (u *UpdateWebhookResponse) String() string {
 }
 
 type UpdateWebhookRequestBody struct {
-	Name         *string                                    `json:"name,omitempty" url:"-"`
-	RequestTypes []UpdateWebhookRequestBodyRequestTypesItem `json:"request_types,omitempty" url:"-"`
-	Status       *UpdateWebhookRequestBodyStatus            `json:"status,omitempty" url:"-"`
-	URL          *string                                    `json:"url,omitempty" url:"-"`
+	EntitlementTriggerConfigs []*EntitlementTriggerConfig                `json:"entitlement_trigger_configs,omitempty" url:"-"`
+	Name                      *string                                    `json:"name,omitempty" url:"-"`
+	RequestTypes              []UpdateWebhookRequestBodyRequestTypesItem `json:"request_types,omitempty" url:"-"`
+	Status                    *UpdateWebhookRequestBodyStatus            `json:"status,omitempty" url:"-"`
+	URL                       *string                                    `json:"url,omitempty" url:"-"`
 }

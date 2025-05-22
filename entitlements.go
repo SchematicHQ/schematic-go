@@ -138,7 +138,7 @@ type CreatePlanEntitlementRequestBody struct {
 
 type GetFeatureUsageByCompanyRequest struct {
 	// Key/value pairs
-	Keys map[string]interface{} `json:"-" url:"keys,omitempty"`
+	Keys map[string]string `json:"-" url:"keys,omitempty"`
 }
 
 type ListCompanyOverridesRequest struct {
@@ -2009,13 +2009,13 @@ func (g *GetCompanyOverrideResponse) String() string {
 
 // Input parameters
 type GetFeatureUsageByCompanyParams struct {
-	Keys map[string]interface{} `json:"keys,omitempty" url:"keys,omitempty"`
+	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (g *GetFeatureUsageByCompanyParams) GetKeys() map[string]interface{} {
+func (g *GetFeatureUsageByCompanyParams) GetKeys() map[string]string {
 	if g == nil {
 		return nil
 	}

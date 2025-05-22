@@ -9,6 +9,16 @@ import (
 	time "time"
 )
 
+type CountPlanTraitsRequest struct {
+	IDs     []*string `json:"-" url:"ids,omitempty"`
+	PlanID  *string   `json:"-" url:"plan_id,omitempty"`
+	TraitID *string   `json:"-" url:"trait_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
 type CountPlansRequest struct {
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
 	// Filter out plans that do not have a billing product ID
@@ -36,6 +46,22 @@ type CreatePlanRequestBody struct {
 	PlanType    CreatePlanRequestBodyPlanType `json:"plan_type" url:"-"`
 }
 
+type CreatePlanTraitRequestBody struct {
+	PlanID     string `json:"plan_id" url:"-"`
+	TraitID    string `json:"trait_id" url:"-"`
+	TraitValue string `json:"trait_value" url:"-"`
+}
+
+type ListPlanTraitsRequest struct {
+	IDs     []*string `json:"-" url:"ids,omitempty"`
+	PlanID  *string   `json:"-" url:"plan_id,omitempty"`
+	TraitID *string   `json:"-" url:"trait_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
 type ListPlansRequest struct {
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
 	// Filter out plans that do not have a billing product ID
@@ -61,6 +87,7 @@ type BillingProductPlanResponseData struct {
 	AccountID        string  `json:"account_id" url:"account_id"`
 	BillingProductID string  `json:"billing_product_id" url:"billing_product_id"`
 	ChargeType       string  `json:"charge_type" url:"charge_type"`
+	ControlledBy     string  `json:"controlled_by" url:"controlled_by"`
 	EnvironmentID    string  `json:"environment_id" url:"environment_id"`
 	IsTrialable      bool    `json:"is_trialable" url:"is_trialable"`
 	MonthlyPriceID   *string `json:"monthly_price_id,omitempty" url:"monthly_price_id,omitempty"`
@@ -92,6 +119,13 @@ func (b *BillingProductPlanResponseData) GetChargeType() string {
 		return ""
 	}
 	return b.ChargeType
+}
+
+func (b *BillingProductPlanResponseData) GetControlledBy() string {
+	if b == nil {
+		return ""
+	}
+	return b.ControlledBy
 }
 
 func (b *BillingProductPlanResponseData) GetEnvironmentID() string {
@@ -330,6 +364,267 @@ func (p *PlanAudienceDetailResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+// The updated resource
+type PlanTraitResponseData struct {
+	AccountID     string    `json:"account_id" url:"account_id"`
+	CreatedAt     time.Time `json:"created_at" url:"created_at"`
+	EnvironmentID string    `json:"environment_id" url:"environment_id"`
+	ID            string    `json:"id" url:"id"`
+	PlanID        string    `json:"plan_id" url:"plan_id"`
+	TraitID       string    `json:"trait_id" url:"trait_id"`
+	TraitValue    string    `json:"trait_value" url:"trait_value"`
+	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanTraitResponseData) GetAccountID() string {
+	if p == nil {
+		return ""
+	}
+	return p.AccountID
+}
+
+func (p *PlanTraitResponseData) GetCreatedAt() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.CreatedAt
+}
+
+func (p *PlanTraitResponseData) GetEnvironmentID() string {
+	if p == nil {
+		return ""
+	}
+	return p.EnvironmentID
+}
+
+func (p *PlanTraitResponseData) GetID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ID
+}
+
+func (p *PlanTraitResponseData) GetPlanID() string {
+	if p == nil {
+		return ""
+	}
+	return p.PlanID
+}
+
+func (p *PlanTraitResponseData) GetTraitID() string {
+	if p == nil {
+		return ""
+	}
+	return p.TraitID
+}
+
+func (p *PlanTraitResponseData) GetTraitValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.TraitValue
+}
+
+func (p *PlanTraitResponseData) GetUpdatedAt() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.UpdatedAt
+}
+
+func (p *PlanTraitResponseData) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PlanTraitResponseData) UnmarshalJSON(data []byte) error {
+	type embed PlanTraitResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PlanTraitResponseData(unmarshaler.embed)
+	p.CreatedAt = unmarshaler.CreatedAt.Time()
+	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanTraitResponseData) MarshalJSON() ([]byte, error) {
+	type embed PlanTraitResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*p),
+		CreatedAt: internal.NewDateTime(p.CreatedAt),
+		UpdatedAt: internal.NewDateTime(p.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (p *PlanTraitResponseData) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// Input parameters
+type CountPlanTraitsParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset  *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	PlanID  *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	TraitID *string `json:"trait_id,omitempty" url:"trait_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountPlanTraitsParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountPlanTraitsParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountPlanTraitsParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountPlanTraitsParams) GetPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanID
+}
+
+func (c *CountPlanTraitsParams) GetTraitID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.TraitID
+}
+
+func (c *CountPlanTraitsParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountPlanTraitsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountPlanTraitsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountPlanTraitsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountPlanTraitsParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CountPlanTraitsResponse struct {
+	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *CountPlanTraitsParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountPlanTraitsResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountPlanTraitsResponse) GetParams() *CountPlanTraitsParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountPlanTraitsResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountPlanTraitsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountPlanTraitsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountPlanTraitsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountPlanTraitsResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 // Input parameters
@@ -636,6 +931,61 @@ func (c *CreatePlanResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreatePlanTraitResponse struct {
+	Data *PlanTraitResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePlanTraitResponse) GetData() *PlanTraitResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreatePlanTraitResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CreatePlanTraitResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePlanTraitResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePlanTraitResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePlanTraitResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePlanTraitResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 type DeleteAudienceResponse struct {
 	Data *DeleteResponse `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -735,6 +1085,61 @@ func (d *DeletePlanResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (d *DeletePlanResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+type DeletePlanTraitResponse struct {
+	Data *DeleteResponse `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletePlanTraitResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeletePlanTraitResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
+}
+
+func (d *DeletePlanTraitResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeletePlanTraitResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeletePlanTraitResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeletePlanTraitResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeletePlanTraitResponse) String() string {
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -854,6 +1259,198 @@ func (g *GetPlanResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+type GetPlanTraitResponse struct {
+	Data *PlanTraitResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetPlanTraitResponse) GetData() *PlanTraitResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetPlanTraitResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetPlanTraitResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetPlanTraitResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetPlanTraitResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetPlanTraitResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetPlanTraitResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type ListPlanTraitsParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset  *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	PlanID  *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	TraitID *string `json:"trait_id,omitempty" url:"trait_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPlanTraitsParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListPlanTraitsParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListPlanTraitsParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListPlanTraitsParams) GetPlanID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanID
+}
+
+func (l *ListPlanTraitsParams) GetTraitID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.TraitID
+}
+
+func (l *ListPlanTraitsParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListPlanTraitsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListPlanTraitsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListPlanTraitsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListPlanTraitsParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+type ListPlanTraitsResponse struct {
+	// The returned resources
+	Data []*PlanTraitResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *ListPlanTraitsParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPlanTraitsResponse) GetData() []*PlanTraitResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListPlanTraitsResponse) GetParams() *ListPlanTraitsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListPlanTraitsResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListPlanTraitsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListPlanTraitsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListPlanTraitsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListPlanTraitsResponse) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 // Input parameters
@@ -1249,6 +1846,61 @@ func (u *UpdatePlanResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
+type UpdatePlanTraitResponse struct {
+	Data *PlanTraitResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatePlanTraitResponse) GetData() *PlanTraitResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdatePlanTraitResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpdatePlanTraitResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdatePlanTraitResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePlanTraitResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdatePlanTraitResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdatePlanTraitResponse) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
 type UpsertBillingProductPlanResponse struct {
 	Data *BillingProductPlanResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -1320,13 +1972,21 @@ type UpdatePlanRequestBody struct {
 	Name        string  `json:"name" url:"-"`
 }
 
+type UpdatePlanTraitRequestBody struct {
+	PlanID     string `json:"plan_id" url:"-"`
+	TraitValue string `json:"trait_value" url:"-"`
+}
+
 type UpsertBillingProductRequestBody struct {
 	BillingProductID *string `json:"billing_product_id,omitempty" url:"-"`
-	ChargeType       *string `json:"charge_type,omitempty" url:"-"`
-	IsFreePlan       bool    `json:"is_free_plan" url:"-"`
+	ChargeType       string  `json:"charge_type" url:"-"`
+	Currency         *string `json:"currency,omitempty" url:"-"`
 	IsTrialable      bool    `json:"is_trialable" url:"-"`
+	MonthlyPrice     *int    `json:"monthly_price,omitempty" url:"-"`
 	MonthlyPriceID   *string `json:"monthly_price_id,omitempty" url:"-"`
+	OneTimePrice     *int    `json:"one_time_price,omitempty" url:"-"`
 	OneTimePriceID   *string `json:"one_time_price_id,omitempty" url:"-"`
 	TrialDays        *int    `json:"trial_days,omitempty" url:"-"`
+	YearlyPrice      *int    `json:"yearly_price,omitempty" url:"-"`
 	YearlyPriceID    *string `json:"yearly_price_id,omitempty" url:"-"`
 }

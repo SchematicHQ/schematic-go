@@ -8,6 +8,7 @@ cache/redis.go
 cmd/webhook-test-server/main.go
 core/request_option.go
 core/custom_options.go
+core/logger.go
 custom_types.go
 client/schematic_client.go
 client/schematic_client_test.go

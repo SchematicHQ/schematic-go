@@ -3,7 +3,7 @@ package core
 import (
 	"time"
 
-	cache "github.com/schematichq/schematic-go/cache"
+	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/http"
 )
 
@@ -105,4 +105,138 @@ func (c CustomLogger) applyRequestOptions(opts *RequestOptions) {
 }
 func WithLogger(logger Logger) RequestOption {
 	return CustomLogger{logger: logger}
+}
+
+type LogLevelOption struct {
+	level LogLevel
+}
+
+func (o LogLevelOption) applyRequestOptions(opts *RequestOptions) {
+	opts.LogLevel = o.level
+}
+
+func WithLogLevel(level LogLevel) RequestOption {
+	return LogLevelOption{level: level}
+}
+
+// Datastream options
+type DatastreamOption interface {
+	applyDatastreamOptions(opts *DatastreamOptions)
+}
+
+type DatastreamOptions struct {
+	CacheTTL    time.Duration
+	CacheConfig CacheConfig
+}
+
+type CacheTTL struct {
+	ttl time.Duration
+}
+
+func (c CacheTTL) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.CacheTTL = c.ttl
+}
+
+func WithCacheTTL(ttl time.Duration) DatastreamOption {
+	return CacheTTL{ttl: ttl}
+}
+
+// Define an interface for Redis options
+type CacheConfig interface {
+	applyDatastreamOptions(opts *DatastreamOptions)
+}
+
+type RedisCacheConfig struct {
+	Network               string
+	Addr                  string
+	ClientName            string
+	Protocol              int
+	Username              string
+	Password              string
+	DB                    int
+	MaxRetries            int
+	MinRetryBackoff       time.Duration
+	MaxRetryBackoff       time.Duration
+	DialTimeout           time.Duration
+	ReadTimeout           time.Duration
+	WriteTimeout          time.Duration
+	ContextTimeoutEnabled bool
+	PoolFIFO              bool
+	PoolSize              int
+	PoolTimeout           time.Duration
+	MinIdleConns          int
+	MaxIdleConns          int
+	MaxActiveConns        int
+	ConnMaxIdleTime       time.Duration
+	ConnMaxLifetime       time.Duration
+	DisableIndentity      bool
+	DisableIdentity       bool
+	IdentitySuffix        string
+	UnstableResp3         bool
+}
+
+func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.CacheConfig = c
+}
+
+type RedisCacheClusterConfig struct {
+	Addrs                 []string
+	MaxRedirects          int
+	RouteByLatency        bool
+	RouteRandomly         bool
+	Protocol              int
+	Username              string
+	Password              string
+	MaxRetries            int
+	MinRetryBackoff       time.Duration
+	MaxRetryBackoff       time.Duration
+	DialTimeout           time.Duration
+	ReadTimeout           time.Duration
+	WriteTimeout          time.Duration
+	ContextTimeoutEnabled bool
+	PoolFIFO              bool
+	PoolSize              int
+	PoolTimeout           time.Duration
+	MinIdleConns          int
+	MaxIdleConns          int
+	MaxActiveConns        int
+	ConnMaxIdleTime       time.Duration
+	ConnMaxLifetime       time.Duration
+	DisableIndentity      bool
+	DisableIdentity       bool
+	IdentitySuffix        string
+	UnstableResp3         bool
+}
+
+func (c RedisCacheClusterConfig) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.CacheConfig = c
+}
+
+func WithRedisCache(opts CacheConfig) CacheConfig {
+	return opts
+}
+
+type ClientOptUseDatastream struct {
+	enabled bool
+	options *DatastreamOptions
+}
+
+func (c ClientOptUseDatastream) applyRequestOptions(opts *RequestOptions) {
+	opts.UseDataStream = c.enabled
+	opts.DatastreamOptions = c.options
+}
+
+func WithDatastream(opts ...DatastreamOption) RequestOption {
+	dataStreamOptions := &DatastreamOptions{
+		CacheTTL: 24 * time.Hour,
+	}
+
+	for _, opt := range opts {
+		opt.applyDatastreamOptions(dataStreamOptions)
+	}
+
+	return &ClientOptUseDatastream{
+		enabled: true,
+		options: dataStreamOptions,
+	}
 }

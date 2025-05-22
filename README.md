@@ -460,8 +460,8 @@ func main() {
 	}
 
 	client := schematicclient.NewSchematicClient(
-		schematicgooption.WithAPIKey(apiKey),
-		schematicgooption.WithDatastream(options),
+		schematicoption.WithAPIKey(apiKey),
+		schematicoption.WithDatastream(options),
 	)
 
   defer client.Close()

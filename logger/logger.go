@@ -33,13 +33,13 @@ func (l *defaultLogger) Warn(ctx context.Context, message string, args ...interf
 
 func (l *defaultLogger) Info(ctx context.Context, message string, args ...interface{}) {
 	if l.level <= core.LogLevelInfo {
-		l.logger.Printf("[INFO] "+message, args...)
+		l.logger.Printf("[INFO] %s", append([]interface{}{message}, args...)...)
 	}
 }
 
 func (l *defaultLogger) Debug(ctx context.Context, message string, args ...interface{}) {
 	if l.level <= core.LogLevelDebug {
-		l.logger.Printf("[DEBUG] "+message, args...)
+		l.logger.Printf("[DEBUG] %s", append([]interface{}{message}, args...)...)
 	}
 }
 

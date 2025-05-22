@@ -1,6 +1,8 @@
 # Specify files that shouldn't be modified by Fern
 
 README.md
+go.mod
+go.sum
 buffer/buffer.go
 cache/cache.go
 cache/local.go

@@ -272,6 +272,11 @@ func (c *Client) DeleteAudience(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -285,6 +290,416 @@ func (c *Client) DeleteAudience(
 		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (c *Client) ListPlanTraits(
+	ctx context.Context,
+	request *schematicgo.ListPlanTraitsRequest,
+	opts ...option.RequestOption,
+) (*schematicgo.ListPlanTraitsResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := baseURL + "/plan-traits"
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *schematicgo.ListPlanTraitsResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (c *Client) CreatePlanTrait(
+	ctx context.Context,
+	request *schematicgo.CreatePlanTraitRequestBody,
+	opts ...option.RequestOption,
+) (*schematicgo.CreatePlanTraitResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := baseURL + "/plan-traits"
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *schematicgo.CreatePlanTraitResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (c *Client) GetPlanTrait(
+	ctx context.Context,
+	// plan_trait_id
+	planTraitID string,
+	opts ...option.RequestOption,
+) (*schematicgo.GetPlanTraitResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/plan-traits/%v",
+		planTraitID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *schematicgo.GetPlanTraitResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (c *Client) UpdatePlanTrait(
+	ctx context.Context,
+	// plan_trait_id
+	planTraitID string,
+	request *schematicgo.UpdatePlanTraitRequestBody,
+	opts ...option.RequestOption,
+) (*schematicgo.UpdatePlanTraitResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/plan-traits/%v",
+		planTraitID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *schematicgo.UpdatePlanTraitResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPut,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (c *Client) DeletePlanTrait(
+	ctx context.Context,
+	// plan_trait_id
+	planTraitID string,
+	opts ...option.RequestOption,
+) (*schematicgo.DeletePlanTraitResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/plan-traits/%v",
+		planTraitID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *schematicgo.DeletePlanTraitResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (c *Client) CountPlanTraits(
+	ctx context.Context,
+	request *schematicgo.CountPlanTraitsRequest,
+	opts ...option.RequestOption,
+) (*schematicgo.CountPlanTraitsResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := baseURL + "/plan-traits/count"
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *schematicgo.CountPlanTraitsResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
@@ -335,6 +750,11 @@ func (c *Client) ListPlans(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -395,6 +815,11 @@ func (c *Client) CreatePlan(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -596,6 +1021,11 @@ func (c *Client) DeletePlan(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -730,6 +1160,11 @@ func (c *Client) CountPlans(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},

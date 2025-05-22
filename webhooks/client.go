@@ -70,6 +70,11 @@ func (c *Client) ListWebhookEvents(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -199,6 +204,11 @@ func (c *Client) CountWebhookEvents(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -265,6 +275,11 @@ func (c *Client) ListWebhooks(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -322,6 +337,11 @@ func (c *Client) CreateWebhook(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -523,6 +543,11 @@ func (c *Client) DeleteWebhook(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -586,6 +611,11 @@ func (c *Client) CountWebhooks(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},

@@ -367,6 +367,7 @@ type PlanGroupPlanDetailResponseData struct {
 	BillingProduct   *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	ChargeType       string                            `json:"charge_type" url:"charge_type"`
 	CompanyCount     int                               `json:"company_count" url:"company_count"`
+	ControlledBy     string                            `json:"controlled_by" url:"controlled_by"`
 	CreatedAt        time.Time                         `json:"created_at" url:"created_at"`
 	CustomPlanConfig *CustomPlanViewConfigResponseData `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
 	Description      string                            `json:"description" url:"description"`
@@ -416,6 +417,13 @@ func (p *PlanGroupPlanDetailResponseData) GetCompanyCount() int {
 		return 0
 	}
 	return p.CompanyCount
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetControlledBy() string {
+	if p == nil {
+		return ""
+	}
+	return p.ControlledBy
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetCreatedAt() time.Time {

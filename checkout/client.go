@@ -64,6 +64,11 @@ func (c *Client) Internal(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -125,6 +130,11 @@ func (c *Client) GetCheckoutData(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -183,6 +193,11 @@ func (c *Client) PreviewCheckoutInternal(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},

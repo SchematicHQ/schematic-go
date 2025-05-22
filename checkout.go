@@ -361,14 +361,15 @@ func (p *PreviewSubscriptionChangeResponseData) String() string {
 }
 
 type PreviewSubscriptionFinanceResponseData struct {
-	AmountOff        int        `json:"amount_off" url:"amount_off"`
-	DueNow           int        `json:"due_now" url:"due_now"`
-	NewCharges       int        `json:"new_charges" url:"new_charges"`
-	PercentOff       float64    `json:"percent_off" url:"percent_off"`
-	PeriodStart      time.Time  `json:"period_start" url:"period_start"`
-	PromoCodeApplied bool       `json:"promo_code_applied" url:"promo_code_applied"`
-	Proration        int        `json:"proration" url:"proration"`
-	TrialEnd         *time.Time `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	AmountOff                int                                            `json:"amount_off" url:"amount_off"`
+	DueNow                   int                                            `json:"due_now" url:"due_now"`
+	NewCharges               int                                            `json:"new_charges" url:"new_charges"`
+	PercentOff               float64                                        `json:"percent_off" url:"percent_off"`
+	PeriodStart              time.Time                                      `json:"period_start" url:"period_start"`
+	PromoCodeApplied         bool                                           `json:"promo_code_applied" url:"promo_code_applied"`
+	Proration                int                                            `json:"proration" url:"proration"`
+	TrialEnd                 *time.Time                                     `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	UpcomingInvoiceLineItems []*PreviewSubscriptionUpcomingInvoiceLineItems `json:"upcoming_invoice_line_items,omitempty" url:"upcoming_invoice_line_items,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -430,6 +431,13 @@ func (p *PreviewSubscriptionFinanceResponseData) GetTrialEnd() *time.Time {
 	return p.TrialEnd
 }
 
+func (p *PreviewSubscriptionFinanceResponseData) GetUpcomingInvoiceLineItems() []*PreviewSubscriptionUpcomingInvoiceLineItems {
+	if p == nil {
+		return nil
+	}
+	return p.UpcomingInvoiceLineItems
+}
+
 func (p *PreviewSubscriptionFinanceResponseData) GetExtraProperties() map[string]interface{} {
 	return p.extraProperties
 }
@@ -473,6 +481,84 @@ func (p *PreviewSubscriptionFinanceResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PreviewSubscriptionFinanceResponseData) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PreviewSubscriptionUpcomingInvoiceLineItems struct {
+	Amount      int    `json:"amount" url:"amount"`
+	Description string `json:"description" url:"description"`
+	PriceID     string `json:"price_id" url:"price_id"`
+	Proration   bool   `json:"proration" url:"proration"`
+	Quantity    int    `json:"quantity" url:"quantity"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreviewSubscriptionUpcomingInvoiceLineItems) GetAmount() int {
+	if p == nil {
+		return 0
+	}
+	return p.Amount
+}
+
+func (p *PreviewSubscriptionUpcomingInvoiceLineItems) GetDescription() string {
+	if p == nil {
+		return ""
+	}
+	return p.Description
+}
+
+func (p *PreviewSubscriptionUpcomingInvoiceLineItems) GetPriceID() string {
+	if p == nil {
+		return ""
+	}
+	return p.PriceID
+}
+
+func (p *PreviewSubscriptionUpcomingInvoiceLineItems) GetProration() bool {
+	if p == nil {
+		return false
+	}
+	return p.Proration
+}
+
+func (p *PreviewSubscriptionUpcomingInvoiceLineItems) GetQuantity() int {
+	if p == nil {
+		return 0
+	}
+	return p.Quantity
+}
+
+func (p *PreviewSubscriptionUpcomingInvoiceLineItems) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PreviewSubscriptionUpcomingInvoiceLineItems) UnmarshalJSON(data []byte) error {
+	type unmarshaler PreviewSubscriptionUpcomingInvoiceLineItems
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PreviewSubscriptionUpcomingInvoiceLineItems(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreviewSubscriptionUpcomingInvoiceLineItems) String() string {
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value

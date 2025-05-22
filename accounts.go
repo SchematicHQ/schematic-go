@@ -943,6 +943,52 @@ func (e *EnvironmentResponseData) String() string {
 	return fmt.Sprintf("%#v", e)
 }
 
+type QuickstartResp struct {
+	Ok bool `json:"ok" url:"ok"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (q *QuickstartResp) GetOk() bool {
+	if q == nil {
+		return false
+	}
+	return q.Ok
+}
+
+func (q *QuickstartResp) GetExtraProperties() map[string]interface{} {
+	return q.extraProperties
+}
+
+func (q *QuickstartResp) UnmarshalJSON(data []byte) error {
+	type unmarshaler QuickstartResp
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*q = QuickstartResp(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *q)
+	if err != nil {
+		return err
+	}
+	q.extraProperties = extraProperties
+	q.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (q *QuickstartResp) String() string {
+	if len(q.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(q.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(q); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", q)
+}
+
 // Input parameters
 type CountAPIKeysParams struct {
 	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
@@ -2002,6 +2048,61 @@ func (l *ListEnvironmentsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+type QuickstartResponse struct {
+	Data *QuickstartResp `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (q *QuickstartResponse) GetData() *QuickstartResp {
+	if q == nil {
+		return nil
+	}
+	return q.Data
+}
+
+func (q *QuickstartResponse) GetParams() map[string]interface{} {
+	if q == nil {
+		return nil
+	}
+	return q.Params
+}
+
+func (q *QuickstartResponse) GetExtraProperties() map[string]interface{} {
+	return q.extraProperties
+}
+
+func (q *QuickstartResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler QuickstartResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*q = QuickstartResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *q)
+	if err != nil {
+		return err
+	}
+	q.extraProperties = extraProperties
+	q.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (q *QuickstartResponse) String() string {
+	if len(q.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(q.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(q); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", q)
 }
 
 type UpdateAPIKeyResponse struct {

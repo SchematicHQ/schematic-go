@@ -64,6 +64,11 @@ func (c *Client) CountAudienceCompanies(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -122,6 +127,11 @@ func (c *Client) CountAudienceUsers(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -186,6 +196,11 @@ func (c *Client) ListAudienceCompanies(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -244,6 +259,11 @@ func (c *Client) ListAudienceUsers(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -314,6 +334,11 @@ func (c *Client) ListFeatures(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -371,6 +396,11 @@ func (c *Client) CreateFeature(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -572,6 +602,11 @@ func (c *Client) DeleteFeature(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -635,6 +670,11 @@ func (c *Client) CountFeatures(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -704,6 +744,11 @@ func (c *Client) ListFlags(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -761,6 +806,11 @@ func (c *Client) CreateFlag(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -962,6 +1012,11 @@ func (c *Client) DeleteFlag(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -1098,6 +1153,11 @@ func (c *Client) CheckFlag(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -1156,6 +1216,11 @@ func (c *Client) CheckFlags(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -1223,6 +1288,11 @@ func (c *Client) CountFlags(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},

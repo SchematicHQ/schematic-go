@@ -42,6 +42,7 @@ type CompanyPlanDetailResponseData struct {
 	ChargeType       string                            `json:"charge_type" url:"charge_type"`
 	CompanyCanTrial  bool                              `json:"company_can_trial" url:"company_can_trial"`
 	CompanyCount     int                               `json:"company_count" url:"company_count"`
+	ControlledBy     string                            `json:"controlled_by" url:"controlled_by"`
 	CreatedAt        time.Time                         `json:"created_at" url:"created_at"`
 	Current          bool                              `json:"current" url:"current"`
 	Custom           bool                              `json:"custom" url:"custom"`
@@ -101,6 +102,13 @@ func (c *CompanyPlanDetailResponseData) GetCompanyCount() int {
 		return 0
 	}
 	return c.CompanyCount
+}
+
+func (c *CompanyPlanDetailResponseData) GetControlledBy() string {
+	if c == nil {
+		return ""
+	}
+	return c.ControlledBy
 }
 
 func (c *CompanyPlanDetailResponseData) GetCreatedAt() time.Time {

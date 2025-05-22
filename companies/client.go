@@ -70,6 +70,11 @@ func (c *Client) ListCompanies(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -127,6 +132,11 @@ func (c *Client) UpsertCompany(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -257,6 +267,11 @@ func (c *Client) DeleteCompany(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -323,6 +338,11 @@ func (c *Client) CountCompanies(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -380,6 +400,11 @@ func (c *Client) CreateCompany(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -441,6 +466,11 @@ func (c *Client) DeleteCompanyByKeys(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -577,6 +607,11 @@ func (c *Client) GetActiveDeals(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -643,6 +678,11 @@ func (c *Client) ListCompanyMemberships(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -700,6 +740,11 @@ func (c *Client) GetOrCreateCompanyMembership(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -764,6 +809,11 @@ func (c *Client) DeleteCompanyMembership(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -833,6 +883,11 @@ func (c *Client) GetActiveCompanySubscription(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -890,6 +945,11 @@ func (c *Client) UpsertCompanyTrait(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -960,6 +1020,11 @@ func (c *Client) ListEntityKeyDefinitions(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -1023,6 +1088,11 @@ func (c *Client) CountEntityKeyDefinitions(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -1092,6 +1162,11 @@ func (c *Client) ListEntityTraitDefinitions(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -1149,6 +1224,11 @@ func (c *Client) GetOrCreateEntityTraitDefinition(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -1353,6 +1433,11 @@ func (c *Client) CountEntityTraitDefinitions(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -1419,6 +1504,11 @@ func (c *Client) GetEntityTraitValues(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -1476,6 +1566,11 @@ func (c *Client) UpsertUserTrait(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -1546,6 +1641,11 @@ func (c *Client) ListUsers(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -1603,6 +1703,11 @@ func (c *Client) UpsertUser(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -1733,6 +1838,11 @@ func (c *Client) DeleteUser(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -1799,6 +1909,11 @@ func (c *Client) CountUsers(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 		500: func(apiError *core.APIError) error {
 			return &schematicgo.InternalServerError{
 				APIError: apiError,
@@ -1856,6 +1971,11 @@ func (c *Client) CreateUser(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},
@@ -1917,6 +2037,11 @@ func (c *Client) DeleteUserByKeys(
 		},
 		403: func(apiError *core.APIError) error {
 			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
 				APIError: apiError,
 			}
 		},

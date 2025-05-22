@@ -213,6 +213,8 @@ type CheckFlagResponseData struct {
 	FeatureAllocation *int `json:"feature_allocation,omitempty" url:"feature_allocation,omitempty"`
 	// If a numeric feature entitlement rule was matched, the company's usage
 	FeatureUsage *int `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	// If an event-based numeric feature entitlement rule was matched, the event used to track its usage
+	FeatureUsageEvent *string `json:"feature_usage_event,omitempty" url:"feature_usage_event,omitempty"`
 	// For event-based feature entitlement rules, the period over which usage is tracked (current_month, current_day, current_week, all_time)
 	FeatureUsagePeriod *string `json:"feature_usage_period,omitempty" url:"feature_usage_period,omitempty"`
 	// For event-based feature entitlement rules, when the usage period will reset
@@ -262,6 +264,13 @@ func (c *CheckFlagResponseData) GetFeatureUsage() *int {
 		return nil
 	}
 	return c.FeatureUsage
+}
+
+func (c *CheckFlagResponseData) GetFeatureUsageEvent() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureUsageEvent
 }
 
 func (c *CheckFlagResponseData) GetFeatureUsagePeriod() *string {

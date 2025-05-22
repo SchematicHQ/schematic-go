@@ -11,6 +11,7 @@ import (
 	components "github.com/schematichq/schematic-go/components"
 	core "github.com/schematichq/schematic-go/core"
 	crm "github.com/schematichq/schematic-go/crm"
+	dataexports "github.com/schematichq/schematic-go/dataexports"
 	entitlements "github.com/schematichq/schematic-go/entitlements"
 	events "github.com/schematichq/schematic-go/events"
 	features "github.com/schematichq/schematic-go/features"
@@ -36,6 +37,7 @@ type Client struct {
 	Plans        *plans.Client
 	Components   *components.Client
 	Crm          *crm.Client
+	Dataexports  *dataexports.Client
 	Events       *events.Client
 	Plangroups   *plangroups.Client
 	Accesstokens *accesstokens.Client
@@ -62,6 +64,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Plans:        plans.NewClient(opts...),
 		Components:   components.NewClient(opts...),
 		Crm:          crm.NewClient(opts...),
+		Dataexports:  dataexports.NewClient(opts...),
 		Events:       events.NewClient(opts...),
 		Plangroups:   plangroups.NewClient(opts...),
 		Accesstokens: accesstokens.NewClient(opts...),

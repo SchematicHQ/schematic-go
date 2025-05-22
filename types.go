@@ -151,24 +151,26 @@ func (b *BillingPriceResponseData) String() string {
 }
 
 type BillingPriceView struct {
-	BillingScheme     string                                 `json:"billing_scheme" url:"billing_scheme"`
-	CreatedAt         time.Time                              `json:"created_at" url:"created_at"`
-	Currency          string                                 `json:"currency" url:"currency"`
-	ID                string                                 `json:"id" url:"id"`
-	Interval          string                                 `json:"interval" url:"interval"`
-	IsActive          bool                                   `json:"is_active" url:"is_active"`
-	MeterID           *string                                `json:"meter_id,omitempty" url:"meter_id,omitempty"`
-	PackageSize       int                                    `json:"package_size" url:"package_size"`
-	Price             int                                    `json:"price" url:"price"`
-	PriceDecimal      *string                                `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
-	PriceExternalID   string                                 `json:"price_external_id" url:"price_external_id"`
-	PriceID           string                                 `json:"price_id" url:"price_id"`
-	PriceTier         []*BillingProductPriceTierResponseData `json:"price_tier,omitempty" url:"price_tier,omitempty"`
-	ProductExternalID string                                 `json:"product_external_id" url:"product_external_id"`
-	ProductID         string                                 `json:"product_id" url:"product_id"`
-	ProductName       string                                 `json:"product_name" url:"product_name"`
-	UpdatedAt         time.Time                              `json:"updated_at" url:"updated_at"`
-	UsageType         string                                 `json:"usage_type" url:"usage_type"`
+	BillingScheme        string                                 `json:"billing_scheme" url:"billing_scheme"`
+	CreatedAt            time.Time                              `json:"created_at" url:"created_at"`
+	Currency             string                                 `json:"currency" url:"currency"`
+	ID                   string                                 `json:"id" url:"id"`
+	Interval             string                                 `json:"interval" url:"interval"`
+	IsActive             bool                                   `json:"is_active" url:"is_active"`
+	MeterEventName       *string                                `json:"meter_event_name,omitempty" url:"meter_event_name,omitempty"`
+	MeterEventPayloadKey *string                                `json:"meter_event_payload_key,omitempty" url:"meter_event_payload_key,omitempty"`
+	MeterID              *string                                `json:"meter_id,omitempty" url:"meter_id,omitempty"`
+	PackageSize          int                                    `json:"package_size" url:"package_size"`
+	Price                int                                    `json:"price" url:"price"`
+	PriceDecimal         *string                                `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
+	PriceExternalID      string                                 `json:"price_external_id" url:"price_external_id"`
+	PriceID              string                                 `json:"price_id" url:"price_id"`
+	PriceTier            []*BillingProductPriceTierResponseData `json:"price_tier,omitempty" url:"price_tier,omitempty"`
+	ProductExternalID    string                                 `json:"product_external_id" url:"product_external_id"`
+	ProductID            string                                 `json:"product_id" url:"product_id"`
+	ProductName          string                                 `json:"product_name" url:"product_name"`
+	UpdatedAt            time.Time                              `json:"updated_at" url:"updated_at"`
+	UsageType            string                                 `json:"usage_type" url:"usage_type"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -214,6 +216,20 @@ func (b *BillingPriceView) GetIsActive() bool {
 		return false
 	}
 	return b.IsActive
+}
+
+func (b *BillingPriceView) GetMeterEventName() *string {
+	if b == nil {
+		return nil
+	}
+	return b.MeterEventName
+}
+
+func (b *BillingPriceView) GetMeterEventPayloadKey() *string {
+	if b == nil {
+		return nil
+	}
+	return b.MeterEventPayloadKey
 }
 
 func (b *BillingPriceView) GetMeterID() *string {
@@ -4689,20 +4705,20 @@ func (e *EventResponseData) String() string {
 }
 
 type EventSummaryResponseData struct {
-	CompanyCount  int        `json:"company_count" url:"company_count"`
+	CompanyCount  *int       `json:"company_count,omitempty" url:"company_count,omitempty"`
 	EnvironmentID string     `json:"environment_id" url:"environment_id"`
 	EventCount    int        `json:"event_count" url:"event_count"`
 	EventSubtype  string     `json:"event_subtype" url:"event_subtype"`
 	LastSeenAt    *time.Time `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	UserCount     int        `json:"user_count" url:"user_count"`
+	UserCount     *int       `json:"user_count,omitempty" url:"user_count,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (e *EventSummaryResponseData) GetCompanyCount() int {
+func (e *EventSummaryResponseData) GetCompanyCount() *int {
 	if e == nil {
-		return 0
+		return nil
 	}
 	return e.CompanyCount
 }
@@ -4735,9 +4751,9 @@ func (e *EventSummaryResponseData) GetLastSeenAt() *time.Time {
 	return e.LastSeenAt
 }
 
-func (e *EventSummaryResponseData) GetUserCount() int {
+func (e *EventSummaryResponseData) GetUserCount() *int {
 	if e == nil {
-		return 0
+		return nil
 	}
 	return e.UserCount
 }
@@ -6590,6 +6606,7 @@ type PlanDetailResponseData struct {
 	BillingProduct *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	ChargeType     string                            `json:"charge_type" url:"charge_type"`
 	CompanyCount   int                               `json:"company_count" url:"company_count"`
+	ControlledBy   string                            `json:"controlled_by" url:"controlled_by"`
 	CreatedAt      time.Time                         `json:"created_at" url:"created_at"`
 	Description    string                            `json:"description" url:"description"`
 	Features       []*FeatureDetailResponseData      `json:"features,omitempty" url:"features,omitempty"`
@@ -6636,6 +6653,13 @@ func (p *PlanDetailResponseData) GetCompanyCount() int {
 		return 0
 	}
 	return p.CompanyCount
+}
+
+func (p *PlanDetailResponseData) GetControlledBy() string {
+	if p == nil {
+		return ""
+	}
+	return p.ControlledBy
 }
 
 func (p *PlanDetailResponseData) GetCreatedAt() time.Time {
@@ -8649,7 +8673,8 @@ type UpsertUserSubRequestBody struct {
 	// Optionally specify companies using Schematic company ID
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// If you know the Schematic ID, you can use that here instead of keys
-	ID         *string           `json:"id,omitempty" url:"id,omitempty"`
+	ID *string `json:"id,omitempty" url:"id,omitempty"`
+	// See [Key Management](https://docs.schematichq.com/developer_resources/key_management) for more information
 	Keys       map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 	LastSeenAt *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
 	Name       *string           `json:"name,omitempty" url:"name,omitempty"`

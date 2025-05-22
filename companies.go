@@ -20,6 +20,8 @@ type CountCompaniesRequest struct {
 	WithoutFeatureOverrideFor *string `json:"-" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
+	// Filter companies that have a subscription
+	WithSubscription *bool `json:"-" url:"with_subscription,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -112,6 +114,8 @@ type ListCompaniesRequest struct {
 	WithoutFeatureOverrideFor *string `json:"-" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
+	// Filter companies that have a subscription
+	WithSubscription *bool `json:"-" url:"with_subscription,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -165,12 +169,12 @@ type ListUsersRequest struct {
 
 type LookupCompanyRequest struct {
 	// Key/value pairs
-	Keys map[string]interface{} `json:"-" url:"keys,omitempty"`
+	Keys map[string]string `json:"-" url:"keys,omitempty"`
 }
 
 type LookupUserRequest struct {
 	// Key/value pairs
-	Keys map[string]interface{} `json:"-" url:"keys,omitempty"`
+	Keys map[string]string `json:"-" url:"keys,omitempty"`
 }
 
 type CompanyCrmDealsResponseData struct {
@@ -511,7 +515,8 @@ func (k *KeysRequestBody) String() string {
 
 type UpsertCompanyRequestBody struct {
 	// If you know the Schematic ID, you can use that here instead of keys
-	ID         *string           `json:"id,omitempty" url:"id,omitempty"`
+	ID *string `json:"id,omitempty" url:"id,omitempty"`
+	// See [Key Management](https://docs.schematichq.com/developer_resources/key_management) for more information
 	Keys       map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 	LastSeenAt *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
 	Name       *string           `json:"name,omitempty" url:"name,omitempty"`
@@ -618,7 +623,7 @@ func (u *UpsertCompanyRequestBody) String() string {
 type UpsertTraitRequestBody struct {
 	// Amount to increment the trait by (positive or negative)
 	Incr *int `json:"incr,omitempty" url:"incr,omitempty"`
-	// Key/value pairs too identify a company or user
+	// Key/value pairs to identify a company or user
 	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 	// Value to set the trait to
 	Set *string `json:"set,omitempty" url:"set,omitempty"`
@@ -708,7 +713,8 @@ type UpsertUserRequestBody struct {
 	// Optionally specify companies using Schematic company ID
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// If you know the Schematic ID, you can use that here instead of keys
-	ID         *string           `json:"id,omitempty" url:"id,omitempty"`
+	ID *string `json:"id,omitempty" url:"id,omitempty"`
+	// See [Key Management](https://docs.schematichq.com/developer_resources/key_management) for more information
 	Keys       map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 	LastSeenAt *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
 	Name       *string           `json:"name,omitempty" url:"name,omitempty"`
@@ -852,6 +858,8 @@ type CountCompaniesParams struct {
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter companies that have a subscription
+	WithSubscription *bool `json:"with_subscription,omitempty" url:"with_subscription,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
@@ -894,6 +902,13 @@ func (c *CountCompaniesParams) GetQ() *string {
 		return nil
 	}
 	return c.Q
+}
+
+func (c *CountCompaniesParams) GetWithSubscription() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithSubscription
 }
 
 func (c *CountCompaniesParams) GetWithoutFeatureOverrideFor() *string {
@@ -2696,6 +2711,8 @@ type ListCompaniesParams struct {
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter companies that have a subscription
+	WithSubscription *bool `json:"with_subscription,omitempty" url:"with_subscription,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
@@ -2738,6 +2755,13 @@ func (l *ListCompaniesParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListCompaniesParams) GetWithSubscription() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithSubscription
 }
 
 func (l *ListCompaniesParams) GetWithoutFeatureOverrideFor() *string {
@@ -3560,13 +3584,13 @@ func (l *ListUsersResponse) String() string {
 
 // Input parameters
 type LookupCompanyParams struct {
-	Keys map[string]interface{} `json:"keys,omitempty" url:"keys,omitempty"`
+	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (l *LookupCompanyParams) GetKeys() map[string]interface{} {
+func (l *LookupCompanyParams) GetKeys() map[string]string {
 	if l == nil {
 		return nil
 	}
@@ -3662,13 +3686,13 @@ func (l *LookupCompanyResponse) String() string {
 
 // Input parameters
 type LookupUserParams struct {
-	Keys map[string]interface{} `json:"keys,omitempty" url:"keys,omitempty"`
+	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (l *LookupUserParams) GetKeys() map[string]interface{} {
+func (l *LookupUserParams) GetKeys() map[string]string {
 	if l == nil {
 		return nil
 	}

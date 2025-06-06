@@ -56,6 +56,7 @@ type DataStreamClient struct {
 	pendingUserRequests    map[string][]chan *rulesengine.User
 	pendingFlagRequest     chan bool
 	mu                     sync.RWMutex
+	writeMu                sync.Mutex
 }
 
 type MessageType string

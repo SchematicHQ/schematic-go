@@ -211,6 +211,8 @@ func (c *DataStreamClient) sendWebSocketMessage(ctx context.Context, req *DataSt
 
 	message := c.packageMessage(req)
 
+	c.writeMu.Lock()
+	defer c.writeMu.Unlock()
 	err := c.conn.WriteJSON(message)
 	if err != nil {
 		c.logger.Error(ctx, fmt.Sprintf("Failed to send WebSocket message: %v", err))

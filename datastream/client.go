@@ -411,7 +411,7 @@ func (c *DataStreamClient) handleErrorMessage(_ context.Context, resp *DataStrea
 	return errors.New(fmt.Sprintf("%s", respError.Error))
 }
 
-func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) *rulesengine.CheckFlagResult {
 	var company *rulesengine.Company
 	var err error
 	if evalCtx.Company != nil {
@@ -421,7 +421,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 				Ctx: ctx,
 				Err: errors.New(fmt.Sprintf("Failed to get company from cache: %v", err)),
 			}
-			return false
+			return nil
 		}
 	}
 
@@ -433,7 +433,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 				Ctx: ctx,
 				Err: errors.New(fmt.Sprintf("Failed to get user from cache: %v", err)),
 			}
-			return false
+			return nil
 		}
 	}
 
@@ -444,7 +444,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 			Ctx: ctx,
 			Err: errors.New(fmt.Sprintf("Flag %s not found", flagKey)),
 		}
-		return false
+		return nil
 	}
 
 	// Evaluate against the rules engine
@@ -454,10 +454,10 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 			Ctx: ctx,
 			Err: err,
 		}
-		return false
+		return nil
 	}
 
-	return resp.Value
+	return resp
 }
 
 func (c *DataStreamClient) getAllFlags(ctx context.Context) error {

@@ -104,7 +104,28 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	}
 
 	if c.useDataStream() {
-		return c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
+		resp := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
+		if resp == nil {
+			return false
+		}
+
+		body := schematicgo.EventBody{
+			EventBodyFlagCheck: &schematicgo.EventBodyFlagCheck{
+				FlagKey:    flagKey,
+				Value:      resp.Value,
+				CompanyID:  resp.CompanyID,
+				UserID:     resp.UserID,
+				FlagID:     resp.FlagID,
+				ReqCompany: evalCtx.Company,
+				ReqUser:    evalCtx.User,
+				RuleID:     resp.RuleID,
+				Reason:     resp.Reason,
+			},
+		}
+
+		c.enqueueEvent("flag_check", body)
+
+		return resp.Value
 	}
 	return c.checkFlag(ctx, evalCtx, flagKey)
 }

@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk:*)",
+      "Bash(find:*)",
+      "Bash(go build:*)",
+      "Bash(go doc:*)",
+      "Bash(go list:*)",
+      "Bash(go mod:*)",
+      "Bash(go test:*)",
+      "Bash(gofmt:*)",
+      "Bash(goimports:*)",
+      "Bash(golangci-lint run:*)",
+      "Bash(grep:*)",
+      "Bash(linear issue view:*)",
+      "Bash(ls:*)",
+      "Bash(rg:*)",
+      "Bash(sed:*)",
+      "WebFetch(domain:buildwithfern.com)",
+      "WebFetch(domain:docs.schematichq.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:golangci-lint.run)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ],
+    "deny": []
+  }
+}

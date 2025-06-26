@@ -242,6 +242,10 @@ func (c *SchematicClient) Track(
 			Err: err,
 		}
 	}
+
+	if body.Company != nil && c.datastreamConnected {
+		c.datastreamClient.UpdateCompanyMetrics(ctx, body)
+	}
 }
 
 func (c *SchematicClient) enqueueEvent(

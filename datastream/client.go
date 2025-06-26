@@ -328,11 +328,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 		return nil
 	}
 
-	for key, value := range company.Keys {
-		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-		ttl := c.cacheTTL
-		c.companyCacheProvider.Set(ctx, companyKey, company, &ttl)
-	}
+	c.cacheCompanyForKeys(ctx, company)
 
 	// Notify all goroutines waiting for this company
 	c.pendingCompReqMu.Lock()
@@ -707,4 +703,128 @@ func (c *DataStreamClient) cleanupPendingUserRequests(cacheKeys []string, waitCh
 	}
 
 	close(waitCh) // Close the wait channel to signal that we're done with it
+}
+
+func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rulesengine.Company) error {
+	if len(company.Keys) == 0 {
+		return errors.New("no keys provided for company lookup")
+	}
+
+	if company == nil {
+		return errors.New("company cannot be nil")
+	}
+
+	for key, value := range company.Keys {
+		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+		ttl := c.cacheTTL
+		err := c.companyCacheProvider.Set(ctx, companyKey, company, &ttl)
+		if err != nil {
+			return fmt.Errorf("failed to cache company: %v", err)
+		}
+	}
+
+	return nil
+}
+
+func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *schematicgo.EventBodyTrack) error {
+	keys := event.Company
+	if len(keys) == 0 {
+		return errors.New("no keys provided for company lookup")
+	}
+
+	if event == nil {
+		return errors.New("event body cannot be nil")
+	}
+
+	company := c.getCompanyFromCache(keys)
+	if company == nil {
+		return nil
+	}
+
+	// Create a deep copy of the company to avoid modifying the cached object directly
+	companyCopy := deepCopyCompany(company)
+
+	// Update the metric value if it matches the event
+	for _, metric := range companyCopy.Metrics {
+		if metric == nil {
+			continue
+		}
+		if metric.EventSubtype == event.Event {
+			metric.Value += int64(*event.Quantity)
+		}
+	}
+
+	c.companyMu.Lock()
+	c.cacheCompanyForKeys(ctx, companyCopy)
+	c.companyMu.Unlock()
+
+	company = c.getCompanyFromCache(keys)
+	return nil
+}
+
+// deepCopyCompany creates a complete deep copy of a Company struct and all its nested fields.
+// This ensures that modifying the returned company won't affect the original object.
+// Use this function when you need to make changes to a company object without affecting the cached version.
+func deepCopyCompany(company *rulesengine.Company) *rulesengine.Company {
+	if company == nil {
+		return nil
+	}
+
+	// Create a deep copy of the company
+	companyCopy := &rulesengine.Company{
+		ID:                company.ID,
+		AccountID:         company.AccountID,
+		EnvironmentID:     company.EnvironmentID,
+		BasePlanID:        company.BasePlanID,
+		BillingProductIDs: append([]string{}, company.BillingProductIDs...),
+		CRMProductIDs:     append([]string{}, company.CRMProductIDs...),
+		PlanIDs:           append([]string{}, company.PlanIDs...),
+		Subscription:      company.Subscription, // Note: this is a shallow copy, as Subscription isn't modified in our case
+		Keys:              make(map[string]string),
+		Metrics:           make([]*rulesengine.CompanyMetric, 0, len(company.Metrics)),
+		Traits:            make([]*rulesengine.Trait, 0, len(company.Traits)),
+	}
+
+	// Copy the keys map
+	for k, v := range company.Keys {
+		companyCopy.Keys[k] = v
+	}
+
+	// Copy the metrics slice and each metric inside it
+	for _, metric := range company.Metrics {
+		if metric == nil {
+			companyCopy.Metrics = append(companyCopy.Metrics, nil)
+			continue
+		}
+
+		metricCopy := &rulesengine.CompanyMetric{
+			AccountID:     metric.AccountID,
+			EnvironmentID: metric.EnvironmentID,
+			CompanyID:     metric.CompanyID,
+			EventSubtype:  metric.EventSubtype,
+			Period:        metric.Period,
+			MonthReset:    metric.MonthReset,
+			Value:         metric.Value,
+			CreatedAt:     metric.CreatedAt,
+		}
+
+		if metric.ValidUntil != nil {
+			validUntil := *metric.ValidUntil
+			metricCopy.ValidUntil = &validUntil
+		}
+
+		companyCopy.Metrics = append(companyCopy.Metrics, metricCopy)
+	}
+
+	// Copy traits if needed
+	for _, trait := range company.Traits {
+		if trait != nil {
+			traitCopy := *trait // shallow copy is sufficient for traits since we don't modify them deeply
+			companyCopy.Traits = append(companyCopy.Traits, &traitCopy)
+		} else {
+			companyCopy.Traits = append(companyCopy.Traits, nil)
+		}
+	}
+
+	return companyCopy
 }

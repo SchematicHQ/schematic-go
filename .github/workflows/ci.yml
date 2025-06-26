@@ -4,10 +4,11 @@ on: [push]
 
 jobs:
   compile:
-    runs-on: ubuntu-latest
+    runs-on: runs-on=${{ github.run_id }}/runner=4cpu-linux-x64/extras=s3-cache
     steps:
+      - uses: runs-on/action@v2
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up go
         uses: actions/setup-go@v4
@@ -15,10 +16,11 @@ jobs:
       - name: Compile
         run: go build ./...
   test:
-    runs-on: ubuntu-latest
+    runs-on: runs-on=${{ github.run_id }}/runner=4cpu-linux-x64/extras=s3-cache
     steps:
+      - uses: runs-on/action@v2
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up go
         uses: actions/setup-go@v4

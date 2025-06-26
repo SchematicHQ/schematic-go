@@ -335,8 +335,8 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 	}
 
 	// Notify all goroutines waiting for this company
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	c.pendingCompReqMu.Lock()
+	defer c.pendingCompReqMu.Unlock()
 	// For each relevant key, notify all waiting channels
 	for key, value := range company.Keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
@@ -382,8 +382,8 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 	}
 
 	// Notify all goroutines waiting for this company
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	c.pendingUserReqMu.Lock()
+	defer c.pendingUserReqMu.Unlock()
 	// For each relevant key, notify all waiting channels
 	for key, value := range user.Keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
@@ -467,9 +467,9 @@ func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
 	}
 
 	waitCh := make(chan bool, 1)
-	c.mu.Lock()
+	c.pendingFlagReqMu.Lock()
 	c.pendingFlagRequest = waitCh
-	c.mu.Unlock()
+	c.pendingFlagReqMu.Unlock()
 	defer func() {
 		c.pendingFlagRequest = nil
 		close(waitCh)
@@ -503,7 +503,7 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 
 	waitCh := make(chan *rulesengine.Company, 1) // Register the wait channel for each key
 	cacheKeys := []string{}
-	c.mu.Lock()
+	c.companyMu.Lock()
 	shouldSendRequest := true
 	for key, value := range keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
@@ -513,7 +513,7 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 			shouldSendRequest = false // Someone else already requested this
 		}
 	}
-	c.mu.Unlock()
+	c.companyMu.Unlock()
 
 	if shouldSendRequest {
 		req := &DataStreamReq{
@@ -526,12 +526,12 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 			return nil, err
 		}
 
-		c.mu.Lock()
+		c.pendingCompReqMu.Lock()
 		for key, value := range keys {
 			cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 			c.pendingCompanyRequests[cacheKey] = []chan *rulesengine.Company{waitCh}
 		}
-		c.mu.Unlock()
+		c.pendingCompReqMu.Unlock()
 	}
 
 	var err error
@@ -558,7 +558,7 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 
 	waitCh := make(chan *rulesengine.User, 1) // Register the wait channel for each key
 	cacheKeys := []string{}
-	c.mu.Lock()
+	c.pendingUserReqMu.Lock()
 	shouldSendRequest := true
 	for key, value := range keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value) // If there are already pending requests for this key, just add our channel
@@ -568,7 +568,7 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 			shouldSendRequest = false // Someone else already requested this
 		}
 	}
-	c.mu.Unlock()
+	c.pendingUserReqMu.Unlock()
 
 	if shouldSendRequest {
 		req := &DataStreamReq{
@@ -581,12 +581,12 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 			return nil, err
 		}
 
-		c.mu.Lock()
+		c.pendingUserReqMu.Lock()
 		for key, value := range keys {
 			cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 			c.pendingUserRequests[cacheKey] = []chan *rulesengine.User{waitCh}
 		}
-		c.mu.Unlock()
+		c.pendingUserReqMu.Unlock()
 	}
 
 	var err error
@@ -628,6 +628,8 @@ func (c *DataStreamClient) packageMessage(req *DataStreamReq) *DataStreamBaseReq
 }
 
 func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *rulesengine.Company {
+	c.companyMu.RLock()
+	defer c.companyMu.RUnlock()
 	for key, value := range keys {
 		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		company, exists := c.companyCacheProvider.Get(context.Background(), companyKey)
@@ -640,6 +642,8 @@ func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *ruleseng
 }
 
 func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine.User {
+	c.userMu.RLock()
+	defer c.userMu.RUnlock()
 	for key, value := range keys {
 		userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		user, exists := c.userCacheProvider.Get(context.Background(), userKey)
@@ -661,8 +665,8 @@ func resourceKeyToCacheKey(resourceType string, key string, value string) string
 
 // Helper function to clean up pending company requests
 func (c *DataStreamClient) cleanupPendingCompanyRequests(cacheKeys []string, waitCh chan *rulesengine.Company) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	c.pendingCompReqMu.Lock()
+	defer c.pendingCompReqMu.Unlock()
 	for _, cacheKey := range cacheKeys {
 		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
 			// Remove the specific channel from the list
@@ -683,8 +687,8 @@ func (c *DataStreamClient) cleanupPendingCompanyRequests(cacheKeys []string, wai
 }
 
 func (c *DataStreamClient) cleanupPendingUserRequests(cacheKeys []string, waitCh chan *rulesengine.User) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	c.pendingUserReqMu.Lock()
+	defer c.pendingUserReqMu.Unlock()
 	for _, cacheKey := range cacheKeys {
 		if channels, ok := c.pendingUserRequests[cacheKey]; ok {
 			// Remove the specific channel from the list

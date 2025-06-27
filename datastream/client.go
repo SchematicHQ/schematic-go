@@ -339,22 +339,40 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 		return nil
 	}
 
-	c.cacheCompanyForKeys(ctx, company)
+	cached := true
+
+	c.companyMu.Lock()
+	cacheResults, err := c.cacheCompanyForKeys(ctx, company)
+	c.companyMu.Unlock()
+
+	if err != nil {
+		return err
+	}
 
 	// Notify all goroutines waiting for this company
 	c.pendingCompReqMu.Lock()
 	defer c.pendingCompReqMu.Unlock()
+
 	// For each relevant key, notify all waiting channels
 	for key, value := range company.Keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+
+		// Check if there are channels waiting for this key
 		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
-			for _, ch := range channels {
-				// Non-blocking send - if the channel is full, we'll just continue
-				select {
-				case ch <- company:
-				default:
+			// Only notify channels if the cache operation for this key was successful
+			if cacheErr, exists := cacheResults[cacheKey]; exists && cacheErr == nil {
+				for _, ch := range channels {
+					// Non-blocking send - if the channel is full, we'll just continue
+					select {
+					case ch <- company:
+					default:
+					}
 				}
-			} // Remove this set of channels as they've been notified
+			} else {
+				c.logger.Warn(ctx, fmt.Sprintf("Not notifying pending requests for key '%s' due to cache error", cacheKey))
+			}
+
+			// Remove this set of channels as they've been notified or informed of failure
 			delete(c.pendingCompanyRequests, cacheKey)
 		}
 	}
@@ -378,30 +396,44 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 		for key, value := range user.Keys {
 			userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 			c.userCacheProvider.Delete(ctx, userKey)
-			return nil
 		}
+
+		return nil
 	}
+
+	// Map to track which cache keys were successfully cached
+	cacheResults := make(map[string]error)
 
 	for key, value := range user.Keys {
-		companyKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+		userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		ttl := c.cacheTTL
-		c.userCacheProvider.Set(ctx, companyKey, user, &ttl)
+		err := c.userCacheProvider.Set(ctx, userKey, user, &ttl)
+
+		// Store the result for each cache key
+		cacheResults[userKey] = err
 	}
 
-	// Notify all goroutines waiting for this company
+	// Notify all goroutines waiting for this user
 	c.pendingUserReqMu.Lock()
 	defer c.pendingUserReqMu.Unlock()
+
 	// For each relevant key, notify all waiting channels
 	for key, value := range user.Keys {
 		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		if channels, ok := c.pendingUserRequests[cacheKey]; ok {
-			for _, ch := range channels {
-				// Non-blocking send - if the channel is full, we'll just continue
-				select {
-				case ch <- user:
-				default:
+			// Only notify channels if the cache operation for this key was successful
+			if cacheErr, exists := cacheResults[cacheKey]; exists && cacheErr == nil {
+				for _, ch := range channels {
+					// Non-blocking send - if the channel is full, we'll just continue
+					select {
+					case ch <- user:
+					default:
+					}
 				}
-			} // Remove this set of channels as they've been notified
+			} else {
+				c.logger.Warn(ctx, fmt.Sprintf("Not notifying pending requests for user key '%s' due to cache error", cacheKey))
+			}
+			// Remove this set of channels as they've been notified or informed of failure
 			delete(c.pendingUserRequests, cacheKey)
 		}
 	}
@@ -716,25 +748,29 @@ func (c *DataStreamClient) cleanupPendingUserRequests(cacheKeys []string, waitCh
 	close(waitCh) // Close the wait channel to signal that we're done with it
 }
 
-func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rulesengine.Company) error {
+func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rulesengine.Company) (map[string]error, error) {
 	if len(company.Keys) == 0 {
-		return errors.New("no keys provided for company lookup")
+		return nil, errors.New("no keys provided for company lookup")
 	}
 
 	if company == nil {
-		return errors.New("company cannot be nil")
+		return nil, errors.New("company cannot be nil")
 	}
 
+	// Map to track which cache keys were successfully cached and which ones failed
+	cacheResults := make(map[string]error)
+
+	// Try to cache the company for all keys
 	for key, value := range company.Keys {
 		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		ttl := c.cacheTTL
 		err := c.companyCacheProvider.Set(ctx, companyKey, company, &ttl)
-		if err != nil {
-			return fmt.Errorf("failed to cache company: %v", err)
-		}
+
+		// Store the result for each cache key
+		cacheResults[companyKey] = err
 	}
 
-	return nil
+	return cacheResults, nil
 }
 
 func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *schematicgo.EventBodyTrack) error {
@@ -766,10 +802,19 @@ func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *sche
 	}
 
 	c.companyMu.Lock()
-	c.cacheCompanyForKeys(ctx, companyCopy)
+	cacheResults, err := c.cacheCompanyForKeys(ctx, companyCopy)
 	c.companyMu.Unlock()
 
-	company = c.getCompanyFromCache(keys)
+	if err != nil {
+		return fmt.Errorf("failed to cache company metrics: %v", err)
+	}
+
+	// Log specific cache key failures
+	for cacheKey, cacheErr := range cacheResults {
+		if cacheErr != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Failed to cache company metric for key '%s': %v", cacheKey, cacheErr))
+		}
+	}
 	return nil
 }
 

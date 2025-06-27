@@ -71,8 +71,8 @@ type DataStreamClient struct {
 	companyMu        sync.RWMutex // For company cache operations
 	userMu           sync.RWMutex // For user cache operations
 	pendingCompReqMu sync.Mutex   // For pending company request operations
-	pendingUserReqMu sync.Mutex   // For pending company request operations
-	pendingFlagReqMu sync.Mutex   // For pending company request operations
+	pendingUserReqMu sync.Mutex   // For pending user request operations
+	pendingFlagReqMu sync.Mutex   // For pending flag request operations
 	writeMu          sync.Mutex   // Existing mutex for WebSocket writes
 }
 

@@ -252,7 +252,13 @@ func (c *SchematicClient) Track(
 	}
 
 	if body.Company != nil && c.datastreamConnected {
-		c.datastreamClient.UpdateCompanyMetrics(ctx, body)
+		err := c.datastreamClient.UpdateCompanyMetrics(ctx, body)
+		if err != nil {
+			c.ctxErrors <- &core.CtxError{
+				Ctx: ctx,
+				Err: fmt.Errorf("failed to update company metrics: %w", err),
+			}
+		}
 	}
 }
 

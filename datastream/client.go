@@ -303,6 +303,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 		return errors.New(fmt.Sprintf("Failed to unmarshal flags data: %v", err))
 	}
 
+	c.flagsMu.Lock()
 	var cacheKeys []string
 	for _, flag := range flagsData {
 		cacheKey := flagCacheKey(flag.Key)
@@ -311,6 +312,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	}
 
 	c.flagsCacheProvider.DeleteMissing(ctx, cacheKeys)
+	c.flagsMu.Unlock()
 
 	if c.pendingFlagRequest != nil {
 		c.pendingFlagRequest <- true
@@ -338,8 +340,6 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 		}
 		return nil
 	}
-
-	cached := true
 
 	c.companyMu.Lock()
 	cacheResults, err := c.cacheCompanyForKeys(ctx, company)
@@ -645,6 +645,8 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 }
 
 func (c *DataStreamClient) getFlag(ctx context.Context, key string) (*rulesengine.Flag, bool) {
+	c.flagsMu.RLock()
+	defer c.flagsMu.RUnlock()
 	flag, exists := c.flagsCacheProvider.Get(ctx, flagCacheKey(key))
 	if !exists {
 		return nil, false

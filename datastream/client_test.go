@@ -338,12 +338,12 @@ func TestDeleteMessage(t *testing.T) {
 
 	logger := NewMockLogger()
 	monitorChannel := make(chan bool, 1)
-	options := &core.DatastreamOptions{
+	configOptions := &core.DatastreamOptions{
 		CacheTTL: 5 * time.Minute,
 	}
 
 	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key", monitorChannel)
-	client := datastream.NewDataStreamClient(clientOptions, options)
+	client := datastream.NewDataStreamClient(clientOptions, configOptions)
 	client.Start()
 	defer client.Close()
 

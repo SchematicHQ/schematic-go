@@ -252,15 +252,15 @@ func TestCheckFlagCompany(t *testing.T) {
 
 	// Test checking a flag that exists and is true
 	result := client.CheckFlag(ctx, evalCtx, "test-flag-1")
-	assert.True(t, result, "Flag value should be true")
+	assert.True(t, result.Value, "Flag value should be true")
 
 	// Test checking a flag that exists and is false
 	result = client.CheckFlag(ctx, evalCtx, "test-flag-2")
-	assert.False(t, result, "Flag value should be false")
+	assert.False(t, result.Value, "Flag value should be false")
 
 	// Test checking a non-existent flag
 	result = client.CheckFlag(ctx, evalCtx, "non-existent-flag")
-	assert.False(t, result, "Non-existent flag should return false")
+	assert.Nil(t, result, "Non-existent flag should return nil flag check result")
 }
 
 func TestCheckFlagUser(t *testing.T) {
@@ -302,15 +302,15 @@ func TestCheckFlagUser(t *testing.T) {
 
 	// Test checking a flag that exists and is true
 	result := client.CheckFlag(ctx, evalCtx, "test-flag-1")
-	assert.True(t, result, "Flag value should be true")
+	assert.True(t, result.Value, "Flag value should be true")
 
 	// Test checking a flag that exists and is false
 	result = client.CheckFlag(ctx, evalCtx, "test-flag-2")
-	assert.False(t, result, "Flag value should be false")
+	assert.False(t, result.Value, "Flag value should be false")
 
 	// Test checking a non-existent flag
 	result = client.CheckFlag(ctx, evalCtx, "non-existent-flag")
-	assert.False(t, result, "Non-existent flag should return false")
+	assert.Nil(t, result, "Non-existent flag should return nil flag check result")
 }
 
 func TestDeleteMessage(t *testing.T) {

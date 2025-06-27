@@ -78,7 +78,15 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 
 	if options.UseDataStream {
 		go client.monitorDatastreamConnection()
-		client.datastreamClient = datastream.NewDataStreamClient(options.BaseURL, options.Logger, options.APIKey, datastreamConnection, options.DatastreamOptions)
+
+		datastreamOptions := datastream.DataStreamClientOptions{
+			ApiKey:         options.APIKey,
+			BaseURL:        options.BaseURL,
+			MonitorChannel: datastreamConnection,
+			Logger:         options.Logger,
+		}
+
+		client.datastreamClient = datastream.NewDataStreamClient(datastreamOptions, options.DatastreamOptions)
 		client.datastreamClient.Start()
 	}
 
@@ -240,6 +248,16 @@ func (c *SchematicClient) Track(
 		c.ctxErrors <- &core.CtxError{
 			Ctx: ctx,
 			Err: err,
+		}
+	}
+
+	if body.Company != nil && c.datastreamConnected {
+		err := c.datastreamClient.UpdateCompanyMetrics(ctx, body)
+		if err != nil {
+			c.ctxErrors <- &core.CtxError{
+				Ctx: ctx,
+				Err: fmt.Errorf("failed to update company metrics: %w", err),
+			}
 		}
 	}
 }

@@ -776,13 +776,13 @@ func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rul
 }
 
 func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *schematicgo.EventBodyTrack) error {
+	if event == nil {
+		return errors.New("event body cannot be nil")
+	}
+
 	keys := event.Company
 	if len(keys) == 0 {
 		return errors.New("no keys provided for company lookup")
-	}
-
-	if event == nil {
-		return errors.New("event body cannot be nil")
 	}
 
 	company := c.getCompanyFromCache(keys)

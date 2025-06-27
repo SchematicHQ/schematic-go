@@ -7,43 +7,78 @@ import (
 	"github.com/schematichq/schematic-go/core"
 )
 
-func getCacheProviders(opt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {
-	if opt.CacheConfig == nil {
-		return buildLocalCache(opt)
+func getCacheProviders(options DataStreamClientOptions, configOpt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {
+	// If both cache providers are specified in options, use them
+	if options.CompanyCache != nil && options.UserCache != nil {
+		return CompanyCacheProvider(options.CompanyCache), UserCacheProvider(options.UserCache)
 	}
 
-	switch opt.CacheConfig.(type) {
+	// If only company cache provider is specified, create only user cache provider
+	if options.CompanyCache != nil {
+		_, userCacheProvider := buildCacheProvidersFromConfig(configOpt)
+		return CompanyCacheProvider(options.CompanyCache), userCacheProvider
+	}
+
+	// If only user cache provider is specified, create only company cache provider
+	if options.UserCache != nil {
+		companyCacheProvider, _ := buildCacheProvidersFromConfig(configOpt)
+		return companyCacheProvider, UserCacheProvider(options.UserCache)
+	}
+
+	// Otherwise build both cache providers based on configuration options
+	return buildCacheProvidersFromConfig(configOpt)
+}
+
+// Helper function to build cache providers based on configuration options
+func buildCacheProvidersFromConfig(configOpt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {
+	if configOpt == nil || configOpt.CacheConfig == nil {
+		return buildLocalCache(configOpt)
+	}
+
+	switch configOpt.CacheConfig.(type) {
 	case *core.RedisCacheConfig:
-		config := opt.CacheConfig.(*core.RedisCacheConfig)
+		config := configOpt.CacheConfig.(*core.RedisCacheConfig)
 		client := redis.NewClient(ToRedisOptions(config))
-		return buildRedisCache(client, opt)
+		return buildRedisCache(client, configOpt)
 	case core.RedisCacheConfig:
-		config := opt.CacheConfig.(core.RedisCacheConfig)
+		config := configOpt.CacheConfig.(core.RedisCacheConfig)
 		client := redis.NewClient(ToRedisOptions(&config))
-		return buildRedisCache(client, opt)
+		return buildRedisCache(client, configOpt)
 	case *core.RedisCacheClusterConfig:
-		config := opt.CacheConfig.(*core.RedisCacheClusterConfig)
+		config := configOpt.CacheConfig.(*core.RedisCacheClusterConfig)
 		client := redis.NewClusterClient(ToRedisClusterOptions(config))
-		return buildRedisCache(client, opt)
+		return buildRedisCache(client, configOpt)
 	case core.RedisCacheClusterConfig:
-		config := opt.CacheConfig.(core.RedisCacheClusterConfig)
+		config := configOpt.CacheConfig.(core.RedisCacheClusterConfig)
 		client := redis.NewClusterClient(ToRedisClusterOptions(&config))
-		return buildRedisCache(client, opt)
+		return buildRedisCache(client, configOpt)
 	}
 
 	return nil, nil
 }
 
 func buildRedisCache(client redis.UniversalClient, opt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {
-	companyCacheProvider := cache.NewRedisCache[*rulesengine.Company](client, opt.CacheTTL)
-	userCacheProvider := cache.NewRedisCache[*rulesengine.User](client, opt.CacheTTL)
+	// Default cache TTL if opt is nil or CacheTTL is zero
+	cacheTTL := defaultTTL
+	if opt != nil && opt.CacheTTL > 0 {
+		cacheTTL = opt.CacheTTL
+	}
+
+	companyCacheProvider := cache.NewRedisCache[*rulesengine.Company](client, cacheTTL)
+	userCacheProvider := cache.NewRedisCache[*rulesengine.User](client, cacheTTL)
 
 	return companyCacheProvider, userCacheProvider
 }
 
 func buildLocalCache(opt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {
-	companyCacheProvider := cache.NewLocalCache[*rulesengine.Company](defaultCacheSize, opt.CacheTTL)
-	userCacheProvider := cache.NewLocalCache[*rulesengine.User](defaultCacheSize, opt.CacheTTL)
+	// Default cache TTL if opt is nil or CacheTTL is zero
+	cacheTTL := defaultTTL
+	if opt != nil && opt.CacheTTL > 0 {
+		cacheTTL = opt.CacheTTL
+	}
+
+	companyCacheProvider := cache.NewLocalCache[*rulesengine.Company](defaultCacheSize, cacheTTL)
+	userCacheProvider := cache.NewLocalCache[*rulesengine.User](defaultCacheSize, cacheTTL)
 
 	return companyCacheProvider, userCacheProvider
 }

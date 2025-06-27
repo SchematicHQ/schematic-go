@@ -37,6 +37,16 @@ type DataStreamError struct {
 	Error string `json:"error"`
 }
 
+type DataStreamClientOptions struct {
+	ApiKey         string
+	BaseURL        string
+	FlagCache      cache.CacheProvider[*rulesengine.Flag]
+	CompanyCache   cache.CacheProvider[*rulesengine.Company]
+	UserCache      cache.CacheProvider[*rulesengine.User]
+	Logger         core.Logger
+	MonitorChannel chan bool
+}
+
 type DataStreamClient struct {
 	cacheTTL             time.Duration
 	conn                 *websocket.Conn

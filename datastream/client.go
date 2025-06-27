@@ -20,29 +20,40 @@ import (
 	"github.com/schematichq/schematic-go/core"
 )
 
-func NewDataStreamClient(baseUrl string, logger core.Logger, apiKey string, monitorChannel chan bool, options *core.DatastreamOptions) *DataStreamClient {
+func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *core.DatastreamOptions) *DataStreamClient {
+	// Provide default configuration options if nil is passed
+	if configurationOptions == nil {
+		configurationOptions = &core.DatastreamOptions{
+			CacheTTL: defaultTTL,
+		}
+	}
 
-	companyCacheProvider, userCacheProvider := getCacheProviders(options)
+	// Get or create cache providers based on options
+	companyCacheProvider, userCacheProvider := getCacheProviders(options, configurationOptions)
 
 	if companyCacheProvider == nil || userCacheProvider == nil {
 		panic("failed to create cache providers")
 	}
 
-	flagCacheProvider := cache.NewLocalCache[*rulesengine.Flag](1000, -1)
+	// Create flag cache if not provided in options
+	flagCacheProvider := options.FlagCache
+	if flagCacheProvider == nil {
+		flagCacheProvider = cache.NewLocalCache[*rulesengine.Flag](1000, -1)
+	}
 
-	dataStreamUrl, err := getBaseURL(baseUrl)
+	dataStreamUrl, err := getBaseURL(options.BaseURL)
 	if err != nil {
 		panic(fmt.Sprintf("failed to parse base URL: %v", err))
 	}
 
 	return &DataStreamClient{
-		apiKey:               apiKey,
-		cacheTTL:             options.CacheTTL,
+		apiKey:               options.ApiKey,
+		cacheTTL:             configurationOptions.CacheTTL,
 		done:                 make(chan bool, 1),
 		ctxErrors:            make(chan *core.CtxError, 100),
 		reconnect:            make(chan bool, 1),
-		monitorChannel:       monitorChannel,
-		logger:               logger,
+		monitorChannel:       options.MonitorChannel,
+		logger:               options.Logger,
 		flagsCacheProvider:   flagCacheProvider,
 		companyCacheProvider: companyCacheProvider,
 		companyCache:         make(map[string]*rulesengine.Company),
@@ -652,11 +663,11 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 }
 
 func flagCacheKey(key string) string {
-	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, rulesEngineVersionKey, strings.ToLower(key))
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, RulesEngineVersionKey, strings.ToLower(key))
 }
 
 func resourceKeyToCacheKey(resourceType string, key string, value string) string {
-	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, rulesEngineVersionKey, strings.ToLower(key), strings.ToLower(value))
+	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, RulesEngineVersionKey, strings.ToLower(key), strings.ToLower(value))
 }
 
 // Helper function to clean up pending company requests

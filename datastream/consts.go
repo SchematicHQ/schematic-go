@@ -43,5 +43,5 @@ const (
 	cacheKeyPrefixFlags   = "flags"
 	cacheKeyPrefixUser    = "user"
 
-	rulesEngineVersionKey = "9ecb00ed"
+	RulesEngineVersionKey = "9ecb00ed"
 )

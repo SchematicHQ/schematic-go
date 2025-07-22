@@ -11,7 +11,34 @@ import (
 
 type IssueTemporaryAccessTokenRequestBody struct {
 	Lookup       map[string]string `json:"lookup,omitempty" url:"-"`
-	ResourceType string            `json:"resource_type" url:"-"`
+	resourceType string
+}
+
+func (i *IssueTemporaryAccessTokenRequestBody) ResourceType() string {
+	return i.resourceType
+}
+
+func (i *IssueTemporaryAccessTokenRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler IssueTemporaryAccessTokenRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*i = IssueTemporaryAccessTokenRequestBody(body)
+	i.resourceType = "company"
+	return nil
+}
+
+func (i *IssueTemporaryAccessTokenRequestBody) MarshalJSON() ([]byte, error) {
+	type embed IssueTemporaryAccessTokenRequestBody
+	var marshaler = struct {
+		embed
+		ResourceType string `json:"resource_type"`
+	}{
+		embed:        embed(*i),
+		ResourceType: "company",
+	}
+	return json.Marshal(marshaler)
 }
 
 // The created resource

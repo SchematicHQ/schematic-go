@@ -1956,6 +1956,31 @@ func (u *UpsertBillingProductPlanResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
+type UpsertBillingProductRequestBodyChargeType string
+
+const (
+	UpsertBillingProductRequestBodyChargeTypeOneTime   UpsertBillingProductRequestBodyChargeType = "one_time"
+	UpsertBillingProductRequestBodyChargeTypeRecurring UpsertBillingProductRequestBodyChargeType = "recurring"
+	UpsertBillingProductRequestBodyChargeTypeFree      UpsertBillingProductRequestBodyChargeType = "free"
+)
+
+func NewUpsertBillingProductRequestBodyChargeTypeFromString(s string) (UpsertBillingProductRequestBodyChargeType, error) {
+	switch s {
+	case "one_time":
+		return UpsertBillingProductRequestBodyChargeTypeOneTime, nil
+	case "recurring":
+		return UpsertBillingProductRequestBodyChargeTypeRecurring, nil
+	case "free":
+		return UpsertBillingProductRequestBodyChargeTypeFree, nil
+	}
+	var t UpsertBillingProductRequestBodyChargeType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpsertBillingProductRequestBodyChargeType) Ptr() *UpsertBillingProductRequestBodyChargeType {
+	return &u
+}
+
 type UpdateAudienceRequestBody struct {
 	ConditionGroups []*CreateOrUpdateConditionGroupRequestBody `json:"condition_groups,omitempty" url:"-"`
 	Conditions      []*CreateOrUpdateConditionRequestBody      `json:"conditions,omitempty" url:"-"`
@@ -1978,15 +2003,15 @@ type UpdatePlanTraitRequestBody struct {
 }
 
 type UpsertBillingProductRequestBody struct {
-	BillingProductID *string `json:"billing_product_id,omitempty" url:"-"`
-	ChargeType       string  `json:"charge_type" url:"-"`
-	Currency         *string `json:"currency,omitempty" url:"-"`
-	IsTrialable      bool    `json:"is_trialable" url:"-"`
-	MonthlyPrice     *int    `json:"monthly_price,omitempty" url:"-"`
-	MonthlyPriceID   *string `json:"monthly_price_id,omitempty" url:"-"`
-	OneTimePrice     *int    `json:"one_time_price,omitempty" url:"-"`
-	OneTimePriceID   *string `json:"one_time_price_id,omitempty" url:"-"`
-	TrialDays        *int    `json:"trial_days,omitempty" url:"-"`
-	YearlyPrice      *int    `json:"yearly_price,omitempty" url:"-"`
-	YearlyPriceID    *string `json:"yearly_price_id,omitempty" url:"-"`
+	BillingProductID *string                                   `json:"billing_product_id,omitempty" url:"-"`
+	ChargeType       UpsertBillingProductRequestBodyChargeType `json:"charge_type" url:"-"`
+	Currency         *string                                   `json:"currency,omitempty" url:"-"`
+	IsTrialable      bool                                      `json:"is_trialable" url:"-"`
+	MonthlyPrice     *int                                      `json:"monthly_price,omitempty" url:"-"`
+	MonthlyPriceID   *string                                   `json:"monthly_price_id,omitempty" url:"-"`
+	OneTimePrice     *int                                      `json:"one_time_price,omitempty" url:"-"`
+	OneTimePriceID   *string                                   `json:"one_time_price_id,omitempty" url:"-"`
+	TrialDays        *int                                      `json:"trial_days,omitempty" url:"-"`
+	YearlyPrice      *int                                      `json:"yearly_price,omitempty" url:"-"`
+	YearlyPriceID    *string                                   `json:"yearly_price_id,omitempty" url:"-"`
 }

@@ -28,6 +28,37 @@ type CountCompaniesRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
+type CountCompaniesForAdvancedFilterRequest struct {
+	// Filter companies by multiple company IDs (starts with comp_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter companies by one or more plan IDs (each ID starts with plan_)
+	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
+	// Filter companies by one or more feature IDs (each ID starts with feat_)
+	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
+	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
+	SubscriptionStatuses []*string `json:"-" url:"subscription_statuses,omitempty"`
+	// Filter companies by one or more subscription types (paid, free, trial)
+	SubscriptionTypes []*string `json:"-" url:"subscription_types,omitempty"`
+	// Filter companies that have monetized subscriptions
+	MonetizedSubscriptions *bool `json:"-" url:"monetized_subscriptions,omitempty"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"-" url:"q,omitempty"`
+	// Filter out companies that have a plan
+	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
+	// Filter out companies that have a subscription
+	WithoutSubscription *bool `json:"-" url:"without_subscription,omitempty"`
+	// Column to sort by (e.g. name, created_at, last_seen_at)
+	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
+	SortOrderDirection *CountCompaniesForAdvancedFilterRequestSortOrderDirection `json:"-" url:"sort_order_direction,omitempty"`
+	// Select the display columns to return (e.g. plan, subscription, users, last_seen)
+	DisplayProperties []*string `json:"-" url:"display_properties,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
 type CountEntityKeyDefinitionsRequest struct {
 	EntityType *CountEntityKeyDefinitionsRequestEntityType `json:"-" url:"entity_type,omitempty"`
 	IDs        []*string                                   `json:"-" url:"ids,omitempty"`
@@ -116,6 +147,37 @@ type ListCompaniesRequest struct {
 	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
 	// Filter companies that have a subscription
 	WithSubscription *bool `json:"-" url:"with_subscription,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
+type ListCompaniesForAdvancedFilterRequest struct {
+	// Filter companies by multiple company IDs (starts with comp_)
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter companies by one or more plan IDs (each ID starts with plan_)
+	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
+	// Filter companies by one or more feature IDs (each ID starts with feat_)
+	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
+	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
+	SubscriptionStatuses []*string `json:"-" url:"subscription_statuses,omitempty"`
+	// Filter companies by one or more subscription types (paid, free, trial)
+	SubscriptionTypes []*string `json:"-" url:"subscription_types,omitempty"`
+	// Filter companies that have monetized subscriptions
+	MonetizedSubscriptions *bool `json:"-" url:"monetized_subscriptions,omitempty"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"-" url:"q,omitempty"`
+	// Filter out companies that have a plan
+	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
+	// Filter out companies that have a subscription
+	WithoutSubscription *bool `json:"-" url:"without_subscription,omitempty"`
+	// Column to sort by (e.g. name, created_at, last_seen_at)
+	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
+	SortOrderDirection *ListCompaniesForAdvancedFilterRequestSortOrderDirection `json:"-" url:"sort_order_direction,omitempty"`
+	// Select the display columns to return (e.g. plan, subscription, users, last_seen)
+	DisplayProperties []*string `json:"-" url:"display_properties,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -244,6 +306,231 @@ func (c *CompanyCrmDealsResponseData) UnmarshalJSON(data []byte) error {
 }
 
 func (c *CompanyCrmDealsResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CompanyViewWithFeatureUsageResponseData struct {
+	AddOns               []*CompanyPlanWithBillingSubView         `json:"add_ons,omitempty" url:"add_ons,omitempty"`
+	BillingSubscription  *BillingSubscriptionView                 `json:"billing_subscription,omitempty" url:"billing_subscription,omitempty"`
+	BillingSubscriptions []*BillingSubscriptionView               `json:"billing_subscriptions,omitempty" url:"billing_subscriptions,omitempty"`
+	CreatedAt            time.Time                                `json:"created_at" url:"created_at"`
+	DefaultPaymentMethod *PaymentMethodResponseData               `json:"default_payment_method,omitempty" url:"default_payment_method,omitempty"`
+	EntityTraits         []*EntityTraitDetailResponseData         `json:"entity_traits,omitempty" url:"entity_traits,omitempty"`
+	EnvironmentID        string                                   `json:"environment_id" url:"environment_id"`
+	FeatureUsage         []*FeatureUsageDataResponseData          `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	ID                   string                                   `json:"id" url:"id"`
+	Keys                 []*EntityKeyDetailResponseData           `json:"keys,omitempty" url:"keys,omitempty"`
+	LastSeenAt           *time.Time                               `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
+	LogoURL              *string                                  `json:"logo_url,omitempty" url:"logo_url,omitempty"`
+	Metrics              []*CompanyEventPeriodMetricsResponseData `json:"metrics,omitempty" url:"metrics,omitempty"`
+	Name                 string                                   `json:"name" url:"name"`
+	PaymentMethods       []*PaymentMethodResponseData             `json:"payment_methods,omitempty" url:"payment_methods,omitempty"`
+	Plan                 *CompanyPlanWithBillingSubView           `json:"plan,omitempty" url:"plan,omitempty"`
+	Plans                []*GenericPreviewObject                  `json:"plans,omitempty" url:"plans,omitempty"`
+	// A map of trait names to trait values
+	Traits    map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
+	UserCount int                    `json:"user_count" url:"user_count"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetAddOns() []*CompanyPlanWithBillingSubView {
+	if c == nil {
+		return nil
+	}
+	return c.AddOns
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetBillingSubscription() *BillingSubscriptionView {
+	if c == nil {
+		return nil
+	}
+	return c.BillingSubscription
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetBillingSubscriptions() []*BillingSubscriptionView {
+	if c == nil {
+		return nil
+	}
+	return c.BillingSubscriptions
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetDefaultPaymentMethod() *PaymentMethodResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.DefaultPaymentMethod
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetEntityTraits() []*EntityTraitDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.EntityTraits
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetFeatureUsage() []*FeatureUsageDataResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureUsage
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetKeys() []*EntityKeyDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Keys
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetLastSeenAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.LastSeenAt
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetLogoURL() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LogoURL
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetMetrics() []*CompanyEventPeriodMetricsResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Metrics
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetPaymentMethods() []*PaymentMethodResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.PaymentMethods
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetPlan() *CompanyPlanWithBillingSubView {
+	if c == nil {
+		return nil
+	}
+	return c.Plan
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetPlans() []*GenericPreviewObject {
+	if c == nil {
+		return nil
+	}
+	return c.Plans
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetTraits() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Traits
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetUserCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.UserCount
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyViewWithFeatureUsageResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyViewWithFeatureUsageResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.LastSeenAt = unmarshaler.LastSeenAt.TimePtr()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyViewWithFeatureUsageResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed:      embed(*c),
+		CreatedAt:  internal.NewDateTime(c.CreatedAt),
+		LastSeenAt: internal.NewOptionalDateTime(c.LastSeenAt),
+		UpdatedAt:  internal.NewDateTime(c.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -465,6 +752,116 @@ func (e *EntityTraitValue) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
+}
+
+type FeatureUsageDataResponseData struct {
+	EntitlementSource    string `json:"entitlement_source" url:"entitlement_source"`
+	EntitlementValueType string `json:"entitlement_value_type" url:"entitlement_value_type"`
+	FeatureID            string `json:"feature_id" url:"feature_id"`
+	FeatureName          string `json:"feature_name" url:"feature_name"`
+	FeatureType          string `json:"feature_type" url:"feature_type"`
+	HardLimit            string `json:"hard_limit" url:"hard_limit"`
+	HasAccess            bool   `json:"has_access" url:"has_access"`
+	SoftLimit            string `json:"soft_limit" url:"soft_limit"`
+	Usage                string `json:"usage" url:"usage"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FeatureUsageDataResponseData) GetEntitlementSource() string {
+	if f == nil {
+		return ""
+	}
+	return f.EntitlementSource
+}
+
+func (f *FeatureUsageDataResponseData) GetEntitlementValueType() string {
+	if f == nil {
+		return ""
+	}
+	return f.EntitlementValueType
+}
+
+func (f *FeatureUsageDataResponseData) GetFeatureID() string {
+	if f == nil {
+		return ""
+	}
+	return f.FeatureID
+}
+
+func (f *FeatureUsageDataResponseData) GetFeatureName() string {
+	if f == nil {
+		return ""
+	}
+	return f.FeatureName
+}
+
+func (f *FeatureUsageDataResponseData) GetFeatureType() string {
+	if f == nil {
+		return ""
+	}
+	return f.FeatureType
+}
+
+func (f *FeatureUsageDataResponseData) GetHardLimit() string {
+	if f == nil {
+		return ""
+	}
+	return f.HardLimit
+}
+
+func (f *FeatureUsageDataResponseData) GetHasAccess() bool {
+	if f == nil {
+		return false
+	}
+	return f.HasAccess
+}
+
+func (f *FeatureUsageDataResponseData) GetSoftLimit() string {
+	if f == nil {
+		return ""
+	}
+	return f.SoftLimit
+}
+
+func (f *FeatureUsageDataResponseData) GetUsage() string {
+	if f == nil {
+		return ""
+	}
+	return f.Usage
+}
+
+func (f *FeatureUsageDataResponseData) GetExtraProperties() map[string]interface{} {
+	return f.extraProperties
+}
+
+func (f *FeatureUsageDataResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler FeatureUsageDataResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*f = FeatureUsageDataResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FeatureUsageDataResponseData) String() string {
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
 }
 
 type KeysRequestBody struct {
@@ -844,6 +1241,272 @@ func (u *UpsertUserRequestBody) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+// Input parameters
+type CountCompaniesForAdvancedFilterParams struct {
+	// Select the display columns to return (e.g. plan, subscription, users, last_seen)
+	DisplayProperties []string `json:"display_properties,omitempty" url:"display_properties,omitempty"`
+	// Filter companies by one or more feature IDs (each ID starts with feat_)
+	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	// Filter companies by multiple company IDs (starts with comp_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Filter companies that have monetized subscriptions
+	MonetizedSubscriptions *bool `json:"monetized_subscriptions,omitempty" url:"monetized_subscriptions,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter companies by one or more plan IDs (each ID starts with plan_)
+	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Column to sort by (e.g. name, created_at, last_seen_at)
+	SortOrderColumn *string `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
+	SortOrderDirection *CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
+	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
+	SubscriptionStatuses []string `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
+	// Filter companies by one or more subscription types (paid, free, trial)
+	SubscriptionTypes []string `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
+	// Filter out companies that have a plan
+	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
+	// Filter out companies that have a subscription
+	WithoutSubscription *bool `json:"without_subscription,omitempty" url:"without_subscription,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetDisplayProperties() []string {
+	if c == nil {
+		return nil
+	}
+	return c.DisplayProperties
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetFeatureIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureIDs
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetMonetizedSubscriptions() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.MonetizedSubscriptions
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetPlanIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanIDs
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetSortOrderColumn() *string {
+	if c == nil {
+		return nil
+	}
+	return c.SortOrderColumn
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetSortOrderDirection() *CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection {
+	if c == nil {
+		return nil
+	}
+	return c.SortOrderDirection
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetSubscriptionStatuses() []string {
+	if c == nil {
+		return nil
+	}
+	return c.SubscriptionStatuses
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetSubscriptionTypes() []string {
+	if c == nil {
+		return nil
+	}
+	return c.SubscriptionTypes
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetWithoutPlan() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutPlan
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetWithoutSubscription() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutSubscription
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCompaniesForAdvancedFilterParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCompaniesForAdvancedFilterParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Direction to sort by (asc or desc)
+type CountCompaniesForAdvancedFilterRequestSortOrderDirection string
+
+const (
+	CountCompaniesForAdvancedFilterRequestSortOrderDirectionAsc  CountCompaniesForAdvancedFilterRequestSortOrderDirection = "asc"
+	CountCompaniesForAdvancedFilterRequestSortOrderDirectionDesc CountCompaniesForAdvancedFilterRequestSortOrderDirection = "desc"
+)
+
+func NewCountCompaniesForAdvancedFilterRequestSortOrderDirectionFromString(s string) (CountCompaniesForAdvancedFilterRequestSortOrderDirection, error) {
+	switch s {
+	case "asc":
+		return CountCompaniesForAdvancedFilterRequestSortOrderDirectionAsc, nil
+	case "desc":
+		return CountCompaniesForAdvancedFilterRequestSortOrderDirectionDesc, nil
+	}
+	var t CountCompaniesForAdvancedFilterRequestSortOrderDirection
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CountCompaniesForAdvancedFilterRequestSortOrderDirection) Ptr() *CountCompaniesForAdvancedFilterRequestSortOrderDirection {
+	return &c
+}
+
+type CountCompaniesForAdvancedFilterResponse struct {
+	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *CountCompaniesForAdvancedFilterParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompaniesForAdvancedFilterResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountCompaniesForAdvancedFilterResponse) GetParams() *CountCompaniesForAdvancedFilterParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountCompaniesForAdvancedFilterResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCompaniesForAdvancedFilterResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCompaniesForAdvancedFilterResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCompaniesForAdvancedFilterResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCompaniesForAdvancedFilterResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Direction to sort by (asc or desc)
+type CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection string
+
+const (
+	CountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionAsc  CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection = "asc"
+	CountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionDesc CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection = "desc"
+)
+
+func NewCountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionFromString(s string) (CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection, error) {
+	switch s {
+	case "asc":
+		return CountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionAsc, nil
+	case "desc":
+		return CountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionDesc, nil
+	}
+	var t CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection) Ptr() *CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection {
+	return &c
 }
 
 // Input parameters
@@ -2697,6 +3360,273 @@ func (g *GetUserResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type ListCompaniesForAdvancedFilterParams struct {
+	// Select the display columns to return (e.g. plan, subscription, users, last_seen)
+	DisplayProperties []string `json:"display_properties,omitempty" url:"display_properties,omitempty"`
+	// Filter companies by one or more feature IDs (each ID starts with feat_)
+	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	// Filter companies by multiple company IDs (starts with comp_)
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Filter companies that have monetized subscriptions
+	MonetizedSubscriptions *bool `json:"monetized_subscriptions,omitempty" url:"monetized_subscriptions,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter companies by one or more plan IDs (each ID starts with plan_)
+	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Column to sort by (e.g. name, created_at, last_seen_at)
+	SortOrderColumn *string `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
+	SortOrderDirection *ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
+	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
+	SubscriptionStatuses []string `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
+	// Filter companies by one or more subscription types (paid, free, trial)
+	SubscriptionTypes []string `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
+	// Filter out companies that have a plan
+	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
+	// Filter out companies that have a subscription
+	WithoutSubscription *bool `json:"without_subscription,omitempty" url:"without_subscription,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetDisplayProperties() []string {
+	if l == nil {
+		return nil
+	}
+	return l.DisplayProperties
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetFeatureIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureIDs
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetMonetizedSubscriptions() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.MonetizedSubscriptions
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetPlanIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanIDs
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetSortOrderColumn() *string {
+	if l == nil {
+		return nil
+	}
+	return l.SortOrderColumn
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetSortOrderDirection() *ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection {
+	if l == nil {
+		return nil
+	}
+	return l.SortOrderDirection
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetSubscriptionStatuses() []string {
+	if l == nil {
+		return nil
+	}
+	return l.SubscriptionStatuses
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetSubscriptionTypes() []string {
+	if l == nil {
+		return nil
+	}
+	return l.SubscriptionTypes
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetWithoutPlan() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutPlan
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetWithoutSubscription() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutSubscription
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompaniesForAdvancedFilterParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompaniesForAdvancedFilterParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Direction to sort by (asc or desc)
+type ListCompaniesForAdvancedFilterRequestSortOrderDirection string
+
+const (
+	ListCompaniesForAdvancedFilterRequestSortOrderDirectionAsc  ListCompaniesForAdvancedFilterRequestSortOrderDirection = "asc"
+	ListCompaniesForAdvancedFilterRequestSortOrderDirectionDesc ListCompaniesForAdvancedFilterRequestSortOrderDirection = "desc"
+)
+
+func NewListCompaniesForAdvancedFilterRequestSortOrderDirectionFromString(s string) (ListCompaniesForAdvancedFilterRequestSortOrderDirection, error) {
+	switch s {
+	case "asc":
+		return ListCompaniesForAdvancedFilterRequestSortOrderDirectionAsc, nil
+	case "desc":
+		return ListCompaniesForAdvancedFilterRequestSortOrderDirectionDesc, nil
+	}
+	var t ListCompaniesForAdvancedFilterRequestSortOrderDirection
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListCompaniesForAdvancedFilterRequestSortOrderDirection) Ptr() *ListCompaniesForAdvancedFilterRequestSortOrderDirection {
+	return &l
+}
+
+type ListCompaniesForAdvancedFilterResponse struct {
+	// The returned resources
+	Data []*CompanyViewWithFeatureUsageResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *ListCompaniesForAdvancedFilterParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompaniesForAdvancedFilterResponse) GetData() []*CompanyViewWithFeatureUsageResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCompaniesForAdvancedFilterResponse) GetParams() *ListCompaniesForAdvancedFilterParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListCompaniesForAdvancedFilterResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCompaniesForAdvancedFilterResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompaniesForAdvancedFilterResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompaniesForAdvancedFilterResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompaniesForAdvancedFilterResponse) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Direction to sort by (asc or desc)
+type ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection string
+
+const (
+	ListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionAsc  ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection = "asc"
+	ListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionDesc ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection = "desc"
+)
+
+func NewListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionFromString(s string) (ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection, error) {
+	switch s {
+	case "asc":
+		return ListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionAsc, nil
+	case "desc":
+		return ListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionDesc, nil
+	}
+	var t ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection) Ptr() *ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection {
+	return &l
 }
 
 // Input parameters

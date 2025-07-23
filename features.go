@@ -16,6 +16,10 @@ type CountFeaturesRequest struct {
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
+	// Filter by one or more feature types (boolean, event, trait)
+	FeatureType []*string `json:"-" url:"feature_type,omitempty"`
+	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
+	BooleanRequireEvent *bool `json:"-" url:"boolean_require_event,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -33,17 +37,17 @@ type CountFlagsRequest struct {
 }
 
 type CreateFeatureRequestBody struct {
-	Description    string                              `json:"description" url:"-"`
-	EventSubtype   *string                             `json:"event_subtype,omitempty" url:"-"`
-	FeatureType    CreateFeatureRequestBodyFeatureType `json:"feature_type" url:"-"`
-	Flag           *CreateOrUpdateFlagRequestBody      `json:"flag,omitempty" url:"-"`
-	Icon           *string                             `json:"icon,omitempty" url:"-"`
-	LifecyclePhase *string                             `json:"lifecycle_phase,omitempty" url:"-"`
-	MaintainerID   *string                             `json:"maintainer_id,omitempty" url:"-"`
-	Name           string                              `json:"name" url:"-"`
-	PluralName     *string                             `json:"plural_name,omitempty" url:"-"`
-	SingularName   *string                             `json:"singular_name,omitempty" url:"-"`
-	TraitID        *string                             `json:"trait_id,omitempty" url:"-"`
+	Description    string                                  `json:"description" url:"-"`
+	EventSubtype   *string                                 `json:"event_subtype,omitempty" url:"-"`
+	FeatureType    CreateFeatureRequestBodyFeatureType     `json:"feature_type" url:"-"`
+	Flag           *CreateOrUpdateFlagRequestBody          `json:"flag,omitempty" url:"-"`
+	Icon           *string                                 `json:"icon,omitempty" url:"-"`
+	LifecyclePhase *CreateFeatureRequestBodyLifecyclePhase `json:"lifecycle_phase,omitempty" url:"-"`
+	MaintainerID   *string                                 `json:"maintainer_id,omitempty" url:"-"`
+	Name           string                                  `json:"name" url:"-"`
+	PluralName     *string                                 `json:"plural_name,omitempty" url:"-"`
+	SingularName   *string                                 `json:"singular_name,omitempty" url:"-"`
+	TraitID        *string                                 `json:"trait_id,omitempty" url:"-"`
 }
 
 type ListFeaturesRequest struct {
@@ -53,6 +57,10 @@ type ListFeaturesRequest struct {
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
+	// Filter by one or more feature types (boolean, event, trait)
+	FeatureType []*string `json:"-" url:"feature_type,omitempty"`
+	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
+	BooleanRequireEvent *bool `json:"-" url:"boolean_require_event,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -437,10 +445,10 @@ type CreateFlagRequestBody struct {
 	DefaultValue bool    `json:"default_value" url:"default_value"`
 	Description  string  `json:"description" url:"description"`
 	FeatureID    *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	FlagType     string  `json:"flag_type" url:"flag_type"`
 	Key          string  `json:"key" url:"key"`
 	MaintainerID *string `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
 	Name         string  `json:"name" url:"name"`
+	flagType     string
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -467,13 +475,6 @@ func (c *CreateFlagRequestBody) GetFeatureID() *string {
 	return c.FeatureID
 }
 
-func (c *CreateFlagRequestBody) GetFlagType() string {
-	if c == nil {
-		return ""
-	}
-	return c.FlagType
-}
-
 func (c *CreateFlagRequestBody) GetKey() string {
 	if c == nil {
 		return ""
@@ -495,24 +496,49 @@ func (c *CreateFlagRequestBody) GetName() string {
 	return c.Name
 }
 
+func (c *CreateFlagRequestBody) FlagType() string {
+	return c.flagType
+}
+
 func (c *CreateFlagRequestBody) GetExtraProperties() map[string]interface{} {
 	return c.extraProperties
 }
 
 func (c *CreateFlagRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreateFlagRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed CreateFlagRequestBody
+	var unmarshaler = struct {
+		embed
+		FlagType string `json:"flag_type"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*c = CreateFlagRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	*c = CreateFlagRequestBody(unmarshaler.embed)
+	if unmarshaler.FlagType != "boolean" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", c, "boolean", unmarshaler.FlagType)
+	}
+	c.flagType = unmarshaler.FlagType
+	extraProperties, err := internal.ExtractExtraProperties(data, *c, "flag_type")
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
 	c.rawJSON = json.RawMessage(data)
 	return nil
+}
+
+func (c *CreateFlagRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateFlagRequestBody
+	var marshaler = struct {
+		embed
+		FlagType string `json:"flag_type"`
+	}{
+		embed:    embed(*c),
+		FlagType: "boolean",
+	}
+	return json.Marshal(marshaler)
 }
 
 func (c *CreateFlagRequestBody) String() string {
@@ -531,11 +557,11 @@ type CreateOrUpdateFlagRequestBody struct {
 	DefaultValue bool    `json:"default_value" url:"default_value"`
 	Description  string  `json:"description" url:"description"`
 	FeatureID    *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	FlagType     string  `json:"flag_type" url:"flag_type"`
 	ID           *string `json:"id,omitempty" url:"id,omitempty"`
 	Key          string  `json:"key" url:"key"`
 	MaintainerID *string `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
 	Name         string  `json:"name" url:"name"`
+	flagType     string
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -560,13 +586,6 @@ func (c *CreateOrUpdateFlagRequestBody) GetFeatureID() *string {
 		return nil
 	}
 	return c.FeatureID
-}
-
-func (c *CreateOrUpdateFlagRequestBody) GetFlagType() string {
-	if c == nil {
-		return ""
-	}
-	return c.FlagType
 }
 
 func (c *CreateOrUpdateFlagRequestBody) GetID() *string {
@@ -597,24 +616,49 @@ func (c *CreateOrUpdateFlagRequestBody) GetName() string {
 	return c.Name
 }
 
+func (c *CreateOrUpdateFlagRequestBody) FlagType() string {
+	return c.flagType
+}
+
 func (c *CreateOrUpdateFlagRequestBody) GetExtraProperties() map[string]interface{} {
 	return c.extraProperties
 }
 
 func (c *CreateOrUpdateFlagRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreateOrUpdateFlagRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed CreateOrUpdateFlagRequestBody
+	var unmarshaler = struct {
+		embed
+		FlagType string `json:"flag_type"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*c = CreateOrUpdateFlagRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	*c = CreateOrUpdateFlagRequestBody(unmarshaler.embed)
+	if unmarshaler.FlagType != "boolean" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", c, "boolean", unmarshaler.FlagType)
+	}
+	c.flagType = unmarshaler.FlagType
+	extraProperties, err := internal.ExtractExtraProperties(data, *c, "flag_type")
 	if err != nil {
 		return err
 	}
 	c.extraProperties = extraProperties
 	c.rawJSON = json.RawMessage(data)
 	return nil
+}
+
+func (c *CreateOrUpdateFlagRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateOrUpdateFlagRequestBody
+	var marshaler = struct {
+		embed
+		FlagType string `json:"flag_type"`
+	}{
+		embed:    embed(*c),
+		FlagType: "boolean",
+	}
+	return json.Marshal(marshaler)
 }
 
 func (c *CreateOrUpdateFlagRequestBody) String() string {
@@ -1174,7 +1218,11 @@ func (c *CountAudienceUsersResponse) String() string {
 
 // Input parameters
 type CountFeaturesParams struct {
-	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
+	BooleanRequireEvent *bool `json:"boolean_require_event,omitempty" url:"boolean_require_event,omitempty"`
+	// Filter by one or more feature types (boolean, event, trait)
+	FeatureType []string `json:"feature_type,omitempty" url:"feature_type,omitempty"`
+	IDs         []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1187,6 +1235,20 @@ type CountFeaturesParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CountFeaturesParams) GetBooleanRequireEvent() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.BooleanRequireEvent
+}
+
+func (c *CountFeaturesParams) GetFeatureType() []string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureType
 }
 
 func (c *CountFeaturesParams) GetIDs() []string {
@@ -1476,6 +1538,49 @@ func NewCreateFeatureRequestBodyFeatureTypeFromString(s string) (CreateFeatureRe
 }
 
 func (c CreateFeatureRequestBodyFeatureType) Ptr() *CreateFeatureRequestBodyFeatureType {
+	return &c
+}
+
+type CreateFeatureRequestBodyLifecyclePhase string
+
+const (
+	CreateFeatureRequestBodyLifecyclePhaseAddOn           CreateFeatureRequestBodyLifecyclePhase = "add_on"
+	CreateFeatureRequestBodyLifecyclePhaseAlpha           CreateFeatureRequestBodyLifecyclePhase = "alpha"
+	CreateFeatureRequestBodyLifecyclePhaseBeta            CreateFeatureRequestBodyLifecyclePhase = "beta"
+	CreateFeatureRequestBodyLifecyclePhaseDeprecated      CreateFeatureRequestBodyLifecyclePhase = "deprecated"
+	CreateFeatureRequestBodyLifecyclePhaseGa              CreateFeatureRequestBodyLifecyclePhase = "ga"
+	CreateFeatureRequestBodyLifecyclePhaseInPlan          CreateFeatureRequestBodyLifecyclePhase = "in_plan"
+	CreateFeatureRequestBodyLifecyclePhaseInactive        CreateFeatureRequestBodyLifecyclePhase = "inactive"
+	CreateFeatureRequestBodyLifecyclePhaseInternalTesting CreateFeatureRequestBodyLifecyclePhase = "internal_testing"
+	CreateFeatureRequestBodyLifecyclePhaseLegacy          CreateFeatureRequestBodyLifecyclePhase = "legacy"
+)
+
+func NewCreateFeatureRequestBodyLifecyclePhaseFromString(s string) (CreateFeatureRequestBodyLifecyclePhase, error) {
+	switch s {
+	case "add_on":
+		return CreateFeatureRequestBodyLifecyclePhaseAddOn, nil
+	case "alpha":
+		return CreateFeatureRequestBodyLifecyclePhaseAlpha, nil
+	case "beta":
+		return CreateFeatureRequestBodyLifecyclePhaseBeta, nil
+	case "deprecated":
+		return CreateFeatureRequestBodyLifecyclePhaseDeprecated, nil
+	case "ga":
+		return CreateFeatureRequestBodyLifecyclePhaseGa, nil
+	case "in_plan":
+		return CreateFeatureRequestBodyLifecyclePhaseInPlan, nil
+	case "inactive":
+		return CreateFeatureRequestBodyLifecyclePhaseInactive, nil
+	case "internal_testing":
+		return CreateFeatureRequestBodyLifecyclePhaseInternalTesting, nil
+	case "legacy":
+		return CreateFeatureRequestBodyLifecyclePhaseLegacy, nil
+	}
+	var t CreateFeatureRequestBodyLifecyclePhase
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateFeatureRequestBodyLifecyclePhase) Ptr() *CreateFeatureRequestBodyLifecyclePhase {
 	return &c
 }
 
@@ -1923,7 +2028,11 @@ func (l *ListAudienceUsersResponse) String() string {
 
 // Input parameters
 type ListFeaturesParams struct {
-	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
+	BooleanRequireEvent *bool `json:"boolean_require_event,omitempty" url:"boolean_require_event,omitempty"`
+	// Filter by one or more feature types (boolean, event, trait)
+	FeatureType []string `json:"feature_type,omitempty" url:"feature_type,omitempty"`
+	IDs         []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1936,6 +2045,20 @@ type ListFeaturesParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (l *ListFeaturesParams) GetBooleanRequireEvent() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.BooleanRequireEvent
+}
+
+func (l *ListFeaturesParams) GetFeatureType() []string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureType
 }
 
 func (l *ListFeaturesParams) GetIDs() []string {
@@ -2230,6 +2353,49 @@ func (u UpdateFeatureRequestBodyFeatureType) Ptr() *UpdateFeatureRequestBodyFeat
 	return &u
 }
 
+type UpdateFeatureRequestBodyLifecyclePhase string
+
+const (
+	UpdateFeatureRequestBodyLifecyclePhaseAddOn           UpdateFeatureRequestBodyLifecyclePhase = "add_on"
+	UpdateFeatureRequestBodyLifecyclePhaseAlpha           UpdateFeatureRequestBodyLifecyclePhase = "alpha"
+	UpdateFeatureRequestBodyLifecyclePhaseBeta            UpdateFeatureRequestBodyLifecyclePhase = "beta"
+	UpdateFeatureRequestBodyLifecyclePhaseDeprecated      UpdateFeatureRequestBodyLifecyclePhase = "deprecated"
+	UpdateFeatureRequestBodyLifecyclePhaseGa              UpdateFeatureRequestBodyLifecyclePhase = "ga"
+	UpdateFeatureRequestBodyLifecyclePhaseInPlan          UpdateFeatureRequestBodyLifecyclePhase = "in_plan"
+	UpdateFeatureRequestBodyLifecyclePhaseInactive        UpdateFeatureRequestBodyLifecyclePhase = "inactive"
+	UpdateFeatureRequestBodyLifecyclePhaseInternalTesting UpdateFeatureRequestBodyLifecyclePhase = "internal_testing"
+	UpdateFeatureRequestBodyLifecyclePhaseLegacy          UpdateFeatureRequestBodyLifecyclePhase = "legacy"
+)
+
+func NewUpdateFeatureRequestBodyLifecyclePhaseFromString(s string) (UpdateFeatureRequestBodyLifecyclePhase, error) {
+	switch s {
+	case "add_on":
+		return UpdateFeatureRequestBodyLifecyclePhaseAddOn, nil
+	case "alpha":
+		return UpdateFeatureRequestBodyLifecyclePhaseAlpha, nil
+	case "beta":
+		return UpdateFeatureRequestBodyLifecyclePhaseBeta, nil
+	case "deprecated":
+		return UpdateFeatureRequestBodyLifecyclePhaseDeprecated, nil
+	case "ga":
+		return UpdateFeatureRequestBodyLifecyclePhaseGa, nil
+	case "in_plan":
+		return UpdateFeatureRequestBodyLifecyclePhaseInPlan, nil
+	case "inactive":
+		return UpdateFeatureRequestBodyLifecyclePhaseInactive, nil
+	case "internal_testing":
+		return UpdateFeatureRequestBodyLifecyclePhaseInternalTesting, nil
+	case "legacy":
+		return UpdateFeatureRequestBodyLifecyclePhaseLegacy, nil
+	}
+	var t UpdateFeatureRequestBodyLifecyclePhase
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateFeatureRequestBodyLifecyclePhase) Ptr() *UpdateFeatureRequestBodyLifecyclePhase {
+	return &u
+}
+
 type UpdateFeatureResponse struct {
 	Data *FeatureDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -2396,17 +2562,17 @@ func (u *UpdateFlagRulesResponse) String() string {
 }
 
 type UpdateFeatureRequestBody struct {
-	Description    *string                              `json:"description,omitempty" url:"-"`
-	EventSubtype   *string                              `json:"event_subtype,omitempty" url:"-"`
-	FeatureType    *UpdateFeatureRequestBodyFeatureType `json:"feature_type,omitempty" url:"-"`
-	Flag           *CreateOrUpdateFlagRequestBody       `json:"flag,omitempty" url:"-"`
-	Icon           *string                              `json:"icon,omitempty" url:"-"`
-	LifecyclePhase *string                              `json:"lifecycle_phase,omitempty" url:"-"`
-	MaintainerID   *string                              `json:"maintainer_id,omitempty" url:"-"`
-	Name           *string                              `json:"name,omitempty" url:"-"`
-	PluralName     *string                              `json:"plural_name,omitempty" url:"-"`
-	SingularName   *string                              `json:"singular_name,omitempty" url:"-"`
-	TraitID        *string                              `json:"trait_id,omitempty" url:"-"`
+	Description    *string                                 `json:"description,omitempty" url:"-"`
+	EventSubtype   *string                                 `json:"event_subtype,omitempty" url:"-"`
+	FeatureType    *UpdateFeatureRequestBodyFeatureType    `json:"feature_type,omitempty" url:"-"`
+	Flag           *CreateOrUpdateFlagRequestBody          `json:"flag,omitempty" url:"-"`
+	Icon           *string                                 `json:"icon,omitempty" url:"-"`
+	LifecyclePhase *UpdateFeatureRequestBodyLifecyclePhase `json:"lifecycle_phase,omitempty" url:"-"`
+	MaintainerID   *string                                 `json:"maintainer_id,omitempty" url:"-"`
+	Name           *string                                 `json:"name,omitempty" url:"-"`
+	PluralName     *string                                 `json:"plural_name,omitempty" url:"-"`
+	SingularName   *string                                 `json:"singular_name,omitempty" url:"-"`
+	TraitID        *string                                 `json:"trait_id,omitempty" url:"-"`
 }
 
 type UpdateFlagRulesRequestBody struct {

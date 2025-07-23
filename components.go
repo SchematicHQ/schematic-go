@@ -37,33 +37,34 @@ type PreviewComponentDataRequest struct {
 }
 
 type CompanyPlanDetailResponseData struct {
-	AudienceType     *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
-	BillingProduct   *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
-	ChargeType       string                            `json:"charge_type" url:"charge_type"`
-	CompanyCanTrial  bool                              `json:"company_can_trial" url:"company_can_trial"`
-	CompanyCount     int                               `json:"company_count" url:"company_count"`
-	ControlledBy     string                            `json:"controlled_by" url:"controlled_by"`
-	CreatedAt        time.Time                         `json:"created_at" url:"created_at"`
-	Current          bool                              `json:"current" url:"current"`
-	Custom           bool                              `json:"custom" url:"custom"`
-	CustomPlanConfig *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
-	Description      string                            `json:"description" url:"description"`
-	Entitlements     []*PlanEntitlementResponseData    `json:"entitlements,omitempty" url:"entitlements,omitempty"`
-	Features         []*FeatureDetailResponseData      `json:"features,omitempty" url:"features,omitempty"`
-	Icon             string                            `json:"icon" url:"icon"`
-	ID               string                            `json:"id" url:"id"`
-	IsCustom         bool                              `json:"is_custom" url:"is_custom"`
-	IsDefault        bool                              `json:"is_default" url:"is_default"`
-	IsFree           bool                              `json:"is_free" url:"is_free"`
-	IsTrialable      bool                              `json:"is_trialable" url:"is_trialable"`
-	MonthlyPrice     *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	Name             string                            `json:"name" url:"name"`
-	OneTimePrice     *BillingPriceResponseData         `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
-	PlanType         string                            `json:"plan_type" url:"plan_type"`
-	TrialDays        *int                              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
-	UpdatedAt        time.Time                         `json:"updated_at" url:"updated_at"`
-	Valid            bool                              `json:"valid" url:"valid"`
-	YearlyPrice      *BillingPriceResponseData         `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+	AudienceType      *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
+	BillingProduct    *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
+	ChargeType        string                            `json:"charge_type" url:"charge_type"`
+	CompanyCanTrial   bool                              `json:"company_can_trial" url:"company_can_trial"`
+	CompanyCount      int                               `json:"company_count" url:"company_count"`
+	CompatiblePlanIDs []string                          `json:"compatible_plan_ids,omitempty" url:"compatible_plan_ids,omitempty"`
+	ControlledBy      string                            `json:"controlled_by" url:"controlled_by"`
+	CreatedAt         time.Time                         `json:"created_at" url:"created_at"`
+	Current           bool                              `json:"current" url:"current"`
+	Custom            bool                              `json:"custom" url:"custom"`
+	CustomPlanConfig  *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
+	Description       string                            `json:"description" url:"description"`
+	Entitlements      []*PlanEntitlementResponseData    `json:"entitlements,omitempty" url:"entitlements,omitempty"`
+	Features          []*FeatureDetailResponseData      `json:"features,omitempty" url:"features,omitempty"`
+	Icon              string                            `json:"icon" url:"icon"`
+	ID                string                            `json:"id" url:"id"`
+	IsCustom          bool                              `json:"is_custom" url:"is_custom"`
+	IsDefault         bool                              `json:"is_default" url:"is_default"`
+	IsFree            bool                              `json:"is_free" url:"is_free"`
+	IsTrialable       bool                              `json:"is_trialable" url:"is_trialable"`
+	MonthlyPrice      *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	Name              string                            `json:"name" url:"name"`
+	OneTimePrice      *BillingPriceResponseData         `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	PlanType          string                            `json:"plan_type" url:"plan_type"`
+	TrialDays         *int                              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	UpdatedAt         time.Time                         `json:"updated_at" url:"updated_at"`
+	Valid             bool                              `json:"valid" url:"valid"`
+	YearlyPrice       *BillingPriceResponseData         `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -102,6 +103,13 @@ func (c *CompanyPlanDetailResponseData) GetCompanyCount() int {
 		return 0
 	}
 	return c.CompanyCount
+}
+
+func (c *CompanyPlanDetailResponseData) GetCompatiblePlanIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.CompatiblePlanIDs
 }
 
 func (c *CompanyPlanDetailResponseData) GetControlledBy() string {
@@ -371,6 +379,7 @@ type ComponentPreviewResponseData struct {
 	ActiveAddOns                 []*CompanyPlanDetailResponseData     `json:"active_add_ons,omitempty" url:"active_add_ons,omitempty"`
 	ActivePlans                  []*CompanyPlanDetailResponseData     `json:"active_plans,omitempty" url:"active_plans,omitempty"`
 	ActiveUsageBasedEntitlements []*UsageBasedEntitlementResponseData `json:"active_usage_based_entitlements,omitempty" url:"active_usage_based_entitlements,omitempty"`
+	AddOnCompatibilities         []*CompatiblePlans                   `json:"add_on_compatibilities,omitempty" url:"add_on_compatibilities,omitempty"`
 	Capabilities                 *ComponentCapabilities               `json:"capabilities,omitempty" url:"capabilities,omitempty"`
 	Company                      *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
 	Component                    *ComponentResponseData               `json:"component,omitempty" url:"component,omitempty"`
@@ -405,6 +414,13 @@ func (c *ComponentPreviewResponseData) GetActiveUsageBasedEntitlements() []*Usag
 		return nil
 	}
 	return c.ActiveUsageBasedEntitlements
+}
+
+func (c *ComponentPreviewResponseData) GetAddOnCompatibilities() []*CompatiblePlans {
+	if c == nil {
+		return nil
+	}
+	return c.AddOnCompatibilities
 }
 
 func (c *ComponentPreviewResponseData) GetCapabilities() *ComponentCapabilities {

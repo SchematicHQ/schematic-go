@@ -18,11 +18,13 @@ type ChangeSubscriptionInternalRequestBody struct {
 	AddOnIDs         []*UpdateAddOnRequestBody        `json:"add_on_ids,omitempty" url:"add_on_ids,omitempty"`
 	CompanyID        string                           `json:"company_id" url:"company_id"`
 	CouponExternalID *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
+	CreditBundles    []*UpdateCreditBundleRequestBody `json:"credit_bundles,omitempty" url:"credit_bundles,omitempty"`
 	NewPlanID        string                           `json:"new_plan_id" url:"new_plan_id"`
 	NewPriceID       string                           `json:"new_price_id" url:"new_price_id"`
 	PayInAdvance     []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance,omitempty" url:"pay_in_advance,omitempty"`
 	PaymentMethodID  *string                          `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
 	PromoCode        *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
+	SkipTrial        bool                             `json:"skip_trial" url:"skip_trial"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -47,6 +49,13 @@ func (c *ChangeSubscriptionInternalRequestBody) GetCouponExternalID() *string {
 		return nil
 	}
 	return c.CouponExternalID
+}
+
+func (c *ChangeSubscriptionInternalRequestBody) GetCreditBundles() []*UpdateCreditBundleRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.CreditBundles
 }
 
 func (c *ChangeSubscriptionInternalRequestBody) GetNewPlanID() string {
@@ -82,6 +91,13 @@ func (c *ChangeSubscriptionInternalRequestBody) GetPromoCode() *string {
 		return nil
 	}
 	return c.PromoCode
+}
+
+func (c *ChangeSubscriptionInternalRequestBody) GetSkipTrial() bool {
+	if c == nil {
+		return false
+	}
+	return c.SkipTrial
 }
 
 func (c *ChangeSubscriptionInternalRequestBody) GetExtraProperties() map[string]interface{} {
@@ -121,8 +137,10 @@ type CheckoutDataResponseData struct {
 	ActiveAddOns                   []*PlanDetailResponseData            `json:"active_add_ons,omitempty" url:"active_add_ons,omitempty"`
 	ActivePlan                     *PlanDetailResponseData              `json:"active_plan,omitempty" url:"active_plan,omitempty"`
 	ActiveUsageBasedEntitlements   []*UsageBasedEntitlementResponseData `json:"active_usage_based_entitlements,omitempty" url:"active_usage_based_entitlements,omitempty"`
+	AvailableCreditBundles         []*BillingCreditBundleResponseData   `json:"available_credit_bundles,omitempty" url:"available_credit_bundles,omitempty"`
 	Company                        *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
 	FeatureUsage                   *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	SelectedCreditBundles          []*CreditBundlePurchaseResponseData  `json:"selected_credit_bundles,omitempty" url:"selected_credit_bundles,omitempty"`
 	SelectedPlan                   *PlanDetailResponseData              `json:"selected_plan,omitempty" url:"selected_plan,omitempty"`
 	SelectedUsageBasedEntitlements []*UsageBasedEntitlementResponseData `json:"selected_usage_based_entitlements,omitempty" url:"selected_usage_based_entitlements,omitempty"`
 	Subscription                   *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
@@ -152,6 +170,13 @@ func (c *CheckoutDataResponseData) GetActiveUsageBasedEntitlements() []*UsageBas
 	return c.ActiveUsageBasedEntitlements
 }
 
+func (c *CheckoutDataResponseData) GetAvailableCreditBundles() []*BillingCreditBundleResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.AvailableCreditBundles
+}
+
 func (c *CheckoutDataResponseData) GetCompany() *CompanyDetailResponseData {
 	if c == nil {
 		return nil
@@ -164,6 +189,13 @@ func (c *CheckoutDataResponseData) GetFeatureUsage() *FeatureUsageDetailResponse
 		return nil
 	}
 	return c.FeatureUsage
+}
+
+func (c *CheckoutDataResponseData) GetSelectedCreditBundles() []*CreditBundlePurchaseResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.SelectedCreditBundles
 }
 
 func (c *CheckoutDataResponseData) GetSelectedPlan() *PlanDetailResponseData {
@@ -219,18 +251,81 @@ func (c *CheckoutDataResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreditBundlePurchaseResponseData struct {
+	Bundle   *BillingCreditBundleResponseData `json:"bundle,omitempty" url:"bundle,omitempty"`
+	Quantity int                              `json:"quantity" url:"quantity"`
+	Total    int                              `json:"total" url:"total"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditBundlePurchaseResponseData) GetBundle() *BillingCreditBundleResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Bundle
+}
+
+func (c *CreditBundlePurchaseResponseData) GetQuantity() int {
+	if c == nil {
+		return 0
+	}
+	return c.Quantity
+}
+
+func (c *CreditBundlePurchaseResponseData) GetTotal() int {
+	if c == nil {
+		return 0
+	}
+	return c.Total
+}
+
+func (c *CreditBundlePurchaseResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditBundlePurchaseResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditBundlePurchaseResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditBundlePurchaseResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditBundlePurchaseResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 // The requested resource
 type PreviewSubscriptionChangeResponseData struct {
-	AmountOff        int                                     `json:"amount_off" url:"amount_off"`
-	DueNow           int                                     `json:"due_now" url:"due_now"`
-	Finance          *PreviewSubscriptionFinanceResponseData `json:"finance,omitempty" url:"finance,omitempty"`
-	NewCharges       int                                     `json:"new_charges" url:"new_charges"`
-	PercentOff       float64                                 `json:"percent_off" url:"percent_off"`
-	PeriodStart      time.Time                               `json:"period_start" url:"period_start"`
-	PromoCodeApplied bool                                    `json:"promo_code_applied" url:"promo_code_applied"`
-	Proration        int                                     `json:"proration" url:"proration"`
-	TrialEnd         *time.Time                              `json:"trial_end,omitempty" url:"trial_end,omitempty"`
-	UsageViolations  []*FeatureUsageResponseData             `json:"usage_violations,omitempty" url:"usage_violations,omitempty"`
+	AmountOff             int                                     `json:"amount_off" url:"amount_off"`
+	DueNow                int                                     `json:"due_now" url:"due_now"`
+	Finance               *PreviewSubscriptionFinanceResponseData `json:"finance,omitempty" url:"finance,omitempty"`
+	NewCharges            int                                     `json:"new_charges" url:"new_charges"`
+	PaymentMethodRequired bool                                    `json:"payment_method_required" url:"payment_method_required"`
+	PercentOff            float64                                 `json:"percent_off" url:"percent_off"`
+	PeriodStart           time.Time                               `json:"period_start" url:"period_start"`
+	PromoCodeApplied      bool                                    `json:"promo_code_applied" url:"promo_code_applied"`
+	Proration             int                                     `json:"proration" url:"proration"`
+	TrialEnd              *time.Time                              `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	UsageViolations       []*FeatureUsageResponseData             `json:"usage_violations,omitempty" url:"usage_violations,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -262,6 +357,13 @@ func (p *PreviewSubscriptionChangeResponseData) GetNewCharges() int {
 		return 0
 	}
 	return p.NewCharges
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetPaymentMethodRequired() bool {
+	if p == nil {
+		return false
+	}
+	return p.PaymentMethodRequired
 }
 
 func (p *PreviewSubscriptionChangeResponseData) GetPercentOff() float64 {

@@ -136,6 +136,7 @@ type SearchBillingPricesRequest struct {
 	Interval  *string                              `json:"-" url:"interval,omitempty"`
 	UsageType *SearchBillingPricesRequestUsageType `json:"-" url:"usage_type,omitempty"`
 	Price     *int                                 `json:"-" url:"price,omitempty"`
+	TiersMode *SearchBillingPricesRequestTiersMode `json:"-" url:"tiers_mode,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -155,7 +156,7 @@ type BillingCouponResponseData struct {
 	MaxRedemptions   *int                   `json:"max_redemptions,omitempty" url:"max_redemptions,omitempty"`
 	Metadata         map[string]interface{} `json:"metadata,omitempty" url:"metadata,omitempty"`
 	Name             string                 `json:"name" url:"name"`
-	PercentOff       *int                   `json:"percent_off,omitempty" url:"percent_off,omitempty"`
+	PercentOff       *float64               `json:"percent_off,omitempty" url:"percent_off,omitempty"`
 	TimesRedeemed    int                    `json:"times_redeemed" url:"times_redeemed"`
 	ValidFrom        *time.Time             `json:"valid_from,omitempty" url:"valid_from,omitempty"`
 	ValidUntil       *time.Time             `json:"valid_until,omitempty" url:"valid_until,omitempty"`
@@ -248,7 +249,7 @@ func (b *BillingCouponResponseData) GetName() string {
 	return b.Name
 }
 
-func (b *BillingCouponResponseData) GetPercentOff() *int {
+func (b *BillingCouponResponseData) GetPercentOff() *float64 {
 	if b == nil {
 		return nil
 	}
@@ -1502,25 +1503,25 @@ func (c CreateBillingPriceRequestBodyBillingScheme) Ptr() *CreateBillingPriceReq
 	return &c
 }
 
-type CreateBillingPriceRequestBodyTierMode string
+type CreateBillingPriceRequestBodyTiersMode string
 
 const (
-	CreateBillingPriceRequestBodyTierModeVolume    CreateBillingPriceRequestBodyTierMode = "volume"
-	CreateBillingPriceRequestBodyTierModeGraduated CreateBillingPriceRequestBodyTierMode = "graduated"
+	CreateBillingPriceRequestBodyTiersModeVolume    CreateBillingPriceRequestBodyTiersMode = "volume"
+	CreateBillingPriceRequestBodyTiersModeGraduated CreateBillingPriceRequestBodyTiersMode = "graduated"
 )
 
-func NewCreateBillingPriceRequestBodyTierModeFromString(s string) (CreateBillingPriceRequestBodyTierMode, error) {
+func NewCreateBillingPriceRequestBodyTiersModeFromString(s string) (CreateBillingPriceRequestBodyTiersMode, error) {
 	switch s {
 	case "volume":
-		return CreateBillingPriceRequestBodyTierModeVolume, nil
+		return CreateBillingPriceRequestBodyTiersModeVolume, nil
 	case "graduated":
-		return CreateBillingPriceRequestBodyTierModeGraduated, nil
+		return CreateBillingPriceRequestBodyTiersModeGraduated, nil
 	}
-	var t CreateBillingPriceRequestBodyTierMode
+	var t CreateBillingPriceRequestBodyTiersMode
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (c CreateBillingPriceRequestBodyTierMode) Ptr() *CreateBillingPriceRequestBodyTierMode {
+func (c CreateBillingPriceRequestBodyTiersMode) Ptr() *CreateBillingPriceRequestBodyTiersMode {
 	return &c
 }
 
@@ -2817,6 +2818,7 @@ type SearchBillingPricesParams struct {
 	Offset    *int                                        `json:"offset,omitempty" url:"offset,omitempty"`
 	Price     *int                                        `json:"price,omitempty" url:"price,omitempty"`
 	Q         *string                                     `json:"q,omitempty" url:"q,omitempty"`
+	TiersMode *SearchBillingPricesResponseParamsTiersMode `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
 	UsageType *SearchBillingPricesResponseParamsUsageType `json:"usage_type,omitempty" url:"usage_type,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -2865,6 +2867,13 @@ func (s *SearchBillingPricesParams) GetQ() *string {
 	return s.Q
 }
 
+func (s *SearchBillingPricesParams) GetTiersMode() *SearchBillingPricesResponseParamsTiersMode {
+	if s == nil {
+		return nil
+	}
+	return s.TiersMode
+}
+
 func (s *SearchBillingPricesParams) GetUsageType() *SearchBillingPricesResponseParamsUsageType {
 	if s == nil {
 		return nil
@@ -2902,6 +2911,28 @@ func (s *SearchBillingPricesParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", s)
+}
+
+type SearchBillingPricesRequestTiersMode string
+
+const (
+	SearchBillingPricesRequestTiersModeVolume    SearchBillingPricesRequestTiersMode = "volume"
+	SearchBillingPricesRequestTiersModeGraduated SearchBillingPricesRequestTiersMode = "graduated"
+)
+
+func NewSearchBillingPricesRequestTiersModeFromString(s string) (SearchBillingPricesRequestTiersMode, error) {
+	switch s {
+	case "volume":
+		return SearchBillingPricesRequestTiersModeVolume, nil
+	case "graduated":
+		return SearchBillingPricesRequestTiersModeGraduated, nil
+	}
+	var t SearchBillingPricesRequestTiersMode
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s SearchBillingPricesRequestTiersMode) Ptr() *SearchBillingPricesRequestTiersMode {
+	return &s
 }
 
 type SearchBillingPricesRequestUsageType string
@@ -2980,6 +3011,28 @@ func (s *SearchBillingPricesResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", s)
+}
+
+type SearchBillingPricesResponseParamsTiersMode string
+
+const (
+	SearchBillingPricesResponseParamsTiersModeVolume    SearchBillingPricesResponseParamsTiersMode = "volume"
+	SearchBillingPricesResponseParamsTiersModeGraduated SearchBillingPricesResponseParamsTiersMode = "graduated"
+)
+
+func NewSearchBillingPricesResponseParamsTiersModeFromString(s string) (SearchBillingPricesResponseParamsTiersMode, error) {
+	switch s {
+	case "volume":
+		return SearchBillingPricesResponseParamsTiersModeVolume, nil
+	case "graduated":
+		return SearchBillingPricesResponseParamsTiersModeGraduated, nil
+	}
+	var t SearchBillingPricesResponseParamsTiersMode
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s SearchBillingPricesResponseParamsTiersMode) Ptr() *SearchBillingPricesResponseParamsTiersMode {
+	return &s
 }
 
 type SearchBillingPricesResponseParamsUsageType string
@@ -3486,7 +3539,7 @@ type CreateBillingPriceRequestBody struct {
 	PriceExternalID   string                                     `json:"price_external_id" url:"-"`
 	PriceTiers        []*CreateBillingPriceTierRequestBody       `json:"price_tiers,omitempty" url:"-"`
 	ProductExternalID string                                     `json:"product_external_id" url:"-"`
-	TierMode          *CreateBillingPriceRequestBodyTierMode     `json:"tier_mode,omitempty" url:"-"`
+	TiersMode         *CreateBillingPriceRequestBodyTiersMode    `json:"tiers_mode,omitempty" url:"-"`
 	UsageType         CreateBillingPriceRequestBodyUsageType     `json:"usage_type" url:"-"`
 }
 

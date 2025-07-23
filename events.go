@@ -23,11 +23,11 @@ type GetEventSummariesRequest struct {
 }
 
 type ListEventsRequest struct {
-	CompanyID    *string   `json:"-" url:"company_id,omitempty"`
-	EventSubtype *string   `json:"-" url:"event_subtype,omitempty"`
-	EventTypes   []*string `json:"-" url:"event_types,omitempty"`
-	FlagID       *string   `json:"-" url:"flag_id,omitempty"`
-	UserID       *string   `json:"-" url:"user_id,omitempty"`
+	CompanyID    *string                            `json:"-" url:"company_id,omitempty"`
+	EventSubtype *string                            `json:"-" url:"event_subtype,omitempty"`
+	EventTypes   []*ListEventsRequestEventTypesItem `json:"-" url:"event_types,omitempty"`
+	FlagID       *string                            `json:"-" url:"flag_id,omitempty"`
+	UserID       *string                            `json:"-" url:"user_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1403,10 +1403,10 @@ func (g *GetSegmentIntegrationStatusResponse) String() string {
 
 // Input parameters
 type ListEventsParams struct {
-	CompanyID    *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EventSubtype *string  `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	EventTypes   []string `json:"event_types,omitempty" url:"event_types,omitempty"`
-	FlagID       *string  `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	CompanyID    *string                                  `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EventSubtype *string                                  `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	EventTypes   []ListEventsResponseParamsEventTypesItem `json:"event_types,omitempty" url:"event_types,omitempty"`
+	FlagID       *string                                  `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1431,7 +1431,7 @@ func (l *ListEventsParams) GetEventSubtype() *string {
 	return l.EventSubtype
 }
 
-func (l *ListEventsParams) GetEventTypes() []string {
+func (l *ListEventsParams) GetEventTypes() []ListEventsResponseParamsEventTypesItem {
 	if l == nil {
 		return nil
 	}
@@ -1498,6 +1498,31 @@ func (l *ListEventsParams) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
+type ListEventsRequestEventTypesItem string
+
+const (
+	ListEventsRequestEventTypesItemIdentify  ListEventsRequestEventTypesItem = "identify"
+	ListEventsRequestEventTypesItemTrack     ListEventsRequestEventTypesItem = "track"
+	ListEventsRequestEventTypesItemFlagCheck ListEventsRequestEventTypesItem = "flag_check"
+)
+
+func NewListEventsRequestEventTypesItemFromString(s string) (ListEventsRequestEventTypesItem, error) {
+	switch s {
+	case "identify":
+		return ListEventsRequestEventTypesItemIdentify, nil
+	case "track":
+		return ListEventsRequestEventTypesItemTrack, nil
+	case "flag_check":
+		return ListEventsRequestEventTypesItemFlagCheck, nil
+	}
+	var t ListEventsRequestEventTypesItem
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListEventsRequestEventTypesItem) Ptr() *ListEventsRequestEventTypesItem {
+	return &l
+}
+
 type ListEventsResponse struct {
 	// The returned resources
 	Data []*EventDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
@@ -1552,4 +1577,29 @@ func (l *ListEventsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+type ListEventsResponseParamsEventTypesItem string
+
+const (
+	ListEventsResponseParamsEventTypesItemIdentify  ListEventsResponseParamsEventTypesItem = "identify"
+	ListEventsResponseParamsEventTypesItemTrack     ListEventsResponseParamsEventTypesItem = "track"
+	ListEventsResponseParamsEventTypesItemFlagCheck ListEventsResponseParamsEventTypesItem = "flag_check"
+)
+
+func NewListEventsResponseParamsEventTypesItemFromString(s string) (ListEventsResponseParamsEventTypesItem, error) {
+	switch s {
+	case "identify":
+		return ListEventsResponseParamsEventTypesItemIdentify, nil
+	case "track":
+		return ListEventsResponseParamsEventTypesItemTrack, nil
+	case "flag_check":
+		return ListEventsResponseParamsEventTypesItemFlagCheck, nil
+	}
+	var t ListEventsResponseParamsEventTypesItem
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListEventsResponseParamsEventTypesItem) Ptr() *ListEventsResponseParamsEventTypesItem {
+	return &l
 }

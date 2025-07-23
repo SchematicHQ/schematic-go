@@ -88,6 +88,7 @@ type CreateCompanyOverrideRequestBody struct {
 	MetricPeriod           *CreateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
 	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              CreateCompanyOverrideRequestBodyValueType               `json:"value_type" url:"-"`
@@ -116,6 +117,7 @@ func (c *CreateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 type CreatePlanEntitlementRequestBody struct {
+	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
 	FeatureID               string                                                  `json:"feature_id" url:"-"`
 	MetricPeriod            *CreatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
@@ -125,9 +127,12 @@ type CreatePlanEntitlementRequestBody struct {
 	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
 	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
 	PlanID                  string                                                  `json:"plan_id" url:"-"`
-	PriceBehavior           *string                                                 `json:"price_behavior,omitempty" url:"-"`
+	PriceBehavior           *CreatePlanEntitlementRequestBodyPriceBehavior          `json:"price_behavior,omitempty" url:"-"`
+	PriceTiers              []*CreatePriceTierRequestBody                           `json:"price_tiers,omitempty" url:"-"`
 	SoftLimit               *int                                                    `json:"soft_limit,omitempty" url:"-"`
+	TierMode                string                                                  `json:"tier_mode" url:"-"`
 	ValueBool               *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID           *string                                                 `json:"value_credit_id,omitempty" url:"-"`
 	ValueNumeric            *int                                                    `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID            *string                                                 `json:"value_trait_id,omitempty" url:"-"`
 	ValueType               CreatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
@@ -217,6 +222,7 @@ type ListPlanEntitlementsRequest struct {
 type CompanyOverrideResponseData struct {
 	Company                *CompanyDetailResponseData         `json:"company,omitempty" url:"company,omitempty"`
 	CompanyID              string                             `json:"company_id" url:"company_id"`
+	ConsumptionRate        *float64                           `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
 	CreatedAt              time.Time                          `json:"created_at" url:"created_at"`
 	EnvironmentID          string                             `json:"environment_id" url:"environment_id"`
 	ExpirationDate         *time.Time                         `json:"expiration_date,omitempty" url:"expiration_date,omitempty"`
@@ -250,6 +256,13 @@ func (c *CompanyOverrideResponseData) GetCompanyID() string {
 		return ""
 	}
 	return c.CompanyID
+}
+
+func (c *CompanyOverrideResponseData) GetConsumptionRate() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.ConsumptionRate
 }
 
 func (c *CompanyOverrideResponseData) GetCreatedAt() time.Time {
@@ -411,6 +424,76 @@ func (c *CompanyOverrideResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyOverrideResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CreatePriceTierRequestBody struct {
+	FlatAmount          *int    `json:"flat_amount,omitempty" url:"flat_amount,omitempty"`
+	PerUnitPrice        *int    `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
+	PerUnitPriceDecimal *string `json:"per_unit_price_decimal,omitempty" url:"per_unit_price_decimal,omitempty"`
+	UpTo                *int    `json:"up_to,omitempty" url:"up_to,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePriceTierRequestBody) GetFlatAmount() *int {
+	if c == nil {
+		return nil
+	}
+	return c.FlatAmount
+}
+
+func (c *CreatePriceTierRequestBody) GetPerUnitPrice() *int {
+	if c == nil {
+		return nil
+	}
+	return c.PerUnitPrice
+}
+
+func (c *CreatePriceTierRequestBody) GetPerUnitPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PerUnitPriceDecimal
+}
+
+func (c *CreatePriceTierRequestBody) GetUpTo() *int {
+	if c == nil {
+		return nil
+	}
+	return c.UpTo
+}
+
+func (c *CreatePriceTierRequestBody) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePriceTierRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePriceTierRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePriceTierRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePriceTierRequestBody) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1630,6 +1713,7 @@ type CreateCompanyOverrideRequestBodyValueType string
 
 const (
 	CreateCompanyOverrideRequestBodyValueTypeBoolean   CreateCompanyOverrideRequestBodyValueType = "boolean"
+	CreateCompanyOverrideRequestBodyValueTypeCredit    CreateCompanyOverrideRequestBodyValueType = "credit"
 	CreateCompanyOverrideRequestBodyValueTypeNumeric   CreateCompanyOverrideRequestBodyValueType = "numeric"
 	CreateCompanyOverrideRequestBodyValueTypeTrait     CreateCompanyOverrideRequestBodyValueType = "trait"
 	CreateCompanyOverrideRequestBodyValueTypeUnlimited CreateCompanyOverrideRequestBodyValueType = "unlimited"
@@ -1639,6 +1723,8 @@ func NewCreateCompanyOverrideRequestBodyValueTypeFromString(s string) (CreateCom
 	switch s {
 	case "boolean":
 		return CreateCompanyOverrideRequestBodyValueTypeBoolean, nil
+	case "credit":
+		return CreateCompanyOverrideRequestBodyValueTypeCredit, nil
 	case "numeric":
 		return CreateCompanyOverrideRequestBodyValueTypeNumeric, nil
 	case "trait":
@@ -1759,10 +1845,42 @@ func (c CreatePlanEntitlementRequestBodyMetricPeriodMonthReset) Ptr() *CreatePla
 	return &c
 }
 
+type CreatePlanEntitlementRequestBodyPriceBehavior string
+
+const (
+	CreatePlanEntitlementRequestBodyPriceBehaviorPayAsYouGo     CreatePlanEntitlementRequestBodyPriceBehavior = "pay_as_you_go"
+	CreatePlanEntitlementRequestBodyPriceBehaviorPayInAdvance   CreatePlanEntitlementRequestBodyPriceBehavior = "pay_in_advance"
+	CreatePlanEntitlementRequestBodyPriceBehaviorOverage        CreatePlanEntitlementRequestBodyPriceBehavior = "overage"
+	CreatePlanEntitlementRequestBodyPriceBehaviorCreditBurndown CreatePlanEntitlementRequestBodyPriceBehavior = "credit_burndown"
+	CreatePlanEntitlementRequestBodyPriceBehaviorTier           CreatePlanEntitlementRequestBodyPriceBehavior = "tier"
+)
+
+func NewCreatePlanEntitlementRequestBodyPriceBehaviorFromString(s string) (CreatePlanEntitlementRequestBodyPriceBehavior, error) {
+	switch s {
+	case "pay_as_you_go":
+		return CreatePlanEntitlementRequestBodyPriceBehaviorPayAsYouGo, nil
+	case "pay_in_advance":
+		return CreatePlanEntitlementRequestBodyPriceBehaviorPayInAdvance, nil
+	case "overage":
+		return CreatePlanEntitlementRequestBodyPriceBehaviorOverage, nil
+	case "credit_burndown":
+		return CreatePlanEntitlementRequestBodyPriceBehaviorCreditBurndown, nil
+	case "tier":
+		return CreatePlanEntitlementRequestBodyPriceBehaviorTier, nil
+	}
+	var t CreatePlanEntitlementRequestBodyPriceBehavior
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreatePlanEntitlementRequestBodyPriceBehavior) Ptr() *CreatePlanEntitlementRequestBodyPriceBehavior {
+	return &c
+}
+
 type CreatePlanEntitlementRequestBodyValueType string
 
 const (
 	CreatePlanEntitlementRequestBodyValueTypeBoolean   CreatePlanEntitlementRequestBodyValueType = "boolean"
+	CreatePlanEntitlementRequestBodyValueTypeCredit    CreatePlanEntitlementRequestBodyValueType = "credit"
 	CreatePlanEntitlementRequestBodyValueTypeNumeric   CreatePlanEntitlementRequestBodyValueType = "numeric"
 	CreatePlanEntitlementRequestBodyValueTypeTrait     CreatePlanEntitlementRequestBodyValueType = "trait"
 	CreatePlanEntitlementRequestBodyValueTypeUnlimited CreatePlanEntitlementRequestBodyValueType = "unlimited"
@@ -1772,6 +1890,8 @@ func NewCreatePlanEntitlementRequestBodyValueTypeFromString(s string) (CreatePla
 	switch s {
 	case "boolean":
 		return CreatePlanEntitlementRequestBodyValueTypeBoolean, nil
+	case "credit":
+		return CreatePlanEntitlementRequestBodyValueTypeCredit, nil
 	case "numeric":
 		return CreatePlanEntitlementRequestBodyValueTypeNumeric, nil
 	case "trait":
@@ -2981,6 +3101,7 @@ type UpdateCompanyOverrideRequestBodyValueType string
 
 const (
 	UpdateCompanyOverrideRequestBodyValueTypeBoolean   UpdateCompanyOverrideRequestBodyValueType = "boolean"
+	UpdateCompanyOverrideRequestBodyValueTypeCredit    UpdateCompanyOverrideRequestBodyValueType = "credit"
 	UpdateCompanyOverrideRequestBodyValueTypeNumeric   UpdateCompanyOverrideRequestBodyValueType = "numeric"
 	UpdateCompanyOverrideRequestBodyValueTypeTrait     UpdateCompanyOverrideRequestBodyValueType = "trait"
 	UpdateCompanyOverrideRequestBodyValueTypeUnlimited UpdateCompanyOverrideRequestBodyValueType = "unlimited"
@@ -2990,6 +3111,8 @@ func NewUpdateCompanyOverrideRequestBodyValueTypeFromString(s string) (UpdateCom
 	switch s {
 	case "boolean":
 		return UpdateCompanyOverrideRequestBodyValueTypeBoolean, nil
+	case "credit":
+		return UpdateCompanyOverrideRequestBodyValueTypeCredit, nil
 	case "numeric":
 		return UpdateCompanyOverrideRequestBodyValueTypeNumeric, nil
 	case "trait":
@@ -3110,10 +3233,42 @@ func (u UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset) Ptr() *UpdatePla
 	return &u
 }
 
+type UpdatePlanEntitlementRequestBodyPriceBehavior string
+
+const (
+	UpdatePlanEntitlementRequestBodyPriceBehaviorPayAsYouGo     UpdatePlanEntitlementRequestBodyPriceBehavior = "pay_as_you_go"
+	UpdatePlanEntitlementRequestBodyPriceBehaviorPayInAdvance   UpdatePlanEntitlementRequestBodyPriceBehavior = "pay_in_advance"
+	UpdatePlanEntitlementRequestBodyPriceBehaviorOverage        UpdatePlanEntitlementRequestBodyPriceBehavior = "overage"
+	UpdatePlanEntitlementRequestBodyPriceBehaviorCreditBurndown UpdatePlanEntitlementRequestBodyPriceBehavior = "credit_burndown"
+	UpdatePlanEntitlementRequestBodyPriceBehaviorTier           UpdatePlanEntitlementRequestBodyPriceBehavior = "tier"
+)
+
+func NewUpdatePlanEntitlementRequestBodyPriceBehaviorFromString(s string) (UpdatePlanEntitlementRequestBodyPriceBehavior, error) {
+	switch s {
+	case "pay_as_you_go":
+		return UpdatePlanEntitlementRequestBodyPriceBehaviorPayAsYouGo, nil
+	case "pay_in_advance":
+		return UpdatePlanEntitlementRequestBodyPriceBehaviorPayInAdvance, nil
+	case "overage":
+		return UpdatePlanEntitlementRequestBodyPriceBehaviorOverage, nil
+	case "credit_burndown":
+		return UpdatePlanEntitlementRequestBodyPriceBehaviorCreditBurndown, nil
+	case "tier":
+		return UpdatePlanEntitlementRequestBodyPriceBehaviorTier, nil
+	}
+	var t UpdatePlanEntitlementRequestBodyPriceBehavior
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdatePlanEntitlementRequestBodyPriceBehavior) Ptr() *UpdatePlanEntitlementRequestBodyPriceBehavior {
+	return &u
+}
+
 type UpdatePlanEntitlementRequestBodyValueType string
 
 const (
 	UpdatePlanEntitlementRequestBodyValueTypeBoolean   UpdatePlanEntitlementRequestBodyValueType = "boolean"
+	UpdatePlanEntitlementRequestBodyValueTypeCredit    UpdatePlanEntitlementRequestBodyValueType = "credit"
 	UpdatePlanEntitlementRequestBodyValueTypeNumeric   UpdatePlanEntitlementRequestBodyValueType = "numeric"
 	UpdatePlanEntitlementRequestBodyValueTypeTrait     UpdatePlanEntitlementRequestBodyValueType = "trait"
 	UpdatePlanEntitlementRequestBodyValueTypeUnlimited UpdatePlanEntitlementRequestBodyValueType = "unlimited"
@@ -3123,6 +3278,8 @@ func NewUpdatePlanEntitlementRequestBodyValueTypeFromString(s string) (UpdatePla
 	switch s {
 	case "boolean":
 		return UpdatePlanEntitlementRequestBodyValueTypeBoolean, nil
+	case "credit":
+		return UpdatePlanEntitlementRequestBodyValueTypeCredit, nil
 	case "numeric":
 		return UpdatePlanEntitlementRequestBodyValueTypeNumeric, nil
 	case "trait":
@@ -3198,6 +3355,7 @@ type UpdateCompanyOverrideRequestBody struct {
 	MetricPeriod           *UpdateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
 	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              UpdateCompanyOverrideRequestBodyValueType               `json:"value_type" url:"-"`
@@ -3226,6 +3384,7 @@ func (u *UpdateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 type UpdatePlanEntitlementRequestBody struct {
+	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
 	MetricPeriod            *UpdatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset  *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
@@ -3233,9 +3392,12 @@ type UpdatePlanEntitlementRequestBody struct {
 	MonthlyUnitPrice        *int                                                    `json:"monthly_unit_price,omitempty" url:"-"`
 	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
 	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
-	PriceBehavior           *string                                                 `json:"price_behavior,omitempty" url:"-"`
+	PriceBehavior           *UpdatePlanEntitlementRequestBodyPriceBehavior          `json:"price_behavior,omitempty" url:"-"`
+	PriceTiers              []*CreatePriceTierRequestBody                           `json:"price_tiers,omitempty" url:"-"`
 	SoftLimit               *int                                                    `json:"soft_limit,omitempty" url:"-"`
+	TierMode                string                                                  `json:"tier_mode" url:"-"`
 	ValueBool               *bool                                                   `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID           *string                                                 `json:"value_credit_id,omitempty" url:"-"`
 	ValueNumeric            *int                                                    `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID            *string                                                 `json:"value_trait_id,omitempty" url:"-"`
 	ValueType               UpdatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`

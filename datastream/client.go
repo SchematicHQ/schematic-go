@@ -322,6 +322,32 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	return nil
 }
 
+// Helper function to notify pending company requests
+func (c *DataStreamClient) notifyPendingCompanyRequests(_ context.Context, keys map[string]string, company *rulesengine.Company) {
+	// Notify all goroutines waiting for this company
+	c.pendingCompReqMu.Lock()
+	defer c.pendingCompReqMu.Unlock()
+
+	// For each relevant key, notify all waiting channels
+	for key, value := range keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+
+		// Check if there are channels waiting for this key
+		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
+			for _, ch := range channels {
+				// Non-blocking send - if the channel is full, we'll just continue
+				select {
+				case ch <- company:
+				default:
+				}
+			}
+
+			// Remove this set of channels as they've been notified
+			delete(c.pendingCompanyRequests, cacheKey)
+		}
+	}
+}
+
 func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataStreamResp) error {
 	var company *rulesengine.Company
 	err := json.Unmarshal(resp.Data, &company)
@@ -350,35 +376,40 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 		return err
 	}
 
-	// Notify all goroutines waiting for this company
-	c.pendingCompReqMu.Lock()
-	defer c.pendingCompReqMu.Unlock()
-
-	// For each relevant key, notify all waiting channels
-	for key, value := range company.Keys {
-		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-
-		// Check if there are channels waiting for this key
-		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
-			// Only notify channels if the cache operation for this key was successful
-			if cacheErr, exists := cacheResults[cacheKey]; exists && cacheErr == nil {
-				for _, ch := range channels {
-					// Non-blocking send - if the channel is full, we'll just continue
-					select {
-					case ch <- company:
-					default:
-					}
-				}
-			} else {
-				c.logger.Warn(ctx, fmt.Sprintf("Not notifying pending requests for key '%s' due to cache error", cacheKey))
-			}
-
-			// Remove this set of channels as they've been notified or informed of failure
-			delete(c.pendingCompanyRequests, cacheKey)
+	// Check for cache errors and log warnings
+	for cacheKey, cacheErr := range cacheResults {
+		if cacheErr != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Cache error for company key '%s': %v", cacheKey, cacheErr))
 		}
 	}
 
+	// Notify pending requests with the company data
+	c.notifyPendingCompanyRequests(ctx, company.Keys, company)
+
 	return nil
+}
+
+// Helper function to notify pending user requests
+func (c *DataStreamClient) notifyPendingUserRequests(_ context.Context, keys map[string]string, user *rulesengine.User) {
+	// Notify all goroutines waiting for this user
+	c.pendingUserReqMu.Lock()
+	defer c.pendingUserReqMu.Unlock()
+
+	// For each relevant key, notify all waiting channels
+	for key, value := range keys {
+		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+		if channels, ok := c.pendingUserRequests[cacheKey]; ok {
+			for _, ch := range channels {
+				// Non-blocking send - if the channel is full, we'll just continue
+				select {
+				case ch <- user:
+				default:
+				}
+			}
+			// Remove this set of channels as they've been notified
+			delete(c.pendingUserRequests, cacheKey)
+		}
+	}
 }
 
 func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStreamResp) error {
@@ -414,40 +445,40 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 		cacheResults[userKey] = err
 	}
 
-	// Notify all goroutines waiting for this user
-	c.pendingUserReqMu.Lock()
-	defer c.pendingUserReqMu.Unlock()
-
-	// For each relevant key, notify all waiting channels
-	for key, value := range user.Keys {
-		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
-		if channels, ok := c.pendingUserRequests[cacheKey]; ok {
-			// Only notify channels if the cache operation for this key was successful
-			if cacheErr, exists := cacheResults[cacheKey]; exists && cacheErr == nil {
-				for _, ch := range channels {
-					// Non-blocking send - if the channel is full, we'll just continue
-					select {
-					case ch <- user:
-					default:
-					}
-				}
-			} else {
-				c.logger.Warn(ctx, fmt.Sprintf("Not notifying pending requests for user key '%s' due to cache error", cacheKey))
-			}
-			// Remove this set of channels as they've been notified or informed of failure
-			delete(c.pendingUserRequests, cacheKey)
+	// Check for cache errors and log warnings
+	for cacheKey, cacheErr := range cacheResults {
+		if cacheErr != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Cache error for user key '%s': %v", cacheKey, cacheErr))
 		}
 	}
+
+	// Notify pending requests with the user data
+	c.notifyPendingUserRequests(ctx, user.Keys, user)
 
 	return nil
 }
 
-func (c *DataStreamClient) handleErrorMessage(_ context.Context, resp *DataStreamResp) error {
+func (c *DataStreamClient) handleErrorMessage(ctx context.Context, resp *DataStreamResp) error {
 	var respError DataStreamError
 	err := json.Unmarshal(resp.Data, &respError)
 	if err != nil {
 		return fmt.Errorf("Failed to unmarshal error message: %v", err)
 	}
+
+	// Check if we have both keys and entity type in the error response
+	if len(respError.Keys) > 0 && respError.EntityType != nil {
+		// Based on the entity type, notify the appropriate pending channels with nil
+		switch *respError.EntityType {
+		case EntityTypeCompany:
+			c.notifyPendingCompanyRequests(ctx, respError.Keys, nil)
+		case EntityTypeUser:
+			c.notifyPendingUserRequests(ctx, respError.Keys, nil)
+		default:
+			// Unsupported entity type
+			c.logger.Warn(ctx, fmt.Sprintf("Received error for unsupported entity type: %s", *respError.EntityType))
+		}
+	}
+
 	return fmt.Errorf("%s", respError.Error)
 }
 

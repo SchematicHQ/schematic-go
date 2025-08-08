@@ -170,7 +170,7 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		if r := recover(); r != nil {
 			c.ctxErrors <- &core.CtxError{
 				Ctx: ctx,
-				Err: errors.New(fmt.Sprintf("Fatal error occurred in WebSocket reader: %v", r)),
+				Err: fmt.Errorf("Fatal error occurred in WebSocket reader: %v", r),
 			}
 			return
 		}
@@ -209,7 +209,7 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		if err != nil {
 			c.ctxErrors <- &core.CtxError{
 				Ctx: ctx,
-				Err: errors.New(fmt.Sprintf("Failed to handle WebSocket message: %v", err)),
+				Err: fmt.Errorf("Failed to handle WebSocket message: %v", err),
 			}
 		}
 	}
@@ -262,9 +262,10 @@ func getBaseURL(baseUrl string) (*url.URL, error) {
 		return nil, err
 	}
 
-	if url.Scheme == "https" {
+	switch url.Scheme {
+	case "https":
 		url.Scheme = "wss"
-	} else if url.Scheme == "http" {
+	case "http":
 		url.Scheme = "ws"
 	}
 
@@ -290,7 +291,7 @@ func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *D
 	case string(EntityTypeUser):
 		return c.handleUserMessage(ctx, message)
 	default:
-		return errors.New(fmt.Sprintf("Received unknown entity type: %s", message.EntityType))
+		return fmt.Errorf("Received unknown entity type: %s", message.EntityType)
 	}
 }
 
@@ -300,7 +301,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	var flagsData []*rulesengine.Flag
 	err := json.Unmarshal(flags, &flagsData)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Failed to unmarshal flags data: %v", err))
+		return fmt.Errorf("Failed to unmarshal flags data: %v", err)
 	}
 
 	c.flagsMu.Lock()
@@ -325,7 +326,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 	var company *rulesengine.Company
 	err := json.Unmarshal(resp.Data, &company)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Failed to unmarshal company data: %v", err))
+		return fmt.Errorf("Failed to unmarshal company data: %v", err)
 	}
 
 	if company == nil {
@@ -384,7 +385,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 	var user *rulesengine.User
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Failed to unmarshal user data: %v", err))
+		return fmt.Errorf("Failed to unmarshal user data: %v", err)
 	}
 
 	if user == nil {
@@ -445,9 +446,9 @@ func (c *DataStreamClient) handleErrorMessage(_ context.Context, resp *DataStrea
 	var respError DataStreamError
 	err := json.Unmarshal(resp.Data, &respError)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Failed to unmarshal error message: %v", err))
+		return fmt.Errorf("Failed to unmarshal error message: %v", err)
 	}
-	return errors.New(fmt.Sprintf("%s", respError.Error))
+	return fmt.Errorf("%s", respError.Error)
 }
 
 func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) *rulesengine.CheckFlagResult {
@@ -458,7 +459,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 		if err != nil {
 			c.ctxErrors <- &core.CtxError{
 				Ctx: ctx,
-				Err: errors.New(fmt.Sprintf("Failed to get company from cache: %v", err)),
+				Err: fmt.Errorf("Failed to get company from cache: %v", err),
 			}
 			return nil
 		}
@@ -470,7 +471,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 		if err != nil {
 			c.ctxErrors <- &core.CtxError{
 				Ctx: ctx,
-				Err: errors.New(fmt.Sprintf("Failed to get user from cache: %v", err)),
+				Err: fmt.Errorf("Failed to get user from cache: %v", err),
 			}
 			return nil
 		}
@@ -481,7 +482,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 	if !found {
 		c.ctxErrors <- &core.CtxError{
 			Ctx: ctx,
-			Err: errors.New(fmt.Sprintf("Flag %s not found", flagKey)),
+			Err: fmt.Errorf("Flag %s not found", flagKey),
 		}
 		return nil
 	}

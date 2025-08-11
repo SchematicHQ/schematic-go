@@ -34,7 +34,9 @@ type DataStreamResp struct {
 }
 
 type DataStreamError struct {
-	Error string `json:"error"`
+	Error      string            `json:"error"`
+	Keys       map[string]string `json:"keys,omitempty"`
+	EntityType *EntityType       `json:"entity_type,omitempty"`
 }
 
 type DataStreamClientOptions struct {

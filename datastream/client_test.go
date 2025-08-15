@@ -178,23 +178,21 @@ func createMockUserData(userID string, messageType datastream.MessageType) strin
 }
 
 // Helper function for creating DataStreamClientOptions for tests
-func createTestClientOptions(baseURL string, logger core.Logger, apiKey string, monitorChannel chan bool) datastream.DataStreamClientOptions {
+func createTestClientOptions(baseURL string, logger core.Logger, apiKey string) datastream.DataStreamClientOptions {
 	return datastream.DataStreamClientOptions{
-		ApiKey:         apiKey,
-		BaseURL:        baseURL,
-		Logger:         logger,
-		MonitorChannel: monitorChannel,
+		ApiKey:  apiKey,
+		BaseURL: baseURL,
+		Logger:  logger,
 	}
 }
 
 func TestNewDataStreamClient(t *testing.T) {
 	logger := NewMockLogger()
-	monitorChannel := make(chan bool, 1)
 	configOptions := &core.DatastreamOptions{
 		CacheTTL: 5 * time.Minute,
 	}
 
-	clientOptions := createTestClientOptions("http://localhost:8080", logger, "test-api-key", monitorChannel)
+	clientOptions := createTestClientOptions("http://localhost:8080", logger, "test-api-key")
 
 	client := datastream.NewDataStreamClient(clientOptions, configOptions)
 
@@ -207,23 +205,21 @@ func TestDataStreamClientConnection(t *testing.T) {
 	defer close(outgoingMessages)
 
 	logger := NewMockLogger()
-	monitorChannel := make(chan bool, 1)
 	configOptions := &core.DatastreamOptions{
 		CacheTTL: 5 * time.Minute,
 	}
 
-	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key", monitorChannel)
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
 	client := datastream.NewDataStreamClient(clientOptions, configOptions)
 
 	// Start the client and wait for connection
 	client.Start()
 
-	// Wait for monitor channel to receive connection status
-	status := <-monitorChannel
-	assert.True(t, status, "Connection should be successful")
-
 	// Allow time for connection to establish
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(200 * time.Millisecond)
+
+	// Check that the client is connected
+	assert.True(t, client.IsConnected(), "Connection should be successful")
 
 	// Clean up
 	client.Close()
@@ -235,18 +231,17 @@ func TestCheckFlagCompany(t *testing.T) {
 	defer close(outgoingMessages)
 
 	logger := NewMockLogger()
-	monitorChannel := make(chan bool, 1)
 	configOptions := &core.DatastreamOptions{
 		CacheTTL: 5 * time.Minute,
 	}
 
-	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key", monitorChannel)
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
 	client := datastream.NewDataStreamClient(clientOptions, configOptions)
 	client.Start()
 	defer client.Close()
 
 	// Wait for connection and initial flags to be received
-	<-monitorChannel
+	time.Sleep(200 * time.Millisecond)
 	time.Sleep(100 * time.Millisecond)
 
 	// Setup a goroutine to handle incoming company and user requests
@@ -277,7 +272,9 @@ func TestCheckFlagCompany(t *testing.T) {
 
 	// Test checking a non-existent flag
 	result = client.CheckFlag(ctx, evalCtx, "non-existent-flag")
-	assert.Nil(t, result, "Non-existent flag should return nil flag check result")
+	assert.NotNil(t, result, "Non-existent flag should return a flag check result")
+	assert.Equal(t, "FlagNotFound", result.Reason, "Non-existent flag should have reason FlagNotFound")
+	assert.False(t, result.Value, "Non-existent flag should have value false")
 }
 
 func TestCheckFlagUser(t *testing.T) {
@@ -286,18 +283,18 @@ func TestCheckFlagUser(t *testing.T) {
 	defer close(outgoingMessages)
 
 	logger := NewMockLogger()
-	monitorChannel := make(chan bool, 1)
+
 	configOptions := &core.DatastreamOptions{
 		CacheTTL: 5 * time.Minute,
 	}
 
-	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key", monitorChannel)
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
 	client := datastream.NewDataStreamClient(clientOptions, configOptions)
 	client.Start()
 	defer client.Close()
 
 	// Wait for connection and initial flags to be received
-	<-monitorChannel
+	time.Sleep(200 * time.Millisecond)
 	time.Sleep(100 * time.Millisecond)
 
 	// Setup a goroutine to handle incoming company and user requests
@@ -328,7 +325,9 @@ func TestCheckFlagUser(t *testing.T) {
 
 	// Test checking a non-existent flag
 	result = client.CheckFlag(ctx, evalCtx, "non-existent-flag")
-	assert.Nil(t, result, "Non-existent flag should return nil flag check result")
+	assert.NotNil(t, result, "Non-existent flag should return a flag check result")
+	assert.Equal(t, "FlagNotFound", result.Reason, "Non-existent flag should have reason FlagNotFound")
+	assert.False(t, result.Value, "Non-existent flag should have value false")
 }
 
 func TestDeleteMessage(t *testing.T) {
@@ -337,18 +336,18 @@ func TestDeleteMessage(t *testing.T) {
 	defer close(outgoingMessages)
 
 	logger := NewMockLogger()
-	monitorChannel := make(chan bool, 1)
+
 	configOptions := &core.DatastreamOptions{
 		CacheTTL: 5 * time.Minute,
 	}
 
-	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key", monitorChannel)
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
 	client := datastream.NewDataStreamClient(clientOptions, configOptions)
 	client.Start()
 	defer client.Close()
 
 	// Wait for connection
-	<-monitorChannel
+	time.Sleep(200 * time.Millisecond)
 	time.Sleep(100 * time.Millisecond)
 
 	// First add a company to the cache
@@ -363,7 +362,6 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 	defer close(outgoingMessages)
 
 	logger := NewMockLogger()
-	monitorChannel := make(chan bool, 1)
 
 	// Create a local cache provider for companies with a 1 minute TTL
 	localCompanyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
@@ -373,7 +371,7 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 	}
 
 	// Create client options with the local cache provider
-	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key", monitorChannel)
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
 	// Add the cache to the options
 	clientOptions.CompanyCache = localCompanyCache
 
@@ -382,7 +380,7 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 	defer client.Close()
 
 	// Wait for connection
-	<-monitorChannel
+	time.Sleep(200 * time.Millisecond)
 	time.Sleep(100 * time.Millisecond)
 
 	// Create a mock company with metrics
@@ -488,6 +486,45 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 	assert.Equal(t, finalExpectedValue, finalMetric.Value,
 		"Metric value should include both increments (initial %d + first %d + second %d = %d)",
 		initialValue, incrementValue, secondIncrementValue, finalExpectedValue)
+}
+
+func TestConnectionStateTracking(t *testing.T) {
+	server, _, outgoingMessages := setupMockWebSocketServer()
+	defer server.Close()
+	defer close(outgoingMessages)
+
+	logger := NewMockLogger()
+
+	configOptions := &core.DatastreamOptions{
+		CacheTTL: 5 * time.Minute,
+	}
+
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+	client := datastream.NewDataStreamClient(clientOptions, configOptions)
+
+	// Initially the client should not be connected
+	connected := client.IsConnected()
+	assert.False(t, connected, "Client should not be connected initially")
+
+	// Start the client and wait for connection
+	client.Start()
+
+	// Allow time for connection to establish
+	time.Sleep(200 * time.Millisecond)
+
+	// Now the client should be connected
+	connected = client.IsConnected()
+	assert.True(t, connected, "Connection should be successful")
+	connected = client.IsConnected()
+	assert.True(t, connected, "Client should be connected after successful connection")
+
+	// Clean up
+	client.Close()
+
+	// After closing, the client should not be connected
+	time.Sleep(10 * time.Millisecond) // Allow time for cleanup
+	connected = client.IsConnected()
+	assert.False(t, connected, "Client should not be connected after close")
 }
 
 // Helper function to create cache keys in the same format as the datastream package

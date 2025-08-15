@@ -40,13 +40,12 @@ type DataStreamError struct {
 }
 
 type DataStreamClientOptions struct {
-	ApiKey         string
-	BaseURL        string
-	FlagCache      cache.CacheProvider[*rulesengine.Flag]
-	CompanyCache   cache.CacheProvider[*rulesengine.Company]
-	UserCache      cache.CacheProvider[*rulesengine.User]
-	Logger         core.Logger
-	MonitorChannel chan bool
+	ApiKey       string
+	BaseURL      string
+	Logger       core.Logger
+	CompanyCache cache.CacheProvider[*rulesengine.Company]
+	UserCache    cache.CacheProvider[*rulesengine.User]
+	FlagCache    cache.CacheProvider[*rulesengine.Flag]
 }
 
 type DataStreamClient struct {
@@ -56,7 +55,6 @@ type DataStreamClient struct {
 	done                 chan bool
 	ctxErrors            chan *core.CtxError
 	reconnect            chan bool
-	monitorChannel       chan bool
 	companyCacheProvider CompanyCacheProvider
 	flagsCacheProvider   FlagCacheProvider
 	userCacheProvider    UserCacheProvider
@@ -68,6 +66,9 @@ type DataStreamClient struct {
 	pendingUserRequests    map[string][]chan *rulesengine.User
 	pendingFlagRequest     chan bool
 
+	// Connection state tracking
+	connected bool
+
 	// Locks
 	flagsMu          sync.RWMutex // For flags cache operations
 	companyMu        sync.RWMutex // For company cache operations
@@ -76,6 +77,7 @@ type DataStreamClient struct {
 	pendingUserReqMu sync.Mutex   // For pending user request operations
 	pendingFlagReqMu sync.Mutex   // For pending flag request operations
 	writeMu          sync.Mutex   // Existing mutex for WebSocket writes
+	connectedMu      sync.RWMutex // For connection state operations
 }
 
 type MessageType string

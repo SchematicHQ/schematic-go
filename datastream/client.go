@@ -52,7 +52,6 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		done:                 make(chan bool, 1),
 		ctxErrors:            make(chan *core.CtxError, 100),
 		reconnect:            make(chan bool, 1),
-		monitorChannel:       options.MonitorChannel,
 		logger:               options.Logger,
 		flagsCacheProvider:   flagCacheProvider,
 		companyCacheProvider: companyCacheProvider,
@@ -91,7 +90,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 		if err != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Failed to connect to WebSocket: %v", err))
 			attempts += 1
-			c.monitorChannel <- false
+			c.setConnected(false)
 			if attempts >= maxReconnectAttempts {
 				c.logger.Error(ctx, "Unable to connect to server")
 				return
@@ -103,8 +102,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 		c.logger.Info(ctx, "Connected to Schematic WebSocket")
 		attempts = 0
 		c.conn = conn
-
-		c.monitorChannel <- true
+		c.setConnected(true)
 
 		err = c.conn.SetReadDeadline(time.Now().Add(pongWait))
 		if err != nil {
@@ -115,7 +113,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 		closed := c.handleWebSocketConnection(ctx)
 
 		if closed {
-			c.monitorChannel <- false
+			c.setConnected(false)
 			return
 		}
 
@@ -159,6 +157,7 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 		case <-ticker.C:
 			if err := c.conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
 				c.logger.Error(ctx, fmt.Sprintf("Failed to send ping message: %v", err))
+				c.setConnected(false)
 				return false
 			}
 		}
@@ -182,18 +181,22 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		if err != nil {
 			var opErr *net.OpError
 			if errors.As(err, &opErr) {
+				c.setConnected(false)
 				return
 			}
 
 			if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
+				c.setConnected(false)
 				return
 			}
 
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				c.logger.Debug(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
+				c.setConnected(false)
 				return
 			}
 
+			c.setConnected(false)
 			c.reconnect <- true
 			return
 		}
@@ -201,6 +204,7 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		err = json.Unmarshal(m, &message)
 		if message.Data == nil {
 			c.logger.Debug(ctx, "Received empty message from WebSocket")
+			c.setConnected(false)
 			c.reconnect <- true
 			return
 		}
@@ -241,6 +245,7 @@ func (c *DataStreamClient) Close() {
 		}
 	}()
 
+	c.setConnected(false)
 	close(c.done)
 	close(c.reconnect)
 
@@ -272,6 +277,20 @@ func getBaseURL(baseUrl string) (*url.URL, error) {
 	url.Path = "/datastream"
 
 	return url, nil
+}
+
+// IsConnected checks if the WebSocket connection is active
+func (c *DataStreamClient) IsConnected() bool {
+	c.connectedMu.RLock()
+	defer c.connectedMu.RUnlock()
+	return c.connected
+}
+
+// setConnected updates the connection state
+func (c *DataStreamClient) setConnected(connected bool) {
+	c.connectedMu.Lock()
+	defer c.connectedMu.Unlock()
+	c.connected = connected
 }
 
 func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *DataStreamResp) error {

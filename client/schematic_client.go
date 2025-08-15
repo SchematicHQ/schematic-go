@@ -19,8 +19,6 @@ type SchematicClient struct {
 	*Client
 
 	datastreamClient        *datastream.DataStreamClient
-	datastreamConnected     bool
-	datastreamConnection    chan bool
 	errors                  chan error
 	ctxErrors               chan *core.CtxError
 	eventBufferPeriod       *time.Duration
@@ -56,8 +54,6 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		setter.SetLevel(options.LogLevel)
 	}
 
-	datastreamConnection := make(chan bool, 1)
-
 	client := &SchematicClient{
 		Client:                  NewClient(opts...),
 		errors:                  make(chan error, 100),
@@ -70,20 +66,16 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		logger:                  options.Logger,
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
-		datastreamConnection:    datastreamConnection,
 	}
 
 	// Start background worker which handles async error logging and event buffering
 	go client.worker()
 
 	if options.UseDataStream {
-		go client.monitorDatastreamConnection()
-
 		datastreamOptions := datastream.DataStreamClientOptions{
-			ApiKey:         options.APIKey,
-			BaseURL:        options.BaseURL,
-			MonitorChannel: datastreamConnection,
-			Logger:         options.Logger,
+			ApiKey:  options.APIKey,
+			BaseURL: options.BaseURL,
+			Logger:  options.Logger,
 		}
 
 		client.datastreamClient = datastream.NewDataStreamClient(datastreamOptions, options.DatastreamOptions)
@@ -94,16 +86,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 }
 
 func (c *SchematicClient) useDataStream() bool {
-	return c.datastreamConnected
-}
-
-func (c *SchematicClient) monitorDatastreamConnection() {
-	for {
-		select {
-		case connected := <-c.datastreamConnection:
-			c.datastreamConnected = connected
-		}
-	}
+	return c.datastreamClient != nil
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
@@ -251,7 +234,7 @@ func (c *SchematicClient) Track(
 		}
 	}
 
-	if body.Company != nil && c.datastreamConnected {
+	if body.Company != nil && c.useDataStream() && c.datastreamClient.IsConnected() {
 		err := c.datastreamClient.UpdateCompanyMetrics(ctx, body)
 		if err != nil {
 			c.ctxErrors <- &core.CtxError{

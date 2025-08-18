@@ -95,9 +95,12 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	}
 
 	if c.useDataStream() {
-		resp := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
-		if resp == nil {
-			return false
+		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
+
+		// Fall back to API if datastream fails
+		if err != nil {
+			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed (%v), falling back to API", err))
+			return c.checkFlag(ctx, evalCtx, flagKey)
 		}
 
 		body := schematicgo.EventBody{

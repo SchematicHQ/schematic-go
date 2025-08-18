@@ -501,53 +501,76 @@ func (c *DataStreamClient) handleErrorMessage(ctx context.Context, resp *DataStr
 	return fmt.Errorf("%s", respError.Error)
 }
 
-func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) *rulesengine.CheckFlagResult {
-	var company *rulesengine.Company
-	var err error
-	if evalCtx.Company != nil {
-		company, err = c.getCompany(ctx, evalCtx.Company)
-		if err != nil {
-			c.ctxErrors <- &core.CtxError{
-				Ctx: ctx,
-				Err: fmt.Errorf("Failed to get company from cache: %v", err),
-			}
-			return nil
-		}
-	}
-
-	var user *rulesengine.User
-	if evalCtx.User != nil {
-		user, err = c.getUser(ctx, evalCtx.User)
-		if err != nil {
-			c.ctxErrors <- &core.CtxError{
-				Ctx: ctx,
-				Err: fmt.Errorf("Failed to get user from cache: %v", err),
-			}
-			return nil
-		}
-	}
-
-	// Get flag here
+func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*rulesengine.CheckFlagResult, error) {
+	// Get flag first - return error if not found
 	flag, found := c.getFlag(ctx, flagKey)
 	if !found {
-		c.ctxErrors <- &core.CtxError{
-			Ctx: ctx,
-			Err: fmt.Errorf("Flag %s not found", flagKey),
+		return nil, fmt.Errorf("flag not found: %s", flagKey)
+	}
+
+	needsCompany := len(evalCtx.Company) > 0
+	needsUser := len(evalCtx.User) > 0
+
+	var cachedCompany *rulesengine.Company
+	var cachedUser *rulesengine.User
+
+	// Try to get cached data first
+	if needsCompany {
+		cachedCompany = c.getCompanyFromCache(evalCtx.Company)
+	}
+	if needsUser {
+		cachedUser = c.getUserFromCache(evalCtx.User)
+	}
+
+	// If we have all cached data we need, use it
+	if (!needsCompany || cachedCompany != nil) && (!needsUser || cachedUser != nil) {
+		// Evaluate against the rules engine with cached data
+		resp, err := rulesengine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
+		if err != nil {
+			return nil, fmt.Errorf("rules engine error: %w", err)
 		}
-		return nil
+		return resp, nil
+	}
+
+	// Otherwise, check if we're connected to datastream
+	if !c.IsConnected() {
+		return nil, fmt.Errorf("datastream not connected")
+	}
+
+	// Fetch missing data from datastream
+	var company *rulesengine.Company
+	var user *rulesengine.User
+	var err error
+
+	if needsCompany {
+		if cachedCompany != nil {
+			company = cachedCompany
+		} else {
+			company, err = c.getCompany(ctx, evalCtx.Company)
+			if err != nil {
+				return nil, fmt.Errorf("failed to get company data: %w", err)
+			}
+		}
+	}
+
+	if needsUser {
+		if cachedUser != nil {
+			user = cachedUser
+		} else {
+			user, err = c.getUser(ctx, evalCtx.User)
+			if err != nil {
+				return nil, fmt.Errorf("failed to get user data: %w", err)
+			}
+		}
 	}
 
 	// Evaluate against the rules engine
 	resp, err := rulesengine.CheckFlag(ctx, company, user, flag)
 	if err != nil {
-		c.ctxErrors <- &core.CtxError{
-			Ctx: ctx,
-			Err: err,
-		}
-		return nil
+		return nil, fmt.Errorf("rules engine error: %w", err)
 	}
 
-	return resp
+	return resp, nil
 }
 
 func (c *DataStreamClient) getAllFlags(ctx context.Context) error {

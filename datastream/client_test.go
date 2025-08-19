@@ -531,6 +531,75 @@ func TestConnectionStateTracking(t *testing.T) {
 	assert.False(t, connected, "Client should not be connected after close")
 }
 
+func TestNewDataStreamClientFlagCache(t *testing.T) {
+	t.Run("Creates client with local flag cache when no Redis config", func(t *testing.T) {
+		logger := NewMockLogger()
+
+		options := datastream.DataStreamClientOptions{
+			ApiKey: "test-key",
+			Logger: logger,
+		}
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL: 24 * time.Hour,
+			// No CacheConfig provided - should use local cache
+		}
+
+		client := datastream.NewDataStreamClient(options, configOptions)
+		assert.NotNil(t, client, "Expected client to be created")
+
+		// Test that flag cache works by attempting a basic operation
+		// We can't directly test the cache type, but we can verify the client was created successfully
+	})
+
+	t.Run("Creates client with Redis flag cache when Redis config provided", func(t *testing.T) {
+		logger := NewMockLogger()
+
+		redisConfig := &core.RedisCacheConfig{
+			Addr: "localhost:6379",
+			DB:   0,
+		}
+
+		options := datastream.DataStreamClientOptions{
+			ApiKey: "test-key",
+			Logger: logger,
+		}
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL:    24 * time.Hour,
+			CacheConfig: redisConfig,
+		}
+
+		// This should create a client with Redis cache for flags
+		client := datastream.NewDataStreamClient(options, configOptions)
+		assert.NotNil(t, client, "Expected client to be created with Redis config")
+
+		// We can't easily test Redis connectivity without a running Redis instance,
+		// but we can verify the client was created successfully
+	})
+
+	t.Run("Uses provided flag cache when specified in options", func(t *testing.T) {
+		logger := NewMockLogger()
+		customFlagCache := cache.NewLocalCache[*rulesengine.Flag](100, time.Hour)
+
+		options := datastream.DataStreamClientOptions{
+			ApiKey:    "test-key",
+			Logger:    logger,
+			FlagCache: customFlagCache,
+		}
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL: 24 * time.Hour,
+		}
+
+		client := datastream.NewDataStreamClient(options, configOptions)
+		assert.NotNil(t, client, "Expected client to be created")
+
+		// The client should use the provided cache, but we can't easily verify this
+		// without accessing private fields. The test ensures the client creation works.
+	})
+}
+
 // Helper function to create cache keys in the same format as the datastream package
 func createTestCacheKey(resourceType string, key string, value string) string {
 	return fmt.Sprintf("schematic:%s:%s:%s:%s", resourceType, datastream.RulesEngineVersionKey, strings.ToLower(key), strings.ToLower(value))

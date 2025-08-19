@@ -16,7 +16,6 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
-	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
 )
 
@@ -35,10 +34,10 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		panic("failed to create cache providers")
 	}
 
-	// Create flag cache if not provided in options
+	// Create flag cache based on configuration - use Redis if configured, otherwise local cache
 	flagCacheProvider := options.FlagCache
 	if flagCacheProvider == nil {
-		flagCacheProvider = cache.NewLocalCache[*rulesengine.Flag](1000, -1)
+		flagCacheProvider = buildFlagCacheProvider(configurationOptions)
 	}
 
 	dataStreamUrl, err := getBaseURL(options.BaseURL)

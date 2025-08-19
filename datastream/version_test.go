@@ -1,13 +1,15 @@
-package datastream
+package datastream_test
 
 import (
 	"testing"
+
+	"github.com/schematichq/schematic-go/datastream"
 )
 
 func TestGetRulesEngineVersionKey(t *testing.T) {
 	t.Run("Generates consistent version key", func(t *testing.T) {
-		key1 := GetRulesEngineVersionKey()
-		key2 := GetRulesEngineVersionKey()
+		key1 := datastream.GetRulesEngineVersionKey()
+		key2 := datastream.GetRulesEngineVersionKey()
 
 		if key1 != key2 {
 			t.Errorf("Expected version keys to be consistent, got %s and %s", key1, key2)
@@ -19,7 +21,7 @@ func TestGetRulesEngineVersionKey(t *testing.T) {
 	})
 
 	t.Run("Version key is not empty", func(t *testing.T) {
-		key := GetRulesEngineVersionKey()
+		key := datastream.GetRulesEngineVersionKey()
 
 		if key == "" {
 			t.Error("Expected version key to not be empty")
@@ -27,9 +29,9 @@ func TestGetRulesEngineVersionKey(t *testing.T) {
 	})
 
 	t.Run("Global variable matches function call", func(t *testing.T) {
-		if RulesEngineVersionKey != GetRulesEngineVersionKey() {
+		if datastream.RulesEngineVersionKey != datastream.GetRulesEngineVersionKey() {
 			t.Errorf("Expected global variable to match function call, got %s vs %s",
-				RulesEngineVersionKey, GetRulesEngineVersionKey())
+				datastream.RulesEngineVersionKey, datastream.GetRulesEngineVersionKey())
 		}
 	})
 }

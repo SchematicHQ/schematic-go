@@ -602,5 +602,5 @@ func TestNewDataStreamClientFlagCache(t *testing.T) {
 
 // Helper function to create cache keys in the same format as the datastream package
 func createTestCacheKey(resourceType string, key string, value string) string {
-	return fmt.Sprintf("schematic:%s:%s:%s:%s", resourceType, datastream.RulesEngineVersionKey, strings.ToLower(key), strings.ToLower(value))
+	return fmt.Sprintf("schematic:%s:%s:%s:%s", resourceType, rulesengine.VersionKey, strings.ToLower(key), strings.ToLower(value))
 }

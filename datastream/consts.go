@@ -44,7 +44,3 @@ const (
 	cacheKeyPrefixFlags   = "flags"
 	cacheKeyPrefixUser    = "user"
 )
-
-// RulesEngineVersionKey generates a version key based on the structure of the rules engine models
-// This ensures cache invalidation when the model structures change
-var RulesEngineVersionKey = GetRulesEngineVersionKey()

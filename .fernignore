@@ -26,6 +26,8 @@ datastream/client.go
 datastream/client_test.go
 datastream/consts.go
 datastream/types.go
+datastream/version_test.go
+datastream/version.go
 flags/flags.go
 flags/flags_test.go
 generate.go

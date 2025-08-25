@@ -29,6 +29,43 @@ func getCacheProviders(options DataStreamClientOptions, configOpt *core.Datastre
 	return buildCacheProvidersFromConfig(configOpt)
 }
 
+// buildFlagCacheProvider creates a flag cache provider based on configuration options
+// Flags use the same cache provider type as company/user caches but with special TTL logic
+func buildFlagCacheProvider(configOpt *core.DatastreamOptions) cache.CacheProvider[*rulesengine.Flag] {
+	// Calculate flag TTL - use the greater value between configured TTL and max TTL
+	flagTTL := maxCacheTTL
+	if configOpt != nil && configOpt.CacheTTL > maxCacheTTL {
+		flagTTL = configOpt.CacheTTL
+	}
+
+	if configOpt == nil || configOpt.CacheConfig == nil {
+		// Use local cache with flag TTL
+		return cache.NewLocalCache[*rulesengine.Flag](defaultCacheSize, flagTTL)
+	}
+
+	switch configOpt.CacheConfig.(type) {
+	case *core.RedisCacheConfig:
+		config := configOpt.CacheConfig.(*core.RedisCacheConfig)
+		client := redis.NewClient(ToRedisOptions(config))
+		return cache.NewRedisCache[*rulesengine.Flag](client, flagTTL)
+	case core.RedisCacheConfig:
+		config := configOpt.CacheConfig.(core.RedisCacheConfig)
+		client := redis.NewClient(ToRedisOptions(&config))
+		return cache.NewRedisCache[*rulesengine.Flag](client, flagTTL)
+	case *core.RedisCacheClusterConfig:
+		config := configOpt.CacheConfig.(*core.RedisCacheClusterConfig)
+		client := redis.NewClusterClient(ToRedisClusterOptions(config))
+		return cache.NewRedisCache[*rulesengine.Flag](client, flagTTL)
+	case core.RedisCacheClusterConfig:
+		config := configOpt.CacheConfig.(core.RedisCacheClusterConfig)
+		client := redis.NewClusterClient(ToRedisClusterOptions(&config))
+		return cache.NewRedisCache[*rulesengine.Flag](client, flagTTL)
+	}
+
+	// Fallback to local cache
+	return cache.NewLocalCache[*rulesengine.Flag](defaultCacheSize, flagTTL)
+}
+
 // Helper function to build cache providers based on configuration options
 func buildCacheProvidersFromConfig(configOpt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {
 	if configOpt == nil || configOpt.CacheConfig == nil {

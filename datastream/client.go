@@ -16,7 +16,6 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
-	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
 )
 
@@ -35,10 +34,10 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		panic("failed to create cache providers")
 	}
 
-	// Create flag cache if not provided in options
+	// Create flag cache based on configuration - use Redis if configured, otherwise local cache
 	flagCacheProvider := options.FlagCache
 	if flagCacheProvider == nil {
-		flagCacheProvider = cache.NewLocalCache[*rulesengine.Flag](1000, -1)
+		flagCacheProvider = buildFlagCacheProvider(configurationOptions)
 	}
 
 	dataStreamUrl, err := getBaseURL(options.BaseURL)
@@ -52,7 +51,6 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		done:                 make(chan bool, 1),
 		ctxErrors:            make(chan *core.CtxError, 100),
 		reconnect:            make(chan bool, 1),
-		monitorChannel:       options.MonitorChannel,
 		logger:               options.Logger,
 		flagsCacheProvider:   flagCacheProvider,
 		companyCacheProvider: companyCacheProvider,
@@ -91,7 +89,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 		if err != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Failed to connect to WebSocket: %v", err))
 			attempts += 1
-			c.monitorChannel <- false
+			c.setConnected(false)
 			if attempts >= maxReconnectAttempts {
 				c.logger.Error(ctx, "Unable to connect to server")
 				return
@@ -103,8 +101,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 		c.logger.Info(ctx, "Connected to Schematic WebSocket")
 		attempts = 0
 		c.conn = conn
-
-		c.monitorChannel <- true
+		c.setConnected(true)
 
 		err = c.conn.SetReadDeadline(time.Now().Add(pongWait))
 		if err != nil {
@@ -115,7 +112,7 @@ func (c *DataStreamClient) ConnectAndRead() {
 		closed := c.handleWebSocketConnection(ctx)
 
 		if closed {
-			c.monitorChannel <- false
+			c.setConnected(false)
 			return
 		}
 
@@ -159,6 +156,7 @@ func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
 		case <-ticker.C:
 			if err := c.conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
 				c.logger.Error(ctx, fmt.Sprintf("Failed to send ping message: %v", err))
+				c.setConnected(false)
 				return false
 			}
 		}
@@ -182,18 +180,22 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		if err != nil {
 			var opErr *net.OpError
 			if errors.As(err, &opErr) {
+				c.setConnected(false)
 				return
 			}
 
 			if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
+				c.setConnected(false)
 				return
 			}
 
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				c.logger.Debug(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
+				c.setConnected(false)
 				return
 			}
 
+			c.setConnected(false)
 			c.reconnect <- true
 			return
 		}
@@ -201,6 +203,7 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		err = json.Unmarshal(m, &message)
 		if message.Data == nil {
 			c.logger.Debug(ctx, "Received empty message from WebSocket")
+			c.setConnected(false)
 			c.reconnect <- true
 			return
 		}
@@ -241,6 +244,7 @@ func (c *DataStreamClient) Close() {
 		}
 	}()
 
+	c.setConnected(false)
 	close(c.done)
 	close(c.reconnect)
 
@@ -272,6 +276,20 @@ func getBaseURL(baseUrl string) (*url.URL, error) {
 	url.Path = "/datastream"
 
 	return url, nil
+}
+
+// IsConnected checks if the WebSocket connection is active
+func (c *DataStreamClient) IsConnected() bool {
+	c.connectedMu.RLock()
+	defer c.connectedMu.RUnlock()
+	return c.connected
+}
+
+// setConnected updates the connection state
+func (c *DataStreamClient) setConnected(connected bool) {
+	c.connectedMu.Lock()
+	defer c.connectedMu.Unlock()
+	c.connected = connected
 }
 
 func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *DataStreamResp) error {
@@ -482,53 +500,76 @@ func (c *DataStreamClient) handleErrorMessage(ctx context.Context, resp *DataStr
 	return fmt.Errorf("%s", respError.Error)
 }
 
-func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) *rulesengine.CheckFlagResult {
-	var company *rulesengine.Company
-	var err error
-	if evalCtx.Company != nil {
-		company, err = c.getCompany(ctx, evalCtx.Company)
-		if err != nil {
-			c.ctxErrors <- &core.CtxError{
-				Ctx: ctx,
-				Err: fmt.Errorf("Failed to get company from cache: %v", err),
-			}
-			return nil
-		}
-	}
-
-	var user *rulesengine.User
-	if evalCtx.User != nil {
-		user, err = c.getUser(ctx, evalCtx.User)
-		if err != nil {
-			c.ctxErrors <- &core.CtxError{
-				Ctx: ctx,
-				Err: fmt.Errorf("Failed to get user from cache: %v", err),
-			}
-			return nil
-		}
-	}
-
-	// Get flag here
+func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*rulesengine.CheckFlagResult, error) {
+	// Get flag first - return error if not found
 	flag, found := c.getFlag(ctx, flagKey)
 	if !found {
-		c.ctxErrors <- &core.CtxError{
-			Ctx: ctx,
-			Err: fmt.Errorf("Flag %s not found", flagKey),
+		return nil, fmt.Errorf("flag not found: %s", flagKey)
+	}
+
+	needsCompany := len(evalCtx.Company) > 0
+	needsUser := len(evalCtx.User) > 0
+
+	var cachedCompany *rulesengine.Company
+	var cachedUser *rulesengine.User
+
+	// Try to get cached data first
+	if needsCompany {
+		cachedCompany = c.getCompanyFromCache(evalCtx.Company)
+	}
+	if needsUser {
+		cachedUser = c.getUserFromCache(evalCtx.User)
+	}
+
+	// If we have all cached data we need, use it
+	if (!needsCompany || cachedCompany != nil) && (!needsUser || cachedUser != nil) {
+		// Evaluate against the rules engine with cached data
+		resp, err := rulesengine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
+		if err != nil {
+			return nil, fmt.Errorf("rules engine error: %w", err)
 		}
-		return nil
+		return resp, nil
+	}
+
+	// Otherwise, check if we're connected to datastream
+	if !c.IsConnected() {
+		return nil, fmt.Errorf("datastream not connected")
+	}
+
+	// Fetch missing data from datastream
+	var company *rulesengine.Company
+	var user *rulesengine.User
+	var err error
+
+	if needsCompany {
+		if cachedCompany != nil {
+			company = cachedCompany
+		} else {
+			company, err = c.getCompany(ctx, evalCtx.Company)
+			if err != nil {
+				return nil, fmt.Errorf("failed to get company data: %w", err)
+			}
+		}
+	}
+
+	if needsUser {
+		if cachedUser != nil {
+			user = cachedUser
+		} else {
+			user, err = c.getUser(ctx, evalCtx.User)
+			if err != nil {
+				return nil, fmt.Errorf("failed to get user data: %w", err)
+			}
+		}
 	}
 
 	// Evaluate against the rules engine
 	resp, err := rulesengine.CheckFlag(ctx, company, user, flag)
 	if err != nil {
-		c.ctxErrors <- &core.CtxError{
-			Ctx: ctx,
-			Err: err,
-		}
-		return nil
+		return nil, fmt.Errorf("rules engine error: %w", err)
 	}
 
-	return resp
+	return resp, nil
 }
 
 func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
@@ -729,11 +770,11 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 }
 
 func flagCacheKey(key string) string {
-	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, RulesEngineVersionKey, strings.ToLower(key))
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, rulesengine.VersionKey, strings.ToLower(key))
 }
 
 func resourceKeyToCacheKey(resourceType string, key string, value string) string {
-	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, RulesEngineVersionKey, strings.ToLower(key), strings.ToLower(value))
+	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, rulesengine.VersionKey, strings.ToLower(key), strings.ToLower(value))
 }
 
 // Helper function to clean up pending company requests

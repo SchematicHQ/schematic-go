@@ -201,6 +201,13 @@ func (c *DataStreamClient) readMessages(ctx context.Context) {
 		}
 
 		err = json.Unmarshal(m, &message)
+		if err != nil {
+			c.logger.Error(ctx, fmt.Sprintf("Failed to unmarshal WebSocket message: %v", err))
+			c.setConnected(false)
+			c.reconnect <- true
+			return
+		}
+
 		if message.Data == nil {
 			c.logger.Debug(ctx, "Received empty message from WebSocket")
 			c.setConnected(false)
@@ -326,7 +333,9 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	var cacheKeys []string
 	for _, flag := range flagsData {
 		cacheKey := flagCacheKey(flag.Key)
-		c.flagsCacheProvider.Set(ctx, cacheKey, flag, nil)
+		if err := c.flagsCacheProvider.Set(ctx, cacheKey, flag, nil); err != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Failed to cache flag '%s': %v", flag.Key, err))
+		}
 		cacheKeys = append(cacheKeys, cacheKey)
 	}
 
@@ -381,7 +390,9 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 		// Remove the company from the cache
 		for key, value := range company.Keys {
 			companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-			c.companyCacheProvider.Delete(ctx, companyKey)
+			if err := c.companyCacheProvider.Delete(ctx, companyKey); err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete company from cache '%s': %v", companyKey, err))
+			}
 		}
 		return nil
 	}
@@ -445,7 +456,9 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 		// Remove the user from the cache
 		for key, value := range user.Keys {
 			userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
-			c.userCacheProvider.Delete(ctx, userKey)
+			if err := c.userCacheProvider.Delete(ctx, userKey); err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete user from cache '%s': %v", userKey, err))
+			}
 		}
 
 		return nil

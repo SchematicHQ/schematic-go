@@ -246,3 +246,47 @@ func TestCheckFlagOfflineModeOption(t *testing.T) {
 
 	assert.True(t, client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag"))
 }
+
+func TestCheckFlagDatastreamFallbackToAPI(t *testing.T) {
+	// Test that when datastream is enabled but fails/is not connected,
+	// the client falls back to the API
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+	// Set up mock API response for the fallback
+	responseBody := &schematicgo.CheckFlagResponse{
+		Data: &schematicgo.CheckFlagResponseData{
+			Value: true,
+		},
+	}
+
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+	body := bytes.NewReader(data)
+
+	// Expect the API call when datastream fails
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(body),
+	}, nil)
+
+	// Create client with datastream enabled but with invalid base URL to force failure
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithBaseURL("https://invalid.example.com"), // This will cause datastream to fail
+		option.WithDatastream(),
+	)
+	defer client.Close()
+
+	// Give some time for datastream connection attempt to fail
+	time.Sleep(50 * time.Millisecond)
+
+	// Check flag - should fallback to API since datastream failed
+	result := client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{
+		Company: map[string]string{"id": "test-company"},
+	}, "test-flag")
+
+	assert.True(t, result)
+}

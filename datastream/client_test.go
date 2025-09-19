@@ -13,6 +13,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
+	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
@@ -130,8 +131,8 @@ func createMockFlagsData() string {
 	}
 
 	flagsData, _ := json.Marshal(flags)
-	resp := datastream.DataStreamResp{
-		EntityType: string(datastream.EntityTypeFlags),
+	resp := schematicdatastreamws.DataStreamResp{
+		EntityType: string(schematicdatastreamws.EntityTypeFlags),
 		Data:       flagsData,
 	}
 	respData, _ := json.Marshal(resp)
@@ -140,7 +141,7 @@ func createMockFlagsData() string {
 }
 
 // Helper function to create mock company data
-func createMockCompanyData(companyID string, messageType datastream.MessageType) string {
+func createMockCompanyData(companyID string, messageType schematicdatastreamws.MessageType) string {
 	company := &rulesengine.Company{
 		Keys: map[string]string{
 			"company_id": companyID,
@@ -148,8 +149,8 @@ func createMockCompanyData(companyID string, messageType datastream.MessageType)
 	}
 
 	companyData, _ := json.Marshal(company)
-	resp := datastream.DataStreamResp{
-		EntityType:  string(datastream.EntityTypeCompany),
+	resp := schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeCompany),
 		Data:        companyData,
 		MessageType: messageType,
 	}
@@ -159,7 +160,7 @@ func createMockCompanyData(companyID string, messageType datastream.MessageType)
 }
 
 // Helper function to create mock user data
-func createMockUserData(userID string, messageType datastream.MessageType) string {
+func createMockUserData(userID string, messageType schematicdatastreamws.MessageType) string {
 	user := &rulesengine.User{
 		Keys: map[string]string{
 			"user_id": userID,
@@ -167,8 +168,8 @@ func createMockUserData(userID string, messageType datastream.MessageType) strin
 	}
 
 	userData, _ := json.Marshal(user)
-	resp := datastream.DataStreamResp{
-		EntityType:  string(datastream.EntityTypeUser),
+	resp := schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeUser),
 		Data:        userData,
 		MessageType: messageType,
 	}
@@ -247,12 +248,12 @@ func TestCheckFlagCompany(t *testing.T) {
 	// Setup a goroutine to handle incoming company and user requests
 	go func() {
 		for msg := range incomingMessages {
-			var req datastream.DataStreamBaseReq
+			var req schematicdatastreamws.DataStreamBaseReq
 			json.Unmarshal([]byte(msg), &req)
 
-			if req.Data.EntityType == datastream.EntityTypeCompany {
+			if req.Data.EntityType == schematicdatastreamws.EntityTypeCompany {
 				companyID := req.Data.Keys["company_id"]
-				outgoingMessages <- createMockCompanyData(companyID, datastream.MessageTypFull)
+				outgoingMessages <- createMockCompanyData(companyID, schematicdatastreamws.MessageTypeFull)
 			}
 		}
 	}()
@@ -302,12 +303,12 @@ func TestCheckFlagUser(t *testing.T) {
 	// Setup a goroutine to handle incoming company and user requests
 	go func() {
 		for msg := range incomingMessages {
-			var req datastream.DataStreamBaseReq
+			var req schematicdatastreamws.DataStreamBaseReq
 			json.Unmarshal([]byte(msg), &req)
 
-			if req.Data.EntityType == datastream.EntityTypeUser {
+			if req.Data.EntityType == schematicdatastreamws.EntityTypeUser {
 				companyID := req.Data.Keys["user_id"]
-				outgoingMessages <- createMockUserData(companyID, datastream.MessageTypFull)
+				outgoingMessages <- createMockUserData(companyID, schematicdatastreamws.MessageTypeFull)
 			}
 		}
 	}()
@@ -355,7 +356,7 @@ func TestDeleteMessage(t *testing.T) {
 	time.Sleep(100 * time.Millisecond)
 
 	// First add a company to the cache
-	outgoingMessages <- createMockCompanyData("123", datastream.MessageTypeDelete)
+	outgoingMessages <- createMockCompanyData("123", schematicdatastreamws.MessageTypeDelete)
 	time.Sleep(100 * time.Millisecond)
 
 }

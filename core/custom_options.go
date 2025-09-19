@@ -125,8 +125,11 @@ type DatastreamOption interface {
 }
 
 type DatastreamOptions struct {
-	CacheTTL    time.Duration
-	CacheConfig CacheConfig
+	CacheTTL           time.Duration
+	CacheConfig        CacheConfig
+	SidecarMode        bool
+	SidecarHealthURL   string
+	SidecarHealthCheck time.Duration
 }
 
 type CacheTTL struct {
@@ -235,8 +238,55 @@ func WithDatastream(opts ...DatastreamOption) RequestOption {
 		opt.applyDatastreamOptions(dataStreamOptions)
 	}
 
+	// Apply sidecar defaults if sidecar mode is enabled but specific options weren't provided
+	if dataStreamOptions.SidecarMode {
+		if dataStreamOptions.SidecarHealthURL == "" {
+			dataStreamOptions.SidecarHealthURL = "http://localhost:8090/ready"
+		}
+		if dataStreamOptions.SidecarHealthCheck == 0 {
+			dataStreamOptions.SidecarHealthCheck = 30 * time.Second
+		}
+	}
+
 	return &ClientOptUseDatastream{
 		enabled: true,
 		options: dataStreamOptions,
 	}
+}
+
+// SidecarMode enables sidecar mode for datastream client
+type SidecarMode struct{}
+
+func (s SidecarMode) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.SidecarMode = true
+}
+
+func WithSidecarMode() DatastreamOption {
+	return SidecarMode{}
+}
+
+// SidecarHealthURL configures the health check URL for sidecar mode
+type SidecarHealthURL struct {
+	url string
+}
+
+func (s SidecarHealthURL) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.SidecarHealthURL = s.url
+}
+
+func WithSidecarHealthURL(url string) DatastreamOption {
+	return SidecarHealthURL{url: url}
+}
+
+// SidecarHealthInterval configures the health check interval for sidecar mode
+type SidecarHealthInterval struct {
+	interval time.Duration
+}
+
+func (s SidecarHealthInterval) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.SidecarHealthCheck = s.interval
+}
+
+func WithSidecarHealthInterval(interval time.Duration) DatastreamOption {
+	return SidecarHealthInterval{interval: interval}
 }

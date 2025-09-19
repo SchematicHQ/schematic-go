@@ -16,6 +16,9 @@ var WithLogger = core.WithLogger
 var WithDatastream = core.WithDatastream
 var WithRedisCache = core.WithRedisCache
 var WithCacheTTL = core.WithCacheTTL
+var WithSidecarMode = core.WithSidecarMode
+var WithSidecarHealthURL = core.WithSidecarHealthURL
+var WithSidecarHealthInterval = core.WithSidecarHealthInterval
 
 type RedisCacheConfig = core.RedisCacheConfig
 type RedisCacheClusterConfig = core.RedisCacheClusterConfig

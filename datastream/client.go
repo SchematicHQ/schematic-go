@@ -61,7 +61,7 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 	if !client.sidecarMode && options.BaseURL != "" {
 		wsClient, err := schematicdatastreamws.NewClient(schematicdatastreamws.ClientOptions{
 			URL:                    options.BaseURL,
-			Headers:                map[string][]string{"X-Schematic-Api-Key": {options.ApiKey}},
+			ApiKey:                 options.ApiKey,
 			MessageHandler:         client.handleWebSocketMessage,
 			ConnectionReadyHandler: client.handleConnectionReady,
 			Logger:                 client.logger,

@@ -40,12 +40,12 @@ type DataStreamClient struct {
 	// Connection state tracking
 	connected bool
 
-	// Sidecar mode configuration
-	sidecarMode        bool
-	sidecarHealthURL   string
-	sidecarHealthCheck time.Duration
-	sidecarReady       bool
-	sidecarHealthDone  chan bool
+	// Replicator mode configuration
+	replicatorMode        bool
+	replicatorHealthURL   string
+	replicatorHealthCheck time.Duration
+	replicatorReady       bool
+	replicatorHealthDone  chan bool
 
 	// Locks
 	flagsMu          sync.RWMutex // For flags cache operations
@@ -56,5 +56,5 @@ type DataStreamClient struct {
 	pendingFlagReqMu sync.Mutex   // For pending flag request operations
 	writeMu          sync.Mutex   // Existing mutex for WebSocket writes
 	connectedMu      sync.RWMutex // For connection state operations
-	sidecarMu        sync.RWMutex // For sidecar state operations
+	replicatorMu     sync.RWMutex // For replicator state operations
 }

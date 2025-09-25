@@ -49,16 +49,16 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		pendingCompanyRequests: make(map[string][]chan *rulesengine.Company),
 		pendingUserRequests:    make(map[string][]chan *rulesengine.User),
 
-		// Sidecar mode configuration
-		sidecarMode:        configurationOptions.SidecarMode,
-		sidecarHealthURL:   configurationOptions.SidecarHealthURL,
-		sidecarHealthCheck: configurationOptions.SidecarHealthCheck,
-		sidecarReady:       false,
-		sidecarHealthDone:  make(chan bool, 1),
+		// Replicator mode configuration
+		replicatorMode:        configurationOptions.ReplicatorMode,
+		replicatorHealthURL:   configurationOptions.ReplicatorHealthURL,
+		replicatorHealthCheck: configurationOptions.ReplicatorHealthCheck,
+		replicatorReady:       false,
+		replicatorHealthDone:  make(chan bool, 1),
 	}
 
-	// Initialize WebSocket client if not in sidecar mode and if BaseURL is provided
-	if !client.sidecarMode && options.BaseURL != "" {
+	// Initialize WebSocket client if not in replicator mode and if BaseURL is provided
+	if !client.replicatorMode && options.BaseURL != "" {
 		wsClient, err := schematicdatastreamws.NewClient(schematicdatastreamws.ClientOptions{
 			URL:                    options.BaseURL,
 			ApiKey:                 options.ApiKey,
@@ -72,9 +72,9 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		client.wsClient = wsClient
 	}
 
-	// Start sidecar health checking if enabled
-	if client.sidecarMode {
-		go client.startSidecarHealthCheck()
+	// Start replicator health checking if enabled
+	if client.replicatorMode {
+		go client.startReplicatorHealthCheck()
 	}
 
 	return client
@@ -91,10 +91,10 @@ func (c *DataStreamClient) handleConnectionReady(ctx context.Context) error {
 }
 
 func (c *DataStreamClient) Start() {
-	// In sidecar mode, we don't establish WebSocket connections
-	// The sidecar replicator handles all data streaming
-	if c.sidecarMode {
-		c.logger.Info(context.Background(), "Sidecar mode enabled - skipping WebSocket connection")
+	// In replicator mode, we don't establish WebSocket connections
+	// The external replicator handles all data streaming
+	if c.replicatorMode {
+		c.logger.Info(context.Background(), "Replicator mode enabled - skipping WebSocket connection")
 		return
 	}
 
@@ -121,10 +121,10 @@ func (c *DataStreamClient) Close() {
 		}
 	}()
 
-	// Stop sidecar health checking if enabled
-	if c.sidecarMode {
-		c.logger.Info(ctx, "Stopping sidecar health check")
-		close(c.sidecarHealthDone)
+	// Stop replicator health checking if enabled
+	if c.replicatorMode {
+		c.logger.Info(ctx, "Stopping replicator health check")
+		close(c.replicatorHealthDone)
 		return
 	}
 
@@ -138,10 +138,10 @@ func (c *DataStreamClient) Close() {
 }
 
 // IsConnected checks if the WebSocket connection is active
-// In sidecar mode, returns true if the sidecar replicator is ready
+// In replicator mode, returns true if the external replicator is ready
 func (c *DataStreamClient) IsConnected() bool {
-	if c.sidecarMode {
-		return c.IsSidecarReady()
+	if c.replicatorMode {
+		return c.IsReplicatorReady()
 	}
 
 	if c.wsClient == nil {
@@ -396,10 +396,10 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 		return resp, nil
 	}
 
-	// Handle sidecar mode behavior
-	if c.sidecarMode {
-		// In sidecar mode, if we don't have all cached data, evaluate with nil values instead of fetching
-		// The sidecar replicator should have populated the cache with all necessary data
+	// Handle replicator mode behavior
+	if c.replicatorMode {
+		// In replicator mode, if we don't have all cached data, evaluate with nil values instead of fetching
+		// The external replicator should have populated the cache with all necessary data
 		resp, err := rulesengine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
 		if err != nil {
 			return nil, fmt.Errorf("rules engine error: %w", err)
@@ -828,39 +828,39 @@ func deepCopyCompany(company *rulesengine.Company) *rulesengine.Company {
 	return companyCopy
 }
 
-// startSidecarHealthCheck starts a background goroutine that periodically checks
-// the sidecar replicator's readiness endpoint
-func (c *DataStreamClient) startSidecarHealthCheck() {
+// startReplicatorHealthCheck starts a background goroutine that periodically checks
+// the external replicator's readiness endpoint
+func (c *DataStreamClient) startReplicatorHealthCheck() {
 	ctx := context.Background()
-	ticker := time.NewTicker(c.sidecarHealthCheck)
+	ticker := time.NewTicker(c.replicatorHealthCheck)
 	defer ticker.Stop()
 
-	c.logger.Info(ctx, fmt.Sprintf("Starting sidecar health check with URL: %s, interval: %v", c.sidecarHealthURL, c.sidecarHealthCheck))
+	c.logger.Info(ctx, fmt.Sprintf("Starting replicator health check with URL: %s, interval: %v", c.replicatorHealthURL, c.replicatorHealthCheck))
 
 	// Initial health check
-	c.checkSidecarHealth(ctx)
+	c.checkReplicatorHealth(ctx)
 
 	for {
 		select {
-		case <-c.sidecarHealthDone:
-			c.logger.Info(ctx, "Sidecar health check stopped")
+		case <-c.replicatorHealthDone:
+			c.logger.Info(ctx, "Replicator health check stopped")
 			return
 		case <-ticker.C:
-			c.checkSidecarHealth(ctx)
+			c.checkReplicatorHealth(ctx)
 		}
 	}
 }
 
-// checkSidecarHealth performs a single health check against the sidecar replicator
-func (c *DataStreamClient) checkSidecarHealth(ctx context.Context) {
+// checkReplicatorHealth performs a single health check against the external replicator
+func (c *DataStreamClient) checkReplicatorHealth(ctx context.Context) {
 	client := &http.Client{
 		Timeout: 5 * time.Second,
 	}
 
-	resp, err := client.Get(c.sidecarHealthURL)
+	resp, err := client.Get(c.replicatorHealthURL)
 	if err != nil {
-		c.setSidecarReady(false)
-		c.logger.Debug(ctx, fmt.Sprintf("Sidecar health check failed: %v", err))
+		c.setReplicatorReady(false)
+		c.logger.Debug(ctx, fmt.Sprintf("Replicator health check failed: %v", err))
 		return
 	}
 	defer resp.Body.Close()
@@ -868,8 +868,8 @@ func (c *DataStreamClient) checkSidecarHealth(ctx context.Context) {
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		c.setSidecarReady(false)
-		c.logger.Warn(ctx, fmt.Sprintf("Failed to read sidecar health response: %v", err))
+		c.setReplicatorReady(false)
+		c.logger.Warn(ctx, fmt.Sprintf("Failed to read replicator health response: %v", err))
 		return
 	}
 
@@ -879,38 +879,38 @@ func (c *DataStreamClient) checkSidecarHealth(ctx context.Context) {
 	}
 
 	if err := json.Unmarshal(body, &healthResp); err != nil {
-		c.setSidecarReady(false)
-		c.logger.Warn(ctx, fmt.Sprintf("Failed to parse sidecar health response: %v", err))
+		c.setReplicatorReady(false)
+		c.logger.Warn(ctx, fmt.Sprintf("Failed to parse replicator health response: %v", err))
 		return
 	}
 
-	// Update sidecar ready state
-	wasReady := c.IsSidecarReady()
-	c.setSidecarReady(healthResp.Ready)
+	// Update replicator ready state
+	wasReady := c.IsReplicatorReady()
+	c.setReplicatorReady(healthResp.Ready)
 
 	// Log state changes
 	if healthResp.Ready && !wasReady {
-		c.logger.Info(ctx, "Sidecar replicator is now ready")
+		c.logger.Info(ctx, "External replicator is now ready")
 	} else if !healthResp.Ready && wasReady {
-		c.logger.Info(ctx, "Sidecar replicator is no longer ready")
+		c.logger.Info(ctx, "External replicator is no longer ready")
 	}
 }
 
-// IsSidecarReady returns whether the sidecar replicator is ready
-func (c *DataStreamClient) IsSidecarReady() bool {
-	c.sidecarMu.RLock()
-	defer c.sidecarMu.RUnlock()
-	return c.sidecarReady
+// IsReplicatorReady returns whether the external replicator is ready
+func (c *DataStreamClient) IsReplicatorReady() bool {
+	c.replicatorMu.RLock()
+	defer c.replicatorMu.RUnlock()
+	return c.replicatorReady
 }
 
-// setSidecarReady updates the sidecar ready state
-func (c *DataStreamClient) setSidecarReady(ready bool) {
-	c.sidecarMu.Lock()
-	defer c.sidecarMu.Unlock()
-	c.sidecarReady = ready
+// setReplicatorReady updates the replicator ready state
+func (c *DataStreamClient) setReplicatorReady(ready bool) {
+	c.replicatorMu.Lock()
+	defer c.replicatorMu.Unlock()
+	c.replicatorReady = ready
 }
 
-// IsSidecarMode returns whether the client is running in sidecar mode
-func (c *DataStreamClient) IsSidecarMode() bool {
-	return c.sidecarMode
+// IsReplicatorMode returns whether the client is running in replicator mode
+func (c *DataStreamClient) IsReplicatorMode() bool {
+	return c.replicatorMode
 }

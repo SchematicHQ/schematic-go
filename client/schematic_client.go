@@ -95,9 +95,9 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	}
 
 	if c.useDataStream() {
-		// In sidecar mode, check if sidecar is ready before using datastream
-		if c.datastreamClient.IsSidecarMode() && !c.datastreamClient.IsSidecarReady() {
-			c.logger.Debug(ctx, "Sidecar mode enabled but replicator not ready, falling back to API")
+		// In replicator mode, check if replicator is ready before using datastream
+		if c.datastreamClient.IsReplicatorMode() && !c.datastreamClient.IsReplicatorReady() {
+			c.logger.Debug(ctx, "Replicator mode enabled but replicator not ready, falling back to API")
 			return c.checkFlag(ctx, evalCtx, flagKey)
 		}
 

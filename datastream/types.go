@@ -1,13 +1,11 @@
 package datastream
 
 import (
-	"encoding/json"
-	"net/url"
 	"sync"
 	"time"
 
-	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
+	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
 )
@@ -15,29 +13,6 @@ import (
 type CompanyCacheProvider cache.CacheProvider[*rulesengine.Company]
 type FlagCacheProvider cache.CacheProvider[*rulesengine.Flag]
 type UserCacheProvider cache.CacheProvider[*rulesengine.User]
-
-type DataStreamReq struct {
-	Action     Action            `json:"action"`
-	EntityType EntityType        `json:"entity_type"`
-	Keys       map[string]string `json:"keys,omitempty"`
-}
-
-type DataStreamBaseReq struct {
-	Data DataStreamReq `json:"data"`
-}
-
-type DataStreamResp struct {
-	Data        json.RawMessage `json:"data"`
-	EntityID    *string         `json:"entity_id"`
-	EntityType  string          `json:"entity_type"`
-	MessageType MessageType     `json:"message_type"`
-}
-
-type DataStreamError struct {
-	Error      string            `json:"error"`
-	Keys       map[string]string `json:"keys,omitempty"`
-	EntityType *EntityType       `json:"entity_type,omitempty"`
-}
 
 type DataStreamClientOptions struct {
 	ApiKey       string
@@ -50,16 +25,12 @@ type DataStreamClientOptions struct {
 
 type DataStreamClient struct {
 	cacheTTL             time.Duration
-	conn                 *websocket.Conn
+	wsClient             *schematicdatastreamws.Client
 	logger               core.Logger
-	done                 chan bool
-	ctxErrors            chan *core.CtxError
-	reconnect            chan bool
 	companyCacheProvider CompanyCacheProvider
 	flagsCacheProvider   FlagCacheProvider
 	userCacheProvider    UserCacheProvider
 	companyCache         map[string]*rulesengine.Company
-	url                  *url.URL
 	apiKey               string
 
 	pendingCompanyRequests map[string][]chan *rulesengine.Company
@@ -68,6 +39,13 @@ type DataStreamClient struct {
 
 	// Connection state tracking
 	connected bool
+
+	// Replicator mode configuration
+	replicatorMode        bool
+	replicatorHealthURL   string
+	replicatorHealthCheck time.Duration
+	replicatorReady       bool
+	replicatorHealthDone  chan bool
 
 	// Locks
 	flagsMu          sync.RWMutex // For flags cache operations
@@ -78,13 +56,5 @@ type DataStreamClient struct {
 	pendingFlagReqMu sync.Mutex   // For pending flag request operations
 	writeMu          sync.Mutex   // Existing mutex for WebSocket writes
 	connectedMu      sync.RWMutex // For connection state operations
+	replicatorMu     sync.RWMutex // For replicator state operations
 }
-
-type MessageType string
-
-const (
-	MessageTypFull     MessageType = "full"
-	MessageTypePartial MessageType = "partial"
-	MessageTypeDelete  MessageType = "delete"
-	MessageTypeError   MessageType = "error"
-)

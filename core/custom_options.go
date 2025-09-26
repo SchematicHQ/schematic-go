@@ -125,8 +125,11 @@ type DatastreamOption interface {
 }
 
 type DatastreamOptions struct {
-	CacheTTL    time.Duration
-	CacheConfig CacheConfig
+	CacheTTL              time.Duration
+	CacheConfig           CacheConfig
+	ReplicatorMode        bool
+	ReplicatorHealthURL   string
+	ReplicatorHealthCheck time.Duration
 }
 
 type CacheTTL struct {
@@ -235,8 +238,55 @@ func WithDatastream(opts ...DatastreamOption) RequestOption {
 		opt.applyDatastreamOptions(dataStreamOptions)
 	}
 
+	// Apply replicator defaults if replicator mode is enabled but specific options weren't provided
+	if dataStreamOptions.ReplicatorMode {
+		if dataStreamOptions.ReplicatorHealthURL == "" {
+			dataStreamOptions.ReplicatorHealthURL = "http://localhost:8090/ready"
+		}
+		if dataStreamOptions.ReplicatorHealthCheck == 0 {
+			dataStreamOptions.ReplicatorHealthCheck = 30 * time.Second
+		}
+	}
+
 	return &ClientOptUseDatastream{
 		enabled: true,
 		options: dataStreamOptions,
 	}
+}
+
+// ReplicatorMode enables replicator mode for datastream client
+type ReplicatorMode struct{}
+
+func (s ReplicatorMode) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.ReplicatorMode = true
+}
+
+func WithReplicatorMode() DatastreamOption {
+	return ReplicatorMode{}
+}
+
+// ReplicatorHealthURL configures the health check URL for replicator mode
+type ReplicatorHealthURL struct {
+	url string
+}
+
+func (s ReplicatorHealthURL) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.ReplicatorHealthURL = s.url
+}
+
+func WithReplicatorHealthURL(url string) DatastreamOption {
+	return ReplicatorHealthURL{url: url}
+}
+
+// ReplicatorHealthInterval configures the health check interval for replicator mode
+type ReplicatorHealthInterval struct {
+	interval time.Duration
+}
+
+func (s ReplicatorHealthInterval) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.ReplicatorHealthCheck = s.interval
+}
+
+func WithReplicatorHealthInterval(interval time.Duration) DatastreamOption {
+	return ReplicatorHealthInterval{interval: interval}
 }

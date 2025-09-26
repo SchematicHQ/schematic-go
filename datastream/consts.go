@@ -2,22 +2,7 @@ package datastream
 
 import "time"
 
-const defaultBaseURL = "wss://datastream.schematichq.com"
-
-type Action string
-
-const (
-	ActionStart Action = "start"
-	ActionStop  Action = "stop"
-)
-
-type EntityType string
-
-const (
-	EntityTypeCompany EntityType = "rulesengine.Company"
-	EntityTypeFlags   EntityType = "rulesengine.Flags"
-	EntityTypeUser    EntityType = "rulesengine.User"
-)
+const defaultBaseURL = "https://api.schematichq.com"
 
 // Time constants for the WebSocket connection
 const (

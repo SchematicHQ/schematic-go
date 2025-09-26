@@ -5,16 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math"
-	"math/rand"
-	"net"
+	"io"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 
-	"github.com/gorilla/websocket"
 	"github.com/schematichq/rulesengine"
+	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
 )
@@ -40,280 +37,142 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		flagCacheProvider = buildFlagCacheProvider(configurationOptions)
 	}
 
-	dataStreamUrl, err := getBaseURL(options.BaseURL)
-	if err != nil {
-		panic(fmt.Sprintf("failed to parse base URL: %v", err))
-	}
-
-	return &DataStreamClient{
+	client := &DataStreamClient{
 		apiKey:               options.ApiKey,
 		cacheTTL:             configurationOptions.CacheTTL,
-		done:                 make(chan bool, 1),
-		ctxErrors:            make(chan *core.CtxError, 100),
-		reconnect:            make(chan bool, 1),
 		logger:               options.Logger,
 		flagsCacheProvider:   flagCacheProvider,
 		companyCacheProvider: companyCacheProvider,
 		companyCache:         make(map[string]*rulesengine.Company),
-		url:                  dataStreamUrl,
 		userCacheProvider:    userCacheProvider,
 
 		pendingCompanyRequests: make(map[string][]chan *rulesengine.Company),
 		pendingUserRequests:    make(map[string][]chan *rulesengine.User),
+
+		// Replicator mode configuration
+		replicatorMode:        configurationOptions.ReplicatorMode,
+		replicatorHealthURL:   configurationOptions.ReplicatorHealthURL,
+		replicatorHealthCheck: configurationOptions.ReplicatorHealthCheck,
+		replicatorReady:       false,
+		replicatorHealthDone:  make(chan bool, 1),
 	}
+
+	// Initialize WebSocket client if not in replicator mode and if BaseURL is provided
+	if !client.replicatorMode && options.BaseURL != "" {
+		wsClient, err := schematicdatastreamws.NewClient(schematicdatastreamws.ClientOptions{
+			URL:                    options.BaseURL,
+			ApiKey:                 options.ApiKey,
+			MessageHandler:         client.handleWebSocketMessage,
+			ConnectionReadyHandler: client.handleConnectionReady,
+			Logger:                 client.logger,
+		})
+		if err != nil {
+			panic(fmt.Sprintf("failed to create WebSocket client: %v", err))
+		}
+		client.wsClient = wsClient
+	}
+
+	// Start replicator health checking if enabled
+	if client.replicatorMode {
+		go client.startReplicatorHealthCheck()
+	}
+
+	return client
 }
 
-func (c *DataStreamClient) connect() (*websocket.Conn, error) {
-	client, _, err := websocket.DefaultDialer.Dial(c.url.String(), http.Header{
-		"X-Schematic-Api-Key": []string{c.apiKey},
-	})
-	return client, err
+// handleWebSocketMessage processes incoming WebSocket messages
+func (c *DataStreamClient) handleWebSocketMessage(ctx context.Context, message *schematicdatastreamws.DataStreamResp) error {
+	return c.handleMessageResponse(ctx, message)
+}
+
+// handleConnectionReady is called when the WebSocket connection is ready
+func (c *DataStreamClient) handleConnectionReady(ctx context.Context) error {
+	return c.getAllFlags(ctx)
 }
 
 func (c *DataStreamClient) Start() {
-	go c.ConnectAndRead()
-}
+	// In replicator mode, we don't establish WebSocket connections
+	// The external replicator handles all data streaming
+	if c.replicatorMode {
+		c.logger.Info(context.Background(), "Replicator mode enabled - skipping WebSocket connection")
+		return
+	}
 
-func (c *DataStreamClient) ConnectAndRead() {
-	ctx := context.Background()
-
-	defer func() {
-		if r := recover(); r != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred in WebSocket handler: %v", r))
-		}
-	}()
-
-	attempts := 0
-	for {
-		conn, err := c.connect()
-		if err != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Failed to connect to WebSocket: %v", err))
-			attempts += 1
-			c.setConnected(false)
-			if attempts >= maxReconnectAttempts {
-				c.logger.Error(ctx, "Unable to connect to server")
-				return
-			}
-			time.Sleep(calculateBackoffDelay(attempts))
-			continue
-		}
-
-		c.logger.Info(ctx, "Connected to Schematic WebSocket")
-		attempts = 0
-		c.conn = conn
-		c.setConnected(true)
-
-		err = c.conn.SetReadDeadline(time.Now().Add(pongWait))
-		if err != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Failed to set read deadline: %v", err))
-		}
-
-		go c.readMessages(ctx)
-		closed := c.handleWebSocketConnection(ctx)
-
-		if closed {
-			c.setConnected(false)
-			return
-		}
-
-		c.logger.Info(ctx, "Reconnecting to WebSocket...")
+	// Start the WebSocket client
+	if c.wsClient != nil {
+		c.wsClient.Start()
 	}
 }
 
-func calculateBackoffDelay(attempt int) time.Duration {
-	// Add jitter to prevent synchronized reconnection attempts
-	jitter := time.Duration(rand.Int63n(int64(minReconnectDelay)))
-
-	// Exponential backoff with a cap
-	delay := time.Duration(math.Pow(2, float64(attempt-1)))*minReconnectDelay + jitter
-	if delay > maxReconnectDelay {
-		delay = maxReconnectDelay + jitter // Ensure jitter is added even when capped
-	}
-	return delay
-}
-
-func (c *DataStreamClient) handleWebSocketConnection(ctx context.Context) bool {
-	ticker := time.NewTicker(pingPeriod)
-	defer func() {
-		ticker.Stop()
-	}()
-
-	c.conn.SetPongHandler(c.handlePong)
-	err := c.getAllFlags(ctx)
-	if err != nil {
-		c.logger.Error(ctx, fmt.Sprintf("Failed to get all flags: %v", err))
-		return true
-	}
-
-	for {
-		select {
-		case <-c.done:
-			return true
-		case <-c.reconnect:
-			return false
-		case err := <-c.ctxErrors:
-			c.logger.Error(err.Ctx, fmt.Sprintf("%v", err.Err))
-		case <-ticker.C:
-			if err := c.conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
-				c.logger.Error(ctx, fmt.Sprintf("Failed to send ping message: %v", err))
-				c.setConnected(false)
-				return false
-			}
-		}
-	}
-}
-
-func (c *DataStreamClient) readMessages(ctx context.Context) {
-	defer func() {
-		if r := recover(); r != nil {
-			c.ctxErrors <- &core.CtxError{
-				Ctx: ctx,
-				Err: fmt.Errorf("Fatal error occurred in WebSocket reader: %v", r),
-			}
-			return
-		}
-	}()
-	for {
-		var message DataStreamResp
-		_, m, err := c.conn.ReadMessage()
-
-		if err != nil {
-			var opErr *net.OpError
-			if errors.As(err, &opErr) {
-				c.setConnected(false)
-				return
-			}
-
-			if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
-				c.setConnected(false)
-				return
-			}
-
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				c.logger.Debug(ctx, fmt.Sprintf("Failed to read WebSocket message: %v", err))
-				c.setConnected(false)
-				return
-			}
-
-			c.setConnected(false)
-			c.reconnect <- true
-			return
-		}
-
-		err = json.Unmarshal(m, &message)
-		if message.Data == nil {
-			c.logger.Debug(ctx, "Received empty message from WebSocket")
-			c.setConnected(false)
-			c.reconnect <- true
-			return
-		}
-
-		err = c.handleMessageResponse(ctx, &message)
-		if err != nil {
-			c.ctxErrors <- &core.CtxError{
-				Ctx: ctx,
-				Err: fmt.Errorf("Failed to handle WebSocket message: %v", err),
-			}
-		}
-	}
-}
-
-func (c *DataStreamClient) sendWebSocketMessage(ctx context.Context, req *DataStreamReq) error {
-	if c.conn == nil {
-		return fmt.Errorf("WebSocket connection is not initialized")
+func (c *DataStreamClient) sendWebSocketMessage(ctx context.Context, req *schematicdatastreamws.DataStreamReq) error {
+	if c.wsClient == nil {
+		return fmt.Errorf("WebSocket client is not initialized")
 	}
 
 	message := c.packageMessage(req)
-
-	c.writeMu.Lock()
-	err := c.conn.WriteJSON(message)
-	c.writeMu.Unlock()
-	if err != nil {
-		c.logger.Error(ctx, fmt.Sprintf("Failed to send WebSocket message: %v", err))
-		return err
-	}
-
-	return nil
+	return c.wsClient.SendMessage(message)
 }
 
 func (c *DataStreamClient) Close() {
 	ctx := context.Background()
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred while closing WebSocket: %v", r))
+			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred while closing client: %v", r))
 		}
 	}()
 
-	c.setConnected(false)
-	close(c.done)
-	close(c.reconnect)
+	// Stop replicator health checking if enabled
+	if c.replicatorMode {
+		c.logger.Info(ctx, "Stopping replicator health check")
+		close(c.replicatorHealthDone)
+		return
+	}
 
-	if c.conn != nil {
+	// Close WebSocket client if it exists
+	if c.wsClient != nil {
 		c.logger.Info(ctx, "Closing WebSocket connection")
-		c.conn.Close()
+		c.wsClient.Close()
 	}
 
 	c.logger.Info(ctx, "WebSocket connection closed")
 }
 
-func getBaseURL(baseUrl string) (*url.URL, error) {
-	if baseUrl == "" {
-		baseUrl = defaultBaseURL
-	}
-
-	url, err := url.Parse(baseUrl)
-	if err != nil {
-		return nil, err
-	}
-
-	switch url.Scheme {
-	case "https":
-		url.Scheme = "wss"
-	case "http":
-		url.Scheme = "ws"
-	}
-
-	url.Path = "/datastream"
-
-	return url, nil
-}
-
 // IsConnected checks if the WebSocket connection is active
+// In replicator mode, returns true if the external replicator is ready
 func (c *DataStreamClient) IsConnected() bool {
-	c.connectedMu.RLock()
-	defer c.connectedMu.RUnlock()
-	return c.connected
+	if c.replicatorMode {
+		return c.IsReplicatorReady()
+	}
+
+	if c.wsClient == nil {
+		return false
+	}
+
+	return c.wsClient.IsConnected()
 }
 
-// setConnected updates the connection state
-func (c *DataStreamClient) setConnected(connected bool) {
-	c.connectedMu.Lock()
-	defer c.connectedMu.Unlock()
-	c.connected = connected
-}
-
-func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *DataStreamResp) error {
+func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *schematicdatastreamws.DataStreamResp) error {
 	if message == nil {
 		return nil
 	}
 
-	if message.MessageType == MessageTypeError {
+	if message.MessageType == schematicdatastreamws.MessageTypeError {
 		return c.handleErrorMessage(ctx, message)
 	}
 
 	switch message.EntityType {
-	case string(EntityTypeCompany):
+	case string(schematicdatastreamws.EntityTypeCompany):
 		return c.handleCompanyMessage(ctx, message)
-	case string(EntityTypeFlags):
+	case string(schematicdatastreamws.EntityTypeFlags):
 		return c.handleFlagsMessage(ctx, message)
-	case string(EntityTypeUser):
+	case string(schematicdatastreamws.EntityTypeUser):
 		return c.handleUserMessage(ctx, message)
 	default:
 		return fmt.Errorf("Received unknown entity type: %s", message.EntityType)
 	}
 }
 
-func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStreamResp) error {
+func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
 	flags := resp.Data
 
 	var flagsData []*rulesengine.Flag
@@ -326,7 +185,9 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *DataStr
 	var cacheKeys []string
 	for _, flag := range flagsData {
 		cacheKey := flagCacheKey(flag.Key)
-		c.flagsCacheProvider.Set(ctx, cacheKey, flag, nil)
+		if err := c.flagsCacheProvider.Set(ctx, cacheKey, flag, nil); err != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Failed to cache flag '%s': %v", flag.Key, err))
+		}
 		cacheKeys = append(cacheKeys, cacheKey)
 	}
 
@@ -366,7 +227,7 @@ func (c *DataStreamClient) notifyPendingCompanyRequests(_ context.Context, keys 
 	}
 }
 
-func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataStreamResp) error {
+func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
 	var company *rulesengine.Company
 	err := json.Unmarshal(resp.Data, &company)
 	if err != nil {
@@ -377,11 +238,13 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *DataS
 		return nil
 	}
 
-	if resp.MessageType == MessageTypeDelete {
+	if resp.MessageType == schematicdatastreamws.MessageTypeDelete {
 		// Remove the company from the cache
 		for key, value := range company.Keys {
 			companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-			c.companyCacheProvider.Delete(ctx, companyKey)
+			if err := c.companyCacheProvider.Delete(ctx, companyKey); err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete company from cache '%s': %v", companyKey, err))
+			}
 		}
 		return nil
 	}
@@ -430,7 +293,7 @@ func (c *DataStreamClient) notifyPendingUserRequests(_ context.Context, keys map
 	}
 }
 
-func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStreamResp) error {
+func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
 	var user *rulesengine.User
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
@@ -441,11 +304,13 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 		return nil
 	}
 
-	if resp.MessageType == MessageTypeDelete {
+	if resp.MessageType == schematicdatastreamws.MessageTypeDelete {
 		// Remove the user from the cache
 		for key, value := range user.Keys {
 			userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
-			c.userCacheProvider.Delete(ctx, userKey)
+			if err := c.userCacheProvider.Delete(ctx, userKey); err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete user from cache '%s': %v", userKey, err))
+			}
 		}
 
 		return nil
@@ -476,8 +341,8 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *DataStre
 	return nil
 }
 
-func (c *DataStreamClient) handleErrorMessage(ctx context.Context, resp *DataStreamResp) error {
-	var respError DataStreamError
+func (c *DataStreamClient) handleErrorMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
+	var respError schematicdatastreamws.DataStreamError
 	err := json.Unmarshal(resp.Data, &respError)
 	if err != nil {
 		return fmt.Errorf("Failed to unmarshal error message: %v", err)
@@ -487,9 +352,9 @@ func (c *DataStreamClient) handleErrorMessage(ctx context.Context, resp *DataStr
 	if len(respError.Keys) > 0 && respError.EntityType != nil {
 		// Based on the entity type, notify the appropriate pending channels with nil
 		switch *respError.EntityType {
-		case EntityTypeCompany:
+		case schematicdatastreamws.EntityTypeCompany:
 			c.notifyPendingCompanyRequests(ctx, respError.Keys, nil)
-		case EntityTypeUser:
+		case schematicdatastreamws.EntityTypeUser:
 			c.notifyPendingUserRequests(ctx, respError.Keys, nil)
 		default:
 			// Unsupported entity type
@@ -524,6 +389,17 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 	// If we have all cached data we need, use it
 	if (!needsCompany || cachedCompany != nil) && (!needsUser || cachedUser != nil) {
 		// Evaluate against the rules engine with cached data
+		resp, err := rulesengine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
+		if err != nil {
+			return nil, fmt.Errorf("rules engine error: %w", err)
+		}
+		return resp, nil
+	}
+
+	// Handle replicator mode behavior
+	if c.replicatorMode {
+		// In replicator mode, if we don't have all cached data, evaluate with nil values instead of fetching
+		// The external replicator should have populated the cache with all necessary data
 		resp, err := rulesengine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
 		if err != nil {
 			return nil, fmt.Errorf("rules engine error: %w", err)
@@ -587,8 +463,8 @@ func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
 		close(waitCh)
 	}()
 
-	req := &DataStreamReq{
-		EntityType: EntityTypeFlags,
+	req := &schematicdatastreamws.DataStreamReq{
+		EntityType: schematicdatastreamws.EntityTypeFlags,
 	}
 	err := c.sendWebSocketMessage(ctx, req)
 	if err != nil {
@@ -628,8 +504,8 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 	c.companyMu.Unlock()
 
 	if shouldSendRequest {
-		req := &DataStreamReq{
-			EntityType: EntityTypeCompany,
+		req := &schematicdatastreamws.DataStreamReq{
+			EntityType: schematicdatastreamws.EntityTypeCompany,
 			Keys:       keys,
 		}
 
@@ -683,8 +559,8 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 	c.pendingUserReqMu.Unlock()
 
 	if shouldSendRequest {
-		req := &DataStreamReq{
-			EntityType: EntityTypeUser,
+		req := &schematicdatastreamws.DataStreamReq{
+			EntityType: schematicdatastreamws.EntityTypeUser,
 			Keys:       keys,
 		}
 
@@ -727,16 +603,8 @@ func (c *DataStreamClient) getFlag(ctx context.Context, key string) (*rulesengin
 	return flag, true
 }
 
-func (c *DataStreamClient) handlePong(string) error {
-	err := c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *DataStreamClient) packageMessage(req *DataStreamReq) *DataStreamBaseReq {
-	return &DataStreamBaseReq{
+func (c *DataStreamClient) packageMessage(req *schematicdatastreamws.DataStreamReq) *schematicdatastreamws.DataStreamBaseReq {
+	return &schematicdatastreamws.DataStreamBaseReq{
 		Data: *req,
 	}
 }
@@ -958,4 +826,91 @@ func deepCopyCompany(company *rulesengine.Company) *rulesengine.Company {
 	}
 
 	return companyCopy
+}
+
+// startReplicatorHealthCheck starts a background goroutine that periodically checks
+// the external replicator's readiness endpoint
+func (c *DataStreamClient) startReplicatorHealthCheck() {
+	ctx := context.Background()
+	ticker := time.NewTicker(c.replicatorHealthCheck)
+	defer ticker.Stop()
+
+	c.logger.Info(ctx, fmt.Sprintf("Starting replicator health check with URL: %s, interval: %v", c.replicatorHealthURL, c.replicatorHealthCheck))
+
+	// Initial health check
+	c.checkReplicatorHealth(ctx)
+
+	for {
+		select {
+		case <-c.replicatorHealthDone:
+			c.logger.Info(ctx, "Replicator health check stopped")
+			return
+		case <-ticker.C:
+			c.checkReplicatorHealth(ctx)
+		}
+	}
+}
+
+// checkReplicatorHealth performs a single health check against the external replicator
+func (c *DataStreamClient) checkReplicatorHealth(ctx context.Context) {
+	client := &http.Client{
+		Timeout: 5 * time.Second,
+	}
+
+	resp, err := client.Get(c.replicatorHealthURL)
+	if err != nil {
+		c.setReplicatorReady(false)
+		c.logger.Debug(ctx, fmt.Sprintf("Replicator health check failed: %v", err))
+		return
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.setReplicatorReady(false)
+		c.logger.Warn(ctx, fmt.Sprintf("Failed to read replicator health response: %v", err))
+		return
+	}
+
+	// Parse the JSON response
+	var healthResp struct {
+		Ready bool `json:"ready"`
+	}
+
+	if err := json.Unmarshal(body, &healthResp); err != nil {
+		c.setReplicatorReady(false)
+		c.logger.Warn(ctx, fmt.Sprintf("Failed to parse replicator health response: %v", err))
+		return
+	}
+
+	// Update replicator ready state
+	wasReady := c.IsReplicatorReady()
+	c.setReplicatorReady(healthResp.Ready)
+
+	// Log state changes
+	if healthResp.Ready && !wasReady {
+		c.logger.Info(ctx, "External replicator is now ready")
+	} else if !healthResp.Ready && wasReady {
+		c.logger.Info(ctx, "External replicator is no longer ready")
+	}
+}
+
+// IsReplicatorReady returns whether the external replicator is ready
+func (c *DataStreamClient) IsReplicatorReady() bool {
+	c.replicatorMu.RLock()
+	defer c.replicatorMu.RUnlock()
+	return c.replicatorReady
+}
+
+// setReplicatorReady updates the replicator ready state
+func (c *DataStreamClient) setReplicatorReady(ready bool) {
+	c.replicatorMu.Lock()
+	defer c.replicatorMu.Unlock()
+	c.replicatorReady = ready
+}
+
+// IsReplicatorMode returns whether the client is running in replicator mode
+func (c *DataStreamClient) IsReplicatorMode() bool {
+	return c.replicatorMode
 }

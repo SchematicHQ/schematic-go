@@ -516,6 +516,63 @@ options := &schematicoption.DatastreamOptions{
 }
 ```
 
+---
+
+### Replicator Mode
+
+When running the `schematic-datastream-replicator` service, you should configure the Schematic client to operate in **Replicator Mode**. In this mode, the client connects to the external replicator service instead of establishing its own WebSocket connections, and the replicator handles all data streaming and caching automatically.
+
+#### How to Enable Replicator Mode
+
+To enable Replicator Mode, simply use the `WithReplicatorMode()` option within `WithDatastream()`:
+
+```go
+import (
+	schematicclient "github.com/schematichq/schematic-go/client"
+	"github.com/schematichq/schematic-go/core"
+)
+
+func main() {
+	apiKey := "your-api-key"
+
+	client := schematicclient.NewSchematicClient(
+		core.WithAPIKey(apiKey),
+		core.WithDatastream(
+			core.WithReplicatorMode(),
+		),
+	)
+
+	defer client.Close()
+}
+```
+
+#### Advanced Configuration (Optional)
+
+The client automatically configures sensible defaults for replicator mode, but you can customize the configuration if needed:
+
+```go
+client := schematicclient.NewSchematicClient(
+	core.WithAPIKey(apiKey),
+	core.WithDatastream(
+		core.WithReplicatorMode(),
+		core.WithReplicatorHealthURL("http://my-replicator:8090/ready"),
+		core.WithReplicatorHealthInterval(60*time.Second),
+	),
+)
+```
+
+#### Default Configuration
+
+- **Replicator Health URL**: `http://localhost:8090/ready`
+- **Health Check Interval**: 30 seconds
+- **Cache TTL**: 24 hours (handled automatically by the replicator)
+
+When running in Replicator Mode, the client will:
+- Skip establishing WebSocket connections
+- Periodically check if the replicator service is ready
+- Use cached data populated by the external replicator service
+- Fall back to direct API calls if the replicator is not available
+
 ## Errors
 
 Structured error types are returned from API calls that return non-success status codes. For example,

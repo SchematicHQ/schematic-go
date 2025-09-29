@@ -165,6 +165,8 @@ func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *s
 		return c.handleCompanyMessage(ctx, message)
 	case string(schematicdatastreamws.EntityTypeFlags):
 		return c.handleFlagsMessage(ctx, message)
+	case string(schematicdatastreamws.EntityTypeFlag):
+		return c.handleFlagMessage(ctx, message)
 	case string(schematicdatastreamws.EntityTypeUser):
 		return c.handleUserMessage(ctx, message)
 	default:
@@ -196,6 +198,42 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 
 	if c.pendingFlagRequest != nil {
 		c.pendingFlagRequest <- true
+	}
+
+	return nil
+}
+
+func (c *DataStreamClient) handleFlagMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
+	flags := resp.Data
+
+	var flag *rulesengine.Flag
+	if err := json.Unmarshal(flags, &flag); err != nil {
+		return fmt.Errorf("Failed to unmarshal flags data: %v", err)
+	}
+
+	c.flagsMu.Lock()
+	defer func() {
+		c.flagsMu.Unlock()
+
+		if c.pendingFlagRequest != nil {
+			c.pendingFlagRequest <- true
+		}
+	}()
+
+	cacheKey := flagCacheKey(flag.Key)
+	switch resp.MessageType {
+	case schematicdatastreamws.MessageTypeDelete:
+		if err := c.flagsCacheProvider.Delete(ctx, cacheKey); err != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Failed to delete flag from cache '%s': %v", cacheKey, err))
+		}
+	case schematicdatastreamws.MessageTypeFull:
+		// For full messages, we replace the existing flag in the cache
+		if err := c.flagsCacheProvider.Set(ctx, cacheKey, flag, nil); err != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Failed to cache flag '%s': %v", flag.Key, err))
+		}
+	default:
+		// Other message types are unhandled
+		c.logger.Warn(ctx, fmt.Sprintf("Unhandled message type for flag: %s", resp.MessageType))
 	}
 
 	return nil

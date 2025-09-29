@@ -178,6 +178,27 @@ func createMockUserData(userID string, messageType schematicdatastreamws.Message
 	return string(respData)
 }
 
+// Helper function to create mock single flag data
+func createMockSingleFlagData(flagKey string, defaultValue bool, messageType schematicdatastreamws.MessageType) string {
+	flag := &rulesengine.Flag{
+		ID:            fmt.Sprintf("flag_%s", flagKey),
+		AccountID:     "account_XXXX",
+		Key:           flagKey,
+		EnvironmentID: "env_XXXX",
+		DefaultValue:  defaultValue,
+	}
+
+	flagData, _ := json.Marshal(flag)
+	resp := schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeFlag),
+		Data:        flagData,
+		MessageType: messageType,
+	}
+	respData, _ := json.Marshal(resp)
+
+	return string(respData)
+}
+
 // Helper function for creating DataStreamClientOptions for tests
 func createTestClientOptions(baseURL string, logger core.Logger, apiKey string) datastream.DataStreamClientOptions {
 	return datastream.DataStreamClientOptions{
@@ -333,6 +354,130 @@ func TestCheckFlagUser(t *testing.T) {
 	assert.Error(t, err, "Non-existent flag should return an error")
 	assert.Nil(t, result, "Non-existent flag should return nil result")
 	assert.Contains(t, err.Error(), "flag not found", "Error should indicate flag not found")
+}
+
+func TestSingleFlagMessage(t *testing.T) {
+	t.Run("Handles single flag with Full message type", func(t *testing.T) {
+		server, incomingMessages, outgoingMessages := setupMockWebSocketServer()
+		defer server.Close()
+		defer close(outgoingMessages)
+
+		logger := NewMockLogger()
+
+		// Create a local cache provider for flags
+		localFlagCache := cache.NewLocalCache[*rulesengine.Flag](100, time.Minute)
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL: 5 * time.Minute,
+		}
+
+		clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+		clientOptions.FlagCache = localFlagCache
+
+		client := datastream.NewDataStreamClient(clientOptions, configOptions)
+		client.Start()
+		defer client.Close()
+
+		// Wait for connection and initial flags
+		time.Sleep(300 * time.Millisecond)
+
+		// Send a single flag update
+		flagKey := "test-single-flag"
+		outgoingMessages <- createMockSingleFlagData(flagKey, true, schematicdatastreamws.MessageTypeFull)
+
+		// Allow time for message processing
+		time.Sleep(100 * time.Millisecond)
+
+		// Setup a goroutine to handle incoming company requests
+		go func() {
+			for msg := range incomingMessages {
+				var req schematicdatastreamws.DataStreamBaseReq
+				json.Unmarshal([]byte(msg), &req)
+
+				if req.Data.EntityType == schematicdatastreamws.EntityTypeCompany {
+					companyID := req.Data.Keys["company_id"]
+					outgoingMessages <- createMockCompanyData(companyID, schematicdatastreamws.MessageTypeFull)
+				}
+			}
+		}()
+
+		// Test that the single flag was added/updated in cache
+		ctx := context.Background()
+		evalCtx := &schematicgo.CheckFlagRequestBody{
+			Company: map[string]string{"company_id": "123"},
+		}
+
+		result, err := client.CheckFlag(ctx, evalCtx, flagKey)
+		assert.NoError(t, err, "CheckFlag should not return an error for flag updated via single flag message")
+		assert.True(t, result.Value, "Flag value should be true as set in the single flag message")
+	})
+
+	t.Run("Handles single flag with Delete message type", func(t *testing.T) {
+		server, incomingMessages, outgoingMessages := setupMockWebSocketServer()
+		defer server.Close()
+		defer close(outgoingMessages)
+
+		logger := NewMockLogger()
+
+		// Create a local cache provider for flags
+		localFlagCache := cache.NewLocalCache[*rulesengine.Flag](100, time.Minute)
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL: 5 * time.Minute,
+		}
+
+		clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+		clientOptions.FlagCache = localFlagCache
+
+		client := datastream.NewDataStreamClient(clientOptions, configOptions)
+		client.Start()
+		defer client.Close()
+
+		// Wait for connection and initial flags
+		time.Sleep(300 * time.Millisecond)
+
+		// First, add a single flag
+		flagKey := "test-delete-flag"
+		outgoingMessages <- createMockSingleFlagData(flagKey, true, schematicdatastreamws.MessageTypeFull)
+
+		// Allow time for message processing
+		time.Sleep(100 * time.Millisecond)
+
+		// Setup a goroutine to handle incoming company requests
+		go func() {
+			for msg := range incomingMessages {
+				var req schematicdatastreamws.DataStreamBaseReq
+				json.Unmarshal([]byte(msg), &req)
+
+				if req.Data.EntityType == schematicdatastreamws.EntityTypeCompany {
+					companyID := req.Data.Keys["company_id"]
+					outgoingMessages <- createMockCompanyData(companyID, schematicdatastreamws.MessageTypeFull)
+				}
+			}
+		}()
+
+		// Verify the flag exists
+		ctx := context.Background()
+		evalCtx := &schematicgo.CheckFlagRequestBody{
+			Company: map[string]string{"company_id": "123"},
+		}
+
+		result, err := client.CheckFlag(ctx, evalCtx, flagKey)
+		assert.NoError(t, err, "Flag should exist before deletion")
+		assert.True(t, result.Value, "Flag value should be true before deletion")
+
+		// Now send a delete message for the same flag
+		outgoingMessages <- createMockSingleFlagData(flagKey, false, schematicdatastreamws.MessageTypeDelete)
+
+		// Allow time for message processing
+		time.Sleep(100 * time.Millisecond)
+
+		// Verify the flag was removed from cache
+		result, err = client.CheckFlag(ctx, evalCtx, flagKey)
+		assert.Error(t, err, "CheckFlag should return an error after flag deletion")
+		assert.Nil(t, result, "Result should be nil after flag deletion")
+		assert.Contains(t, err.Error(), "flag not found", "Error should indicate flag not found after deletion")
+	})
 }
 
 func TestDeleteMessage(t *testing.T) {

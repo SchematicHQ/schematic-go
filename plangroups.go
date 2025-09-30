@@ -10,14 +10,18 @@ import (
 )
 
 type CreatePlanGroupRequestBody struct {
-	AddOnCompatibilities       []*CompatiblePlans     `json:"add_on_compatibilities,omitempty" url:"-"`
-	AddOnIDs                   []string               `json:"add_on_ids,omitempty" url:"-"`
-	CustomPlanConfig           *CustomPlanConfig      `json:"custom_plan_config,omitempty" url:"-"`
-	CustomPlanID               *string                `json:"custom_plan_id,omitempty" url:"-"`
-	DefaultPlanID              *string                `json:"default_plan_id,omitempty" url:"-"`
-	OrderedPlans               []*OrderedPlansInGroup `json:"ordered_plans,omitempty" url:"-"`
-	TrialDays                  *int                   `json:"trial_days,omitempty" url:"-"`
-	TrialPaymentMethodRequired *bool                  `json:"trial_payment_method_required,omitempty" url:"-"`
+	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
+	// Use OrderedAddOns instead
+	AddOnIDs                   []string                `json:"add_on_ids,omitempty" url:"-"`
+	CustomPlanConfig           *CustomPlanConfig       `json:"custom_plan_config,omitempty" url:"-"`
+	CustomPlanID               *string                 `json:"custom_plan_id,omitempty" url:"-"`
+	DefaultPlanID              *string                 `json:"default_plan_id,omitempty" url:"-"`
+	OrderedAddOns              []*OrderedPlansInGroup  `json:"ordered_add_ons,omitempty" url:"-"`
+	OrderedBundleList          []*PlanGroupBundleOrder `json:"ordered_bundle_list,omitempty" url:"-"`
+	OrderedPlans               []*OrderedPlansInGroup  `json:"ordered_plans,omitempty" url:"-"`
+	ShowPeriodToggle           bool                    `json:"show_period_toggle" url:"-"`
+	TrialDays                  *int                    `json:"trial_days,omitempty" url:"-"`
+	TrialPaymentMethodRequired *bool                   `json:"trial_payment_method_required,omitempty" url:"-"`
 }
 
 type CompatiblePlansResponseData struct {
@@ -298,6 +302,52 @@ func (p *PlanEntitlementsOrder) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+type PlanGroupBundleOrder struct {
+	BundleID string `json:"bundleId" url:"bundleId"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanGroupBundleOrder) GetBundleID() string {
+	if p == nil {
+		return ""
+	}
+	return p.BundleID
+}
+
+func (p *PlanGroupBundleOrder) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PlanGroupBundleOrder) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanGroupBundleOrder
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanGroupBundleOrder(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanGroupBundleOrder) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
 // The returned resource
 type PlanGroupDetailResponseData struct {
 	AddOns                     []*PlanGroupPlanDetailResponseData `json:"add_ons,omitempty" url:"add_ons,omitempty"`
@@ -306,8 +356,11 @@ type PlanGroupDetailResponseData struct {
 	DefaultPlan                *PlanGroupPlanDetailResponseData   `json:"default_plan,omitempty" url:"default_plan,omitempty"`
 	DefaultPlanID              *string                            `json:"default_plan_id,omitempty" url:"default_plan_id,omitempty"`
 	ID                         string                             `json:"id" url:"id"`
+	OrderedAddOnList           []*PlanGroupPlanEntitlementsOrder  `json:"ordered_add_on_list,omitempty" url:"ordered_add_on_list,omitempty"`
+	OrderedBundleList          []*PlanGroupBundleOrder            `json:"ordered_bundle_list,omitempty" url:"ordered_bundle_list,omitempty"`
 	OrderedPlanList            []*PlanGroupPlanEntitlementsOrder  `json:"ordered_plan_list,omitempty" url:"ordered_plan_list,omitempty"`
 	Plans                      []*PlanGroupPlanDetailResponseData `json:"plans,omitempty" url:"plans,omitempty"`
+	ShowPeriodToggle           bool                               `json:"show_period_toggle" url:"show_period_toggle"`
 	TrialDays                  *int                               `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	TrialPaymentMethodRequired *bool                              `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
 
@@ -357,6 +410,20 @@ func (p *PlanGroupDetailResponseData) GetID() string {
 	return p.ID
 }
 
+func (p *PlanGroupDetailResponseData) GetOrderedAddOnList() []*PlanGroupPlanEntitlementsOrder {
+	if p == nil {
+		return nil
+	}
+	return p.OrderedAddOnList
+}
+
+func (p *PlanGroupDetailResponseData) GetOrderedBundleList() []*PlanGroupBundleOrder {
+	if p == nil {
+		return nil
+	}
+	return p.OrderedBundleList
+}
+
 func (p *PlanGroupDetailResponseData) GetOrderedPlanList() []*PlanGroupPlanEntitlementsOrder {
 	if p == nil {
 		return nil
@@ -369,6 +436,13 @@ func (p *PlanGroupDetailResponseData) GetPlans() []*PlanGroupPlanDetailResponseD
 		return nil
 	}
 	return p.Plans
+}
+
+func (p *PlanGroupDetailResponseData) GetShowPeriodToggle() bool {
+	if p == nil {
+		return false
+	}
+	return p.ShowPeriodToggle
 }
 
 func (p *PlanGroupDetailResponseData) GetTrialDays() *int {
@@ -729,7 +803,9 @@ type PlanGroupResponseData struct {
 	AddOnIDs                   []string                       `json:"add_on_ids,omitempty" url:"add_on_ids,omitempty"`
 	DefaultPlanID              *string                        `json:"default_plan_id,omitempty" url:"default_plan_id,omitempty"`
 	ID                         string                         `json:"id" url:"id"`
+	OrderedAddOnIDs            []*OrderedPlansInGroup         `json:"ordered_add_on_ids,omitempty" url:"ordered_add_on_ids,omitempty"`
 	PlanIDs                    []*OrderedPlansInGroup         `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	ShowPeriodToggle           bool                           `json:"show_period_toggle" url:"show_period_toggle"`
 	TrialDays                  *int                           `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	TrialPaymentMethodRequired *bool                          `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
 
@@ -765,11 +841,25 @@ func (p *PlanGroupResponseData) GetID() string {
 	return p.ID
 }
 
+func (p *PlanGroupResponseData) GetOrderedAddOnIDs() []*OrderedPlansInGroup {
+	if p == nil {
+		return nil
+	}
+	return p.OrderedAddOnIDs
+}
+
 func (p *PlanGroupResponseData) GetPlanIDs() []*OrderedPlansInGroup {
 	if p == nil {
 		return nil
 	}
 	return p.PlanIDs
+}
+
+func (p *PlanGroupResponseData) GetShowPeriodToggle() bool {
+	if p == nil {
+		return false
+	}
+	return p.ShowPeriodToggle
 }
 
 func (p *PlanGroupResponseData) GetTrialDays() *int {
@@ -984,12 +1074,16 @@ func (u *UpdatePlanGroupResponse) String() string {
 }
 
 type UpdatePlanGroupRequestBody struct {
-	AddOnCompatibilities       []*CompatiblePlans     `json:"add_on_compatibilities,omitempty" url:"-"`
-	AddOnIDs                   []string               `json:"add_on_ids,omitempty" url:"-"`
-	CustomPlanConfig           *CustomPlanConfig      `json:"custom_plan_config,omitempty" url:"-"`
-	CustomPlanID               *string                `json:"custom_plan_id,omitempty" url:"-"`
-	DefaultPlanID              *string                `json:"default_plan_id,omitempty" url:"-"`
-	OrderedPlans               []*OrderedPlansInGroup `json:"ordered_plans,omitempty" url:"-"`
-	TrialDays                  *int                   `json:"trial_days,omitempty" url:"-"`
-	TrialPaymentMethodRequired *bool                  `json:"trial_payment_method_required,omitempty" url:"-"`
+	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
+	// Use OrderedAddOns instead
+	AddOnIDs                   []string                `json:"add_on_ids,omitempty" url:"-"`
+	CustomPlanConfig           *CustomPlanConfig       `json:"custom_plan_config,omitempty" url:"-"`
+	CustomPlanID               *string                 `json:"custom_plan_id,omitempty" url:"-"`
+	DefaultPlanID              *string                 `json:"default_plan_id,omitempty" url:"-"`
+	OrderedAddOns              []*OrderedPlansInGroup  `json:"ordered_add_ons,omitempty" url:"-"`
+	OrderedBundleList          []*PlanGroupBundleOrder `json:"ordered_bundle_list,omitempty" url:"-"`
+	OrderedPlans               []*OrderedPlansInGroup  `json:"ordered_plans,omitempty" url:"-"`
+	ShowPeriodToggle           bool                    `json:"show_period_toggle" url:"-"`
+	TrialDays                  *int                    `json:"trial_days,omitempty" url:"-"`
+	TrialPaymentMethodRequired *bool                   `json:"trial_payment_method_required,omitempty" url:"-"`
 }

@@ -302,6 +302,74 @@ func (c *Client) UpdateBillingCredit(
 	return response, nil
 }
 
+func (c *Client) SoftDeleteBillingCredit(
+	ctx context.Context,
+	// billing_id
+	billingID string,
+	opts ...option.RequestOption,
+) (*schematicgo.SoftDeleteBillingCreditResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/billing/credits/%v",
+		billingID,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *schematicgo.SoftDeleteBillingCreditResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
 func (c *Client) ListCreditBundles(
 	ctx context.Context,
 	request *schematicgo.ListCreditBundlesRequest,
@@ -502,13 +570,13 @@ func (c *Client) GetCreditBundle(
 	return response, nil
 }
 
-func (c *Client) UpdateCreditBundle(
+func (c *Client) UpdateCreditBundleDetails(
 	ctx context.Context,
 	// billing_id
 	billingID string,
-	request *schematicgo.UpdateCreditBundleRequestBody,
+	request *schematicgo.UpdateCreditBundleDetailsRequestBody,
 	opts ...option.RequestOption,
-) (*schematicgo.UpdateCreditBundleResponse, error) {
+) (*schematicgo.UpdateCreditBundleDetailsResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -552,7 +620,7 @@ func (c *Client) UpdateCreditBundle(
 		},
 	}
 
-	var response *schematicgo.UpdateCreditBundleResponse
+	var response *schematicgo.UpdateCreditBundleDetailsResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -839,6 +907,72 @@ func (c *Client) ZeroOutGrant(
 		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPut,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (c *Client) GrantBillingCreditsToCompany(
+	ctx context.Context,
+	request *schematicgo.CreateCompanyCreditGrant,
+	opts ...option.RequestOption,
+) (*schematicgo.GrantBillingCreditsToCompanyResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := baseURL + "/billing/credits/grants/company"
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &schematicgo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &schematicgo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		403: func(apiError *core.APIError) error {
+			return &schematicgo.ForbiddenError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &schematicgo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		500: func(apiError *core.APIError) error {
+			return &schematicgo.InternalServerError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *schematicgo.GrantBillingCreditsToCompanyResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,

@@ -57,22 +57,35 @@ func (a *APIError) String() string {
 }
 
 type BillingCreditBundleResponseData struct {
-	BundleType          string    `json:"bundle_type" url:"bundle_type"`
-	CreatedAt           time.Time `json:"created_at" url:"created_at"`
-	CreditID            string    `json:"credit_id" url:"credit_id"`
-	Currency            string    `json:"currency" url:"currency"`
-	ExpiryType          string    `json:"expiry_type" url:"expiry_type"`
-	ExpiryUnit          string    `json:"expiry_unit" url:"expiry_unit"`
-	ExpiryUnitCount     *int      `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	ID                  string    `json:"id" url:"id"`
-	PricePerUnit        int       `json:"price_per_unit" url:"price_per_unit"`
-	PricePerUnitDecimal *string   `json:"price_per_unit_decimal,omitempty" url:"price_per_unit_decimal,omitempty"`
-	Quantity            *int      `json:"quantity,omitempty" url:"quantity,omitempty"`
-	Status              string    `json:"status" url:"status"`
-	UpdatedAt           time.Time `json:"updated_at" url:"updated_at"`
+	BillingInvoiceID  *string                   `json:"billing_invoice_id,omitempty" url:"billing_invoice_id,omitempty"`
+	BundleType        string                    `json:"bundle_type" url:"bundle_type"`
+	CreatedAt         time.Time                 `json:"created_at" url:"created_at"`
+	CreditDescription *string                   `json:"credit_description,omitempty" url:"credit_description,omitempty"`
+	CreditIcon        *string                   `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID          string                    `json:"credit_id" url:"credit_id"`
+	CreditName        string                    `json:"credit_name" url:"credit_name"`
+	ExpiryType        string                    `json:"expiry_type" url:"expiry_type"`
+	ExpiryUnit        string                    `json:"expiry_unit" url:"expiry_unit"`
+	ExpiryUnitCount   *int                      `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ID                string                    `json:"id" url:"id"`
+	Name              string                    `json:"name" url:"name"`
+	PluralName        *string                   `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	Price             *BillingPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
+	Quantity          *int                      `json:"quantity,omitempty" url:"quantity,omitempty"`
+	SingularName      *string                   `json:"singular_name,omitempty" url:"singular_name,omitempty"`
+	Status            string                    `json:"status" url:"status"`
+	UnitPrice         *BillingPriceResponseData `json:"unit_price,omitempty" url:"unit_price,omitempty"`
+	UpdatedAt         time.Time                 `json:"updated_at" url:"updated_at"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (b *BillingCreditBundleResponseData) GetBillingInvoiceID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.BillingInvoiceID
 }
 
 func (b *BillingCreditBundleResponseData) GetBundleType() string {
@@ -89,6 +102,20 @@ func (b *BillingCreditBundleResponseData) GetCreatedAt() time.Time {
 	return b.CreatedAt
 }
 
+func (b *BillingCreditBundleResponseData) GetCreditDescription() *string {
+	if b == nil {
+		return nil
+	}
+	return b.CreditDescription
+}
+
+func (b *BillingCreditBundleResponseData) GetCreditIcon() *string {
+	if b == nil {
+		return nil
+	}
+	return b.CreditIcon
+}
+
 func (b *BillingCreditBundleResponseData) GetCreditID() string {
 	if b == nil {
 		return ""
@@ -96,11 +123,11 @@ func (b *BillingCreditBundleResponseData) GetCreditID() string {
 	return b.CreditID
 }
 
-func (b *BillingCreditBundleResponseData) GetCurrency() string {
+func (b *BillingCreditBundleResponseData) GetCreditName() string {
 	if b == nil {
 		return ""
 	}
-	return b.Currency
+	return b.CreditName
 }
 
 func (b *BillingCreditBundleResponseData) GetExpiryType() string {
@@ -131,18 +158,25 @@ func (b *BillingCreditBundleResponseData) GetID() string {
 	return b.ID
 }
 
-func (b *BillingCreditBundleResponseData) GetPricePerUnit() int {
+func (b *BillingCreditBundleResponseData) GetName() string {
 	if b == nil {
-		return 0
+		return ""
 	}
-	return b.PricePerUnit
+	return b.Name
 }
 
-func (b *BillingCreditBundleResponseData) GetPricePerUnitDecimal() *string {
+func (b *BillingCreditBundleResponseData) GetPluralName() *string {
 	if b == nil {
 		return nil
 	}
-	return b.PricePerUnitDecimal
+	return b.PluralName
+}
+
+func (b *BillingCreditBundleResponseData) GetPrice() *BillingPriceResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Price
 }
 
 func (b *BillingCreditBundleResponseData) GetQuantity() *int {
@@ -152,11 +186,25 @@ func (b *BillingCreditBundleResponseData) GetQuantity() *int {
 	return b.Quantity
 }
 
+func (b *BillingCreditBundleResponseData) GetSingularName() *string {
+	if b == nil {
+		return nil
+	}
+	return b.SingularName
+}
+
 func (b *BillingCreditBundleResponseData) GetStatus() string {
 	if b == nil {
 		return ""
 	}
 	return b.Status
+}
+
+func (b *BillingCreditBundleResponseData) GetUnitPrice() *BillingPriceResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.UnitPrice
 }
 
 func (b *BillingCreditBundleResponseData) GetUpdatedAt() time.Time {
@@ -229,13 +277,12 @@ type BillingCreditResponseData struct {
 	Description            string                      `json:"description" url:"description"`
 	Icon                   *string                     `json:"icon,omitempty" url:"icon,omitempty"`
 	ID                     string                      `json:"id" url:"id"`
-	MonthlyPrice           *BillingPriceResponseData   `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name                   string                      `json:"name" url:"name"`
 	PluralName             *string                     `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	Price                  *BillingPriceResponseData   `json:"price,omitempty" url:"price,omitempty"`
 	Product                *BillingProductResponseData `json:"product,omitempty" url:"product,omitempty"`
 	SingularName           *string                     `json:"singular_name,omitempty" url:"singular_name,omitempty"`
 	UpdatedAt              time.Time                   `json:"updated_at" url:"updated_at"`
-	YearlyPrice            *BillingPriceResponseData   `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -297,13 +344,6 @@ func (b *BillingCreditResponseData) GetID() string {
 	return b.ID
 }
 
-func (b *BillingCreditResponseData) GetMonthlyPrice() *BillingPriceResponseData {
-	if b == nil {
-		return nil
-	}
-	return b.MonthlyPrice
-}
-
 func (b *BillingCreditResponseData) GetName() string {
 	if b == nil {
 		return ""
@@ -316,6 +356,13 @@ func (b *BillingCreditResponseData) GetPluralName() *string {
 		return nil
 	}
 	return b.PluralName
+}
+
+func (b *BillingCreditResponseData) GetPrice() *BillingPriceResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Price
 }
 
 func (b *BillingCreditResponseData) GetProduct() *BillingProductResponseData {
@@ -337,13 +384,6 @@ func (b *BillingCreditResponseData) GetUpdatedAt() time.Time {
 		return time.Time{}
 	}
 	return b.UpdatedAt
-}
-
-func (b *BillingCreditResponseData) GetYearlyPrice() *BillingPriceResponseData {
-	if b == nil {
-		return nil
-	}
-	return b.YearlyPrice
 }
 
 func (b *BillingCreditResponseData) GetExtraProperties() map[string]interface{} {
@@ -1095,186 +1135,6 @@ func (b *BillingProductForSubscriptionResponseData) MarshalJSON() ([]byte, error
 }
 
 func (b *BillingProductForSubscriptionResponseData) String() string {
-	if len(b.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(b); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", b)
-}
-
-type BillingProductPriceResponseData struct {
-	BillingScheme     string    `json:"billing_scheme" url:"billing_scheme"`
-	CreatedAt         time.Time `json:"created_at" url:"created_at"`
-	Currency          string    `json:"currency" url:"currency"`
-	ID                string    `json:"id" url:"id"`
-	Interval          string    `json:"interval" url:"interval"`
-	IsActive          bool      `json:"is_active" url:"is_active"`
-	MeterID           *string   `json:"meter_id,omitempty" url:"meter_id,omitempty"`
-	PackageSize       int       `json:"package_size" url:"package_size"`
-	Price             int       `json:"price" url:"price"`
-	PriceDecimal      *string   `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
-	PriceExternalID   string    `json:"price_external_id" url:"price_external_id"`
-	ProductExternalID string    `json:"product_external_id" url:"product_external_id"`
-	TiersMode         *string   `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
-	UpdatedAt         time.Time `json:"updated_at" url:"updated_at"`
-	UsageType         string    `json:"usage_type" url:"usage_type"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (b *BillingProductPriceResponseData) GetBillingScheme() string {
-	if b == nil {
-		return ""
-	}
-	return b.BillingScheme
-}
-
-func (b *BillingProductPriceResponseData) GetCreatedAt() time.Time {
-	if b == nil {
-		return time.Time{}
-	}
-	return b.CreatedAt
-}
-
-func (b *BillingProductPriceResponseData) GetCurrency() string {
-	if b == nil {
-		return ""
-	}
-	return b.Currency
-}
-
-func (b *BillingProductPriceResponseData) GetID() string {
-	if b == nil {
-		return ""
-	}
-	return b.ID
-}
-
-func (b *BillingProductPriceResponseData) GetInterval() string {
-	if b == nil {
-		return ""
-	}
-	return b.Interval
-}
-
-func (b *BillingProductPriceResponseData) GetIsActive() bool {
-	if b == nil {
-		return false
-	}
-	return b.IsActive
-}
-
-func (b *BillingProductPriceResponseData) GetMeterID() *string {
-	if b == nil {
-		return nil
-	}
-	return b.MeterID
-}
-
-func (b *BillingProductPriceResponseData) GetPackageSize() int {
-	if b == nil {
-		return 0
-	}
-	return b.PackageSize
-}
-
-func (b *BillingProductPriceResponseData) GetPrice() int {
-	if b == nil {
-		return 0
-	}
-	return b.Price
-}
-
-func (b *BillingProductPriceResponseData) GetPriceDecimal() *string {
-	if b == nil {
-		return nil
-	}
-	return b.PriceDecimal
-}
-
-func (b *BillingProductPriceResponseData) GetPriceExternalID() string {
-	if b == nil {
-		return ""
-	}
-	return b.PriceExternalID
-}
-
-func (b *BillingProductPriceResponseData) GetProductExternalID() string {
-	if b == nil {
-		return ""
-	}
-	return b.ProductExternalID
-}
-
-func (b *BillingProductPriceResponseData) GetTiersMode() *string {
-	if b == nil {
-		return nil
-	}
-	return b.TiersMode
-}
-
-func (b *BillingProductPriceResponseData) GetUpdatedAt() time.Time {
-	if b == nil {
-		return time.Time{}
-	}
-	return b.UpdatedAt
-}
-
-func (b *BillingProductPriceResponseData) GetUsageType() string {
-	if b == nil {
-		return ""
-	}
-	return b.UsageType
-}
-
-func (b *BillingProductPriceResponseData) GetExtraProperties() map[string]interface{} {
-	return b.extraProperties
-}
-
-func (b *BillingProductPriceResponseData) UnmarshalJSON(data []byte) error {
-	type embed BillingProductPriceResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*b),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*b = BillingProductPriceResponseData(unmarshaler.embed)
-	b.CreatedAt = unmarshaler.CreatedAt.Time()
-	b.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *b)
-	if err != nil {
-		return err
-	}
-	b.extraProperties = extraProperties
-	b.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (b *BillingProductPriceResponseData) MarshalJSON() ([]byte, error) {
-	type embed BillingProductPriceResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*b),
-		CreatedAt: internal.NewDateTime(b.CreatedAt),
-		UpdatedAt: internal.NewDateTime(b.UpdatedAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (b *BillingProductPriceResponseData) String() string {
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2236,22 +2096,23 @@ func (c *ChangeSubscriptionRequestBody) String() string {
 }
 
 type CompanyDetailResponseData struct {
-	AddOns               []*CompanyPlanWithBillingSubView         `json:"add_ons,omitempty" url:"add_ons,omitempty"`
-	BillingSubscription  *BillingSubscriptionView                 `json:"billing_subscription,omitempty" url:"billing_subscription,omitempty"`
-	BillingSubscriptions []*BillingSubscriptionView               `json:"billing_subscriptions,omitempty" url:"billing_subscriptions,omitempty"`
-	CreatedAt            time.Time                                `json:"created_at" url:"created_at"`
-	DefaultPaymentMethod *PaymentMethodResponseData               `json:"default_payment_method,omitempty" url:"default_payment_method,omitempty"`
-	EntityTraits         []*EntityTraitDetailResponseData         `json:"entity_traits,omitempty" url:"entity_traits,omitempty"`
-	EnvironmentID        string                                   `json:"environment_id" url:"environment_id"`
-	ID                   string                                   `json:"id" url:"id"`
-	Keys                 []*EntityKeyDetailResponseData           `json:"keys,omitempty" url:"keys,omitempty"`
-	LastSeenAt           *time.Time                               `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	LogoURL              *string                                  `json:"logo_url,omitempty" url:"logo_url,omitempty"`
-	Metrics              []*CompanyEventPeriodMetricsResponseData `json:"metrics,omitempty" url:"metrics,omitempty"`
-	Name                 string                                   `json:"name" url:"name"`
-	PaymentMethods       []*PaymentMethodResponseData             `json:"payment_methods,omitempty" url:"payment_methods,omitempty"`
-	Plan                 *CompanyPlanWithBillingSubView           `json:"plan,omitempty" url:"plan,omitempty"`
-	Plans                []*GenericPreviewObject                  `json:"plans,omitempty" url:"plans,omitempty"`
+	AddOns                []*CompanyPlanWithBillingSubView         `json:"add_ons,omitempty" url:"add_ons,omitempty"`
+	BillingCreditBalances map[string]float64                       `json:"billing_credit_balances,omitempty" url:"billing_credit_balances,omitempty"`
+	BillingSubscription   *BillingSubscriptionView                 `json:"billing_subscription,omitempty" url:"billing_subscription,omitempty"`
+	BillingSubscriptions  []*BillingSubscriptionView               `json:"billing_subscriptions,omitempty" url:"billing_subscriptions,omitempty"`
+	CreatedAt             time.Time                                `json:"created_at" url:"created_at"`
+	DefaultPaymentMethod  *PaymentMethodResponseData               `json:"default_payment_method,omitempty" url:"default_payment_method,omitempty"`
+	EntityTraits          []*EntityTraitDetailResponseData         `json:"entity_traits,omitempty" url:"entity_traits,omitempty"`
+	EnvironmentID         string                                   `json:"environment_id" url:"environment_id"`
+	ID                    string                                   `json:"id" url:"id"`
+	Keys                  []*EntityKeyDetailResponseData           `json:"keys,omitempty" url:"keys,omitempty"`
+	LastSeenAt            *time.Time                               `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
+	LogoURL               *string                                  `json:"logo_url,omitempty" url:"logo_url,omitempty"`
+	Metrics               []*CompanyEventPeriodMetricsResponseData `json:"metrics,omitempty" url:"metrics,omitempty"`
+	Name                  string                                   `json:"name" url:"name"`
+	PaymentMethods        []*PaymentMethodResponseData             `json:"payment_methods,omitempty" url:"payment_methods,omitempty"`
+	Plan                  *CompanyPlanWithBillingSubView           `json:"plan,omitempty" url:"plan,omitempty"`
+	Plans                 []*GenericPreviewObject                  `json:"plans,omitempty" url:"plans,omitempty"`
 	// A map of trait names to trait values
 	Traits    map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
 	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
@@ -2266,6 +2127,13 @@ func (c *CompanyDetailResponseData) GetAddOns() []*CompanyPlanWithBillingSubView
 		return nil
 	}
 	return c.AddOns
+}
+
+func (c *CompanyDetailResponseData) GetBillingCreditBalances() map[string]float64 {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCreditBalances
 }
 
 func (c *CompanyDetailResponseData) GetBillingSubscription() *BillingSubscriptionView {
@@ -2816,6 +2684,222 @@ func (c *CompanyMembershipResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CompanyOverrideResponseData struct {
+	Company                *CompanyDetailResponseData         `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID              string                             `json:"company_id" url:"company_id"`
+	ConsumptionRate        *float64                           `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
+	CreatedAt              time.Time                          `json:"created_at" url:"created_at"`
+	EnvironmentID          string                             `json:"environment_id" url:"environment_id"`
+	ExpirationDate         *time.Time                         `json:"expiration_date,omitempty" url:"expiration_date,omitempty"`
+	Feature                *FeatureResponseData               `json:"feature,omitempty" url:"feature,omitempty"`
+	FeatureID              string                             `json:"feature_id" url:"feature_id"`
+	ID                     string                             `json:"id" url:"id"`
+	MetricPeriod           *string                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset *string                            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	RuleID                 *string                            `json:"rule_id,omitempty" url:"rule_id,omitempty"`
+	RuleIDUsageExceeded    *string                            `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
+	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
+	ValueBool              *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueNumeric           *int                               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueTrait             *EntityTraitDefinitionResponseData `json:"value_trait,omitempty" url:"value_trait,omitempty"`
+	ValueTraitID           *string                            `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
+	ValueType              string                             `json:"value_type" url:"value_type"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyOverrideResponseData) GetCompany() *CompanyDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Company
+}
+
+func (c *CompanyOverrideResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CompanyOverrideResponseData) GetConsumptionRate() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.ConsumptionRate
+}
+
+func (c *CompanyOverrideResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CompanyOverrideResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *CompanyOverrideResponseData) GetExpirationDate() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.ExpirationDate
+}
+
+func (c *CompanyOverrideResponseData) GetFeature() *FeatureResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Feature
+}
+
+func (c *CompanyOverrideResponseData) GetFeatureID() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureID
+}
+
+func (c *CompanyOverrideResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CompanyOverrideResponseData) GetMetricPeriod() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriod
+}
+
+func (c *CompanyOverrideResponseData) GetMetricPeriodMonthReset() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriodMonthReset
+}
+
+func (c *CompanyOverrideResponseData) GetRuleID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.RuleID
+}
+
+func (c *CompanyOverrideResponseData) GetRuleIDUsageExceeded() *string {
+	if c == nil {
+		return nil
+	}
+	return c.RuleIDUsageExceeded
+}
+
+func (c *CompanyOverrideResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CompanyOverrideResponseData) GetValueBool() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ValueBool
+}
+
+func (c *CompanyOverrideResponseData) GetValueNumeric() *int {
+	if c == nil {
+		return nil
+	}
+	return c.ValueNumeric
+}
+
+func (c *CompanyOverrideResponseData) GetValueTrait() *EntityTraitDefinitionResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.ValueTrait
+}
+
+func (c *CompanyOverrideResponseData) GetValueTraitID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ValueTraitID
+}
+
+func (c *CompanyOverrideResponseData) GetValueType() string {
+	if c == nil {
+		return ""
+	}
+	return c.ValueType
+}
+
+func (c *CompanyOverrideResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CompanyOverrideResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyOverrideResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt      *internal.DateTime `json:"created_at"`
+		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
+		UpdatedAt      *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyOverrideResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.ExpirationDate = unmarshaler.ExpirationDate.TimePtr()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyOverrideResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyOverrideResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt      *internal.DateTime `json:"created_at"`
+		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
+		UpdatedAt      *internal.DateTime `json:"updated_at"`
+	}{
+		embed:          embed(*c),
+		CreatedAt:      internal.NewDateTime(c.CreatedAt),
+		ExpirationDate: internal.NewOptionalDateTime(c.ExpirationDate),
+		UpdatedAt:      internal.NewDateTime(c.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CompanyOverrideResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 type CompanyPlanWithBillingSubView struct {
 	AddedOn                  *time.Time `json:"added_on,omitempty" url:"added_on,omitempty"`
 	BillingProductExternalID *string    `json:"billing_product_external_id,omitempty" url:"billing_product_external_id,omitempty"`
@@ -3302,8 +3386,11 @@ type ComponentHydrateResponseData struct {
 	Capabilities                 *ComponentCapabilities               `json:"capabilities,omitempty" url:"capabilities,omitempty"`
 	Company                      *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
 	Component                    *ComponentResponseData               `json:"component,omitempty" url:"component,omitempty"`
+	CreditBundles                []*BillingCreditBundleView           `json:"credit_bundles,omitempty" url:"credit_bundles,omitempty"`
+	CreditGrants                 []*CreditCompanyGrantView            `json:"credit_grants,omitempty" url:"credit_grants,omitempty"`
 	DefaultPlan                  *PlanDetailResponseData              `json:"default_plan,omitempty" url:"default_plan,omitempty"`
 	FeatureUsage                 *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	ShowPeriodToggle             bool                                 `json:"show_period_toggle" url:"show_period_toggle"`
 	StripeEmbed                  *StripeEmbedInfo                     `json:"stripe_embed,omitempty" url:"stripe_embed,omitempty"`
 	Subscription                 *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
 	TrialPaymentMethodRequired   *bool                                `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
@@ -3362,6 +3449,20 @@ func (c *ComponentHydrateResponseData) GetComponent() *ComponentResponseData {
 	return c.Component
 }
 
+func (c *ComponentHydrateResponseData) GetCreditBundles() []*BillingCreditBundleView {
+	if c == nil {
+		return nil
+	}
+	return c.CreditBundles
+}
+
+func (c *ComponentHydrateResponseData) GetCreditGrants() []*CreditCompanyGrantView {
+	if c == nil {
+		return nil
+	}
+	return c.CreditGrants
+}
+
 func (c *ComponentHydrateResponseData) GetDefaultPlan() *PlanDetailResponseData {
 	if c == nil {
 		return nil
@@ -3374,6 +3475,13 @@ func (c *ComponentHydrateResponseData) GetFeatureUsage() *FeatureUsageDetailResp
 		return nil
 	}
 	return c.FeatureUsage
+}
+
+func (c *ComponentHydrateResponseData) GetShowPeriodToggle() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowPeriodToggle
 }
 
 func (c *ComponentHydrateResponseData) GetStripeEmbed() *StripeEmbedInfo {
@@ -3586,6 +3694,7 @@ func (c *CouponRequestBody) String() string {
 }
 
 type CreateEntitlementReqCommon struct {
+	CreditConsumptionRate  *float64                                          `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
 	FeatureID              string                                            `json:"feature_id" url:"feature_id"`
 	MetricPeriod           *CreateEntitlementReqCommonMetricPeriod           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *CreateEntitlementReqCommonMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
@@ -3597,6 +3706,13 @@ type CreateEntitlementReqCommon struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CreateEntitlementReqCommon) GetCreditConsumptionRate() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditConsumptionRate
 }
 
 func (c *CreateEntitlementReqCommon) GetFeatureID() string {
@@ -3842,6 +3958,10 @@ type CreateOrUpdateConditionRequestBody struct {
 	// Optionally provide a trait ID to compare a metric or trait value against instead of a value
 	ComparisonTraitID *string                                         `json:"comparison_trait_id,omitempty" url:"comparison_trait_id,omitempty"`
 	ConditionType     CreateOrUpdateConditionRequestBodyConditionType `json:"condition_type" url:"condition_type"`
+	// Cost of credit to use to measure this condition
+	CreditCost *float64 `json:"credit_cost,omitempty" url:"credit_cost,omitempty"`
+	// ID of credit to use to measure this condition
+	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	// Name of track event type used to measure this condition
 	EventSubtype *string `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
 	ID           *string `json:"id,omitempty" url:"id,omitempty"`
@@ -3875,6 +3995,20 @@ func (c *CreateOrUpdateConditionRequestBody) GetConditionType() CreateOrUpdateCo
 		return ""
 	}
 	return c.ConditionType
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetCreditCost() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditCost
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditID
 }
 
 func (c *CreateOrUpdateConditionRequestBody) GetEventSubtype() *string {
@@ -5154,20 +5288,20 @@ func (e *EventResponseData) String() string {
 }
 
 type EventSummaryResponseData struct {
-	CompanyCount  *int       `json:"company_count,omitempty" url:"company_count,omitempty"`
+	CompanyCount  int        `json:"company_count" url:"company_count"`
 	EnvironmentID string     `json:"environment_id" url:"environment_id"`
 	EventCount    int        `json:"event_count" url:"event_count"`
 	EventSubtype  string     `json:"event_subtype" url:"event_subtype"`
 	LastSeenAt    *time.Time `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	UserCount     *int       `json:"user_count,omitempty" url:"user_count,omitempty"`
+	UserCount     int        `json:"user_count" url:"user_count"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (e *EventSummaryResponseData) GetCompanyCount() *int {
+func (e *EventSummaryResponseData) GetCompanyCount() int {
 	if e == nil {
-		return nil
+		return 0
 	}
 	return e.CompanyCount
 }
@@ -5200,9 +5334,9 @@ func (e *EventSummaryResponseData) GetLastSeenAt() *time.Time {
 	return e.LastSeenAt
 }
 
-func (e *EventSummaryResponseData) GetUserCount() *int {
+func (e *EventSummaryResponseData) GetUserCount() int {
 	if e == nil {
-		return nil
+		return 0
 	}
 	return e.UserCount
 }
@@ -5670,6 +5804,7 @@ type FeatureUsageResponseData struct {
 	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// The type of allocation that is being used.
 	AllocationType            FeatureUsageResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
+	CompanyOverride           *CompanyOverrideResponseData           `json:"company_override,omitempty" url:"company_override,omitempty"`
 	EntitlementExpirationDate *time.Time                             `json:"entitlement_expiration_date,omitempty" url:"entitlement_expiration_date,omitempty"`
 	EntitlementID             string                                 `json:"entitlement_id" url:"entitlement_id"`
 	EntitlementType           string                                 `json:"entitlement_type" url:"entitlement_type"`
@@ -5680,9 +5815,10 @@ type FeatureUsageResponseData struct {
 	MonthReset             *string           `json:"month_reset,omitempty" url:"month_reset,omitempty"`
 	MonthlyUsageBasedPrice *BillingPriceView `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
 	// The period over which usage is measured.
-	Period        *string           `json:"period,omitempty" url:"period,omitempty"`
-	Plan          *PlanResponseData `json:"plan,omitempty" url:"plan,omitempty"`
-	PriceBehavior *string           `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	Period          *string                      `json:"period,omitempty" url:"period,omitempty"`
+	Plan            *PlanResponseData            `json:"plan,omitempty" url:"plan,omitempty"`
+	PlanEntitlement *PlanEntitlementResponseData `json:"plan_entitlement,omitempty" url:"plan_entitlement,omitempty"`
+	PriceBehavior   *string                      `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// The soft limit for the feature usage. Available only for overage price behavior
 	SoftLimit *int `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured.
@@ -5712,6 +5848,13 @@ func (f *FeatureUsageResponseData) GetAllocationType() FeatureUsageResponseDataA
 		return ""
 	}
 	return f.AllocationType
+}
+
+func (f *FeatureUsageResponseData) GetCompanyOverride() *CompanyOverrideResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.CompanyOverride
 }
 
 func (f *FeatureUsageResponseData) GetEntitlementExpirationDate() *time.Time {
@@ -5775,6 +5918,13 @@ func (f *FeatureUsageResponseData) GetPlan() *PlanResponseData {
 		return nil
 	}
 	return f.Plan
+}
+
+func (f *FeatureUsageResponseData) GetPlanEntitlement() *PlanEntitlementResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.PlanEntitlement
 }
 
 func (f *FeatureUsageResponseData) GetPriceBehavior() *string {
@@ -8890,61 +9040,8 @@ func (t *TemporaryAccessTokenResponseData) String() string {
 	return fmt.Sprintf("%#v", t)
 }
 
-type UpdateCreditBundleRequestBody struct {
-	BundleID string `json:"bundle_id" url:"bundle_id"`
-	Quantity int    `json:"quantity" url:"quantity"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (u *UpdateCreditBundleRequestBody) GetBundleID() string {
-	if u == nil {
-		return ""
-	}
-	return u.BundleID
-}
-
-func (u *UpdateCreditBundleRequestBody) GetQuantity() int {
-	if u == nil {
-		return 0
-	}
-	return u.Quantity
-}
-
-func (u *UpdateCreditBundleRequestBody) GetExtraProperties() map[string]interface{} {
-	return u.extraProperties
-}
-
-func (u *UpdateCreditBundleRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler UpdateCreditBundleRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*u = UpdateCreditBundleRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *u)
-	if err != nil {
-		return err
-	}
-	u.extraProperties = extraProperties
-	u.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (u *UpdateCreditBundleRequestBody) String() string {
-	if len(u.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(u); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", u)
-}
-
 type UpdateEntitlementReqCommon struct {
+	CreditConsumptionRate  *float64                                          `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
 	MetricPeriod           *UpdateEntitlementReqCommonMetricPeriod           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *UpdateEntitlementReqCommonMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	ValueBool              *bool                                             `json:"value_bool,omitempty" url:"value_bool,omitempty"`
@@ -8955,6 +9052,13 @@ type UpdateEntitlementReqCommon struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (u *UpdateEntitlementReqCommon) GetCreditConsumptionRate() *float64 {
+	if u == nil {
+		return nil
+	}
+	return u.CreditConsumptionRate
 }
 
 func (u *UpdateEntitlementReqCommon) GetMetricPeriod() *UpdateEntitlementReqCommonMetricPeriod {
@@ -9323,29 +9427,32 @@ func (u *UpsertUserSubRequestBody) String() string {
 }
 
 type UsageBasedEntitlementRequestBody struct {
-	CreditConsumptionRate   *float64                                       `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
+	BillingProductID        *string                                        `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
 	Currency                *string                                        `json:"currency,omitempty" url:"currency,omitempty"`
 	MonthlyMeteredPriceID   *string                                        `json:"monthly_metered_price_id,omitempty" url:"monthly_metered_price_id,omitempty"`
+	MonthlyPriceTiers       []*CreatePriceTierRequestBody                  `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
 	MonthlyUnitPrice        *int                                           `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
 	MonthlyUnitPriceDecimal *string                                        `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
 	OverageBillingProductID *string                                        `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
 	PriceBehavior           *UsageBasedEntitlementRequestBodyPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
-	PriceTiers              []*CreatePriceTierRequestBody                  `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
-	SoftLimit               *int                                           `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
-	TierMode                string                                         `json:"tier_mode" url:"tier_mode"`
-	YearlyMeteredPriceID    *string                                        `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
-	YearlyUnitPrice         *int                                           `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
-	YearlyUnitPriceDecimal  *string                                        `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
+	// Use MonthlyPriceTiers or YearlyPriceTiers instead
+	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
+	SoftLimit              *int                          `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	TierMode               *string                       `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
+	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
+	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
+	YearlyUnitPrice        *int                          `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
+	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (u *UsageBasedEntitlementRequestBody) GetCreditConsumptionRate() *float64 {
+func (u *UsageBasedEntitlementRequestBody) GetBillingProductID() *string {
 	if u == nil {
 		return nil
 	}
-	return u.CreditConsumptionRate
+	return u.BillingProductID
 }
 
 func (u *UsageBasedEntitlementRequestBody) GetCurrency() *string {
@@ -9360,6 +9467,13 @@ func (u *UsageBasedEntitlementRequestBody) GetMonthlyMeteredPriceID() *string {
 		return nil
 	}
 	return u.MonthlyMeteredPriceID
+}
+
+func (u *UsageBasedEntitlementRequestBody) GetMonthlyPriceTiers() []*CreatePriceTierRequestBody {
+	if u == nil {
+		return nil
+	}
+	return u.MonthlyPriceTiers
 }
 
 func (u *UsageBasedEntitlementRequestBody) GetMonthlyUnitPrice() *int {
@@ -9404,9 +9518,9 @@ func (u *UsageBasedEntitlementRequestBody) GetSoftLimit() *int {
 	return u.SoftLimit
 }
 
-func (u *UsageBasedEntitlementRequestBody) GetTierMode() string {
+func (u *UsageBasedEntitlementRequestBody) GetTierMode() *string {
 	if u == nil {
-		return ""
+		return nil
 	}
 	return u.TierMode
 }
@@ -9416,6 +9530,13 @@ func (u *UsageBasedEntitlementRequestBody) GetYearlyMeteredPriceID() *string {
 		return nil
 	}
 	return u.YearlyMeteredPriceID
+}
+
+func (u *UsageBasedEntitlementRequestBody) GetYearlyPriceTiers() []*CreatePriceTierRequestBody {
+	if u == nil {
+		return nil
+	}
+	return u.YearlyPriceTiers
 }
 
 func (u *UsageBasedEntitlementRequestBody) GetYearlyUnitPrice() *int {

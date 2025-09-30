@@ -28,6 +28,7 @@ type CountWebhooksRequest struct {
 }
 
 type CreateWebhookRequestBody struct {
+	CreditTriggerConfigs      []*CreditTriggerConfig                     `json:"credit_trigger_configs,omitempty" url:"-"`
 	EntitlementTriggerConfigs []*EntitlementTriggerConfig                `json:"entitlement_trigger_configs,omitempty" url:"-"`
 	Name                      string                                     `json:"name" url:"-"`
 	RequestTypes              []CreateWebhookRequestBodyRequestTypesItem `json:"request_types,omitempty" url:"-"`
@@ -50,6 +51,52 @@ type ListWebhooksRequest struct {
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
+type CreditTriggerConfig struct {
+	CreditID string `json:"credit_id" url:"credit_id"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditTriggerConfig) GetCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditID
+}
+
+func (c *CreditTriggerConfig) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditTriggerConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditTriggerConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditTriggerConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditTriggerConfig) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 type EntitlementTriggerConfig struct {
@@ -244,6 +291,7 @@ func (w *WebhookEventDetailResponseData) String() string {
 
 type WebhookResponseData struct {
 	CreatedAt                 time.Time                   `json:"created_at" url:"created_at"`
+	CreditTriggerConfigs      []*CreditTriggerConfig      `json:"credit_trigger_configs,omitempty" url:"credit_trigger_configs,omitempty"`
 	EntitlementTriggerConfigs []*EntitlementTriggerConfig `json:"entitlement_trigger_configs,omitempty" url:"entitlement_trigger_configs,omitempty"`
 	ID                        string                      `json:"id" url:"id"`
 	Name                      string                      `json:"name" url:"name"`
@@ -262,6 +310,13 @@ func (w *WebhookResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return w.CreatedAt
+}
+
+func (w *WebhookResponseData) GetCreditTriggerConfigs() []*CreditTriggerConfig {
+	if w == nil {
+		return nil
+	}
+	return w.CreditTriggerConfigs
 }
 
 func (w *WebhookResponseData) GetEntitlementTriggerConfigs() []*EntitlementTriggerConfig {
@@ -661,6 +716,8 @@ const (
 	CreateWebhookRequestBodyRequestTypesItemEntitlementLimitReached     CreateWebhookRequestBodyRequestTypesItem = "entitlement.limit.reached"
 	CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning CreateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.warning"
 	CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached CreateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.reached"
+	CreateWebhookRequestBodyRequestTypesItemCreditLimitWarning          CreateWebhookRequestBodyRequestTypesItem = "credit.limit.warning"
+	CreateWebhookRequestBodyRequestTypesItemCreditLimitReached          CreateWebhookRequestBodyRequestTypesItem = "credit.limit.reached"
 )
 
 func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebhookRequestBodyRequestTypesItem, error) {
@@ -721,6 +778,10 @@ func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebh
 		return CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning, nil
 	case "entitlement.soft_limit.reached":
 		return CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached, nil
+	case "credit.limit.warning":
+		return CreateWebhookRequestBodyRequestTypesItemCreditLimitWarning, nil
+	case "credit.limit.reached":
+		return CreateWebhookRequestBodyRequestTypesItemCreditLimitReached, nil
 	}
 	var t CreateWebhookRequestBodyRequestTypesItem
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1239,6 +1300,8 @@ const (
 	UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitReached     UpdateWebhookRequestBodyRequestTypesItem = "entitlement.limit.reached"
 	UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning UpdateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.warning"
 	UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached UpdateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.reached"
+	UpdateWebhookRequestBodyRequestTypesItemCreditLimitWarning          UpdateWebhookRequestBodyRequestTypesItem = "credit.limit.warning"
+	UpdateWebhookRequestBodyRequestTypesItemCreditLimitReached          UpdateWebhookRequestBodyRequestTypesItem = "credit.limit.reached"
 )
 
 func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebhookRequestBodyRequestTypesItem, error) {
@@ -1299,6 +1362,10 @@ func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebh
 		return UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning, nil
 	case "entitlement.soft_limit.reached":
 		return UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached, nil
+	case "credit.limit.warning":
+		return UpdateWebhookRequestBodyRequestTypesItemCreditLimitWarning, nil
+	case "credit.limit.reached":
+		return UpdateWebhookRequestBodyRequestTypesItemCreditLimitReached, nil
 	}
 	var t UpdateWebhookRequestBodyRequestTypesItem
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1386,6 +1453,7 @@ func (u *UpdateWebhookResponse) String() string {
 }
 
 type UpdateWebhookRequestBody struct {
+	CreditTriggerConfigs      []*CreditTriggerConfig                     `json:"credit_trigger_configs,omitempty" url:"-"`
 	EntitlementTriggerConfigs []*EntitlementTriggerConfig                `json:"entitlement_trigger_configs,omitempty" url:"-"`
 	Name                      *string                                    `json:"name,omitempty" url:"-"`
 	RequestTypes              []UpdateWebhookRequestBodyRequestTypesItem `json:"request_types,omitempty" url:"-"`

@@ -85,7 +85,7 @@ type ListCustomersWithSubscriptionsRequest struct {
 type ListInvoicesRequest struct {
 	CompanyID              *string `json:"-" url:"company_id,omitempty"`
 	CustomerExternalID     string  `json:"-" url:"customer_external_id"`
-	SubscriptionExternalID *string `json:"-" url:"subscription_external_id,omitempty"`
+	SubscriptionExternalID string  `json:"-" url:"subscription_external_id"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)

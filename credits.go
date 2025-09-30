@@ -30,6 +30,7 @@ type CountBillingCreditsGrantsRequest struct {
 type CountBillingPlanCreditGrantsRequest struct {
 	CreditID *string   `json:"-" url:"credit_id,omitempty"`
 	PlanID   *string   `json:"-" url:"plan_id,omitempty"`
+	PlanIDs  []*string `json:"-" url:"plan_ids,omitempty"`
 	IDs      []*string `json:"-" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
@@ -72,6 +73,7 @@ type CreateBillingPlanCreditGrantRequestBody struct {
 }
 
 type CreateCreditBundleRequestBody struct {
+	BundleName          string                                   `json:"bundle_name" url:"-"`
 	BundleType          *string                                  `json:"bundle_type,omitempty" url:"-"`
 	CreditID            string                                   `json:"credit_id" url:"-"`
 	Currency            string                                   `json:"currency" url:"-"`
@@ -82,6 +84,36 @@ type CreateCreditBundleRequestBody struct {
 	PricePerUnitDecimal *string                                  `json:"price_per_unit_decimal,omitempty" url:"-"`
 	Quantity            *int                                     `json:"quantity,omitempty" url:"-"`
 	Status              *CreateCreditBundleRequestBodyStatus     `json:"status,omitempty" url:"-"`
+}
+
+type CreateCompanyCreditGrant struct {
+	CompanyID string     `json:"company_id" url:"-"`
+	CreditID  string     `json:"credit_id" url:"-"`
+	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"-"`
+	Quantity  int        `json:"quantity" url:"-"`
+	Reason    string     `json:"reason" url:"-"`
+}
+
+func (c *CreateCompanyCreditGrant) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCompanyCreditGrant
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateCompanyCreditGrant(body)
+	return nil
+}
+
+func (c *CreateCompanyCreditGrant) MarshalJSON() ([]byte, error) {
+	type embed CreateCompanyCreditGrant
+	var marshaler = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed:     embed(*c),
+		ExpiresAt: internal.NewOptionalDateTime(c.ExpiresAt),
+	}
+	return json.Marshal(marshaler)
 }
 
 type ListBillingCreditsRequest struct {
@@ -96,6 +128,7 @@ type ListBillingCreditsRequest struct {
 type ListBillingPlanCreditGrantsRequest struct {
 	CreditID *string   `json:"-" url:"credit_id,omitempty"`
 	PlanID   *string   `json:"-" url:"plan_id,omitempty"`
+	PlanIDs  []*string `json:"-" url:"plan_ids,omitempty"`
 	IDs      []*string `json:"-" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
@@ -134,48 +167,28 @@ type ListGrantsForCreditRequest struct {
 }
 
 type BillingCreditGrantResponseData struct {
-	BundleCurrency     *string    `json:"bundle_currency,omitempty" url:"bundle_currency,omitempty"`
-	BundlePriceDecimal *string    `json:"bundle_price_decimal,omitempty" url:"bundle_price_decimal,omitempty"`
-	BundlePricePerUnit *int       `json:"bundle_price_per_unit,omitempty" url:"bundle_price_per_unit,omitempty"`
-	CompanyID          string     `json:"company_id" url:"company_id"`
-	CompanyName        string     `json:"company_name" url:"company_name"`
-	CreatedAt          time.Time  `json:"created_at" url:"created_at"`
-	ExpiresAt          *time.Time `json:"expires_at,omitempty" url:"expires_at,omitempty"`
-	GrantReason        string     `json:"grant_reason" url:"grant_reason"`
-	ID                 string     `json:"id" url:"id"`
-	PlanID             *string    `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	PlanName           *string    `json:"plan_name,omitempty" url:"plan_name,omitempty"`
-	Quantity           int        `json:"quantity" url:"quantity"`
-	QuantityRemaining  float64    `json:"quantity_remaining" url:"quantity_remaining"`
-	SourceLabel        string     `json:"source_label" url:"source_label"`
-	UpdatedAt          time.Time  `json:"updated_at" url:"updated_at"`
-	ValidFrom          *time.Time `json:"valid_from,omitempty" url:"valid_from,omitempty"`
-	ZeroedOutDate      *time.Time `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
-	ZeroedOutReason    *string    `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
+	CompanyID         string                    `json:"company_id" url:"company_id"`
+	CompanyName       string                    `json:"company_name" url:"company_name"`
+	CreatedAt         time.Time                 `json:"created_at" url:"created_at"`
+	CreditIcon        *string                   `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditName        string                    `json:"credit_name" url:"credit_name"`
+	ExpiresAt         *time.Time                `json:"expires_at,omitempty" url:"expires_at,omitempty"`
+	GrantReason       string                    `json:"grant_reason" url:"grant_reason"`
+	ID                string                    `json:"id" url:"id"`
+	PlanID            *string                   `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanName          *string                   `json:"plan_name,omitempty" url:"plan_name,omitempty"`
+	Price             *BillingPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
+	Quantity          int                       `json:"quantity" url:"quantity"`
+	QuantityRemaining float64                   `json:"quantity_remaining" url:"quantity_remaining"`
+	QuantityUsed      float64                   `json:"quantity_used" url:"quantity_used"`
+	SourceLabel       string                    `json:"source_label" url:"source_label"`
+	UpdatedAt         time.Time                 `json:"updated_at" url:"updated_at"`
+	ValidFrom         *time.Time                `json:"valid_from,omitempty" url:"valid_from,omitempty"`
+	ZeroedOutDate     *time.Time                `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
+	ZeroedOutReason   *string                   `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
-}
-
-func (b *BillingCreditGrantResponseData) GetBundleCurrency() *string {
-	if b == nil {
-		return nil
-	}
-	return b.BundleCurrency
-}
-
-func (b *BillingCreditGrantResponseData) GetBundlePriceDecimal() *string {
-	if b == nil {
-		return nil
-	}
-	return b.BundlePriceDecimal
-}
-
-func (b *BillingCreditGrantResponseData) GetBundlePricePerUnit() *int {
-	if b == nil {
-		return nil
-	}
-	return b.BundlePricePerUnit
 }
 
 func (b *BillingCreditGrantResponseData) GetCompanyID() string {
@@ -197,6 +210,20 @@ func (b *BillingCreditGrantResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return b.CreatedAt
+}
+
+func (b *BillingCreditGrantResponseData) GetCreditIcon() *string {
+	if b == nil {
+		return nil
+	}
+	return b.CreditIcon
+}
+
+func (b *BillingCreditGrantResponseData) GetCreditName() string {
+	if b == nil {
+		return ""
+	}
+	return b.CreditName
 }
 
 func (b *BillingCreditGrantResponseData) GetExpiresAt() *time.Time {
@@ -234,6 +261,13 @@ func (b *BillingCreditGrantResponseData) GetPlanName() *string {
 	return b.PlanName
 }
 
+func (b *BillingCreditGrantResponseData) GetPrice() *BillingPriceResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Price
+}
+
 func (b *BillingCreditGrantResponseData) GetQuantity() int {
 	if b == nil {
 		return 0
@@ -246,6 +280,13 @@ func (b *BillingCreditGrantResponseData) GetQuantityRemaining() float64 {
 		return 0
 	}
 	return b.QuantityRemaining
+}
+
+func (b *BillingCreditGrantResponseData) GetQuantityUsed() float64 {
+	if b == nil {
+		return 0
+	}
+	return b.QuantityUsed
 }
 
 func (b *BillingCreditGrantResponseData) GetSourceLabel() string {
@@ -744,8 +785,9 @@ type CountBillingPlanCreditGrantsParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	Offset  *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	PlanID  *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -784,6 +826,13 @@ func (c *CountBillingPlanCreditGrantsParams) GetPlanID() *string {
 		return nil
 	}
 	return c.PlanID
+}
+
+func (c *CountBillingPlanCreditGrantsParams) GetPlanIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanIDs
 }
 
 func (c *CountBillingPlanCreditGrantsParams) GetExtraProperties() map[string]interface{} {
@@ -1586,6 +1635,61 @@ func (g *GetSingleBillingCreditResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+type GrantBillingCreditsToCompanyResponse struct {
+	Data *BillingCreditGrantResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GrantBillingCreditsToCompanyResponse) GetData() *BillingCreditGrantResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GrantBillingCreditsToCompanyResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GrantBillingCreditsToCompanyResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GrantBillingCreditsToCompanyResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GrantBillingCreditsToCompanyResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GrantBillingCreditsToCompanyResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GrantBillingCreditsToCompanyResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 // Input parameters
 type ListBillingCreditsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
@@ -1722,8 +1826,9 @@ type ListBillingPlanCreditGrantsParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	Offset  *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	PlanID  *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1762,6 +1867,13 @@ func (l *ListBillingPlanCreditGrantsParams) GetPlanID() *string {
 		return nil
 	}
 	return l.PlanID
+}
+
+func (l *ListBillingPlanCreditGrantsParams) GetPlanIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanIDs
 }
 
 func (l *ListBillingPlanCreditGrantsParams) GetExtraProperties() map[string]interface{} {
@@ -2400,6 +2512,61 @@ func (l *ListGrantsForCreditResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
+type SoftDeleteBillingCreditResponse struct {
+	Data *DeleteResponse `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *SoftDeleteBillingCreditResponse) GetData() *DeleteResponse {
+	if s == nil {
+		return nil
+	}
+	return s.Data
+}
+
+func (s *SoftDeleteBillingCreditResponse) GetParams() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.Params
+}
+
+func (s *SoftDeleteBillingCreditResponse) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *SoftDeleteBillingCreditResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler SoftDeleteBillingCreditResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = SoftDeleteBillingCreditResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SoftDeleteBillingCreditResponse) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
 type UpdateBillingCreditRequestBodyBurnStrategy string
 
 const (
@@ -2508,7 +2675,51 @@ func (u *UpdateBillingCreditResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
-type UpdateCreditBundleResponse struct {
+type UpdateCreditBundleDetailsRequestBodyExpiryType string
+
+const (
+	UpdateCreditBundleDetailsRequestBodyExpiryTypeDaysFromPurchase UpdateCreditBundleDetailsRequestBodyExpiryType = "days_from_purchase"
+	UpdateCreditBundleDetailsRequestBodyExpiryTypeNoExpiry         UpdateCreditBundleDetailsRequestBodyExpiryType = "no_expiry"
+)
+
+func NewUpdateCreditBundleDetailsRequestBodyExpiryTypeFromString(s string) (UpdateCreditBundleDetailsRequestBodyExpiryType, error) {
+	switch s {
+	case "days_from_purchase":
+		return UpdateCreditBundleDetailsRequestBodyExpiryTypeDaysFromPurchase, nil
+	case "no_expiry":
+		return UpdateCreditBundleDetailsRequestBodyExpiryTypeNoExpiry, nil
+	}
+	var t UpdateCreditBundleDetailsRequestBodyExpiryType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateCreditBundleDetailsRequestBodyExpiryType) Ptr() *UpdateCreditBundleDetailsRequestBodyExpiryType {
+	return &u
+}
+
+type UpdateCreditBundleDetailsRequestBodyStatus string
+
+const (
+	UpdateCreditBundleDetailsRequestBodyStatusActive   UpdateCreditBundleDetailsRequestBodyStatus = "active"
+	UpdateCreditBundleDetailsRequestBodyStatusInactive UpdateCreditBundleDetailsRequestBodyStatus = "inactive"
+)
+
+func NewUpdateCreditBundleDetailsRequestBodyStatusFromString(s string) (UpdateCreditBundleDetailsRequestBodyStatus, error) {
+	switch s {
+	case "active":
+		return UpdateCreditBundleDetailsRequestBodyStatusActive, nil
+	case "inactive":
+		return UpdateCreditBundleDetailsRequestBodyStatusInactive, nil
+	}
+	var t UpdateCreditBundleDetailsRequestBodyStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateCreditBundleDetailsRequestBodyStatus) Ptr() *UpdateCreditBundleDetailsRequestBodyStatus {
+	return &u
+}
+
+type UpdateCreditBundleDetailsResponse struct {
 	Data *BillingCreditBundleResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
@@ -2517,31 +2728,31 @@ type UpdateCreditBundleResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (u *UpdateCreditBundleResponse) GetData() *BillingCreditBundleResponseData {
+func (u *UpdateCreditBundleDetailsResponse) GetData() *BillingCreditBundleResponseData {
 	if u == nil {
 		return nil
 	}
 	return u.Data
 }
 
-func (u *UpdateCreditBundleResponse) GetParams() map[string]interface{} {
+func (u *UpdateCreditBundleDetailsResponse) GetParams() map[string]interface{} {
 	if u == nil {
 		return nil
 	}
 	return u.Params
 }
 
-func (u *UpdateCreditBundleResponse) GetExtraProperties() map[string]interface{} {
+func (u *UpdateCreditBundleDetailsResponse) GetExtraProperties() map[string]interface{} {
 	return u.extraProperties
 }
 
-func (u *UpdateCreditBundleResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler UpdateCreditBundleResponse
+func (u *UpdateCreditBundleDetailsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCreditBundleDetailsResponse
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*u = UpdateCreditBundleResponse(value)
+	*u = UpdateCreditBundleDetailsResponse(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *u)
 	if err != nil {
 		return err
@@ -2551,7 +2762,7 @@ func (u *UpdateCreditBundleResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (u *UpdateCreditBundleResponse) String() string {
+func (u *UpdateCreditBundleDetailsResponse) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -2566,8 +2777,9 @@ func (u *UpdateCreditBundleResponse) String() string {
 type ZeroOutGrantRequestBodyReason string
 
 const (
-	ZeroOutGrantRequestBodyReasonPlanChange ZeroOutGrantRequestBodyReason = "plan_change"
-	ZeroOutGrantRequestBodyReasonManual     ZeroOutGrantRequestBodyReason = "manual"
+	ZeroOutGrantRequestBodyReasonPlanChange      ZeroOutGrantRequestBodyReason = "plan_change"
+	ZeroOutGrantRequestBodyReasonManual          ZeroOutGrantRequestBodyReason = "manual"
+	ZeroOutGrantRequestBodyReasonPlanPeriodReset ZeroOutGrantRequestBodyReason = "plan_period_reset"
 )
 
 func NewZeroOutGrantRequestBodyReasonFromString(s string) (ZeroOutGrantRequestBodyReason, error) {
@@ -2576,6 +2788,8 @@ func NewZeroOutGrantRequestBodyReasonFromString(s string) (ZeroOutGrantRequestBo
 		return ZeroOutGrantRequestBodyReasonPlanChange, nil
 	case "manual":
 		return ZeroOutGrantRequestBodyReasonManual, nil
+	case "plan_period_reset":
+		return ZeroOutGrantRequestBodyReasonPlanPeriodReset, nil
 	}
 	var t ZeroOutGrantRequestBodyReason
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -2652,6 +2866,16 @@ type UpdateBillingCreditRequestBody struct {
 	PerUnitPriceDecimal    *string                                              `json:"per_unit_price_decimal,omitempty" url:"-"`
 	PluralName             *string                                              `json:"plural_name,omitempty" url:"-"`
 	SingularName           *string                                              `json:"singular_name,omitempty" url:"-"`
+}
+
+type UpdateCreditBundleDetailsRequestBody struct {
+	BundleName          string                                          `json:"bundle_name" url:"-"`
+	ExpiryType          *UpdateCreditBundleDetailsRequestBodyExpiryType `json:"expiry_type,omitempty" url:"-"`
+	ExpiryUnitCount     *int                                            `json:"expiry_unit_count,omitempty" url:"-"`
+	PricePerUnit        int                                             `json:"price_per_unit" url:"-"`
+	PricePerUnitDecimal *string                                         `json:"price_per_unit_decimal,omitempty" url:"-"`
+	Quantity            *int                                            `json:"quantity,omitempty" url:"-"`
+	Status              *UpdateCreditBundleDetailsRequestBodyStatus     `json:"status,omitempty" url:"-"`
 }
 
 type ZeroOutGrantRequestBody struct {

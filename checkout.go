@@ -726,6 +726,60 @@ func (u *UpdateAddOnRequestBody) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
+type UpdateCreditBundleRequestBody struct {
+	BundleID string `json:"bundle_id" url:"bundle_id"`
+	Quantity int    `json:"quantity" url:"quantity"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateCreditBundleRequestBody) GetBundleID() string {
+	if u == nil {
+		return ""
+	}
+	return u.BundleID
+}
+
+func (u *UpdateCreditBundleRequestBody) GetQuantity() int {
+	if u == nil {
+		return 0
+	}
+	return u.Quantity
+}
+
+func (u *UpdateCreditBundleRequestBody) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateCreditBundleRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCreditBundleRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateCreditBundleRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateCreditBundleRequestBody) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
 type UpdatePayInAdvanceRequestBody struct {
 	PriceID  string `json:"price_id" url:"price_id"`
 	Quantity int    `json:"quantity" url:"quantity"`

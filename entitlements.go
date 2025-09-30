@@ -83,6 +83,7 @@ type CountPlanEntitlementsRequest struct {
 
 type CreateCompanyOverrideRequestBody struct {
 	CompanyID              string                                                  `json:"company_id" url:"-"`
+	CreditConsumptionRate  *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	ExpirationDate         *time.Time                                              `json:"expiration_date,omitempty" url:"-"`
 	FeatureID              string                                                  `json:"feature_id" url:"-"`
 	MetricPeriod           *CreateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
@@ -117,28 +118,32 @@ func (c *CreateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 type CreatePlanEntitlementRequestBody struct {
+	BillingProductID        *string                                                 `json:"billing_product_id,omitempty" url:"-"`
 	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
 	FeatureID               string                                                  `json:"feature_id" url:"-"`
 	MetricPeriod            *CreatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset  *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	MonthlyMeteredPriceID   *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
+	MonthlyPriceTiers       []*CreatePriceTierRequestBody                           `json:"monthly_price_tiers,omitempty" url:"-"`
 	MonthlyUnitPrice        *int                                                    `json:"monthly_unit_price,omitempty" url:"-"`
 	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
 	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
 	PlanID                  string                                                  `json:"plan_id" url:"-"`
 	PriceBehavior           *CreatePlanEntitlementRequestBodyPriceBehavior          `json:"price_behavior,omitempty" url:"-"`
-	PriceTiers              []*CreatePriceTierRequestBody                           `json:"price_tiers,omitempty" url:"-"`
-	SoftLimit               *int                                                    `json:"soft_limit,omitempty" url:"-"`
-	TierMode                string                                                  `json:"tier_mode" url:"-"`
-	ValueBool               *bool                                                   `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID           *string                                                 `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric            *int                                                    `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID            *string                                                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType               CreatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
-	YearlyMeteredPriceID    *string                                                 `json:"yearly_metered_price_id,omitempty" url:"-"`
-	YearlyUnitPrice         *int                                                    `json:"yearly_unit_price,omitempty" url:"-"`
-	YearlyUnitPriceDecimal  *string                                                 `json:"yearly_unit_price_decimal,omitempty" url:"-"`
+	// Use MonthlyPriceTiers or YearlyPriceTiers instead
+	PriceTiers             []*CreatePriceTierRequestBody             `json:"price_tiers,omitempty" url:"-"`
+	SoftLimit              *int                                      `json:"soft_limit,omitempty" url:"-"`
+	TierMode               *string                                   `json:"tier_mode,omitempty" url:"-"`
+	ValueBool              *bool                                     `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                                   `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric           *int                                      `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                                   `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              CreatePlanEntitlementRequestBodyValueType `json:"value_type" url:"-"`
+	YearlyMeteredPriceID   *string                                   `json:"yearly_metered_price_id,omitempty" url:"-"`
+	YearlyPriceTiers       []*CreatePriceTierRequestBody             `json:"yearly_price_tiers,omitempty" url:"-"`
+	YearlyUnitPrice        *int                                      `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPriceDecimal *string                                   `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 }
 
 type GetFeatureUsageByCompanyRequest struct {
@@ -216,223 +221,6 @@ type ListPlanEntitlementsRequest struct {
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"-" url:"offset,omitempty"`
-}
-
-// The updated resource
-type CompanyOverrideResponseData struct {
-	Company                *CompanyDetailResponseData         `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID              string                             `json:"company_id" url:"company_id"`
-	ConsumptionRate        *float64                           `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
-	CreatedAt              time.Time                          `json:"created_at" url:"created_at"`
-	EnvironmentID          string                             `json:"environment_id" url:"environment_id"`
-	ExpirationDate         *time.Time                         `json:"expiration_date,omitempty" url:"expiration_date,omitempty"`
-	Feature                *FeatureResponseData               `json:"feature,omitempty" url:"feature,omitempty"`
-	FeatureID              string                             `json:"feature_id" url:"feature_id"`
-	ID                     string                             `json:"id" url:"id"`
-	MetricPeriod           *string                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
-	MetricPeriodMonthReset *string                            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	RuleID                 *string                            `json:"rule_id,omitempty" url:"rule_id,omitempty"`
-	RuleIDUsageExceeded    *string                            `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
-	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
-	ValueBool              *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueNumeric           *int                               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	ValueTrait             *EntityTraitDefinitionResponseData `json:"value_trait,omitempty" url:"value_trait,omitempty"`
-	ValueTraitID           *string                            `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
-	ValueType              string                             `json:"value_type" url:"value_type"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CompanyOverrideResponseData) GetCompany() *CompanyDetailResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.Company
-}
-
-func (c *CompanyOverrideResponseData) GetCompanyID() string {
-	if c == nil {
-		return ""
-	}
-	return c.CompanyID
-}
-
-func (c *CompanyOverrideResponseData) GetConsumptionRate() *float64 {
-	if c == nil {
-		return nil
-	}
-	return c.ConsumptionRate
-}
-
-func (c *CompanyOverrideResponseData) GetCreatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.CreatedAt
-}
-
-func (c *CompanyOverrideResponseData) GetEnvironmentID() string {
-	if c == nil {
-		return ""
-	}
-	return c.EnvironmentID
-}
-
-func (c *CompanyOverrideResponseData) GetExpirationDate() *time.Time {
-	if c == nil {
-		return nil
-	}
-	return c.ExpirationDate
-}
-
-func (c *CompanyOverrideResponseData) GetFeature() *FeatureResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.Feature
-}
-
-func (c *CompanyOverrideResponseData) GetFeatureID() string {
-	if c == nil {
-		return ""
-	}
-	return c.FeatureID
-}
-
-func (c *CompanyOverrideResponseData) GetID() string {
-	if c == nil {
-		return ""
-	}
-	return c.ID
-}
-
-func (c *CompanyOverrideResponseData) GetMetricPeriod() *string {
-	if c == nil {
-		return nil
-	}
-	return c.MetricPeriod
-}
-
-func (c *CompanyOverrideResponseData) GetMetricPeriodMonthReset() *string {
-	if c == nil {
-		return nil
-	}
-	return c.MetricPeriodMonthReset
-}
-
-func (c *CompanyOverrideResponseData) GetRuleID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.RuleID
-}
-
-func (c *CompanyOverrideResponseData) GetRuleIDUsageExceeded() *string {
-	if c == nil {
-		return nil
-	}
-	return c.RuleIDUsageExceeded
-}
-
-func (c *CompanyOverrideResponseData) GetUpdatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.UpdatedAt
-}
-
-func (c *CompanyOverrideResponseData) GetValueBool() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.ValueBool
-}
-
-func (c *CompanyOverrideResponseData) GetValueNumeric() *int {
-	if c == nil {
-		return nil
-	}
-	return c.ValueNumeric
-}
-
-func (c *CompanyOverrideResponseData) GetValueTrait() *EntityTraitDefinitionResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.ValueTrait
-}
-
-func (c *CompanyOverrideResponseData) GetValueTraitID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.ValueTraitID
-}
-
-func (c *CompanyOverrideResponseData) GetValueType() string {
-	if c == nil {
-		return ""
-	}
-	return c.ValueType
-}
-
-func (c *CompanyOverrideResponseData) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CompanyOverrideResponseData) UnmarshalJSON(data []byte) error {
-	type embed CompanyOverrideResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt      *internal.DateTime `json:"created_at"`
-		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
-		UpdatedAt      *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*c),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*c = CompanyOverrideResponseData(unmarshaler.embed)
-	c.CreatedAt = unmarshaler.CreatedAt.Time()
-	c.ExpirationDate = unmarshaler.ExpirationDate.TimePtr()
-	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CompanyOverrideResponseData) MarshalJSON() ([]byte, error) {
-	type embed CompanyOverrideResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt      *internal.DateTime `json:"created_at"`
-		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
-		UpdatedAt      *internal.DateTime `json:"updated_at"`
-	}{
-		embed:          embed(*c),
-		CreatedAt:      internal.NewDateTime(c.CreatedAt),
-		ExpirationDate: internal.NewOptionalDateTime(c.ExpirationDate),
-		UpdatedAt:      internal.NewDateTime(c.UpdatedAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (c *CompanyOverrideResponseData) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
 }
 
 type CreatePriceTierRequestBody struct {
@@ -3351,6 +3139,7 @@ func (u *UpdatePlanEntitlementResponse) String() string {
 }
 
 type UpdateCompanyOverrideRequestBody struct {
+	CreditConsumptionRate  *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	ExpirationDate         *time.Time                                              `json:"expiration_date,omitempty" url:"-"`
 	MetricPeriod           *UpdateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
@@ -3384,24 +3173,28 @@ func (u *UpdateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 type UpdatePlanEntitlementRequestBody struct {
+	BillingProductID        *string                                                 `json:"billing_product_id,omitempty" url:"-"`
 	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
 	MetricPeriod            *UpdatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset  *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	MonthlyMeteredPriceID   *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
+	MonthlyPriceTiers       []*CreatePriceTierRequestBody                           `json:"monthly_price_tiers,omitempty" url:"-"`
 	MonthlyUnitPrice        *int                                                    `json:"monthly_unit_price,omitempty" url:"-"`
 	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
 	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
 	PriceBehavior           *UpdatePlanEntitlementRequestBodyPriceBehavior          `json:"price_behavior,omitempty" url:"-"`
-	PriceTiers              []*CreatePriceTierRequestBody                           `json:"price_tiers,omitempty" url:"-"`
-	SoftLimit               *int                                                    `json:"soft_limit,omitempty" url:"-"`
-	TierMode                string                                                  `json:"tier_mode" url:"-"`
-	ValueBool               *bool                                                   `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID           *string                                                 `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric            *int                                                    `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID            *string                                                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType               UpdatePlanEntitlementRequestBodyValueType               `json:"value_type" url:"-"`
-	YearlyMeteredPriceID    *string                                                 `json:"yearly_metered_price_id,omitempty" url:"-"`
-	YearlyUnitPrice         *int                                                    `json:"yearly_unit_price,omitempty" url:"-"`
-	YearlyUnitPriceDecimal  *string                                                 `json:"yearly_unit_price_decimal,omitempty" url:"-"`
+	// Use MonthlyPriceTiers or YearlyPriceTiers instead
+	PriceTiers             []*CreatePriceTierRequestBody             `json:"price_tiers,omitempty" url:"-"`
+	SoftLimit              *int                                      `json:"soft_limit,omitempty" url:"-"`
+	TierMode               *string                                   `json:"tier_mode,omitempty" url:"-"`
+	ValueBool              *bool                                     `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                                   `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric           *int                                      `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                                   `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              UpdatePlanEntitlementRequestBodyValueType `json:"value_type" url:"-"`
+	YearlyMeteredPriceID   *string                                   `json:"yearly_metered_price_id,omitempty" url:"-"`
+	YearlyPriceTiers       []*CreatePriceTierRequestBody             `json:"yearly_price_tiers,omitempty" url:"-"`
+	YearlyUnitPrice        *int                                      `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPriceDecimal *string                                   `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 }

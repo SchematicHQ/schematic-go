@@ -11,12 +11,20 @@ import (
 
 type CountPlansRequest struct {
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Filter for plans valid as fallback plans (not linked to billing)
+	ForFallbackPlan *bool `json:"-" url:"for_fallback_plan,omitempty"`
+	// Filter for plans valid as initial plans (not linked to billing, free, or auto-cancelling trial)
+	ForInitialPlan *bool `json:"-" url:"for_initial_plan,omitempty"`
+	// Filter for plans valid as trial expiry plans (not linked to billing or free)
+	ForTrialExpiryPlan *bool `json:"-" url:"for_trial_expiry_plan,omitempty"`
 	// Filter out plans that do not have a billing product ID
 	HasProductID *bool     `json:"-" url:"has_product_id,omitempty"`
 	IDs          []*string `json:"-" url:"ids,omitempty"`
 	// Filter by plan type
 	PlanType *CountPlansRequestPlanType `json:"-" url:"plan_type,omitempty"`
 	Q        *string                    `json:"-" url:"q,omitempty"`
+	// Filter for plans that require a payment method (inverse of ForInitialPlan)
+	RequiresPaymentMethod *bool `json:"-" url:"requires_payment_method,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a billing product ID
@@ -36,14 +44,26 @@ type CreatePlanRequestBody struct {
 	PlanType    CreatePlanRequestBodyPlanType `json:"plan_type" url:"-"`
 }
 
+type ListPlanIssuesRequest struct {
+	PlanID string `json:"-" url:"plan_id"`
+}
+
 type ListPlansRequest struct {
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Filter for plans valid as fallback plans (not linked to billing)
+	ForFallbackPlan *bool `json:"-" url:"for_fallback_plan,omitempty"`
+	// Filter for plans valid as initial plans (not linked to billing, free, or auto-cancelling trial)
+	ForInitialPlan *bool `json:"-" url:"for_initial_plan,omitempty"`
+	// Filter for plans valid as trial expiry plans (not linked to billing or free)
+	ForTrialExpiryPlan *bool `json:"-" url:"for_trial_expiry_plan,omitempty"`
 	// Filter out plans that do not have a billing product ID
 	HasProductID *bool     `json:"-" url:"has_product_id,omitempty"`
 	IDs          []*string `json:"-" url:"ids,omitempty"`
 	// Filter by plan type
 	PlanType *ListPlansRequestPlanType `json:"-" url:"plan_type,omitempty"`
 	Q        *string                   `json:"-" url:"q,omitempty"`
+	// Filter for plans that require a payment method (inverse of ForInitialPlan)
+	RequiresPaymentMethod *bool `json:"-" url:"requires_payment_method,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a billing product ID
@@ -56,7 +76,6 @@ type ListPlansRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
-// The updated resource
 type BillingProductPlanResponseData struct {
 	AccountID        string  `json:"account_id" url:"account_id"`
 	BillingProductID string  `json:"billing_product_id" url:"billing_product_id"`
@@ -183,7 +202,6 @@ func (b *BillingProductPlanResponseData) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
-// The updated resource
 type PlanAudienceDetailResponseData struct {
 	ConditionGroups []*RuleConditionGroupDetailResponseData `json:"condition_groups,omitempty" url:"condition_groups,omitempty"`
 	Conditions      []*RuleConditionDetailResponseData      `json:"conditions,omitempty" url:"conditions,omitempty"`
@@ -340,9 +358,85 @@ func (p *PlanAudienceDetailResponseData) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+type PlanIssueResponseData struct {
+	Code        string  `json:"code" url:"code"`
+	Description string  `json:"description" url:"description"`
+	Detail      *string `json:"detail,omitempty" url:"detail,omitempty"`
+	ID          *string `json:"id,omitempty" url:"id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanIssueResponseData) GetCode() string {
+	if p == nil {
+		return ""
+	}
+	return p.Code
+}
+
+func (p *PlanIssueResponseData) GetDescription() string {
+	if p == nil {
+		return ""
+	}
+	return p.Description
+}
+
+func (p *PlanIssueResponseData) GetDetail() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Detail
+}
+
+func (p *PlanIssueResponseData) GetID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.ID
+}
+
+func (p *PlanIssueResponseData) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PlanIssueResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanIssueResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanIssueResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanIssueResponseData) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
 // Input parameters
 type CountPlansParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter for plans valid as fallback plans (not linked to billing)
+	ForFallbackPlan *bool `json:"for_fallback_plan,omitempty" url:"for_fallback_plan,omitempty"`
+	// Filter for plans valid as initial plans (not linked to billing, free, or auto-cancelling trial)
+	ForInitialPlan *bool `json:"for_initial_plan,omitempty" url:"for_initial_plan,omitempty"`
+	// Filter for plans valid as trial expiry plans (not linked to billing or free)
+	ForTrialExpiryPlan *bool `json:"for_trial_expiry_plan,omitempty" url:"for_trial_expiry_plan,omitempty"`
 	// Filter out plans that do not have a billing product ID
 	HasProductID *bool    `json:"has_product_id,omitempty" url:"has_product_id,omitempty"`
 	IDs          []string `json:"ids,omitempty" url:"ids,omitempty"`
@@ -353,6 +447,8 @@ type CountPlansParams struct {
 	// Filter by plan type
 	PlanType *CountPlansResponseParamsPlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
 	Q        *string                           `json:"q,omitempty" url:"q,omitempty"`
+	// Filter for plans that require a payment method (inverse of ForInitialPlan)
+	RequiresPaymentMethod *bool `json:"requires_payment_method,omitempty" url:"requires_payment_method,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
@@ -369,6 +465,27 @@ func (c *CountPlansParams) GetCompanyID() *string {
 		return nil
 	}
 	return c.CompanyID
+}
+
+func (c *CountPlansParams) GetForFallbackPlan() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ForFallbackPlan
+}
+
+func (c *CountPlansParams) GetForInitialPlan() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ForInitialPlan
+}
+
+func (c *CountPlansParams) GetForTrialExpiryPlan() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ForTrialExpiryPlan
 }
 
 func (c *CountPlansParams) GetHasProductID() *bool {
@@ -411,6 +528,13 @@ func (c *CountPlansParams) GetQ() *string {
 		return nil
 	}
 	return c.Q
+}
+
+func (c *CountPlansParams) GetRequiresPaymentMethod() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.RequiresPaymentMethod
 }
 
 func (c *CountPlansParams) GetWithoutEntitlementFor() *string {
@@ -865,8 +989,116 @@ func (g *GetPlanResponse) String() string {
 }
 
 // Input parameters
+type ListPlanIssuesParams struct {
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPlanIssuesParams) GetPlanID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanID
+}
+
+func (l *ListPlanIssuesParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListPlanIssuesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListPlanIssuesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListPlanIssuesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListPlanIssuesParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+type ListPlanIssuesResponse struct {
+	Data []*PlanIssueResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *ListPlanIssuesParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPlanIssuesResponse) GetData() []*PlanIssueResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListPlanIssuesResponse) GetParams() *ListPlanIssuesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListPlanIssuesResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListPlanIssuesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListPlanIssuesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListPlanIssuesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListPlanIssuesResponse) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
 type ListPlansParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Filter for plans valid as fallback plans (not linked to billing)
+	ForFallbackPlan *bool `json:"for_fallback_plan,omitempty" url:"for_fallback_plan,omitempty"`
+	// Filter for plans valid as initial plans (not linked to billing, free, or auto-cancelling trial)
+	ForInitialPlan *bool `json:"for_initial_plan,omitempty" url:"for_initial_plan,omitempty"`
+	// Filter for plans valid as trial expiry plans (not linked to billing or free)
+	ForTrialExpiryPlan *bool `json:"for_trial_expiry_plan,omitempty" url:"for_trial_expiry_plan,omitempty"`
 	// Filter out plans that do not have a billing product ID
 	HasProductID *bool    `json:"has_product_id,omitempty" url:"has_product_id,omitempty"`
 	IDs          []string `json:"ids,omitempty" url:"ids,omitempty"`
@@ -877,6 +1109,8 @@ type ListPlansParams struct {
 	// Filter by plan type
 	PlanType *ListPlansResponseParamsPlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
 	Q        *string                          `json:"q,omitempty" url:"q,omitempty"`
+	// Filter for plans that require a payment method (inverse of ForInitialPlan)
+	RequiresPaymentMethod *bool `json:"requires_payment_method,omitempty" url:"requires_payment_method,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
@@ -893,6 +1127,27 @@ func (l *ListPlansParams) GetCompanyID() *string {
 		return nil
 	}
 	return l.CompanyID
+}
+
+func (l *ListPlansParams) GetForFallbackPlan() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.ForFallbackPlan
+}
+
+func (l *ListPlansParams) GetForInitialPlan() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.ForInitialPlan
+}
+
+func (l *ListPlansParams) GetForTrialExpiryPlan() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.ForTrialExpiryPlan
 }
 
 func (l *ListPlansParams) GetHasProductID() *bool {
@@ -935,6 +1190,13 @@ func (l *ListPlansParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListPlansParams) GetRequiresPaymentMethod() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.RequiresPaymentMethod
 }
 
 func (l *ListPlansParams) GetWithoutEntitlementFor() *string {
@@ -1014,7 +1276,6 @@ func (l ListPlansRequestPlanType) Ptr() *ListPlansRequestPlanType {
 }
 
 type ListPlansResponse struct {
-	// The returned resources
 	Data []*PlanDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListPlansParams `json:"params,omitempty" url:"params,omitempty"`

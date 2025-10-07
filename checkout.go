@@ -132,7 +132,6 @@ func (c *ChangeSubscriptionInternalRequestBody) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// The requested resource
 type CheckoutDataResponseData struct {
 	ActiveAddOns                   []*PlanDetailResponseData            `json:"active_add_ons,omitempty" url:"active_add_ons,omitempty"`
 	ActivePlan                     *PlanDetailResponseData              `json:"active_plan,omitempty" url:"active_plan,omitempty"`
@@ -313,7 +312,6 @@ func (c *CreditBundlePurchaseResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// The requested resource
 type PreviewSubscriptionChangeResponseData struct {
 	AmountOff             int                                     `json:"amount_off" url:"amount_off"`
 	DueNow                int                                     `json:"due_now" url:"due_now"`
@@ -470,6 +468,9 @@ type PreviewSubscriptionFinanceResponseData struct {
 	PeriodStart              time.Time                                      `json:"period_start" url:"period_start"`
 	PromoCodeApplied         bool                                           `json:"promo_code_applied" url:"promo_code_applied"`
 	Proration                int                                            `json:"proration" url:"proration"`
+	TaxAmount                *int                                           `json:"tax_amount,omitempty" url:"tax_amount,omitempty"`
+	TaxDisplayName           *string                                        `json:"tax_display_name,omitempty" url:"tax_display_name,omitempty"`
+	TaxRequireBillingDetails bool                                           `json:"tax_require_billing_details" url:"tax_require_billing_details"`
 	TrialEnd                 *time.Time                                     `json:"trial_end,omitempty" url:"trial_end,omitempty"`
 	UpcomingInvoiceLineItems []*PreviewSubscriptionUpcomingInvoiceLineItems `json:"upcoming_invoice_line_items,omitempty" url:"upcoming_invoice_line_items,omitempty"`
 
@@ -524,6 +525,27 @@ func (p *PreviewSubscriptionFinanceResponseData) GetProration() int {
 		return 0
 	}
 	return p.Proration
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetTaxAmount() *int {
+	if p == nil {
+		return nil
+	}
+	return p.TaxAmount
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetTaxDisplayName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.TaxDisplayName
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetTaxRequireBillingDetails() bool {
+	if p == nil {
+		return false
+	}
+	return p.TaxRequireBillingDetails
 }
 
 func (p *PreviewSubscriptionFinanceResponseData) GetTrialEnd() *time.Time {

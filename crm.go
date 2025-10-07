@@ -18,7 +18,6 @@ type ListCrmProductsRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
-// The created resource
 type CrmDealResponseData struct {
 	AccountID         string    `json:"account_id" url:"account_id"`
 	Arr               string    `json:"arr" url:"arr"`
@@ -167,7 +166,6 @@ func (c *CrmDealResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// The created resource
 type CrmLineItemResponseData struct {
 	AccountID         string    `json:"account_id" url:"account_id"`
 	CreatedAt         time.Time `json:"created_at" url:"created_at"`
@@ -276,7 +274,6 @@ func (c *CrmLineItemResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// The created resource
 type CrmProductResponseData struct {
 	AccountID     string    `json:"account_id" url:"account_id"`
 	CreatedAt     time.Time `json:"created_at" url:"created_at"`
@@ -491,7 +488,6 @@ func (l *ListCrmProductsParams) String() string {
 }
 
 type ListCrmProductsResponse struct {
-	// The returned resources
 	Data []*CrmProductResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListCrmProductsParams `json:"params,omitempty" url:"params,omitempty"`

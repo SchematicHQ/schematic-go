@@ -41,7 +41,6 @@ func (i *IssueTemporaryAccessTokenRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(marshaler)
 }
 
-// The created resource
 type IssueTemporaryAccessTokenResponseData struct {
 	APIKeyID      string    `json:"api_key_id" url:"api_key_id"`
 	CreatedAt     time.Time `json:"created_at" url:"created_at"`

@@ -211,7 +211,6 @@ func (c *CheckFlagRequestBody) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// The returned resource
 type CheckFlagResponseData struct {
 	// If company keys were provided and matched a company, its ID
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -394,7 +393,6 @@ func (c *CheckFlagResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// The created resource
 type CheckFlagsResponseData struct {
 	Flags []*CheckFlagResponseData `json:"flags,omitempty" url:"flags,omitempty"`
 
@@ -941,7 +939,6 @@ func (f *FlagResponseData) String() string {
 	return fmt.Sprintf("%#v", f)
 }
 
-// The updated resource
 type RulesDetailResponseData struct {
 	Flag  *FlagResponseData         `json:"flag,omitempty" url:"flag,omitempty"`
 	Rules []*RuleDetailResponseData `json:"rules,omitempty" url:"rules,omitempty"`
@@ -1915,7 +1912,6 @@ func (g *GetFlagResponse) String() string {
 }
 
 type ListAudienceCompaniesResponse struct {
-	// The returned resources
 	Data []*CompanyDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
@@ -1971,7 +1967,6 @@ func (l *ListAudienceCompaniesResponse) String() string {
 }
 
 type ListAudienceUsersResponse struct {
-	// The returned resources
 	Data []*UserDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
@@ -2136,7 +2131,6 @@ func (l *ListFeaturesParams) String() string {
 }
 
 type ListFeaturesResponse struct {
-	// The returned resources
 	Data []*FeatureDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListFeaturesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2273,7 +2267,6 @@ func (l *ListFlagsParams) String() string {
 }
 
 type ListFlagsResponse struct {
-	// The returned resources
 	Data []*FlagDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListFlagsParams `json:"params,omitempty" url:"params,omitempty"`

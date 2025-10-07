@@ -131,12 +131,19 @@ type ListProductPricesRequest struct {
 }
 
 type SearchBillingPricesRequest struct {
-	IDs       []*string                            `json:"-" url:"ids,omitempty"`
-	Q         *string                              `json:"-" url:"q,omitempty"`
-	Interval  *string                              `json:"-" url:"interval,omitempty"`
-	UsageType *SearchBillingPricesRequestUsageType `json:"-" url:"usage_type,omitempty"`
-	Price     *int                                 `json:"-" url:"price,omitempty"`
-	TiersMode *SearchBillingPricesRequestTiersMode `json:"-" url:"tiers_mode,omitempty"`
+	// Filter for prices valid for initial plans (free prices only)
+	ForInitialPlan *bool `json:"-" url:"for_initial_plan,omitempty"`
+	// Filter for prices valid for trial expiry plans (free prices only)
+	ForTrialExpiryPlan *bool     `json:"-" url:"for_trial_expiry_plan,omitempty"`
+	IDs                []*string `json:"-" url:"ids,omitempty"`
+	ProductID          *string   `json:"-" url:"product_id,omitempty"`
+	Interval           *string   `json:"-" url:"interval,omitempty"`
+	Price              *int      `json:"-" url:"price,omitempty"`
+	Q                  *string   `json:"-" url:"q,omitempty"`
+	// Filter for prices that require a payment method (inverse of ForInitialPlan)
+	RequiresPaymentMethod *bool                                `json:"-" url:"requires_payment_method,omitempty"`
+	TiersMode             *SearchBillingPricesRequestTiersMode `json:"-" url:"tiers_mode,omitempty"`
+	UsageType             *SearchBillingPricesRequestUsageType `json:"-" url:"usage_type,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -331,7 +338,6 @@ func (b *BillingCouponResponseData) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
-// The created resource
 type BillingCustomerResponseData struct {
 	CompanyID      *string    `json:"company_id,omitempty" url:"company_id,omitempty"`
 	DeletedAt      *time.Time `json:"deleted_at,omitempty" url:"deleted_at,omitempty"`
@@ -771,19 +777,28 @@ func (b *BillingMeterResponseData) String() string {
 }
 
 type BillingProductPricing struct {
-	Currency          string                         `json:"currency" url:"currency"`
-	Interval          string                         `json:"interval" url:"interval"`
-	MeterID           *string                        `json:"meter_id,omitempty" url:"meter_id,omitempty"`
-	PackageSize       *int                           `json:"package_size,omitempty" url:"package_size,omitempty"`
-	Price             int                            `json:"price" url:"price"`
-	PriceDecimal      *string                        `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
-	PriceExternalID   string                         `json:"price_external_id" url:"price_external_id"`
-	ProductExternalID string                         `json:"product_external_id" url:"product_external_id"`
-	Quantity          int                            `json:"quantity" url:"quantity"`
-	UsageType         BillingProductPricingUsageType `json:"usage_type" url:"usage_type"`
+	BillingThreshold           *int                           `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
+	Currency                   string                         `json:"currency" url:"currency"`
+	Interval                   string                         `json:"interval" url:"interval"`
+	MeterID                    *string                        `json:"meter_id,omitempty" url:"meter_id,omitempty"`
+	PackageSize                *int                           `json:"package_size,omitempty" url:"package_size,omitempty"`
+	Price                      int                            `json:"price" url:"price"`
+	PriceDecimal               *string                        `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
+	PriceExternalID            string                         `json:"price_external_id" url:"price_external_id"`
+	ProductExternalID          string                         `json:"product_external_id" url:"product_external_id"`
+	Quantity                   int                            `json:"quantity" url:"quantity"`
+	SubscriptionItemExternalID *string                        `json:"subscription_item_external_id,omitempty" url:"subscription_item_external_id,omitempty"`
+	UsageType                  BillingProductPricingUsageType `json:"usage_type" url:"usage_type"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (b *BillingProductPricing) GetBillingThreshold() *int {
+	if b == nil {
+		return nil
+	}
+	return b.BillingThreshold
 }
 
 func (b *BillingProductPricing) GetCurrency() string {
@@ -847,6 +862,13 @@ func (b *BillingProductPricing) GetQuantity() int {
 		return 0
 	}
 	return b.Quantity
+}
+
+func (b *BillingProductPricing) GetSubscriptionItemExternalID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.SubscriptionItemExternalID
 }
 
 func (b *BillingProductPricing) GetUsageType() BillingProductPricingUsageType {
@@ -1547,25 +1569,25 @@ func (c CreateBillingPriceRequestBodyUsageType) Ptr() *CreateBillingPriceRequest
 	return &c
 }
 
-type CreateBillingSubscriptionsRequestBodyTrialEndSetting string
+type CreateBillingSubscriptionRequestBodyTrialEndSetting string
 
 const (
-	CreateBillingSubscriptionsRequestBodyTrialEndSettingSubscribe CreateBillingSubscriptionsRequestBodyTrialEndSetting = "subscribe"
-	CreateBillingSubscriptionsRequestBodyTrialEndSettingCancel    CreateBillingSubscriptionsRequestBodyTrialEndSetting = "cancel"
+	CreateBillingSubscriptionRequestBodyTrialEndSettingSubscribe CreateBillingSubscriptionRequestBodyTrialEndSetting = "subscribe"
+	CreateBillingSubscriptionRequestBodyTrialEndSettingCancel    CreateBillingSubscriptionRequestBodyTrialEndSetting = "cancel"
 )
 
-func NewCreateBillingSubscriptionsRequestBodyTrialEndSettingFromString(s string) (CreateBillingSubscriptionsRequestBodyTrialEndSetting, error) {
+func NewCreateBillingSubscriptionRequestBodyTrialEndSettingFromString(s string) (CreateBillingSubscriptionRequestBodyTrialEndSetting, error) {
 	switch s {
 	case "subscribe":
-		return CreateBillingSubscriptionsRequestBodyTrialEndSettingSubscribe, nil
+		return CreateBillingSubscriptionRequestBodyTrialEndSettingSubscribe, nil
 	case "cancel":
-		return CreateBillingSubscriptionsRequestBodyTrialEndSettingCancel, nil
+		return CreateBillingSubscriptionRequestBodyTrialEndSettingCancel, nil
 	}
-	var t CreateBillingSubscriptionsRequestBodyTrialEndSetting
+	var t CreateBillingSubscriptionRequestBodyTrialEndSetting
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (c CreateBillingSubscriptionsRequestBodyTrialEndSetting) Ptr() *CreateBillingSubscriptionsRequestBodyTrialEndSetting {
+func (c CreateBillingSubscriptionRequestBodyTrialEndSetting) Ptr() *CreateBillingSubscriptionRequestBodyTrialEndSetting {
 	return &c
 }
 
@@ -1836,7 +1858,6 @@ func (l ListBillingProductsRequestPriceUsageType) Ptr() *ListBillingProductsRequ
 }
 
 type ListBillingProductsResponse struct {
-	// The returned resources
 	Data []*BillingProductDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListBillingProductsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -1987,7 +2008,6 @@ func (l *ListCouponsParams) String() string {
 }
 
 type ListCouponsResponse struct {
-	// The returned resources
 	Data []*BillingCouponResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListCouponsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2132,7 +2152,6 @@ func (l *ListCustomersWithSubscriptionsParams) String() string {
 }
 
 type ListCustomersWithSubscriptionsResponse struct {
-	// The returned resources
 	Data []*BillingCustomerWithSubscriptionsResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListCustomersWithSubscriptionsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2269,7 +2288,6 @@ func (l *ListInvoicesParams) String() string {
 }
 
 type ListInvoicesResponse struct {
-	// The returned resources
 	Data []*InvoiceResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListInvoicesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2390,7 +2408,6 @@ func (l *ListMetersParams) String() string {
 }
 
 type ListMetersResponse struct {
-	// The returned resources
 	Data []*BillingMeterResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListMetersParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2519,7 +2536,6 @@ func (l *ListPaymentMethodsParams) String() string {
 }
 
 type ListPaymentMethodsResponse struct {
-	// The returned resources
 	Data []*PaymentMethodResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListPaymentMethodsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2731,7 +2747,6 @@ func (l ListProductPricesRequestPriceUsageType) Ptr() *ListProductPricesRequestP
 }
 
 type ListProductPricesResponse struct {
-	// The returned resources
 	Data []*BillingPriceResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListProductPricesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2810,19 +2825,40 @@ func (l ListProductPricesResponseParamsPriceUsageType) Ptr() *ListProductPricesR
 
 // Input parameters
 type SearchBillingPricesParams struct {
-	IDs      []string `json:"ids,omitempty" url:"ids,omitempty"`
-	Interval *string  `json:"interval,omitempty" url:"interval,omitempty"`
+	// Filter for prices valid for initial plans (free prices only)
+	ForInitialPlan *bool `json:"for_initial_plan,omitempty" url:"for_initial_plan,omitempty"`
+	// Filter for prices valid for trial expiry plans (free prices only)
+	ForTrialExpiryPlan *bool    `json:"for_trial_expiry_plan,omitempty" url:"for_trial_expiry_plan,omitempty"`
+	IDs                []string `json:"ids,omitempty" url:"ids,omitempty"`
+	Interval           *string  `json:"interval,omitempty" url:"interval,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int                                        `json:"offset,omitempty" url:"offset,omitempty"`
-	Price     *int                                        `json:"price,omitempty" url:"price,omitempty"`
-	Q         *string                                     `json:"q,omitempty" url:"q,omitempty"`
-	TiersMode *SearchBillingPricesResponseParamsTiersMode `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
-	UsageType *SearchBillingPricesResponseParamsUsageType `json:"usage_type,omitempty" url:"usage_type,omitempty"`
+	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Price     *int    `json:"price,omitempty" url:"price,omitempty"`
+	ProductID *string `json:"product_id,omitempty" url:"product_id,omitempty"`
+	Q         *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter for prices that require a payment method (inverse of ForInitialPlan)
+	RequiresPaymentMethod *bool                                       `json:"requires_payment_method,omitempty" url:"requires_payment_method,omitempty"`
+	TiersMode             *SearchBillingPricesResponseParamsTiersMode `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
+	UsageType             *SearchBillingPricesResponseParamsUsageType `json:"usage_type,omitempty" url:"usage_type,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (s *SearchBillingPricesParams) GetForInitialPlan() *bool {
+	if s == nil {
+		return nil
+	}
+	return s.ForInitialPlan
+}
+
+func (s *SearchBillingPricesParams) GetForTrialExpiryPlan() *bool {
+	if s == nil {
+		return nil
+	}
+	return s.ForTrialExpiryPlan
 }
 
 func (s *SearchBillingPricesParams) GetIDs() []string {
@@ -2860,11 +2896,25 @@ func (s *SearchBillingPricesParams) GetPrice() *int {
 	return s.Price
 }
 
+func (s *SearchBillingPricesParams) GetProductID() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ProductID
+}
+
 func (s *SearchBillingPricesParams) GetQ() *string {
 	if s == nil {
 		return nil
 	}
 	return s.Q
+}
+
+func (s *SearchBillingPricesParams) GetRequiresPaymentMethod() *bool {
+	if s == nil {
+		return nil
+	}
+	return s.RequiresPaymentMethod
 }
 
 func (s *SearchBillingPricesParams) GetTiersMode() *SearchBillingPricesResponseParamsTiersMode {
@@ -2958,7 +3008,6 @@ func (s SearchBillingPricesRequestUsageType) Ptr() *SearchBillingPricesRequestUs
 }
 
 type SearchBillingPricesResponse struct {
-	// The returned resources
 	Data []*BillingPriceView `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *SearchBillingPricesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -3550,38 +3599,38 @@ type CreateBillingProductRequestBody struct {
 	Price      float64 `json:"price" url:"-"`
 }
 
-type CreateBillingSubscriptionsRequestBody struct {
-	CancelAt               *int                                                  `json:"cancel_at,omitempty" url:"-"`
-	CancelAtPeriodEnd      bool                                                  `json:"cancel_at_period_end" url:"-"`
-	Currency               string                                                `json:"currency" url:"-"`
-	CustomerExternalID     string                                                `json:"customer_external_id" url:"-"`
-	DefaultPaymentMethodID *string                                               `json:"default_payment_method_id,omitempty" url:"-"`
-	Discounts              []*BillingSubscriptionDiscount                        `json:"discounts,omitempty" url:"-"`
-	ExpiredAt              time.Time                                             `json:"expired_at" url:"-"`
-	Interval               *string                                               `json:"interval,omitempty" url:"-"`
-	Metadata               map[string]interface{}                                `json:"metadata,omitempty" url:"-"`
-	PeriodEnd              *int                                                  `json:"period_end,omitempty" url:"-"`
-	PeriodStart            *int                                                  `json:"period_start,omitempty" url:"-"`
-	ProductExternalIDs     []*BillingProductPricing                              `json:"product_external_ids,omitempty" url:"-"`
-	Status                 *string                                               `json:"status,omitempty" url:"-"`
-	SubscriptionExternalID string                                                `json:"subscription_external_id" url:"-"`
-	TotalPrice             int                                                   `json:"total_price" url:"-"`
-	TrialEnd               *int                                                  `json:"trial_end,omitempty" url:"-"`
-	TrialEndSetting        *CreateBillingSubscriptionsRequestBodyTrialEndSetting `json:"trial_end_setting,omitempty" url:"-"`
+type CreateBillingSubscriptionRequestBody struct {
+	CancelAt               *int                                                 `json:"cancel_at,omitempty" url:"-"`
+	CancelAtPeriodEnd      bool                                                 `json:"cancel_at_period_end" url:"-"`
+	Currency               string                                               `json:"currency" url:"-"`
+	CustomerExternalID     string                                               `json:"customer_external_id" url:"-"`
+	DefaultPaymentMethodID *string                                              `json:"default_payment_method_id,omitempty" url:"-"`
+	Discounts              []*BillingSubscriptionDiscount                       `json:"discounts,omitempty" url:"-"`
+	ExpiredAt              time.Time                                            `json:"expired_at" url:"-"`
+	Interval               *string                                              `json:"interval,omitempty" url:"-"`
+	Metadata               map[string]interface{}                               `json:"metadata,omitempty" url:"-"`
+	PeriodEnd              *int                                                 `json:"period_end,omitempty" url:"-"`
+	PeriodStart            *int                                                 `json:"period_start,omitempty" url:"-"`
+	ProductExternalIDs     []*BillingProductPricing                             `json:"product_external_ids,omitempty" url:"-"`
+	Status                 *string                                              `json:"status,omitempty" url:"-"`
+	SubscriptionExternalID string                                               `json:"subscription_external_id" url:"-"`
+	TotalPrice             int                                                  `json:"total_price" url:"-"`
+	TrialEnd               *int                                                 `json:"trial_end,omitempty" url:"-"`
+	TrialEndSetting        *CreateBillingSubscriptionRequestBodyTrialEndSetting `json:"trial_end_setting,omitempty" url:"-"`
 }
 
-func (c *CreateBillingSubscriptionsRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreateBillingSubscriptionsRequestBody
+func (c *CreateBillingSubscriptionRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateBillingSubscriptionRequestBody
 	var body unmarshaler
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
 	}
-	*c = CreateBillingSubscriptionsRequestBody(body)
+	*c = CreateBillingSubscriptionRequestBody(body)
 	return nil
 }
 
-func (c *CreateBillingSubscriptionsRequestBody) MarshalJSON() ([]byte, error) {
-	type embed CreateBillingSubscriptionsRequestBody
+func (c *CreateBillingSubscriptionRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateBillingSubscriptionRequestBody
 	var marshaler = struct {
 		embed
 		ExpiredAt *internal.DateTime `json:"expired_at"`

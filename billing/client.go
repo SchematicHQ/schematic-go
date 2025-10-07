@@ -1341,7 +1341,7 @@ func (c *Client) CountBillingProducts(
 
 func (c *Client) UpsertBillingSubscription(
 	ctx context.Context,
-	request *schematicgo.CreateBillingSubscriptionsRequestBody,
+	request *schematicgo.CreateBillingSubscriptionRequestBody,
 	opts ...option.RequestOption,
 ) (*schematicgo.UpsertBillingSubscriptionResponse, error) {
 	options := core.NewRequestOptions(opts...)

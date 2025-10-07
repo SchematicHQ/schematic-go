@@ -66,7 +66,6 @@ type ListEnvironmentsRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
-// The created resource
 type APIKeyCreateResponseData struct {
 	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
 	Description   *string    `json:"description,omitempty" url:"description,omitempty"`
@@ -391,7 +390,6 @@ func (a *APIKeyRequestListResponseData) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
-// The returned resource
 type APIKeyRequestResponseData struct {
 	APIKeyID          string     `json:"api_key_id" url:"api_key_id"`
 	EndedAt           *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
@@ -604,7 +602,6 @@ func (a *APIKeyRequestResponseData) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
-// The updated resource
 type APIKeyResponseData struct {
 	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
 	Description   *string    `json:"description,omitempty" url:"description,omitempty"`
@@ -733,7 +730,6 @@ func (a *APIKeyResponseData) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
-// The created resource
 type EnvironmentDetailResponseData struct {
 	APIKeys         []*APIKeyResponseData `json:"api_keys,omitempty" url:"api_keys,omitempty"`
 	CreatedAt       time.Time             `json:"created_at" url:"created_at"`
@@ -842,7 +838,6 @@ func (e *EnvironmentDetailResponseData) String() string {
 	return fmt.Sprintf("%#v", e)
 }
 
-// The updated resource
 type EnvironmentResponseData struct {
 	CreatedAt       time.Time `json:"created_at" url:"created_at"`
 	EnvironmentType string    `json:"environment_type" url:"environment_type"`
@@ -1737,7 +1732,6 @@ func (l *ListAPIKeysParams) String() string {
 }
 
 type ListAPIKeysResponse struct {
-	// The returned resources
 	Data []*APIKeyResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListAPIKeysParams `json:"params,omitempty" url:"params,omitempty"`
@@ -1874,7 +1868,6 @@ func (l *ListAPIRequestsParams) String() string {
 }
 
 type ListAPIRequestsResponse struct {
-	// The returned resources
 	Data []*APIKeyRequestListResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListAPIRequestsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -1995,7 +1988,6 @@ func (l *ListEnvironmentsParams) String() string {
 }
 
 type ListEnvironmentsResponse struct {
-	// The returned resources
 	Data []*EnvironmentResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListEnvironmentsParams `json:"params,omitempty" url:"params,omitempty"`

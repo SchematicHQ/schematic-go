@@ -1093,7 +1093,6 @@ func (l *ListWebhookEventsParams) String() string {
 }
 
 type ListWebhookEventsResponse struct {
-	// The returned resources
 	Data []*WebhookEventDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListWebhookEventsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -1214,7 +1213,6 @@ func (l *ListWebhooksParams) String() string {
 }
 
 type ListWebhooksResponse struct {
-	// The returned resources
 	Data []*WebhookResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListWebhooksParams `json:"params,omitempty" url:"params,omitempty"`

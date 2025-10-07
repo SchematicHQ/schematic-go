@@ -49,7 +49,6 @@ func (c *CreateDataExportRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(marshaler)
 }
 
-// The created resource
 type DataExportResponseData struct {
 	AccountID      string    `json:"account_id" url:"account_id"`
 	CreatedAt      time.Time `json:"created_at" url:"created_at"`

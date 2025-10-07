@@ -828,7 +828,6 @@ func (e *EventDetailResponseData) String() string {
 	return fmt.Sprintf("%#v", e)
 }
 
-// The created resource
 type RawEventBatchResponseData struct {
 	Events []*RawEventResponseData `json:"events,omitempty" url:"events,omitempty"`
 
@@ -971,7 +970,6 @@ func (r *RawEventResponseData) String() string {
 	return fmt.Sprintf("%#v", r)
 }
 
-// The returned resource
 type SegmentStatusResp struct {
 	Connected     bool       `json:"connected" url:"connected"`
 	EnvironmentID string     `json:"environment_id" url:"environment_id"`
@@ -1291,7 +1289,6 @@ func (g *GetEventSummariesParams) String() string {
 }
 
 type GetEventSummariesResponse struct {
-	// The returned resources
 	Data []*EventSummaryResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *GetEventSummariesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -1524,7 +1521,6 @@ func (l ListEventsRequestEventTypesItem) Ptr() *ListEventsRequestEventTypesItem 
 }
 
 type ListEventsResponse struct {
-	// The returned resources
 	Data []*EventDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListEventsParams `json:"params,omitempty" url:"params,omitempty"`

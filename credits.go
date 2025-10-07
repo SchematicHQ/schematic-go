@@ -65,11 +65,15 @@ type CreateBillingCreditRequestBody struct {
 }
 
 type CreateBillingPlanCreditGrantRequestBody struct {
-	CreditAmount int                                                 `json:"credit_amount" url:"-"`
-	CreditID     string                                              `json:"credit_id" url:"-"`
-	PlanID       string                                              `json:"plan_id" url:"-"`
-	ResetCadence CreateBillingPlanCreditGrantRequestBodyResetCadence `json:"reset_cadence" url:"-"`
-	ResetStart   CreateBillingPlanCreditGrantRequestBodyResetStart   `json:"reset_start" url:"-"`
+	CreditAmount    int                                                 `json:"credit_amount" url:"-"`
+	CreditID        string                                              `json:"credit_id" url:"-"`
+	ExpiryType      *CreateBillingPlanCreditGrantRequestBodyExpiryType  `json:"expiry_type,omitempty" url:"-"`
+	ExpiryUnit      *CreateBillingPlanCreditGrantRequestBodyExpiryUnit  `json:"expiry_unit,omitempty" url:"-"`
+	ExpiryUnitCount *int                                                `json:"expiry_unit_count,omitempty" url:"-"`
+	PlanID          string                                              `json:"plan_id" url:"-"`
+	ResetCadence    CreateBillingPlanCreditGrantRequestBodyResetCadence `json:"reset_cadence" url:"-"`
+	ResetStart      CreateBillingPlanCreditGrantRequestBodyResetStart   `json:"reset_start" url:"-"`
+	ResetType       *CreateBillingPlanCreditGrantRequestBodyResetType   `json:"reset_type,omitempty" url:"-"`
 }
 
 type CreateCreditBundleRequestBody struct {
@@ -78,7 +82,7 @@ type CreateCreditBundleRequestBody struct {
 	CreditID            string                                   `json:"credit_id" url:"-"`
 	Currency            string                                   `json:"currency" url:"-"`
 	ExpiryType          *CreateCreditBundleRequestBodyExpiryType `json:"expiry_type,omitempty" url:"-"`
-	ExpiryUnit          *string                                  `json:"expiry_unit,omitempty" url:"-"`
+	ExpiryUnit          *CreateCreditBundleRequestBodyExpiryUnit `json:"expiry_unit,omitempty" url:"-"`
 	ExpiryUnitCount     *int                                     `json:"expiry_unit_count,omitempty" url:"-"`
 	PricePerUnit        int                                      `json:"price_per_unit" url:"-"`
 	PricePerUnitDecimal *string                                  `json:"price_per_unit_decimal,omitempty" url:"-"`
@@ -87,11 +91,15 @@ type CreateCreditBundleRequestBody struct {
 }
 
 type CreateCompanyCreditGrant struct {
-	CompanyID string     `json:"company_id" url:"-"`
-	CreditID  string     `json:"credit_id" url:"-"`
-	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"-"`
-	Quantity  int        `json:"quantity" url:"-"`
-	Reason    string     `json:"reason" url:"-"`
+	BillingPeriodsCount *int                                `json:"billing_periods_count,omitempty" url:"-"`
+	CompanyID           string                              `json:"company_id" url:"-"`
+	CreditID            string                              `json:"credit_id" url:"-"`
+	ExpiresAt           *time.Time                          `json:"expires_at,omitempty" url:"-"`
+	ExpiryType          *CreateCompanyCreditGrantExpiryType `json:"expiry_type,omitempty" url:"-"`
+	ExpiryUnit          *CreateCompanyCreditGrantExpiryUnit `json:"expiry_unit,omitempty" url:"-"`
+	ExpiryUnitCount     *int                                `json:"expiry_unit_count,omitempty" url:"-"`
+	Quantity            int                                 `json:"quantity" url:"-"`
+	Reason              string                              `json:"reason" url:"-"`
 }
 
 func (c *CreateCompanyCreditGrant) UnmarshalJSON(data []byte) error {
@@ -379,138 +387,6 @@ func (b *BillingCreditGrantResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCreditGrantResponseData) String() string {
-	if len(b.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(b); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", b)
-}
-
-type BillingPlanCreditGrantResponseData struct {
-	CreatedAt    time.Time `json:"created_at" url:"created_at"`
-	CreditAmount int       `json:"credit_amount" url:"credit_amount"`
-	CreditID     string    `json:"credit_id" url:"credit_id"`
-	ID           string    `json:"id" url:"id"`
-	PlanID       string    `json:"plan_id" url:"plan_id"`
-	PlanName     string    `json:"plan_name" url:"plan_name"`
-	ResetCadence string    `json:"reset_cadence" url:"reset_cadence"`
-	ResetStart   string    `json:"reset_start" url:"reset_start"`
-	UpdatedAt    time.Time `json:"updated_at" url:"updated_at"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetCreatedAt() time.Time {
-	if b == nil {
-		return time.Time{}
-	}
-	return b.CreatedAt
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetCreditAmount() int {
-	if b == nil {
-		return 0
-	}
-	return b.CreditAmount
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetCreditID() string {
-	if b == nil {
-		return ""
-	}
-	return b.CreditID
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetID() string {
-	if b == nil {
-		return ""
-	}
-	return b.ID
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetPlanID() string {
-	if b == nil {
-		return ""
-	}
-	return b.PlanID
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetPlanName() string {
-	if b == nil {
-		return ""
-	}
-	return b.PlanName
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetResetCadence() string {
-	if b == nil {
-		return ""
-	}
-	return b.ResetCadence
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetResetStart() string {
-	if b == nil {
-		return ""
-	}
-	return b.ResetStart
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetUpdatedAt() time.Time {
-	if b == nil {
-		return time.Time{}
-	}
-	return b.UpdatedAt
-}
-
-func (b *BillingPlanCreditGrantResponseData) GetExtraProperties() map[string]interface{} {
-	return b.extraProperties
-}
-
-func (b *BillingPlanCreditGrantResponseData) UnmarshalJSON(data []byte) error {
-	type embed BillingPlanCreditGrantResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*b),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*b = BillingPlanCreditGrantResponseData(unmarshaler.embed)
-	b.CreatedAt = unmarshaler.CreatedAt.Time()
-	b.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *b)
-	if err != nil {
-		return err
-	}
-	b.extraProperties = extraProperties
-	b.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (b *BillingPlanCreditGrantResponseData) MarshalJSON() ([]byte, error) {
-	type embed BillingPlanCreditGrantResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*b),
-		CreatedAt: internal.NewDateTime(b.CreatedAt),
-		UpdatedAt: internal.NewDateTime(b.UpdatedAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (b *BillingPlanCreditGrantResponseData) String() string {
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -1211,6 +1087,59 @@ func (c *CreateBillingCreditResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreateBillingPlanCreditGrantRequestBodyExpiryType string
+
+const (
+	CreateBillingPlanCreditGrantRequestBodyExpiryTypeDuration               CreateBillingPlanCreditGrantRequestBodyExpiryType = "duration"
+	CreateBillingPlanCreditGrantRequestBodyExpiryTypeNoExpiry               CreateBillingPlanCreditGrantRequestBodyExpiryType = "no_expiry"
+	CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfTrial             CreateBillingPlanCreditGrantRequestBodyExpiryType = "end_of_trial"
+	CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfBillingPeriod     CreateBillingPlanCreditGrantRequestBodyExpiryType = "end_of_billing_period"
+	CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfNextBillingPeriod CreateBillingPlanCreditGrantRequestBodyExpiryType = "end_of_next_billing_period"
+)
+
+func NewCreateBillingPlanCreditGrantRequestBodyExpiryTypeFromString(s string) (CreateBillingPlanCreditGrantRequestBodyExpiryType, error) {
+	switch s {
+	case "duration":
+		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeDuration, nil
+	case "no_expiry":
+		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeNoExpiry, nil
+	case "end_of_trial":
+		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfTrial, nil
+	case "end_of_billing_period":
+		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfBillingPeriod, nil
+	case "end_of_next_billing_period":
+		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfNextBillingPeriod, nil
+	}
+	var t CreateBillingPlanCreditGrantRequestBodyExpiryType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateBillingPlanCreditGrantRequestBodyExpiryType) Ptr() *CreateBillingPlanCreditGrantRequestBodyExpiryType {
+	return &c
+}
+
+type CreateBillingPlanCreditGrantRequestBodyExpiryUnit string
+
+const (
+	CreateBillingPlanCreditGrantRequestBodyExpiryUnitDays           CreateBillingPlanCreditGrantRequestBodyExpiryUnit = "days"
+	CreateBillingPlanCreditGrantRequestBodyExpiryUnitBillingPeriods CreateBillingPlanCreditGrantRequestBodyExpiryUnit = "billing_periods"
+)
+
+func NewCreateBillingPlanCreditGrantRequestBodyExpiryUnitFromString(s string) (CreateBillingPlanCreditGrantRequestBodyExpiryUnit, error) {
+	switch s {
+	case "days":
+		return CreateBillingPlanCreditGrantRequestBodyExpiryUnitDays, nil
+	case "billing_periods":
+		return CreateBillingPlanCreditGrantRequestBodyExpiryUnitBillingPeriods, nil
+	}
+	var t CreateBillingPlanCreditGrantRequestBodyExpiryUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateBillingPlanCreditGrantRequestBodyExpiryUnit) Ptr() *CreateBillingPlanCreditGrantRequestBodyExpiryUnit {
+	return &c
+}
+
 type CreateBillingPlanCreditGrantRequestBodyResetCadence string
 
 const (
@@ -1258,6 +1187,28 @@ func NewCreateBillingPlanCreditGrantRequestBodyResetStartFromString(s string) (C
 }
 
 func (c CreateBillingPlanCreditGrantRequestBodyResetStart) Ptr() *CreateBillingPlanCreditGrantRequestBodyResetStart {
+	return &c
+}
+
+type CreateBillingPlanCreditGrantRequestBodyResetType string
+
+const (
+	CreateBillingPlanCreditGrantRequestBodyResetTypePlanPeriod CreateBillingPlanCreditGrantRequestBodyResetType = "plan_period"
+	CreateBillingPlanCreditGrantRequestBodyResetTypeNoReset    CreateBillingPlanCreditGrantRequestBodyResetType = "no_reset"
+)
+
+func NewCreateBillingPlanCreditGrantRequestBodyResetTypeFromString(s string) (CreateBillingPlanCreditGrantRequestBodyResetType, error) {
+	switch s {
+	case "plan_period":
+		return CreateBillingPlanCreditGrantRequestBodyResetTypePlanPeriod, nil
+	case "no_reset":
+		return CreateBillingPlanCreditGrantRequestBodyResetTypeNoReset, nil
+	}
+	var t CreateBillingPlanCreditGrantRequestBodyResetType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateBillingPlanCreditGrantRequestBodyResetType) Ptr() *CreateBillingPlanCreditGrantRequestBodyResetType {
 	return &c
 }
 
@@ -1316,25 +1267,109 @@ func (c *CreateBillingPlanCreditGrantResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreateCompanyCreditGrantExpiryType string
+
+const (
+	CreateCompanyCreditGrantExpiryTypeDuration               CreateCompanyCreditGrantExpiryType = "duration"
+	CreateCompanyCreditGrantExpiryTypeNoExpiry               CreateCompanyCreditGrantExpiryType = "no_expiry"
+	CreateCompanyCreditGrantExpiryTypeEndOfTrial             CreateCompanyCreditGrantExpiryType = "end_of_trial"
+	CreateCompanyCreditGrantExpiryTypeEndOfBillingPeriod     CreateCompanyCreditGrantExpiryType = "end_of_billing_period"
+	CreateCompanyCreditGrantExpiryTypeEndOfNextBillingPeriod CreateCompanyCreditGrantExpiryType = "end_of_next_billing_period"
+)
+
+func NewCreateCompanyCreditGrantExpiryTypeFromString(s string) (CreateCompanyCreditGrantExpiryType, error) {
+	switch s {
+	case "duration":
+		return CreateCompanyCreditGrantExpiryTypeDuration, nil
+	case "no_expiry":
+		return CreateCompanyCreditGrantExpiryTypeNoExpiry, nil
+	case "end_of_trial":
+		return CreateCompanyCreditGrantExpiryTypeEndOfTrial, nil
+	case "end_of_billing_period":
+		return CreateCompanyCreditGrantExpiryTypeEndOfBillingPeriod, nil
+	case "end_of_next_billing_period":
+		return CreateCompanyCreditGrantExpiryTypeEndOfNextBillingPeriod, nil
+	}
+	var t CreateCompanyCreditGrantExpiryType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateCompanyCreditGrantExpiryType) Ptr() *CreateCompanyCreditGrantExpiryType {
+	return &c
+}
+
+type CreateCompanyCreditGrantExpiryUnit string
+
+const (
+	CreateCompanyCreditGrantExpiryUnitDays           CreateCompanyCreditGrantExpiryUnit = "days"
+	CreateCompanyCreditGrantExpiryUnitBillingPeriods CreateCompanyCreditGrantExpiryUnit = "billing_periods"
+)
+
+func NewCreateCompanyCreditGrantExpiryUnitFromString(s string) (CreateCompanyCreditGrantExpiryUnit, error) {
+	switch s {
+	case "days":
+		return CreateCompanyCreditGrantExpiryUnitDays, nil
+	case "billing_periods":
+		return CreateCompanyCreditGrantExpiryUnitBillingPeriods, nil
+	}
+	var t CreateCompanyCreditGrantExpiryUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateCompanyCreditGrantExpiryUnit) Ptr() *CreateCompanyCreditGrantExpiryUnit {
+	return &c
+}
+
 type CreateCreditBundleRequestBodyExpiryType string
 
 const (
-	CreateCreditBundleRequestBodyExpiryTypeDaysFromPurchase CreateCreditBundleRequestBodyExpiryType = "days_from_purchase"
-	CreateCreditBundleRequestBodyExpiryTypeNoExpiry         CreateCreditBundleRequestBodyExpiryType = "no_expiry"
+	CreateCreditBundleRequestBodyExpiryTypeDuration               CreateCreditBundleRequestBodyExpiryType = "duration"
+	CreateCreditBundleRequestBodyExpiryTypeNoExpiry               CreateCreditBundleRequestBodyExpiryType = "no_expiry"
+	CreateCreditBundleRequestBodyExpiryTypeEndOfTrial             CreateCreditBundleRequestBodyExpiryType = "end_of_trial"
+	CreateCreditBundleRequestBodyExpiryTypeEndOfBillingPeriod     CreateCreditBundleRequestBodyExpiryType = "end_of_billing_period"
+	CreateCreditBundleRequestBodyExpiryTypeEndOfNextBillingPeriod CreateCreditBundleRequestBodyExpiryType = "end_of_next_billing_period"
 )
 
 func NewCreateCreditBundleRequestBodyExpiryTypeFromString(s string) (CreateCreditBundleRequestBodyExpiryType, error) {
 	switch s {
-	case "days_from_purchase":
-		return CreateCreditBundleRequestBodyExpiryTypeDaysFromPurchase, nil
+	case "duration":
+		return CreateCreditBundleRequestBodyExpiryTypeDuration, nil
 	case "no_expiry":
 		return CreateCreditBundleRequestBodyExpiryTypeNoExpiry, nil
+	case "end_of_trial":
+		return CreateCreditBundleRequestBodyExpiryTypeEndOfTrial, nil
+	case "end_of_billing_period":
+		return CreateCreditBundleRequestBodyExpiryTypeEndOfBillingPeriod, nil
+	case "end_of_next_billing_period":
+		return CreateCreditBundleRequestBodyExpiryTypeEndOfNextBillingPeriod, nil
 	}
 	var t CreateCreditBundleRequestBodyExpiryType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
 func (c CreateCreditBundleRequestBodyExpiryType) Ptr() *CreateCreditBundleRequestBodyExpiryType {
+	return &c
+}
+
+type CreateCreditBundleRequestBodyExpiryUnit string
+
+const (
+	CreateCreditBundleRequestBodyExpiryUnitDays           CreateCreditBundleRequestBodyExpiryUnit = "days"
+	CreateCreditBundleRequestBodyExpiryUnitBillingPeriods CreateCreditBundleRequestBodyExpiryUnit = "billing_periods"
+)
+
+func NewCreateCreditBundleRequestBodyExpiryUnitFromString(s string) (CreateCreditBundleRequestBodyExpiryUnit, error) {
+	switch s {
+	case "days":
+		return CreateCreditBundleRequestBodyExpiryUnitDays, nil
+	case "billing_periods":
+		return CreateCreditBundleRequestBodyExpiryUnitBillingPeriods, nil
+	}
+	var t CreateCreditBundleRequestBodyExpiryUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateCreditBundleRequestBodyExpiryUnit) Ptr() *CreateCreditBundleRequestBodyExpiryUnit {
 	return &c
 }
 
@@ -1764,7 +1799,6 @@ func (l *ListBillingCreditsParams) String() string {
 }
 
 type ListBillingCreditsResponse struct {
-	// The returned resources
 	Data []*BillingCreditResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListBillingCreditsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -1909,7 +1943,6 @@ func (l *ListBillingPlanCreditGrantsParams) String() string {
 }
 
 type ListBillingPlanCreditGrantsResponse struct {
-	// The returned resources
 	Data []*BillingPlanCreditGrantResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListBillingPlanCreditGrantsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2096,7 +2129,6 @@ func (l ListCompanyGrantsRequestOrder) Ptr() *ListCompanyGrantsRequestOrder {
 }
 
 type ListCompanyGrantsResponse struct {
-	// The returned resources
 	Data []*BillingCreditGrantResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListCompanyGrantsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2306,7 +2338,6 @@ func (l ListCreditBundlesRequestStatus) Ptr() *ListCreditBundlesRequestStatus {
 }
 
 type ListCreditBundlesResponse struct {
-	// The returned resources
 	Data []*BillingCreditBundleResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListCreditBundlesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2457,7 +2488,6 @@ func (l *ListGrantsForCreditParams) String() string {
 }
 
 type ListGrantsForCreditResponse struct {
-	// The returned resources
 	Data []*BillingCreditGrantResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListGrantsForCreditParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2678,22 +2708,53 @@ func (u *UpdateBillingCreditResponse) String() string {
 type UpdateCreditBundleDetailsRequestBodyExpiryType string
 
 const (
-	UpdateCreditBundleDetailsRequestBodyExpiryTypeDaysFromPurchase UpdateCreditBundleDetailsRequestBodyExpiryType = "days_from_purchase"
-	UpdateCreditBundleDetailsRequestBodyExpiryTypeNoExpiry         UpdateCreditBundleDetailsRequestBodyExpiryType = "no_expiry"
+	UpdateCreditBundleDetailsRequestBodyExpiryTypeDuration               UpdateCreditBundleDetailsRequestBodyExpiryType = "duration"
+	UpdateCreditBundleDetailsRequestBodyExpiryTypeNoExpiry               UpdateCreditBundleDetailsRequestBodyExpiryType = "no_expiry"
+	UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfTrial             UpdateCreditBundleDetailsRequestBodyExpiryType = "end_of_trial"
+	UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfBillingPeriod     UpdateCreditBundleDetailsRequestBodyExpiryType = "end_of_billing_period"
+	UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfNextBillingPeriod UpdateCreditBundleDetailsRequestBodyExpiryType = "end_of_next_billing_period"
 )
 
 func NewUpdateCreditBundleDetailsRequestBodyExpiryTypeFromString(s string) (UpdateCreditBundleDetailsRequestBodyExpiryType, error) {
 	switch s {
-	case "days_from_purchase":
-		return UpdateCreditBundleDetailsRequestBodyExpiryTypeDaysFromPurchase, nil
+	case "duration":
+		return UpdateCreditBundleDetailsRequestBodyExpiryTypeDuration, nil
 	case "no_expiry":
 		return UpdateCreditBundleDetailsRequestBodyExpiryTypeNoExpiry, nil
+	case "end_of_trial":
+		return UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfTrial, nil
+	case "end_of_billing_period":
+		return UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfBillingPeriod, nil
+	case "end_of_next_billing_period":
+		return UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfNextBillingPeriod, nil
 	}
 	var t UpdateCreditBundleDetailsRequestBodyExpiryType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
 func (u UpdateCreditBundleDetailsRequestBodyExpiryType) Ptr() *UpdateCreditBundleDetailsRequestBodyExpiryType {
+	return &u
+}
+
+type UpdateCreditBundleDetailsRequestBodyExpiryUnit string
+
+const (
+	UpdateCreditBundleDetailsRequestBodyExpiryUnitDays           UpdateCreditBundleDetailsRequestBodyExpiryUnit = "days"
+	UpdateCreditBundleDetailsRequestBodyExpiryUnitBillingPeriods UpdateCreditBundleDetailsRequestBodyExpiryUnit = "billing_periods"
+)
+
+func NewUpdateCreditBundleDetailsRequestBodyExpiryUnitFromString(s string) (UpdateCreditBundleDetailsRequestBodyExpiryUnit, error) {
+	switch s {
+	case "days":
+		return UpdateCreditBundleDetailsRequestBodyExpiryUnitDays, nil
+	case "billing_periods":
+		return UpdateCreditBundleDetailsRequestBodyExpiryUnitBillingPeriods, nil
+	}
+	var t UpdateCreditBundleDetailsRequestBodyExpiryUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateCreditBundleDetailsRequestBodyExpiryUnit) Ptr() *UpdateCreditBundleDetailsRequestBodyExpiryUnit {
 	return &u
 }
 
@@ -2780,6 +2841,7 @@ const (
 	ZeroOutGrantRequestBodyReasonPlanChange      ZeroOutGrantRequestBodyReason = "plan_change"
 	ZeroOutGrantRequestBodyReasonManual          ZeroOutGrantRequestBodyReason = "manual"
 	ZeroOutGrantRequestBodyReasonPlanPeriodReset ZeroOutGrantRequestBodyReason = "plan_period_reset"
+	ZeroOutGrantRequestBodyReasonExpired         ZeroOutGrantRequestBodyReason = "expired"
 )
 
 func NewZeroOutGrantRequestBodyReasonFromString(s string) (ZeroOutGrantRequestBodyReason, error) {
@@ -2790,6 +2852,8 @@ func NewZeroOutGrantRequestBodyReasonFromString(s string) (ZeroOutGrantRequestBo
 		return ZeroOutGrantRequestBodyReasonManual, nil
 	case "plan_period_reset":
 		return ZeroOutGrantRequestBodyReasonPlanPeriodReset, nil
+	case "expired":
+		return ZeroOutGrantRequestBodyReasonExpired, nil
 	}
 	var t ZeroOutGrantRequestBodyReason
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -2871,6 +2935,7 @@ type UpdateBillingCreditRequestBody struct {
 type UpdateCreditBundleDetailsRequestBody struct {
 	BundleName          string                                          `json:"bundle_name" url:"-"`
 	ExpiryType          *UpdateCreditBundleDetailsRequestBodyExpiryType `json:"expiry_type,omitempty" url:"-"`
+	ExpiryUnit          *UpdateCreditBundleDetailsRequestBodyExpiryUnit `json:"expiry_unit,omitempty" url:"-"`
 	ExpiryUnitCount     *int                                            `json:"expiry_unit_count,omitempty" url:"-"`
 	PricePerUnit        int                                             `json:"price_per_unit" url:"-"`
 	PricePerUnitDecimal *string                                         `json:"price_per_unit_decimal,omitempty" url:"-"`

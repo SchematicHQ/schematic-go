@@ -35,6 +35,8 @@ type CountCompaniesForAdvancedFilterRequest struct {
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
 	// Filter companies by one or more feature IDs (each ID starts with feat_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
+	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
+	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
 	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
 	SubscriptionStatuses []*string `json:"-" url:"subscription_statuses,omitempty"`
 	// Filter companies by one or more subscription types (paid, free, trial)
@@ -51,7 +53,7 @@ type CountCompaniesForAdvancedFilterRequest struct {
 	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
 	// Direction to sort by (asc or desc)
 	SortOrderDirection *CountCompaniesForAdvancedFilterRequestSortOrderDirection `json:"-" url:"sort_order_direction,omitempty"`
-	// Select the display columns to return (e.g. plan, subscription, users, last_seen)
+	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
 	DisplayProperties []*string `json:"-" url:"display_properties,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
@@ -177,6 +179,8 @@ type ListCompaniesForAdvancedFilterRequest struct {
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
 	// Filter companies by one or more feature IDs (each ID starts with feat_)
 	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
+	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
+	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
 	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
 	SubscriptionStatuses []*string `json:"-" url:"subscription_statuses,omitempty"`
 	// Filter companies by one or more subscription types (paid, free, trial)
@@ -193,7 +197,7 @@ type ListCompaniesForAdvancedFilterRequest struct {
 	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
 	// Direction to sort by (asc or desc)
 	SortOrderDirection *ListCompaniesForAdvancedFilterRequestSortOrderDirection `json:"-" url:"sort_order_direction,omitempty"`
-	// Select the display columns to return (e.g. plan, subscription, users, last_seen)
+	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
 	DisplayProperties []*string `json:"-" url:"display_properties,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
@@ -578,6 +582,108 @@ func (c *CompanyViewWithFeatureUsageResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreditUsageResponseData struct {
+	CreditConsumptionRate *float64             `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
+	CreditGrantCounts     map[string]float64   `json:"credit_grant_counts,omitempty" url:"credit_grant_counts,omitempty"`
+	CreditGrantDetails    []*CreditGrantDetail `json:"credit_grant_details,omitempty" url:"credit_grant_details,omitempty"`
+	CreditRemaining       *float64             `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
+	CreditTotal           *float64             `json:"credit_total,omitempty" url:"credit_total,omitempty"`
+	CreditTypeIcon        *string              `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
+	CreditTypeName        *string              `json:"credit_type_name,omitempty" url:"credit_type_name,omitempty"`
+	CreditUsed            *float64             `json:"credit_used,omitempty" url:"credit_used,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditUsageResponseData) GetCreditConsumptionRate() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditConsumptionRate
+}
+
+func (c *CreditUsageResponseData) GetCreditGrantCounts() map[string]float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditGrantCounts
+}
+
+func (c *CreditUsageResponseData) GetCreditGrantDetails() []*CreditGrantDetail {
+	if c == nil {
+		return nil
+	}
+	return c.CreditGrantDetails
+}
+
+func (c *CreditUsageResponseData) GetCreditRemaining() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditRemaining
+}
+
+func (c *CreditUsageResponseData) GetCreditTotal() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditTotal
+}
+
+func (c *CreditUsageResponseData) GetCreditTypeIcon() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditTypeIcon
+}
+
+func (c *CreditUsageResponseData) GetCreditTypeName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditTypeName
+}
+
+func (c *CreditUsageResponseData) GetCreditUsed() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditUsed
+}
+
+func (c *CreditUsageResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditUsageResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditUsageResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditUsageResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditUsageResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 type CrmDealLineItem struct {
 	BillingFrequency   string    `json:"billing_frequency" url:"billing_frequency"`
 	CreatedAt          time.Time `json:"created_at" url:"created_at"`
@@ -791,18 +897,39 @@ func (e *EntityTraitValue) String() string {
 }
 
 type FeatureUsageDataResponseData struct {
-	EntitlementSource    string `json:"entitlement_source" url:"entitlement_source"`
-	EntitlementValueType string `json:"entitlement_value_type" url:"entitlement_value_type"`
-	FeatureID            string `json:"feature_id" url:"feature_id"`
-	FeatureName          string `json:"feature_name" url:"feature_name"`
-	FeatureType          string `json:"feature_type" url:"feature_type"`
-	HardLimit            string `json:"hard_limit" url:"hard_limit"`
-	HasAccess            bool   `json:"has_access" url:"has_access"`
-	SoftLimit            string `json:"soft_limit" url:"soft_limit"`
-	Usage                string `json:"usage" url:"usage"`
+	CreditTypeID           *string                  `json:"credit_type_id,omitempty" url:"credit_type_id,omitempty"`
+	CreditUsage            *CreditUsageResponseData `json:"credit_usage,omitempty" url:"credit_usage,omitempty"`
+	EntitlementSource      string                   `json:"entitlement_source" url:"entitlement_source"`
+	EntitlementValueType   string                   `json:"entitlement_value_type" url:"entitlement_value_type"`
+	FeatureID              string                   `json:"feature_id" url:"feature_id"`
+	FeatureName            string                   `json:"feature_name" url:"feature_name"`
+	FeatureType            string                   `json:"feature_type" url:"feature_type"`
+	HardLimit              string                   `json:"hard_limit" url:"hard_limit"`
+	HasAccess              bool                     `json:"has_access" url:"has_access"`
+	MetricResetAt          *time.Time               `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
+	MonthlyUsageBasedPrice *BillingPriceView        `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
+	PriceBehavior          *string                  `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	SoftLimit              string                   `json:"soft_limit" url:"soft_limit"`
+	Usage                  string                   `json:"usage" url:"usage"`
+	ValueNumeric           *int                     `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	YearlyUsageBasedPrice  *BillingPriceView        `json:"yearly_usage_based_price,omitempty" url:"yearly_usage_based_price,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (f *FeatureUsageDataResponseData) GetCreditTypeID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.CreditTypeID
+}
+
+func (f *FeatureUsageDataResponseData) GetCreditUsage() *CreditUsageResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.CreditUsage
 }
 
 func (f *FeatureUsageDataResponseData) GetEntitlementSource() string {
@@ -854,6 +981,27 @@ func (f *FeatureUsageDataResponseData) GetHasAccess() bool {
 	return f.HasAccess
 }
 
+func (f *FeatureUsageDataResponseData) GetMetricResetAt() *time.Time {
+	if f == nil {
+		return nil
+	}
+	return f.MetricResetAt
+}
+
+func (f *FeatureUsageDataResponseData) GetMonthlyUsageBasedPrice() *BillingPriceView {
+	if f == nil {
+		return nil
+	}
+	return f.MonthlyUsageBasedPrice
+}
+
+func (f *FeatureUsageDataResponseData) GetPriceBehavior() *string {
+	if f == nil {
+		return nil
+	}
+	return f.PriceBehavior
+}
+
 func (f *FeatureUsageDataResponseData) GetSoftLimit() string {
 	if f == nil {
 		return ""
@@ -868,17 +1016,37 @@ func (f *FeatureUsageDataResponseData) GetUsage() string {
 	return f.Usage
 }
 
+func (f *FeatureUsageDataResponseData) GetValueNumeric() *int {
+	if f == nil {
+		return nil
+	}
+	return f.ValueNumeric
+}
+
+func (f *FeatureUsageDataResponseData) GetYearlyUsageBasedPrice() *BillingPriceView {
+	if f == nil {
+		return nil
+	}
+	return f.YearlyUsageBasedPrice
+}
+
 func (f *FeatureUsageDataResponseData) GetExtraProperties() map[string]interface{} {
 	return f.extraProperties
 }
 
 func (f *FeatureUsageDataResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler FeatureUsageDataResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed FeatureUsageDataResponseData
+	var unmarshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed: embed(*f),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*f = FeatureUsageDataResponseData(value)
+	*f = FeatureUsageDataResponseData(unmarshaler.embed)
+	f.MetricResetAt = unmarshaler.MetricResetAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *f)
 	if err != nil {
 		return err
@@ -886,6 +1054,18 @@ func (f *FeatureUsageDataResponseData) UnmarshalJSON(data []byte) error {
 	f.extraProperties = extraProperties
 	f.rawJSON = json.RawMessage(data)
 	return nil
+}
+
+func (f *FeatureUsageDataResponseData) MarshalJSON() ([]byte, error) {
+	type embed FeatureUsageDataResponseData
+	var marshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed:         embed(*f),
+		MetricResetAt: internal.NewOptionalDateTime(f.MetricResetAt),
+	}
+	return json.Marshal(marshaler)
 }
 
 func (f *FeatureUsageDataResponseData) String() string {
@@ -946,7 +1126,6 @@ func (k *KeysRequestBody) String() string {
 	return fmt.Sprintf("%#v", k)
 }
 
-// The updated resource
 type PlanTraitResponseData struct {
 	AccountID     string    `json:"account_id" url:"account_id"`
 	CreatedAt     time.Time `json:"created_at" url:"created_at"`
@@ -1077,6 +1256,60 @@ func (p *PlanTraitResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+type UpdatePlanTraitTraitRequestBody struct {
+	TraitID    string `json:"trait_id" url:"trait_id"`
+	TraitValue string `json:"trait_value" url:"trait_value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) GetTraitID() string {
+	if u == nil {
+		return ""
+	}
+	return u.TraitID
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) GetTraitValue() string {
+	if u == nil {
+		return ""
+	}
+	return u.TraitValue
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePlanTraitTraitRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdatePlanTraitTraitRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }
 
 type UpsertCompanyRequestBody struct {
@@ -1414,7 +1647,9 @@ func (u *UpsertUserRequestBody) String() string {
 
 // Input parameters
 type CountCompaniesForAdvancedFilterParams struct {
-	// Select the display columns to return (e.g. plan, subscription, users, last_seen)
+	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
+	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
+	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
 	DisplayProperties []string `json:"display_properties,omitempty" url:"display_properties,omitempty"`
 	// Filter companies by one or more feature IDs (each ID starts with feat_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
@@ -1445,6 +1680,13 @@ type CountCompaniesForAdvancedFilterParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CountCompaniesForAdvancedFilterParams) GetCreditTypeIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditTypeIDs
 }
 
 func (c *CountCompaniesForAdvancedFilterParams) GetDisplayProperties() []string {
@@ -3197,7 +3439,6 @@ func (g *GetActiveCompanySubscriptionParams) String() string {
 }
 
 type GetActiveCompanySubscriptionResponse struct {
-	// The returned resources
 	Data []*CompanySubscriptionResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *GetActiveCompanySubscriptionParams `json:"params,omitempty" url:"params,omitempty"`
@@ -3326,7 +3567,6 @@ func (g *GetActiveDealsParams) String() string {
 }
 
 type GetActiveDealsResponse struct {
-	// The returned resources
 	Data []*CompanyCrmDealsResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *GetActiveDealsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -3565,7 +3805,6 @@ func (g *GetEntityTraitValuesParams) String() string {
 }
 
 type GetEntityTraitValuesResponse struct {
-	// The returned resources
 	Data []*EntityTraitValue `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *GetEntityTraitValuesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -3842,7 +4081,9 @@ func (g *GetUserResponse) String() string {
 
 // Input parameters
 type ListCompaniesForAdvancedFilterParams struct {
-	// Select the display columns to return (e.g. plan, subscription, users, last_seen)
+	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
+	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
+	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
 	DisplayProperties []string `json:"display_properties,omitempty" url:"display_properties,omitempty"`
 	// Filter companies by one or more feature IDs (each ID starts with feat_)
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
@@ -3873,6 +4114,13 @@ type ListCompaniesForAdvancedFilterParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (l *ListCompaniesForAdvancedFilterParams) GetCreditTypeIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.CreditTypeIDs
 }
 
 func (l *ListCompaniesForAdvancedFilterParams) GetDisplayProperties() []string {
@@ -4029,7 +4277,6 @@ func (l ListCompaniesForAdvancedFilterRequestSortOrderDirection) Ptr() *ListComp
 }
 
 type ListCompaniesForAdvancedFilterResponse struct {
-	// The returned resources
 	Data []*CompanyViewWithFeatureUsageResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListCompaniesForAdvancedFilterParams `json:"params,omitempty" url:"params,omitempty"`
@@ -4219,7 +4466,6 @@ func (l *ListCompaniesParams) String() string {
 }
 
 type ListCompaniesResponse struct {
-	// The returned resources
 	Data []*CompanyDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListCompaniesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -4348,7 +4594,6 @@ func (l *ListCompanyMembershipsParams) String() string {
 }
 
 type ListCompanyMembershipsResponse struct {
-	// The returned resources
 	Data []*CompanyMembershipDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListCompanyMembershipsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -4507,7 +4752,6 @@ func (l ListEntityKeyDefinitionsRequestEntityType) Ptr() *ListEntityKeyDefinitio
 }
 
 type ListEntityKeyDefinitionsResponse struct {
-	// The returned resources
 	Data []*EntityKeyDefinitionResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListEntityKeyDefinitionsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -4730,7 +4974,6 @@ func (l ListEntityTraitDefinitionsRequestTraitType) Ptr() *ListEntityTraitDefini
 }
 
 type ListEntityTraitDefinitionsResponse struct {
-	// The returned resources
 	Data []*EntityTraitDefinitionResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListEntityTraitDefinitionsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -4931,7 +5174,6 @@ func (l *ListPlanTraitsParams) String() string {
 }
 
 type ListPlanTraitsResponse struct {
-	// The returned resources
 	Data []*PlanTraitResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListPlanTraitsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -5080,7 +5322,6 @@ func (l *ListUsersParams) String() string {
 }
 
 type ListUsersResponse struct {
-	// The returned resources
 	Data []*UserDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListUsersParams `json:"params,omitempty" url:"params,omitempty"`
@@ -5483,6 +5724,61 @@ func (u *UpdatePlanTraitResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
+type UpdatePlanTraitsBulkResponse struct {
+	Data []*PlanTraitResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatePlanTraitsBulkResponse) GetData() []*PlanTraitResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdatePlanTraitsBulkResponse) GetParams() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpdatePlanTraitsBulkResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdatePlanTraitsBulkResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePlanTraitsBulkResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdatePlanTraitsBulkResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdatePlanTraitsBulkResponse) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
 type UpsertCompanyResponse struct {
 	Data *CompanyDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -5711,4 +6007,9 @@ type UpdateEntityTraitDefinitionRequestBody struct {
 type UpdatePlanTraitRequestBody struct {
 	PlanID     string `json:"plan_id" url:"-"`
 	TraitValue string `json:"trait_value" url:"-"`
+}
+
+type UpdatePlanTraitBulkRequestBody struct {
+	PlanID string                             `json:"plan_id" url:"-"`
+	Traits []*UpdatePlanTraitTraitRequestBody `json:"traits,omitempty" url:"-"`
 }

@@ -13,15 +13,88 @@ type CreatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
 	AddOnIDs                   []string                `json:"add_on_ids,omitempty" url:"-"`
+	CheckoutCollectAddress     bool                    `json:"checkout_collect_address" url:"-"`
+	CheckoutCollectEmail       bool                    `json:"checkout_collect_email" url:"-"`
+	CheckoutCollectPhone       bool                    `json:"checkout_collect_phone" url:"-"`
 	CustomPlanConfig           *CustomPlanConfig       `json:"custom_plan_config,omitempty" url:"-"`
 	CustomPlanID               *string                 `json:"custom_plan_id,omitempty" url:"-"`
 	DefaultPlanID              *string                 `json:"default_plan_id,omitempty" url:"-"`
+	EnableTaxCollection        bool                    `json:"enable_tax_collection" url:"-"`
+	FallbackPlanID             *string                 `json:"fallback_plan_id,omitempty" url:"-"`
+	InitialPlanID              *string                 `json:"initial_plan_id,omitempty" url:"-"`
+	InitialPlanPriceID         *string                 `json:"initial_plan_price_id,omitempty" url:"-"`
 	OrderedAddOns              []*OrderedPlansInGroup  `json:"ordered_add_ons,omitempty" url:"-"`
 	OrderedBundleList          []*PlanGroupBundleOrder `json:"ordered_bundle_list,omitempty" url:"-"`
 	OrderedPlans               []*OrderedPlansInGroup  `json:"ordered_plans,omitempty" url:"-"`
+	ShowCredits                bool                    `json:"show_credits" url:"-"`
 	ShowPeriodToggle           bool                    `json:"show_period_toggle" url:"-"`
+	ShowZeroPriceAsFree        bool                    `json:"show_zero_price_as_free" url:"-"`
 	TrialDays                  *int                    `json:"trial_days,omitempty" url:"-"`
+	TrialExpiryPlanID          *string                 `json:"trial_expiry_plan_id,omitempty" url:"-"`
+	TrialExpiryPlanPriceID     *string                 `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
 	TrialPaymentMethodRequired *bool                   `json:"trial_payment_method_required,omitempty" url:"-"`
+}
+
+type CheckoutSettingsResponseData struct {
+	CollectAddress bool `json:"collect_address" url:"collect_address"`
+	CollectEmail   bool `json:"collect_email" url:"collect_email"`
+	CollectPhone   bool `json:"collect_phone" url:"collect_phone"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CheckoutSettingsResponseData) GetCollectAddress() bool {
+	if c == nil {
+		return false
+	}
+	return c.CollectAddress
+}
+
+func (c *CheckoutSettingsResponseData) GetCollectEmail() bool {
+	if c == nil {
+		return false
+	}
+	return c.CollectEmail
+}
+
+func (c *CheckoutSettingsResponseData) GetCollectPhone() bool {
+	if c == nil {
+		return false
+	}
+	return c.CollectPhone
+}
+
+func (c *CheckoutSettingsResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CheckoutSettingsResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CheckoutSettingsResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CheckoutSettingsResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CheckoutSettingsResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 type CompatiblePlansResponseData struct {
@@ -348,20 +421,33 @@ func (p *PlanGroupBundleOrder) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
-// The returned resource
 type PlanGroupDetailResponseData struct {
 	AddOns                     []*PlanGroupPlanDetailResponseData `json:"add_ons,omitempty" url:"add_ons,omitempty"`
+	CheckoutSettings           *CheckoutSettingsResponseData      `json:"checkout_settings,omitempty" url:"checkout_settings,omitempty"`
 	CustomPlanConfig           *CustomPlanViewConfigResponseData  `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
 	CustomPlanID               *string                            `json:"custom_plan_id,omitempty" url:"custom_plan_id,omitempty"`
 	DefaultPlan                *PlanGroupPlanDetailResponseData   `json:"default_plan,omitempty" url:"default_plan,omitempty"`
 	DefaultPlanID              *string                            `json:"default_plan_id,omitempty" url:"default_plan_id,omitempty"`
+	FallbackPlan               *PlanGroupPlanDetailResponseData   `json:"fallback_plan,omitempty" url:"fallback_plan,omitempty"`
+	FallbackPlanID             *string                            `json:"fallback_plan_id,omitempty" url:"fallback_plan_id,omitempty"`
 	ID                         string                             `json:"id" url:"id"`
+	InitialPlan                *PlanGroupPlanDetailResponseData   `json:"initial_plan,omitempty" url:"initial_plan,omitempty"`
+	InitialPlanID              *string                            `json:"initial_plan_id,omitempty" url:"initial_plan_id,omitempty"`
+	InitialPlanPrice           *BillingPriceResponseData          `json:"initial_plan_price,omitempty" url:"initial_plan_price,omitempty"`
+	InitialPlanPriceID         *string                            `json:"initial_plan_price_id,omitempty" url:"initial_plan_price_id,omitempty"`
 	OrderedAddOnList           []*PlanGroupPlanEntitlementsOrder  `json:"ordered_add_on_list,omitempty" url:"ordered_add_on_list,omitempty"`
 	OrderedBundleList          []*PlanGroupBundleOrder            `json:"ordered_bundle_list,omitempty" url:"ordered_bundle_list,omitempty"`
 	OrderedPlanList            []*PlanGroupPlanEntitlementsOrder  `json:"ordered_plan_list,omitempty" url:"ordered_plan_list,omitempty"`
 	Plans                      []*PlanGroupPlanDetailResponseData `json:"plans,omitempty" url:"plans,omitempty"`
+	ShowCredits                bool                               `json:"show_credits" url:"show_credits"`
 	ShowPeriodToggle           bool                               `json:"show_period_toggle" url:"show_period_toggle"`
+	ShowZeroPriceAsFree        bool                               `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
+	TaxCollectionEnabled       bool                               `json:"tax_collection_enabled" url:"tax_collection_enabled"`
 	TrialDays                  *int                               `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialExpiryPlan            *PlanGroupPlanDetailResponseData   `json:"trial_expiry_plan,omitempty" url:"trial_expiry_plan,omitempty"`
+	TrialExpiryPlanID          *string                            `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
+	TrialExpiryPlanPrice       *BillingPriceResponseData          `json:"trial_expiry_plan_price,omitempty" url:"trial_expiry_plan_price,omitempty"`
+	TrialExpiryPlanPriceID     *string                            `json:"trial_expiry_plan_price_id,omitempty" url:"trial_expiry_plan_price_id,omitempty"`
 	TrialPaymentMethodRequired *bool                              `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -373,6 +459,13 @@ func (p *PlanGroupDetailResponseData) GetAddOns() []*PlanGroupPlanDetailResponse
 		return nil
 	}
 	return p.AddOns
+}
+
+func (p *PlanGroupDetailResponseData) GetCheckoutSettings() *CheckoutSettingsResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.CheckoutSettings
 }
 
 func (p *PlanGroupDetailResponseData) GetCustomPlanConfig() *CustomPlanViewConfigResponseData {
@@ -403,11 +496,53 @@ func (p *PlanGroupDetailResponseData) GetDefaultPlanID() *string {
 	return p.DefaultPlanID
 }
 
+func (p *PlanGroupDetailResponseData) GetFallbackPlan() *PlanGroupPlanDetailResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.FallbackPlan
+}
+
+func (p *PlanGroupDetailResponseData) GetFallbackPlanID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.FallbackPlanID
+}
+
 func (p *PlanGroupDetailResponseData) GetID() string {
 	if p == nil {
 		return ""
 	}
 	return p.ID
+}
+
+func (p *PlanGroupDetailResponseData) GetInitialPlan() *PlanGroupPlanDetailResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.InitialPlan
+}
+
+func (p *PlanGroupDetailResponseData) GetInitialPlanID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.InitialPlanID
+}
+
+func (p *PlanGroupDetailResponseData) GetInitialPlanPrice() *BillingPriceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.InitialPlanPrice
+}
+
+func (p *PlanGroupDetailResponseData) GetInitialPlanPriceID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.InitialPlanPriceID
 }
 
 func (p *PlanGroupDetailResponseData) GetOrderedAddOnList() []*PlanGroupPlanEntitlementsOrder {
@@ -438,6 +573,13 @@ func (p *PlanGroupDetailResponseData) GetPlans() []*PlanGroupPlanDetailResponseD
 	return p.Plans
 }
 
+func (p *PlanGroupDetailResponseData) GetShowCredits() bool {
+	if p == nil {
+		return false
+	}
+	return p.ShowCredits
+}
+
 func (p *PlanGroupDetailResponseData) GetShowPeriodToggle() bool {
 	if p == nil {
 		return false
@@ -445,11 +587,53 @@ func (p *PlanGroupDetailResponseData) GetShowPeriodToggle() bool {
 	return p.ShowPeriodToggle
 }
 
+func (p *PlanGroupDetailResponseData) GetShowZeroPriceAsFree() bool {
+	if p == nil {
+		return false
+	}
+	return p.ShowZeroPriceAsFree
+}
+
+func (p *PlanGroupDetailResponseData) GetTaxCollectionEnabled() bool {
+	if p == nil {
+		return false
+	}
+	return p.TaxCollectionEnabled
+}
+
 func (p *PlanGroupDetailResponseData) GetTrialDays() *int {
 	if p == nil {
 		return nil
 	}
 	return p.TrialDays
+}
+
+func (p *PlanGroupDetailResponseData) GetTrialExpiryPlan() *PlanGroupPlanDetailResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.TrialExpiryPlan
+}
+
+func (p *PlanGroupDetailResponseData) GetTrialExpiryPlanID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.TrialExpiryPlanID
+}
+
+func (p *PlanGroupDetailResponseData) GetTrialExpiryPlanPrice() *BillingPriceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.TrialExpiryPlanPrice
+}
+
+func (p *PlanGroupDetailResponseData) GetTrialExpiryPlanPriceID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.TrialExpiryPlanPriceID
 }
 
 func (p *PlanGroupDetailResponseData) GetTrialPaymentMethodRequired() *bool {
@@ -492,30 +676,31 @@ func (p *PlanGroupDetailResponseData) String() string {
 }
 
 type PlanGroupPlanDetailResponseData struct {
-	AudienceType      *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
-	BillingProduct    *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
-	ChargeType        string                            `json:"charge_type" url:"charge_type"`
-	CompanyCount      int                               `json:"company_count" url:"company_count"`
-	CompatiblePlanIDs []string                          `json:"compatible_plan_ids,omitempty" url:"compatible_plan_ids,omitempty"`
-	ControlledBy      string                            `json:"controlled_by" url:"controlled_by"`
-	CreatedAt         time.Time                         `json:"created_at" url:"created_at"`
-	CustomPlanConfig  *CustomPlanViewConfigResponseData `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
-	Description       string                            `json:"description" url:"description"`
-	Entitlements      []*PlanEntitlementResponseData    `json:"entitlements,omitempty" url:"entitlements,omitempty"`
-	Features          []*FeatureDetailResponseData      `json:"features,omitempty" url:"features,omitempty"`
-	Icon              string                            `json:"icon" url:"icon"`
-	ID                string                            `json:"id" url:"id"`
-	IsCustom          bool                              `json:"is_custom" url:"is_custom"`
-	IsDefault         bool                              `json:"is_default" url:"is_default"`
-	IsFree            bool                              `json:"is_free" url:"is_free"`
-	IsTrialable       bool                              `json:"is_trialable" url:"is_trialable"`
-	MonthlyPrice      *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	Name              string                            `json:"name" url:"name"`
-	OneTimePrice      *BillingPriceResponseData         `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
-	PlanType          string                            `json:"plan_type" url:"plan_type"`
-	TrialDays         *int                              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
-	UpdatedAt         time.Time                         `json:"updated_at" url:"updated_at"`
-	YearlyPrice       *BillingPriceResponseData         `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+	AudienceType         *string                               `json:"audience_type,omitempty" url:"audience_type,omitempty"`
+	BillingProduct       *BillingProductDetailResponseData     `json:"billing_product,omitempty" url:"billing_product,omitempty"`
+	ChargeType           string                                `json:"charge_type" url:"charge_type"`
+	CompanyCount         int                                   `json:"company_count" url:"company_count"`
+	CompatiblePlanIDs    []string                              `json:"compatible_plan_ids,omitempty" url:"compatible_plan_ids,omitempty"`
+	ControlledBy         string                                `json:"controlled_by" url:"controlled_by"`
+	CreatedAt            time.Time                             `json:"created_at" url:"created_at"`
+	CustomPlanConfig     *CustomPlanViewConfigResponseData     `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
+	Description          string                                `json:"description" url:"description"`
+	Entitlements         []*PlanEntitlementResponseData        `json:"entitlements,omitempty" url:"entitlements,omitempty"`
+	Features             []*FeatureDetailResponseData          `json:"features,omitempty" url:"features,omitempty"`
+	Icon                 string                                `json:"icon" url:"icon"`
+	ID                   string                                `json:"id" url:"id"`
+	IncludedCreditGrants []*BillingPlanCreditGrantResponseData `json:"included_credit_grants,omitempty" url:"included_credit_grants,omitempty"`
+	IsCustom             bool                                  `json:"is_custom" url:"is_custom"`
+	IsDefault            bool                                  `json:"is_default" url:"is_default"`
+	IsFree               bool                                  `json:"is_free" url:"is_free"`
+	IsTrialable          bool                                  `json:"is_trialable" url:"is_trialable"`
+	MonthlyPrice         *BillingPriceResponseData             `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	Name                 string                                `json:"name" url:"name"`
+	OneTimePrice         *BillingPriceResponseData             `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	PlanType             string                                `json:"plan_type" url:"plan_type"`
+	TrialDays            *int                                  `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	UpdatedAt            time.Time                             `json:"updated_at" url:"updated_at"`
+	YearlyPrice          *BillingPriceResponseData             `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -610,6 +795,13 @@ func (p *PlanGroupPlanDetailResponseData) GetID() string {
 		return ""
 	}
 	return p.ID
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetIncludedCreditGrants() []*BillingPlanCreditGrantResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.IncludedCreditGrants
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetIsCustom() bool {
@@ -797,16 +989,24 @@ func (p *PlanGroupPlanEntitlementsOrder) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
-// The updated resource
 type PlanGroupResponseData struct {
 	AddOnCompatibilities       []*CompatiblePlansResponseData `json:"add_on_compatibilities,omitempty" url:"add_on_compatibilities,omitempty"`
 	AddOnIDs                   []string                       `json:"add_on_ids,omitempty" url:"add_on_ids,omitempty"`
+	CheckoutSettings           *CheckoutSettingsResponseData  `json:"checkout_settings,omitempty" url:"checkout_settings,omitempty"`
 	DefaultPlanID              *string                        `json:"default_plan_id,omitempty" url:"default_plan_id,omitempty"`
+	FallbackPlanID             *string                        `json:"fallback_plan_id,omitempty" url:"fallback_plan_id,omitempty"`
 	ID                         string                         `json:"id" url:"id"`
+	InitialPlanID              *string                        `json:"initial_plan_id,omitempty" url:"initial_plan_id,omitempty"`
+	InitialPlanPriceID         *string                        `json:"initial_plan_price_id,omitempty" url:"initial_plan_price_id,omitempty"`
 	OrderedAddOnIDs            []*OrderedPlansInGroup         `json:"ordered_add_on_ids,omitempty" url:"ordered_add_on_ids,omitempty"`
 	PlanIDs                    []*OrderedPlansInGroup         `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	ShowCredits                bool                           `json:"show_credits" url:"show_credits"`
 	ShowPeriodToggle           bool                           `json:"show_period_toggle" url:"show_period_toggle"`
+	ShowZeroPriceAsFree        bool                           `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
+	TaxCollectionEnabled       bool                           `json:"tax_collection_enabled" url:"tax_collection_enabled"`
 	TrialDays                  *int                           `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialExpiryPlanID          *string                        `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
+	TrialExpiryPlanPriceID     *string                        `json:"trial_expiry_plan_price_id,omitempty" url:"trial_expiry_plan_price_id,omitempty"`
 	TrialPaymentMethodRequired *bool                          `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -827,6 +1027,13 @@ func (p *PlanGroupResponseData) GetAddOnIDs() []string {
 	return p.AddOnIDs
 }
 
+func (p *PlanGroupResponseData) GetCheckoutSettings() *CheckoutSettingsResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.CheckoutSettings
+}
+
 func (p *PlanGroupResponseData) GetDefaultPlanID() *string {
 	if p == nil {
 		return nil
@@ -834,11 +1041,32 @@ func (p *PlanGroupResponseData) GetDefaultPlanID() *string {
 	return p.DefaultPlanID
 }
 
+func (p *PlanGroupResponseData) GetFallbackPlanID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.FallbackPlanID
+}
+
 func (p *PlanGroupResponseData) GetID() string {
 	if p == nil {
 		return ""
 	}
 	return p.ID
+}
+
+func (p *PlanGroupResponseData) GetInitialPlanID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.InitialPlanID
+}
+
+func (p *PlanGroupResponseData) GetInitialPlanPriceID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.InitialPlanPriceID
 }
 
 func (p *PlanGroupResponseData) GetOrderedAddOnIDs() []*OrderedPlansInGroup {
@@ -855,6 +1083,13 @@ func (p *PlanGroupResponseData) GetPlanIDs() []*OrderedPlansInGroup {
 	return p.PlanIDs
 }
 
+func (p *PlanGroupResponseData) GetShowCredits() bool {
+	if p == nil {
+		return false
+	}
+	return p.ShowCredits
+}
+
 func (p *PlanGroupResponseData) GetShowPeriodToggle() bool {
 	if p == nil {
 		return false
@@ -862,11 +1097,39 @@ func (p *PlanGroupResponseData) GetShowPeriodToggle() bool {
 	return p.ShowPeriodToggle
 }
 
+func (p *PlanGroupResponseData) GetShowZeroPriceAsFree() bool {
+	if p == nil {
+		return false
+	}
+	return p.ShowZeroPriceAsFree
+}
+
+func (p *PlanGroupResponseData) GetTaxCollectionEnabled() bool {
+	if p == nil {
+		return false
+	}
+	return p.TaxCollectionEnabled
+}
+
 func (p *PlanGroupResponseData) GetTrialDays() *int {
 	if p == nil {
 		return nil
 	}
 	return p.TrialDays
+}
+
+func (p *PlanGroupResponseData) GetTrialExpiryPlanID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.TrialExpiryPlanID
+}
+
+func (p *PlanGroupResponseData) GetTrialExpiryPlanPriceID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.TrialExpiryPlanPriceID
 }
 
 func (p *PlanGroupResponseData) GetTrialPaymentMethodRequired() *bool {
@@ -1077,13 +1340,24 @@ type UpdatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
 	AddOnIDs                   []string                `json:"add_on_ids,omitempty" url:"-"`
+	CheckoutCollectAddress     bool                    `json:"checkout_collect_address" url:"-"`
+	CheckoutCollectEmail       bool                    `json:"checkout_collect_email" url:"-"`
+	CheckoutCollectPhone       bool                    `json:"checkout_collect_phone" url:"-"`
 	CustomPlanConfig           *CustomPlanConfig       `json:"custom_plan_config,omitempty" url:"-"`
 	CustomPlanID               *string                 `json:"custom_plan_id,omitempty" url:"-"`
 	DefaultPlanID              *string                 `json:"default_plan_id,omitempty" url:"-"`
+	EnableTaxCollection        bool                    `json:"enable_tax_collection" url:"-"`
+	FallbackPlanID             *string                 `json:"fallback_plan_id,omitempty" url:"-"`
+	InitialPlanID              *string                 `json:"initial_plan_id,omitempty" url:"-"`
+	InitialPlanPriceID         *string                 `json:"initial_plan_price_id,omitempty" url:"-"`
 	OrderedAddOns              []*OrderedPlansInGroup  `json:"ordered_add_ons,omitempty" url:"-"`
 	OrderedBundleList          []*PlanGroupBundleOrder `json:"ordered_bundle_list,omitempty" url:"-"`
 	OrderedPlans               []*OrderedPlansInGroup  `json:"ordered_plans,omitempty" url:"-"`
+	ShowCredits                bool                    `json:"show_credits" url:"-"`
 	ShowPeriodToggle           bool                    `json:"show_period_toggle" url:"-"`
+	ShowZeroPriceAsFree        bool                    `json:"show_zero_price_as_free" url:"-"`
 	TrialDays                  *int                    `json:"trial_days,omitempty" url:"-"`
+	TrialExpiryPlanID          *string                 `json:"trial_expiry_plan_id,omitempty" url:"-"`
+	TrialExpiryPlanPriceID     *string                 `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
 	TrialPaymentMethodRequired *bool                   `json:"trial_payment_method_required,omitempty" url:"-"`
 }

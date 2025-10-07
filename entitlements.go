@@ -88,6 +88,7 @@ type CreateCompanyOverrideRequestBody struct {
 	FeatureID              string                                                  `json:"feature_id" url:"-"`
 	MetricPeriod           *CreateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	Note                   *string                                                 `json:"note,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
 	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
 	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
@@ -119,6 +120,7 @@ func (c *CreateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 
 type CreatePlanEntitlementRequestBody struct {
 	BillingProductID        *string                                                 `json:"billing_product_id,omitempty" url:"-"`
+	BillingThreshold        *int                                                    `json:"billing_threshold,omitempty" url:"-"`
 	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
 	FeatureID               string                                                  `json:"feature_id" url:"-"`
@@ -293,18 +295,123 @@ func (c *CreatePriceTierRequestBody) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreditUsage struct {
+	CreditConsumptionRate *float64             `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
+	CreditGrantCounts     map[string]float64   `json:"credit_grant_counts,omitempty" url:"credit_grant_counts,omitempty"`
+	CreditGrantDetails    []*CreditGrantDetail `json:"credit_grant_details,omitempty" url:"credit_grant_details,omitempty"`
+	CreditRemaining       *float64             `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
+	CreditTotal           *float64             `json:"credit_total,omitempty" url:"credit_total,omitempty"`
+	CreditTypeIcon        *string              `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
+	CreditTypeName        *string              `json:"credit_type_name,omitempty" url:"credit_type_name,omitempty"`
+	CreditUsed            *float64             `json:"credit_used,omitempty" url:"credit_used,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditUsage) GetCreditConsumptionRate() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditConsumptionRate
+}
+
+func (c *CreditUsage) GetCreditGrantCounts() map[string]float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditGrantCounts
+}
+
+func (c *CreditUsage) GetCreditGrantDetails() []*CreditGrantDetail {
+	if c == nil {
+		return nil
+	}
+	return c.CreditGrantDetails
+}
+
+func (c *CreditUsage) GetCreditRemaining() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditRemaining
+}
+
+func (c *CreditUsage) GetCreditTotal() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditTotal
+}
+
+func (c *CreditUsage) GetCreditTypeIcon() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditTypeIcon
+}
+
+func (c *CreditUsage) GetCreditTypeName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditTypeName
+}
+
+func (c *CreditUsage) GetCreditUsed() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditUsed
+}
+
+func (c *CreditUsage) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditUsage) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditUsage
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditUsage(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditUsage) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 type FeatureCompanyResponseData struct {
 	// Whether further usage is permitted.
 	Access bool `json:"access" url:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
 	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// The type of allocation that is being used.
-	AllocationType            FeatureCompanyResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
-	Company                   *CompanyDetailResponseData               `json:"company,omitempty" url:"company,omitempty"`
-	EntitlementExpirationDate *time.Time                               `json:"entitlement_expiration_date,omitempty" url:"entitlement_expiration_date,omitempty"`
-	EntitlementID             string                                   `json:"entitlement_id" url:"entitlement_id"`
-	EntitlementType           string                                   `json:"entitlement_type" url:"entitlement_type"`
-	Feature                   *FeatureDetailResponseData               `json:"feature,omitempty" url:"feature,omitempty"`
+	AllocationType FeatureCompanyResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
+	Company        *CompanyDetailResponseData               `json:"company,omitempty" url:"company,omitempty"`
+	// Rate at which credits are consumed per unit of usage for credit-based features.
+	CreditConsumptionRate     *float64                   `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
+	CreditUsage               *CreditUsage               `json:"credit_usage,omitempty" url:"credit_usage,omitempty"`
+	EntitlementExpirationDate *time.Time                 `json:"entitlement_expiration_date,omitempty" url:"entitlement_expiration_date,omitempty"`
+	EntitlementID             string                     `json:"entitlement_id" url:"entitlement_id"`
+	EntitlementType           string                     `json:"entitlement_type" url:"entitlement_type"`
+	Feature                   *FeatureDetailResponseData `json:"feature,omitempty" url:"feature,omitempty"`
 	// The time at which the metric will resets.
 	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
 	// If the period is current_month, when the month resets.
@@ -345,6 +452,20 @@ func (f *FeatureCompanyResponseData) GetCompany() *CompanyDetailResponseData {
 		return nil
 	}
 	return f.Company
+}
+
+func (f *FeatureCompanyResponseData) GetCreditConsumptionRate() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditConsumptionRate
+}
+
+func (f *FeatureCompanyResponseData) GetCreditUsage() *CreditUsage {
+	if f == nil {
+		return nil
+	}
+	return f.CreditUsage
 }
 
 func (f *FeatureCompanyResponseData) GetEntitlementExpirationDate() *time.Time {
@@ -668,6 +789,7 @@ const (
 	FeatureCompanyUserResponseDataAllocationTypeNumeric   FeatureCompanyUserResponseDataAllocationType = "numeric"
 	FeatureCompanyUserResponseDataAllocationTypeTrait     FeatureCompanyUserResponseDataAllocationType = "trait"
 	FeatureCompanyUserResponseDataAllocationTypeUnlimited FeatureCompanyUserResponseDataAllocationType = "unlimited"
+	FeatureCompanyUserResponseDataAllocationTypeUnknown   FeatureCompanyUserResponseDataAllocationType = "unknown"
 )
 
 func NewFeatureCompanyUserResponseDataAllocationTypeFromString(s string) (FeatureCompanyUserResponseDataAllocationType, error) {
@@ -680,6 +802,8 @@ func NewFeatureCompanyUserResponseDataAllocationTypeFromString(s string) (Featur
 		return FeatureCompanyUserResponseDataAllocationTypeTrait, nil
 	case "unlimited":
 		return FeatureCompanyUserResponseDataAllocationTypeUnlimited, nil
+	case "unknown":
+		return FeatureCompanyUserResponseDataAllocationTypeUnknown, nil
 	}
 	var t FeatureCompanyUserResponseDataAllocationType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -2193,7 +2317,6 @@ func (l *ListCompanyOverridesParams) String() string {
 }
 
 type ListCompanyOverridesResponse struct {
-	// The returned resources
 	Data []*CompanyOverrideResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListCompanyOverridesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2322,7 +2445,6 @@ func (l *ListFeatureCompaniesParams) String() string {
 }
 
 type ListFeatureCompaniesResponse struct {
-	// The returned resources
 	Data []*FeatureCompanyResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListFeatureCompaniesParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2475,7 +2597,6 @@ func (l *ListFeatureUsageParams) String() string {
 }
 
 type ListFeatureUsageResponse struct {
-	// The returned resources
 	Data []*FeatureUsageResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListFeatureUsageParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2604,7 +2725,6 @@ func (l *ListFeatureUsersParams) String() string {
 }
 
 type ListFeatureUsersResponse struct {
-	// The returned resources
 	Data []*FeatureCompanyUserResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListFeatureUsersParams `json:"params,omitempty" url:"params,omitempty"`
@@ -2780,7 +2900,6 @@ func (l *ListPlanEntitlementsParams) String() string {
 }
 
 type ListPlanEntitlementsResponse struct {
-	// The returned resources
 	Data []*PlanEntitlementResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params *ListPlanEntitlementsParams `json:"params,omitempty" url:"params,omitempty"`
@@ -3143,6 +3262,7 @@ type UpdateCompanyOverrideRequestBody struct {
 	ExpirationDate         *time.Time                                              `json:"expiration_date,omitempty" url:"-"`
 	MetricPeriod           *UpdateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	Note                   *string                                                 `json:"note,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
 	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
 	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
@@ -3174,6 +3294,7 @@ func (u *UpdateCompanyOverrideRequestBody) MarshalJSON() ([]byte, error) {
 
 type UpdatePlanEntitlementRequestBody struct {
 	BillingProductID        *string                                                 `json:"billing_product_id,omitempty" url:"-"`
+	BillingThreshold        *int                                                    `json:"billing_threshold,omitempty" url:"-"`
 	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
 	MetricPeriod            *UpdatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`

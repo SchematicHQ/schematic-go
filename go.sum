@@ -22,8 +22,8 @@ github.com/redis/go-redis/v9 v9.14.1 h1:nDCrEiJmfOWhD76xlaw+HXT0c9hfNWeXgl0vIRYS
 github.com/redis/go-redis/v9 v9.14.1/go.mod h1:huWgSWd8mW6+m0VPhJjSSQ+d6Nh1VICQ6Q5lHuCH/Iw=
 github.com/schematichq/rulesengine v0.1.8 h1:hmP0dXP3SNR43PbgnUihuvGnPpWgejEM3tY8/yTNkf0=
 github.com/schematichq/rulesengine v0.1.8/go.mod h1:HmweBgjg+kVe6VuNMLc7FISHFF0wzr5cVGLAxlVP8+4=
-github.com/schematichq/schematic-datastream-ws v0.2.1 h1:G0T8dkIlKQOQVIuKVZ+KUU3qAwwQW8CEyHouq7iH2gg=
-github.com/schematichq/schematic-datastream-ws v0.2.1/go.mod h1:NKrg326C9YfCDOI84On5GZhvrovzDpFCzW8wdBwPZ3g=
+github.com/schematichq/schematic-datastream-ws v0.2.2 h1:q0WTy7oyAmo9gWaQ65FvzrltE6u+1eYt877ttWzocig=
+github.com/schematichq/schematic-datastream-ws v0.2.2/go.mod h1:NKrg326C9YfCDOI84On5GZhvrovzDpFCzW8wdBwPZ3g=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=

@@ -41,9 +41,8 @@ type eventBuffer struct {
 	maxRetries        int
 	initialRetryDelay time.Duration
 
-	// mutexes for flushing and pushing to the buffer
-	mutexFlush sync.Mutex
-	mutexPush  sync.Mutex
+	// mutex for buffer operations
+	mutex sync.Mutex
 
 	// channel to signal shutdown
 	shutdown chan struct{}
@@ -72,8 +71,7 @@ func NewEventBuffer(
 		maxEvents:         maxEvents,
 		maxRetries:        defaultMaxRetries,
 		initialRetryDelay: defaultInitialRetryDelay,
-		mutexFlush:        sync.Mutex{},
-		mutexPush:         sync.Mutex{},
+		mutex:             sync.Mutex{},
 		shutdown:          make(chan struct{}),
 	}
 
@@ -84,18 +82,31 @@ func NewEventBuffer(
 }
 
 func (b *eventBuffer) flush() {
-	b.mutexFlush.Lock()
-	defer b.mutexFlush.Unlock()
+	b.mutex.Lock()
+	defer b.mutex.Unlock()
 
+	b.flushLocked()
+}
+
+func (b *eventBuffer) flushLocked() {
 	if len(b.events) == 0 {
 		return
 	}
 
-	events := make([]*schematicgo.CreateEventRequestBody, len(b.events))
-	for i, event := range b.events {
+	eventsToProcess := make([]*schematicgo.CreateEventRequestBody, len(b.events))
+	copy(eventsToProcess, b.events)
+
+	b.events = b.events[:0]
+
+	events := make([]*schematicgo.CreateEventRequestBody, 0, len(eventsToProcess))
+	for _, event := range eventsToProcess {
 		if event != nil {
-			events[i] = event
+			events = append(events, event)
 		}
+	}
+
+	if len(events) == 0 {
+		return
 	}
 
 	req := &schematicgo.CreateEventBatchRequestBody{
@@ -150,8 +161,6 @@ func (b *eventBuffer) flush() {
 	} else if retryCount > 0 {
 		b.logger.Info(context.Background(), fmt.Sprintf("Event batch submission succeeded after %d retries", retryCount))
 	}
-
-	b.events = b.events[:0]
 }
 
 func (b *eventBuffer) periodicFlush() {
@@ -184,11 +193,11 @@ func (b *eventBuffer) Push(event *schematicgo.CreateEventRequestBody) {
 		return
 	}
 
-	b.mutexPush.Lock()
-	defer b.mutexPush.Unlock()
+	b.mutex.Lock()
+	defer b.mutex.Unlock()
 
 	if len(b.events) >= b.maxEvents {
-		b.flush()
+		b.flushLocked()
 	}
 
 	b.events = append(b.events, event)

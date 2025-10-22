@@ -716,6 +716,8 @@ const (
 	CreateWebhookRequestBodyRequestTypesItemEntitlementLimitReached     CreateWebhookRequestBodyRequestTypesItem = "entitlement.limit.reached"
 	CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning CreateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.warning"
 	CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached CreateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.reached"
+	CreateWebhookRequestBodyRequestTypesItemEntitlementTierLimitWarning CreateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.warning"
+	CreateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached CreateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.reached"
 	CreateWebhookRequestBodyRequestTypesItemCreditLimitWarning          CreateWebhookRequestBodyRequestTypesItem = "credit.limit.warning"
 	CreateWebhookRequestBodyRequestTypesItemCreditLimitReached          CreateWebhookRequestBodyRequestTypesItem = "credit.limit.reached"
 )
@@ -778,6 +780,10 @@ func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebh
 		return CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning, nil
 	case "entitlement.soft_limit.reached":
 		return CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached, nil
+	case "entitlement.tier_limit.warning":
+		return CreateWebhookRequestBodyRequestTypesItemEntitlementTierLimitWarning, nil
+	case "entitlement.tier_limit.reached":
+		return CreateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached, nil
 	case "credit.limit.warning":
 		return CreateWebhookRequestBodyRequestTypesItemCreditLimitWarning, nil
 	case "credit.limit.reached":
@@ -1298,6 +1304,8 @@ const (
 	UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitReached     UpdateWebhookRequestBodyRequestTypesItem = "entitlement.limit.reached"
 	UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning UpdateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.warning"
 	UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached UpdateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.reached"
+	UpdateWebhookRequestBodyRequestTypesItemEntitlementTierLimitWarning UpdateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.warning"
+	UpdateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached UpdateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.reached"
 	UpdateWebhookRequestBodyRequestTypesItemCreditLimitWarning          UpdateWebhookRequestBodyRequestTypesItem = "credit.limit.warning"
 	UpdateWebhookRequestBodyRequestTypesItemCreditLimitReached          UpdateWebhookRequestBodyRequestTypesItem = "credit.limit.reached"
 )
@@ -1360,6 +1368,10 @@ func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebh
 		return UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning, nil
 	case "entitlement.soft_limit.reached":
 		return UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached, nil
+	case "entitlement.tier_limit.warning":
+		return UpdateWebhookRequestBodyRequestTypesItemEntitlementTierLimitWarning, nil
+	case "entitlement.tier_limit.reached":
+		return UpdateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached, nil
 	case "credit.limit.warning":
 		return UpdateWebhookRequestBodyRequestTypesItemCreditLimitWarning, nil
 	case "credit.limit.reached":

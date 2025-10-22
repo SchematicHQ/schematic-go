@@ -49,6 +49,19 @@ type CountCreditBundlesRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
+type CountCreditLedgerRequest struct {
+	CompanyID       string                         `json:"-" url:"company_id"`
+	BillingCreditID *string                        `json:"-" url:"billing_credit_id,omitempty"`
+	FeatureID       *string                        `json:"-" url:"feature_id,omitempty"`
+	Period          CountCreditLedgerRequestPeriod `json:"-" url:"period"`
+	StartTime       *string                        `json:"-" url:"start_time,omitempty"`
+	EndTime         *string                        `json:"-" url:"end_time,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
 type CreateBillingCreditRequestBody struct {
 	BurnStrategy           *CreateBillingCreditRequestBodyBurnStrategy          `json:"burn_strategy,omitempty" url:"-"`
 	Currency               string                                               `json:"currency" url:"-"`
@@ -88,6 +101,19 @@ type CreateCreditBundleRequestBody struct {
 	PricePerUnitDecimal *string                                  `json:"price_per_unit_decimal,omitempty" url:"-"`
 	Quantity            *int                                     `json:"quantity,omitempty" url:"-"`
 	Status              *CreateCreditBundleRequestBodyStatus     `json:"status,omitempty" url:"-"`
+}
+
+type GetEnrichedCreditLedgerRequest struct {
+	CompanyID       string                               `json:"-" url:"company_id"`
+	BillingCreditID *string                              `json:"-" url:"billing_credit_id,omitempty"`
+	FeatureID       *string                              `json:"-" url:"feature_id,omitempty"`
+	Period          GetEnrichedCreditLedgerRequestPeriod `json:"-" url:"period"`
+	StartTime       *string                              `json:"-" url:"start_time,omitempty"`
+	EndTime         *string                              `json:"-" url:"end_time,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
 type CreateCompanyCreditGrant struct {
@@ -179,6 +205,7 @@ type BillingCreditGrantResponseData struct {
 	CompanyName       string                    `json:"company_name" url:"company_name"`
 	CreatedAt         time.Time                 `json:"created_at" url:"created_at"`
 	CreditIcon        *string                   `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID          string                    `json:"credit_id" url:"credit_id"`
 	CreditName        string                    `json:"credit_name" url:"credit_name"`
 	ExpiresAt         *time.Time                `json:"expires_at,omitempty" url:"expires_at,omitempty"`
 	GrantReason       string                    `json:"grant_reason" url:"grant_reason"`
@@ -225,6 +252,13 @@ func (b *BillingCreditGrantResponseData) GetCreditIcon() *string {
 		return nil
 	}
 	return b.CreditIcon
+}
+
+func (b *BillingCreditGrantResponseData) GetCreditID() string {
+	if b == nil {
+		return ""
+	}
+	return b.CreditID
 }
 
 func (b *BillingCreditGrantResponseData) GetCreditName() string {
@@ -396,6 +430,456 @@ func (b *BillingCreditGrantResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", b)
+}
+
+type BillingCreditLedgerResponseData struct {
+	Description  *string `json:"description,omitempty" url:"description,omitempty"`
+	Icon         *string `json:"icon,omitempty" url:"icon,omitempty"`
+	ID           string  `json:"id" url:"id"`
+	Name         string  `json:"name" url:"name"`
+	PluralName   *string `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	SingularName *string `json:"singular_name,omitempty" url:"singular_name,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingCreditLedgerResponseData) GetDescription() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Description
+}
+
+func (b *BillingCreditLedgerResponseData) GetIcon() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Icon
+}
+
+func (b *BillingCreditLedgerResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingCreditLedgerResponseData) GetName() string {
+	if b == nil {
+		return ""
+	}
+	return b.Name
+}
+
+func (b *BillingCreditLedgerResponseData) GetPluralName() *string {
+	if b == nil {
+		return nil
+	}
+	return b.PluralName
+}
+
+func (b *BillingCreditLedgerResponseData) GetSingularName() *string {
+	if b == nil {
+		return nil
+	}
+	return b.SingularName
+}
+
+func (b *BillingCreditLedgerResponseData) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BillingCreditLedgerResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler BillingCreditLedgerResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BillingCreditLedgerResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingCreditLedgerResponseData) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+type CompanyLedgerResponseData struct {
+	ID      string  `json:"id" url:"id"`
+	LogoURL *string `json:"logo_url,omitempty" url:"logo_url,omitempty"`
+	Name    string  `json:"name" url:"name"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyLedgerResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CompanyLedgerResponseData) GetLogoURL() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LogoURL
+}
+
+func (c *CompanyLedgerResponseData) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CompanyLedgerResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CompanyLedgerResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CompanyLedgerResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CompanyLedgerResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyLedgerResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CreditLedgerEnrichedEntryResponseData struct {
+	BillingCreditID     string                           `json:"billing_credit_id" url:"billing_credit_id"`
+	Company             *CompanyLedgerResponseData       `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID           string                           `json:"company_id" url:"company_id"`
+	Credit              *BillingCreditLedgerResponseData `json:"credit,omitempty" url:"credit,omitempty"`
+	ExpiredGrantCount   int                              `json:"expired_grant_count" url:"expired_grant_count"`
+	Feature             *FeatureLedgerResponseData       `json:"feature,omitempty" url:"feature,omitempty"`
+	FeatureID           *string                          `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FirstTransactionAt  time.Time                        `json:"first_transaction_at" url:"first_transaction_at"`
+	FreeGrantCount      int                              `json:"free_grant_count" url:"free_grant_count"`
+	GrantCount          int                              `json:"grant_count" url:"grant_count"`
+	LastTransactionAt   time.Time                        `json:"last_transaction_at" url:"last_transaction_at"`
+	ManuallyZeroedCount int                              `json:"manually_zeroed_count" url:"manually_zeroed_count"`
+	NetChange           float64                          `json:"net_change" url:"net_change"`
+	PlanGrantCount      int                              `json:"plan_grant_count" url:"plan_grant_count"`
+	PurchasedGrantCount int                              `json:"purchased_grant_count" url:"purchased_grant_count"`
+	TimeBucket          time.Time                        `json:"time_bucket" url:"time_bucket"`
+	TotalConsumed       float64                          `json:"total_consumed" url:"total_consumed"`
+	TotalGranted        float64                          `json:"total_granted" url:"total_granted"`
+	TransactionCount    int                              `json:"transaction_count" url:"transaction_count"`
+	UsageCount          int                              `json:"usage_count" url:"usage_count"`
+	ZeroedOutCount      int                              `json:"zeroed_out_count" url:"zeroed_out_count"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetBillingCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.BillingCreditID
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetCompany() *CompanyLedgerResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Company
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetCredit() *BillingCreditLedgerResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Credit
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetExpiredGrantCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.ExpiredGrantCount
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetFeature() *FeatureLedgerResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Feature
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetFirstTransactionAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.FirstTransactionAt
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetFreeGrantCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.FreeGrantCount
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetGrantCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.GrantCount
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetLastTransactionAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.LastTransactionAt
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetManuallyZeroedCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.ManuallyZeroedCount
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetNetChange() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.NetChange
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetPlanGrantCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.PlanGrantCount
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetPurchasedGrantCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.PurchasedGrantCount
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetTimeBucket() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.TimeBucket
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetTotalConsumed() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.TotalConsumed
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetTotalGranted() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.TotalGranted
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetTransactionCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.TransactionCount
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetUsageCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.UsageCount
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetZeroedOutCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.ZeroedOutCount
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) UnmarshalJSON(data []byte) error {
+	type embed CreditLedgerEnrichedEntryResponseData
+	var unmarshaler = struct {
+		embed
+		FirstTransactionAt *internal.DateTime `json:"first_transaction_at"`
+		LastTransactionAt  *internal.DateTime `json:"last_transaction_at"`
+		TimeBucket         *internal.DateTime `json:"time_bucket"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CreditLedgerEnrichedEntryResponseData(unmarshaler.embed)
+	c.FirstTransactionAt = unmarshaler.FirstTransactionAt.Time()
+	c.LastTransactionAt = unmarshaler.LastTransactionAt.Time()
+	c.TimeBucket = unmarshaler.TimeBucket.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) MarshalJSON() ([]byte, error) {
+	type embed CreditLedgerEnrichedEntryResponseData
+	var marshaler = struct {
+		embed
+		FirstTransactionAt *internal.DateTime `json:"first_transaction_at"`
+		LastTransactionAt  *internal.DateTime `json:"last_transaction_at"`
+		TimeBucket         *internal.DateTime `json:"time_bucket"`
+	}{
+		embed:              embed(*c),
+		FirstTransactionAt: internal.NewDateTime(c.FirstTransactionAt),
+		LastTransactionAt:  internal.NewDateTime(c.LastTransactionAt),
+		TimeBucket:         internal.NewDateTime(c.TimeBucket),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type FeatureLedgerResponseData struct {
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	Icon        *string `json:"icon,omitempty" url:"icon,omitempty"`
+	ID          string  `json:"id" url:"id"`
+	Name        string  `json:"name" url:"name"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FeatureLedgerResponseData) GetDescription() *string {
+	if f == nil {
+		return nil
+	}
+	return f.Description
+}
+
+func (f *FeatureLedgerResponseData) GetIcon() *string {
+	if f == nil {
+		return nil
+	}
+	return f.Icon
+}
+
+func (f *FeatureLedgerResponseData) GetID() string {
+	if f == nil {
+		return ""
+	}
+	return f.ID
+}
+
+func (f *FeatureLedgerResponseData) GetName() string {
+	if f == nil {
+		return ""
+	}
+	return f.Name
+}
+
+func (f *FeatureLedgerResponseData) GetExtraProperties() map[string]interface{} {
+	return f.extraProperties
+}
+
+func (f *FeatureLedgerResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler FeatureLedgerResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*f = FeatureLedgerResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FeatureLedgerResponseData) String() string {
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
 }
 
 // Input parameters
@@ -976,6 +1460,222 @@ func NewCountCreditBundlesResponseParamsStatusFromString(s string) (CountCreditB
 }
 
 func (c CountCreditBundlesResponseParamsStatus) Ptr() *CountCreditBundlesResponseParamsStatus {
+	return &c
+}
+
+// Input parameters
+type CountCreditLedgerParams struct {
+	BillingCreditID *string `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
+	CompanyID       *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EndTime         *string `json:"end_time,omitempty" url:"end_time,omitempty"`
+	FeatureID       *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int                                   `json:"offset,omitempty" url:"offset,omitempty"`
+	Period    *CountCreditLedgerResponseParamsPeriod `json:"period,omitempty" url:"period,omitempty"`
+	StartTime *string                                `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCreditLedgerParams) GetBillingCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCreditID
+}
+
+func (c *CountCreditLedgerParams) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CountCreditLedgerParams) GetEndTime() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EndTime
+}
+
+func (c *CountCreditLedgerParams) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CountCreditLedgerParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountCreditLedgerParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountCreditLedgerParams) GetPeriod() *CountCreditLedgerResponseParamsPeriod {
+	if c == nil {
+		return nil
+	}
+	return c.Period
+}
+
+func (c *CountCreditLedgerParams) GetStartTime() *string {
+	if c == nil {
+		return nil
+	}
+	return c.StartTime
+}
+
+func (c *CountCreditLedgerParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCreditLedgerParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCreditLedgerParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCreditLedgerParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCreditLedgerParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CountCreditLedgerRequestPeriod string
+
+const (
+	CountCreditLedgerRequestPeriodDaily   CountCreditLedgerRequestPeriod = "daily"
+	CountCreditLedgerRequestPeriodWeekly  CountCreditLedgerRequestPeriod = "weekly"
+	CountCreditLedgerRequestPeriodMonthly CountCreditLedgerRequestPeriod = "monthly"
+	CountCreditLedgerRequestPeriodRaw     CountCreditLedgerRequestPeriod = "raw"
+)
+
+func NewCountCreditLedgerRequestPeriodFromString(s string) (CountCreditLedgerRequestPeriod, error) {
+	switch s {
+	case "daily":
+		return CountCreditLedgerRequestPeriodDaily, nil
+	case "weekly":
+		return CountCreditLedgerRequestPeriodWeekly, nil
+	case "monthly":
+		return CountCreditLedgerRequestPeriodMonthly, nil
+	case "raw":
+		return CountCreditLedgerRequestPeriodRaw, nil
+	}
+	var t CountCreditLedgerRequestPeriod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CountCreditLedgerRequestPeriod) Ptr() *CountCreditLedgerRequestPeriod {
+	return &c
+}
+
+type CountCreditLedgerResponse struct {
+	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *CountCreditLedgerParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCreditLedgerResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountCreditLedgerResponse) GetParams() *CountCreditLedgerParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountCreditLedgerResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCreditLedgerResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCreditLedgerResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCreditLedgerResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCreditLedgerResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CountCreditLedgerResponseParamsPeriod string
+
+const (
+	CountCreditLedgerResponseParamsPeriodDaily   CountCreditLedgerResponseParamsPeriod = "daily"
+	CountCreditLedgerResponseParamsPeriodWeekly  CountCreditLedgerResponseParamsPeriod = "weekly"
+	CountCreditLedgerResponseParamsPeriodMonthly CountCreditLedgerResponseParamsPeriod = "monthly"
+	CountCreditLedgerResponseParamsPeriodRaw     CountCreditLedgerResponseParamsPeriod = "raw"
+)
+
+func NewCountCreditLedgerResponseParamsPeriodFromString(s string) (CountCreditLedgerResponseParamsPeriod, error) {
+	switch s {
+	case "daily":
+		return CountCreditLedgerResponseParamsPeriodDaily, nil
+	case "weekly":
+		return CountCreditLedgerResponseParamsPeriodWeekly, nil
+	case "monthly":
+		return CountCreditLedgerResponseParamsPeriodMonthly, nil
+	case "raw":
+		return CountCreditLedgerResponseParamsPeriodRaw, nil
+	}
+	var t CountCreditLedgerResponseParamsPeriod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CountCreditLedgerResponseParamsPeriod) Ptr() *CountCreditLedgerResponseParamsPeriod {
 	return &c
 }
 
@@ -1613,6 +2313,222 @@ func (g *GetCreditBundleResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+type GetEnrichedCreditLedgerParams struct {
+	BillingCreditID *string `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
+	CompanyID       *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EndTime         *string `json:"end_time,omitempty" url:"end_time,omitempty"`
+	FeatureID       *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int                                         `json:"offset,omitempty" url:"offset,omitempty"`
+	Period    *GetEnrichedCreditLedgerResponseParamsPeriod `json:"period,omitempty" url:"period,omitempty"`
+	StartTime *string                                      `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEnrichedCreditLedgerParams) GetBillingCreditID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.BillingCreditID
+}
+
+func (g *GetEnrichedCreditLedgerParams) GetCompanyID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.CompanyID
+}
+
+func (g *GetEnrichedCreditLedgerParams) GetEndTime() *string {
+	if g == nil {
+		return nil
+	}
+	return g.EndTime
+}
+
+func (g *GetEnrichedCreditLedgerParams) GetFeatureID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.FeatureID
+}
+
+func (g *GetEnrichedCreditLedgerParams) GetLimit() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Limit
+}
+
+func (g *GetEnrichedCreditLedgerParams) GetOffset() *int {
+	if g == nil {
+		return nil
+	}
+	return g.Offset
+}
+
+func (g *GetEnrichedCreditLedgerParams) GetPeriod() *GetEnrichedCreditLedgerResponseParamsPeriod {
+	if g == nil {
+		return nil
+	}
+	return g.Period
+}
+
+func (g *GetEnrichedCreditLedgerParams) GetStartTime() *string {
+	if g == nil {
+		return nil
+	}
+	return g.StartTime
+}
+
+func (g *GetEnrichedCreditLedgerParams) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetEnrichedCreditLedgerParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetEnrichedCreditLedgerParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetEnrichedCreditLedgerParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetEnrichedCreditLedgerParams) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GetEnrichedCreditLedgerRequestPeriod string
+
+const (
+	GetEnrichedCreditLedgerRequestPeriodDaily   GetEnrichedCreditLedgerRequestPeriod = "daily"
+	GetEnrichedCreditLedgerRequestPeriodWeekly  GetEnrichedCreditLedgerRequestPeriod = "weekly"
+	GetEnrichedCreditLedgerRequestPeriodMonthly GetEnrichedCreditLedgerRequestPeriod = "monthly"
+	GetEnrichedCreditLedgerRequestPeriodRaw     GetEnrichedCreditLedgerRequestPeriod = "raw"
+)
+
+func NewGetEnrichedCreditLedgerRequestPeriodFromString(s string) (GetEnrichedCreditLedgerRequestPeriod, error) {
+	switch s {
+	case "daily":
+		return GetEnrichedCreditLedgerRequestPeriodDaily, nil
+	case "weekly":
+		return GetEnrichedCreditLedgerRequestPeriodWeekly, nil
+	case "monthly":
+		return GetEnrichedCreditLedgerRequestPeriodMonthly, nil
+	case "raw":
+		return GetEnrichedCreditLedgerRequestPeriodRaw, nil
+	}
+	var t GetEnrichedCreditLedgerRequestPeriod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (g GetEnrichedCreditLedgerRequestPeriod) Ptr() *GetEnrichedCreditLedgerRequestPeriod {
+	return &g
+}
+
+type GetEnrichedCreditLedgerResponse struct {
+	Data []*CreditLedgerEnrichedEntryResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *GetEnrichedCreditLedgerParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetEnrichedCreditLedgerResponse) GetData() []*CreditLedgerEnrichedEntryResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetEnrichedCreditLedgerResponse) GetParams() *GetEnrichedCreditLedgerParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetEnrichedCreditLedgerResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetEnrichedCreditLedgerResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetEnrichedCreditLedgerResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetEnrichedCreditLedgerResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetEnrichedCreditLedgerResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GetEnrichedCreditLedgerResponseParamsPeriod string
+
+const (
+	GetEnrichedCreditLedgerResponseParamsPeriodDaily   GetEnrichedCreditLedgerResponseParamsPeriod = "daily"
+	GetEnrichedCreditLedgerResponseParamsPeriodWeekly  GetEnrichedCreditLedgerResponseParamsPeriod = "weekly"
+	GetEnrichedCreditLedgerResponseParamsPeriodMonthly GetEnrichedCreditLedgerResponseParamsPeriod = "monthly"
+	GetEnrichedCreditLedgerResponseParamsPeriodRaw     GetEnrichedCreditLedgerResponseParamsPeriod = "raw"
+)
+
+func NewGetEnrichedCreditLedgerResponseParamsPeriodFromString(s string) (GetEnrichedCreditLedgerResponseParamsPeriod, error) {
+	switch s {
+	case "daily":
+		return GetEnrichedCreditLedgerResponseParamsPeriodDaily, nil
+	case "weekly":
+		return GetEnrichedCreditLedgerResponseParamsPeriodWeekly, nil
+	case "monthly":
+		return GetEnrichedCreditLedgerResponseParamsPeriodMonthly, nil
+	case "raw":
+		return GetEnrichedCreditLedgerResponseParamsPeriodRaw, nil
+	}
+	var t GetEnrichedCreditLedgerResponseParamsPeriod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (g GetEnrichedCreditLedgerResponseParamsPeriod) Ptr() *GetEnrichedCreditLedgerResponseParamsPeriod {
+	return &g
 }
 
 type GetSingleBillingCreditResponse struct {

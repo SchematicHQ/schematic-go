@@ -391,28 +391,36 @@ func (a *APIKeyRequestListResponseData) String() string {
 }
 
 type APIKeyRequestResponseData struct {
-	APIKeyID          string     `json:"api_key_id" url:"api_key_id"`
-	EndedAt           *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
-	EnvironmentID     *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID                string     `json:"id" url:"id"`
-	Method            string     `json:"method" url:"method"`
-	ReqBody           *string    `json:"req_body,omitempty" url:"req_body,omitempty"`
-	RequestType       *string    `json:"request_type,omitempty" url:"request_type,omitempty"`
-	ResourceID        *int       `json:"resource_id,omitempty" url:"resource_id,omitempty"`
-	ResourceIDString  *string    `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
-	ResourceName      *string    `json:"resource_name,omitempty" url:"resource_name,omitempty"`
-	ResourceType      *string    `json:"resource_type,omitempty" url:"resource_type,omitempty"`
-	RespBody          *string    `json:"resp_body,omitempty" url:"resp_body,omitempty"`
-	RespCode          *int       `json:"resp_code,omitempty" url:"resp_code,omitempty"`
-	SecondaryResource *string    `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
-	StartedAt         time.Time  `json:"started_at" url:"started_at"`
-	URL               string     `json:"url" url:"url"`
-	UserAgent         *string    `json:"user_agent,omitempty" url:"user_agent,omitempty"`
-	UserID            *string    `json:"user_id,omitempty" url:"user_id,omitempty"`
-	UserName          *string    `json:"user_name,omitempty" url:"user_name,omitempty"`
+	APIKey            *APIKeyResponseData `json:"api_key,omitempty" url:"api_key,omitempty"`
+	APIKeyID          string              `json:"api_key_id" url:"api_key_id"`
+	EndedAt           *time.Time          `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	EnvironmentID     *string             `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID                string              `json:"id" url:"id"`
+	Method            string              `json:"method" url:"method"`
+	ReqBody           *string             `json:"req_body,omitempty" url:"req_body,omitempty"`
+	RequestType       *string             `json:"request_type,omitempty" url:"request_type,omitempty"`
+	ResourceID        *int                `json:"resource_id,omitempty" url:"resource_id,omitempty"`
+	ResourceIDString  *string             `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
+	ResourceName      *string             `json:"resource_name,omitempty" url:"resource_name,omitempty"`
+	ResourceType      *string             `json:"resource_type,omitempty" url:"resource_type,omitempty"`
+	RespBody          *string             `json:"resp_body,omitempty" url:"resp_body,omitempty"`
+	RespCode          *int                `json:"resp_code,omitempty" url:"resp_code,omitempty"`
+	SecondaryResource *string             `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
+	StartedAt         time.Time           `json:"started_at" url:"started_at"`
+	URL               string              `json:"url" url:"url"`
+	UserAgent         *string             `json:"user_agent,omitempty" url:"user_agent,omitempty"`
+	UserID            *string             `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserName          *string             `json:"user_name,omitempty" url:"user_name,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (a *APIKeyRequestResponseData) GetAPIKey() *APIKeyResponseData {
+	if a == nil {
+		return nil
+	}
+	return a.APIKey
 }
 
 func (a *APIKeyRequestResponseData) GetAPIKeyID() string {

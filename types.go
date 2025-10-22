@@ -1758,210 +1758,6 @@ func (b *BillingSubscriptionDiscountView) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
-type BillingSubscriptionResponseData struct {
-	CancelAt               *int                   `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
-	CancelAtPeriodEnd      bool                   `json:"cancel_at_period_end" url:"cancel_at_period_end"`
-	CompanyID              *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
-	CreatedAt              time.Time              `json:"created_at" url:"created_at"`
-	Currency               string                 `json:"currency" url:"currency"`
-	CustomerExternalID     string                 `json:"customer_external_id" url:"customer_external_id"`
-	DefaultPaymentMethodID *string                `json:"default_payment_method_id,omitempty" url:"default_payment_method_id,omitempty"`
-	ExpiredAt              *time.Time             `json:"expired_at,omitempty" url:"expired_at,omitempty"`
-	ID                     string                 `json:"id" url:"id"`
-	Interval               string                 `json:"interval" url:"interval"`
-	Metadata               map[string]interface{} `json:"metadata,omitempty" url:"metadata,omitempty"`
-	PeriodEnd              int                    `json:"period_end" url:"period_end"`
-	PeriodStart            int                    `json:"period_start" url:"period_start"`
-	Status                 string                 `json:"status" url:"status"`
-	SubscriptionExternalID string                 `json:"subscription_external_id" url:"subscription_external_id"`
-	TotalPrice             int                    `json:"total_price" url:"total_price"`
-	TrialEnd               *int                   `json:"trial_end,omitempty" url:"trial_end,omitempty"`
-	TrialEndSetting        *string                `json:"trial_end_setting,omitempty" url:"trial_end_setting,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (b *BillingSubscriptionResponseData) GetCancelAt() *int {
-	if b == nil {
-		return nil
-	}
-	return b.CancelAt
-}
-
-func (b *BillingSubscriptionResponseData) GetCancelAtPeriodEnd() bool {
-	if b == nil {
-		return false
-	}
-	return b.CancelAtPeriodEnd
-}
-
-func (b *BillingSubscriptionResponseData) GetCompanyID() *string {
-	if b == nil {
-		return nil
-	}
-	return b.CompanyID
-}
-
-func (b *BillingSubscriptionResponseData) GetCreatedAt() time.Time {
-	if b == nil {
-		return time.Time{}
-	}
-	return b.CreatedAt
-}
-
-func (b *BillingSubscriptionResponseData) GetCurrency() string {
-	if b == nil {
-		return ""
-	}
-	return b.Currency
-}
-
-func (b *BillingSubscriptionResponseData) GetCustomerExternalID() string {
-	if b == nil {
-		return ""
-	}
-	return b.CustomerExternalID
-}
-
-func (b *BillingSubscriptionResponseData) GetDefaultPaymentMethodID() *string {
-	if b == nil {
-		return nil
-	}
-	return b.DefaultPaymentMethodID
-}
-
-func (b *BillingSubscriptionResponseData) GetExpiredAt() *time.Time {
-	if b == nil {
-		return nil
-	}
-	return b.ExpiredAt
-}
-
-func (b *BillingSubscriptionResponseData) GetID() string {
-	if b == nil {
-		return ""
-	}
-	return b.ID
-}
-
-func (b *BillingSubscriptionResponseData) GetInterval() string {
-	if b == nil {
-		return ""
-	}
-	return b.Interval
-}
-
-func (b *BillingSubscriptionResponseData) GetMetadata() map[string]interface{} {
-	if b == nil {
-		return nil
-	}
-	return b.Metadata
-}
-
-func (b *BillingSubscriptionResponseData) GetPeriodEnd() int {
-	if b == nil {
-		return 0
-	}
-	return b.PeriodEnd
-}
-
-func (b *BillingSubscriptionResponseData) GetPeriodStart() int {
-	if b == nil {
-		return 0
-	}
-	return b.PeriodStart
-}
-
-func (b *BillingSubscriptionResponseData) GetStatus() string {
-	if b == nil {
-		return ""
-	}
-	return b.Status
-}
-
-func (b *BillingSubscriptionResponseData) GetSubscriptionExternalID() string {
-	if b == nil {
-		return ""
-	}
-	return b.SubscriptionExternalID
-}
-
-func (b *BillingSubscriptionResponseData) GetTotalPrice() int {
-	if b == nil {
-		return 0
-	}
-	return b.TotalPrice
-}
-
-func (b *BillingSubscriptionResponseData) GetTrialEnd() *int {
-	if b == nil {
-		return nil
-	}
-	return b.TrialEnd
-}
-
-func (b *BillingSubscriptionResponseData) GetTrialEndSetting() *string {
-	if b == nil {
-		return nil
-	}
-	return b.TrialEndSetting
-}
-
-func (b *BillingSubscriptionResponseData) GetExtraProperties() map[string]interface{} {
-	return b.extraProperties
-}
-
-func (b *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) error {
-	type embed BillingSubscriptionResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
-	}{
-		embed: embed(*b),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*b = BillingSubscriptionResponseData(unmarshaler.embed)
-	b.CreatedAt = unmarshaler.CreatedAt.Time()
-	b.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
-	extraProperties, err := internal.ExtractExtraProperties(data, *b)
-	if err != nil {
-		return err
-	}
-	b.extraProperties = extraProperties
-	b.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (b *BillingSubscriptionResponseData) MarshalJSON() ([]byte, error) {
-	type embed BillingSubscriptionResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
-	}{
-		embed:     embed(*b),
-		CreatedAt: internal.NewDateTime(b.CreatedAt),
-		ExpiredAt: internal.NewOptionalDateTime(b.ExpiredAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (b *BillingSubscriptionResponseData) String() string {
-	if len(b.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(b); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", b)
-}
-
 type BillingSubscriptionView struct {
 	CancelAt               *int                                         `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
 	CancelAtPeriodEnd      bool                                         `json:"cancel_at_period_end" url:"cancel_at_period_end"`
@@ -6500,19 +6296,31 @@ type FeatureUsageResponseData struct {
 	CreditRemaining   *float64                                   `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
 	CreditTotal       *float64                                   `json:"credit_total,omitempty" url:"credit_total,omitempty"`
 	// Icon identifier for the credit type
-	CreditTypeIcon            *string    `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
-	CreditUsed                *float64   `json:"credit_used,omitempty" url:"credit_used,omitempty"`
+	CreditTypeIcon *string  `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
+	CreditUsed     *float64 `json:"credit_used,omitempty" url:"credit_used,omitempty"`
+	// Effective limit for usage calculations. For overage pricing, this is the soft limit where overage charges begin. For tiered pricing, this is the first tier boundary. For other pricing models, this is the base allocation. Used to calculate usage percentages and determine access thresholds.
+	EffectiveLimit *int `json:"effective_limit,omitempty" url:"effective_limit,omitempty"`
+	// Per-unit price for current usage scenario
+	EffectivePrice            *float64   `json:"effective_price,omitempty" url:"effective_price,omitempty"`
 	EntitlementExpirationDate *time.Time `json:"entitlement_expiration_date,omitempty" url:"entitlement_expiration_date,omitempty"`
 	EntitlementID             string     `json:"entitlement_id" url:"entitlement_id"`
 	// Source of the entitlement (plan or company_override)
 	EntitlementSource *string                    `json:"entitlement_source,omitempty" url:"entitlement_source,omitempty"`
 	EntitlementType   string                     `json:"entitlement_type" url:"entitlement_type"`
 	Feature           *FeatureDetailResponseData `json:"feature,omitempty" url:"feature,omitempty"`
+	// Whether a valid allocation exists
+	HasValidAllocation *bool `json:"has_valid_allocation,omitempty" url:"has_valid_allocation,omitempty"`
+	// Whether this is an unlimited allocation
+	IsUnlimited *bool `json:"is_unlimited,omitempty" url:"is_unlimited,omitempty"`
 	// The time at which the metric will reset.
 	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
 	// If the period is current_month, when the month resets.
 	MonthReset             *string           `json:"month_reset,omitempty" url:"month_reset,omitempty"`
 	MonthlyUsageBasedPrice *BillingPriceView `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
+	// Amount of usage exceeding soft limit (overage pricing only)
+	Overuse *int `json:"overuse,omitempty" url:"overuse,omitempty"`
+	// Percentage of allocation consumed (0-100+)
+	PercentUsed *float64 `json:"percent_used,omitempty" url:"percent_used,omitempty"`
 	// The period over which usage is measured.
 	Period          *string                      `json:"period,omitempty" url:"period,omitempty"`
 	Plan            *PlanResponseData            `json:"plan,omitempty" url:"plan,omitempty"`
@@ -6612,6 +6420,20 @@ func (f *FeatureUsageResponseData) GetCreditUsed() *float64 {
 	return f.CreditUsed
 }
 
+func (f *FeatureUsageResponseData) GetEffectiveLimit() *int {
+	if f == nil {
+		return nil
+	}
+	return f.EffectiveLimit
+}
+
+func (f *FeatureUsageResponseData) GetEffectivePrice() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.EffectivePrice
+}
+
 func (f *FeatureUsageResponseData) GetEntitlementExpirationDate() *time.Time {
 	if f == nil {
 		return nil
@@ -6647,6 +6469,20 @@ func (f *FeatureUsageResponseData) GetFeature() *FeatureDetailResponseData {
 	return f.Feature
 }
 
+func (f *FeatureUsageResponseData) GetHasValidAllocation() *bool {
+	if f == nil {
+		return nil
+	}
+	return f.HasValidAllocation
+}
+
+func (f *FeatureUsageResponseData) GetIsUnlimited() *bool {
+	if f == nil {
+		return nil
+	}
+	return f.IsUnlimited
+}
+
 func (f *FeatureUsageResponseData) GetMetricResetAt() *time.Time {
 	if f == nil {
 		return nil
@@ -6666,6 +6502,20 @@ func (f *FeatureUsageResponseData) GetMonthlyUsageBasedPrice() *BillingPriceView
 		return nil
 	}
 	return f.MonthlyUsageBasedPrice
+}
+
+func (f *FeatureUsageResponseData) GetOveruse() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Overuse
+}
+
+func (f *FeatureUsageResponseData) GetPercentUsed() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.PercentUsed
 }
 
 func (f *FeatureUsageResponseData) GetPeriod() *string {

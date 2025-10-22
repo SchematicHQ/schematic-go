@@ -403,24 +403,54 @@ type FeatureCompanyResponseData struct {
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
 	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// The type of allocation that is being used.
-	AllocationType FeatureCompanyResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
-	Company        *CompanyDetailResponseData               `json:"company,omitempty" url:"company,omitempty"`
-	// Rate at which credits are consumed per unit of usage for credit-based features.
-	CreditConsumptionRate     *float64                   `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
-	CreditUsage               *CreditUsage               `json:"credit_usage,omitempty" url:"credit_usage,omitempty"`
-	EntitlementExpirationDate *time.Time                 `json:"entitlement_expiration_date,omitempty" url:"entitlement_expiration_date,omitempty"`
-	EntitlementID             string                     `json:"entitlement_id" url:"entitlement_id"`
-	EntitlementType           string                     `json:"entitlement_type" url:"entitlement_type"`
-	Feature                   *FeatureDetailResponseData `json:"feature,omitempty" url:"feature,omitempty"`
-	// The time at which the metric will resets.
+	AllocationType  FeatureCompanyResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
+	Company         *CompanyDetailResponseData               `json:"company,omitempty" url:"company,omitempty"`
+	CompanyOverride *CompanyOverrideResponseData             `json:"company_override,omitempty" url:"company_override,omitempty"`
+	// The rate at which credits are consumed per unit of usage
+	CreditConsumptionRate *float64             `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
+	CreditGrantCounts     map[string]float64   `json:"credit_grant_counts,omitempty" url:"credit_grant_counts,omitempty"`
+	CreditGrantDetails    []*CreditGrantDetail `json:"credit_grant_details,omitempty" url:"credit_grant_details,omitempty"`
+	// Reason for the credit grant
+	CreditGrantReason *FeatureCompanyResponseDataCreditGrantReason `json:"credit_grant_reason,omitempty" url:"credit_grant_reason,omitempty"`
+	CreditRemaining   *float64                                     `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
+	CreditTotal       *float64                                     `json:"credit_total,omitempty" url:"credit_total,omitempty"`
+	// Icon identifier for the credit type
+	CreditTypeIcon *string      `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
+	CreditUsage    *CreditUsage `json:"credit_usage,omitempty" url:"credit_usage,omitempty"`
+	CreditUsed     *float64     `json:"credit_used,omitempty" url:"credit_used,omitempty"`
+	// Effective limit for usage calculations. For overage pricing, this is the soft limit where overage charges begin. For tiered pricing, this is the first tier boundary. For other pricing models, this is the base allocation. Used to calculate usage percentages and determine access thresholds.
+	EffectiveLimit *int `json:"effective_limit,omitempty" url:"effective_limit,omitempty"`
+	// Per-unit price for current usage scenario
+	EffectivePrice            *float64   `json:"effective_price,omitempty" url:"effective_price,omitempty"`
+	EntitlementExpirationDate *time.Time `json:"entitlement_expiration_date,omitempty" url:"entitlement_expiration_date,omitempty"`
+	EntitlementID             string     `json:"entitlement_id" url:"entitlement_id"`
+	// Source of the entitlement (plan or company_override)
+	EntitlementSource *string                    `json:"entitlement_source,omitempty" url:"entitlement_source,omitempty"`
+	EntitlementType   string                     `json:"entitlement_type" url:"entitlement_type"`
+	Feature           *FeatureDetailResponseData `json:"feature,omitempty" url:"feature,omitempty"`
+	// Whether a valid allocation exists
+	HasValidAllocation *bool `json:"has_valid_allocation,omitempty" url:"has_valid_allocation,omitempty"`
+	// Whether this is an unlimited allocation
+	IsUnlimited *bool `json:"is_unlimited,omitempty" url:"is_unlimited,omitempty"`
+	// The time at which the metric will reset.
 	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
 	// If the period is current_month, when the month resets.
-	MonthReset *string `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	MonthReset             *string           `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	MonthlyUsageBasedPrice *BillingPriceView `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
+	// Amount of usage exceeding soft limit (overage pricing only)
+	Overuse *int `json:"overuse,omitempty" url:"overuse,omitempty"`
+	// Percentage of allocation consumed (0-100+)
+	PercentUsed *float64 `json:"percent_used,omitempty" url:"percent_used,omitempty"`
 	// The period over which usage is measured.
-	Period *string           `json:"period,omitempty" url:"period,omitempty"`
-	Plan   *PlanResponseData `json:"plan,omitempty" url:"plan,omitempty"`
+	Period          *string                      `json:"period,omitempty" url:"period,omitempty"`
+	Plan            *PlanResponseData            `json:"plan,omitempty" url:"plan,omitempty"`
+	PlanEntitlement *PlanEntitlementResponseData `json:"plan_entitlement,omitempty" url:"plan_entitlement,omitempty"`
+	PriceBehavior   *string                      `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	// The soft limit for the feature usage. Available only for overage price behavior
+	SoftLimit *int `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured.
-	Usage *int `json:"usage,omitempty" url:"usage,omitempty"`
+	Usage                 *int              `json:"usage,omitempty" url:"usage,omitempty"`
+	YearlyUsageBasedPrice *BillingPriceView `json:"yearly_usage_based_price,omitempty" url:"yearly_usage_based_price,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -454,6 +484,13 @@ func (f *FeatureCompanyResponseData) GetCompany() *CompanyDetailResponseData {
 	return f.Company
 }
 
+func (f *FeatureCompanyResponseData) GetCompanyOverride() *CompanyOverrideResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.CompanyOverride
+}
+
 func (f *FeatureCompanyResponseData) GetCreditConsumptionRate() *float64 {
 	if f == nil {
 		return nil
@@ -461,11 +498,74 @@ func (f *FeatureCompanyResponseData) GetCreditConsumptionRate() *float64 {
 	return f.CreditConsumptionRate
 }
 
+func (f *FeatureCompanyResponseData) GetCreditGrantCounts() map[string]float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditGrantCounts
+}
+
+func (f *FeatureCompanyResponseData) GetCreditGrantDetails() []*CreditGrantDetail {
+	if f == nil {
+		return nil
+	}
+	return f.CreditGrantDetails
+}
+
+func (f *FeatureCompanyResponseData) GetCreditGrantReason() *FeatureCompanyResponseDataCreditGrantReason {
+	if f == nil {
+		return nil
+	}
+	return f.CreditGrantReason
+}
+
+func (f *FeatureCompanyResponseData) GetCreditRemaining() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditRemaining
+}
+
+func (f *FeatureCompanyResponseData) GetCreditTotal() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditTotal
+}
+
+func (f *FeatureCompanyResponseData) GetCreditTypeIcon() *string {
+	if f == nil {
+		return nil
+	}
+	return f.CreditTypeIcon
+}
+
 func (f *FeatureCompanyResponseData) GetCreditUsage() *CreditUsage {
 	if f == nil {
 		return nil
 	}
 	return f.CreditUsage
+}
+
+func (f *FeatureCompanyResponseData) GetCreditUsed() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditUsed
+}
+
+func (f *FeatureCompanyResponseData) GetEffectiveLimit() *int {
+	if f == nil {
+		return nil
+	}
+	return f.EffectiveLimit
+}
+
+func (f *FeatureCompanyResponseData) GetEffectivePrice() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.EffectivePrice
 }
 
 func (f *FeatureCompanyResponseData) GetEntitlementExpirationDate() *time.Time {
@@ -482,6 +582,13 @@ func (f *FeatureCompanyResponseData) GetEntitlementID() string {
 	return f.EntitlementID
 }
 
+func (f *FeatureCompanyResponseData) GetEntitlementSource() *string {
+	if f == nil {
+		return nil
+	}
+	return f.EntitlementSource
+}
+
 func (f *FeatureCompanyResponseData) GetEntitlementType() string {
 	if f == nil {
 		return ""
@@ -494,6 +601,20 @@ func (f *FeatureCompanyResponseData) GetFeature() *FeatureDetailResponseData {
 		return nil
 	}
 	return f.Feature
+}
+
+func (f *FeatureCompanyResponseData) GetHasValidAllocation() *bool {
+	if f == nil {
+		return nil
+	}
+	return f.HasValidAllocation
+}
+
+func (f *FeatureCompanyResponseData) GetIsUnlimited() *bool {
+	if f == nil {
+		return nil
+	}
+	return f.IsUnlimited
 }
 
 func (f *FeatureCompanyResponseData) GetMetricResetAt() *time.Time {
@@ -510,6 +631,27 @@ func (f *FeatureCompanyResponseData) GetMonthReset() *string {
 	return f.MonthReset
 }
 
+func (f *FeatureCompanyResponseData) GetMonthlyUsageBasedPrice() *BillingPriceView {
+	if f == nil {
+		return nil
+	}
+	return f.MonthlyUsageBasedPrice
+}
+
+func (f *FeatureCompanyResponseData) GetOveruse() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Overuse
+}
+
+func (f *FeatureCompanyResponseData) GetPercentUsed() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.PercentUsed
+}
+
 func (f *FeatureCompanyResponseData) GetPeriod() *string {
 	if f == nil {
 		return nil
@@ -524,11 +666,39 @@ func (f *FeatureCompanyResponseData) GetPlan() *PlanResponseData {
 	return f.Plan
 }
 
+func (f *FeatureCompanyResponseData) GetPlanEntitlement() *PlanEntitlementResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.PlanEntitlement
+}
+
+func (f *FeatureCompanyResponseData) GetPriceBehavior() *string {
+	if f == nil {
+		return nil
+	}
+	return f.PriceBehavior
+}
+
+func (f *FeatureCompanyResponseData) GetSoftLimit() *int {
+	if f == nil {
+		return nil
+	}
+	return f.SoftLimit
+}
+
 func (f *FeatureCompanyResponseData) GetUsage() *int {
 	if f == nil {
 		return nil
 	}
 	return f.Usage
+}
+
+func (f *FeatureCompanyResponseData) GetYearlyUsageBasedPrice() *BillingPriceView {
+	if f == nil {
+		return nil
+	}
+	return f.YearlyUsageBasedPrice
 }
 
 func (f *FeatureCompanyResponseData) GetExtraProperties() map[string]interface{} {
@@ -611,6 +781,32 @@ func NewFeatureCompanyResponseDataAllocationTypeFromString(s string) (FeatureCom
 }
 
 func (f FeatureCompanyResponseDataAllocationType) Ptr() *FeatureCompanyResponseDataAllocationType {
+	return &f
+}
+
+// Reason for the credit grant
+type FeatureCompanyResponseDataCreditGrantReason string
+
+const (
+	FeatureCompanyResponseDataCreditGrantReasonFree      FeatureCompanyResponseDataCreditGrantReason = "free"
+	FeatureCompanyResponseDataCreditGrantReasonPlan      FeatureCompanyResponseDataCreditGrantReason = "plan"
+	FeatureCompanyResponseDataCreditGrantReasonPurchased FeatureCompanyResponseDataCreditGrantReason = "purchased"
+)
+
+func NewFeatureCompanyResponseDataCreditGrantReasonFromString(s string) (FeatureCompanyResponseDataCreditGrantReason, error) {
+	switch s {
+	case "free":
+		return FeatureCompanyResponseDataCreditGrantReasonFree, nil
+	case "plan":
+		return FeatureCompanyResponseDataCreditGrantReasonPlan, nil
+	case "purchased":
+		return FeatureCompanyResponseDataCreditGrantReasonPurchased, nil
+	}
+	var t FeatureCompanyResponseDataCreditGrantReason
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (f FeatureCompanyResponseDataCreditGrantReason) Ptr() *FeatureCompanyResponseDataCreditGrantReason {
 	return &f
 }
 

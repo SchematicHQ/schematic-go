@@ -11,7 +11,8 @@ import (
 
 type CountFeaturesRequest struct {
 	IDs []*string `json:"-" url:"ids,omitempty"`
-	Q   *string   `json:"-" url:"q,omitempty"`
+	// Search by feature name or ID
+	Q *string `json:"-" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
@@ -29,7 +30,8 @@ type CountFeaturesRequest struct {
 type CountFlagsRequest struct {
 	FeatureID *string   `json:"-" url:"feature_id,omitempty"`
 	IDs       []*string `json:"-" url:"ids,omitempty"`
-	Q         *string   `json:"-" url:"q,omitempty"`
+	// Search by flag name, key, or ID
+	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -52,7 +54,8 @@ type CreateFeatureRequestBody struct {
 
 type ListFeaturesRequest struct {
 	IDs []*string `json:"-" url:"ids,omitempty"`
-	Q   *string   `json:"-" url:"q,omitempty"`
+	// Search by feature name or ID
+	Q *string `json:"-" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
@@ -70,7 +73,8 @@ type ListFeaturesRequest struct {
 type ListFlagsRequest struct {
 	FeatureID *string   `json:"-" url:"feature_id,omitempty"`
 	IDs       []*string `json:"-" url:"ids,omitempty"`
-	Q         *string   `json:"-" url:"q,omitempty"`
+	// Search by flag name, key, or ID
+	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1223,8 +1227,9 @@ type CountFeaturesParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search by feature name or ID
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"without_company_override_for,omitempty" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
@@ -1384,8 +1389,9 @@ type CountFlagsParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search by flag name, key, or ID
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -2031,8 +2037,9 @@ type ListFeaturesParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search by feature name or ID
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"without_company_override_for,omitempty" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
@@ -2192,8 +2199,9 @@ type ListFlagsParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q      *string `json:"q,omitempty" url:"q,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search by flag name, key, or ID
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage

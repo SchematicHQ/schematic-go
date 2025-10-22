@@ -250,6 +250,226 @@ func (c *CheckoutDataResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CheckoutSubscription struct {
+	CancelAt                         *int                   `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
+	CancelAtPeriodEnd                bool                   `json:"cancel_at_period_end" url:"cancel_at_period_end"`
+	CompanyID                        *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
+	ConfirmPaymentIntentClientSecret *string                `json:"confirm_payment_intent_client_secret,omitempty" url:"confirm_payment_intent_client_secret,omitempty"`
+	ConfirmPaymentIntentID           *string                `json:"confirm_payment_intent_id,omitempty" url:"confirm_payment_intent_id,omitempty"`
+	CreatedAt                        time.Time              `json:"created_at" url:"created_at"`
+	Currency                         string                 `json:"currency" url:"currency"`
+	CustomerExternalID               string                 `json:"customer_external_id" url:"customer_external_id"`
+	DefaultPaymentMethodID           *string                `json:"default_payment_method_id,omitempty" url:"default_payment_method_id,omitempty"`
+	ExpiredAt                        *time.Time             `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	ID                               string                 `json:"id" url:"id"`
+	Interval                         string                 `json:"interval" url:"interval"`
+	Metadata                         map[string]interface{} `json:"metadata,omitempty" url:"metadata,omitempty"`
+	PeriodEnd                        int                    `json:"period_end" url:"period_end"`
+	PeriodStart                      int                    `json:"period_start" url:"period_start"`
+	Status                           string                 `json:"status" url:"status"`
+	SubscriptionExternalID           string                 `json:"subscription_external_id" url:"subscription_external_id"`
+	TotalPrice                       int                    `json:"total_price" url:"total_price"`
+	TrialEnd                         *int                   `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	TrialEndSetting                  *string                `json:"trial_end_setting,omitempty" url:"trial_end_setting,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CheckoutSubscription) GetCancelAt() *int {
+	if c == nil {
+		return nil
+	}
+	return c.CancelAt
+}
+
+func (c *CheckoutSubscription) GetCancelAtPeriodEnd() bool {
+	if c == nil {
+		return false
+	}
+	return c.CancelAtPeriodEnd
+}
+
+func (c *CheckoutSubscription) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CheckoutSubscription) GetConfirmPaymentIntentClientSecret() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ConfirmPaymentIntentClientSecret
+}
+
+func (c *CheckoutSubscription) GetConfirmPaymentIntentID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ConfirmPaymentIntentID
+}
+
+func (c *CheckoutSubscription) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CheckoutSubscription) GetCurrency() string {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CheckoutSubscription) GetCustomerExternalID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CustomerExternalID
+}
+
+func (c *CheckoutSubscription) GetDefaultPaymentMethodID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.DefaultPaymentMethodID
+}
+
+func (c *CheckoutSubscription) GetExpiredAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.ExpiredAt
+}
+
+func (c *CheckoutSubscription) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CheckoutSubscription) GetInterval() string {
+	if c == nil {
+		return ""
+	}
+	return c.Interval
+}
+
+func (c *CheckoutSubscription) GetMetadata() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Metadata
+}
+
+func (c *CheckoutSubscription) GetPeriodEnd() int {
+	if c == nil {
+		return 0
+	}
+	return c.PeriodEnd
+}
+
+func (c *CheckoutSubscription) GetPeriodStart() int {
+	if c == nil {
+		return 0
+	}
+	return c.PeriodStart
+}
+
+func (c *CheckoutSubscription) GetStatus() string {
+	if c == nil {
+		return ""
+	}
+	return c.Status
+}
+
+func (c *CheckoutSubscription) GetSubscriptionExternalID() string {
+	if c == nil {
+		return ""
+	}
+	return c.SubscriptionExternalID
+}
+
+func (c *CheckoutSubscription) GetTotalPrice() int {
+	if c == nil {
+		return 0
+	}
+	return c.TotalPrice
+}
+
+func (c *CheckoutSubscription) GetTrialEnd() *int {
+	if c == nil {
+		return nil
+	}
+	return c.TrialEnd
+}
+
+func (c *CheckoutSubscription) GetTrialEndSetting() *string {
+	if c == nil {
+		return nil
+	}
+	return c.TrialEndSetting
+}
+
+func (c *CheckoutSubscription) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CheckoutSubscription) UnmarshalJSON(data []byte) error {
+	type embed CheckoutSubscription
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CheckoutSubscription(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CheckoutSubscription) MarshalJSON() ([]byte, error) {
+	type embed CheckoutSubscription
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		ExpiredAt: internal.NewOptionalDateTime(c.ExpiredAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CheckoutSubscription) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 type CreditBundlePurchaseResponseData struct {
 	Bundle   *BillingCreditBundleResponseData `json:"bundle,omitempty" url:"bundle,omitempty"`
 	Quantity int                              `json:"quantity" url:"quantity"`
@@ -310,6 +530,270 @@ func (c *CreditBundlePurchaseResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+type ManagePlanPreviewResponseResponseData struct {
+	SubscriptionChangePreview *PreviewSubscriptionChangeResponseData `json:"subscription_change_preview,omitempty" url:"subscription_change_preview,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *ManagePlanPreviewResponseResponseData) GetSubscriptionChangePreview() *PreviewSubscriptionChangeResponseData {
+	if m == nil {
+		return nil
+	}
+	return m.SubscriptionChangePreview
+}
+
+func (m *ManagePlanPreviewResponseResponseData) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *ManagePlanPreviewResponseResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler ManagePlanPreviewResponseResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = ManagePlanPreviewResponseResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *ManagePlanPreviewResponseResponseData) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
+type ManagePlanRequest struct {
+	AddOnSelections          []*PlanSelection                 `json:"add_on_selections,omitempty" url:"add_on_selections,omitempty"`
+	BasePlanID               *string                          `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
+	BasePlanPriceID          *string                          `json:"base_plan_price_id,omitempty" url:"base_plan_price_id,omitempty"`
+	CompanyID                string                           `json:"company_id" url:"company_id"`
+	CouponExternalID         *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
+	CreditBundles            []*UpdateCreditBundleRequestBody `json:"credit_bundles,omitempty" url:"credit_bundles,omitempty"`
+	PayInAdvanceEntitlements []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance_entitlements,omitempty" url:"pay_in_advance_entitlements,omitempty"`
+	PaymentMethodExternalID  *string                          `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
+	PromoCode                *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *ManagePlanRequest) GetAddOnSelections() []*PlanSelection {
+	if m == nil {
+		return nil
+	}
+	return m.AddOnSelections
+}
+
+func (m *ManagePlanRequest) GetBasePlanID() *string {
+	if m == nil {
+		return nil
+	}
+	return m.BasePlanID
+}
+
+func (m *ManagePlanRequest) GetBasePlanPriceID() *string {
+	if m == nil {
+		return nil
+	}
+	return m.BasePlanPriceID
+}
+
+func (m *ManagePlanRequest) GetCompanyID() string {
+	if m == nil {
+		return ""
+	}
+	return m.CompanyID
+}
+
+func (m *ManagePlanRequest) GetCouponExternalID() *string {
+	if m == nil {
+		return nil
+	}
+	return m.CouponExternalID
+}
+
+func (m *ManagePlanRequest) GetCreditBundles() []*UpdateCreditBundleRequestBody {
+	if m == nil {
+		return nil
+	}
+	return m.CreditBundles
+}
+
+func (m *ManagePlanRequest) GetPayInAdvanceEntitlements() []*UpdatePayInAdvanceRequestBody {
+	if m == nil {
+		return nil
+	}
+	return m.PayInAdvanceEntitlements
+}
+
+func (m *ManagePlanRequest) GetPaymentMethodExternalID() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PaymentMethodExternalID
+}
+
+func (m *ManagePlanRequest) GetPromoCode() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PromoCode
+}
+
+func (m *ManagePlanRequest) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *ManagePlanRequest) UnmarshalJSON(data []byte) error {
+	type unmarshaler ManagePlanRequest
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = ManagePlanRequest(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *ManagePlanRequest) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
+type ManagePlanResponseResponseData struct {
+	Company *CompanyDetailResponseData `json:"company,omitempty" url:"company,omitempty"`
+	Success bool                       `json:"success" url:"success"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *ManagePlanResponseResponseData) GetCompany() *CompanyDetailResponseData {
+	if m == nil {
+		return nil
+	}
+	return m.Company
+}
+
+func (m *ManagePlanResponseResponseData) GetSuccess() bool {
+	if m == nil {
+		return false
+	}
+	return m.Success
+}
+
+func (m *ManagePlanResponseResponseData) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *ManagePlanResponseResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler ManagePlanResponseResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = ManagePlanResponseResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *ManagePlanResponseResponseData) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
+type PlanSelection struct {
+	PlanID  string  `json:"plan_id" url:"plan_id"`
+	PriceID *string `json:"price_id,omitempty" url:"price_id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanSelection) GetPlanID() string {
+	if p == nil {
+		return ""
+	}
+	return p.PlanID
+}
+
+func (p *PlanSelection) GetPriceID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PriceID
+}
+
+func (p *PlanSelection) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PlanSelection) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanSelection
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanSelection(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanSelection) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 type PreviewSubscriptionChangeResponseData struct {
@@ -857,7 +1341,7 @@ func (u *UpdatePayInAdvanceRequestBody) String() string {
 }
 
 type CheckoutInternalResponse struct {
-	Data *BillingSubscriptionResponseData `json:"data,omitempty" url:"data,omitempty"`
+	Data *CheckoutSubscription `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
 	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
 
@@ -865,7 +1349,7 @@ type CheckoutInternalResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CheckoutInternalResponse) GetData() *BillingSubscriptionResponseData {
+func (c *CheckoutInternalResponse) GetData() *CheckoutSubscription {
 	if c == nil {
 		return nil
 	}
@@ -966,6 +1450,61 @@ func (g *GetCheckoutDataResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+type ManagePlanResponse struct {
+	Data *ManagePlanResponseResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *ManagePlanResponse) GetData() *ManagePlanResponseResponseData {
+	if m == nil {
+		return nil
+	}
+	return m.Data
+}
+
+func (m *ManagePlanResponse) GetParams() map[string]interface{} {
+	if m == nil {
+		return nil
+	}
+	return m.Params
+}
+
+func (m *ManagePlanResponse) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *ManagePlanResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ManagePlanResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = ManagePlanResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *ManagePlanResponse) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
 type PreviewCheckoutInternalResponse struct {
 	Data *PreviewSubscriptionChangeResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -1010,6 +1549,61 @@ func (p *PreviewCheckoutInternalResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (p *PreviewCheckoutInternalResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PreviewManagePlanResponse struct {
+	Data *ManagePlanPreviewResponseResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreviewManagePlanResponse) GetData() *ManagePlanPreviewResponseResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Data
+}
+
+func (p *PreviewManagePlanResponse) GetParams() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.Params
+}
+
+func (p *PreviewManagePlanResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PreviewManagePlanResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PreviewManagePlanResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PreviewManagePlanResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreviewManagePlanResponse) String() string {
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value

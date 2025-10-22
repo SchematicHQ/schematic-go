@@ -26,6 +26,7 @@ type CreatePlanGroupRequestBody struct {
 	OrderedAddOns                    []*OrderedPlansInGroup  `json:"ordered_add_ons,omitempty" url:"-"`
 	OrderedBundleList                []*PlanGroupBundleOrder `json:"ordered_bundle_list,omitempty" url:"-"`
 	OrderedPlans                     []*OrderedPlansInGroup  `json:"ordered_plans,omitempty" url:"-"`
+	PreventDowngradesWhenOverLimit   bool                    `json:"prevent_downgrades_when_over_limit" url:"-"`
 	ShowCredits                      bool                    `json:"show_credits" url:"-"`
 	ShowPeriodToggle                 bool                    `json:"show_period_toggle" url:"-"`
 	ShowZeroPriceAsFree              bool                    `json:"show_zero_price_as_free" url:"-"`
@@ -440,6 +441,7 @@ type PlanGroupDetailResponseData struct {
 	OrderedBundleList                []*PlanGroupBundleOrder            `json:"ordered_bundle_list,omitempty" url:"ordered_bundle_list,omitempty"`
 	OrderedPlanList                  []*PlanGroupPlanEntitlementsOrder  `json:"ordered_plan_list,omitempty" url:"ordered_plan_list,omitempty"`
 	Plans                            []*PlanGroupPlanDetailResponseData `json:"plans,omitempty" url:"plans,omitempty"`
+	PreventDowngradesWhenOverLimit   bool                               `json:"prevent_downgrades_when_over_limit" url:"prevent_downgrades_when_over_limit"`
 	ShowCredits                      bool                               `json:"show_credits" url:"show_credits"`
 	ShowPeriodToggle                 bool                               `json:"show_period_toggle" url:"show_period_toggle"`
 	ShowZeroPriceAsFree              bool                               `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
@@ -573,6 +575,13 @@ func (p *PlanGroupDetailResponseData) GetPlans() []*PlanGroupPlanDetailResponseD
 		return nil
 	}
 	return p.Plans
+}
+
+func (p *PlanGroupDetailResponseData) GetPreventDowngradesWhenOverLimit() bool {
+	if p == nil {
+		return false
+	}
+	return p.PreventDowngradesWhenOverLimit
 }
 
 func (p *PlanGroupDetailResponseData) GetShowCredits() bool {
@@ -1009,6 +1018,7 @@ type PlanGroupResponseData struct {
 	InitialPlanPriceID               *string                        `json:"initial_plan_price_id,omitempty" url:"initial_plan_price_id,omitempty"`
 	OrderedAddOnIDs                  []*OrderedPlansInGroup         `json:"ordered_add_on_ids,omitempty" url:"ordered_add_on_ids,omitempty"`
 	PlanIDs                          []*OrderedPlansInGroup         `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	PreventDowngradesWhenOverLimit   bool                           `json:"prevent_downgrades_when_over_limit" url:"prevent_downgrades_when_over_limit"`
 	ShowCredits                      bool                           `json:"show_credits" url:"show_credits"`
 	ShowPeriodToggle                 bool                           `json:"show_period_toggle" url:"show_period_toggle"`
 	ShowZeroPriceAsFree              bool                           `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
@@ -1091,6 +1101,13 @@ func (p *PlanGroupResponseData) GetPlanIDs() []*OrderedPlansInGroup {
 		return nil
 	}
 	return p.PlanIDs
+}
+
+func (p *PlanGroupResponseData) GetPreventDowngradesWhenOverLimit() bool {
+	if p == nil {
+		return false
+	}
+	return p.PreventDowngradesWhenOverLimit
 }
 
 func (p *PlanGroupResponseData) GetShowCredits() bool {
@@ -1370,6 +1387,7 @@ type UpdatePlanGroupRequestBody struct {
 	OrderedAddOns                    []*OrderedPlansInGroup  `json:"ordered_add_ons,omitempty" url:"-"`
 	OrderedBundleList                []*PlanGroupBundleOrder `json:"ordered_bundle_list,omitempty" url:"-"`
 	OrderedPlans                     []*OrderedPlansInGroup  `json:"ordered_plans,omitempty" url:"-"`
+	PreventDowngradesWhenOverLimit   bool                    `json:"prevent_downgrades_when_over_limit" url:"-"`
 	ShowCredits                      bool                    `json:"show_credits" url:"-"`
 	ShowPeriodToggle                 bool                    `json:"show_period_toggle" url:"-"`
 	ShowZeroPriceAsFree              bool                    `json:"show_zero_price_as_free" url:"-"`

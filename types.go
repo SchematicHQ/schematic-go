@@ -56,6 +56,322 @@ func (a *APIError) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+type APIKeyRequestListResponseData struct {
+	APIKeyID          string     `json:"api_key_id" url:"api_key_id"`
+	EndedAt           *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	EnvironmentID     *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID                string     `json:"id" url:"id"`
+	Method            string     `json:"method" url:"method"`
+	ReqBody           *string    `json:"req_body,omitempty" url:"req_body,omitempty"`
+	RequestType       *string    `json:"request_type,omitempty" url:"request_type,omitempty"`
+	ResourceID        *int       `json:"resource_id,omitempty" url:"resource_id,omitempty"`
+	ResourceIDString  *string    `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
+	ResourceName      *string    `json:"resource_name,omitempty" url:"resource_name,omitempty"`
+	ResourceType      *string    `json:"resource_type,omitempty" url:"resource_type,omitempty"`
+	RespCode          *int       `json:"resp_code,omitempty" url:"resp_code,omitempty"`
+	SecondaryResource *string    `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
+	StartedAt         time.Time  `json:"started_at" url:"started_at"`
+	URL               string     `json:"url" url:"url"`
+	UserName          *string    `json:"user_name,omitempty" url:"user_name,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *APIKeyRequestListResponseData) GetAPIKeyID() string {
+	if a == nil {
+		return ""
+	}
+	return a.APIKeyID
+}
+
+func (a *APIKeyRequestListResponseData) GetEndedAt() *time.Time {
+	if a == nil {
+		return nil
+	}
+	return a.EndedAt
+}
+
+func (a *APIKeyRequestListResponseData) GetEnvironmentID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.EnvironmentID
+}
+
+func (a *APIKeyRequestListResponseData) GetID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ID
+}
+
+func (a *APIKeyRequestListResponseData) GetMethod() string {
+	if a == nil {
+		return ""
+	}
+	return a.Method
+}
+
+func (a *APIKeyRequestListResponseData) GetReqBody() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ReqBody
+}
+
+func (a *APIKeyRequestListResponseData) GetRequestType() *string {
+	if a == nil {
+		return nil
+	}
+	return a.RequestType
+}
+
+func (a *APIKeyRequestListResponseData) GetResourceID() *int {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceID
+}
+
+func (a *APIKeyRequestListResponseData) GetResourceIDString() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceIDString
+}
+
+func (a *APIKeyRequestListResponseData) GetResourceName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceName
+}
+
+func (a *APIKeyRequestListResponseData) GetResourceType() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ResourceType
+}
+
+func (a *APIKeyRequestListResponseData) GetRespCode() *int {
+	if a == nil {
+		return nil
+	}
+	return a.RespCode
+}
+
+func (a *APIKeyRequestListResponseData) GetSecondaryResource() *string {
+	if a == nil {
+		return nil
+	}
+	return a.SecondaryResource
+}
+
+func (a *APIKeyRequestListResponseData) GetStartedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.StartedAt
+}
+
+func (a *APIKeyRequestListResponseData) GetURL() string {
+	if a == nil {
+		return ""
+	}
+	return a.URL
+}
+
+func (a *APIKeyRequestListResponseData) GetUserName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.UserName
+}
+
+func (a *APIKeyRequestListResponseData) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *APIKeyRequestListResponseData) UnmarshalJSON(data []byte) error {
+	type embed APIKeyRequestListResponseData
+	var unmarshaler = struct {
+		embed
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		StartedAt *internal.DateTime `json:"started_at"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = APIKeyRequestListResponseData(unmarshaler.embed)
+	a.EndedAt = unmarshaler.EndedAt.TimePtr()
+	a.StartedAt = unmarshaler.StartedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *APIKeyRequestListResponseData) MarshalJSON() ([]byte, error) {
+	type embed APIKeyRequestListResponseData
+	var marshaler = struct {
+		embed
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		StartedAt *internal.DateTime `json:"started_at"`
+	}{
+		embed:     embed(*a),
+		EndedAt:   internal.NewOptionalDateTime(a.EndedAt),
+		StartedAt: internal.NewDateTime(a.StartedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (a *APIKeyRequestListResponseData) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type APIKeyResponseData struct {
+	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
+	Description   *string    `json:"description,omitempty" url:"description,omitempty"`
+	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID            string     `json:"id" url:"id"`
+	LastUsedAt    *time.Time `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
+	Name          string     `json:"name" url:"name"`
+	Scopes        []string   `json:"scopes,omitempty" url:"scopes,omitempty"`
+	UpdatedAt     time.Time  `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *APIKeyResponseData) GetCreatedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.CreatedAt
+}
+
+func (a *APIKeyResponseData) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *APIKeyResponseData) GetEnvironmentID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.EnvironmentID
+}
+
+func (a *APIKeyResponseData) GetID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ID
+}
+
+func (a *APIKeyResponseData) GetLastUsedAt() *time.Time {
+	if a == nil {
+		return nil
+	}
+	return a.LastUsedAt
+}
+
+func (a *APIKeyResponseData) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *APIKeyResponseData) GetScopes() []string {
+	if a == nil {
+		return nil
+	}
+	return a.Scopes
+}
+
+func (a *APIKeyResponseData) GetUpdatedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.UpdatedAt
+}
+
+func (a *APIKeyResponseData) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *APIKeyResponseData) UnmarshalJSON(data []byte) error {
+	type embed APIKeyResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastUsedAt *internal.DateTime `json:"last_used_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = APIKeyResponseData(unmarshaler.embed)
+	a.CreatedAt = unmarshaler.CreatedAt.Time()
+	a.LastUsedAt = unmarshaler.LastUsedAt.TimePtr()
+	a.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *APIKeyResponseData) MarshalJSON() ([]byte, error) {
+	type embed APIKeyResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastUsedAt *internal.DateTime `json:"last_used_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed:      embed(*a),
+		CreatedAt:  internal.NewDateTime(a.CreatedAt),
+		LastUsedAt: internal.NewOptionalDateTime(a.LastUsedAt),
+		UpdatedAt:  internal.NewDateTime(a.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (a *APIKeyResponseData) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
 type BillingCreditBundleResponseData struct {
 	BillingInvoiceID  *string                   `json:"billing_invoice_id,omitempty" url:"billing_invoice_id,omitempty"`
 	BundleType        string                    `json:"bundle_type" url:"bundle_type"`
@@ -2493,114 +2809,6 @@ func (c *CompanyEventPeriodMetricsResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-type CompanyMembershipDetailResponseData struct {
-	Company   *CompanyResponseData `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID string               `json:"company_id" url:"company_id"`
-	CreatedAt time.Time            `json:"created_at" url:"created_at"`
-	ID        string               `json:"id" url:"id"`
-	UpdatedAt time.Time            `json:"updated_at" url:"updated_at"`
-	UserID    string               `json:"user_id" url:"user_id"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CompanyMembershipDetailResponseData) GetCompany() *CompanyResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.Company
-}
-
-func (c *CompanyMembershipDetailResponseData) GetCompanyID() string {
-	if c == nil {
-		return ""
-	}
-	return c.CompanyID
-}
-
-func (c *CompanyMembershipDetailResponseData) GetCreatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.CreatedAt
-}
-
-func (c *CompanyMembershipDetailResponseData) GetID() string {
-	if c == nil {
-		return ""
-	}
-	return c.ID
-}
-
-func (c *CompanyMembershipDetailResponseData) GetUpdatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.UpdatedAt
-}
-
-func (c *CompanyMembershipDetailResponseData) GetUserID() string {
-	if c == nil {
-		return ""
-	}
-	return c.UserID
-}
-
-func (c *CompanyMembershipDetailResponseData) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CompanyMembershipDetailResponseData) UnmarshalJSON(data []byte) error {
-	type embed CompanyMembershipDetailResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*c),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*c = CompanyMembershipDetailResponseData(unmarshaler.embed)
-	c.CreatedAt = unmarshaler.CreatedAt.Time()
-	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CompanyMembershipDetailResponseData) MarshalJSON() ([]byte, error) {
-	type embed CompanyMembershipDetailResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*c),
-		CreatedAt: internal.NewDateTime(c.CreatedAt),
-		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (c *CompanyMembershipDetailResponseData) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
 type CompanyMembershipResponseData struct {
 	CompanyID string    `json:"company_id" url:"company_id"`
 	CreatedAt time.Time `json:"created_at" url:"created_at"`
@@ -3150,126 +3358,6 @@ func (c *CompanyPlanWithBillingSubView) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyPlanWithBillingSubView) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-type CompanyResponseData struct {
-	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
-	EnvironmentID string     `json:"environment_id" url:"environment_id"`
-	ID            string     `json:"id" url:"id"`
-	LastSeenAt    *time.Time `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	LogoURL       *string    `json:"logo_url,omitempty" url:"logo_url,omitempty"`
-	Name          string     `json:"name" url:"name"`
-	UpdatedAt     time.Time  `json:"updated_at" url:"updated_at"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CompanyResponseData) GetCreatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.CreatedAt
-}
-
-func (c *CompanyResponseData) GetEnvironmentID() string {
-	if c == nil {
-		return ""
-	}
-	return c.EnvironmentID
-}
-
-func (c *CompanyResponseData) GetID() string {
-	if c == nil {
-		return ""
-	}
-	return c.ID
-}
-
-func (c *CompanyResponseData) GetLastSeenAt() *time.Time {
-	if c == nil {
-		return nil
-	}
-	return c.LastSeenAt
-}
-
-func (c *CompanyResponseData) GetLogoURL() *string {
-	if c == nil {
-		return nil
-	}
-	return c.LogoURL
-}
-
-func (c *CompanyResponseData) GetName() string {
-	if c == nil {
-		return ""
-	}
-	return c.Name
-}
-
-func (c *CompanyResponseData) GetUpdatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.UpdatedAt
-}
-
-func (c *CompanyResponseData) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CompanyResponseData) UnmarshalJSON(data []byte) error {
-	type embed CompanyResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt  *internal.DateTime `json:"created_at"`
-		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
-		UpdatedAt  *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*c),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*c = CompanyResponseData(unmarshaler.embed)
-	c.CreatedAt = unmarshaler.CreatedAt.Time()
-	c.LastSeenAt = unmarshaler.LastSeenAt.TimePtr()
-	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CompanyResponseData) MarshalJSON() ([]byte, error) {
-	type embed CompanyResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt  *internal.DateTime `json:"created_at"`
-		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
-		UpdatedAt  *internal.DateTime `json:"updated_at"`
-	}{
-		embed:      embed(*c),
-		CreatedAt:  internal.NewDateTime(c.CreatedAt),
-		LastSeenAt: internal.NewOptionalDateTime(c.LastSeenAt),
-		UpdatedAt:  internal.NewDateTime(c.UpdatedAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (c *CompanyResponseData) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4250,360 +4338,6 @@ func NewCreateEntitlementReqCommonValueTypeFromString(s string) (CreateEntitleme
 }
 
 func (c CreateEntitlementReqCommonValueType) Ptr() *CreateEntitlementReqCommonValueType {
-	return &c
-}
-
-type CreateOrUpdateConditionGroupRequestBody struct {
-	Conditions []*CreateOrUpdateConditionRequestBody `json:"conditions,omitempty" url:"conditions,omitempty"`
-	FlagID     *string                               `json:"flag_id,omitempty" url:"flag_id,omitempty"`
-	ID         *string                               `json:"id,omitempty" url:"id,omitempty"`
-	PlanID     *string                               `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CreateOrUpdateConditionGroupRequestBody) GetConditions() []*CreateOrUpdateConditionRequestBody {
-	if c == nil {
-		return nil
-	}
-	return c.Conditions
-}
-
-func (c *CreateOrUpdateConditionGroupRequestBody) GetFlagID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.FlagID
-}
-
-func (c *CreateOrUpdateConditionGroupRequestBody) GetID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.ID
-}
-
-func (c *CreateOrUpdateConditionGroupRequestBody) GetPlanID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.PlanID
-}
-
-func (c *CreateOrUpdateConditionGroupRequestBody) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CreateOrUpdateConditionGroupRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreateOrUpdateConditionGroupRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CreateOrUpdateConditionGroupRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CreateOrUpdateConditionGroupRequestBody) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-type CreateOrUpdateConditionRequestBody struct {
-	// Optionally provide a trait ID to compare a metric or trait value against instead of a value
-	ComparisonTraitID *string                                         `json:"comparison_trait_id,omitempty" url:"comparison_trait_id,omitempty"`
-	ConditionType     CreateOrUpdateConditionRequestBodyConditionType `json:"condition_type" url:"condition_type"`
-	// Cost of credit to use to measure this condition
-	CreditCost *float64 `json:"credit_cost,omitempty" url:"credit_cost,omitempty"`
-	// ID of credit to use to measure this condition
-	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
-	// Name of track event type used to measure this condition
-	EventSubtype *string `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	ID           *string `json:"id,omitempty" url:"id,omitempty"`
-	// Period of time over which to measure the track event metric
-	MetricPeriod *CreateOrUpdateConditionRequestBodyMetricPeriod `json:"metric_period,omitempty" url:"metric_period,omitempty"`
-	// When metric_period=current_month, specify whether the month restarts based on the calendar month or the billing period
-	MetricPeriodMonthReset *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	// Value to compare the track event metric against
-	MetricValue *int                                       `json:"metric_value,omitempty" url:"metric_value,omitempty"`
-	Operator    CreateOrUpdateConditionRequestBodyOperator `json:"operator" url:"operator"`
-	// List of resource IDs (companies, users, or plans) targeted by this condition
-	ResourceIDs []string `json:"resource_ids,omitempty" url:"resource_ids,omitempty"`
-	// ID of trait to use to measure this condition
-	TraitID *string `json:"trait_id,omitempty" url:"trait_id,omitempty"`
-	// Value to compare the trait value against
-	TraitValue *string `json:"trait_value,omitempty" url:"trait_value,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetComparisonTraitID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.ComparisonTraitID
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetConditionType() CreateOrUpdateConditionRequestBodyConditionType {
-	if c == nil {
-		return ""
-	}
-	return c.ConditionType
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetCreditCost() *float64 {
-	if c == nil {
-		return nil
-	}
-	return c.CreditCost
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetCreditID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.CreditID
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetEventSubtype() *string {
-	if c == nil {
-		return nil
-	}
-	return c.EventSubtype
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.ID
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetMetricPeriod() *CreateOrUpdateConditionRequestBodyMetricPeriod {
-	if c == nil {
-		return nil
-	}
-	return c.MetricPeriod
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetMetricPeriodMonthReset() *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset {
-	if c == nil {
-		return nil
-	}
-	return c.MetricPeriodMonthReset
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetMetricValue() *int {
-	if c == nil {
-		return nil
-	}
-	return c.MetricValue
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetOperator() CreateOrUpdateConditionRequestBodyOperator {
-	if c == nil {
-		return ""
-	}
-	return c.Operator
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetResourceIDs() []string {
-	if c == nil {
-		return nil
-	}
-	return c.ResourceIDs
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetTraitID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.TraitID
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetTraitValue() *string {
-	if c == nil {
-		return nil
-	}
-	return c.TraitValue
-}
-
-func (c *CreateOrUpdateConditionRequestBody) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CreateOrUpdateConditionRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreateOrUpdateConditionRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CreateOrUpdateConditionRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CreateOrUpdateConditionRequestBody) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-type CreateOrUpdateConditionRequestBodyConditionType string
-
-const (
-	CreateOrUpdateConditionRequestBodyConditionTypeCompany        CreateOrUpdateConditionRequestBodyConditionType = "company"
-	CreateOrUpdateConditionRequestBodyConditionTypeMetric         CreateOrUpdateConditionRequestBodyConditionType = "metric"
-	CreateOrUpdateConditionRequestBodyConditionTypeTrait          CreateOrUpdateConditionRequestBodyConditionType = "trait"
-	CreateOrUpdateConditionRequestBodyConditionTypeUser           CreateOrUpdateConditionRequestBodyConditionType = "user"
-	CreateOrUpdateConditionRequestBodyConditionTypePlan           CreateOrUpdateConditionRequestBodyConditionType = "plan"
-	CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct CreateOrUpdateConditionRequestBodyConditionType = "billing_product"
-	CreateOrUpdateConditionRequestBodyConditionTypeCrmProduct     CreateOrUpdateConditionRequestBodyConditionType = "crm_product"
-	CreateOrUpdateConditionRequestBodyConditionTypeBasePlan       CreateOrUpdateConditionRequestBodyConditionType = "base_plan"
-)
-
-func NewCreateOrUpdateConditionRequestBodyConditionTypeFromString(s string) (CreateOrUpdateConditionRequestBodyConditionType, error) {
-	switch s {
-	case "company":
-		return CreateOrUpdateConditionRequestBodyConditionTypeCompany, nil
-	case "metric":
-		return CreateOrUpdateConditionRequestBodyConditionTypeMetric, nil
-	case "trait":
-		return CreateOrUpdateConditionRequestBodyConditionTypeTrait, nil
-	case "user":
-		return CreateOrUpdateConditionRequestBodyConditionTypeUser, nil
-	case "plan":
-		return CreateOrUpdateConditionRequestBodyConditionTypePlan, nil
-	case "billing_product":
-		return CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct, nil
-	case "crm_product":
-		return CreateOrUpdateConditionRequestBodyConditionTypeCrmProduct, nil
-	case "base_plan":
-		return CreateOrUpdateConditionRequestBodyConditionTypeBasePlan, nil
-	}
-	var t CreateOrUpdateConditionRequestBodyConditionType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateOrUpdateConditionRequestBodyConditionType) Ptr() *CreateOrUpdateConditionRequestBodyConditionType {
-	return &c
-}
-
-// Period of time over which to measure the track event metric
-type CreateOrUpdateConditionRequestBodyMetricPeriod string
-
-const (
-	CreateOrUpdateConditionRequestBodyMetricPeriodAllTime      CreateOrUpdateConditionRequestBodyMetricPeriod = "all_time"
-	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentMonth CreateOrUpdateConditionRequestBodyMetricPeriod = "current_month"
-	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentWeek  CreateOrUpdateConditionRequestBodyMetricPeriod = "current_week"
-	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentDay   CreateOrUpdateConditionRequestBodyMetricPeriod = "current_day"
-)
-
-func NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString(s string) (CreateOrUpdateConditionRequestBodyMetricPeriod, error) {
-	switch s {
-	case "all_time":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodAllTime, nil
-	case "current_month":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentMonth, nil
-	case "current_week":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentWeek, nil
-	case "current_day":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentDay, nil
-	}
-	var t CreateOrUpdateConditionRequestBodyMetricPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateOrUpdateConditionRequestBodyMetricPeriod) Ptr() *CreateOrUpdateConditionRequestBodyMetricPeriod {
-	return &c
-}
-
-// When metric_period=current_month, specify whether the month restarts based on the calendar month or the billing period
-type CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset string
-
-const (
-	CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFirstOfMonth CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset = "first_of_month"
-	CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetBillingCycle CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset = "billing_cycle"
-)
-
-func NewCreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFromString(s string) (CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset, error) {
-	switch s {
-	case "first_of_month":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
-	case "billing_cycle":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetBillingCycle, nil
-	}
-	var t CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset) Ptr() *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset {
-	return &c
-}
-
-type CreateOrUpdateConditionRequestBodyOperator string
-
-const (
-	CreateOrUpdateConditionRequestBodyOperatorEq       CreateOrUpdateConditionRequestBodyOperator = "eq"
-	CreateOrUpdateConditionRequestBodyOperatorNe       CreateOrUpdateConditionRequestBodyOperator = "ne"
-	CreateOrUpdateConditionRequestBodyOperatorGt       CreateOrUpdateConditionRequestBodyOperator = "gt"
-	CreateOrUpdateConditionRequestBodyOperatorGte      CreateOrUpdateConditionRequestBodyOperator = "gte"
-	CreateOrUpdateConditionRequestBodyOperatorLt       CreateOrUpdateConditionRequestBodyOperator = "lt"
-	CreateOrUpdateConditionRequestBodyOperatorLte      CreateOrUpdateConditionRequestBodyOperator = "lte"
-	CreateOrUpdateConditionRequestBodyOperatorIsEmpty  CreateOrUpdateConditionRequestBodyOperator = "is_empty"
-	CreateOrUpdateConditionRequestBodyOperatorNotEmpty CreateOrUpdateConditionRequestBodyOperator = "not_empty"
-)
-
-func NewCreateOrUpdateConditionRequestBodyOperatorFromString(s string) (CreateOrUpdateConditionRequestBodyOperator, error) {
-	switch s {
-	case "eq":
-		return CreateOrUpdateConditionRequestBodyOperatorEq, nil
-	case "ne":
-		return CreateOrUpdateConditionRequestBodyOperatorNe, nil
-	case "gt":
-		return CreateOrUpdateConditionRequestBodyOperatorGt, nil
-	case "gte":
-		return CreateOrUpdateConditionRequestBodyOperatorGte, nil
-	case "lt":
-		return CreateOrUpdateConditionRequestBodyOperatorLt, nil
-	case "lte":
-		return CreateOrUpdateConditionRequestBodyOperatorLte, nil
-	case "is_empty":
-		return CreateOrUpdateConditionRequestBodyOperatorIsEmpty, nil
-	case "not_empty":
-		return CreateOrUpdateConditionRequestBodyOperatorNotEmpty, nil
-	}
-	var t CreateOrUpdateConditionRequestBodyOperator
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateOrUpdateConditionRequestBodyOperator) Ptr() *CreateOrUpdateConditionRequestBodyOperator {
 	return &c
 }
 
@@ -7320,62 +7054,6 @@ func (m *MeterRequestBody) String() string {
 	return fmt.Sprintf("%#v", m)
 }
 
-type PaginationFilter struct {
-	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
-	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (p *PaginationFilter) GetLimit() *int {
-	if p == nil {
-		return nil
-	}
-	return p.Limit
-}
-
-func (p *PaginationFilter) GetOffset() *int {
-	if p == nil {
-		return nil
-	}
-	return p.Offset
-}
-
-func (p *PaginationFilter) GetExtraProperties() map[string]interface{} {
-	return p.extraProperties
-}
-
-func (p *PaginationFilter) UnmarshalJSON(data []byte) error {
-	type unmarshaler PaginationFilter
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*p = PaginationFilter(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *p)
-	if err != nil {
-		return err
-	}
-	p.extraProperties = extraProperties
-	p.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (p *PaginationFilter) String() string {
-	if len(p.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(p); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", p)
-}
-
 type PaymentMethodRequestBody struct {
 	AccountLast4       *string `json:"account_last4,omitempty" url:"account_last4,omitempty"`
 	AccountName        *string `json:"account_name,omitempty" url:"account_name,omitempty"`
@@ -7687,146 +7365,6 @@ func (p *PaymentMethodResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PaymentMethodResponseData) String() string {
-	if len(p.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(p); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", p)
-}
-
-type PlanAudienceResponseData struct {
-	CreatedAt     time.Time `json:"created_at" url:"created_at"`
-	EnvironmentID string    `json:"environment_id" url:"environment_id"`
-	FlagID        *string   `json:"flag_id,omitempty" url:"flag_id,omitempty"`
-	ID            string    `json:"id" url:"id"`
-	Name          string    `json:"name" url:"name"`
-	PlanID        *string   `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	Priority      int       `json:"priority" url:"priority"`
-	RuleType      string    `json:"rule_type" url:"rule_type"`
-	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
-	Value         bool      `json:"value" url:"value"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (p *PlanAudienceResponseData) GetCreatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.CreatedAt
-}
-
-func (p *PlanAudienceResponseData) GetEnvironmentID() string {
-	if p == nil {
-		return ""
-	}
-	return p.EnvironmentID
-}
-
-func (p *PlanAudienceResponseData) GetFlagID() *string {
-	if p == nil {
-		return nil
-	}
-	return p.FlagID
-}
-
-func (p *PlanAudienceResponseData) GetID() string {
-	if p == nil {
-		return ""
-	}
-	return p.ID
-}
-
-func (p *PlanAudienceResponseData) GetName() string {
-	if p == nil {
-		return ""
-	}
-	return p.Name
-}
-
-func (p *PlanAudienceResponseData) GetPlanID() *string {
-	if p == nil {
-		return nil
-	}
-	return p.PlanID
-}
-
-func (p *PlanAudienceResponseData) GetPriority() int {
-	if p == nil {
-		return 0
-	}
-	return p.Priority
-}
-
-func (p *PlanAudienceResponseData) GetRuleType() string {
-	if p == nil {
-		return ""
-	}
-	return p.RuleType
-}
-
-func (p *PlanAudienceResponseData) GetUpdatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.UpdatedAt
-}
-
-func (p *PlanAudienceResponseData) GetValue() bool {
-	if p == nil {
-		return false
-	}
-	return p.Value
-}
-
-func (p *PlanAudienceResponseData) GetExtraProperties() map[string]interface{} {
-	return p.extraProperties
-}
-
-func (p *PlanAudienceResponseData) UnmarshalJSON(data []byte) error {
-	type embed PlanAudienceResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*p),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*p = PlanAudienceResponseData(unmarshaler.embed)
-	p.CreatedAt = unmarshaler.CreatedAt.Time()
-	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *p)
-	if err != nil {
-		return err
-	}
-	p.extraProperties = extraProperties
-	p.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (p *PlanAudienceResponseData) MarshalJSON() ([]byte, error) {
-	type embed PlanAudienceResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*p),
-		CreatedAt: internal.NewDateTime(p.CreatedAt),
-		UpdatedAt: internal.NewDateTime(p.UpdatedAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (p *PlanAudienceResponseData) String() string {
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -8722,7 +8260,6 @@ type RuleConditionDetailResponseData struct {
 	MetricPeriodMonthReset *string                            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	MetricValue            *int                               `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator               string                             `json:"operator" url:"operator"`
-	PlanID                 *string                            `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	ResourceIDs            []string                           `json:"resource_ids,omitempty" url:"resource_ids,omitempty"`
 	Resources              []*PreviewObjectResponseData       `json:"resources,omitempty" url:"resources,omitempty"`
 	RuleID                 string                             `json:"rule_id" url:"rule_id"`
@@ -8825,13 +8362,6 @@ func (r *RuleConditionDetailResponseData) GetOperator() string {
 		return ""
 	}
 	return r.Operator
-}
-
-func (r *RuleConditionDetailResponseData) GetPlanID() *string {
-	if r == nil {
-		return nil
-	}
-	return r.PlanID
 }
 
 func (r *RuleConditionDetailResponseData) GetResourceIDs() []string {
@@ -8950,7 +8480,6 @@ type RuleConditionGroupDetailResponseData struct {
 	EnvironmentID string                             `json:"environment_id" url:"environment_id"`
 	FlagID        *string                            `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID            string                             `json:"id" url:"id"`
-	PlanID        *string                            `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	RuleID        string                             `json:"rule_id" url:"rule_id"`
 	UpdatedAt     time.Time                          `json:"updated_at" url:"updated_at"`
 
@@ -8991,13 +8520,6 @@ func (r *RuleConditionGroupDetailResponseData) GetID() string {
 		return ""
 	}
 	return r.ID
-}
-
-func (r *RuleConditionGroupDetailResponseData) GetPlanID() *string {
-	if r == nil {
-		return nil
-	}
-	return r.PlanID
 }
 
 func (r *RuleConditionGroupDetailResponseData) GetRuleID() string {
@@ -9073,7 +8595,6 @@ type RuleConditionGroupResponseData struct {
 	EnvironmentID string    `json:"environment_id" url:"environment_id"`
 	FlagID        *string   `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID            string    `json:"id" url:"id"`
-	PlanID        *string   `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	RuleID        string    `json:"rule_id" url:"rule_id"`
 	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
 
@@ -9107,13 +8628,6 @@ func (r *RuleConditionGroupResponseData) GetID() string {
 		return ""
 	}
 	return r.ID
-}
-
-func (r *RuleConditionGroupResponseData) GetPlanID() *string {
-	if r == nil {
-		return nil
-	}
-	return r.PlanID
 }
 
 func (r *RuleConditionGroupResponseData) GetRuleID() string {
@@ -9197,7 +8711,6 @@ type RuleConditionResponseData struct {
 	MetricPeriodMonthReset *string   `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	MetricValue            *int      `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator               string    `json:"operator" url:"operator"`
-	PlanID                 *string   `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	ResourceIDs            []string  `json:"resource_ids,omitempty" url:"resource_ids,omitempty"`
 	RuleID                 string    `json:"rule_id" url:"rule_id"`
 	TraitEntityType        *string   `json:"trait_entity_type,omitempty" url:"trait_entity_type,omitempty"`
@@ -9291,13 +8804,6 @@ func (r *RuleConditionResponseData) GetOperator() string {
 		return ""
 	}
 	return r.Operator
-}
-
-func (r *RuleConditionResponseData) GetPlanID() *string {
-	if r == nil {
-		return nil
-	}
-	return r.PlanID
 }
 
 func (r *RuleConditionResponseData) GetResourceIDs() []string {
@@ -9404,7 +8910,6 @@ type RuleDetailResponseData struct {
 	FlagID          *string                                 `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID              string                                  `json:"id" url:"id"`
 	Name            string                                  `json:"name" url:"name"`
-	PlanID          *string                                 `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	Priority        int                                     `json:"priority" url:"priority"`
 	RuleType        string                                  `json:"rule_type" url:"rule_type"`
 	UpdatedAt       time.Time                               `json:"updated_at" url:"updated_at"`
@@ -9461,13 +8966,6 @@ func (r *RuleDetailResponseData) GetName() string {
 		return ""
 	}
 	return r.Name
-}
-
-func (r *RuleDetailResponseData) GetPlanID() *string {
-	if r == nil {
-		return nil
-	}
-	return r.PlanID
 }
 
 func (r *RuleDetailResponseData) GetPriority() int {
@@ -9558,7 +9056,6 @@ type RuleResponseData struct {
 	FlagID        *string   `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID            string    `json:"id" url:"id"`
 	Name          string    `json:"name" url:"name"`
-	PlanID        *string   `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	Priority      int       `json:"priority" url:"priority"`
 	RuleType      string    `json:"rule_type" url:"rule_type"`
 	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
@@ -9601,13 +9098,6 @@ func (r *RuleResponseData) GetName() string {
 		return ""
 	}
 	return r.Name
-}
-
-func (r *RuleResponseData) GetPlanID() *string {
-	if r == nil {
-		return nil
-	}
-	return r.PlanID
 }
 
 func (r *RuleResponseData) GetPriority() int {
@@ -10581,151 +10071,6 @@ func (u *UsageBasedEntitlementResponseData) UnmarshalJSON(data []byte) error {
 }
 
 func (u *UsageBasedEntitlementResponseData) String() string {
-	if len(u.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(u); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", u)
-}
-
-type UserDetailResponseData struct {
-	CompanyMemberships []*CompanyMembershipDetailResponseData `json:"company_memberships,omitempty" url:"company_memberships,omitempty"`
-	CreatedAt          time.Time                              `json:"created_at" url:"created_at"`
-	EntityTraits       []*EntityTraitDetailResponseData       `json:"entity_traits,omitempty" url:"entity_traits,omitempty"`
-	EnvironmentID      string                                 `json:"environment_id" url:"environment_id"`
-	ID                 string                                 `json:"id" url:"id"`
-	Keys               []*EntityKeyDetailResponseData         `json:"keys,omitempty" url:"keys,omitempty"`
-	LastSeenAt         *time.Time                             `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	Name               string                                 `json:"name" url:"name"`
-	// A map of trait names to trait values
-	Traits    map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
-	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (u *UserDetailResponseData) GetCompanyMemberships() []*CompanyMembershipDetailResponseData {
-	if u == nil {
-		return nil
-	}
-	return u.CompanyMemberships
-}
-
-func (u *UserDetailResponseData) GetCreatedAt() time.Time {
-	if u == nil {
-		return time.Time{}
-	}
-	return u.CreatedAt
-}
-
-func (u *UserDetailResponseData) GetEntityTraits() []*EntityTraitDetailResponseData {
-	if u == nil {
-		return nil
-	}
-	return u.EntityTraits
-}
-
-func (u *UserDetailResponseData) GetEnvironmentID() string {
-	if u == nil {
-		return ""
-	}
-	return u.EnvironmentID
-}
-
-func (u *UserDetailResponseData) GetID() string {
-	if u == nil {
-		return ""
-	}
-	return u.ID
-}
-
-func (u *UserDetailResponseData) GetKeys() []*EntityKeyDetailResponseData {
-	if u == nil {
-		return nil
-	}
-	return u.Keys
-}
-
-func (u *UserDetailResponseData) GetLastSeenAt() *time.Time {
-	if u == nil {
-		return nil
-	}
-	return u.LastSeenAt
-}
-
-func (u *UserDetailResponseData) GetName() string {
-	if u == nil {
-		return ""
-	}
-	return u.Name
-}
-
-func (u *UserDetailResponseData) GetTraits() map[string]interface{} {
-	if u == nil {
-		return nil
-	}
-	return u.Traits
-}
-
-func (u *UserDetailResponseData) GetUpdatedAt() time.Time {
-	if u == nil {
-		return time.Time{}
-	}
-	return u.UpdatedAt
-}
-
-func (u *UserDetailResponseData) GetExtraProperties() map[string]interface{} {
-	return u.extraProperties
-}
-
-func (u *UserDetailResponseData) UnmarshalJSON(data []byte) error {
-	type embed UserDetailResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt  *internal.DateTime `json:"created_at"`
-		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
-		UpdatedAt  *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*u),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*u = UserDetailResponseData(unmarshaler.embed)
-	u.CreatedAt = unmarshaler.CreatedAt.Time()
-	u.LastSeenAt = unmarshaler.LastSeenAt.TimePtr()
-	u.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *u)
-	if err != nil {
-		return err
-	}
-	u.extraProperties = extraProperties
-	u.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (u *UserDetailResponseData) MarshalJSON() ([]byte, error) {
-	type embed UserDetailResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt  *internal.DateTime `json:"created_at"`
-		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
-		UpdatedAt  *internal.DateTime `json:"updated_at"`
-	}{
-		embed:      embed(*u),
-		CreatedAt:  internal.NewDateTime(u.CreatedAt),
-		LastSeenAt: internal.NewOptionalDateTime(u.LastSeenAt),
-		UpdatedAt:  internal.NewDateTime(u.UpdatedAt),
-	}
-	return json.Marshal(marshaler)
-}
-
-func (u *UserDetailResponseData) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value

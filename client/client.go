@@ -31,7 +31,6 @@ type Client struct {
 	header  http.Header
 
 	Accounts     *accounts.Client
-	Features     *features.Client
 	Billing      *billing.Client
 	Credits      *credits.Client
 	Checkout     *checkout.Client
@@ -42,6 +41,7 @@ type Client struct {
 	Crm          *crm.Client
 	Dataexports  *dataexports.Client
 	Events       *events.Client
+	Features     *features.Client
 	Plangroups   *plangroups.Client
 	Accesstokens *accesstokens.Client
 	Webhooks     *webhooks.Client
@@ -59,7 +59,6 @@ func NewClient(opts ...option.RequestOption) *Client {
 		),
 		header:       options.ToHeader(),
 		Accounts:     accounts.NewClient(opts...),
-		Features:     features.NewClient(opts...),
 		Billing:      billing.NewClient(opts...),
 		Credits:      credits.NewClient(opts...),
 		Checkout:     checkout.NewClient(opts...),
@@ -70,14 +69,16 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Crm:          crm.NewClient(opts...),
 		Dataexports:  dataexports.NewClient(opts...),
 		Events:       events.NewClient(opts...),
+		Features:     features.NewClient(opts...),
 		Plangroups:   plangroups.NewClient(opts...),
 		Accesstokens: accesstokens.NewClient(opts...),
 		Webhooks:     webhooks.NewClient(opts...),
 	}
 }
 
-func (c *Client) GetCredit(
+func (c *Client) PutPlanAudiencesPlanAudienceID(
 	ctx context.Context,
+	planAudienceID string,
 	opts ...option.RequestOption,
 ) error {
 	options := core.NewRequestOptions(opts...)
@@ -86,40 +87,10 @@ func (c *Client) GetCredit(
 		c.baseURL,
 		"https://api.schematichq.com",
 	)
-	endpointURL := baseURL + "/billing/credits/:credit_id"
-	headers := internal.MergeHeaders(
-		c.header.Clone(),
-		options.ToHeader(),
+	endpointURL := internal.EncodeURL(
+		baseURL+"/plan-audiences/%v",
+		planAudienceID,
 	)
-
-	if err := c.caller.Call(
-		ctx,
-		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodGet,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) UpdateCredit(
-	ctx context.Context,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-	baseURL := internal.ResolveBaseURL(
-		options.BaseURL,
-		c.baseURL,
-		"https://api.schematichq.com",
-	)
-	endpointURL := baseURL + "/billing/credits/:credit_id"
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -142,8 +113,9 @@ func (c *Client) UpdateCredit(
 	return nil
 }
 
-func (c *Client) DeleteCredit(
+func (c *Client) DeletePlanAudiencesPlanAudienceID(
 	ctx context.Context,
+	planAudienceID string,
 	opts ...option.RequestOption,
 ) error {
 	options := core.NewRequestOptions(opts...)
@@ -152,172 +124,10 @@ func (c *Client) DeleteCredit(
 		c.baseURL,
 		"https://api.schematichq.com",
 	)
-	endpointURL := baseURL + "/billing/credits/:credit_id"
-	headers := internal.MergeHeaders(
-		c.header.Clone(),
-		options.ToHeader(),
+	endpointURL := internal.EncodeURL(
+		baseURL+"/plan-audiences/%v",
+		planAudienceID,
 	)
-
-	if err := c.caller.Call(
-		ctx,
-		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodDelete,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) GetCreditBundle(
-	ctx context.Context,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-	baseURL := internal.ResolveBaseURL(
-		options.BaseURL,
-		c.baseURL,
-		"https://api.schematichq.com",
-	)
-	endpointURL := baseURL + "/billing/credits/bundles/:bundle_id"
-	headers := internal.MergeHeaders(
-		c.header.Clone(),
-		options.ToHeader(),
-	)
-
-	if err := c.caller.Call(
-		ctx,
-		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodGet,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) PurchaseCreditBundle(
-	ctx context.Context,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-	baseURL := internal.ResolveBaseURL(
-		options.BaseURL,
-		c.baseURL,
-		"https://api.schematichq.com",
-	)
-	endpointURL := baseURL + "/billing/credits/bundles/:bundle_id"
-	headers := internal.MergeHeaders(
-		c.header.Clone(),
-		options.ToHeader(),
-	)
-
-	if err := c.caller.Call(
-		ctx,
-		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodPost,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) UpdateCreditBundle(
-	ctx context.Context,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-	baseURL := internal.ResolveBaseURL(
-		options.BaseURL,
-		c.baseURL,
-		"https://api.schematichq.com",
-	)
-	endpointURL := baseURL + "/billing/credits/bundles/:bundle_id"
-	headers := internal.MergeHeaders(
-		c.header.Clone(),
-		options.ToHeader(),
-	)
-
-	if err := c.caller.Call(
-		ctx,
-		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodPut,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) ZeroOutCreditGrant(
-	ctx context.Context,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-	baseURL := internal.ResolveBaseURL(
-		options.BaseURL,
-		c.baseURL,
-		"https://api.schematichq.com",
-	)
-	endpointURL := baseURL + "/billing/credits/grants/:grant_id/zero-out"
-	headers := internal.MergeHeaders(
-		c.header.Clone(),
-		options.ToHeader(),
-	)
-
-	if err := c.caller.Call(
-		ctx,
-		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodPut,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) DeletePlanCreditGrant(
-	ctx context.Context,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-	baseURL := internal.ResolveBaseURL(
-		options.BaseURL,
-		c.baseURL,
-		"https://api.schematichq.com",
-	)
-	endpointURL := baseURL + "/billing/credits/plan-grants/:plan_grant_id"
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),

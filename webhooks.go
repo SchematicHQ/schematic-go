@@ -720,6 +720,7 @@ const (
 	CreateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached CreateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.reached"
 	CreateWebhookRequestBodyRequestTypesItemCreditLimitWarning          CreateWebhookRequestBodyRequestTypesItem = "credit.limit.warning"
 	CreateWebhookRequestBodyRequestTypesItemCreditLimitReached          CreateWebhookRequestBodyRequestTypesItem = "credit.limit.reached"
+	CreateWebhookRequestBodyRequestTypesItemCompanyPlanChange           CreateWebhookRequestBodyRequestTypesItem = "company.plan_change"
 )
 
 func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebhookRequestBodyRequestTypesItem, error) {
@@ -788,6 +789,8 @@ func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebh
 		return CreateWebhookRequestBodyRequestTypesItemCreditLimitWarning, nil
 	case "credit.limit.reached":
 		return CreateWebhookRequestBodyRequestTypesItemCreditLimitReached, nil
+	case "company.plan_change":
+		return CreateWebhookRequestBodyRequestTypesItemCompanyPlanChange, nil
 	}
 	var t CreateWebhookRequestBodyRequestTypesItem
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1308,6 +1311,7 @@ const (
 	UpdateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached UpdateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.reached"
 	UpdateWebhookRequestBodyRequestTypesItemCreditLimitWarning          UpdateWebhookRequestBodyRequestTypesItem = "credit.limit.warning"
 	UpdateWebhookRequestBodyRequestTypesItemCreditLimitReached          UpdateWebhookRequestBodyRequestTypesItem = "credit.limit.reached"
+	UpdateWebhookRequestBodyRequestTypesItemCompanyPlanChange           UpdateWebhookRequestBodyRequestTypesItem = "company.plan_change"
 )
 
 func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebhookRequestBodyRequestTypesItem, error) {
@@ -1376,6 +1380,8 @@ func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebh
 		return UpdateWebhookRequestBodyRequestTypesItemCreditLimitWarning, nil
 	case "credit.limit.reached":
 		return UpdateWebhookRequestBodyRequestTypesItemCreditLimitReached, nil
+	case "company.plan_change":
+		return UpdateWebhookRequestBodyRequestTypesItemCompanyPlanChange, nil
 	}
 	var t UpdateWebhookRequestBodyRequestTypesItem
 	return "", fmt.Errorf("%s is not a valid %T", s, t)

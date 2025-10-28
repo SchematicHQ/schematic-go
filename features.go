@@ -81,86 +81,6 @@ type ListFlagsRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
-type AudienceRequestBody struct {
-	ConditionGroups []*CreateOrUpdateConditionGroupRequestBody `json:"condition_groups,omitempty" url:"condition_groups,omitempty"`
-	Conditions      []*CreateOrUpdateConditionRequestBody      `json:"conditions,omitempty" url:"conditions,omitempty"`
-	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
-	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q      *string `json:"q,omitempty" url:"q,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (a *AudienceRequestBody) GetConditionGroups() []*CreateOrUpdateConditionGroupRequestBody {
-	if a == nil {
-		return nil
-	}
-	return a.ConditionGroups
-}
-
-func (a *AudienceRequestBody) GetConditions() []*CreateOrUpdateConditionRequestBody {
-	if a == nil {
-		return nil
-	}
-	return a.Conditions
-}
-
-func (a *AudienceRequestBody) GetLimit() *int {
-	if a == nil {
-		return nil
-	}
-	return a.Limit
-}
-
-func (a *AudienceRequestBody) GetOffset() *int {
-	if a == nil {
-		return nil
-	}
-	return a.Offset
-}
-
-func (a *AudienceRequestBody) GetQ() *string {
-	if a == nil {
-		return nil
-	}
-	return a.Q
-}
-
-func (a *AudienceRequestBody) GetExtraProperties() map[string]interface{} {
-	return a.extraProperties
-}
-
-func (a *AudienceRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler AudienceRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*a = AudienceRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *a)
-	if err != nil {
-		return err
-	}
-	a.extraProperties = extraProperties
-	a.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (a *AudienceRequestBody) String() string {
-	if len(a.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(a); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", a)
-}
-
 type CheckFlagRequestBody struct {
 	Company map[string]string `json:"company,omitempty" url:"company,omitempty"`
 	User    map[string]string `json:"user,omitempty" url:"user,omitempty"`
@@ -555,6 +475,352 @@ func (c *CreateFlagRequestBody) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreateOrUpdateConditionGroupRequestBody struct {
+	Conditions []*CreateOrUpdateConditionRequestBody `json:"conditions,omitempty" url:"conditions,omitempty"`
+	FlagID     *string                               `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	ID         *string                               `json:"id,omitempty" url:"id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateOrUpdateConditionGroupRequestBody) GetConditions() []*CreateOrUpdateConditionRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.Conditions
+}
+
+func (c *CreateOrUpdateConditionGroupRequestBody) GetFlagID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FlagID
+}
+
+func (c *CreateOrUpdateConditionGroupRequestBody) GetID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ID
+}
+
+func (c *CreateOrUpdateConditionGroupRequestBody) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateOrUpdateConditionGroupRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateOrUpdateConditionGroupRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateOrUpdateConditionGroupRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateOrUpdateConditionGroupRequestBody) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CreateOrUpdateConditionRequestBody struct {
+	// Optionally provide a trait ID to compare a metric or trait value against instead of a value
+	ComparisonTraitID *string                                         `json:"comparison_trait_id,omitempty" url:"comparison_trait_id,omitempty"`
+	ConditionType     CreateOrUpdateConditionRequestBodyConditionType `json:"condition_type" url:"condition_type"`
+	// Cost of credit to use to measure this condition
+	CreditCost *float64 `json:"credit_cost,omitempty" url:"credit_cost,omitempty"`
+	// ID of credit to use to measure this condition
+	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
+	// Name of track event type used to measure this condition
+	EventSubtype *string `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	ID           *string `json:"id,omitempty" url:"id,omitempty"`
+	// Period of time over which to measure the track event metric
+	MetricPeriod *CreateOrUpdateConditionRequestBodyMetricPeriod `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	// When metric_period=current_month, specify whether the month restarts based on the calendar month or the billing period
+	MetricPeriodMonthReset *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	// Value to compare the track event metric against
+	MetricValue *int                                       `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	Operator    CreateOrUpdateConditionRequestBodyOperator `json:"operator" url:"operator"`
+	// List of resource IDs (companies, users, or plans) targeted by this condition
+	ResourceIDs []string `json:"resource_ids,omitempty" url:"resource_ids,omitempty"`
+	// ID of trait to use to measure this condition
+	TraitID *string `json:"trait_id,omitempty" url:"trait_id,omitempty"`
+	// Value to compare the trait value against
+	TraitValue *string `json:"trait_value,omitempty" url:"trait_value,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetComparisonTraitID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ComparisonTraitID
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetConditionType() CreateOrUpdateConditionRequestBodyConditionType {
+	if c == nil {
+		return ""
+	}
+	return c.ConditionType
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetCreditCost() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditCost
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditID
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetEventSubtype() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EventSubtype
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ID
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetMetricPeriod() *CreateOrUpdateConditionRequestBodyMetricPeriod {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriod
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetMetricPeriodMonthReset() *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriodMonthReset
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetMetricValue() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MetricValue
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetOperator() CreateOrUpdateConditionRequestBodyOperator {
+	if c == nil {
+		return ""
+	}
+	return c.Operator
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetResourceIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.ResourceIDs
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetTraitID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.TraitID
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetTraitValue() *string {
+	if c == nil {
+		return nil
+	}
+	return c.TraitValue
+}
+
+func (c *CreateOrUpdateConditionRequestBody) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateOrUpdateConditionRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateOrUpdateConditionRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateOrUpdateConditionRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateOrUpdateConditionRequestBody) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CreateOrUpdateConditionRequestBodyConditionType string
+
+const (
+	CreateOrUpdateConditionRequestBodyConditionTypeCompany        CreateOrUpdateConditionRequestBodyConditionType = "company"
+	CreateOrUpdateConditionRequestBodyConditionTypeMetric         CreateOrUpdateConditionRequestBodyConditionType = "metric"
+	CreateOrUpdateConditionRequestBodyConditionTypeTrait          CreateOrUpdateConditionRequestBodyConditionType = "trait"
+	CreateOrUpdateConditionRequestBodyConditionTypeUser           CreateOrUpdateConditionRequestBodyConditionType = "user"
+	CreateOrUpdateConditionRequestBodyConditionTypePlan           CreateOrUpdateConditionRequestBodyConditionType = "plan"
+	CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct CreateOrUpdateConditionRequestBodyConditionType = "billing_product"
+	CreateOrUpdateConditionRequestBodyConditionTypeCrmProduct     CreateOrUpdateConditionRequestBodyConditionType = "crm_product"
+	CreateOrUpdateConditionRequestBodyConditionTypeBasePlan       CreateOrUpdateConditionRequestBodyConditionType = "base_plan"
+)
+
+func NewCreateOrUpdateConditionRequestBodyConditionTypeFromString(s string) (CreateOrUpdateConditionRequestBodyConditionType, error) {
+	switch s {
+	case "company":
+		return CreateOrUpdateConditionRequestBodyConditionTypeCompany, nil
+	case "metric":
+		return CreateOrUpdateConditionRequestBodyConditionTypeMetric, nil
+	case "trait":
+		return CreateOrUpdateConditionRequestBodyConditionTypeTrait, nil
+	case "user":
+		return CreateOrUpdateConditionRequestBodyConditionTypeUser, nil
+	case "plan":
+		return CreateOrUpdateConditionRequestBodyConditionTypePlan, nil
+	case "billing_product":
+		return CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct, nil
+	case "crm_product":
+		return CreateOrUpdateConditionRequestBodyConditionTypeCrmProduct, nil
+	case "base_plan":
+		return CreateOrUpdateConditionRequestBodyConditionTypeBasePlan, nil
+	}
+	var t CreateOrUpdateConditionRequestBodyConditionType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateOrUpdateConditionRequestBodyConditionType) Ptr() *CreateOrUpdateConditionRequestBodyConditionType {
+	return &c
+}
+
+// Period of time over which to measure the track event metric
+type CreateOrUpdateConditionRequestBodyMetricPeriod string
+
+const (
+	CreateOrUpdateConditionRequestBodyMetricPeriodAllTime      CreateOrUpdateConditionRequestBodyMetricPeriod = "all_time"
+	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentMonth CreateOrUpdateConditionRequestBodyMetricPeriod = "current_month"
+	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentWeek  CreateOrUpdateConditionRequestBodyMetricPeriod = "current_week"
+	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentDay   CreateOrUpdateConditionRequestBodyMetricPeriod = "current_day"
+)
+
+func NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString(s string) (CreateOrUpdateConditionRequestBodyMetricPeriod, error) {
+	switch s {
+	case "all_time":
+		return CreateOrUpdateConditionRequestBodyMetricPeriodAllTime, nil
+	case "current_month":
+		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentMonth, nil
+	case "current_week":
+		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentWeek, nil
+	case "current_day":
+		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentDay, nil
+	}
+	var t CreateOrUpdateConditionRequestBodyMetricPeriod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateOrUpdateConditionRequestBodyMetricPeriod) Ptr() *CreateOrUpdateConditionRequestBodyMetricPeriod {
+	return &c
+}
+
+// When metric_period=current_month, specify whether the month restarts based on the calendar month or the billing period
+type CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset string
+
+const (
+	CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFirstOfMonth CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset = "first_of_month"
+	CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetBillingCycle CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset = "billing_cycle"
+)
+
+func NewCreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFromString(s string) (CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset, error) {
+	switch s {
+	case "first_of_month":
+		return CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
+	case "billing_cycle":
+		return CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetBillingCycle, nil
+	}
+	var t CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset) Ptr() *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset {
+	return &c
+}
+
+type CreateOrUpdateConditionRequestBodyOperator string
+
+const (
+	CreateOrUpdateConditionRequestBodyOperatorEq       CreateOrUpdateConditionRequestBodyOperator = "eq"
+	CreateOrUpdateConditionRequestBodyOperatorNe       CreateOrUpdateConditionRequestBodyOperator = "ne"
+	CreateOrUpdateConditionRequestBodyOperatorGt       CreateOrUpdateConditionRequestBodyOperator = "gt"
+	CreateOrUpdateConditionRequestBodyOperatorGte      CreateOrUpdateConditionRequestBodyOperator = "gte"
+	CreateOrUpdateConditionRequestBodyOperatorLt       CreateOrUpdateConditionRequestBodyOperator = "lt"
+	CreateOrUpdateConditionRequestBodyOperatorLte      CreateOrUpdateConditionRequestBodyOperator = "lte"
+	CreateOrUpdateConditionRequestBodyOperatorIsEmpty  CreateOrUpdateConditionRequestBodyOperator = "is_empty"
+	CreateOrUpdateConditionRequestBodyOperatorNotEmpty CreateOrUpdateConditionRequestBodyOperator = "not_empty"
+)
+
+func NewCreateOrUpdateConditionRequestBodyOperatorFromString(s string) (CreateOrUpdateConditionRequestBodyOperator, error) {
+	switch s {
+	case "eq":
+		return CreateOrUpdateConditionRequestBodyOperatorEq, nil
+	case "ne":
+		return CreateOrUpdateConditionRequestBodyOperatorNe, nil
+	case "gt":
+		return CreateOrUpdateConditionRequestBodyOperatorGt, nil
+	case "gte":
+		return CreateOrUpdateConditionRequestBodyOperatorGte, nil
+	case "lt":
+		return CreateOrUpdateConditionRequestBodyOperatorLt, nil
+	case "lte":
+		return CreateOrUpdateConditionRequestBodyOperatorLte, nil
+	case "is_empty":
+		return CreateOrUpdateConditionRequestBodyOperatorIsEmpty, nil
+	case "not_empty":
+		return CreateOrUpdateConditionRequestBodyOperatorNotEmpty, nil
+	}
+	var t CreateOrUpdateConditionRequestBodyOperator
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateOrUpdateConditionRequestBodyOperator) Ptr() *CreateOrUpdateConditionRequestBodyOperator {
+	return &c
+}
+
 type CreateOrUpdateFlagRequestBody struct {
 	DefaultValue bool    `json:"default_value" url:"default_value"`
 	Description  string  `json:"description" url:"description"`
@@ -777,7 +1043,6 @@ const (
 	CreateOrUpdateRuleRequestBodyRuleTypePlanEntitlement CreateOrUpdateRuleRequestBodyRuleType = "plan_entitlement"
 	CreateOrUpdateRuleRequestBodyRuleTypeStandard        CreateOrUpdateRuleRequestBodyRuleType = "standard"
 	CreateOrUpdateRuleRequestBodyRuleTypeDefault         CreateOrUpdateRuleRequestBodyRuleType = "default"
-	CreateOrUpdateRuleRequestBodyRuleTypePlanAudience    CreateOrUpdateRuleRequestBodyRuleType = "plan_audience"
 )
 
 func NewCreateOrUpdateRuleRequestBodyRuleTypeFromString(s string) (CreateOrUpdateRuleRequestBodyRuleType, error) {
@@ -792,8 +1057,6 @@ func NewCreateOrUpdateRuleRequestBodyRuleTypeFromString(s string) (CreateOrUpdat
 		return CreateOrUpdateRuleRequestBodyRuleTypeStandard, nil
 	case "default":
 		return CreateOrUpdateRuleRequestBodyRuleTypeDefault, nil
-	case "plan_audience":
-		return CreateOrUpdateRuleRequestBodyRuleTypePlanAudience, nil
 	}
 	var t CreateOrUpdateRuleRequestBodyRuleType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1096,116 +1359,6 @@ func (c *CheckFlagsResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (c *CheckFlagsResponse) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-type CountAudienceCompaniesResponse struct {
-	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
-	// Input parameters
-	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CountAudienceCompaniesResponse) GetData() *CountResponse {
-	if c == nil {
-		return nil
-	}
-	return c.Data
-}
-
-func (c *CountAudienceCompaniesResponse) GetParams() map[string]interface{} {
-	if c == nil {
-		return nil
-	}
-	return c.Params
-}
-
-func (c *CountAudienceCompaniesResponse) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CountAudienceCompaniesResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler CountAudienceCompaniesResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CountAudienceCompaniesResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CountAudienceCompaniesResponse) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-type CountAudienceUsersResponse struct {
-	Data *CountResponse `json:"data,omitempty" url:"data,omitempty"`
-	// Input parameters
-	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CountAudienceUsersResponse) GetData() *CountResponse {
-	if c == nil {
-		return nil
-	}
-	return c.Data
-}
-
-func (c *CountAudienceUsersResponse) GetParams() map[string]interface{} {
-	if c == nil {
-		return nil
-	}
-	return c.Params
-}
-
-func (c *CountAudienceUsersResponse) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CountAudienceUsersResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler CountAudienceUsersResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CountAudienceUsersResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CountAudienceUsersResponse) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1915,116 +2068,6 @@ func (g *GetFlagResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
-}
-
-type ListAudienceCompaniesResponse struct {
-	Data []*CompanyDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
-	// Input parameters
-	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (l *ListAudienceCompaniesResponse) GetData() []*CompanyDetailResponseData {
-	if l == nil {
-		return nil
-	}
-	return l.Data
-}
-
-func (l *ListAudienceCompaniesResponse) GetParams() map[string]interface{} {
-	if l == nil {
-		return nil
-	}
-	return l.Params
-}
-
-func (l *ListAudienceCompaniesResponse) GetExtraProperties() map[string]interface{} {
-	return l.extraProperties
-}
-
-func (l *ListAudienceCompaniesResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler ListAudienceCompaniesResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*l = ListAudienceCompaniesResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *l)
-	if err != nil {
-		return err
-	}
-	l.extraProperties = extraProperties
-	l.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (l *ListAudienceCompaniesResponse) String() string {
-	if len(l.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(l); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", l)
-}
-
-type ListAudienceUsersResponse struct {
-	Data []*UserDetailResponseData `json:"data,omitempty" url:"data,omitempty"`
-	// Input parameters
-	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (l *ListAudienceUsersResponse) GetData() []*UserDetailResponseData {
-	if l == nil {
-		return nil
-	}
-	return l.Data
-}
-
-func (l *ListAudienceUsersResponse) GetParams() map[string]interface{} {
-	if l == nil {
-		return nil
-	}
-	return l.Params
-}
-
-func (l *ListAudienceUsersResponse) GetExtraProperties() map[string]interface{} {
-	return l.extraProperties
-}
-
-func (l *ListAudienceUsersResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler ListAudienceUsersResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*l = ListAudienceUsersResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *l)
-	if err != nil {
-		return err
-	}
-	l.extraProperties = extraProperties
-	l.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (l *ListAudienceUsersResponse) String() string {
-	if len(l.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(l); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", l)
 }
 
 // Input parameters

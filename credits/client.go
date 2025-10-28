@@ -170,8 +170,8 @@ func (c *Client) CreateBillingCredit(
 
 func (c *Client) GetSingleBillingCredit(
 	ctx context.Context,
-	// billing_id
-	billingID string,
+	// credit_id
+	creditID string,
 	opts ...option.RequestOption,
 ) (*schematicgo.GetSingleBillingCreditResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -182,7 +182,7 @@ func (c *Client) GetSingleBillingCredit(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/billing/credits/%v",
-		billingID,
+		creditID,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
@@ -233,8 +233,8 @@ func (c *Client) GetSingleBillingCredit(
 
 func (c *Client) UpdateBillingCredit(
 	ctx context.Context,
-	// billing_id
-	billingID string,
+	// credit_id
+	creditID string,
 	request *schematicgo.UpdateBillingCreditRequestBody,
 	opts ...option.RequestOption,
 ) (*schematicgo.UpdateBillingCreditResponse, error) {
@@ -246,7 +246,7 @@ func (c *Client) UpdateBillingCredit(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/billing/credits/%v",
-		billingID,
+		creditID,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
@@ -304,8 +304,8 @@ func (c *Client) UpdateBillingCredit(
 
 func (c *Client) SoftDeleteBillingCredit(
 	ctx context.Context,
-	// billing_id
-	billingID string,
+	// credit_id
+	creditID string,
 	opts ...option.RequestOption,
 ) (*schematicgo.SoftDeleteBillingCreditResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -316,7 +316,7 @@ func (c *Client) SoftDeleteBillingCredit(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/billing/credits/%v",
-		billingID,
+		creditID,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
@@ -509,8 +509,8 @@ func (c *Client) CreateCreditBundle(
 
 func (c *Client) GetCreditBundle(
 	ctx context.Context,
-	// billing_id
-	billingID string,
+	// bundle_id
+	bundleID string,
 	opts ...option.RequestOption,
 ) (*schematicgo.GetCreditBundleResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -521,7 +521,7 @@ func (c *Client) GetCreditBundle(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/billing/credits/bundles/%v",
-		billingID,
+		bundleID,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
@@ -572,8 +572,8 @@ func (c *Client) GetCreditBundle(
 
 func (c *Client) UpdateCreditBundleDetails(
 	ctx context.Context,
-	// billing_id
-	billingID string,
+	// bundle_id
+	bundleID string,
 	request *schematicgo.UpdateCreditBundleDetailsRequestBody,
 	opts ...option.RequestOption,
 ) (*schematicgo.UpdateCreditBundleDetailsResponse, error) {
@@ -585,7 +585,7 @@ func (c *Client) UpdateCreditBundleDetails(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/billing/credits/bundles/%v",
-		billingID,
+		bundleID,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
@@ -643,8 +643,8 @@ func (c *Client) UpdateCreditBundleDetails(
 
 func (c *Client) DeleteCreditBundle(
 	ctx context.Context,
-	// billing_id
-	billingID string,
+	// bundle_id
+	bundleID string,
 	opts ...option.RequestOption,
 ) (*schematicgo.DeleteCreditBundleResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -655,7 +655,7 @@ func (c *Client) DeleteCreditBundle(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/billing/credits/bundles/%v",
-		billingID,
+		bundleID,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
@@ -853,8 +853,8 @@ func (c *Client) CountBillingCredits(
 
 func (c *Client) ZeroOutGrant(
 	ctx context.Context,
-	// billing_id
-	billingID string,
+	// grant_id
+	grantID string,
 	request *schematicgo.ZeroOutGrantRequestBody,
 	opts ...option.RequestOption,
 ) (*schematicgo.ZeroOutGrantResponse, error) {
@@ -866,7 +866,7 @@ func (c *Client) ZeroOutGrant(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/billing/credits/grants/%v/zero-out",
-		billingID,
+		grantID,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
@@ -1482,8 +1482,8 @@ func (c *Client) CreateBillingPlanCreditGrant(
 
 func (c *Client) DeleteBillingPlanCreditGrant(
 	ctx context.Context,
-	// billing_id
-	billingID string,
+	// plan_grant_id
+	planGrantID string,
 	opts ...option.RequestOption,
 ) (*schematicgo.DeleteBillingPlanCreditGrantResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -1494,7 +1494,7 @@ func (c *Client) DeleteBillingPlanCreditGrant(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/billing/credits/plan-grants/%v",
-		billingID,
+		planGrantID,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),

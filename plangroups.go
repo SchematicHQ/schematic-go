@@ -18,7 +18,6 @@ type CreatePlanGroupRequestBody struct {
 	CheckoutCollectPhone             bool                    `json:"checkout_collect_phone" url:"-"`
 	CustomPlanConfig                 *CustomPlanConfig       `json:"custom_plan_config,omitempty" url:"-"`
 	CustomPlanID                     *string                 `json:"custom_plan_id,omitempty" url:"-"`
-	DefaultPlanID                    *string                 `json:"default_plan_id,omitempty" url:"-"`
 	EnableTaxCollection              bool                    `json:"enable_tax_collection" url:"-"`
 	FallbackPlanID                   *string                 `json:"fallback_plan_id,omitempty" url:"-"`
 	InitialPlanID                    *string                 `json:"initial_plan_id,omitempty" url:"-"`
@@ -1379,7 +1378,6 @@ type UpdatePlanGroupRequestBody struct {
 	CheckoutCollectPhone             bool                    `json:"checkout_collect_phone" url:"-"`
 	CustomPlanConfig                 *CustomPlanConfig       `json:"custom_plan_config,omitempty" url:"-"`
 	CustomPlanID                     *string                 `json:"custom_plan_id,omitempty" url:"-"`
-	DefaultPlanID                    *string                 `json:"default_plan_id,omitempty" url:"-"`
 	EnableTaxCollection              bool                    `json:"enable_tax_collection" url:"-"`
 	FallbackPlanID                   *string                 `json:"fallback_plan_id,omitempty" url:"-"`
 	InitialPlanID                    *string                 `json:"initial_plan_id,omitempty" url:"-"`

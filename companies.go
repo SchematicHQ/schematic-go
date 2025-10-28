@@ -235,6 +235,18 @@ type ListEntityTraitDefinitionsRequest struct {
 	Offset *int `json:"-" url:"offset,omitempty"`
 }
 
+type ListPlanChangesRequest struct {
+	Action         *string   `json:"-" url:"action,omitempty"`
+	BasePlanAction *string   `json:"-" url:"base_plan_action,omitempty"`
+	CompanyID      *string   `json:"-" url:"company_id,omitempty"`
+	CompanyIDs     []*string `json:"-" url:"company_ids,omitempty"`
+	PlanIDs        []*string `json:"-" url:"plan_ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+}
+
 type ListPlanTraitsRequest struct {
 	IDs      []*string `json:"-" url:"ids,omitempty"`
 	PlanID   *string   `json:"-" url:"plan_id,omitempty"`
@@ -338,6 +350,234 @@ func (c *CompanyCrmDealsResponseData) UnmarshalJSON(data []byte) error {
 }
 
 func (c *CompanyCrmDealsResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CompanyMembershipDetailResponseData struct {
+	Company   *CompanyResponseData `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID string               `json:"company_id" url:"company_id"`
+	CreatedAt time.Time            `json:"created_at" url:"created_at"`
+	ID        string               `json:"id" url:"id"`
+	UpdatedAt time.Time            `json:"updated_at" url:"updated_at"`
+	UserID    string               `json:"user_id" url:"user_id"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyMembershipDetailResponseData) GetCompany() *CompanyResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Company
+}
+
+func (c *CompanyMembershipDetailResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CompanyMembershipDetailResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CompanyMembershipDetailResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CompanyMembershipDetailResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CompanyMembershipDetailResponseData) GetUserID() string {
+	if c == nil {
+		return ""
+	}
+	return c.UserID
+}
+
+func (c *CompanyMembershipDetailResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CompanyMembershipDetailResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyMembershipDetailResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyMembershipDetailResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyMembershipDetailResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyMembershipDetailResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CompanyMembershipDetailResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CompanyResponseData struct {
+	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
+	EnvironmentID string     `json:"environment_id" url:"environment_id"`
+	ID            string     `json:"id" url:"id"`
+	LastSeenAt    *time.Time `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
+	LogoURL       *string    `json:"logo_url,omitempty" url:"logo_url,omitempty"`
+	Name          string     `json:"name" url:"name"`
+	UpdatedAt     time.Time  `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CompanyResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *CompanyResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CompanyResponseData) GetLastSeenAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.LastSeenAt
+}
+
+func (c *CompanyResponseData) GetLogoURL() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LogoURL
+}
+
+func (c *CompanyResponseData) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CompanyResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CompanyResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CompanyResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.LastSeenAt = unmarshaler.LastSeenAt.TimePtr()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed:      embed(*c),
+		CreatedAt:  internal.NewDateTime(c.CreatedAt),
+		LastSeenAt: internal.NewOptionalDateTime(c.LastSeenAt),
+		UpdatedAt:  internal.NewDateTime(c.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (c *CompanyResponseData) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1134,6 +1374,439 @@ func (k *KeysRequestBody) String() string {
 	return fmt.Sprintf("%#v", k)
 }
 
+type PlanChangeResponseData struct {
+	Action        PlanChangeResponseDataAction    `json:"action" url:"action"`
+	ActorType     PlanChangeResponseDataActorType `json:"actor_type" url:"actor_type"`
+	AddOnsAdded   []*PlanSnapshotView             `json:"add_ons_added,omitempty" url:"add_ons_added,omitempty"`
+	AddOnsRemoved []*PlanSnapshotView             `json:"add_ons_removed,omitempty" url:"add_ons_removed,omitempty"`
+	APIKey        *APIKeyResponseData             `json:"api_key,omitempty" url:"api_key,omitempty"`
+	APIKeyRequest *APIKeyRequestListResponseData  `json:"api_key_request,omitempty" url:"api_key_request,omitempty"`
+	BasePlan      *PlanSnapshotView               `json:"base_plan,omitempty" url:"base_plan,omitempty"`
+	// Any special behavior that affected the assignment of the base plan during this change.
+	BasePlanAction   *PlanChangeResponseDataBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
+	Company          *CompanyResponseData                  `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID        string                                `json:"company_id" url:"company_id"`
+	CreatedAt        time.Time                             `json:"created_at" url:"created_at"`
+	EnvironmentID    string                                `json:"environment_id" url:"environment_id"`
+	ID               string                                `json:"id" url:"id"`
+	PreviousBasePlan *PlanSnapshotView                     `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
+	RequestID        *string                               `json:"request_id,omitempty" url:"request_id,omitempty"`
+	// If a subscription was changed as a part of this plan change, indicates the type of change that was made.
+	SubscriptionChangeAction *PlanChangeResponseDataSubscriptionChangeAction `json:"subscription_change_action,omitempty" url:"subscription_change_action,omitempty"`
+	// Any traits were updated as part of this plan change (via pay-in-advance entitlements).
+	TraitsUpdated []*SubscriptionTraitUpdate `json:"traits_updated,omitempty" url:"traits_updated,omitempty"`
+	UpdatedAt     time.Time                  `json:"updated_at" url:"updated_at"`
+	UserID        *string                    `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserName      *string                    `json:"user_name,omitempty" url:"user_name,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanChangeResponseData) GetAction() PlanChangeResponseDataAction {
+	if p == nil {
+		return ""
+	}
+	return p.Action
+}
+
+func (p *PlanChangeResponseData) GetActorType() PlanChangeResponseDataActorType {
+	if p == nil {
+		return ""
+	}
+	return p.ActorType
+}
+
+func (p *PlanChangeResponseData) GetAddOnsAdded() []*PlanSnapshotView {
+	if p == nil {
+		return nil
+	}
+	return p.AddOnsAdded
+}
+
+func (p *PlanChangeResponseData) GetAddOnsRemoved() []*PlanSnapshotView {
+	if p == nil {
+		return nil
+	}
+	return p.AddOnsRemoved
+}
+
+func (p *PlanChangeResponseData) GetAPIKey() *APIKeyResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.APIKey
+}
+
+func (p *PlanChangeResponseData) GetAPIKeyRequest() *APIKeyRequestListResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.APIKeyRequest
+}
+
+func (p *PlanChangeResponseData) GetBasePlan() *PlanSnapshotView {
+	if p == nil {
+		return nil
+	}
+	return p.BasePlan
+}
+
+func (p *PlanChangeResponseData) GetBasePlanAction() *PlanChangeResponseDataBasePlanAction {
+	if p == nil {
+		return nil
+	}
+	return p.BasePlanAction
+}
+
+func (p *PlanChangeResponseData) GetCompany() *CompanyResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Company
+}
+
+func (p *PlanChangeResponseData) GetCompanyID() string {
+	if p == nil {
+		return ""
+	}
+	return p.CompanyID
+}
+
+func (p *PlanChangeResponseData) GetCreatedAt() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.CreatedAt
+}
+
+func (p *PlanChangeResponseData) GetEnvironmentID() string {
+	if p == nil {
+		return ""
+	}
+	return p.EnvironmentID
+}
+
+func (p *PlanChangeResponseData) GetID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ID
+}
+
+func (p *PlanChangeResponseData) GetPreviousBasePlan() *PlanSnapshotView {
+	if p == nil {
+		return nil
+	}
+	return p.PreviousBasePlan
+}
+
+func (p *PlanChangeResponseData) GetRequestID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.RequestID
+}
+
+func (p *PlanChangeResponseData) GetSubscriptionChangeAction() *PlanChangeResponseDataSubscriptionChangeAction {
+	if p == nil {
+		return nil
+	}
+	return p.SubscriptionChangeAction
+}
+
+func (p *PlanChangeResponseData) GetTraitsUpdated() []*SubscriptionTraitUpdate {
+	if p == nil {
+		return nil
+	}
+	return p.TraitsUpdated
+}
+
+func (p *PlanChangeResponseData) GetUpdatedAt() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.UpdatedAt
+}
+
+func (p *PlanChangeResponseData) GetUserID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.UserID
+}
+
+func (p *PlanChangeResponseData) GetUserName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.UserName
+}
+
+func (p *PlanChangeResponseData) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PlanChangeResponseData) UnmarshalJSON(data []byte) error {
+	type embed PlanChangeResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PlanChangeResponseData(unmarshaler.embed)
+	p.CreatedAt = unmarshaler.CreatedAt.Time()
+	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanChangeResponseData) MarshalJSON() ([]byte, error) {
+	type embed PlanChangeResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*p),
+		CreatedAt: internal.NewDateTime(p.CreatedAt),
+		UpdatedAt: internal.NewDateTime(p.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (p *PlanChangeResponseData) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PlanChangeResponseDataAction string
+
+const (
+	PlanChangeResponseDataActionCheckout                  PlanChangeResponseDataAction = "checkout"
+	PlanChangeResponseDataActionCompanyUpsert             PlanChangeResponseDataAction = "company_upsert"
+	PlanChangeResponseDataActionFallbackPlan              PlanChangeResponseDataAction = "fallback_plan"
+	PlanChangeResponseDataActionManagePlan                PlanChangeResponseDataAction = "manage_plan"
+	PlanChangeResponseDataActionPlanBillingProductChanged PlanChangeResponseDataAction = "plan_billing_product_changed"
+	PlanChangeResponseDataActionPlanDeleted               PlanChangeResponseDataAction = "plan_deleted"
+	PlanChangeResponseDataActionQuickstart                PlanChangeResponseDataAction = "quickstart"
+	PlanChangeResponseDataActionSubscriptionChange        PlanChangeResponseDataAction = "subscription_change"
+)
+
+func NewPlanChangeResponseDataActionFromString(s string) (PlanChangeResponseDataAction, error) {
+	switch s {
+	case "checkout":
+		return PlanChangeResponseDataActionCheckout, nil
+	case "company_upsert":
+		return PlanChangeResponseDataActionCompanyUpsert, nil
+	case "fallback_plan":
+		return PlanChangeResponseDataActionFallbackPlan, nil
+	case "manage_plan":
+		return PlanChangeResponseDataActionManagePlan, nil
+	case "plan_billing_product_changed":
+		return PlanChangeResponseDataActionPlanBillingProductChanged, nil
+	case "plan_deleted":
+		return PlanChangeResponseDataActionPlanDeleted, nil
+	case "quickstart":
+		return PlanChangeResponseDataActionQuickstart, nil
+	case "subscription_change":
+		return PlanChangeResponseDataActionSubscriptionChange, nil
+	}
+	var t PlanChangeResponseDataAction
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanChangeResponseDataAction) Ptr() *PlanChangeResponseDataAction {
+	return &p
+}
+
+type PlanChangeResponseDataActorType string
+
+const (
+	PlanChangeResponseDataActorTypeAppUser              PlanChangeResponseDataActorType = "app_user"
+	PlanChangeResponseDataActorTypeAPIKey               PlanChangeResponseDataActorType = "api_key"
+	PlanChangeResponseDataActorTypeSystem               PlanChangeResponseDataActorType = "system"
+	PlanChangeResponseDataActorTypeTemporaryAccessToken PlanChangeResponseDataActorType = "temporary_access_token"
+)
+
+func NewPlanChangeResponseDataActorTypeFromString(s string) (PlanChangeResponseDataActorType, error) {
+	switch s {
+	case "app_user":
+		return PlanChangeResponseDataActorTypeAppUser, nil
+	case "api_key":
+		return PlanChangeResponseDataActorTypeAPIKey, nil
+	case "system":
+		return PlanChangeResponseDataActorTypeSystem, nil
+	case "temporary_access_token":
+		return PlanChangeResponseDataActorTypeTemporaryAccessToken, nil
+	}
+	var t PlanChangeResponseDataActorType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanChangeResponseDataActorType) Ptr() *PlanChangeResponseDataActorType {
+	return &p
+}
+
+// Any special behavior that affected the assignment of the base plan during this change.
+type PlanChangeResponseDataBasePlanAction string
+
+const (
+	PlanChangeResponseDataBasePlanActionFallback    PlanChangeResponseDataBasePlanAction = "fallback"
+	PlanChangeResponseDataBasePlanActionInitial     PlanChangeResponseDataBasePlanAction = "initial"
+	PlanChangeResponseDataBasePlanActionTrait       PlanChangeResponseDataBasePlanAction = "trait"
+	PlanChangeResponseDataBasePlanActionTrialExpiry PlanChangeResponseDataBasePlanAction = "trial_expiry"
+)
+
+func NewPlanChangeResponseDataBasePlanActionFromString(s string) (PlanChangeResponseDataBasePlanAction, error) {
+	switch s {
+	case "fallback":
+		return PlanChangeResponseDataBasePlanActionFallback, nil
+	case "initial":
+		return PlanChangeResponseDataBasePlanActionInitial, nil
+	case "trait":
+		return PlanChangeResponseDataBasePlanActionTrait, nil
+	case "trial_expiry":
+		return PlanChangeResponseDataBasePlanActionTrialExpiry, nil
+	}
+	var t PlanChangeResponseDataBasePlanAction
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanChangeResponseDataBasePlanAction) Ptr() *PlanChangeResponseDataBasePlanAction {
+	return &p
+}
+
+// If a subscription was changed as a part of this plan change, indicates the type of change that was made.
+type PlanChangeResponseDataSubscriptionChangeAction string
+
+const (
+	PlanChangeResponseDataSubscriptionChangeActionDowngrade    PlanChangeResponseDataSubscriptionChangeAction = "downgrade"
+	PlanChangeResponseDataSubscriptionChangeActionInvalid      PlanChangeResponseDataSubscriptionChangeAction = "invalid"
+	PlanChangeResponseDataSubscriptionChangeActionSubscribe    PlanChangeResponseDataSubscriptionChangeAction = "subscribe"
+	PlanChangeResponseDataSubscriptionChangeActionUnsubscribe  PlanChangeResponseDataSubscriptionChangeAction = "unsubscribe"
+	PlanChangeResponseDataSubscriptionChangeActionUpgrade      PlanChangeResponseDataSubscriptionChangeAction = "upgrade"
+	PlanChangeResponseDataSubscriptionChangeActionUpgradeTrial PlanChangeResponseDataSubscriptionChangeAction = "upgrade_trial"
+)
+
+func NewPlanChangeResponseDataSubscriptionChangeActionFromString(s string) (PlanChangeResponseDataSubscriptionChangeAction, error) {
+	switch s {
+	case "downgrade":
+		return PlanChangeResponseDataSubscriptionChangeActionDowngrade, nil
+	case "invalid":
+		return PlanChangeResponseDataSubscriptionChangeActionInvalid, nil
+	case "subscribe":
+		return PlanChangeResponseDataSubscriptionChangeActionSubscribe, nil
+	case "unsubscribe":
+		return PlanChangeResponseDataSubscriptionChangeActionUnsubscribe, nil
+	case "upgrade":
+		return PlanChangeResponseDataSubscriptionChangeActionUpgrade, nil
+	case "upgrade_trial":
+		return PlanChangeResponseDataSubscriptionChangeActionUpgradeTrial, nil
+	}
+	var t PlanChangeResponseDataSubscriptionChangeAction
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanChangeResponseDataSubscriptionChangeAction) Ptr() *PlanChangeResponseDataSubscriptionChangeAction {
+	return &p
+}
+
+type PlanSnapshotView struct {
+	Deleted     bool   `json:"deleted" url:"deleted"`
+	Description string `json:"description" url:"description"`
+	Icon        string `json:"icon" url:"icon"`
+	ID          string `json:"id" url:"id"`
+	Name        string `json:"name" url:"name"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanSnapshotView) GetDeleted() bool {
+	if p == nil {
+		return false
+	}
+	return p.Deleted
+}
+
+func (p *PlanSnapshotView) GetDescription() string {
+	if p == nil {
+		return ""
+	}
+	return p.Description
+}
+
+func (p *PlanSnapshotView) GetIcon() string {
+	if p == nil {
+		return ""
+	}
+	return p.Icon
+}
+
+func (p *PlanSnapshotView) GetID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ID
+}
+
+func (p *PlanSnapshotView) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PlanSnapshotView) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PlanSnapshotView) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanSnapshotView
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanSnapshotView(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanSnapshotView) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
 type PlanTraitResponseData struct {
 	AccountID     string    `json:"account_id" url:"account_id"`
 	CreatedAt     time.Time `json:"created_at" url:"created_at"`
@@ -1264,6 +1937,100 @@ func (p *PlanTraitResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+type SubscriptionTraitUpdate struct {
+	FeatureID string   `json:"feature_id" url:"feature_id"`
+	Hierarchy []string `json:"hierarchy,omitempty" url:"hierarchy,omitempty"`
+	Reason    string   `json:"reason" url:"reason"`
+	TraitID   string   `json:"trait_id" url:"trait_id"`
+	TraitName string   `json:"trait_name" url:"trait_name"`
+	TraitType string   `json:"trait_type" url:"trait_type"`
+	Value     string   `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *SubscriptionTraitUpdate) GetFeatureID() string {
+	if s == nil {
+		return ""
+	}
+	return s.FeatureID
+}
+
+func (s *SubscriptionTraitUpdate) GetHierarchy() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Hierarchy
+}
+
+func (s *SubscriptionTraitUpdate) GetReason() string {
+	if s == nil {
+		return ""
+	}
+	return s.Reason
+}
+
+func (s *SubscriptionTraitUpdate) GetTraitID() string {
+	if s == nil {
+		return ""
+	}
+	return s.TraitID
+}
+
+func (s *SubscriptionTraitUpdate) GetTraitName() string {
+	if s == nil {
+		return ""
+	}
+	return s.TraitName
+}
+
+func (s *SubscriptionTraitUpdate) GetTraitType() string {
+	if s == nil {
+		return ""
+	}
+	return s.TraitType
+}
+
+func (s *SubscriptionTraitUpdate) GetValue() string {
+	if s == nil {
+		return ""
+	}
+	return s.Value
+}
+
+func (s *SubscriptionTraitUpdate) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *SubscriptionTraitUpdate) UnmarshalJSON(data []byte) error {
+	type unmarshaler SubscriptionTraitUpdate
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = SubscriptionTraitUpdate(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SubscriptionTraitUpdate) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
 }
 
 type UpdatePlanTraitTraitRequestBody struct {
@@ -1642,6 +2409,151 @@ func (u *UpsertUserRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertUserRequestBody) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+type UserDetailResponseData struct {
+	CompanyMemberships []*CompanyMembershipDetailResponseData `json:"company_memberships,omitempty" url:"company_memberships,omitempty"`
+	CreatedAt          time.Time                              `json:"created_at" url:"created_at"`
+	EntityTraits       []*EntityTraitDetailResponseData       `json:"entity_traits,omitempty" url:"entity_traits,omitempty"`
+	EnvironmentID      string                                 `json:"environment_id" url:"environment_id"`
+	ID                 string                                 `json:"id" url:"id"`
+	Keys               []*EntityKeyDetailResponseData         `json:"keys,omitempty" url:"keys,omitempty"`
+	LastSeenAt         *time.Time                             `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
+	Name               string                                 `json:"name" url:"name"`
+	// A map of trait names to trait values
+	Traits    map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UserDetailResponseData) GetCompanyMemberships() []*CompanyMembershipDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.CompanyMemberships
+}
+
+func (u *UserDetailResponseData) GetCreatedAt() time.Time {
+	if u == nil {
+		return time.Time{}
+	}
+	return u.CreatedAt
+}
+
+func (u *UserDetailResponseData) GetEntityTraits() []*EntityTraitDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.EntityTraits
+}
+
+func (u *UserDetailResponseData) GetEnvironmentID() string {
+	if u == nil {
+		return ""
+	}
+	return u.EnvironmentID
+}
+
+func (u *UserDetailResponseData) GetID() string {
+	if u == nil {
+		return ""
+	}
+	return u.ID
+}
+
+func (u *UserDetailResponseData) GetKeys() []*EntityKeyDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Keys
+}
+
+func (u *UserDetailResponseData) GetLastSeenAt() *time.Time {
+	if u == nil {
+		return nil
+	}
+	return u.LastSeenAt
+}
+
+func (u *UserDetailResponseData) GetName() string {
+	if u == nil {
+		return ""
+	}
+	return u.Name
+}
+
+func (u *UserDetailResponseData) GetTraits() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.Traits
+}
+
+func (u *UserDetailResponseData) GetUpdatedAt() time.Time {
+	if u == nil {
+		return time.Time{}
+	}
+	return u.UpdatedAt
+}
+
+func (u *UserDetailResponseData) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UserDetailResponseData) UnmarshalJSON(data []byte) error {
+	type embed UserDetailResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*u),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*u = UserDetailResponseData(unmarshaler.embed)
+	u.CreatedAt = unmarshaler.CreatedAt.Time()
+	u.LastSeenAt = unmarshaler.LastSeenAt.TimePtr()
+	u.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UserDetailResponseData) MarshalJSON() ([]byte, error) {
+	type embed UserDetailResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed:      embed(*u),
+		CreatedAt:  internal.NewDateTime(u.CreatedAt),
+		LastSeenAt: internal.NewOptionalDateTime(u.LastSeenAt),
+		UpdatedAt:  internal.NewDateTime(u.UpdatedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (u *UserDetailResponseData) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -3977,6 +4889,61 @@ func (g *GetOrCreateEntityTraitDefinitionResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+type GetPlanChangeResponse struct {
+	Data *PlanChangeResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params map[string]interface{} `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetPlanChangeResponse) GetData() *PlanChangeResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetPlanChangeResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetPlanChangeResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetPlanChangeResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetPlanChangeResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetPlanChangeResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetPlanChangeResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 type GetPlanTraitResponse struct {
 	Data *PlanTraitResponseData `json:"data,omitempty" url:"data,omitempty"`
 	// Input parameters
@@ -5090,6 +6057,158 @@ func NewListEntityTraitDefinitionsResponseParamsTraitTypeFromString(s string) (L
 
 func (l ListEntityTraitDefinitionsResponseParamsTraitType) Ptr() *ListEntityTraitDefinitionsResponseParamsTraitType {
 	return &l
+}
+
+// Input parameters
+type ListPlanChangesParams struct {
+	Action         *string  `json:"action,omitempty" url:"action,omitempty"`
+	BasePlanAction *string  `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
+	CompanyID      *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyIDs     []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset  *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPlanChangesParams) GetAction() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Action
+}
+
+func (l *ListPlanChangesParams) GetBasePlanAction() *string {
+	if l == nil {
+		return nil
+	}
+	return l.BasePlanAction
+}
+
+func (l *ListPlanChangesParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListPlanChangesParams) GetCompanyIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyIDs
+}
+
+func (l *ListPlanChangesParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListPlanChangesParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListPlanChangesParams) GetPlanIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanIDs
+}
+
+func (l *ListPlanChangesParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListPlanChangesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListPlanChangesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListPlanChangesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListPlanChangesParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+type ListPlanChangesResponse struct {
+	Data []*PlanChangeResponseData `json:"data,omitempty" url:"data,omitempty"`
+	// Input parameters
+	Params *ListPlanChangesParams `json:"params,omitempty" url:"params,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListPlanChangesResponse) GetData() []*PlanChangeResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListPlanChangesResponse) GetParams() *ListPlanChangesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListPlanChangesResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListPlanChangesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListPlanChangesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListPlanChangesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListPlanChangesResponse) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 // Input parameters

@@ -5,6 +5,7 @@
 .github/dependabot.yml
 .github/workflows/claude.yml
 CLAUDE.md
+LICENSE
 README.md
 go.mod
 go.sum

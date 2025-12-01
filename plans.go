@@ -18,12 +18,10 @@ var (
 	countPlansRequestFieldIDs                   = big.NewInt(1 << 5)
 	countPlansRequestFieldPlanType              = big.NewInt(1 << 6)
 	countPlansRequestFieldQ                     = big.NewInt(1 << 7)
-	countPlansRequestFieldRequiresPaymentMethod = big.NewInt(1 << 8)
-	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 9)
-	countPlansRequestFieldWithoutProductID      = big.NewInt(1 << 10)
-	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 11)
-	countPlansRequestFieldLimit                 = big.NewInt(1 << 12)
-	countPlansRequestFieldOffset                = big.NewInt(1 << 13)
+	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 8)
+	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 9)
+	countPlansRequestFieldLimit                 = big.NewInt(1 << 10)
+	countPlansRequestFieldOffset                = big.NewInt(1 << 11)
 )
 
 type CountPlansRequest struct {
@@ -38,14 +36,10 @@ type CountPlansRequest struct {
 	HasProductID *bool     `json:"-" url:"has_product_id,omitempty"`
 	IDs          []*string `json:"-" url:"ids,omitempty"`
 	// Filter by plan type
-	PlanType *CountPlansRequestPlanType `json:"-" url:"plan_type,omitempty"`
-	Q        *string                    `json:"-" url:"q,omitempty"`
-	// Filter for plans that require a payment method (inverse of ForInitialPlan)
-	RequiresPaymentMethod *bool `json:"-" url:"requires_payment_method,omitempty"`
+	PlanType *PlanType `json:"-" url:"plan_type,omitempty"`
+	Q        *string   `json:"-" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
-	// Filter out plans that have a billing product ID
-	WithoutProductID *bool `json:"-" url:"without_product_id,omitempty"`
 	// Filter out plans that have a paid billing product ID
 	WithoutPaidProductID *bool `json:"-" url:"without_paid_product_id,omitempty"`
 	// Page limit (default 100)
@@ -108,7 +102,7 @@ func (c *CountPlansRequest) SetIDs(ids []*string) {
 
 // SetPlanType sets the PlanType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansRequest) SetPlanType(planType *CountPlansRequestPlanType) {
+func (c *CountPlansRequest) SetPlanType(planType *PlanType) {
 	c.PlanType = planType
 	c.require(countPlansRequestFieldPlanType)
 }
@@ -120,25 +114,11 @@ func (c *CountPlansRequest) SetQ(q *string) {
 	c.require(countPlansRequestFieldQ)
 }
 
-// SetRequiresPaymentMethod sets the RequiresPaymentMethod field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansRequest) SetRequiresPaymentMethod(requiresPaymentMethod *bool) {
-	c.RequiresPaymentMethod = requiresPaymentMethod
-	c.require(countPlansRequestFieldRequiresPaymentMethod)
-}
-
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountPlansRequest) SetWithoutEntitlementFor(withoutEntitlementFor *string) {
 	c.WithoutEntitlementFor = withoutEntitlementFor
 	c.require(countPlansRequestFieldWithoutEntitlementFor)
-}
-
-// SetWithoutProductID sets the WithoutProductID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansRequest) SetWithoutProductID(withoutProductID *bool) {
-	c.WithoutProductID = withoutProductID
-	c.require(countPlansRequestFieldWithoutProductID)
 }
 
 // SetWithoutPaidProductID sets the WithoutPaidProductID field and marks it as non-optional;
@@ -170,10 +150,10 @@ var (
 )
 
 type CreatePlanRequestBody struct {
-	Description string                        `json:"description" url:"-"`
-	Icon        *string                       `json:"icon,omitempty" url:"-"`
-	Name        string                        `json:"name" url:"-"`
-	PlanType    CreatePlanRequestBodyPlanType `json:"plan_type" url:"-"`
+	Description string   `json:"description" url:"-"`
+	Icon        *string  `json:"icon,omitempty" url:"-"`
+	Name        string   `json:"name" url:"-"`
+	PlanType    PlanType `json:"plan_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -209,7 +189,7 @@ func (c *CreatePlanRequestBody) SetName(name string) {
 
 // SetPlanType sets the PlanType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanRequestBody) SetPlanType(planType CreatePlanRequestBodyPlanType) {
+func (c *CreatePlanRequestBody) SetPlanType(planType PlanType) {
 	c.PlanType = planType
 	c.require(createPlanRequestBodyFieldPlanType)
 }
@@ -248,12 +228,10 @@ var (
 	listPlansRequestFieldIDs                   = big.NewInt(1 << 5)
 	listPlansRequestFieldPlanType              = big.NewInt(1 << 6)
 	listPlansRequestFieldQ                     = big.NewInt(1 << 7)
-	listPlansRequestFieldRequiresPaymentMethod = big.NewInt(1 << 8)
-	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 9)
-	listPlansRequestFieldWithoutProductID      = big.NewInt(1 << 10)
-	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 11)
-	listPlansRequestFieldLimit                 = big.NewInt(1 << 12)
-	listPlansRequestFieldOffset                = big.NewInt(1 << 13)
+	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 8)
+	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 9)
+	listPlansRequestFieldLimit                 = big.NewInt(1 << 10)
+	listPlansRequestFieldOffset                = big.NewInt(1 << 11)
 )
 
 type ListPlansRequest struct {
@@ -268,14 +246,10 @@ type ListPlansRequest struct {
 	HasProductID *bool     `json:"-" url:"has_product_id,omitempty"`
 	IDs          []*string `json:"-" url:"ids,omitempty"`
 	// Filter by plan type
-	PlanType *ListPlansRequestPlanType `json:"-" url:"plan_type,omitempty"`
-	Q        *string                   `json:"-" url:"q,omitempty"`
-	// Filter for plans that require a payment method (inverse of ForInitialPlan)
-	RequiresPaymentMethod *bool `json:"-" url:"requires_payment_method,omitempty"`
+	PlanType *PlanType `json:"-" url:"plan_type,omitempty"`
+	Q        *string   `json:"-" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
-	// Filter out plans that have a billing product ID
-	WithoutProductID *bool `json:"-" url:"without_product_id,omitempty"`
 	// Filter out plans that have a paid billing product ID
 	WithoutPaidProductID *bool `json:"-" url:"without_paid_product_id,omitempty"`
 	// Page limit (default 100)
@@ -338,7 +312,7 @@ func (l *ListPlansRequest) SetIDs(ids []*string) {
 
 // SetPlanType sets the PlanType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansRequest) SetPlanType(planType *ListPlansRequestPlanType) {
+func (l *ListPlansRequest) SetPlanType(planType *PlanType) {
 	l.PlanType = planType
 	l.require(listPlansRequestFieldPlanType)
 }
@@ -350,25 +324,11 @@ func (l *ListPlansRequest) SetQ(q *string) {
 	l.require(listPlansRequestFieldQ)
 }
 
-// SetRequiresPaymentMethod sets the RequiresPaymentMethod field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansRequest) SetRequiresPaymentMethod(requiresPaymentMethod *bool) {
-	l.RequiresPaymentMethod = requiresPaymentMethod
-	l.require(listPlansRequestFieldRequiresPaymentMethod)
-}
-
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListPlansRequest) SetWithoutEntitlementFor(withoutEntitlementFor *string) {
 	l.WithoutEntitlementFor = withoutEntitlementFor
 	l.require(listPlansRequestFieldWithoutEntitlementFor)
-}
-
-// SetWithoutProductID sets the WithoutProductID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansRequest) SetWithoutProductID(withoutProductID *bool) {
-	l.WithoutProductID = withoutProductID
-	l.require(listPlansRequestFieldWithoutProductID)
 }
 
 // SetWithoutPaidProductID sets the WithoutPaidProductID field and marks it as non-optional;
@@ -407,17 +367,17 @@ var (
 )
 
 type BillingProductPlanResponseData struct {
-	AccountID        string  `json:"account_id" url:"account_id"`
-	BillingProductID string  `json:"billing_product_id" url:"billing_product_id"`
-	ChargeType       string  `json:"charge_type" url:"charge_type"`
-	ControlledBy     string  `json:"controlled_by" url:"controlled_by"`
-	EnvironmentID    string  `json:"environment_id" url:"environment_id"`
-	IsTrialable      bool    `json:"is_trialable" url:"is_trialable"`
-	MonthlyPriceID   *string `json:"monthly_price_id,omitempty" url:"monthly_price_id,omitempty"`
-	OneTimePriceID   *string `json:"one_time_price_id,omitempty" url:"one_time_price_id,omitempty"`
-	PlanID           string  `json:"plan_id" url:"plan_id"`
-	TrialDays        *int    `json:"trial_days,omitempty" url:"trial_days,omitempty"`
-	YearlyPriceID    *string `json:"yearly_price_id,omitempty" url:"yearly_price_id,omitempty"`
+	AccountID        string               `json:"account_id" url:"account_id"`
+	BillingProductID string               `json:"billing_product_id" url:"billing_product_id"`
+	ChargeType       ChargeType           `json:"charge_type" url:"charge_type"`
+	ControlledBy     PlanControlledByType `json:"controlled_by" url:"controlled_by"`
+	EnvironmentID    string               `json:"environment_id" url:"environment_id"`
+	IsTrialable      bool                 `json:"is_trialable" url:"is_trialable"`
+	MonthlyPriceID   *string              `json:"monthly_price_id,omitempty" url:"monthly_price_id,omitempty"`
+	OneTimePriceID   *string              `json:"one_time_price_id,omitempty" url:"one_time_price_id,omitempty"`
+	PlanID           string               `json:"plan_id" url:"plan_id"`
+	TrialDays        *int                 `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	YearlyPriceID    *string              `json:"yearly_price_id,omitempty" url:"yearly_price_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -440,14 +400,14 @@ func (b *BillingProductPlanResponseData) GetBillingProductID() string {
 	return b.BillingProductID
 }
 
-func (b *BillingProductPlanResponseData) GetChargeType() string {
+func (b *BillingProductPlanResponseData) GetChargeType() ChargeType {
 	if b == nil {
 		return ""
 	}
 	return b.ChargeType
 }
 
-func (b *BillingProductPlanResponseData) GetControlledBy() string {
+func (b *BillingProductPlanResponseData) GetControlledBy() PlanControlledByType {
 	if b == nil {
 		return ""
 	}
@@ -530,14 +490,14 @@ func (b *BillingProductPlanResponseData) SetBillingProductID(billingProductID st
 
 // SetChargeType sets the ChargeType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPlanResponseData) SetChargeType(chargeType string) {
+func (b *BillingProductPlanResponseData) SetChargeType(chargeType ChargeType) {
 	b.ChargeType = chargeType
 	b.require(billingProductPlanResponseDataFieldChargeType)
 }
 
 // SetControlledBy sets the ControlledBy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPlanResponseData) SetControlledBy(controlledBy string) {
+func (b *BillingProductPlanResponseData) SetControlledBy(controlledBy PlanControlledByType) {
 	b.ControlledBy = controlledBy
 	b.require(billingProductPlanResponseDataFieldControlledBy)
 }
@@ -768,10 +728,8 @@ var (
 	countPlansParamsFieldOffset                = big.NewInt(1 << 7)
 	countPlansParamsFieldPlanType              = big.NewInt(1 << 8)
 	countPlansParamsFieldQ                     = big.NewInt(1 << 9)
-	countPlansParamsFieldRequiresPaymentMethod = big.NewInt(1 << 10)
-	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 11)
-	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 12)
-	countPlansParamsFieldWithoutProductID      = big.NewInt(1 << 13)
+	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 10)
+	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 11)
 )
 
 type CountPlansParams struct {
@@ -788,18 +746,13 @@ type CountPlansParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter by plan type
-	PlanType *CountPlansResponseParamsPlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
-	Q        *string                           `json:"q,omitempty" url:"q,omitempty"`
-	// Filter for plans that require a payment method (inverse of ForInitialPlan)
-	RequiresPaymentMethod *bool `json:"requires_payment_method,omitempty" url:"requires_payment_method,omitempty"`
+	Offset   *int      `json:"offset,omitempty" url:"offset,omitempty"`
+	PlanType *PlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
+	Q        *string   `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
 	WithoutPaidProductID *bool `json:"without_paid_product_id,omitempty" url:"without_paid_product_id,omitempty"`
-	// Filter out plans that have a billing product ID
-	WithoutProductID *bool `json:"without_product_id,omitempty" url:"without_product_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -864,7 +817,7 @@ func (c *CountPlansParams) GetOffset() *int {
 	return c.Offset
 }
 
-func (c *CountPlansParams) GetPlanType() *CountPlansResponseParamsPlanType {
+func (c *CountPlansParams) GetPlanType() *PlanType {
 	if c == nil {
 		return nil
 	}
@@ -876,13 +829,6 @@ func (c *CountPlansParams) GetQ() *string {
 		return nil
 	}
 	return c.Q
-}
-
-func (c *CountPlansParams) GetRequiresPaymentMethod() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.RequiresPaymentMethod
 }
 
 func (c *CountPlansParams) GetWithoutEntitlementFor() *string {
@@ -897,13 +843,6 @@ func (c *CountPlansParams) GetWithoutPaidProductID() *bool {
 		return nil
 	}
 	return c.WithoutPaidProductID
-}
-
-func (c *CountPlansParams) GetWithoutProductID() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.WithoutProductID
 }
 
 func (c *CountPlansParams) GetExtraProperties() map[string]interface{} {
@@ -975,7 +914,7 @@ func (c *CountPlansParams) SetOffset(offset *int) {
 
 // SetPlanType sets the PlanType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansParams) SetPlanType(planType *CountPlansResponseParamsPlanType) {
+func (c *CountPlansParams) SetPlanType(planType *PlanType) {
 	c.PlanType = planType
 	c.require(countPlansParamsFieldPlanType)
 }
@@ -985,13 +924,6 @@ func (c *CountPlansParams) SetPlanType(planType *CountPlansResponseParamsPlanTyp
 func (c *CountPlansParams) SetQ(q *string) {
 	c.Q = q
 	c.require(countPlansParamsFieldQ)
-}
-
-// SetRequiresPaymentMethod sets the RequiresPaymentMethod field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansParams) SetRequiresPaymentMethod(requiresPaymentMethod *bool) {
-	c.RequiresPaymentMethod = requiresPaymentMethod
-	c.require(countPlansParamsFieldRequiresPaymentMethod)
 }
 
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
@@ -1006,13 +938,6 @@ func (c *CountPlansParams) SetWithoutEntitlementFor(withoutEntitlementFor *strin
 func (c *CountPlansParams) SetWithoutPaidProductID(withoutPaidProductID *bool) {
 	c.WithoutPaidProductID = withoutPaidProductID
 	c.require(countPlansParamsFieldWithoutPaidProductID)
-}
-
-// SetWithoutProductID sets the WithoutProductID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansParams) SetWithoutProductID(withoutProductID *bool) {
-	c.WithoutProductID = withoutProductID
-	c.require(countPlansParamsFieldWithoutProductID)
 }
 
 func (c *CountPlansParams) UnmarshalJSON(data []byte) error {
@@ -1052,29 +977,6 @@ func (c *CountPlansParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-// Filter by plan type
-type CountPlansRequestPlanType string
-
-const (
-	CountPlansRequestPlanTypePlan  CountPlansRequestPlanType = "plan"
-	CountPlansRequestPlanTypeAddOn CountPlansRequestPlanType = "add_on"
-)
-
-func NewCountPlansRequestPlanTypeFromString(s string) (CountPlansRequestPlanType, error) {
-	switch s {
-	case "plan":
-		return CountPlansRequestPlanTypePlan, nil
-	case "add_on":
-		return CountPlansRequestPlanTypeAddOn, nil
-	}
-	var t CountPlansRequestPlanType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountPlansRequestPlanType) Ptr() *CountPlansRequestPlanType {
-	return &c
 }
 
 var (
@@ -1170,51 +1072,6 @@ func (c *CountPlansResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-// Filter by plan type
-type CountPlansResponseParamsPlanType string
-
-const (
-	CountPlansResponseParamsPlanTypePlan  CountPlansResponseParamsPlanType = "plan"
-	CountPlansResponseParamsPlanTypeAddOn CountPlansResponseParamsPlanType = "add_on"
-)
-
-func NewCountPlansResponseParamsPlanTypeFromString(s string) (CountPlansResponseParamsPlanType, error) {
-	switch s {
-	case "plan":
-		return CountPlansResponseParamsPlanTypePlan, nil
-	case "add_on":
-		return CountPlansResponseParamsPlanTypeAddOn, nil
-	}
-	var t CountPlansResponseParamsPlanType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountPlansResponseParamsPlanType) Ptr() *CountPlansResponseParamsPlanType {
-	return &c
-}
-
-type CreatePlanRequestBodyPlanType string
-
-const (
-	CreatePlanRequestBodyPlanTypePlan  CreatePlanRequestBodyPlanType = "plan"
-	CreatePlanRequestBodyPlanTypeAddOn CreatePlanRequestBodyPlanType = "add_on"
-)
-
-func NewCreatePlanRequestBodyPlanTypeFromString(s string) (CreatePlanRequestBodyPlanType, error) {
-	switch s {
-	case "plan":
-		return CreatePlanRequestBodyPlanTypePlan, nil
-	case "add_on":
-		return CreatePlanRequestBodyPlanTypeAddOn, nil
-	}
-	var t CreatePlanRequestBodyPlanType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreatePlanRequestBodyPlanType) Ptr() *CreatePlanRequestBodyPlanType {
-	return &c
 }
 
 var (
@@ -1688,10 +1545,8 @@ var (
 	listPlansParamsFieldOffset                = big.NewInt(1 << 7)
 	listPlansParamsFieldPlanType              = big.NewInt(1 << 8)
 	listPlansParamsFieldQ                     = big.NewInt(1 << 9)
-	listPlansParamsFieldRequiresPaymentMethod = big.NewInt(1 << 10)
-	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 11)
-	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 12)
-	listPlansParamsFieldWithoutProductID      = big.NewInt(1 << 13)
+	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 10)
+	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 11)
 )
 
 type ListPlansParams struct {
@@ -1708,18 +1563,13 @@ type ListPlansParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter by plan type
-	PlanType *ListPlansResponseParamsPlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
-	Q        *string                          `json:"q,omitempty" url:"q,omitempty"`
-	// Filter for plans that require a payment method (inverse of ForInitialPlan)
-	RequiresPaymentMethod *bool `json:"requires_payment_method,omitempty" url:"requires_payment_method,omitempty"`
+	Offset   *int      `json:"offset,omitempty" url:"offset,omitempty"`
+	PlanType *PlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
+	Q        *string   `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
 	WithoutPaidProductID *bool `json:"without_paid_product_id,omitempty" url:"without_paid_product_id,omitempty"`
-	// Filter out plans that have a billing product ID
-	WithoutProductID *bool `json:"without_product_id,omitempty" url:"without_product_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1784,7 +1634,7 @@ func (l *ListPlansParams) GetOffset() *int {
 	return l.Offset
 }
 
-func (l *ListPlansParams) GetPlanType() *ListPlansResponseParamsPlanType {
+func (l *ListPlansParams) GetPlanType() *PlanType {
 	if l == nil {
 		return nil
 	}
@@ -1796,13 +1646,6 @@ func (l *ListPlansParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
-}
-
-func (l *ListPlansParams) GetRequiresPaymentMethod() *bool {
-	if l == nil {
-		return nil
-	}
-	return l.RequiresPaymentMethod
 }
 
 func (l *ListPlansParams) GetWithoutEntitlementFor() *string {
@@ -1817,13 +1660,6 @@ func (l *ListPlansParams) GetWithoutPaidProductID() *bool {
 		return nil
 	}
 	return l.WithoutPaidProductID
-}
-
-func (l *ListPlansParams) GetWithoutProductID() *bool {
-	if l == nil {
-		return nil
-	}
-	return l.WithoutProductID
 }
 
 func (l *ListPlansParams) GetExtraProperties() map[string]interface{} {
@@ -1895,7 +1731,7 @@ func (l *ListPlansParams) SetOffset(offset *int) {
 
 // SetPlanType sets the PlanType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansParams) SetPlanType(planType *ListPlansResponseParamsPlanType) {
+func (l *ListPlansParams) SetPlanType(planType *PlanType) {
 	l.PlanType = planType
 	l.require(listPlansParamsFieldPlanType)
 }
@@ -1905,13 +1741,6 @@ func (l *ListPlansParams) SetPlanType(planType *ListPlansResponseParamsPlanType)
 func (l *ListPlansParams) SetQ(q *string) {
 	l.Q = q
 	l.require(listPlansParamsFieldQ)
-}
-
-// SetRequiresPaymentMethod sets the RequiresPaymentMethod field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansParams) SetRequiresPaymentMethod(requiresPaymentMethod *bool) {
-	l.RequiresPaymentMethod = requiresPaymentMethod
-	l.require(listPlansParamsFieldRequiresPaymentMethod)
 }
 
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
@@ -1926,13 +1755,6 @@ func (l *ListPlansParams) SetWithoutEntitlementFor(withoutEntitlementFor *string
 func (l *ListPlansParams) SetWithoutPaidProductID(withoutPaidProductID *bool) {
 	l.WithoutPaidProductID = withoutPaidProductID
 	l.require(listPlansParamsFieldWithoutPaidProductID)
-}
-
-// SetWithoutProductID sets the WithoutProductID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansParams) SetWithoutProductID(withoutProductID *bool) {
-	l.WithoutProductID = withoutProductID
-	l.require(listPlansParamsFieldWithoutProductID)
 }
 
 func (l *ListPlansParams) UnmarshalJSON(data []byte) error {
@@ -1972,29 +1794,6 @@ func (l *ListPlansParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-// Filter by plan type
-type ListPlansRequestPlanType string
-
-const (
-	ListPlansRequestPlanTypePlan  ListPlansRequestPlanType = "plan"
-	ListPlansRequestPlanTypeAddOn ListPlansRequestPlanType = "add_on"
-)
-
-func NewListPlansRequestPlanTypeFromString(s string) (ListPlansRequestPlanType, error) {
-	switch s {
-	case "plan":
-		return ListPlansRequestPlanTypePlan, nil
-	case "add_on":
-		return ListPlansRequestPlanTypeAddOn, nil
-	}
-	var t ListPlansRequestPlanType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListPlansRequestPlanType) Ptr() *ListPlansRequestPlanType {
-	return &l
 }
 
 var (
@@ -2090,29 +1889,6 @@ func (l *ListPlansResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-// Filter by plan type
-type ListPlansResponseParamsPlanType string
-
-const (
-	ListPlansResponseParamsPlanTypePlan  ListPlansResponseParamsPlanType = "plan"
-	ListPlansResponseParamsPlanTypeAddOn ListPlansResponseParamsPlanType = "add_on"
-)
-
-func NewListPlansResponseParamsPlanTypeFromString(s string) (ListPlansResponseParamsPlanType, error) {
-	switch s {
-	case "plan":
-		return ListPlansResponseParamsPlanTypePlan, nil
-	case "add_on":
-		return ListPlansResponseParamsPlanTypeAddOn, nil
-	}
-	var t ListPlansResponseParamsPlanType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListPlansResponseParamsPlanType) Ptr() *ListPlansResponseParamsPlanType {
-	return &l
 }
 
 var (
@@ -2400,31 +2176,6 @@ func (u *UpsertBillingProductPlanResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
-type UpsertBillingProductRequestBodyChargeType string
-
-const (
-	UpsertBillingProductRequestBodyChargeTypeOneTime   UpsertBillingProductRequestBodyChargeType = "one_time"
-	UpsertBillingProductRequestBodyChargeTypeRecurring UpsertBillingProductRequestBodyChargeType = "recurring"
-	UpsertBillingProductRequestBodyChargeTypeFree      UpsertBillingProductRequestBodyChargeType = "free"
-)
-
-func NewUpsertBillingProductRequestBodyChargeTypeFromString(s string) (UpsertBillingProductRequestBodyChargeType, error) {
-	switch s {
-	case "one_time":
-		return UpsertBillingProductRequestBodyChargeTypeOneTime, nil
-	case "recurring":
-		return UpsertBillingProductRequestBodyChargeTypeRecurring, nil
-	case "free":
-		return UpsertBillingProductRequestBodyChargeTypeFree, nil
-	}
-	var t UpsertBillingProductRequestBodyChargeType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpsertBillingProductRequestBodyChargeType) Ptr() *UpsertBillingProductRequestBodyChargeType {
-	return &u
-}
-
 var (
 	updateCompanyPlansRequestBodyFieldAddOnIDs   = big.NewInt(1 << 0)
 	updateCompanyPlansRequestBodyFieldBasePlanID = big.NewInt(1 << 1)
@@ -2517,17 +2268,17 @@ var (
 )
 
 type UpsertBillingProductRequestBody struct {
-	BillingProductID *string                                   `json:"billing_product_id,omitempty" url:"-"`
-	ChargeType       UpsertBillingProductRequestBodyChargeType `json:"charge_type" url:"-"`
-	Currency         *string                                   `json:"currency,omitempty" url:"-"`
-	IsTrialable      bool                                      `json:"is_trialable" url:"-"`
-	MonthlyPrice     *int                                      `json:"monthly_price,omitempty" url:"-"`
-	MonthlyPriceID   *string                                   `json:"monthly_price_id,omitempty" url:"-"`
-	OneTimePrice     *int                                      `json:"one_time_price,omitempty" url:"-"`
-	OneTimePriceID   *string                                   `json:"one_time_price_id,omitempty" url:"-"`
-	TrialDays        *int                                      `json:"trial_days,omitempty" url:"-"`
-	YearlyPrice      *int                                      `json:"yearly_price,omitempty" url:"-"`
-	YearlyPriceID    *string                                   `json:"yearly_price_id,omitempty" url:"-"`
+	BillingProductID *string    `json:"billing_product_id,omitempty" url:"-"`
+	ChargeType       ChargeType `json:"charge_type" url:"-"`
+	Currency         *string    `json:"currency,omitempty" url:"-"`
+	IsTrialable      bool       `json:"is_trialable" url:"-"`
+	MonthlyPrice     *int       `json:"monthly_price,omitempty" url:"-"`
+	MonthlyPriceID   *string    `json:"monthly_price_id,omitempty" url:"-"`
+	OneTimePrice     *int       `json:"one_time_price,omitempty" url:"-"`
+	OneTimePriceID   *string    `json:"one_time_price_id,omitempty" url:"-"`
+	TrialDays        *int       `json:"trial_days,omitempty" url:"-"`
+	YearlyPrice      *int       `json:"yearly_price,omitempty" url:"-"`
+	YearlyPriceID    *string    `json:"yearly_price_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2549,7 +2300,7 @@ func (u *UpsertBillingProductRequestBody) SetBillingProductID(billingProductID *
 
 // SetChargeType sets the ChargeType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingProductRequestBody) SetChargeType(chargeType UpsertBillingProductRequestBodyChargeType) {
+func (u *UpsertBillingProductRequestBody) SetChargeType(chargeType ChargeType) {
 	u.ChargeType = chargeType
 	u.require(upsertBillingProductRequestBodyFieldChargeType)
 }

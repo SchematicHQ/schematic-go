@@ -11,24 +11,18 @@ import (
 )
 
 var (
-	createDataExportRequestBodyFieldMetadata = big.NewInt(1 << 0)
+	createDataExportRequestBodyFieldExportType     = big.NewInt(1 << 0)
+	createDataExportRequestBodyFieldMetadata       = big.NewInt(1 << 1)
+	createDataExportRequestBodyFieldOutputFileType = big.NewInt(1 << 2)
 )
 
 type CreateDataExportRequestBody struct {
-	Metadata       string `json:"metadata" url:"-"`
-	exportType     string
-	outputFileType string
+	ExportType     DataExportType           `json:"export_type,omitempty" url:"-"`
+	Metadata       string                   `json:"metadata" url:"-"`
+	OutputFileType DataExportOutputFileType `json:"output_file_type,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
-}
-
-func (c *CreateDataExportRequestBody) ExportType() string {
-	return c.exportType
-}
-
-func (c *CreateDataExportRequestBody) OutputFileType() string {
-	return c.outputFileType
 }
 
 func (c *CreateDataExportRequestBody) require(field *big.Int) {
@@ -38,6 +32,13 @@ func (c *CreateDataExportRequestBody) require(field *big.Int) {
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
+// SetExportType sets the ExportType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateDataExportRequestBody) SetExportType(exportType DataExportType) {
+	c.ExportType = exportType
+	c.require(createDataExportRequestBodyFieldExportType)
+}
+
 // SetMetadata sets the Metadata field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateDataExportRequestBody) SetMetadata(metadata string) {
@@ -45,32 +46,14 @@ func (c *CreateDataExportRequestBody) SetMetadata(metadata string) {
 	c.require(createDataExportRequestBodyFieldMetadata)
 }
 
-func (c *CreateDataExportRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreateDataExportRequestBody
-	var body unmarshaler
-	if err := json.Unmarshal(data, &body); err != nil {
-		return err
-	}
-	*c = CreateDataExportRequestBody(body)
-	c.exportType = "company-feature-usage"
-	c.outputFileType = "csv"
-	return nil
+// SetOutputFileType sets the OutputFileType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateDataExportRequestBody) SetOutputFileType(outputFileType DataExportOutputFileType) {
+	c.OutputFileType = outputFileType
+	c.require(createDataExportRequestBodyFieldOutputFileType)
 }
 
-func (c *CreateDataExportRequestBody) MarshalJSON() ([]byte, error) {
-	type embed CreateDataExportRequestBody
-	var marshaler = struct {
-		embed
-		ExportType     string `json:"export_type"`
-		OutputFileType string `json:"output_file_type"`
-	}{
-		embed:          embed(*c),
-		ExportType:     "company-feature-usage",
-		OutputFileType: "csv",
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
+type DataExportOutputFileType = string
 
 var (
 	dataExportResponseDataFieldAccountID      = big.NewInt(1 << 0)
@@ -85,15 +68,15 @@ var (
 )
 
 type DataExportResponseData struct {
-	AccountID      string    `json:"account_id" url:"account_id"`
-	CreatedAt      time.Time `json:"created_at" url:"created_at"`
-	EnvironmentID  string    `json:"environment_id" url:"environment_id"`
-	ExportType     string    `json:"export_type" url:"export_type"`
-	ID             string    `json:"id" url:"id"`
-	Metadata       string    `json:"metadata" url:"metadata"`
-	OutputFileType string    `json:"output_file_type" url:"output_file_type"`
-	Status         string    `json:"status" url:"status"`
-	UpdatedAt      time.Time `json:"updated_at" url:"updated_at"`
+	AccountID      string                   `json:"account_id" url:"account_id"`
+	CreatedAt      time.Time                `json:"created_at" url:"created_at"`
+	EnvironmentID  string                   `json:"environment_id" url:"environment_id"`
+	ExportType     DataExportType           `json:"export_type" url:"export_type"`
+	ID             string                   `json:"id" url:"id"`
+	Metadata       string                   `json:"metadata" url:"metadata"`
+	OutputFileType DataExportOutputFileType `json:"output_file_type" url:"output_file_type"`
+	Status         DataExportStatus         `json:"status" url:"status"`
+	UpdatedAt      time.Time                `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -123,13 +106,6 @@ func (d *DataExportResponseData) GetEnvironmentID() string {
 	return d.EnvironmentID
 }
 
-func (d *DataExportResponseData) GetExportType() string {
-	if d == nil {
-		return ""
-	}
-	return d.ExportType
-}
-
 func (d *DataExportResponseData) GetID() string {
 	if d == nil {
 		return ""
@@ -144,14 +120,7 @@ func (d *DataExportResponseData) GetMetadata() string {
 	return d.Metadata
 }
 
-func (d *DataExportResponseData) GetOutputFileType() string {
-	if d == nil {
-		return ""
-	}
-	return d.OutputFileType
-}
-
-func (d *DataExportResponseData) GetStatus() string {
+func (d *DataExportResponseData) GetStatus() DataExportStatus {
 	if d == nil {
 		return ""
 	}
@@ -199,7 +168,7 @@ func (d *DataExportResponseData) SetEnvironmentID(environmentID string) {
 
 // SetExportType sets the ExportType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DataExportResponseData) SetExportType(exportType string) {
+func (d *DataExportResponseData) SetExportType(exportType DataExportType) {
 	d.ExportType = exportType
 	d.require(dataExportResponseDataFieldExportType)
 }
@@ -220,14 +189,14 @@ func (d *DataExportResponseData) SetMetadata(metadata string) {
 
 // SetOutputFileType sets the OutputFileType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DataExportResponseData) SetOutputFileType(outputFileType string) {
+func (d *DataExportResponseData) SetOutputFileType(outputFileType DataExportOutputFileType) {
 	d.OutputFileType = outputFileType
 	d.require(dataExportResponseDataFieldOutputFileType)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DataExportResponseData) SetStatus(status string) {
+func (d *DataExportResponseData) SetStatus(status DataExportStatus) {
 	d.Status = status
 	d.require(dataExportResponseDataFieldStatus)
 }
@@ -289,6 +258,33 @@ func (d *DataExportResponseData) String() string {
 	}
 	return fmt.Sprintf("%#v", d)
 }
+
+type DataExportStatus string
+
+const (
+	DataExportStatusFailure DataExportStatus = "failure"
+	DataExportStatusPending DataExportStatus = "pending"
+	DataExportStatusSuccess DataExportStatus = "success"
+)
+
+func NewDataExportStatusFromString(s string) (DataExportStatus, error) {
+	switch s {
+	case "failure":
+		return DataExportStatusFailure, nil
+	case "pending":
+		return DataExportStatusPending, nil
+	case "success":
+		return DataExportStatusSuccess, nil
+	}
+	var t DataExportStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (d DataExportStatus) Ptr() *DataExportStatus {
+	return &d
+}
+
+type DataExportType = string
 
 var (
 	createDataExportResponseFieldData   = big.NewInt(1 << 0)

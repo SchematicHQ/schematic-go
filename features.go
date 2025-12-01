@@ -30,7 +30,7 @@ type CountFeaturesRequest struct {
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
 	// Filter by one or more feature types (boolean, event, trait)
-	FeatureType []*string `json:"-" url:"feature_type,omitempty"`
+	FeatureType []*FeatureType `json:"-" url:"feature_type,omitempty"`
 	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
 	BooleanRequireEvent *bool `json:"-" url:"boolean_require_event,omitempty"`
 	// Page limit (default 100)
@@ -79,7 +79,7 @@ func (c *CountFeaturesRequest) SetWithoutPlanEntitlementFor(withoutPlanEntitleme
 
 // SetFeatureType sets the FeatureType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeaturesRequest) SetFeatureType(featureType []*string) {
+func (c *CountFeaturesRequest) SetFeatureType(featureType []*FeatureType) {
 	c.FeatureType = featureType
 	c.require(countFeaturesRequestFieldFeatureType)
 }
@@ -184,17 +184,17 @@ var (
 )
 
 type CreateFeatureRequestBody struct {
-	Description    string                                  `json:"description" url:"-"`
-	EventSubtype   *string                                 `json:"event_subtype,omitempty" url:"-"`
-	FeatureType    CreateFeatureRequestBodyFeatureType     `json:"feature_type" url:"-"`
-	Flag           *CreateOrUpdateFlagRequestBody          `json:"flag,omitempty" url:"-"`
-	Icon           *string                                 `json:"icon,omitempty" url:"-"`
-	LifecyclePhase *CreateFeatureRequestBodyLifecyclePhase `json:"lifecycle_phase,omitempty" url:"-"`
-	MaintainerID   *string                                 `json:"maintainer_id,omitempty" url:"-"`
-	Name           string                                  `json:"name" url:"-"`
-	PluralName     *string                                 `json:"plural_name,omitempty" url:"-"`
-	SingularName   *string                                 `json:"singular_name,omitempty" url:"-"`
-	TraitID        *string                                 `json:"trait_id,omitempty" url:"-"`
+	Description    string                         `json:"description" url:"-"`
+	EventSubtype   *string                        `json:"event_subtype,omitempty" url:"-"`
+	FeatureType    FeatureType                    `json:"feature_type" url:"-"`
+	Flag           *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
+	Icon           *string                        `json:"icon,omitempty" url:"-"`
+	LifecyclePhase *FeatureLifecyclePhase         `json:"lifecycle_phase,omitempty" url:"-"`
+	MaintainerID   *string                        `json:"maintainer_id,omitempty" url:"-"`
+	Name           string                         `json:"name" url:"-"`
+	PluralName     *string                        `json:"plural_name,omitempty" url:"-"`
+	SingularName   *string                        `json:"singular_name,omitempty" url:"-"`
+	TraitID        *string                        `json:"trait_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -223,7 +223,7 @@ func (c *CreateFeatureRequestBody) SetEventSubtype(eventSubtype *string) {
 
 // SetFeatureType sets the FeatureType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateFeatureRequestBody) SetFeatureType(featureType CreateFeatureRequestBodyFeatureType) {
+func (c *CreateFeatureRequestBody) SetFeatureType(featureType FeatureType) {
 	c.FeatureType = featureType
 	c.require(createFeatureRequestBodyFieldFeatureType)
 }
@@ -244,7 +244,7 @@ func (c *CreateFeatureRequestBody) SetIcon(icon *string) {
 
 // SetLifecyclePhase sets the LifecyclePhase field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateFeatureRequestBody) SetLifecyclePhase(lifecyclePhase *CreateFeatureRequestBodyLifecyclePhase) {
+func (c *CreateFeatureRequestBody) SetLifecyclePhase(lifecyclePhase *FeatureLifecyclePhase) {
 	c.LifecyclePhase = lifecyclePhase
 	c.require(createFeatureRequestBodyFieldLifecyclePhase)
 }
@@ -304,7 +304,7 @@ type ListFeaturesRequest struct {
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
 	// Filter by one or more feature types (boolean, event, trait)
-	FeatureType []*string `json:"-" url:"feature_type,omitempty"`
+	FeatureType []*FeatureType `json:"-" url:"feature_type,omitempty"`
 	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
 	BooleanRequireEvent *bool `json:"-" url:"boolean_require_event,omitempty"`
 	// Page limit (default 100)
@@ -353,7 +353,7 @@ func (l *ListFeaturesRequest) SetWithoutPlanEntitlementFor(withoutPlanEntitlemen
 
 // SetFeatureType sets the FeatureType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeaturesRequest) SetFeatureType(featureType []*string) {
+func (l *ListFeaturesRequest) SetFeatureType(featureType []*FeatureType) {
 	l.FeatureType = featureType
 	l.require(listFeaturesRequestFieldFeatureType)
 }
@@ -927,22 +927,23 @@ var (
 	createFlagRequestBodyFieldDefaultValue = big.NewInt(1 << 0)
 	createFlagRequestBodyFieldDescription  = big.NewInt(1 << 1)
 	createFlagRequestBodyFieldFeatureID    = big.NewInt(1 << 2)
-	createFlagRequestBodyFieldKey          = big.NewInt(1 << 3)
-	createFlagRequestBodyFieldMaintainerID = big.NewInt(1 << 4)
-	createFlagRequestBodyFieldName         = big.NewInt(1 << 5)
+	createFlagRequestBodyFieldFlagType     = big.NewInt(1 << 3)
+	createFlagRequestBodyFieldKey          = big.NewInt(1 << 4)
+	createFlagRequestBodyFieldMaintainerID = big.NewInt(1 << 5)
+	createFlagRequestBodyFieldName         = big.NewInt(1 << 6)
 )
 
 type CreateFlagRequestBody struct {
-	DefaultValue bool    `json:"default_value" url:"default_value"`
-	Description  string  `json:"description" url:"description"`
-	FeatureID    *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	Key          string  `json:"key" url:"key"`
-	MaintainerID *string `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
-	Name         string  `json:"name" url:"name"`
+	DefaultValue bool     `json:"default_value" url:"default_value"`
+	Description  string   `json:"description" url:"description"`
+	FeatureID    *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FlagType     FlagType `json:"flag_type" url:"flag_type"`
+	Key          string   `json:"key" url:"key"`
+	MaintainerID *string  `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
+	Name         string   `json:"name" url:"name"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
-	flagType       string
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -990,10 +991,6 @@ func (c *CreateFlagRequestBody) GetName() string {
 	return c.Name
 }
 
-func (c *CreateFlagRequestBody) FlagType() string {
-	return c.flagType
-}
-
 func (c *CreateFlagRequestBody) GetExtraProperties() map[string]interface{} {
 	return c.extraProperties
 }
@@ -1026,6 +1023,13 @@ func (c *CreateFlagRequestBody) SetFeatureID(featureID *string) {
 	c.require(createFlagRequestBodyFieldFeatureID)
 }
 
+// SetFlagType sets the FlagType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateFlagRequestBody) SetFlagType(flagType FlagType) {
+	c.FlagType = flagType
+	c.require(createFlagRequestBodyFieldFlagType)
+}
+
 // SetKey sets the Key field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateFlagRequestBody) SetKey(key string) {
@@ -1048,22 +1052,13 @@ func (c *CreateFlagRequestBody) SetName(name string) {
 }
 
 func (c *CreateFlagRequestBody) UnmarshalJSON(data []byte) error {
-	type embed CreateFlagRequestBody
-	var unmarshaler = struct {
-		embed
-		FlagType string `json:"flag_type"`
-	}{
-		embed: embed(*c),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+	type unmarshaler CreateFlagRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*c = CreateFlagRequestBody(unmarshaler.embed)
-	if unmarshaler.FlagType != "boolean" {
-		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", c, "boolean", unmarshaler.FlagType)
-	}
-	c.flagType = unmarshaler.FlagType
-	extraProperties, err := internal.ExtractExtraProperties(data, *c, "flag_type")
+	*c = CreateFlagRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
@@ -1076,10 +1071,8 @@ func (c *CreateFlagRequestBody) MarshalJSON() ([]byte, error) {
 	type embed CreateFlagRequestBody
 	var marshaler = struct {
 		embed
-		FlagType string `json:"flag_type"`
 	}{
-		embed:    embed(*c),
-		FlagType: "boolean",
+		embed: embed(*c),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -1623,24 +1616,25 @@ var (
 	createOrUpdateFlagRequestBodyFieldDefaultValue = big.NewInt(1 << 0)
 	createOrUpdateFlagRequestBodyFieldDescription  = big.NewInt(1 << 1)
 	createOrUpdateFlagRequestBodyFieldFeatureID    = big.NewInt(1 << 2)
-	createOrUpdateFlagRequestBodyFieldID           = big.NewInt(1 << 3)
-	createOrUpdateFlagRequestBodyFieldKey          = big.NewInt(1 << 4)
-	createOrUpdateFlagRequestBodyFieldMaintainerID = big.NewInt(1 << 5)
-	createOrUpdateFlagRequestBodyFieldName         = big.NewInt(1 << 6)
+	createOrUpdateFlagRequestBodyFieldFlagType     = big.NewInt(1 << 3)
+	createOrUpdateFlagRequestBodyFieldID           = big.NewInt(1 << 4)
+	createOrUpdateFlagRequestBodyFieldKey          = big.NewInt(1 << 5)
+	createOrUpdateFlagRequestBodyFieldMaintainerID = big.NewInt(1 << 6)
+	createOrUpdateFlagRequestBodyFieldName         = big.NewInt(1 << 7)
 )
 
 type CreateOrUpdateFlagRequestBody struct {
-	DefaultValue bool    `json:"default_value" url:"default_value"`
-	Description  string  `json:"description" url:"description"`
-	FeatureID    *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	ID           *string `json:"id,omitempty" url:"id,omitempty"`
-	Key          string  `json:"key" url:"key"`
-	MaintainerID *string `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
-	Name         string  `json:"name" url:"name"`
+	DefaultValue bool     `json:"default_value" url:"default_value"`
+	Description  string   `json:"description" url:"description"`
+	FeatureID    *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FlagType     FlagType `json:"flag_type" url:"flag_type"`
+	ID           *string  `json:"id,omitempty" url:"id,omitempty"`
+	Key          string   `json:"key" url:"key"`
+	MaintainerID *string  `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
+	Name         string   `json:"name" url:"name"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
-	flagType       string
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1695,10 +1689,6 @@ func (c *CreateOrUpdateFlagRequestBody) GetName() string {
 	return c.Name
 }
 
-func (c *CreateOrUpdateFlagRequestBody) FlagType() string {
-	return c.flagType
-}
-
 func (c *CreateOrUpdateFlagRequestBody) GetExtraProperties() map[string]interface{} {
 	return c.extraProperties
 }
@@ -1731,6 +1721,13 @@ func (c *CreateOrUpdateFlagRequestBody) SetFeatureID(featureID *string) {
 	c.require(createOrUpdateFlagRequestBodyFieldFeatureID)
 }
 
+// SetFlagType sets the FlagType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateOrUpdateFlagRequestBody) SetFlagType(flagType FlagType) {
+	c.FlagType = flagType
+	c.require(createOrUpdateFlagRequestBodyFieldFlagType)
+}
+
 // SetID sets the ID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateOrUpdateFlagRequestBody) SetID(id *string) {
@@ -1760,22 +1757,13 @@ func (c *CreateOrUpdateFlagRequestBody) SetName(name string) {
 }
 
 func (c *CreateOrUpdateFlagRequestBody) UnmarshalJSON(data []byte) error {
-	type embed CreateOrUpdateFlagRequestBody
-	var unmarshaler = struct {
-		embed
-		FlagType string `json:"flag_type"`
-	}{
-		embed: embed(*c),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+	type unmarshaler CreateOrUpdateFlagRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*c = CreateOrUpdateFlagRequestBody(unmarshaler.embed)
-	if unmarshaler.FlagType != "boolean" {
-		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", c, "boolean", unmarshaler.FlagType)
-	}
-	c.flagType = unmarshaler.FlagType
-	extraProperties, err := internal.ExtractExtraProperties(data, *c, "flag_type")
+	*c = CreateOrUpdateFlagRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
 	}
@@ -1788,10 +1776,8 @@ func (c *CreateOrUpdateFlagRequestBody) MarshalJSON() ([]byte, error) {
 	type embed CreateOrUpdateFlagRequestBody
 	var marshaler = struct {
 		embed
-		FlagType string `json:"flag_type"`
 	}{
-		embed:    embed(*c),
-		FlagType: "boolean",
+		embed: embed(*c),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -2032,7 +2018,7 @@ type FlagResponseData struct {
 	DefaultValue bool      `json:"default_value" url:"default_value"`
 	Description  string    `json:"description" url:"description"`
 	FeatureID    *string   `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	FlagType     string    `json:"flag_type" url:"flag_type"`
+	FlagType     FlagType  `json:"flag_type" url:"flag_type"`
 	ID           string    `json:"id" url:"id"`
 	Key          string    `json:"key" url:"key"`
 	MaintainerID *string   `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
@@ -2072,13 +2058,6 @@ func (f *FlagResponseData) GetFeatureID() *string {
 		return nil
 	}
 	return f.FeatureID
-}
-
-func (f *FlagResponseData) GetFlagType() string {
-	if f == nil {
-		return ""
-	}
-	return f.FlagType
 }
 
 func (f *FlagResponseData) GetID() string {
@@ -2157,7 +2136,7 @@ func (f *FlagResponseData) SetFeatureID(featureID *string) {
 
 // SetFlagType sets the FlagType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FlagResponseData) SetFlagType(flagType string) {
+func (f *FlagResponseData) SetFlagType(flagType FlagType) {
 	f.FlagType = flagType
 	f.require(flagResponseDataFieldFlagType)
 }
@@ -2548,8 +2527,8 @@ type CountFeaturesParams struct {
 	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
 	BooleanRequireEvent *bool `json:"boolean_require_event,omitempty" url:"boolean_require_event,omitempty"`
 	// Filter by one or more feature types (boolean, event, trait)
-	FeatureType []string `json:"feature_type,omitempty" url:"feature_type,omitempty"`
-	IDs         []string `json:"ids,omitempty" url:"ids,omitempty"`
+	FeatureType []FeatureType `json:"feature_type,omitempty" url:"feature_type,omitempty"`
+	IDs         []string      `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -2575,7 +2554,7 @@ func (c *CountFeaturesParams) GetBooleanRequireEvent() *bool {
 	return c.BooleanRequireEvent
 }
 
-func (c *CountFeaturesParams) GetFeatureType() []string {
+func (c *CountFeaturesParams) GetFeatureType() []FeatureType {
 	if c == nil {
 		return nil
 	}
@@ -2644,7 +2623,7 @@ func (c *CountFeaturesParams) SetBooleanRequireEvent(booleanRequireEvent *bool) 
 
 // SetFeatureType sets the FeatureType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeaturesParams) SetFeatureType(featureType []string) {
+func (c *CountFeaturesParams) SetFeatureType(featureType []FeatureType) {
 	c.FeatureType = featureType
 	c.require(countFeaturesParamsFieldFeatureType)
 }
@@ -3064,74 +3043,6 @@ func (c *CountFlagsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CreateFeatureRequestBodyFeatureType string
-
-const (
-	CreateFeatureRequestBodyFeatureTypeBoolean CreateFeatureRequestBodyFeatureType = "boolean"
-	CreateFeatureRequestBodyFeatureTypeEvent   CreateFeatureRequestBodyFeatureType = "event"
-	CreateFeatureRequestBodyFeatureTypeTrait   CreateFeatureRequestBodyFeatureType = "trait"
-)
-
-func NewCreateFeatureRequestBodyFeatureTypeFromString(s string) (CreateFeatureRequestBodyFeatureType, error) {
-	switch s {
-	case "boolean":
-		return CreateFeatureRequestBodyFeatureTypeBoolean, nil
-	case "event":
-		return CreateFeatureRequestBodyFeatureTypeEvent, nil
-	case "trait":
-		return CreateFeatureRequestBodyFeatureTypeTrait, nil
-	}
-	var t CreateFeatureRequestBodyFeatureType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateFeatureRequestBodyFeatureType) Ptr() *CreateFeatureRequestBodyFeatureType {
-	return &c
-}
-
-type CreateFeatureRequestBodyLifecyclePhase string
-
-const (
-	CreateFeatureRequestBodyLifecyclePhaseAddOn           CreateFeatureRequestBodyLifecyclePhase = "add_on"
-	CreateFeatureRequestBodyLifecyclePhaseAlpha           CreateFeatureRequestBodyLifecyclePhase = "alpha"
-	CreateFeatureRequestBodyLifecyclePhaseBeta            CreateFeatureRequestBodyLifecyclePhase = "beta"
-	CreateFeatureRequestBodyLifecyclePhaseDeprecated      CreateFeatureRequestBodyLifecyclePhase = "deprecated"
-	CreateFeatureRequestBodyLifecyclePhaseGa              CreateFeatureRequestBodyLifecyclePhase = "ga"
-	CreateFeatureRequestBodyLifecyclePhaseInPlan          CreateFeatureRequestBodyLifecyclePhase = "in_plan"
-	CreateFeatureRequestBodyLifecyclePhaseInactive        CreateFeatureRequestBodyLifecyclePhase = "inactive"
-	CreateFeatureRequestBodyLifecyclePhaseInternalTesting CreateFeatureRequestBodyLifecyclePhase = "internal_testing"
-	CreateFeatureRequestBodyLifecyclePhaseLegacy          CreateFeatureRequestBodyLifecyclePhase = "legacy"
-)
-
-func NewCreateFeatureRequestBodyLifecyclePhaseFromString(s string) (CreateFeatureRequestBodyLifecyclePhase, error) {
-	switch s {
-	case "add_on":
-		return CreateFeatureRequestBodyLifecyclePhaseAddOn, nil
-	case "alpha":
-		return CreateFeatureRequestBodyLifecyclePhaseAlpha, nil
-	case "beta":
-		return CreateFeatureRequestBodyLifecyclePhaseBeta, nil
-	case "deprecated":
-		return CreateFeatureRequestBodyLifecyclePhaseDeprecated, nil
-	case "ga":
-		return CreateFeatureRequestBodyLifecyclePhaseGa, nil
-	case "in_plan":
-		return CreateFeatureRequestBodyLifecyclePhaseInPlan, nil
-	case "inactive":
-		return CreateFeatureRequestBodyLifecyclePhaseInactive, nil
-	case "internal_testing":
-		return CreateFeatureRequestBodyLifecyclePhaseInternalTesting, nil
-	case "legacy":
-		return CreateFeatureRequestBodyLifecyclePhaseLegacy, nil
-	}
-	var t CreateFeatureRequestBodyLifecyclePhase
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateFeatureRequestBodyLifecyclePhase) Ptr() *CreateFeatureRequestBodyLifecyclePhase {
-	return &c
 }
 
 var (
@@ -3720,8 +3631,8 @@ type ListFeaturesParams struct {
 	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
 	BooleanRequireEvent *bool `json:"boolean_require_event,omitempty" url:"boolean_require_event,omitempty"`
 	// Filter by one or more feature types (boolean, event, trait)
-	FeatureType []string `json:"feature_type,omitempty" url:"feature_type,omitempty"`
-	IDs         []string `json:"ids,omitempty" url:"ids,omitempty"`
+	FeatureType []FeatureType `json:"feature_type,omitempty" url:"feature_type,omitempty"`
+	IDs         []string      `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -3747,7 +3658,7 @@ func (l *ListFeaturesParams) GetBooleanRequireEvent() *bool {
 	return l.BooleanRequireEvent
 }
 
-func (l *ListFeaturesParams) GetFeatureType() []string {
+func (l *ListFeaturesParams) GetFeatureType() []FeatureType {
 	if l == nil {
 		return nil
 	}
@@ -3816,7 +3727,7 @@ func (l *ListFeaturesParams) SetBooleanRequireEvent(booleanRequireEvent *bool) {
 
 // SetFeatureType sets the FeatureType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeaturesParams) SetFeatureType(featureType []string) {
+func (l *ListFeaturesParams) SetFeatureType(featureType []FeatureType) {
 	l.FeatureType = featureType
 	l.require(listFeaturesParamsFieldFeatureType)
 }
@@ -4238,74 +4149,6 @@ func (l *ListFlagsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-type UpdateFeatureRequestBodyFeatureType string
-
-const (
-	UpdateFeatureRequestBodyFeatureTypeBoolean UpdateFeatureRequestBodyFeatureType = "boolean"
-	UpdateFeatureRequestBodyFeatureTypeEvent   UpdateFeatureRequestBodyFeatureType = "event"
-	UpdateFeatureRequestBodyFeatureTypeTrait   UpdateFeatureRequestBodyFeatureType = "trait"
-)
-
-func NewUpdateFeatureRequestBodyFeatureTypeFromString(s string) (UpdateFeatureRequestBodyFeatureType, error) {
-	switch s {
-	case "boolean":
-		return UpdateFeatureRequestBodyFeatureTypeBoolean, nil
-	case "event":
-		return UpdateFeatureRequestBodyFeatureTypeEvent, nil
-	case "trait":
-		return UpdateFeatureRequestBodyFeatureTypeTrait, nil
-	}
-	var t UpdateFeatureRequestBodyFeatureType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateFeatureRequestBodyFeatureType) Ptr() *UpdateFeatureRequestBodyFeatureType {
-	return &u
-}
-
-type UpdateFeatureRequestBodyLifecyclePhase string
-
-const (
-	UpdateFeatureRequestBodyLifecyclePhaseAddOn           UpdateFeatureRequestBodyLifecyclePhase = "add_on"
-	UpdateFeatureRequestBodyLifecyclePhaseAlpha           UpdateFeatureRequestBodyLifecyclePhase = "alpha"
-	UpdateFeatureRequestBodyLifecyclePhaseBeta            UpdateFeatureRequestBodyLifecyclePhase = "beta"
-	UpdateFeatureRequestBodyLifecyclePhaseDeprecated      UpdateFeatureRequestBodyLifecyclePhase = "deprecated"
-	UpdateFeatureRequestBodyLifecyclePhaseGa              UpdateFeatureRequestBodyLifecyclePhase = "ga"
-	UpdateFeatureRequestBodyLifecyclePhaseInPlan          UpdateFeatureRequestBodyLifecyclePhase = "in_plan"
-	UpdateFeatureRequestBodyLifecyclePhaseInactive        UpdateFeatureRequestBodyLifecyclePhase = "inactive"
-	UpdateFeatureRequestBodyLifecyclePhaseInternalTesting UpdateFeatureRequestBodyLifecyclePhase = "internal_testing"
-	UpdateFeatureRequestBodyLifecyclePhaseLegacy          UpdateFeatureRequestBodyLifecyclePhase = "legacy"
-)
-
-func NewUpdateFeatureRequestBodyLifecyclePhaseFromString(s string) (UpdateFeatureRequestBodyLifecyclePhase, error) {
-	switch s {
-	case "add_on":
-		return UpdateFeatureRequestBodyLifecyclePhaseAddOn, nil
-	case "alpha":
-		return UpdateFeatureRequestBodyLifecyclePhaseAlpha, nil
-	case "beta":
-		return UpdateFeatureRequestBodyLifecyclePhaseBeta, nil
-	case "deprecated":
-		return UpdateFeatureRequestBodyLifecyclePhaseDeprecated, nil
-	case "ga":
-		return UpdateFeatureRequestBodyLifecyclePhaseGa, nil
-	case "in_plan":
-		return UpdateFeatureRequestBodyLifecyclePhaseInPlan, nil
-	case "inactive":
-		return UpdateFeatureRequestBodyLifecyclePhaseInactive, nil
-	case "internal_testing":
-		return UpdateFeatureRequestBodyLifecyclePhaseInternalTesting, nil
-	case "legacy":
-		return UpdateFeatureRequestBodyLifecyclePhaseLegacy, nil
-	}
-	var t UpdateFeatureRequestBodyLifecyclePhase
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateFeatureRequestBodyLifecyclePhase) Ptr() *UpdateFeatureRequestBodyLifecyclePhase {
-	return &u
-}
-
 var (
 	updateFeatureResponseFieldData   = big.NewInt(1 << 0)
 	updateFeatureResponseFieldParams = big.NewInt(1 << 1)
@@ -4606,17 +4449,17 @@ var (
 )
 
 type UpdateFeatureRequestBody struct {
-	Description    *string                                 `json:"description,omitempty" url:"-"`
-	EventSubtype   *string                                 `json:"event_subtype,omitempty" url:"-"`
-	FeatureType    *UpdateFeatureRequestBodyFeatureType    `json:"feature_type,omitempty" url:"-"`
-	Flag           *CreateOrUpdateFlagRequestBody          `json:"flag,omitempty" url:"-"`
-	Icon           *string                                 `json:"icon,omitempty" url:"-"`
-	LifecyclePhase *UpdateFeatureRequestBodyLifecyclePhase `json:"lifecycle_phase,omitempty" url:"-"`
-	MaintainerID   *string                                 `json:"maintainer_id,omitempty" url:"-"`
-	Name           *string                                 `json:"name,omitempty" url:"-"`
-	PluralName     *string                                 `json:"plural_name,omitempty" url:"-"`
-	SingularName   *string                                 `json:"singular_name,omitempty" url:"-"`
-	TraitID        *string                                 `json:"trait_id,omitempty" url:"-"`
+	Description    *string                        `json:"description,omitempty" url:"-"`
+	EventSubtype   *string                        `json:"event_subtype,omitempty" url:"-"`
+	FeatureType    *FeatureType                   `json:"feature_type,omitempty" url:"-"`
+	Flag           *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
+	Icon           *string                        `json:"icon,omitempty" url:"-"`
+	LifecyclePhase *FeatureLifecyclePhase         `json:"lifecycle_phase,omitempty" url:"-"`
+	MaintainerID   *string                        `json:"maintainer_id,omitempty" url:"-"`
+	Name           *string                        `json:"name,omitempty" url:"-"`
+	PluralName     *string                        `json:"plural_name,omitempty" url:"-"`
+	SingularName   *string                        `json:"singular_name,omitempty" url:"-"`
+	TraitID        *string                        `json:"trait_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4645,7 +4488,7 @@ func (u *UpdateFeatureRequestBody) SetEventSubtype(eventSubtype *string) {
 
 // SetFeatureType sets the FeatureType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateFeatureRequestBody) SetFeatureType(featureType *UpdateFeatureRequestBodyFeatureType) {
+func (u *UpdateFeatureRequestBody) SetFeatureType(featureType *FeatureType) {
 	u.FeatureType = featureType
 	u.require(updateFeatureRequestBodyFieldFeatureType)
 }
@@ -4666,7 +4509,7 @@ func (u *UpdateFeatureRequestBody) SetIcon(icon *string) {
 
 // SetLifecyclePhase sets the LifecyclePhase field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateFeatureRequestBody) SetLifecyclePhase(lifecyclePhase *UpdateFeatureRequestBodyLifecyclePhase) {
+func (u *UpdateFeatureRequestBody) SetLifecyclePhase(lifecyclePhase *FeatureLifecyclePhase) {
 	u.LifecyclePhase = lifecyclePhase
 	u.require(updateFeatureRequestBodyFieldLifecyclePhase)
 }

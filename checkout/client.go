@@ -112,6 +112,22 @@ func (c *Client) PreviewManagePlan(
 	return response.Body, nil
 }
 
+func (c *Client) CancelSubscription(
+	ctx context.Context,
+	request *schematichq.CancelSubscriptionRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CancelSubscriptionResponse, error) {
+	response, err := c.WithRawResponse.CancelSubscription(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) UpdateCustomerSubscriptionTrialEnd(
 	ctx context.Context,
 	// subscription_id

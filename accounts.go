@@ -176,8 +176,8 @@ var (
 )
 
 type CreateEnvironmentRequestBody struct {
-	EnvironmentType CreateEnvironmentRequestBodyEnvironmentType `json:"environment_type" url:"-"`
-	Name            string                                      `json:"name" url:"-"`
+	EnvironmentType EnvironmentType `json:"environment_type" url:"-"`
+	Name            string          `json:"name" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -192,7 +192,7 @@ func (c *CreateEnvironmentRequestBody) require(field *big.Int) {
 
 // SetEnvironmentType sets the EnvironmentType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEnvironmentRequestBody) SetEnvironmentType(environmentType CreateEnvironmentRequestBodyEnvironmentType) {
+func (c *CreateEnvironmentRequestBody) SetEnvironmentType(environmentType EnvironmentType) {
 	c.EnvironmentType = environmentType
 	c.require(createEnvironmentRequestBodyFieldEnvironmentType)
 }
@@ -379,15 +379,15 @@ var (
 )
 
 type APIKeyCreateResponseData struct {
-	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
-	Description   *string    `json:"description,omitempty" url:"description,omitempty"`
-	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID            string     `json:"id" url:"id"`
-	LastUsedAt    *time.Time `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
-	Name          string     `json:"name" url:"name"`
-	Scopes        []string   `json:"scopes" url:"scopes"`
-	Secret        string     `json:"secret" url:"secret"`
-	UpdatedAt     time.Time  `json:"updated_at" url:"updated_at"`
+	CreatedAt     time.Time     `json:"created_at" url:"created_at"`
+	Description   *string       `json:"description,omitempty" url:"description,omitempty"`
+	EnvironmentID *string       `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID            string        `json:"id" url:"id"`
+	LastUsedAt    *time.Time    `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
+	Name          string        `json:"name" url:"name"`
+	Scopes        []APIKeyScope `json:"scopes" url:"scopes"`
+	Secret        string        `json:"secret" url:"secret"`
+	UpdatedAt     time.Time     `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -438,7 +438,7 @@ func (a *APIKeyCreateResponseData) GetName() string {
 	return a.Name
 }
 
-func (a *APIKeyCreateResponseData) GetScopes() []string {
+func (a *APIKeyCreateResponseData) GetScopes() []APIKeyScope {
 	if a == nil {
 		return nil
 	}
@@ -514,7 +514,7 @@ func (a *APIKeyCreateResponseData) SetName(name string) {
 
 // SetScopes sets the Scopes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyCreateResponseData) SetScopes(scopes []string) {
+func (a *APIKeyCreateResponseData) SetScopes(scopes []APIKeyScope) {
 	a.Scopes = scopes
 	a.require(aPIKeyCreateResponseDataFieldScopes)
 }
@@ -994,7 +994,7 @@ var (
 type EnvironmentDetailResponseData struct {
 	APIKeys         []*APIKeyResponseData `json:"api_keys" url:"api_keys"`
 	CreatedAt       time.Time             `json:"created_at" url:"created_at"`
-	EnvironmentType string                `json:"environment_type" url:"environment_type"`
+	EnvironmentType EnvironmentType       `json:"environment_type" url:"environment_type"`
 	ID              string                `json:"id" url:"id"`
 	Name            string                `json:"name" url:"name"`
 	UpdatedAt       time.Time             `json:"updated_at" url:"updated_at"`
@@ -1020,7 +1020,7 @@ func (e *EnvironmentDetailResponseData) GetCreatedAt() time.Time {
 	return e.CreatedAt
 }
 
-func (e *EnvironmentDetailResponseData) GetEnvironmentType() string {
+func (e *EnvironmentDetailResponseData) GetEnvironmentType() EnvironmentType {
 	if e == nil {
 		return ""
 	}
@@ -1075,7 +1075,7 @@ func (e *EnvironmentDetailResponseData) SetCreatedAt(createdAt time.Time) {
 
 // SetEnvironmentType sets the EnvironmentType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EnvironmentDetailResponseData) SetEnvironmentType(environmentType string) {
+func (e *EnvironmentDetailResponseData) SetEnvironmentType(environmentType EnvironmentType) {
 	e.EnvironmentType = environmentType
 	e.require(environmentDetailResponseDataFieldEnvironmentType)
 }
@@ -1161,11 +1161,11 @@ var (
 )
 
 type EnvironmentResponseData struct {
-	CreatedAt       time.Time `json:"created_at" url:"created_at"`
-	EnvironmentType string    `json:"environment_type" url:"environment_type"`
-	ID              string    `json:"id" url:"id"`
-	Name            string    `json:"name" url:"name"`
-	UpdatedAt       time.Time `json:"updated_at" url:"updated_at"`
+	CreatedAt       time.Time       `json:"created_at" url:"created_at"`
+	EnvironmentType EnvironmentType `json:"environment_type" url:"environment_type"`
+	ID              string          `json:"id" url:"id"`
+	Name            string          `json:"name" url:"name"`
+	UpdatedAt       time.Time       `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1181,7 +1181,7 @@ func (e *EnvironmentResponseData) GetCreatedAt() time.Time {
 	return e.CreatedAt
 }
 
-func (e *EnvironmentResponseData) GetEnvironmentType() string {
+func (e *EnvironmentResponseData) GetEnvironmentType() EnvironmentType {
 	if e == nil {
 		return ""
 	}
@@ -1229,7 +1229,7 @@ func (e *EnvironmentResponseData) SetCreatedAt(createdAt time.Time) {
 
 // SetEnvironmentType sets the EnvironmentType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EnvironmentResponseData) SetEnvironmentType(environmentType string) {
+func (e *EnvironmentResponseData) SetEnvironmentType(environmentType EnvironmentType) {
 	e.EnvironmentType = environmentType
 	e.require(environmentResponseDataFieldEnvironmentType)
 }
@@ -1304,6 +1304,31 @@ func (e *EnvironmentResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
+}
+
+type EnvironmentType string
+
+const (
+	EnvironmentTypeDevelopment EnvironmentType = "development"
+	EnvironmentTypeProduction  EnvironmentType = "production"
+	EnvironmentTypeStaging     EnvironmentType = "staging"
+)
+
+func NewEnvironmentTypeFromString(s string) (EnvironmentType, error) {
+	switch s {
+	case "development":
+		return EnvironmentTypeDevelopment, nil
+	case "production":
+		return EnvironmentTypeProduction, nil
+	case "staging":
+		return EnvironmentTypeStaging, nil
+	}
+	var t EnvironmentType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (e EnvironmentType) Ptr() *EnvironmentType {
+	return &e
 }
 
 var (
@@ -1941,31 +1966,6 @@ func (c *CreateAPIKeyResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CreateEnvironmentRequestBodyEnvironmentType string
-
-const (
-	CreateEnvironmentRequestBodyEnvironmentTypeDevelopment CreateEnvironmentRequestBodyEnvironmentType = "development"
-	CreateEnvironmentRequestBodyEnvironmentTypeStaging     CreateEnvironmentRequestBodyEnvironmentType = "staging"
-	CreateEnvironmentRequestBodyEnvironmentTypeProduction  CreateEnvironmentRequestBodyEnvironmentType = "production"
-)
-
-func NewCreateEnvironmentRequestBodyEnvironmentTypeFromString(s string) (CreateEnvironmentRequestBodyEnvironmentType, error) {
-	switch s {
-	case "development":
-		return CreateEnvironmentRequestBodyEnvironmentTypeDevelopment, nil
-	case "staging":
-		return CreateEnvironmentRequestBodyEnvironmentTypeStaging, nil
-	case "production":
-		return CreateEnvironmentRequestBodyEnvironmentTypeProduction, nil
-	}
-	var t CreateEnvironmentRequestBodyEnvironmentType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateEnvironmentRequestBodyEnvironmentType) Ptr() *CreateEnvironmentRequestBodyEnvironmentType {
-	return &c
 }
 
 var (
@@ -3400,31 +3400,6 @@ func (u *UpdateAPIKeyResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
-type UpdateEnvironmentRequestBodyEnvironmentType string
-
-const (
-	UpdateEnvironmentRequestBodyEnvironmentTypeDevelopment UpdateEnvironmentRequestBodyEnvironmentType = "development"
-	UpdateEnvironmentRequestBodyEnvironmentTypeStaging     UpdateEnvironmentRequestBodyEnvironmentType = "staging"
-	UpdateEnvironmentRequestBodyEnvironmentTypeProduction  UpdateEnvironmentRequestBodyEnvironmentType = "production"
-)
-
-func NewUpdateEnvironmentRequestBodyEnvironmentTypeFromString(s string) (UpdateEnvironmentRequestBodyEnvironmentType, error) {
-	switch s {
-	case "development":
-		return UpdateEnvironmentRequestBodyEnvironmentTypeDevelopment, nil
-	case "staging":
-		return UpdateEnvironmentRequestBodyEnvironmentTypeStaging, nil
-	case "production":
-		return UpdateEnvironmentRequestBodyEnvironmentTypeProduction, nil
-	}
-	var t UpdateEnvironmentRequestBodyEnvironmentType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateEnvironmentRequestBodyEnvironmentType) Ptr() *UpdateEnvironmentRequestBodyEnvironmentType {
-	return &u
-}
-
 var (
 	updateEnvironmentResponseFieldData   = big.NewInt(1 << 0)
 	updateEnvironmentResponseFieldParams = big.NewInt(1 << 1)
@@ -3560,8 +3535,8 @@ var (
 )
 
 type UpdateEnvironmentRequestBody struct {
-	EnvironmentType *UpdateEnvironmentRequestBodyEnvironmentType `json:"environment_type,omitempty" url:"-"`
-	Name            *string                                      `json:"name,omitempty" url:"-"`
+	EnvironmentType *EnvironmentType `json:"environment_type,omitempty" url:"-"`
+	Name            *string          `json:"name,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3576,7 +3551,7 @@ func (u *UpdateEnvironmentRequestBody) require(field *big.Int) {
 
 // SetEnvironmentType sets the EnvironmentType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateEnvironmentRequestBody) SetEnvironmentType(environmentType *UpdateEnvironmentRequestBodyEnvironmentType) {
+func (u *UpdateEnvironmentRequestBody) SetEnvironmentType(environmentType *EnvironmentType) {
 	u.EnvironmentType = environmentType
 	u.require(updateEnvironmentRequestBodyFieldEnvironmentType)
 }

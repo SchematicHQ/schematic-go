@@ -438,7 +438,7 @@ type CreateCompanyOverrideRequestBody struct {
 	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
 	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              CreateCompanyOverrideRequestBodyValueType               `json:"value_type" url:"-"`
+	ValueType              EntitlementValueType                                    `json:"value_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -530,7 +530,7 @@ func (c *CreateCompanyOverrideRequestBody) SetValueTraitID(valueTraitID *string)
 
 // SetValueType sets the ValueType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyOverrideRequestBody) SetValueType(valueType CreateCompanyOverrideRequestBodyValueType) {
+func (c *CreateCompanyOverrideRequestBody) SetValueType(valueType EntitlementValueType) {
 	c.ValueType = valueType
 	c.require(createCompanyOverrideRequestBodyFieldValueType)
 }
@@ -601,20 +601,20 @@ type CreatePlanEntitlementRequestBody struct {
 	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
 	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
 	PlanID                  string                                                  `json:"plan_id" url:"-"`
-	PriceBehavior           *CreatePlanEntitlementRequestBodyPriceBehavior          `json:"price_behavior,omitempty" url:"-"`
+	PriceBehavior           *EntitlementPriceBehavior                               `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
-	PriceTiers             []*CreatePriceTierRequestBody             `json:"price_tiers,omitempty" url:"-"`
-	SoftLimit              *int                                      `json:"soft_limit,omitempty" url:"-"`
-	TierMode               *string                                   `json:"tier_mode,omitempty" url:"-"`
-	ValueBool              *bool                                     `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID          *string                                   `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int                                      `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID           *string                                   `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              CreatePlanEntitlementRequestBodyValueType `json:"value_type" url:"-"`
-	YearlyMeteredPriceID   *string                                   `json:"yearly_metered_price_id,omitempty" url:"-"`
-	YearlyPriceTiers       []*CreatePriceTierRequestBody             `json:"yearly_price_tiers,omitempty" url:"-"`
-	YearlyUnitPrice        *int                                      `json:"yearly_unit_price,omitempty" url:"-"`
-	YearlyUnitPriceDecimal *string                                   `json:"yearly_unit_price_decimal,omitempty" url:"-"`
+	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
+	SoftLimit              *int                          `json:"soft_limit,omitempty" url:"-"`
+	TierMode               *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
+	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric           *int                          `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
+	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
+	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
+	YearlyUnitPrice        *int                          `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -720,7 +720,7 @@ func (c *CreatePlanEntitlementRequestBody) SetPlanID(planID string) {
 
 // SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetPriceBehavior(priceBehavior *CreatePlanEntitlementRequestBodyPriceBehavior) {
+func (c *CreatePlanEntitlementRequestBody) SetPriceBehavior(priceBehavior *EntitlementPriceBehavior) {
 	c.PriceBehavior = priceBehavior
 	c.require(createPlanEntitlementRequestBodyFieldPriceBehavior)
 }
@@ -741,7 +741,7 @@ func (c *CreatePlanEntitlementRequestBody) SetSoftLimit(softLimit *int) {
 
 // SetTierMode sets the TierMode field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetTierMode(tierMode *string) {
+func (c *CreatePlanEntitlementRequestBody) SetTierMode(tierMode *BillingTiersMode) {
 	c.TierMode = tierMode
 	c.require(createPlanEntitlementRequestBodyFieldTierMode)
 }
@@ -776,7 +776,7 @@ func (c *CreatePlanEntitlementRequestBody) SetValueTraitID(valueTraitID *string)
 
 // SetValueType sets the ValueType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetValueType(valueType CreatePlanEntitlementRequestBodyValueType) {
+func (c *CreatePlanEntitlementRequestBody) SetValueType(valueType EntitlementValueType) {
 	c.ValueType = valueType
 	c.require(createPlanEntitlementRequestBodyFieldValueType)
 }
@@ -807,6 +807,40 @@ func (c *CreatePlanEntitlementRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *i
 func (c *CreatePlanEntitlementRequestBody) SetYearlyUnitPriceDecimal(yearlyUnitPriceDecimal *string) {
 	c.YearlyUnitPriceDecimal = yearlyUnitPriceDecimal
 	c.require(createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal)
+}
+
+var (
+	duplicatePlanEntitlementsRequestBodyFieldSourcePlanID = big.NewInt(1 << 0)
+	duplicatePlanEntitlementsRequestBodyFieldTargetPlanID = big.NewInt(1 << 1)
+)
+
+type DuplicatePlanEntitlementsRequestBody struct {
+	SourcePlanID string `json:"source_plan_id" url:"-"`
+	TargetPlanID string `json:"target_plan_id" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (d *DuplicatePlanEntitlementsRequestBody) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetSourcePlanID sets the SourcePlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DuplicatePlanEntitlementsRequestBody) SetSourcePlanID(sourcePlanID string) {
+	d.SourcePlanID = sourcePlanID
+	d.require(duplicatePlanEntitlementsRequestBodyFieldSourcePlanID)
+}
+
+// SetTargetPlanID sets the TargetPlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DuplicatePlanEntitlementsRequestBody) SetTargetPlanID(targetPlanID string) {
+	d.TargetPlanID = targetPlanID
+	d.require(duplicatePlanEntitlementsRequestBodyFieldTargetPlanID)
 }
 
 var (
@@ -1553,6 +1587,100 @@ func (c *CreditUsage) String() string {
 }
 
 var (
+	duplicatePlanEntitlementsResponseResponseDataFieldData    = big.NewInt(1 << 0)
+	duplicatePlanEntitlementsResponseResponseDataFieldSkipped = big.NewInt(1 << 1)
+)
+
+type DuplicatePlanEntitlementsResponseResponseData struct {
+	Data    []*PlanEntitlementResponseData    `json:"data" url:"data"`
+	Skipped []*SkippedEntitlementResponseData `json:"skipped" url:"skipped"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DuplicatePlanEntitlementsResponseResponseData) GetData() []*PlanEntitlementResponseData {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DuplicatePlanEntitlementsResponseResponseData) GetSkipped() []*SkippedEntitlementResponseData {
+	if d == nil {
+		return nil
+	}
+	return d.Skipped
+}
+
+func (d *DuplicatePlanEntitlementsResponseResponseData) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DuplicatePlanEntitlementsResponseResponseData) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DuplicatePlanEntitlementsResponseResponseData) SetData(data []*PlanEntitlementResponseData) {
+	d.Data = data
+	d.require(duplicatePlanEntitlementsResponseResponseDataFieldData)
+}
+
+// SetSkipped sets the Skipped field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DuplicatePlanEntitlementsResponseResponseData) SetSkipped(skipped []*SkippedEntitlementResponseData) {
+	d.Skipped = skipped
+	d.require(duplicatePlanEntitlementsResponseResponseDataFieldSkipped)
+}
+
+func (d *DuplicatePlanEntitlementsResponseResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler DuplicatePlanEntitlementsResponseResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DuplicatePlanEntitlementsResponseResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DuplicatePlanEntitlementsResponseResponseData) MarshalJSON() ([]byte, error) {
+	type embed DuplicatePlanEntitlementsResponseResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DuplicatePlanEntitlementsResponseResponseData) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+var (
 	featureCompanyResponseDataFieldAccess                    = big.NewInt(1 << 0)
 	featureCompanyResponseDataFieldAllocation                = big.NewInt(1 << 1)
 	featureCompanyResponseDataFieldAllocationType            = big.NewInt(1 << 2)
@@ -1594,19 +1722,17 @@ type FeatureCompanyResponseData struct {
 	// Whether further usage is permitted.
 	Access bool `json:"access" url:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
-	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
-	// The type of allocation that is being used.
-	AllocationType  FeatureCompanyResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
-	Company         *CompanyDetailResponseData               `json:"company,omitempty" url:"company,omitempty"`
-	CompanyOverride *CompanyOverrideResponseData             `json:"company_override,omitempty" url:"company_override,omitempty"`
+	Allocation      *int                         `json:"allocation,omitempty" url:"allocation,omitempty"`
+	AllocationType  EntitlementValueType         `json:"allocation_type" url:"allocation_type"`
+	Company         *CompanyDetailResponseData   `json:"company,omitempty" url:"company,omitempty"`
+	CompanyOverride *CompanyOverrideResponseData `json:"company_override,omitempty" url:"company_override,omitempty"`
 	// The rate at which credits are consumed per unit of usage
-	CreditConsumptionRate *float64             `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
-	CreditGrantCounts     map[string]float64   `json:"credit_grant_counts,omitempty" url:"credit_grant_counts,omitempty"`
-	CreditGrantDetails    []*CreditGrantDetail `json:"credit_grant_details,omitempty" url:"credit_grant_details,omitempty"`
-	// Reason for the credit grant
-	CreditGrantReason *FeatureCompanyResponseDataCreditGrantReason `json:"credit_grant_reason,omitempty" url:"credit_grant_reason,omitempty"`
-	CreditRemaining   *float64                                     `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
-	CreditTotal       *float64                                     `json:"credit_total,omitempty" url:"credit_total,omitempty"`
+	CreditConsumptionRate *float64                  `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
+	CreditGrantCounts     map[string]float64        `json:"credit_grant_counts,omitempty" url:"credit_grant_counts,omitempty"`
+	CreditGrantDetails    []*CreditGrantDetail      `json:"credit_grant_details,omitempty" url:"credit_grant_details,omitempty"`
+	CreditGrantReason     *BillingCreditGrantReason `json:"credit_grant_reason,omitempty" url:"credit_grant_reason,omitempty"`
+	CreditRemaining       *float64                  `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
+	CreditTotal           *float64                  `json:"credit_total,omitempty" url:"credit_total,omitempty"`
 	// Icon identifier for the credit type
 	CreditTypeIcon *string      `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
 	CreditUsage    *CreditUsage `json:"credit_usage,omitempty" url:"credit_usage,omitempty"`
@@ -1619,7 +1745,7 @@ type FeatureCompanyResponseData struct {
 	EntitlementID             string     `json:"entitlement_id" url:"entitlement_id"`
 	// Source of the entitlement (plan or company_override)
 	EntitlementSource *string                    `json:"entitlement_source,omitempty" url:"entitlement_source,omitempty"`
-	EntitlementType   string                     `json:"entitlement_type" url:"entitlement_type"`
+	EntitlementType   EntitlementType            `json:"entitlement_type" url:"entitlement_type"`
 	Feature           *FeatureDetailResponseData `json:"feature,omitempty" url:"feature,omitempty"`
 	// Whether a valid allocation exists
 	HasValidAllocation *bool `json:"has_valid_allocation,omitempty" url:"has_valid_allocation,omitempty"`
@@ -1638,7 +1764,7 @@ type FeatureCompanyResponseData struct {
 	Period          *string                      `json:"period,omitempty" url:"period,omitempty"`
 	Plan            *PlanResponseData            `json:"plan,omitempty" url:"plan,omitempty"`
 	PlanEntitlement *PlanEntitlementResponseData `json:"plan_entitlement,omitempty" url:"plan_entitlement,omitempty"`
-	PriceBehavior   *string                      `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	PriceBehavior   *EntitlementPriceBehavior    `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// The soft limit for the feature usage. Available only for overage price behavior
 	SoftLimit *int `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured.
@@ -1666,7 +1792,7 @@ func (f *FeatureCompanyResponseData) GetAllocation() *int {
 	return f.Allocation
 }
 
-func (f *FeatureCompanyResponseData) GetAllocationType() FeatureCompanyResponseDataAllocationType {
+func (f *FeatureCompanyResponseData) GetAllocationType() EntitlementValueType {
 	if f == nil {
 		return ""
 	}
@@ -1708,7 +1834,7 @@ func (f *FeatureCompanyResponseData) GetCreditGrantDetails() []*CreditGrantDetai
 	return f.CreditGrantDetails
 }
 
-func (f *FeatureCompanyResponseData) GetCreditGrantReason() *FeatureCompanyResponseDataCreditGrantReason {
+func (f *FeatureCompanyResponseData) GetCreditGrantReason() *BillingCreditGrantReason {
 	if f == nil {
 		return nil
 	}
@@ -1785,7 +1911,7 @@ func (f *FeatureCompanyResponseData) GetEntitlementSource() *string {
 	return f.EntitlementSource
 }
 
-func (f *FeatureCompanyResponseData) GetEntitlementType() string {
+func (f *FeatureCompanyResponseData) GetEntitlementType() EntitlementType {
 	if f == nil {
 		return ""
 	}
@@ -1869,7 +1995,7 @@ func (f *FeatureCompanyResponseData) GetPlanEntitlement() *PlanEntitlementRespon
 	return f.PlanEntitlement
 }
 
-func (f *FeatureCompanyResponseData) GetPriceBehavior() *string {
+func (f *FeatureCompanyResponseData) GetPriceBehavior() *EntitlementPriceBehavior {
 	if f == nil {
 		return nil
 	}
@@ -1924,7 +2050,7 @@ func (f *FeatureCompanyResponseData) SetAllocation(allocation *int) {
 
 // SetAllocationType sets the AllocationType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetAllocationType(allocationType FeatureCompanyResponseDataAllocationType) {
+func (f *FeatureCompanyResponseData) SetAllocationType(allocationType EntitlementValueType) {
 	f.AllocationType = allocationType
 	f.require(featureCompanyResponseDataFieldAllocationType)
 }
@@ -1966,7 +2092,7 @@ func (f *FeatureCompanyResponseData) SetCreditGrantDetails(creditGrantDetails []
 
 // SetCreditGrantReason sets the CreditGrantReason field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetCreditGrantReason(creditGrantReason *FeatureCompanyResponseDataCreditGrantReason) {
+func (f *FeatureCompanyResponseData) SetCreditGrantReason(creditGrantReason *BillingCreditGrantReason) {
 	f.CreditGrantReason = creditGrantReason
 	f.require(featureCompanyResponseDataFieldCreditGrantReason)
 }
@@ -2043,7 +2169,7 @@ func (f *FeatureCompanyResponseData) SetEntitlementSource(entitlementSource *str
 
 // SetEntitlementType sets the EntitlementType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetEntitlementType(entitlementType string) {
+func (f *FeatureCompanyResponseData) SetEntitlementType(entitlementType EntitlementType) {
 	f.EntitlementType = entitlementType
 	f.require(featureCompanyResponseDataFieldEntitlementType)
 }
@@ -2127,7 +2253,7 @@ func (f *FeatureCompanyResponseData) SetPlanEntitlement(planEntitlement *PlanEnt
 
 // SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetPriceBehavior(priceBehavior *string) {
+func (f *FeatureCompanyResponseData) SetPriceBehavior(priceBehavior *EntitlementPriceBehavior) {
 	f.PriceBehavior = priceBehavior
 	f.require(featureCompanyResponseDataFieldPriceBehavior)
 }
@@ -2204,61 +2330,6 @@ func (f *FeatureCompanyResponseData) String() string {
 	return fmt.Sprintf("%#v", f)
 }
 
-// The type of allocation that is being used.
-type FeatureCompanyResponseDataAllocationType string
-
-const (
-	FeatureCompanyResponseDataAllocationTypeBoolean   FeatureCompanyResponseDataAllocationType = "boolean"
-	FeatureCompanyResponseDataAllocationTypeNumeric   FeatureCompanyResponseDataAllocationType = "numeric"
-	FeatureCompanyResponseDataAllocationTypeTrait     FeatureCompanyResponseDataAllocationType = "trait"
-	FeatureCompanyResponseDataAllocationTypeUnlimited FeatureCompanyResponseDataAllocationType = "unlimited"
-)
-
-func NewFeatureCompanyResponseDataAllocationTypeFromString(s string) (FeatureCompanyResponseDataAllocationType, error) {
-	switch s {
-	case "boolean":
-		return FeatureCompanyResponseDataAllocationTypeBoolean, nil
-	case "numeric":
-		return FeatureCompanyResponseDataAllocationTypeNumeric, nil
-	case "trait":
-		return FeatureCompanyResponseDataAllocationTypeTrait, nil
-	case "unlimited":
-		return FeatureCompanyResponseDataAllocationTypeUnlimited, nil
-	}
-	var t FeatureCompanyResponseDataAllocationType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (f FeatureCompanyResponseDataAllocationType) Ptr() *FeatureCompanyResponseDataAllocationType {
-	return &f
-}
-
-// Reason for the credit grant
-type FeatureCompanyResponseDataCreditGrantReason string
-
-const (
-	FeatureCompanyResponseDataCreditGrantReasonFree      FeatureCompanyResponseDataCreditGrantReason = "free"
-	FeatureCompanyResponseDataCreditGrantReasonPlan      FeatureCompanyResponseDataCreditGrantReason = "plan"
-	FeatureCompanyResponseDataCreditGrantReasonPurchased FeatureCompanyResponseDataCreditGrantReason = "purchased"
-)
-
-func NewFeatureCompanyResponseDataCreditGrantReasonFromString(s string) (FeatureCompanyResponseDataCreditGrantReason, error) {
-	switch s {
-	case "free":
-		return FeatureCompanyResponseDataCreditGrantReasonFree, nil
-	case "plan":
-		return FeatureCompanyResponseDataCreditGrantReasonPlan, nil
-	case "purchased":
-		return FeatureCompanyResponseDataCreditGrantReasonPurchased, nil
-	}
-	var t FeatureCompanyResponseDataCreditGrantReason
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (f FeatureCompanyResponseDataCreditGrantReason) Ptr() *FeatureCompanyResponseDataCreditGrantReason {
-	return &f
-}
-
 var (
 	featureCompanyUserResponseDataFieldAccess          = big.NewInt(1 << 0)
 	featureCompanyUserResponseDataFieldAllocation      = big.NewInt(1 << 1)
@@ -2279,13 +2350,12 @@ type FeatureCompanyUserResponseData struct {
 	// Whether further usage is permitted.
 	Access bool `json:"access" url:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
-	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
-	// The type of allocation that is being used.
-	AllocationType  FeatureCompanyUserResponseDataAllocationType `json:"allocation_type" url:"allocation_type"`
-	Company         *CompanyDetailResponseData                   `json:"company,omitempty" url:"company,omitempty"`
-	EntitlementID   string                                       `json:"entitlement_id" url:"entitlement_id"`
-	EntitlementType string                                       `json:"entitlement_type" url:"entitlement_type"`
-	Feature         *FeatureDetailResponseData                   `json:"feature,omitempty" url:"feature,omitempty"`
+	Allocation      *int                       `json:"allocation,omitempty" url:"allocation,omitempty"`
+	AllocationType  EntitlementValueType       `json:"allocation_type" url:"allocation_type"`
+	Company         *CompanyDetailResponseData `json:"company,omitempty" url:"company,omitempty"`
+	EntitlementID   string                     `json:"entitlement_id" url:"entitlement_id"`
+	EntitlementType EntitlementType            `json:"entitlement_type" url:"entitlement_type"`
+	Feature         *FeatureDetailResponseData `json:"feature,omitempty" url:"feature,omitempty"`
 	// The time at which the metric will resets.
 	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
 	// If the period is current_month, when the month resets.
@@ -2318,7 +2388,7 @@ func (f *FeatureCompanyUserResponseData) GetAllocation() *int {
 	return f.Allocation
 }
 
-func (f *FeatureCompanyUserResponseData) GetAllocationType() FeatureCompanyUserResponseDataAllocationType {
+func (f *FeatureCompanyUserResponseData) GetAllocationType() EntitlementValueType {
 	if f == nil {
 		return ""
 	}
@@ -2339,7 +2409,7 @@ func (f *FeatureCompanyUserResponseData) GetEntitlementID() string {
 	return f.EntitlementID
 }
 
-func (f *FeatureCompanyUserResponseData) GetEntitlementType() string {
+func (f *FeatureCompanyUserResponseData) GetEntitlementType() EntitlementType {
 	if f == nil {
 		return ""
 	}
@@ -2422,7 +2492,7 @@ func (f *FeatureCompanyUserResponseData) SetAllocation(allocation *int) {
 
 // SetAllocationType sets the AllocationType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyUserResponseData) SetAllocationType(allocationType FeatureCompanyUserResponseDataAllocationType) {
+func (f *FeatureCompanyUserResponseData) SetAllocationType(allocationType EntitlementValueType) {
 	f.AllocationType = allocationType
 	f.require(featureCompanyUserResponseDataFieldAllocationType)
 }
@@ -2443,7 +2513,7 @@ func (f *FeatureCompanyUserResponseData) SetEntitlementID(entitlementID string) 
 
 // SetEntitlementType sets the EntitlementType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyUserResponseData) SetEntitlementType(entitlementType string) {
+func (f *FeatureCompanyUserResponseData) SetEntitlementType(entitlementType EntitlementType) {
 	f.EntitlementType = entitlementType
 	f.require(featureCompanyUserResponseDataFieldEntitlementType)
 }
@@ -2544,36 +2614,208 @@ func (f *FeatureCompanyUserResponseData) String() string {
 	return fmt.Sprintf("%#v", f)
 }
 
-// The type of allocation that is being used.
-type FeatureCompanyUserResponseDataAllocationType string
-
-const (
-	FeatureCompanyUserResponseDataAllocationTypeBoolean   FeatureCompanyUserResponseDataAllocationType = "boolean"
-	FeatureCompanyUserResponseDataAllocationTypeNumeric   FeatureCompanyUserResponseDataAllocationType = "numeric"
-	FeatureCompanyUserResponseDataAllocationTypeTrait     FeatureCompanyUserResponseDataAllocationType = "trait"
-	FeatureCompanyUserResponseDataAllocationTypeUnlimited FeatureCompanyUserResponseDataAllocationType = "unlimited"
-	FeatureCompanyUserResponseDataAllocationTypeUnknown   FeatureCompanyUserResponseDataAllocationType = "unknown"
+var (
+	skippedEntitlementErrorResponseDataFieldMessage = big.NewInt(1 << 0)
 )
 
-func NewFeatureCompanyUserResponseDataAllocationTypeFromString(s string) (FeatureCompanyUserResponseDataAllocationType, error) {
-	switch s {
-	case "boolean":
-		return FeatureCompanyUserResponseDataAllocationTypeBoolean, nil
-	case "numeric":
-		return FeatureCompanyUserResponseDataAllocationTypeNumeric, nil
-	case "trait":
-		return FeatureCompanyUserResponseDataAllocationTypeTrait, nil
-	case "unlimited":
-		return FeatureCompanyUserResponseDataAllocationTypeUnlimited, nil
-	case "unknown":
-		return FeatureCompanyUserResponseDataAllocationTypeUnknown, nil
-	}
-	var t FeatureCompanyUserResponseDataAllocationType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
+type SkippedEntitlementErrorResponseData struct {
+	Message string `json:"message" url:"message"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
 }
 
-func (f FeatureCompanyUserResponseDataAllocationType) Ptr() *FeatureCompanyUserResponseDataAllocationType {
-	return &f
+func (s *SkippedEntitlementErrorResponseData) GetMessage() string {
+	if s == nil {
+		return ""
+	}
+	return s.Message
+}
+
+func (s *SkippedEntitlementErrorResponseData) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *SkippedEntitlementErrorResponseData) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetMessage sets the Message field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SkippedEntitlementErrorResponseData) SetMessage(message string) {
+	s.Message = message
+	s.require(skippedEntitlementErrorResponseDataFieldMessage)
+}
+
+func (s *SkippedEntitlementErrorResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler SkippedEntitlementErrorResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = SkippedEntitlementErrorResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SkippedEntitlementErrorResponseData) MarshalJSON() ([]byte, error) {
+	type embed SkippedEntitlementErrorResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *SkippedEntitlementErrorResponseData) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+var (
+	skippedEntitlementResponseDataFieldEntitlementID = big.NewInt(1 << 0)
+	skippedEntitlementResponseDataFieldErrors        = big.NewInt(1 << 1)
+	skippedEntitlementResponseDataFieldFeatureID     = big.NewInt(1 << 2)
+	skippedEntitlementResponseDataFieldFeatureName   = big.NewInt(1 << 3)
+)
+
+type SkippedEntitlementResponseData struct {
+	EntitlementID string                                 `json:"entitlement_id" url:"entitlement_id"`
+	Errors        []*SkippedEntitlementErrorResponseData `json:"errors" url:"errors"`
+	FeatureID     string                                 `json:"feature_id" url:"feature_id"`
+	FeatureName   string                                 `json:"feature_name" url:"feature_name"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *SkippedEntitlementResponseData) GetEntitlementID() string {
+	if s == nil {
+		return ""
+	}
+	return s.EntitlementID
+}
+
+func (s *SkippedEntitlementResponseData) GetErrors() []*SkippedEntitlementErrorResponseData {
+	if s == nil {
+		return nil
+	}
+	return s.Errors
+}
+
+func (s *SkippedEntitlementResponseData) GetFeatureID() string {
+	if s == nil {
+		return ""
+	}
+	return s.FeatureID
+}
+
+func (s *SkippedEntitlementResponseData) GetFeatureName() string {
+	if s == nil {
+		return ""
+	}
+	return s.FeatureName
+}
+
+func (s *SkippedEntitlementResponseData) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *SkippedEntitlementResponseData) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetEntitlementID sets the EntitlementID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SkippedEntitlementResponseData) SetEntitlementID(entitlementID string) {
+	s.EntitlementID = entitlementID
+	s.require(skippedEntitlementResponseDataFieldEntitlementID)
+}
+
+// SetErrors sets the Errors field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SkippedEntitlementResponseData) SetErrors(errors []*SkippedEntitlementErrorResponseData) {
+	s.Errors = errors
+	s.require(skippedEntitlementResponseDataFieldErrors)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SkippedEntitlementResponseData) SetFeatureID(featureID string) {
+	s.FeatureID = featureID
+	s.require(skippedEntitlementResponseDataFieldFeatureID)
+}
+
+// SetFeatureName sets the FeatureName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SkippedEntitlementResponseData) SetFeatureName(featureName string) {
+	s.FeatureName = featureName
+	s.require(skippedEntitlementResponseDataFieldFeatureName)
+}
+
+func (s *SkippedEntitlementResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler SkippedEntitlementResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = SkippedEntitlementResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SkippedEntitlementResponseData) MarshalJSON() ([]byte, error) {
+	type embed SkippedEntitlementResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *SkippedEntitlementResponseData) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
 }
 
 // Input parameters
@@ -3968,37 +4210,6 @@ func (c CreateCompanyOverrideRequestBodyMetricPeriodMonthReset) Ptr() *CreateCom
 	return &c
 }
 
-type CreateCompanyOverrideRequestBodyValueType string
-
-const (
-	CreateCompanyOverrideRequestBodyValueTypeBoolean   CreateCompanyOverrideRequestBodyValueType = "boolean"
-	CreateCompanyOverrideRequestBodyValueTypeCredit    CreateCompanyOverrideRequestBodyValueType = "credit"
-	CreateCompanyOverrideRequestBodyValueTypeNumeric   CreateCompanyOverrideRequestBodyValueType = "numeric"
-	CreateCompanyOverrideRequestBodyValueTypeTrait     CreateCompanyOverrideRequestBodyValueType = "trait"
-	CreateCompanyOverrideRequestBodyValueTypeUnlimited CreateCompanyOverrideRequestBodyValueType = "unlimited"
-)
-
-func NewCreateCompanyOverrideRequestBodyValueTypeFromString(s string) (CreateCompanyOverrideRequestBodyValueType, error) {
-	switch s {
-	case "boolean":
-		return CreateCompanyOverrideRequestBodyValueTypeBoolean, nil
-	case "credit":
-		return CreateCompanyOverrideRequestBodyValueTypeCredit, nil
-	case "numeric":
-		return CreateCompanyOverrideRequestBodyValueTypeNumeric, nil
-	case "trait":
-		return CreateCompanyOverrideRequestBodyValueTypeTrait, nil
-	case "unlimited":
-		return CreateCompanyOverrideRequestBodyValueTypeUnlimited, nil
-	}
-	var t CreateCompanyOverrideRequestBodyValueType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateCompanyOverrideRequestBodyValueType) Ptr() *CreateCompanyOverrideRequestBodyValueType {
-	return &c
-}
-
 var (
 	createCompanyOverrideResponseFieldData   = big.NewInt(1 << 0)
 	createCompanyOverrideResponseFieldParams = big.NewInt(1 << 1)
@@ -4141,68 +4352,6 @@ func NewCreatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString(s strin
 }
 
 func (c CreatePlanEntitlementRequestBodyMetricPeriodMonthReset) Ptr() *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset {
-	return &c
-}
-
-type CreatePlanEntitlementRequestBodyPriceBehavior string
-
-const (
-	CreatePlanEntitlementRequestBodyPriceBehaviorPayAsYouGo     CreatePlanEntitlementRequestBodyPriceBehavior = "pay_as_you_go"
-	CreatePlanEntitlementRequestBodyPriceBehaviorPayInAdvance   CreatePlanEntitlementRequestBodyPriceBehavior = "pay_in_advance"
-	CreatePlanEntitlementRequestBodyPriceBehaviorOverage        CreatePlanEntitlementRequestBodyPriceBehavior = "overage"
-	CreatePlanEntitlementRequestBodyPriceBehaviorCreditBurndown CreatePlanEntitlementRequestBodyPriceBehavior = "credit_burndown"
-	CreatePlanEntitlementRequestBodyPriceBehaviorTier           CreatePlanEntitlementRequestBodyPriceBehavior = "tier"
-)
-
-func NewCreatePlanEntitlementRequestBodyPriceBehaviorFromString(s string) (CreatePlanEntitlementRequestBodyPriceBehavior, error) {
-	switch s {
-	case "pay_as_you_go":
-		return CreatePlanEntitlementRequestBodyPriceBehaviorPayAsYouGo, nil
-	case "pay_in_advance":
-		return CreatePlanEntitlementRequestBodyPriceBehaviorPayInAdvance, nil
-	case "overage":
-		return CreatePlanEntitlementRequestBodyPriceBehaviorOverage, nil
-	case "credit_burndown":
-		return CreatePlanEntitlementRequestBodyPriceBehaviorCreditBurndown, nil
-	case "tier":
-		return CreatePlanEntitlementRequestBodyPriceBehaviorTier, nil
-	}
-	var t CreatePlanEntitlementRequestBodyPriceBehavior
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreatePlanEntitlementRequestBodyPriceBehavior) Ptr() *CreatePlanEntitlementRequestBodyPriceBehavior {
-	return &c
-}
-
-type CreatePlanEntitlementRequestBodyValueType string
-
-const (
-	CreatePlanEntitlementRequestBodyValueTypeBoolean   CreatePlanEntitlementRequestBodyValueType = "boolean"
-	CreatePlanEntitlementRequestBodyValueTypeCredit    CreatePlanEntitlementRequestBodyValueType = "credit"
-	CreatePlanEntitlementRequestBodyValueTypeNumeric   CreatePlanEntitlementRequestBodyValueType = "numeric"
-	CreatePlanEntitlementRequestBodyValueTypeTrait     CreatePlanEntitlementRequestBodyValueType = "trait"
-	CreatePlanEntitlementRequestBodyValueTypeUnlimited CreatePlanEntitlementRequestBodyValueType = "unlimited"
-)
-
-func NewCreatePlanEntitlementRequestBodyValueTypeFromString(s string) (CreatePlanEntitlementRequestBodyValueType, error) {
-	switch s {
-	case "boolean":
-		return CreatePlanEntitlementRequestBodyValueTypeBoolean, nil
-	case "credit":
-		return CreatePlanEntitlementRequestBodyValueTypeCredit, nil
-	case "numeric":
-		return CreatePlanEntitlementRequestBodyValueTypeNumeric, nil
-	case "trait":
-		return CreatePlanEntitlementRequestBodyValueTypeTrait, nil
-	case "unlimited":
-		return CreatePlanEntitlementRequestBodyValueTypeUnlimited, nil
-	}
-	var t CreatePlanEntitlementRequestBodyValueType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreatePlanEntitlementRequestBodyValueType) Ptr() *CreatePlanEntitlementRequestBodyValueType {
 	return &c
 }
 
@@ -4480,6 +4629,101 @@ func (d *DeletePlanEntitlementResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeletePlanEntitlementResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+var (
+	duplicatePlanEntitlementsResponseFieldData   = big.NewInt(1 << 0)
+	duplicatePlanEntitlementsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type DuplicatePlanEntitlementsResponse struct {
+	Data *DuplicatePlanEntitlementsResponseResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]interface{} `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DuplicatePlanEntitlementsResponse) GetData() *DuplicatePlanEntitlementsResponseResponseData {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DuplicatePlanEntitlementsResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
+}
+
+func (d *DuplicatePlanEntitlementsResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DuplicatePlanEntitlementsResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DuplicatePlanEntitlementsResponse) SetData(data *DuplicatePlanEntitlementsResponseResponseData) {
+	d.Data = data
+	d.require(duplicatePlanEntitlementsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DuplicatePlanEntitlementsResponse) SetParams(params map[string]interface{}) {
+	d.Params = params
+	d.require(duplicatePlanEntitlementsResponseFieldParams)
+}
+
+func (d *DuplicatePlanEntitlementsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DuplicatePlanEntitlementsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DuplicatePlanEntitlementsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DuplicatePlanEntitlementsResponse) MarshalJSON() ([]byte, error) {
+	type embed DuplicatePlanEntitlementsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DuplicatePlanEntitlementsResponse) String() string {
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -6247,37 +6491,6 @@ func (u UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset) Ptr() *UpdateCom
 	return &u
 }
 
-type UpdateCompanyOverrideRequestBodyValueType string
-
-const (
-	UpdateCompanyOverrideRequestBodyValueTypeBoolean   UpdateCompanyOverrideRequestBodyValueType = "boolean"
-	UpdateCompanyOverrideRequestBodyValueTypeCredit    UpdateCompanyOverrideRequestBodyValueType = "credit"
-	UpdateCompanyOverrideRequestBodyValueTypeNumeric   UpdateCompanyOverrideRequestBodyValueType = "numeric"
-	UpdateCompanyOverrideRequestBodyValueTypeTrait     UpdateCompanyOverrideRequestBodyValueType = "trait"
-	UpdateCompanyOverrideRequestBodyValueTypeUnlimited UpdateCompanyOverrideRequestBodyValueType = "unlimited"
-)
-
-func NewUpdateCompanyOverrideRequestBodyValueTypeFromString(s string) (UpdateCompanyOverrideRequestBodyValueType, error) {
-	switch s {
-	case "boolean":
-		return UpdateCompanyOverrideRequestBodyValueTypeBoolean, nil
-	case "credit":
-		return UpdateCompanyOverrideRequestBodyValueTypeCredit, nil
-	case "numeric":
-		return UpdateCompanyOverrideRequestBodyValueTypeNumeric, nil
-	case "trait":
-		return UpdateCompanyOverrideRequestBodyValueTypeTrait, nil
-	case "unlimited":
-		return UpdateCompanyOverrideRequestBodyValueTypeUnlimited, nil
-	}
-	var t UpdateCompanyOverrideRequestBodyValueType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateCompanyOverrideRequestBodyValueType) Ptr() *UpdateCompanyOverrideRequestBodyValueType {
-	return &u
-}
-
 var (
 	updateCompanyOverrideResponseFieldData   = big.NewInt(1 << 0)
 	updateCompanyOverrideResponseFieldParams = big.NewInt(1 << 1)
@@ -6423,68 +6636,6 @@ func (u UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset) Ptr() *UpdatePla
 	return &u
 }
 
-type UpdatePlanEntitlementRequestBodyPriceBehavior string
-
-const (
-	UpdatePlanEntitlementRequestBodyPriceBehaviorPayAsYouGo     UpdatePlanEntitlementRequestBodyPriceBehavior = "pay_as_you_go"
-	UpdatePlanEntitlementRequestBodyPriceBehaviorPayInAdvance   UpdatePlanEntitlementRequestBodyPriceBehavior = "pay_in_advance"
-	UpdatePlanEntitlementRequestBodyPriceBehaviorOverage        UpdatePlanEntitlementRequestBodyPriceBehavior = "overage"
-	UpdatePlanEntitlementRequestBodyPriceBehaviorCreditBurndown UpdatePlanEntitlementRequestBodyPriceBehavior = "credit_burndown"
-	UpdatePlanEntitlementRequestBodyPriceBehaviorTier           UpdatePlanEntitlementRequestBodyPriceBehavior = "tier"
-)
-
-func NewUpdatePlanEntitlementRequestBodyPriceBehaviorFromString(s string) (UpdatePlanEntitlementRequestBodyPriceBehavior, error) {
-	switch s {
-	case "pay_as_you_go":
-		return UpdatePlanEntitlementRequestBodyPriceBehaviorPayAsYouGo, nil
-	case "pay_in_advance":
-		return UpdatePlanEntitlementRequestBodyPriceBehaviorPayInAdvance, nil
-	case "overage":
-		return UpdatePlanEntitlementRequestBodyPriceBehaviorOverage, nil
-	case "credit_burndown":
-		return UpdatePlanEntitlementRequestBodyPriceBehaviorCreditBurndown, nil
-	case "tier":
-		return UpdatePlanEntitlementRequestBodyPriceBehaviorTier, nil
-	}
-	var t UpdatePlanEntitlementRequestBodyPriceBehavior
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdatePlanEntitlementRequestBodyPriceBehavior) Ptr() *UpdatePlanEntitlementRequestBodyPriceBehavior {
-	return &u
-}
-
-type UpdatePlanEntitlementRequestBodyValueType string
-
-const (
-	UpdatePlanEntitlementRequestBodyValueTypeBoolean   UpdatePlanEntitlementRequestBodyValueType = "boolean"
-	UpdatePlanEntitlementRequestBodyValueTypeCredit    UpdatePlanEntitlementRequestBodyValueType = "credit"
-	UpdatePlanEntitlementRequestBodyValueTypeNumeric   UpdatePlanEntitlementRequestBodyValueType = "numeric"
-	UpdatePlanEntitlementRequestBodyValueTypeTrait     UpdatePlanEntitlementRequestBodyValueType = "trait"
-	UpdatePlanEntitlementRequestBodyValueTypeUnlimited UpdatePlanEntitlementRequestBodyValueType = "unlimited"
-)
-
-func NewUpdatePlanEntitlementRequestBodyValueTypeFromString(s string) (UpdatePlanEntitlementRequestBodyValueType, error) {
-	switch s {
-	case "boolean":
-		return UpdatePlanEntitlementRequestBodyValueTypeBoolean, nil
-	case "credit":
-		return UpdatePlanEntitlementRequestBodyValueTypeCredit, nil
-	case "numeric":
-		return UpdatePlanEntitlementRequestBodyValueTypeNumeric, nil
-	case "trait":
-		return UpdatePlanEntitlementRequestBodyValueTypeTrait, nil
-	case "unlimited":
-		return UpdatePlanEntitlementRequestBodyValueTypeUnlimited, nil
-	}
-	var t UpdatePlanEntitlementRequestBodyValueType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdatePlanEntitlementRequestBodyValueType) Ptr() *UpdatePlanEntitlementRequestBodyValueType {
-	return &u
-}
-
 var (
 	updatePlanEntitlementResponseFieldData   = big.NewInt(1 << 0)
 	updatePlanEntitlementResponseFieldParams = big.NewInt(1 << 1)
@@ -6603,7 +6754,7 @@ type UpdateCompanyOverrideRequestBody struct {
 	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
 	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              UpdateCompanyOverrideRequestBodyValueType               `json:"value_type" url:"-"`
+	ValueType              EntitlementValueType                                    `json:"value_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6681,7 +6832,7 @@ func (u *UpdateCompanyOverrideRequestBody) SetValueTraitID(valueTraitID *string)
 
 // SetValueType sets the ValueType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCompanyOverrideRequestBody) SetValueType(valueType UpdateCompanyOverrideRequestBodyValueType) {
+func (u *UpdateCompanyOverrideRequestBody) SetValueType(valueType EntitlementValueType) {
 	u.ValueType = valueType
 	u.require(updateCompanyOverrideRequestBodyFieldValueType)
 }
@@ -6748,20 +6899,20 @@ type UpdatePlanEntitlementRequestBody struct {
 	MonthlyUnitPrice        *int                                                    `json:"monthly_unit_price,omitempty" url:"-"`
 	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
 	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
-	PriceBehavior           *UpdatePlanEntitlementRequestBodyPriceBehavior          `json:"price_behavior,omitempty" url:"-"`
+	PriceBehavior           *EntitlementPriceBehavior                               `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
-	PriceTiers             []*CreatePriceTierRequestBody             `json:"price_tiers,omitempty" url:"-"`
-	SoftLimit              *int                                      `json:"soft_limit,omitempty" url:"-"`
-	TierMode               *string                                   `json:"tier_mode,omitempty" url:"-"`
-	ValueBool              *bool                                     `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID          *string                                   `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int                                      `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID           *string                                   `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              UpdatePlanEntitlementRequestBodyValueType `json:"value_type" url:"-"`
-	YearlyMeteredPriceID   *string                                   `json:"yearly_metered_price_id,omitempty" url:"-"`
-	YearlyPriceTiers       []*CreatePriceTierRequestBody             `json:"yearly_price_tiers,omitempty" url:"-"`
-	YearlyUnitPrice        *int                                      `json:"yearly_unit_price,omitempty" url:"-"`
-	YearlyUnitPriceDecimal *string                                   `json:"yearly_unit_price_decimal,omitempty" url:"-"`
+	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
+	SoftLimit              *int                          `json:"soft_limit,omitempty" url:"-"`
+	TierMode               *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
+	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric           *int                          `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
+	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
+	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
+	YearlyUnitPrice        *int                          `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6853,7 +7004,7 @@ func (u *UpdatePlanEntitlementRequestBody) SetOverageBillingProductID(overageBil
 
 // SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetPriceBehavior(priceBehavior *UpdatePlanEntitlementRequestBodyPriceBehavior) {
+func (u *UpdatePlanEntitlementRequestBody) SetPriceBehavior(priceBehavior *EntitlementPriceBehavior) {
 	u.PriceBehavior = priceBehavior
 	u.require(updatePlanEntitlementRequestBodyFieldPriceBehavior)
 }
@@ -6874,7 +7025,7 @@ func (u *UpdatePlanEntitlementRequestBody) SetSoftLimit(softLimit *int) {
 
 // SetTierMode sets the TierMode field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetTierMode(tierMode *string) {
+func (u *UpdatePlanEntitlementRequestBody) SetTierMode(tierMode *BillingTiersMode) {
 	u.TierMode = tierMode
 	u.require(updatePlanEntitlementRequestBodyFieldTierMode)
 }
@@ -6909,7 +7060,7 @@ func (u *UpdatePlanEntitlementRequestBody) SetValueTraitID(valueTraitID *string)
 
 // SetValueType sets the ValueType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetValueType(valueType UpdatePlanEntitlementRequestBodyValueType) {
+func (u *UpdatePlanEntitlementRequestBody) SetValueType(valueType EntitlementValueType) {
 	u.ValueType = valueType
 	u.require(updatePlanEntitlementRequestBodyFieldValueType)
 }

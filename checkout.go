@@ -11,6 +11,51 @@ import (
 )
 
 var (
+	cancelSubscriptionRequestFieldCancelImmediately = big.NewInt(1 << 0)
+	cancelSubscriptionRequestFieldCompanyID         = big.NewInt(1 << 1)
+	cancelSubscriptionRequestFieldProrate           = big.NewInt(1 << 2)
+)
+
+type CancelSubscriptionRequest struct {
+	// If false, subscription cancels at period end. Defaults to true.
+	CancelImmediately *bool  `json:"cancel_immediately,omitempty" url:"-"`
+	CompanyID         string `json:"company_id" url:"-"`
+	// If true and cancel_immediately is true, issue prorated credit. Defaults to true.
+	Prorate *bool `json:"prorate,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CancelSubscriptionRequest) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCancelImmediately sets the CancelImmediately field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CancelSubscriptionRequest) SetCancelImmediately(cancelImmediately *bool) {
+	c.CancelImmediately = cancelImmediately
+	c.require(cancelSubscriptionRequestFieldCancelImmediately)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CancelSubscriptionRequest) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(cancelSubscriptionRequestFieldCompanyID)
+}
+
+// SetProrate sets the Prorate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CancelSubscriptionRequest) SetProrate(prorate *bool) {
+	c.Prorate = prorate
+	c.require(cancelSubscriptionRequestFieldProrate)
+}
+
+var (
 	checkoutDataRequestBodyFieldCompanyID      = big.NewInt(1 << 0)
 	checkoutDataRequestBodyFieldSelectedPlanID = big.NewInt(1 << 1)
 )
@@ -489,55 +534,64 @@ func (c *CheckoutDataResponseData) String() string {
 }
 
 var (
-	checkoutSubscriptionFieldCancelAt                         = big.NewInt(1 << 0)
-	checkoutSubscriptionFieldCancelAtPeriodEnd                = big.NewInt(1 << 1)
-	checkoutSubscriptionFieldCompanyID                        = big.NewInt(1 << 2)
-	checkoutSubscriptionFieldConfirmPaymentIntentClientSecret = big.NewInt(1 << 3)
-	checkoutSubscriptionFieldConfirmPaymentIntentID           = big.NewInt(1 << 4)
-	checkoutSubscriptionFieldCreatedAt                        = big.NewInt(1 << 5)
-	checkoutSubscriptionFieldCurrency                         = big.NewInt(1 << 6)
-	checkoutSubscriptionFieldCustomerExternalID               = big.NewInt(1 << 7)
-	checkoutSubscriptionFieldDefaultPaymentMethodID           = big.NewInt(1 << 8)
-	checkoutSubscriptionFieldExpiredAt                        = big.NewInt(1 << 9)
-	checkoutSubscriptionFieldID                               = big.NewInt(1 << 10)
-	checkoutSubscriptionFieldInterval                         = big.NewInt(1 << 11)
-	checkoutSubscriptionFieldMetadata                         = big.NewInt(1 << 12)
-	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 13)
-	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 14)
-	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 15)
-	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 16)
-	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 17)
-	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 18)
-	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 19)
+	checkoutSubscriptionFieldApplicationID                    = big.NewInt(1 << 0)
+	checkoutSubscriptionFieldCancelAt                         = big.NewInt(1 << 1)
+	checkoutSubscriptionFieldCancelAtPeriodEnd                = big.NewInt(1 << 2)
+	checkoutSubscriptionFieldCompanyID                        = big.NewInt(1 << 3)
+	checkoutSubscriptionFieldConfirmPaymentIntentClientSecret = big.NewInt(1 << 4)
+	checkoutSubscriptionFieldConfirmPaymentIntentID           = big.NewInt(1 << 5)
+	checkoutSubscriptionFieldCreatedAt                        = big.NewInt(1 << 6)
+	checkoutSubscriptionFieldCurrency                         = big.NewInt(1 << 7)
+	checkoutSubscriptionFieldCustomerExternalID               = big.NewInt(1 << 8)
+	checkoutSubscriptionFieldDefaultPaymentMethodID           = big.NewInt(1 << 9)
+	checkoutSubscriptionFieldExpiredAt                        = big.NewInt(1 << 10)
+	checkoutSubscriptionFieldID                               = big.NewInt(1 << 11)
+	checkoutSubscriptionFieldInterval                         = big.NewInt(1 << 12)
+	checkoutSubscriptionFieldMetadata                         = big.NewInt(1 << 13)
+	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 14)
+	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 15)
+	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 16)
+	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 17)
+	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 18)
+	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 19)
+	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 20)
 )
 
 type CheckoutSubscription struct {
-	CancelAt                         *int                   `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
-	CancelAtPeriodEnd                bool                   `json:"cancel_at_period_end" url:"cancel_at_period_end"`
-	CompanyID                        *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
-	ConfirmPaymentIntentClientSecret *string                `json:"confirm_payment_intent_client_secret,omitempty" url:"confirm_payment_intent_client_secret,omitempty"`
-	ConfirmPaymentIntentID           *string                `json:"confirm_payment_intent_id,omitempty" url:"confirm_payment_intent_id,omitempty"`
-	CreatedAt                        time.Time              `json:"created_at" url:"created_at"`
-	Currency                         string                 `json:"currency" url:"currency"`
-	CustomerExternalID               string                 `json:"customer_external_id" url:"customer_external_id"`
-	DefaultPaymentMethodID           *string                `json:"default_payment_method_id,omitempty" url:"default_payment_method_id,omitempty"`
-	ExpiredAt                        *time.Time             `json:"expired_at,omitempty" url:"expired_at,omitempty"`
-	ID                               string                 `json:"id" url:"id"`
-	Interval                         string                 `json:"interval" url:"interval"`
-	Metadata                         map[string]interface{} `json:"metadata,omitempty" url:"metadata,omitempty"`
-	PeriodEnd                        int                    `json:"period_end" url:"period_end"`
-	PeriodStart                      int                    `json:"period_start" url:"period_start"`
-	Status                           string                 `json:"status" url:"status"`
-	SubscriptionExternalID           string                 `json:"subscription_external_id" url:"subscription_external_id"`
-	TotalPrice                       int                    `json:"total_price" url:"total_price"`
-	TrialEnd                         *int                   `json:"trial_end,omitempty" url:"trial_end,omitempty"`
-	TrialEndSetting                  *string                `json:"trial_end_setting,omitempty" url:"trial_end_setting,omitempty"`
+	ApplicationID                    *string                             `json:"application_id,omitempty" url:"application_id,omitempty"`
+	CancelAt                         *int                                `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
+	CancelAtPeriodEnd                bool                                `json:"cancel_at_period_end" url:"cancel_at_period_end"`
+	CompanyID                        *string                             `json:"company_id,omitempty" url:"company_id,omitempty"`
+	ConfirmPaymentIntentClientSecret *string                             `json:"confirm_payment_intent_client_secret,omitempty" url:"confirm_payment_intent_client_secret,omitempty"`
+	ConfirmPaymentIntentID           *string                             `json:"confirm_payment_intent_id,omitempty" url:"confirm_payment_intent_id,omitempty"`
+	CreatedAt                        time.Time                           `json:"created_at" url:"created_at"`
+	Currency                         string                              `json:"currency" url:"currency"`
+	CustomerExternalID               string                              `json:"customer_external_id" url:"customer_external_id"`
+	DefaultPaymentMethodID           *string                             `json:"default_payment_method_id,omitempty" url:"default_payment_method_id,omitempty"`
+	ExpiredAt                        *time.Time                          `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	ID                               string                              `json:"id" url:"id"`
+	Interval                         string                              `json:"interval" url:"interval"`
+	Metadata                         map[string]interface{}              `json:"metadata,omitempty" url:"metadata,omitempty"`
+	PeriodEnd                        int                                 `json:"period_end" url:"period_end"`
+	PeriodStart                      int                                 `json:"period_start" url:"period_start"`
+	Status                           string                              `json:"status" url:"status"`
+	SubscriptionExternalID           string                              `json:"subscription_external_id" url:"subscription_external_id"`
+	TotalPrice                       int                                 `json:"total_price" url:"total_price"`
+	TrialEnd                         *int                                `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	TrialEndSetting                  *BillingSubscriptionTrialEndSetting `json:"trial_end_setting,omitempty" url:"trial_end_setting,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CheckoutSubscription) GetApplicationID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ApplicationID
 }
 
 func (c *CheckoutSubscription) GetCancelAt() *int {
@@ -673,7 +727,7 @@ func (c *CheckoutSubscription) GetTrialEnd() *int {
 	return c.TrialEnd
 }
 
-func (c *CheckoutSubscription) GetTrialEndSetting() *string {
+func (c *CheckoutSubscription) GetTrialEndSetting() *BillingSubscriptionTrialEndSetting {
 	if c == nil {
 		return nil
 	}
@@ -689,6 +743,13 @@ func (c *CheckoutSubscription) require(field *big.Int) {
 		c.explicitFields = big.NewInt(0)
 	}
 	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetApplicationID sets the ApplicationID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutSubscription) SetApplicationID(applicationID *string) {
+	c.ApplicationID = applicationID
+	c.require(checkoutSubscriptionFieldApplicationID)
 }
 
 // SetCancelAt sets the CancelAt field and marks it as non-optional;
@@ -826,7 +887,7 @@ func (c *CheckoutSubscription) SetTrialEnd(trialEnd *int) {
 
 // SetTrialEndSetting sets the TrialEndSetting field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CheckoutSubscription) SetTrialEndSetting(trialEndSetting *string) {
+func (c *CheckoutSubscription) SetTrialEndSetting(trialEndSetting *BillingSubscriptionTrialEndSetting) {
 	c.TrialEndSetting = trialEndSetting
 	c.require(checkoutSubscriptionFieldTrialEndSetting)
 }
@@ -1074,24 +1135,30 @@ var (
 	managePlanRequestFieldAddOnSelections          = big.NewInt(1 << 0)
 	managePlanRequestFieldBasePlanID               = big.NewInt(1 << 1)
 	managePlanRequestFieldBasePlanPriceID          = big.NewInt(1 << 2)
-	managePlanRequestFieldCompanyID                = big.NewInt(1 << 3)
-	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 4)
-	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 5)
-	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 6)
-	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 7)
-	managePlanRequestFieldPromoCode                = big.NewInt(1 << 8)
+	managePlanRequestFieldCancelImmediately        = big.NewInt(1 << 3)
+	managePlanRequestFieldCompanyID                = big.NewInt(1 << 4)
+	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 5)
+	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 6)
+	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 7)
+	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 8)
+	managePlanRequestFieldPromoCode                = big.NewInt(1 << 9)
+	managePlanRequestFieldProrate                  = big.NewInt(1 << 10)
 )
 
 type ManagePlanRequest struct {
-	AddOnSelections          []*PlanSelection                 `json:"add_on_selections" url:"add_on_selections"`
-	BasePlanID               *string                          `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
-	BasePlanPriceID          *string                          `json:"base_plan_price_id,omitempty" url:"base_plan_price_id,omitempty"`
+	AddOnSelections []*PlanSelection `json:"add_on_selections" url:"add_on_selections"`
+	BasePlanID      *string          `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
+	BasePlanPriceID *string          `json:"base_plan_price_id,omitempty" url:"base_plan_price_id,omitempty"`
+	// If false, subscription cancels at period end. Only applies when removing all plans. Defaults to true.
+	CancelImmediately        *bool                            `json:"cancel_immediately,omitempty" url:"cancel_immediately,omitempty"`
 	CompanyID                string                           `json:"company_id" url:"company_id"`
 	CouponExternalID         *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles            []*UpdateCreditBundleRequestBody `json:"credit_bundles" url:"credit_bundles"`
 	PayInAdvanceEntitlements []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance_entitlements" url:"pay_in_advance_entitlements"`
 	PaymentMethodExternalID  *string                          `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
 	PromoCode                *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
+	// If true and cancel_immediately is true, issue prorated credit. Only applies when removing all plans. Defaults to true.
+	Prorate *bool `json:"prorate,omitempty" url:"prorate,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1119,6 +1186,13 @@ func (m *ManagePlanRequest) GetBasePlanPriceID() *string {
 		return nil
 	}
 	return m.BasePlanPriceID
+}
+
+func (m *ManagePlanRequest) GetCancelImmediately() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.CancelImmediately
 }
 
 func (m *ManagePlanRequest) GetCompanyID() string {
@@ -1163,6 +1237,13 @@ func (m *ManagePlanRequest) GetPromoCode() *string {
 	return m.PromoCode
 }
 
+func (m *ManagePlanRequest) GetProrate() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.Prorate
+}
+
 func (m *ManagePlanRequest) GetExtraProperties() map[string]interface{} {
 	return m.extraProperties
 }
@@ -1193,6 +1274,13 @@ func (m *ManagePlanRequest) SetBasePlanID(basePlanID *string) {
 func (m *ManagePlanRequest) SetBasePlanPriceID(basePlanPriceID *string) {
 	m.BasePlanPriceID = basePlanPriceID
 	m.require(managePlanRequestFieldBasePlanPriceID)
+}
+
+// SetCancelImmediately sets the CancelImmediately field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetCancelImmediately(cancelImmediately *bool) {
+	m.CancelImmediately = cancelImmediately
+	m.require(managePlanRequestFieldCancelImmediately)
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1235,6 +1323,13 @@ func (m *ManagePlanRequest) SetPaymentMethodExternalID(paymentMethodExternalID *
 func (m *ManagePlanRequest) SetPromoCode(promoCode *string) {
 	m.PromoCode = promoCode
 	m.require(managePlanRequestFieldPromoCode)
+}
+
+// SetProrate sets the Prorate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetProrate(prorate *bool) {
+	m.Prorate = prorate
+	m.require(managePlanRequestFieldProrate)
 }
 
 func (m *ManagePlanRequest) UnmarshalJSON(data []byte) error {
@@ -2402,6 +2497,101 @@ func (u *UpdatePayInAdvanceRequestBody) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	cancelSubscriptionResponseFieldData   = big.NewInt(1 << 0)
+	cancelSubscriptionResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CancelSubscriptionResponse struct {
+	Data *ManagePlanResponseResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]interface{} `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CancelSubscriptionResponse) GetData() *ManagePlanResponseResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CancelSubscriptionResponse) GetParams() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CancelSubscriptionResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CancelSubscriptionResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CancelSubscriptionResponse) SetData(data *ManagePlanResponseResponseData) {
+	c.Data = data
+	c.require(cancelSubscriptionResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CancelSubscriptionResponse) SetParams(params map[string]interface{}) {
+	c.Params = params
+	c.require(cancelSubscriptionResponseFieldParams)
+}
+
+func (c *CancelSubscriptionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CancelSubscriptionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CancelSubscriptionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CancelSubscriptionResponse) MarshalJSON() ([]byte, error) {
+	type embed CancelSubscriptionResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CancelSubscriptionResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 var (

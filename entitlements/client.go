@@ -330,6 +330,22 @@ func (c *Client) CountPlanEntitlements(
 	return response.Body, nil
 }
 
+func (c *Client) DuplicatePlanEntitlements(
+	ctx context.Context,
+	request *schematichq.DuplicatePlanEntitlementsRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.DuplicatePlanEntitlementsResponse, error) {
+	response, err := c.WithRawResponse.DuplicatePlanEntitlements(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) GetFeatureUsageByCompany(
 	ctx context.Context,
 	request *schematichq.GetFeatureUsageByCompanyRequest,

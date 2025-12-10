@@ -413,66 +413,47 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 	needsCompany := len(evalCtx.Company) > 0
 	needsUser := len(evalCtx.User) > 0
 
-	var cachedCompany *rulesengine.Company
-	var cachedUser *rulesengine.User
-
-	// Try to get cached data first
-	if needsCompany {
-		cachedCompany = c.getCompanyFromCache(evalCtx.Company)
-	}
-	if needsUser {
-		cachedUser = c.getUserFromCache(evalCtx.User)
-	}
-
-	// If we have all cached data we need, use it
-	if (!needsCompany || cachedCompany != nil) && (!needsUser || cachedUser != nil) {
-		// Evaluate against the rules engine with cached data
-		resp, err := rulesengine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
-		if err != nil {
-			return nil, fmt.Errorf("rules engine error: %w", err)
-		}
-		return resp, nil
-	}
-
-	// Handle replicator mode behavior
-	if c.replicatorMode {
-		// In replicator mode, if we don't have all cached data, evaluate with nil values instead of fetching
-		// The external replicator should have populated the cache with all necessary data
-		resp, err := rulesengine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
-		if err != nil {
-			return nil, fmt.Errorf("rules engine error: %w", err)
-		}
-		return resp, nil
-	}
-
-	// Otherwise, check if we're connected to datastream
-	if !c.IsConnected() {
-		return nil, fmt.Errorf("datastream not connected")
-	}
-
-	// Fetch missing data from datastream
 	var company *rulesengine.Company
 	var user *rulesengine.User
 	var err error
 
+	// Try to get cached data first
 	if needsCompany {
-		if cachedCompany != nil {
-			company = cachedCompany
-		} else {
-			company, err = c.getCompany(ctx, evalCtx.Company)
-			if err != nil {
-				return nil, fmt.Errorf("failed to get company data: %w", err)
-			}
-		}
+		company = c.getCompanyFromCache(evalCtx.Company)
+	}
+	if needsUser {
+		user = c.getUserFromCache(evalCtx.User)
 	}
 
-	if needsUser {
-		if cachedUser != nil {
-			user = cachedUser
+	// Check if we have all the data we need
+	hasAllData := (!needsCompany || company != nil) && (!needsUser || user != nil)
+
+	// If we don't have all cached data, try to fetch missing data
+	if !hasAllData {
+		// In replicator mode, we don't fetch data - we expect it to be cached
+		if c.replicatorMode {
+			if !c.IsReplicatorReady() {
+				return nil, fmt.Errorf("replicator not ready and missing cached data")
+			}
+			// Continue with whatever cached data we have - replicator should have populated it
 		} else {
-			user, err = c.getUser(ctx, evalCtx.User)
-			if err != nil {
-				return nil, fmt.Errorf("failed to get user data: %w", err)
+			// Check if we're connected to datastream for fetching
+			if !c.IsConnected() {
+				return nil, fmt.Errorf("datastream not connected and missing cached data")
+			} // Fetch missing company data
+			if needsCompany && company == nil {
+				company, err = c.getCompany(ctx, evalCtx.Company)
+				if err != nil {
+					return nil, fmt.Errorf("failed to get company data: %w", err)
+				}
+			}
+
+			// Fetch missing user data
+			if needsUser && user == nil {
+				user, err = c.getUser(ctx, evalCtx.User)
+				if err != nil {
+					return nil, fmt.Errorf("failed to get user data: %w", err)
+				}
 			}
 		}
 	}

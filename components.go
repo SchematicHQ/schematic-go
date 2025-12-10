@@ -62,9 +62,9 @@ var (
 )
 
 type CreateComponentRequestBody struct {
-	Ast        map[string]float64                   `json:"ast,omitempty" url:"-"`
-	EntityType CreateComponentRequestBodyEntityType `json:"entity_type" url:"-"`
-	Name       string                               `json:"name" url:"-"`
+	Ast        map[string]float64  `json:"ast,omitempty" url:"-"`
+	EntityType ComponentEntityType `json:"entity_type" url:"-"`
+	Name       string              `json:"name" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -86,7 +86,7 @@ func (c *CreateComponentRequestBody) SetAst(ast map[string]float64) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateComponentRequestBody) SetEntityType(entityType CreateComponentRequestBodyEntityType) {
+func (c *CreateComponentRequestBody) SetEntityType(entityType ComponentEntityType) {
 	c.EntityType = entityType
 	c.require(createComponentRequestBodyFieldEntityType)
 }
@@ -202,14 +202,14 @@ var (
 
 type BillingCreditBundleView struct {
 	BillingInvoiceID  *string                          `json:"billing_invoice_id,omitempty" url:"billing_invoice_id,omitempty"`
-	BundleType        string                           `json:"bundle_type" url:"bundle_type"`
+	BundleType        BillingCreditBundleType          `json:"bundle_type" url:"bundle_type"`
 	CreatedAt         time.Time                        `json:"created_at" url:"created_at"`
 	CreditDescription *string                          `json:"credit_description,omitempty" url:"credit_description,omitempty"`
 	CreditIcon        *string                          `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
 	CreditID          string                           `json:"credit_id" url:"credit_id"`
 	CreditName        string                           `json:"credit_name" url:"credit_name"`
-	ExpiryType        string                           `json:"expiry_type" url:"expiry_type"`
-	ExpiryUnit        string                           `json:"expiry_unit" url:"expiry_unit"`
+	ExpiryType        BillingCreditExpiryType          `json:"expiry_type" url:"expiry_type"`
+	ExpiryUnit        BillingCreditExpiryUnit          `json:"expiry_unit" url:"expiry_unit"`
 	ExpiryUnitCount   *int                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	HasGrants         bool                             `json:"has_grants" url:"has_grants"`
 	ID                string                           `json:"id" url:"id"`
@@ -218,7 +218,7 @@ type BillingCreditBundleView struct {
 	Price             *BillingProductPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
 	Quantity          *int                             `json:"quantity,omitempty" url:"quantity,omitempty"`
 	SingularName      *string                          `json:"singular_name,omitempty" url:"singular_name,omitempty"`
-	Status            string                           `json:"status" url:"status"`
+	Status            BillingCreditBundleStatus        `json:"status" url:"status"`
 	UnitPrice         *BillingProductPriceResponseData `json:"unit_price,omitempty" url:"unit_price,omitempty"`
 	UpdatedAt         time.Time                        `json:"updated_at" url:"updated_at"`
 
@@ -234,13 +234,6 @@ func (b *BillingCreditBundleView) GetBillingInvoiceID() *string {
 		return nil
 	}
 	return b.BillingInvoiceID
-}
-
-func (b *BillingCreditBundleView) GetBundleType() string {
-	if b == nil {
-		return ""
-	}
-	return b.BundleType
 }
 
 func (b *BillingCreditBundleView) GetCreatedAt() time.Time {
@@ -278,14 +271,14 @@ func (b *BillingCreditBundleView) GetCreditName() string {
 	return b.CreditName
 }
 
-func (b *BillingCreditBundleView) GetExpiryType() string {
+func (b *BillingCreditBundleView) GetExpiryType() BillingCreditExpiryType {
 	if b == nil {
 		return ""
 	}
 	return b.ExpiryType
 }
 
-func (b *BillingCreditBundleView) GetExpiryUnit() string {
+func (b *BillingCreditBundleView) GetExpiryUnit() BillingCreditExpiryUnit {
 	if b == nil {
 		return ""
 	}
@@ -348,7 +341,7 @@ func (b *BillingCreditBundleView) GetSingularName() *string {
 	return b.SingularName
 }
 
-func (b *BillingCreditBundleView) GetStatus() string {
+func (b *BillingCreditBundleView) GetStatus() BillingCreditBundleStatus {
 	if b == nil {
 		return ""
 	}
@@ -389,7 +382,7 @@ func (b *BillingCreditBundleView) SetBillingInvoiceID(billingInvoiceID *string) 
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleView) SetBundleType(bundleType string) {
+func (b *BillingCreditBundleView) SetBundleType(bundleType BillingCreditBundleType) {
 	b.BundleType = bundleType
 	b.require(billingCreditBundleViewFieldBundleType)
 }
@@ -431,14 +424,14 @@ func (b *BillingCreditBundleView) SetCreditName(creditName string) {
 
 // SetExpiryType sets the ExpiryType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleView) SetExpiryType(expiryType string) {
+func (b *BillingCreditBundleView) SetExpiryType(expiryType BillingCreditExpiryType) {
 	b.ExpiryType = expiryType
 	b.require(billingCreditBundleViewFieldExpiryType)
 }
 
 // SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleView) SetExpiryUnit(expiryUnit string) {
+func (b *BillingCreditBundleView) SetExpiryUnit(expiryUnit BillingCreditExpiryUnit) {
 	b.ExpiryUnit = expiryUnit
 	b.require(billingCreditBundleViewFieldExpiryUnit)
 }
@@ -501,7 +494,7 @@ func (b *BillingCreditBundleView) SetSingularName(singularName *string) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleView) SetStatus(status string) {
+func (b *BillingCreditBundleView) SetStatus(status BillingCreditBundleStatus) {
 	b.Status = status
 	b.require(billingCreditBundleViewFieldStatus)
 }
@@ -590,21 +583,21 @@ var (
 )
 
 type BillingProductPriceResponseData struct {
-	BillingScheme     string    `json:"billing_scheme" url:"billing_scheme"`
-	CreatedAt         time.Time `json:"created_at" url:"created_at"`
-	Currency          string    `json:"currency" url:"currency"`
-	ID                string    `json:"id" url:"id"`
-	Interval          string    `json:"interval" url:"interval"`
-	IsActive          bool      `json:"is_active" url:"is_active"`
-	MeterID           *string   `json:"meter_id,omitempty" url:"meter_id,omitempty"`
-	PackageSize       int       `json:"package_size" url:"package_size"`
-	Price             int       `json:"price" url:"price"`
-	PriceDecimal      *string   `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
-	PriceExternalID   string    `json:"price_external_id" url:"price_external_id"`
-	ProductExternalID string    `json:"product_external_id" url:"product_external_id"`
-	TiersMode         *string   `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
-	UpdatedAt         time.Time `json:"updated_at" url:"updated_at"`
-	UsageType         string    `json:"usage_type" url:"usage_type"`
+	BillingScheme     BillingPriceScheme          `json:"billing_scheme" url:"billing_scheme"`
+	CreatedAt         time.Time                   `json:"created_at" url:"created_at"`
+	Currency          string                      `json:"currency" url:"currency"`
+	ID                string                      `json:"id" url:"id"`
+	Interval          BillingProductPriceInterval `json:"interval" url:"interval"`
+	IsActive          bool                        `json:"is_active" url:"is_active"`
+	MeterID           *string                     `json:"meter_id,omitempty" url:"meter_id,omitempty"`
+	PackageSize       int                         `json:"package_size" url:"package_size"`
+	Price             int                         `json:"price" url:"price"`
+	PriceDecimal      *string                     `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
+	PriceExternalID   string                      `json:"price_external_id" url:"price_external_id"`
+	ProductExternalID string                      `json:"product_external_id" url:"product_external_id"`
+	TiersMode         *BillingTiersMode           `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
+	UpdatedAt         time.Time                   `json:"updated_at" url:"updated_at"`
+	UsageType         BillingPriceUsageType       `json:"usage_type" url:"usage_type"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -613,7 +606,7 @@ type BillingProductPriceResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (b *BillingProductPriceResponseData) GetBillingScheme() string {
+func (b *BillingProductPriceResponseData) GetBillingScheme() BillingPriceScheme {
 	if b == nil {
 		return ""
 	}
@@ -641,7 +634,7 @@ func (b *BillingProductPriceResponseData) GetID() string {
 	return b.ID
 }
 
-func (b *BillingProductPriceResponseData) GetInterval() string {
+func (b *BillingProductPriceResponseData) GetInterval() BillingProductPriceInterval {
 	if b == nil {
 		return ""
 	}
@@ -697,7 +690,7 @@ func (b *BillingProductPriceResponseData) GetProductExternalID() string {
 	return b.ProductExternalID
 }
 
-func (b *BillingProductPriceResponseData) GetTiersMode() *string {
+func (b *BillingProductPriceResponseData) GetTiersMode() *BillingTiersMode {
 	if b == nil {
 		return nil
 	}
@@ -711,7 +704,7 @@ func (b *BillingProductPriceResponseData) GetUpdatedAt() time.Time {
 	return b.UpdatedAt
 }
 
-func (b *BillingProductPriceResponseData) GetUsageType() string {
+func (b *BillingProductPriceResponseData) GetUsageType() BillingPriceUsageType {
 	if b == nil {
 		return ""
 	}
@@ -731,7 +724,7 @@ func (b *BillingProductPriceResponseData) require(field *big.Int) {
 
 // SetBillingScheme sets the BillingScheme field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceResponseData) SetBillingScheme(billingScheme string) {
+func (b *BillingProductPriceResponseData) SetBillingScheme(billingScheme BillingPriceScheme) {
 	b.BillingScheme = billingScheme
 	b.require(billingProductPriceResponseDataFieldBillingScheme)
 }
@@ -759,7 +752,7 @@ func (b *BillingProductPriceResponseData) SetID(id string) {
 
 // SetInterval sets the Interval field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceResponseData) SetInterval(interval string) {
+func (b *BillingProductPriceResponseData) SetInterval(interval BillingProductPriceInterval) {
 	b.Interval = interval
 	b.require(billingProductPriceResponseDataFieldInterval)
 }
@@ -815,7 +808,7 @@ func (b *BillingProductPriceResponseData) SetProductExternalID(productExternalID
 
 // SetTiersMode sets the TiersMode field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceResponseData) SetTiersMode(tiersMode *string) {
+func (b *BillingProductPriceResponseData) SetTiersMode(tiersMode *BillingTiersMode) {
 	b.TiersMode = tiersMode
 	b.require(billingProductPriceResponseDataFieldTiersMode)
 }
@@ -829,7 +822,7 @@ func (b *BillingProductPriceResponseData) SetUpdatedAt(updatedAt time.Time) {
 
 // SetUsageType sets the UsageType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceResponseData) SetUsageType(usageType string) {
+func (b *BillingProductPriceResponseData) SetUsageType(usageType BillingPriceUsageType) {
 	b.UsageType = usageType
 	b.require(billingProductPriceResponseDataFieldUsageType)
 }
@@ -903,29 +896,30 @@ var (
 	companyPlanDetailResponseDataFieldIcon                 = big.NewInt(1 << 14)
 	companyPlanDetailResponseDataFieldID                   = big.NewInt(1 << 15)
 	companyPlanDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 16)
-	companyPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 17)
-	companyPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 18)
-	companyPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 19)
-	companyPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 20)
-	companyPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 21)
-	companyPlanDetailResponseDataFieldName                 = big.NewInt(1 << 22)
-	companyPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 23)
-	companyPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 24)
-	companyPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 25)
-	companyPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 26)
-	companyPlanDetailResponseDataFieldUsageViolations      = big.NewInt(1 << 27)
-	companyPlanDetailResponseDataFieldValid                = big.NewInt(1 << 28)
-	companyPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 29)
+	companyPlanDetailResponseDataFieldInvalidReason        = big.NewInt(1 << 17)
+	companyPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 18)
+	companyPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 19)
+	companyPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 20)
+	companyPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 21)
+	companyPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 22)
+	companyPlanDetailResponseDataFieldName                 = big.NewInt(1 << 23)
+	companyPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 24)
+	companyPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 25)
+	companyPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 26)
+	companyPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 27)
+	companyPlanDetailResponseDataFieldUsageViolations      = big.NewInt(1 << 28)
+	companyPlanDetailResponseDataFieldValid                = big.NewInt(1 << 29)
+	companyPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 30)
 )
 
 type CompanyPlanDetailResponseData struct {
 	AudienceType         *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	BillingProduct       *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
-	ChargeType           string                            `json:"charge_type" url:"charge_type"`
+	ChargeType           ChargeType                        `json:"charge_type" url:"charge_type"`
 	CompanyCanTrial      bool                              `json:"company_can_trial" url:"company_can_trial"`
 	CompanyCount         int                               `json:"company_count" url:"company_count"`
 	CompatiblePlanIDs    []string                          `json:"compatible_plan_ids" url:"compatible_plan_ids"`
-	ControlledBy         string                            `json:"controlled_by" url:"controlled_by"`
+	ControlledBy         PlanControlledByType              `json:"controlled_by" url:"controlled_by"`
 	CreatedAt            time.Time                         `json:"created_at" url:"created_at"`
 	Current              bool                              `json:"current" url:"current"`
 	Custom               bool                              `json:"custom" url:"custom"`
@@ -936,6 +930,7 @@ type CompanyPlanDetailResponseData struct {
 	Icon                 string                            `json:"icon" url:"icon"`
 	ID                   string                            `json:"id" url:"id"`
 	IncludedCreditGrants []*PlanCreditGrantView            `json:"included_credit_grants" url:"included_credit_grants"`
+	InvalidReason        *CompanyPlanInvalidReason         `json:"invalid_reason,omitempty" url:"invalid_reason,omitempty"`
 	IsCustom             bool                              `json:"is_custom" url:"is_custom"`
 	IsDefault            bool                              `json:"is_default" url:"is_default"`
 	IsFree               bool                              `json:"is_free" url:"is_free"`
@@ -943,7 +938,7 @@ type CompanyPlanDetailResponseData struct {
 	MonthlyPrice         *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name                 string                            `json:"name" url:"name"`
 	OneTimePrice         *BillingPriceResponseData         `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
-	PlanType             string                            `json:"plan_type" url:"plan_type"`
+	PlanType             PlanType                          `json:"plan_type" url:"plan_type"`
 	TrialDays            *int                              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt            time.Time                         `json:"updated_at" url:"updated_at"`
 	UsageViolations      []*FeatureUsageResponseData       `json:"usage_violations" url:"usage_violations"`
@@ -971,7 +966,7 @@ func (c *CompanyPlanDetailResponseData) GetBillingProduct() *BillingProductDetai
 	return c.BillingProduct
 }
 
-func (c *CompanyPlanDetailResponseData) GetChargeType() string {
+func (c *CompanyPlanDetailResponseData) GetChargeType() ChargeType {
 	if c == nil {
 		return ""
 	}
@@ -999,7 +994,7 @@ func (c *CompanyPlanDetailResponseData) GetCompatiblePlanIDs() []string {
 	return c.CompatiblePlanIDs
 }
 
-func (c *CompanyPlanDetailResponseData) GetControlledBy() string {
+func (c *CompanyPlanDetailResponseData) GetControlledBy() PlanControlledByType {
 	if c == nil {
 		return ""
 	}
@@ -1076,6 +1071,13 @@ func (c *CompanyPlanDetailResponseData) GetIncludedCreditGrants() []*PlanCreditG
 	return c.IncludedCreditGrants
 }
 
+func (c *CompanyPlanDetailResponseData) GetInvalidReason() *CompanyPlanInvalidReason {
+	if c == nil {
+		return nil
+	}
+	return c.InvalidReason
+}
+
 func (c *CompanyPlanDetailResponseData) GetIsCustom() bool {
 	if c == nil {
 		return false
@@ -1125,7 +1127,7 @@ func (c *CompanyPlanDetailResponseData) GetOneTimePrice() *BillingPriceResponseD
 	return c.OneTimePrice
 }
 
-func (c *CompanyPlanDetailResponseData) GetPlanType() string {
+func (c *CompanyPlanDetailResponseData) GetPlanType() PlanType {
 	if c == nil {
 		return ""
 	}
@@ -1194,7 +1196,7 @@ func (c *CompanyPlanDetailResponseData) SetBillingProduct(billingProduct *Billin
 
 // SetChargeType sets the ChargeType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanDetailResponseData) SetChargeType(chargeType string) {
+func (c *CompanyPlanDetailResponseData) SetChargeType(chargeType ChargeType) {
 	c.ChargeType = chargeType
 	c.require(companyPlanDetailResponseDataFieldChargeType)
 }
@@ -1222,7 +1224,7 @@ func (c *CompanyPlanDetailResponseData) SetCompatiblePlanIDs(compatiblePlanIDs [
 
 // SetControlledBy sets the ControlledBy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanDetailResponseData) SetControlledBy(controlledBy string) {
+func (c *CompanyPlanDetailResponseData) SetControlledBy(controlledBy PlanControlledByType) {
 	c.ControlledBy = controlledBy
 	c.require(companyPlanDetailResponseDataFieldControlledBy)
 }
@@ -1297,6 +1299,13 @@ func (c *CompanyPlanDetailResponseData) SetIncludedCreditGrants(includedCreditGr
 	c.require(companyPlanDetailResponseDataFieldIncludedCreditGrants)
 }
 
+// SetInvalidReason sets the InvalidReason field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanDetailResponseData) SetInvalidReason(invalidReason *CompanyPlanInvalidReason) {
+	c.InvalidReason = invalidReason
+	c.require(companyPlanDetailResponseDataFieldInvalidReason)
+}
+
 // SetIsCustom sets the IsCustom field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyPlanDetailResponseData) SetIsCustom(isCustom bool) {
@@ -1348,7 +1357,7 @@ func (c *CompanyPlanDetailResponseData) SetOneTimePrice(oneTimePrice *BillingPri
 
 // SetPlanType sets the PlanType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanDetailResponseData) SetPlanType(planType string) {
+func (c *CompanyPlanDetailResponseData) SetPlanType(planType PlanType) {
 	c.PlanType = planType
 	c.require(companyPlanDetailResponseDataFieldPlanType)
 }
@@ -1437,6 +1446,28 @@ func (c *CompanyPlanDetailResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+type CompanyPlanInvalidReason string
+
+const (
+	CompanyPlanInvalidReasonDowngradeNotPermitted CompanyPlanInvalidReason = "downgrade_not_permitted"
+	CompanyPlanInvalidReasonFeatureUsageExceeded  CompanyPlanInvalidReason = "feature_usage_exceeded"
+)
+
+func NewCompanyPlanInvalidReasonFromString(s string) (CompanyPlanInvalidReason, error) {
+	switch s {
+	case "downgrade_not_permitted":
+		return CompanyPlanInvalidReasonDowngradeNotPermitted, nil
+	case "feature_usage_exceeded":
+		return CompanyPlanInvalidReasonFeatureUsageExceeded, nil
+	}
+	var t CompanyPlanInvalidReason
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CompanyPlanInvalidReason) Ptr() *CompanyPlanInvalidReason {
+	return &c
 }
 
 var (
@@ -1660,51 +1691,209 @@ func (c *ComponentCheckoutSettings) String() string {
 }
 
 var (
-	componentPreviewResponseDataFieldActiveAddOns                 = big.NewInt(1 << 0)
-	componentPreviewResponseDataFieldActivePlans                  = big.NewInt(1 << 1)
-	componentPreviewResponseDataFieldActiveUsageBasedEntitlements = big.NewInt(1 << 2)
-	componentPreviewResponseDataFieldAddOnCompatibilities         = big.NewInt(1 << 3)
-	componentPreviewResponseDataFieldCapabilities                 = big.NewInt(1 << 4)
-	componentPreviewResponseDataFieldCheckoutSettings             = big.NewInt(1 << 5)
-	componentPreviewResponseDataFieldCompany                      = big.NewInt(1 << 6)
-	componentPreviewResponseDataFieldComponent                    = big.NewInt(1 << 7)
-	componentPreviewResponseDataFieldCreditBundles                = big.NewInt(1 << 8)
-	componentPreviewResponseDataFieldCreditGrants                 = big.NewInt(1 << 9)
-	componentPreviewResponseDataFieldDefaultPlan                  = big.NewInt(1 << 10)
-	componentPreviewResponseDataFieldFeatureUsage                 = big.NewInt(1 << 11)
-	componentPreviewResponseDataFieldInvoices                     = big.NewInt(1 << 12)
-	componentPreviewResponseDataFieldPostTrialPlan                = big.NewInt(1 << 13)
-	componentPreviewResponseDataFieldShowCredits                  = big.NewInt(1 << 14)
-	componentPreviewResponseDataFieldShowPeriodToggle             = big.NewInt(1 << 15)
-	componentPreviewResponseDataFieldShowZeroPriceAsFree          = big.NewInt(1 << 16)
-	componentPreviewResponseDataFieldStripeEmbed                  = big.NewInt(1 << 17)
-	componentPreviewResponseDataFieldSubscription                 = big.NewInt(1 << 18)
-	componentPreviewResponseDataFieldTrialPaymentMethodRequired   = big.NewInt(1 << 19)
-	componentPreviewResponseDataFieldUpcomingInvoice              = big.NewInt(1 << 20)
+	componentDisplaySettingsFieldShowAsMonthlyPrices = big.NewInt(1 << 0)
+	componentDisplaySettingsFieldShowCredits         = big.NewInt(1 << 1)
+	componentDisplaySettingsFieldShowPeriodToggle    = big.NewInt(1 << 2)
+	componentDisplaySettingsFieldShowZeroPriceAsFree = big.NewInt(1 << 3)
+)
+
+type ComponentDisplaySettings struct {
+	ShowAsMonthlyPrices bool `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
+	ShowCredits         bool `json:"show_credits" url:"show_credits"`
+	ShowPeriodToggle    bool `json:"show_period_toggle" url:"show_period_toggle"`
+	ShowZeroPriceAsFree bool `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *ComponentDisplaySettings) GetShowAsMonthlyPrices() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowAsMonthlyPrices
+}
+
+func (c *ComponentDisplaySettings) GetShowCredits() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowCredits
+}
+
+func (c *ComponentDisplaySettings) GetShowPeriodToggle() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowPeriodToggle
+}
+
+func (c *ComponentDisplaySettings) GetShowZeroPriceAsFree() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowZeroPriceAsFree
+}
+
+func (c *ComponentDisplaySettings) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *ComponentDisplaySettings) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetShowAsMonthlyPrices sets the ShowAsMonthlyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentDisplaySettings) SetShowAsMonthlyPrices(showAsMonthlyPrices bool) {
+	c.ShowAsMonthlyPrices = showAsMonthlyPrices
+	c.require(componentDisplaySettingsFieldShowAsMonthlyPrices)
+}
+
+// SetShowCredits sets the ShowCredits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentDisplaySettings) SetShowCredits(showCredits bool) {
+	c.ShowCredits = showCredits
+	c.require(componentDisplaySettingsFieldShowCredits)
+}
+
+// SetShowPeriodToggle sets the ShowPeriodToggle field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentDisplaySettings) SetShowPeriodToggle(showPeriodToggle bool) {
+	c.ShowPeriodToggle = showPeriodToggle
+	c.require(componentDisplaySettingsFieldShowPeriodToggle)
+}
+
+// SetShowZeroPriceAsFree sets the ShowZeroPriceAsFree field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentDisplaySettings) SetShowZeroPriceAsFree(showZeroPriceAsFree bool) {
+	c.ShowZeroPriceAsFree = showZeroPriceAsFree
+	c.require(componentDisplaySettingsFieldShowZeroPriceAsFree)
+}
+
+func (c *ComponentDisplaySettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler ComponentDisplaySettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = ComponentDisplaySettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ComponentDisplaySettings) MarshalJSON() ([]byte, error) {
+	type embed ComponentDisplaySettings
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *ComponentDisplaySettings) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type ComponentEntityType string
+
+const (
+	ComponentEntityTypeBilling     ComponentEntityType = "billing"
+	ComponentEntityTypeEntitlement ComponentEntityType = "entitlement"
+)
+
+func NewComponentEntityTypeFromString(s string) (ComponentEntityType, error) {
+	switch s {
+	case "billing":
+		return ComponentEntityTypeBilling, nil
+	case "entitlement":
+		return ComponentEntityTypeEntitlement, nil
+	}
+	var t ComponentEntityType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c ComponentEntityType) Ptr() *ComponentEntityType {
+	return &c
+}
+
+var (
+	componentPreviewResponseDataFieldActiveAddOns                          = big.NewInt(1 << 0)
+	componentPreviewResponseDataFieldActivePlans                           = big.NewInt(1 << 1)
+	componentPreviewResponseDataFieldActiveUsageBasedEntitlements          = big.NewInt(1 << 2)
+	componentPreviewResponseDataFieldAddOnCompatibilities                  = big.NewInt(1 << 3)
+	componentPreviewResponseDataFieldCapabilities                          = big.NewInt(1 << 4)
+	componentPreviewResponseDataFieldCheckoutSettings                      = big.NewInt(1 << 5)
+	componentPreviewResponseDataFieldCompany                               = big.NewInt(1 << 6)
+	componentPreviewResponseDataFieldComponent                             = big.NewInt(1 << 7)
+	componentPreviewResponseDataFieldCreditBundles                         = big.NewInt(1 << 8)
+	componentPreviewResponseDataFieldCreditGrants                          = big.NewInt(1 << 9)
+	componentPreviewResponseDataFieldDefaultPlan                           = big.NewInt(1 << 10)
+	componentPreviewResponseDataFieldDisplaySettings                       = big.NewInt(1 << 11)
+	componentPreviewResponseDataFieldFeatureUsage                          = big.NewInt(1 << 12)
+	componentPreviewResponseDataFieldInvoices                              = big.NewInt(1 << 13)
+	componentPreviewResponseDataFieldPostTrialPlan                         = big.NewInt(1 << 14)
+	componentPreviewResponseDataFieldPreventSelfServiceDowngrade           = big.NewInt(1 << 15)
+	componentPreviewResponseDataFieldPreventSelfServiceDowngradeButtonText = big.NewInt(1 << 16)
+	componentPreviewResponseDataFieldPreventSelfServiceDowngradeURL        = big.NewInt(1 << 17)
+	componentPreviewResponseDataFieldShowAsMonthlyPrices                   = big.NewInt(1 << 18)
+	componentPreviewResponseDataFieldShowCredits                           = big.NewInt(1 << 19)
+	componentPreviewResponseDataFieldShowPeriodToggle                      = big.NewInt(1 << 20)
+	componentPreviewResponseDataFieldShowZeroPriceAsFree                   = big.NewInt(1 << 21)
+	componentPreviewResponseDataFieldStripeEmbed                           = big.NewInt(1 << 22)
+	componentPreviewResponseDataFieldSubscription                          = big.NewInt(1 << 23)
+	componentPreviewResponseDataFieldTrialPaymentMethodRequired            = big.NewInt(1 << 24)
+	componentPreviewResponseDataFieldUpcomingInvoice                       = big.NewInt(1 << 25)
 )
 
 type ComponentPreviewResponseData struct {
-	ActiveAddOns                 []*CompanyPlanDetailResponseData     `json:"active_add_ons" url:"active_add_ons"`
-	ActivePlans                  []*CompanyPlanDetailResponseData     `json:"active_plans" url:"active_plans"`
-	ActiveUsageBasedEntitlements []*UsageBasedEntitlementResponseData `json:"active_usage_based_entitlements" url:"active_usage_based_entitlements"`
-	AddOnCompatibilities         []*CompatiblePlans                   `json:"add_on_compatibilities" url:"add_on_compatibilities"`
-	Capabilities                 *ComponentCapabilities               `json:"capabilities,omitempty" url:"capabilities,omitempty"`
-	CheckoutSettings             *ComponentCheckoutSettings           `json:"checkout_settings" url:"checkout_settings"`
-	Company                      *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
-	Component                    *ComponentResponseData               `json:"component,omitempty" url:"component,omitempty"`
-	CreditBundles                []*BillingCreditBundleView           `json:"credit_bundles" url:"credit_bundles"`
-	CreditGrants                 []*CreditCompanyGrantView            `json:"credit_grants" url:"credit_grants"`
-	DefaultPlan                  *PlanDetailResponseData              `json:"default_plan,omitempty" url:"default_plan,omitempty"`
-	FeatureUsage                 *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
-	Invoices                     []*InvoiceResponseData               `json:"invoices" url:"invoices"`
-	PostTrialPlan                *PlanDetailResponseData              `json:"post_trial_plan,omitempty" url:"post_trial_plan,omitempty"`
-	ShowCredits                  bool                                 `json:"show_credits" url:"show_credits"`
-	ShowPeriodToggle             bool                                 `json:"show_period_toggle" url:"show_period_toggle"`
-	ShowZeroPriceAsFree          bool                                 `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
-	StripeEmbed                  *StripeEmbedInfo                     `json:"stripe_embed,omitempty" url:"stripe_embed,omitempty"`
-	Subscription                 *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
-	TrialPaymentMethodRequired   *bool                                `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
-	UpcomingInvoice              *InvoiceResponseData                 `json:"upcoming_invoice,omitempty" url:"upcoming_invoice,omitempty"`
+	ActiveAddOns                          []*CompanyPlanDetailResponseData     `json:"active_add_ons" url:"active_add_ons"`
+	ActivePlans                           []*CompanyPlanDetailResponseData     `json:"active_plans" url:"active_plans"`
+	ActiveUsageBasedEntitlements          []*UsageBasedEntitlementResponseData `json:"active_usage_based_entitlements" url:"active_usage_based_entitlements"`
+	AddOnCompatibilities                  []*CompatiblePlans                   `json:"add_on_compatibilities" url:"add_on_compatibilities"`
+	Capabilities                          *ComponentCapabilities               `json:"capabilities,omitempty" url:"capabilities,omitempty"`
+	CheckoutSettings                      *ComponentCheckoutSettings           `json:"checkout_settings" url:"checkout_settings"`
+	Company                               *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
+	Component                             *ComponentResponseData               `json:"component,omitempty" url:"component,omitempty"`
+	CreditBundles                         []*BillingCreditBundleView           `json:"credit_bundles" url:"credit_bundles"`
+	CreditGrants                          []*CreditCompanyGrantView            `json:"credit_grants" url:"credit_grants"`
+	DefaultPlan                           *PlanDetailResponseData              `json:"default_plan,omitempty" url:"default_plan,omitempty"`
+	DisplaySettings                       *ComponentDisplaySettings            `json:"display_settings" url:"display_settings"`
+	FeatureUsage                          *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	Invoices                              []*InvoiceResponseData               `json:"invoices" url:"invoices"`
+	PostTrialPlan                         *PlanDetailResponseData              `json:"post_trial_plan,omitempty" url:"post_trial_plan,omitempty"`
+	PreventSelfServiceDowngrade           bool                                 `json:"prevent_self_service_downgrade" url:"prevent_self_service_downgrade"`
+	PreventSelfServiceDowngradeButtonText *string                              `json:"prevent_self_service_downgrade_button_text,omitempty" url:"prevent_self_service_downgrade_button_text,omitempty"`
+	PreventSelfServiceDowngradeURL        *string                              `json:"prevent_self_service_downgrade_url,omitempty" url:"prevent_self_service_downgrade_url,omitempty"`
+	ShowAsMonthlyPrices                   bool                                 `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
+	ShowCredits                           bool                                 `json:"show_credits" url:"show_credits"`
+	ShowPeriodToggle                      bool                                 `json:"show_period_toggle" url:"show_period_toggle"`
+	ShowZeroPriceAsFree                   bool                                 `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
+	StripeEmbed                           *StripeEmbedInfo                     `json:"stripe_embed,omitempty" url:"stripe_embed,omitempty"`
+	Subscription                          *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
+	TrialPaymentMethodRequired            *bool                                `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
+	UpcomingInvoice                       *InvoiceResponseData                 `json:"upcoming_invoice,omitempty" url:"upcoming_invoice,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1790,6 +1979,13 @@ func (c *ComponentPreviewResponseData) GetDefaultPlan() *PlanDetailResponseData 
 	return c.DefaultPlan
 }
 
+func (c *ComponentPreviewResponseData) GetDisplaySettings() *ComponentDisplaySettings {
+	if c == nil {
+		return nil
+	}
+	return c.DisplaySettings
+}
+
 func (c *ComponentPreviewResponseData) GetFeatureUsage() *FeatureUsageDetailResponseData {
 	if c == nil {
 		return nil
@@ -1809,6 +2005,34 @@ func (c *ComponentPreviewResponseData) GetPostTrialPlan() *PlanDetailResponseDat
 		return nil
 	}
 	return c.PostTrialPlan
+}
+
+func (c *ComponentPreviewResponseData) GetPreventSelfServiceDowngrade() bool {
+	if c == nil {
+		return false
+	}
+	return c.PreventSelfServiceDowngrade
+}
+
+func (c *ComponentPreviewResponseData) GetPreventSelfServiceDowngradeButtonText() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PreventSelfServiceDowngradeButtonText
+}
+
+func (c *ComponentPreviewResponseData) GetPreventSelfServiceDowngradeURL() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PreventSelfServiceDowngradeURL
+}
+
+func (c *ComponentPreviewResponseData) GetShowAsMonthlyPrices() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowAsMonthlyPrices
 }
 
 func (c *ComponentPreviewResponseData) GetShowCredits() bool {
@@ -1948,6 +2172,13 @@ func (c *ComponentPreviewResponseData) SetDefaultPlan(defaultPlan *PlanDetailRes
 	c.require(componentPreviewResponseDataFieldDefaultPlan)
 }
 
+// SetDisplaySettings sets the DisplaySettings field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentPreviewResponseData) SetDisplaySettings(displaySettings *ComponentDisplaySettings) {
+	c.DisplaySettings = displaySettings
+	c.require(componentPreviewResponseDataFieldDisplaySettings)
+}
+
 // SetFeatureUsage sets the FeatureUsage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *ComponentPreviewResponseData) SetFeatureUsage(featureUsage *FeatureUsageDetailResponseData) {
@@ -1967,6 +2198,34 @@ func (c *ComponentPreviewResponseData) SetInvoices(invoices []*InvoiceResponseDa
 func (c *ComponentPreviewResponseData) SetPostTrialPlan(postTrialPlan *PlanDetailResponseData) {
 	c.PostTrialPlan = postTrialPlan
 	c.require(componentPreviewResponseDataFieldPostTrialPlan)
+}
+
+// SetPreventSelfServiceDowngrade sets the PreventSelfServiceDowngrade field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentPreviewResponseData) SetPreventSelfServiceDowngrade(preventSelfServiceDowngrade bool) {
+	c.PreventSelfServiceDowngrade = preventSelfServiceDowngrade
+	c.require(componentPreviewResponseDataFieldPreventSelfServiceDowngrade)
+}
+
+// SetPreventSelfServiceDowngradeButtonText sets the PreventSelfServiceDowngradeButtonText field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentPreviewResponseData) SetPreventSelfServiceDowngradeButtonText(preventSelfServiceDowngradeButtonText *string) {
+	c.PreventSelfServiceDowngradeButtonText = preventSelfServiceDowngradeButtonText
+	c.require(componentPreviewResponseDataFieldPreventSelfServiceDowngradeButtonText)
+}
+
+// SetPreventSelfServiceDowngradeURL sets the PreventSelfServiceDowngradeURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentPreviewResponseData) SetPreventSelfServiceDowngradeURL(preventSelfServiceDowngradeURL *string) {
+	c.PreventSelfServiceDowngradeURL = preventSelfServiceDowngradeURL
+	c.require(componentPreviewResponseDataFieldPreventSelfServiceDowngradeURL)
+}
+
+// SetShowAsMonthlyPrices sets the ShowAsMonthlyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentPreviewResponseData) SetShowAsMonthlyPrices(showAsMonthlyPrices bool) {
+	c.ShowAsMonthlyPrices = showAsMonthlyPrices
+	c.require(componentPreviewResponseDataFieldShowAsMonthlyPrices)
 }
 
 // SetShowCredits sets the ShowCredits field and marks it as non-optional;
@@ -2068,13 +2327,13 @@ var (
 )
 
 type ComponentResponseData struct {
-	Ast       map[string]float64 `json:"ast,omitempty" url:"ast,omitempty"`
-	CreatedAt time.Time          `json:"created_at" url:"created_at"`
-	ID        string             `json:"id" url:"id"`
-	Name      string             `json:"name" url:"name"`
-	State     string             `json:"state" url:"state"`
-	Type      string             `json:"type" url:"type"`
-	UpdatedAt time.Time          `json:"updated_at" url:"updated_at"`
+	Ast       map[string]float64  `json:"ast,omitempty" url:"ast,omitempty"`
+	CreatedAt time.Time           `json:"created_at" url:"created_at"`
+	ID        string              `json:"id" url:"id"`
+	Name      string              `json:"name" url:"name"`
+	State     ComponentState      `json:"state" url:"state"`
+	Type      ComponentEntityType `json:"type" url:"type"`
+	UpdatedAt time.Time           `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2111,14 +2370,14 @@ func (c *ComponentResponseData) GetName() string {
 	return c.Name
 }
 
-func (c *ComponentResponseData) GetState() string {
+func (c *ComponentResponseData) GetState() ComponentState {
 	if c == nil {
 		return ""
 	}
 	return c.State
 }
 
-func (c *ComponentResponseData) GetType() string {
+func (c *ComponentResponseData) GetType() ComponentEntityType {
 	if c == nil {
 		return ""
 	}
@@ -2173,14 +2432,14 @@ func (c *ComponentResponseData) SetName(name string) {
 
 // SetState sets the State field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentResponseData) SetState(state string) {
+func (c *ComponentResponseData) SetState(state ComponentState) {
 	c.State = state
 	c.require(componentResponseDataFieldState)
 }
 
 // SetType sets the Type field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentResponseData) SetType(type_ string) {
+func (c *ComponentResponseData) SetType(type_ ComponentEntityType) {
 	c.Type = type_
 	c.require(componentResponseDataFieldType)
 }
@@ -2243,6 +2502,28 @@ func (c *ComponentResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type ComponentState string
+
+const (
+	ComponentStateDraft ComponentState = "draft"
+	ComponentStateLive  ComponentState = "live"
+)
+
+func NewComponentStateFromString(s string) (ComponentState, error) {
+	switch s {
+	case "draft":
+		return ComponentStateDraft, nil
+	case "live":
+		return ComponentStateLive, nil
+	}
+	var t ComponentState
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c ComponentState) Ptr() *ComponentState {
+	return &c
+}
+
 var (
 	creditCompanyGrantViewFieldBillingCreditBundleID = big.NewInt(1 << 0)
 	creditCompanyGrantViewFieldBillingCreditID       = big.NewInt(1 << 1)
@@ -2274,33 +2555,33 @@ var (
 )
 
 type CreditCompanyGrantView struct {
-	BillingCreditBundleID *string                          `json:"billing_credit_bundle_id,omitempty" url:"billing_credit_bundle_id,omitempty"`
-	BillingCreditID       string                           `json:"billing_credit_id" url:"billing_credit_id"`
-	CompanyID             string                           `json:"company_id" url:"company_id"`
-	CompanyName           string                           `json:"company_name" url:"company_name"`
-	CreatedAt             time.Time                        `json:"created_at" url:"created_at"`
-	CreditDescription     string                           `json:"credit_description" url:"credit_description"`
-	CreditIcon            *string                          `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
-	CreditName            string                           `json:"credit_name" url:"credit_name"`
-	ExpiresAt             *time.Time                       `json:"expires_at,omitempty" url:"expires_at,omitempty"`
-	ExpiryType            *string                          `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
-	ExpiryUnit            *string                          `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount       *int                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	GrantReason           string                           `json:"grant_reason" url:"grant_reason"`
-	ID                    string                           `json:"id" url:"id"`
-	PlanID                *string                          `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	PlanName              *string                          `json:"plan_name,omitempty" url:"plan_name,omitempty"`
-	PluralName            *string                          `json:"plural_name,omitempty" url:"plural_name,omitempty"`
-	Price                 *BillingProductPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
-	Quantity              int                              `json:"quantity" url:"quantity"`
-	QuantityRemaining     float64                          `json:"quantity_remaining" url:"quantity_remaining"`
-	QuantityUsed          float64                          `json:"quantity_used" url:"quantity_used"`
-	SingularName          *string                          `json:"singular_name,omitempty" url:"singular_name,omitempty"`
-	SourceLabel           string                           `json:"source_label" url:"source_label"`
-	UpdatedAt             time.Time                        `json:"updated_at" url:"updated_at"`
-	ValidFrom             *time.Time                       `json:"valid_from,omitempty" url:"valid_from,omitempty"`
-	ZeroedOutDate         *time.Time                       `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
-	ZeroedOutReason       *string                          `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
+	BillingCreditBundleID *string                            `json:"billing_credit_bundle_id,omitempty" url:"billing_credit_bundle_id,omitempty"`
+	BillingCreditID       string                             `json:"billing_credit_id" url:"billing_credit_id"`
+	CompanyID             string                             `json:"company_id" url:"company_id"`
+	CompanyName           string                             `json:"company_name" url:"company_name"`
+	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
+	CreditDescription     string                             `json:"credit_description" url:"credit_description"`
+	CreditIcon            *string                            `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditName            string                             `json:"credit_name" url:"credit_name"`
+	ExpiresAt             *time.Time                         `json:"expires_at,omitempty" url:"expires_at,omitempty"`
+	ExpiryType            *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
+	ExpiryUnit            *BillingCreditExpiryUnit           `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
+	ExpiryUnitCount       *int                               `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	GrantReason           BillingCreditGrantReason           `json:"grant_reason" url:"grant_reason"`
+	ID                    string                             `json:"id" url:"id"`
+	PlanID                *string                            `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanName              *string                            `json:"plan_name,omitempty" url:"plan_name,omitempty"`
+	PluralName            *string                            `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	Price                 *BillingProductPriceResponseData   `json:"price,omitempty" url:"price,omitempty"`
+	Quantity              int                                `json:"quantity" url:"quantity"`
+	QuantityRemaining     float64                            `json:"quantity_remaining" url:"quantity_remaining"`
+	QuantityUsed          float64                            `json:"quantity_used" url:"quantity_used"`
+	SingularName          *string                            `json:"singular_name,omitempty" url:"singular_name,omitempty"`
+	SourceLabel           string                             `json:"source_label" url:"source_label"`
+	UpdatedAt             time.Time                          `json:"updated_at" url:"updated_at"`
+	ValidFrom             *time.Time                         `json:"valid_from,omitempty" url:"valid_from,omitempty"`
+	ZeroedOutDate         *time.Time                         `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
+	ZeroedOutReason       *BillingCreditGrantZeroedOutReason `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2372,14 +2653,14 @@ func (c *CreditCompanyGrantView) GetExpiresAt() *time.Time {
 	return c.ExpiresAt
 }
 
-func (c *CreditCompanyGrantView) GetExpiryType() *string {
+func (c *CreditCompanyGrantView) GetExpiryType() *BillingCreditExpiryType {
 	if c == nil {
 		return nil
 	}
 	return c.ExpiryType
 }
 
-func (c *CreditCompanyGrantView) GetExpiryUnit() *string {
+func (c *CreditCompanyGrantView) GetExpiryUnit() *BillingCreditExpiryUnit {
 	if c == nil {
 		return nil
 	}
@@ -2393,7 +2674,7 @@ func (c *CreditCompanyGrantView) GetExpiryUnitCount() *int {
 	return c.ExpiryUnitCount
 }
 
-func (c *CreditCompanyGrantView) GetGrantReason() string {
+func (c *CreditCompanyGrantView) GetGrantReason() BillingCreditGrantReason {
 	if c == nil {
 		return ""
 	}
@@ -2491,7 +2772,7 @@ func (c *CreditCompanyGrantView) GetZeroedOutDate() *time.Time {
 	return c.ZeroedOutDate
 }
 
-func (c *CreditCompanyGrantView) GetZeroedOutReason() *string {
+func (c *CreditCompanyGrantView) GetZeroedOutReason() *BillingCreditGrantZeroedOutReason {
 	if c == nil {
 		return nil
 	}
@@ -2574,14 +2855,14 @@ func (c *CreditCompanyGrantView) SetExpiresAt(expiresAt *time.Time) {
 
 // SetExpiryType sets the ExpiryType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCompanyGrantView) SetExpiryType(expiryType *string) {
+func (c *CreditCompanyGrantView) SetExpiryType(expiryType *BillingCreditExpiryType) {
 	c.ExpiryType = expiryType
 	c.require(creditCompanyGrantViewFieldExpiryType)
 }
 
 // SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCompanyGrantView) SetExpiryUnit(expiryUnit *string) {
+func (c *CreditCompanyGrantView) SetExpiryUnit(expiryUnit *BillingCreditExpiryUnit) {
 	c.ExpiryUnit = expiryUnit
 	c.require(creditCompanyGrantViewFieldExpiryUnit)
 }
@@ -2595,7 +2876,7 @@ func (c *CreditCompanyGrantView) SetExpiryUnitCount(expiryUnitCount *int) {
 
 // SetGrantReason sets the GrantReason field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCompanyGrantView) SetGrantReason(grantReason string) {
+func (c *CreditCompanyGrantView) SetGrantReason(grantReason BillingCreditGrantReason) {
 	c.GrantReason = grantReason
 	c.require(creditCompanyGrantViewFieldGrantReason)
 }
@@ -2693,7 +2974,7 @@ func (c *CreditCompanyGrantView) SetZeroedOutDate(zeroedOutDate *time.Time) {
 
 // SetZeroedOutReason sets the ZeroedOutReason field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCompanyGrantView) SetZeroedOutReason(zeroedOutReason *string) {
+func (c *CreditCompanyGrantView) SetZeroedOutReason(zeroedOutReason *BillingCreditGrantZeroedOutReason) {
 	c.ZeroedOutReason = zeroedOutReason
 	c.require(creditCompanyGrantViewFieldZeroedOutReason)
 }
@@ -2759,368 +3040,6 @@ func (c *CreditCompanyGrantView) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-var (
-	planCreditGrantViewFieldCreatedAt         = big.NewInt(1 << 0)
-	planCreditGrantViewFieldCreditAmount      = big.NewInt(1 << 1)
-	planCreditGrantViewFieldCreditDescription = big.NewInt(1 << 2)
-	planCreditGrantViewFieldCreditIcon        = big.NewInt(1 << 3)
-	planCreditGrantViewFieldCreditID          = big.NewInt(1 << 4)
-	planCreditGrantViewFieldCreditName        = big.NewInt(1 << 5)
-	planCreditGrantViewFieldExpiryType        = big.NewInt(1 << 6)
-	planCreditGrantViewFieldExpiryUnit        = big.NewInt(1 << 7)
-	planCreditGrantViewFieldExpiryUnitCount   = big.NewInt(1 << 8)
-	planCreditGrantViewFieldID                = big.NewInt(1 << 9)
-	planCreditGrantViewFieldPlanID            = big.NewInt(1 << 10)
-	planCreditGrantViewFieldPlanName          = big.NewInt(1 << 11)
-	planCreditGrantViewFieldPluralName        = big.NewInt(1 << 12)
-	planCreditGrantViewFieldResetCadence      = big.NewInt(1 << 13)
-	planCreditGrantViewFieldResetStart        = big.NewInt(1 << 14)
-	planCreditGrantViewFieldResetType         = big.NewInt(1 << 15)
-	planCreditGrantViewFieldSingularName      = big.NewInt(1 << 16)
-	planCreditGrantViewFieldUpdatedAt         = big.NewInt(1 << 17)
-)
-
-type PlanCreditGrantView struct {
-	CreatedAt         time.Time `json:"created_at" url:"created_at"`
-	CreditAmount      int       `json:"credit_amount" url:"credit_amount"`
-	CreditDescription string    `json:"credit_description" url:"credit_description"`
-	CreditIcon        *string   `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
-	CreditID          string    `json:"credit_id" url:"credit_id"`
-	CreditName        string    `json:"credit_name" url:"credit_name"`
-	ExpiryType        *string   `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
-	ExpiryUnit        *string   `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount   *int      `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	ID                string    `json:"id" url:"id"`
-	PlanID            string    `json:"plan_id" url:"plan_id"`
-	PlanName          string    `json:"plan_name" url:"plan_name"`
-	PluralName        *string   `json:"plural_name,omitempty" url:"plural_name,omitempty"`
-	ResetCadence      string    `json:"reset_cadence" url:"reset_cadence"`
-	ResetStart        string    `json:"reset_start" url:"reset_start"`
-	ResetType         string    `json:"reset_type" url:"reset_type"`
-	SingularName      *string   `json:"singular_name,omitempty" url:"singular_name,omitempty"`
-	UpdatedAt         time.Time `json:"updated_at" url:"updated_at"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (p *PlanCreditGrantView) GetCreatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.CreatedAt
-}
-
-func (p *PlanCreditGrantView) GetCreditAmount() int {
-	if p == nil {
-		return 0
-	}
-	return p.CreditAmount
-}
-
-func (p *PlanCreditGrantView) GetCreditDescription() string {
-	if p == nil {
-		return ""
-	}
-	return p.CreditDescription
-}
-
-func (p *PlanCreditGrantView) GetCreditIcon() *string {
-	if p == nil {
-		return nil
-	}
-	return p.CreditIcon
-}
-
-func (p *PlanCreditGrantView) GetCreditID() string {
-	if p == nil {
-		return ""
-	}
-	return p.CreditID
-}
-
-func (p *PlanCreditGrantView) GetCreditName() string {
-	if p == nil {
-		return ""
-	}
-	return p.CreditName
-}
-
-func (p *PlanCreditGrantView) GetExpiryType() *string {
-	if p == nil {
-		return nil
-	}
-	return p.ExpiryType
-}
-
-func (p *PlanCreditGrantView) GetExpiryUnit() *string {
-	if p == nil {
-		return nil
-	}
-	return p.ExpiryUnit
-}
-
-func (p *PlanCreditGrantView) GetExpiryUnitCount() *int {
-	if p == nil {
-		return nil
-	}
-	return p.ExpiryUnitCount
-}
-
-func (p *PlanCreditGrantView) GetID() string {
-	if p == nil {
-		return ""
-	}
-	return p.ID
-}
-
-func (p *PlanCreditGrantView) GetPlanID() string {
-	if p == nil {
-		return ""
-	}
-	return p.PlanID
-}
-
-func (p *PlanCreditGrantView) GetPlanName() string {
-	if p == nil {
-		return ""
-	}
-	return p.PlanName
-}
-
-func (p *PlanCreditGrantView) GetPluralName() *string {
-	if p == nil {
-		return nil
-	}
-	return p.PluralName
-}
-
-func (p *PlanCreditGrantView) GetResetCadence() string {
-	if p == nil {
-		return ""
-	}
-	return p.ResetCadence
-}
-
-func (p *PlanCreditGrantView) GetResetStart() string {
-	if p == nil {
-		return ""
-	}
-	return p.ResetStart
-}
-
-func (p *PlanCreditGrantView) GetResetType() string {
-	if p == nil {
-		return ""
-	}
-	return p.ResetType
-}
-
-func (p *PlanCreditGrantView) GetSingularName() *string {
-	if p == nil {
-		return nil
-	}
-	return p.SingularName
-}
-
-func (p *PlanCreditGrantView) GetUpdatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.UpdatedAt
-}
-
-func (p *PlanCreditGrantView) GetExtraProperties() map[string]interface{} {
-	return p.extraProperties
-}
-
-func (p *PlanCreditGrantView) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
-	}
-	p.explicitFields.Or(p.explicitFields, field)
-}
-
-// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetCreatedAt(createdAt time.Time) {
-	p.CreatedAt = createdAt
-	p.require(planCreditGrantViewFieldCreatedAt)
-}
-
-// SetCreditAmount sets the CreditAmount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetCreditAmount(creditAmount int) {
-	p.CreditAmount = creditAmount
-	p.require(planCreditGrantViewFieldCreditAmount)
-}
-
-// SetCreditDescription sets the CreditDescription field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetCreditDescription(creditDescription string) {
-	p.CreditDescription = creditDescription
-	p.require(planCreditGrantViewFieldCreditDescription)
-}
-
-// SetCreditIcon sets the CreditIcon field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetCreditIcon(creditIcon *string) {
-	p.CreditIcon = creditIcon
-	p.require(planCreditGrantViewFieldCreditIcon)
-}
-
-// SetCreditID sets the CreditID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetCreditID(creditID string) {
-	p.CreditID = creditID
-	p.require(planCreditGrantViewFieldCreditID)
-}
-
-// SetCreditName sets the CreditName field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetCreditName(creditName string) {
-	p.CreditName = creditName
-	p.require(planCreditGrantViewFieldCreditName)
-}
-
-// SetExpiryType sets the ExpiryType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetExpiryType(expiryType *string) {
-	p.ExpiryType = expiryType
-	p.require(planCreditGrantViewFieldExpiryType)
-}
-
-// SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetExpiryUnit(expiryUnit *string) {
-	p.ExpiryUnit = expiryUnit
-	p.require(planCreditGrantViewFieldExpiryUnit)
-}
-
-// SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetExpiryUnitCount(expiryUnitCount *int) {
-	p.ExpiryUnitCount = expiryUnitCount
-	p.require(planCreditGrantViewFieldExpiryUnitCount)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetID(id string) {
-	p.ID = id
-	p.require(planCreditGrantViewFieldID)
-}
-
-// SetPlanID sets the PlanID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetPlanID(planID string) {
-	p.PlanID = planID
-	p.require(planCreditGrantViewFieldPlanID)
-}
-
-// SetPlanName sets the PlanName field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetPlanName(planName string) {
-	p.PlanName = planName
-	p.require(planCreditGrantViewFieldPlanName)
-}
-
-// SetPluralName sets the PluralName field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetPluralName(pluralName *string) {
-	p.PluralName = pluralName
-	p.require(planCreditGrantViewFieldPluralName)
-}
-
-// SetResetCadence sets the ResetCadence field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetResetCadence(resetCadence string) {
-	p.ResetCadence = resetCadence
-	p.require(planCreditGrantViewFieldResetCadence)
-}
-
-// SetResetStart sets the ResetStart field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetResetStart(resetStart string) {
-	p.ResetStart = resetStart
-	p.require(planCreditGrantViewFieldResetStart)
-}
-
-// SetResetType sets the ResetType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetResetType(resetType string) {
-	p.ResetType = resetType
-	p.require(planCreditGrantViewFieldResetType)
-}
-
-// SetSingularName sets the SingularName field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetSingularName(singularName *string) {
-	p.SingularName = singularName
-	p.require(planCreditGrantViewFieldSingularName)
-}
-
-// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetUpdatedAt(updatedAt time.Time) {
-	p.UpdatedAt = updatedAt
-	p.require(planCreditGrantViewFieldUpdatedAt)
-}
-
-func (p *PlanCreditGrantView) UnmarshalJSON(data []byte) error {
-	type embed PlanCreditGrantView
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*p),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*p = PlanCreditGrantView(unmarshaler.embed)
-	p.CreatedAt = unmarshaler.CreatedAt.Time()
-	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *p)
-	if err != nil {
-		return err
-	}
-	p.extraProperties = extraProperties
-	p.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (p *PlanCreditGrantView) MarshalJSON() ([]byte, error) {
-	type embed PlanCreditGrantView
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*p),
-		CreatedAt: internal.NewDateTime(p.CreatedAt),
-		UpdatedAt: internal.NewDateTime(p.UpdatedAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (p *PlanCreditGrantView) String() string {
-	if len(p.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(p); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", p)
 }
 
 var (
@@ -3455,28 +3374,6 @@ func (c *CountComponentsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CreateComponentRequestBodyEntityType string
-
-const (
-	CreateComponentRequestBodyEntityTypeEntitlement CreateComponentRequestBodyEntityType = "entitlement"
-	CreateComponentRequestBodyEntityTypeBilling     CreateComponentRequestBodyEntityType = "billing"
-)
-
-func NewCreateComponentRequestBodyEntityTypeFromString(s string) (CreateComponentRequestBodyEntityType, error) {
-	switch s {
-	case "entitlement":
-		return CreateComponentRequestBodyEntityTypeEntitlement, nil
-	case "billing":
-		return CreateComponentRequestBodyEntityTypeBilling, nil
-	}
-	var t CreateComponentRequestBodyEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateComponentRequestBodyEntityType) Ptr() *CreateComponentRequestBodyEntityType {
-	return &c
 }
 
 var (
@@ -4162,50 +4059,6 @@ func (p *PreviewComponentDataResponse) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
-type UpdateComponentRequestBodyEntityType string
-
-const (
-	UpdateComponentRequestBodyEntityTypeEntitlement UpdateComponentRequestBodyEntityType = "entitlement"
-	UpdateComponentRequestBodyEntityTypeBilling     UpdateComponentRequestBodyEntityType = "billing"
-)
-
-func NewUpdateComponentRequestBodyEntityTypeFromString(s string) (UpdateComponentRequestBodyEntityType, error) {
-	switch s {
-	case "entitlement":
-		return UpdateComponentRequestBodyEntityTypeEntitlement, nil
-	case "billing":
-		return UpdateComponentRequestBodyEntityTypeBilling, nil
-	}
-	var t UpdateComponentRequestBodyEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateComponentRequestBodyEntityType) Ptr() *UpdateComponentRequestBodyEntityType {
-	return &u
-}
-
-type UpdateComponentRequestBodyState string
-
-const (
-	UpdateComponentRequestBodyStateDraft UpdateComponentRequestBodyState = "draft"
-	UpdateComponentRequestBodyStateLive  UpdateComponentRequestBodyState = "live"
-)
-
-func NewUpdateComponentRequestBodyStateFromString(s string) (UpdateComponentRequestBodyState, error) {
-	switch s {
-	case "draft":
-		return UpdateComponentRequestBodyStateDraft, nil
-	case "live":
-		return UpdateComponentRequestBodyStateLive, nil
-	}
-	var t UpdateComponentRequestBodyState
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateComponentRequestBodyState) Ptr() *UpdateComponentRequestBodyState {
-	return &u
-}
-
 var (
 	updateComponentResponseFieldData   = big.NewInt(1 << 0)
 	updateComponentResponseFieldParams = big.NewInt(1 << 1)
@@ -4309,10 +4162,10 @@ var (
 )
 
 type UpdateComponentRequestBody struct {
-	Ast        map[string]float64                    `json:"ast,omitempty" url:"-"`
-	EntityType *UpdateComponentRequestBodyEntityType `json:"entity_type,omitempty" url:"-"`
-	Name       *string                               `json:"name,omitempty" url:"-"`
-	State      *UpdateComponentRequestBodyState      `json:"state,omitempty" url:"-"`
+	Ast        map[string]float64   `json:"ast,omitempty" url:"-"`
+	EntityType *ComponentEntityType `json:"entity_type,omitempty" url:"-"`
+	Name       *string              `json:"name,omitempty" url:"-"`
+	State      *ComponentState      `json:"state,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4334,7 +4187,7 @@ func (u *UpdateComponentRequestBody) SetAst(ast map[string]float64) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateComponentRequestBody) SetEntityType(entityType *UpdateComponentRequestBodyEntityType) {
+func (u *UpdateComponentRequestBody) SetEntityType(entityType *ComponentEntityType) {
 	u.EntityType = entityType
 	u.require(updateComponentRequestBodyFieldEntityType)
 }
@@ -4348,7 +4201,7 @@ func (u *UpdateComponentRequestBody) SetName(name *string) {
 
 // SetState sets the State field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateComponentRequestBody) SetState(state *UpdateComponentRequestBodyState) {
+func (u *UpdateComponentRequestBody) SetState(state *ComponentState) {
 	u.State = state
 	u.require(updateComponentRequestBodyFieldState)
 }

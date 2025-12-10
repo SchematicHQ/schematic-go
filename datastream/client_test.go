@@ -746,6 +746,342 @@ func TestNewDataStreamClientFlagCache(t *testing.T) {
 	})
 }
 
+func TestCheckFlagReplicatorMode(t *testing.T) {
+	t.Run("CheckFlag with replicator mode ready and cached data", func(t *testing.T) {
+		logger := NewMockLogger()
+
+		// Create mock health endpoint that returns ready=true
+		healthServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(`{"ready": true}`))
+		}))
+		defer healthServer.Close()
+
+		// Create local cache providers
+		companyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
+		userCache := cache.NewLocalCache[*rulesengine.User](100, time.Minute)
+		flagCache := cache.NewLocalCache[*rulesengine.Flag](100, time.Minute)
+
+		// Set up replicator mode configuration
+		configOptions := &core.DatastreamOptions{
+			CacheTTL:              5 * time.Minute,
+			ReplicatorMode:        true,
+			ReplicatorHealthURL:   healthServer.URL,
+			ReplicatorHealthCheck: 100 * time.Millisecond,
+		}
+
+		clientOptions := datastream.DataStreamClientOptions{
+			ApiKey:       "test-api-key",
+			Logger:       logger,
+			CompanyCache: companyCache,
+			UserCache:    userCache,
+			FlagCache:    flagCache,
+		}
+
+		client := datastream.NewDataStreamClient(clientOptions, configOptions)
+		defer client.Close()
+
+		// Wait for health check to complete
+		time.Sleep(200 * time.Millisecond)
+
+		ctx := context.Background()
+
+		// Pre-populate caches with test data
+		testFlag := &rulesengine.Flag{
+			ID:            "flag_test",
+			AccountID:     "account_test",
+			Key:           "test-flag",
+			EnvironmentID: "env_test",
+			DefaultValue:  true,
+		}
+
+		testCompany := &rulesengine.Company{
+			ID: "company_123",
+			Keys: map[string]string{
+				"company_id": "123",
+			},
+		}
+
+		testUser := &rulesengine.User{
+			ID: "user_456",
+			Keys: map[string]string{
+				"user_id": "456",
+			},
+		}
+
+		// Cache the data using the proper helper functions
+		// For flags: "schematic:flags:{version}:{flag_key}"
+		// For companies/users: "schematic:{type}:{version}:{key}:{value}"
+		flagCache.Set(ctx, fmt.Sprintf("schematic:flags:%s:test-flag", rulesengine.VersionKey), testFlag, nil)
+		companyCache.Set(ctx, fmt.Sprintf("schematic:company:%s:company_id:123", rulesengine.VersionKey), testCompany, nil)
+		userCache.Set(ctx, fmt.Sprintf("schematic:user:%s:user_id:456", rulesengine.VersionKey), testUser, nil)
+
+		evalCtx := &schematicgo.CheckFlagRequestBody{
+			Company: map[string]string{"company_id": "123"},
+			User:    map[string]string{"user_id": "456"},
+		}
+
+		result, err := client.CheckFlag(ctx, evalCtx, "test-flag")
+		assert.NoError(t, err, "CheckFlag should succeed in replicator mode with cached data")
+		assert.NotNil(t, result, "Result should not be nil")
+		assert.True(t, result.Value, "Flag value should match the default value")
+	})
+
+	t.Run("CheckFlag with replicator mode not ready", func(t *testing.T) {
+		logger := NewMockLogger()
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL:              5 * time.Minute,
+			ReplicatorMode:        true,
+			ReplicatorHealthURL:   "http://localhost:8080/health",
+			ReplicatorHealthCheck: 1 * time.Second,
+		}
+
+		clientOptions := datastream.DataStreamClientOptions{
+			ApiKey: "test-api-key",
+			Logger: logger,
+		}
+
+		client := datastream.NewDataStreamClient(clientOptions, configOptions)
+
+		// Replicator starts as not ready by default
+
+		ctx := context.Background()
+		evalCtx := &schematicgo.CheckFlagRequestBody{
+			Company: map[string]string{"company_id": "123"},
+		}
+
+		result, err := client.CheckFlag(ctx, evalCtx, "non-existent-flag")
+		assert.Error(t, err, "CheckFlag should fail when flag not found")
+		assert.Contains(t, err.Error(), "flag not found", "Error should indicate flag not found")
+		assert.Nil(t, result, "Result should be nil when flag not found")
+	})
+
+	t.Run("CheckFlag with replicator mode ready but missing cached data", func(t *testing.T) {
+		logger := NewMockLogger()
+
+		// Create mock health endpoint that returns ready=true
+		healthServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(`{"ready": true}`))
+		}))
+		defer healthServer.Close()
+
+		// Create flag cache and pre-populate with test flag
+		flagCache := cache.NewLocalCache[*rulesengine.Flag](100, time.Minute)
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL:              5 * time.Minute,
+			ReplicatorMode:        true,
+			ReplicatorHealthURL:   healthServer.URL,
+			ReplicatorHealthCheck: 100 * time.Millisecond,
+		}
+
+		clientOptions := datastream.DataStreamClientOptions{
+			ApiKey:    "test-api-key",
+			Logger:    logger,
+			FlagCache: flagCache,
+		}
+
+		client := datastream.NewDataStreamClient(clientOptions, configOptions)
+		defer client.Close()
+
+		// Wait for health check to complete
+		time.Sleep(200 * time.Millisecond)
+
+		ctx := context.Background()
+
+		// Pre-populate flag cache but not company/user caches
+		testFlag := &rulesengine.Flag{
+			ID:            "flag_test",
+			AccountID:     "account_test",
+			Key:           "test-flag",
+			EnvironmentID: "env_test",
+			DefaultValue:  true,
+		}
+
+		flagCache.Set(ctx, fmt.Sprintf("schematic:flags:%s:test-flag", rulesengine.VersionKey), testFlag, nil)
+
+		evalCtx := &schematicgo.CheckFlagRequestBody{
+			Company: map[string]string{"company_id": "123"},
+		}
+
+		// In replicator mode, missing cached data should still allow evaluation
+		// (the replicator should have populated data, but we proceed with nil if not available)
+		result, err := client.CheckFlag(ctx, evalCtx, "test-flag")
+		assert.NoError(t, err, "CheckFlag should succeed even with missing cached data in replicator mode")
+		assert.NotNil(t, result, "Result should not be nil")
+	})
+}
+
+func TestCheckFlagDatastreamMode(t *testing.T) {
+	t.Run("CheckFlag with datastream not connected and missing cached data", func(t *testing.T) {
+		logger := NewMockLogger()
+
+		// Create flag cache and pre-populate with test flag
+		flagCache := cache.NewLocalCache[*rulesengine.Flag](100, time.Minute)
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL: 5 * time.Minute,
+			// ReplicatorMode is false by default
+		}
+
+		clientOptions := datastream.DataStreamClientOptions{
+			ApiKey:    "test-api-key",
+			Logger:    logger,
+			FlagCache: flagCache,
+			BaseURL:   "", // No BaseURL means no WebSocket client
+		}
+
+		client := datastream.NewDataStreamClient(clientOptions, configOptions)
+
+		ctx := context.Background()
+
+		// Pre-populate flag cache
+		testFlag := &rulesengine.Flag{
+			ID:            "flag_test",
+			AccountID:     "account_test",
+			Key:           "test-flag",
+			EnvironmentID: "env_test",
+			DefaultValue:  true,
+		}
+
+		// Use correct flag cache key format
+		flagCache.Set(ctx, fmt.Sprintf("schematic:flags:%s:test-flag", rulesengine.VersionKey), testFlag, nil)
+
+		evalCtx := &schematicgo.CheckFlagRequestBody{
+			Company: map[string]string{"company_id": "123"},
+		}
+
+		result, err := client.CheckFlag(ctx, evalCtx, "test-flag")
+		assert.Error(t, err, "CheckFlag should fail when datastream not connected and missing cached data")
+		assert.Contains(t, err.Error(), "datastream not connected and missing cached data", "Error should indicate connection issue")
+		assert.Nil(t, result, "Result should be nil on connection error")
+	})
+
+	t.Run("CheckFlag with cached data only", func(t *testing.T) {
+		logger := NewMockLogger()
+
+		// Create local cache providers
+		companyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
+		userCache := cache.NewLocalCache[*rulesengine.User](100, time.Minute)
+		flagCache := cache.NewLocalCache[*rulesengine.Flag](100, time.Minute)
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL: 5 * time.Minute,
+		}
+
+		clientOptions := datastream.DataStreamClientOptions{
+			ApiKey:       "test-api-key",
+			Logger:       logger,
+			CompanyCache: companyCache,
+			UserCache:    userCache,
+			FlagCache:    flagCache,
+			BaseURL:      "", // No WebSocket connection
+		}
+
+		client := datastream.NewDataStreamClient(clientOptions, configOptions)
+
+		ctx := context.Background()
+
+		// Pre-populate all caches with correct cache key format
+		testFlag := &rulesengine.Flag{
+			ID:            "flag_test",
+			AccountID:     "account_test",
+			Key:           "test-flag",
+			EnvironmentID: "env_test",
+			DefaultValue:  true,
+		}
+
+		testCompany := &rulesengine.Company{
+			ID: "company_123",
+			Keys: map[string]string{
+				"company_id": "123",
+			},
+		}
+
+		flagCache.Set(ctx, fmt.Sprintf("schematic:flags:%s:test-flag", rulesengine.VersionKey), testFlag, nil)
+		companyCache.Set(ctx, fmt.Sprintf("schematic:company:%s:company_id:123", rulesengine.VersionKey), testCompany, nil)
+
+		evalCtx := &schematicgo.CheckFlagRequestBody{
+			Company: map[string]string{"company_id": "123"},
+		}
+
+		result, err := client.CheckFlag(ctx, evalCtx, "test-flag")
+		assert.NoError(t, err, "CheckFlag should succeed with all cached data")
+		assert.NotNil(t, result, "Result should not be nil")
+		assert.True(t, result.Value, "Flag value should match the default value")
+	})
+}
+
+func TestCheckFlagErrorScenarios(t *testing.T) {
+	t.Run("CheckFlag with non-existent flag", func(t *testing.T) {
+		logger := NewMockLogger()
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL: 5 * time.Minute,
+		}
+
+		clientOptions := datastream.DataStreamClientOptions{
+			ApiKey: "test-api-key",
+			Logger: logger,
+		}
+
+		client := datastream.NewDataStreamClient(clientOptions, configOptions)
+
+		ctx := context.Background()
+		evalCtx := &schematicgo.CheckFlagRequestBody{
+			Company: map[string]string{"company_id": "123"},
+		}
+
+		result, err := client.CheckFlag(ctx, evalCtx, "non-existent-flag")
+		assert.Error(t, err, "CheckFlag should fail for non-existent flag")
+		assert.Contains(t, err.Error(), "flag not found", "Error should indicate flag not found")
+		assert.Nil(t, result, "Result should be nil for non-existent flag")
+	})
+
+	t.Run("CheckFlag with empty evaluation context", func(t *testing.T) {
+		logger := NewMockLogger()
+		flagCache := cache.NewLocalCache[*rulesengine.Flag](100, time.Minute)
+
+		configOptions := &core.DatastreamOptions{
+			CacheTTL: 5 * time.Minute,
+		}
+
+		clientOptions := datastream.DataStreamClientOptions{
+			ApiKey:    "test-api-key",
+			Logger:    logger,
+			FlagCache: flagCache,
+		}
+
+		client := datastream.NewDataStreamClient(clientOptions, configOptions)
+
+		ctx := context.Background()
+
+		// Pre-populate flag cache
+		testFlag := &rulesengine.Flag{
+			ID:            "flag_test",
+			AccountID:     "account_test",
+			Key:           "test-flag",
+			EnvironmentID: "env_test",
+			DefaultValue:  true,
+		}
+
+		// Use correct flag cache key format
+		flagCache.Set(ctx, fmt.Sprintf("schematic:flags:%s:test-flag", rulesengine.VersionKey), testFlag, nil)
+
+		// Empty evaluation context (no company or user keys)
+		evalCtx := &schematicgo.CheckFlagRequestBody{}
+
+		result, err := client.CheckFlag(ctx, evalCtx, "test-flag")
+		assert.NoError(t, err, "CheckFlag should succeed with empty context")
+		assert.NotNil(t, result, "Result should not be nil")
+		assert.True(t, result.Value, "Flag value should match the default value")
+	})
+}
+
 // Helper function to create cache keys in the same format as the datastream package
 func createTestCacheKey(resourceType string, key string, value string) string {
 	return fmt.Sprintf("schematic:%s:%s:%s:%s", resourceType, rulesengine.VersionKey, strings.ToLower(key), strings.ToLower(value))

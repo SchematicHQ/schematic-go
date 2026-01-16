@@ -773,7 +773,7 @@ client.Accounts.ListEnvironments(
 
 ```go
 request := &schematichq.CreateEnvironmentRequestBody{
-        EnvironmentType: schematichq.CreateEnvironmentRequestBodyEnvironmentTypeDevelopment,
+        EnvironmentType: schematichq.EnvironmentTypeDevelopment,
         Name: "name",
     }
 client.Accounts.CreateEnvironment(
@@ -795,7 +795,7 @@ client.Accounts.CreateEnvironment(
 <dl>
 <dd>
 
-**environmentType:** `*schematichq.CreateEnvironmentRequestBodyEnvironmentType` 
+**environmentType:** `*schematichq.EnvironmentType` 
     
 </dd>
 </dl>
@@ -901,7 +901,7 @@ client.Accounts.UpdateEnvironment(
 <dl>
 <dd>
 
-**environmentType:** `*schematichq.UpdateEnvironmentRequestBodyEnvironmentType` 
+**environmentType:** `*schematichq.EnvironmentType` 
     
 </dd>
 </dl>
@@ -1210,7 +1210,6 @@ client.Billing.UpsertBillingCoupon(
 request := &schematichq.CreateBillingCustomerRequestBody{
         Email: "email",
         ExternalID: "external_id",
-        FailedToImport: true,
         Meta: map[string]string{
             "key": "value",
         },
@@ -1267,14 +1266,6 @@ client.Billing.UpsertBillingCustomer(
 <dl>
 <dd>
 
-**failedToImport:** `bool` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **meta:** `map[string]string` 
     
 </dd>
@@ -1284,6 +1275,14 @@ client.Billing.UpsertBillingCustomer(
 <dd>
 
 **name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**providerType:** `*schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -1312,9 +1311,7 @@ request := &schematichq.ListCustomersWithSubscriptionsRequest{
         Name: schematichq.String(
             "name",
         ),
-        FailedToImport: schematichq.Bool(
-            true,
-        ),
+        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -1360,7 +1357,7 @@ client.Billing.ListCustomersWithSubscriptions(
 <dl>
 <dd>
 
-**failedToImport:** `*bool` 
+**providerType:** `*schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -1413,9 +1410,7 @@ request := &schematichq.CountCustomersRequest{
         Name: schematichq.String(
             "name",
         ),
-        FailedToImport: schematichq.Bool(
-            true,
-        ),
+        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -1461,7 +1456,7 @@ client.Billing.CountCustomers(
 <dl>
 <dd>
 
-**failedToImport:** `*bool` 
+**providerType:** `*schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -2089,7 +2084,7 @@ client.Billing.UpsertPaymentMethod(
 </dl>
 </details>
 
-<details><summary><code>client.Billing.SearchBillingPrices() -> *schematichq.SearchBillingPricesResponse</code></summary>
+<details><summary><code>client.Billing.ListBillingPrices() -> *schematichq.ListBillingPricesResponse</code></summary>
 <dl>
 <dd>
 
@@ -2102,30 +2097,34 @@ client.Billing.UpsertPaymentMethod(
 <dd>
 
 ```go
-request := &schematichq.SearchBillingPricesRequest{
+request := &schematichq.ListBillingPricesRequest{
         ForInitialPlan: schematichq.Bool(
             true,
         ),
         ForTrialExpiryPlan: schematichq.Bool(
             true,
         ),
-        ProductID: schematichq.String(
-            "product_id",
-        ),
         Interval: schematichq.String(
             "interval",
+        ),
+        IsActive: schematichq.Bool(
+            true,
         ),
         Price: schematichq.Int(
             1,
         ),
+        ProductID: schematichq.String(
+            "product_id",
+        ),
+        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
         Q: schematichq.String(
             "q",
         ),
-        RequiresPaymentMethod: schematichq.Bool(
+        TiersMode: schematichq.BillingTiersModeGraduated.Ptr(),
+        UsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
+        WithMeter: schematichq.Bool(
             true,
         ),
-        TiersMode: schematichq.SearchBillingPricesRequestTiersModeVolume.Ptr(),
-        UsageType: schematichq.SearchBillingPricesRequestUsageTypeLicensed.Ptr(),
         Limit: schematichq.Int(
             1,
         ),
@@ -2133,7 +2132,7 @@ request := &schematichq.SearchBillingPricesRequest{
             1,
         ),
     }
-client.Billing.SearchBillingPrices(
+client.Billing.ListBillingPrices(
         context.TODO(),
         request,
     )
@@ -2176,7 +2175,7 @@ client.Billing.SearchBillingPrices(
 <dl>
 <dd>
 
-**productID:** `*string` 
+**interval:** `*string` 
     
 </dd>
 </dl>
@@ -2184,7 +2183,7 @@ client.Billing.SearchBillingPrices(
 <dl>
 <dd>
 
-**interval:** `*string` 
+**isActive:** `*bool` — Filter for active prices on active products (defaults to true if not specified)
     
 </dd>
 </dl>
@@ -2200,6 +2199,30 @@ client.Billing.SearchBillingPrices(
 <dl>
 <dd>
 
+**productID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**productIDs:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**providerType:** `*schematichq.BillingProviderType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **q:** `*string` 
     
 </dd>
@@ -2208,7 +2231,7 @@ client.Billing.SearchBillingPrices(
 <dl>
 <dd>
 
-**requiresPaymentMethod:** `*bool` — Filter for prices that require a payment method (inverse of ForInitialPlan)
+**tiersMode:** `*schematichq.BillingTiersMode` 
     
 </dd>
 </dl>
@@ -2216,7 +2239,7 @@ client.Billing.SearchBillingPrices(
 <dl>
 <dd>
 
-**tiersMode:** `*schematichq.SearchBillingPricesRequestTiersMode` 
+**usageType:** `*schematichq.BillingPriceUsageType` 
     
 </dd>
 </dl>
@@ -2224,7 +2247,7 @@ client.Billing.SearchBillingPrices(
 <dl>
 <dd>
 
-**usageType:** `*schematichq.SearchBillingPricesRequestUsageType` 
+**withMeter:** `*bool` — Filter for prices with a meter
     
 </dd>
 </dl>
@@ -2266,7 +2289,7 @@ client.Billing.SearchBillingPrices(
 
 ```go
 request := &schematichq.CreateBillingPriceRequestBody{
-        BillingScheme: schematichq.CreateBillingPriceRequestBodyBillingSchemePerUnit,
+        BillingScheme: schematichq.BillingPriceSchemePerUnit,
         Currency: "currency",
         ExternalAccountID: "external_account_id",
         Interval: "interval",
@@ -2279,7 +2302,7 @@ request := &schematichq.CreateBillingPriceRequestBody{
             },
         },
         ProductExternalID: "product_external_id",
-        UsageType: schematichq.CreateBillingPriceRequestBodyUsageTypeLicensed,
+        UsageType: schematichq.BillingPriceUsageTypeLicensed,
     }
 client.Billing.UpsertBillingPrice(
         context.TODO(),
@@ -2300,7 +2323,7 @@ client.Billing.UpsertBillingPrice(
 <dl>
 <dd>
 
-**billingScheme:** `*schematichq.CreateBillingPriceRequestBodyBillingScheme` 
+**billingScheme:** `*schematichq.BillingPriceScheme` 
     
 </dd>
 </dl>
@@ -2396,7 +2419,7 @@ client.Billing.UpsertBillingPrice(
 <dl>
 <dd>
 
-**tiersMode:** `*schematichq.CreateBillingPriceRequestBodyTiersMode` 
+**providerType:** `*schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -2404,7 +2427,15 @@ client.Billing.UpsertBillingPrice(
 <dl>
 <dd>
 
-**usageType:** `*schematichq.CreateBillingPriceRequestBodyUsageType` 
+**tiersMode:** `*schematichq.BillingTiersMode` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**usageType:** `*schematichq.BillingPriceUsageType` 
     
 </dd>
 </dl>
@@ -2460,7 +2491,7 @@ client.Billing.DeleteBillingProduct(
 </dl>
 </details>
 
-<details><summary><code>client.Billing.ListProductPrices() -> *schematichq.ListProductPricesResponse</code></summary>
+<details><summary><code>client.Billing.ListBillingProductPrices() -> *schematichq.ListBillingProductPricesResponse</code></summary>
 <dl>
 <dd>
 
@@ -2473,27 +2504,32 @@ client.Billing.DeleteBillingProduct(
 <dd>
 
 ```go
-request := &schematichq.ListProductPricesRequest{
-        Name: schematichq.String(
-            "name",
+request := &schematichq.ListBillingProductPricesRequest{
+        ForInitialPlan: schematichq.Bool(
+            true,
         ),
+        ForTrialExpiryPlan: schematichq.Bool(
+            true,
+        ),
+        Interval: schematichq.String(
+            "interval",
+        ),
+        IsActive: schematichq.Bool(
+            true,
+        ),
+        Price: schematichq.Int(
+            1,
+        ),
+        ProductID: schematichq.String(
+            "product_id",
+        ),
+        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
         Q: schematichq.String(
             "q",
         ),
-        PriceUsageType: schematichq.ListProductPricesRequestPriceUsageTypeLicensed.Ptr(),
-        WithoutLinkedToPlan: schematichq.Bool(
-            true,
-        ),
-        WithOneTimeCharges: schematichq.Bool(
-            true,
-        ),
-        WithZeroPrice: schematichq.Bool(
-            true,
-        ),
-        WithPricesOnly: schematichq.Bool(
-            true,
-        ),
-        IsActive: schematichq.Bool(
+        TiersMode: schematichq.BillingTiersModeGraduated.Ptr(),
+        UsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
+        WithMeter: schematichq.Bool(
             true,
         ),
         Limit: schematichq.Int(
@@ -2503,7 +2539,7 @@ request := &schematichq.ListProductPricesRequest{
             1,
         ),
     }
-client.Billing.ListProductPrices(
+client.Billing.ListBillingProductPrices(
         context.TODO(),
         request,
     )
@@ -2522,6 +2558,22 @@ client.Billing.ListProductPrices(
 <dl>
 <dd>
 
+**forInitialPlan:** `*bool` — Filter for prices valid for initial plans (free prices only)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**forTrialExpiryPlan:** `*bool` — Filter for prices valid for trial expiry plans (free prices only)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **ids:** `*string` 
     
 </dd>
@@ -2530,7 +2582,47 @@ client.Billing.ListProductPrices(
 <dl>
 <dd>
 
-**name:** `*string` 
+**interval:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**isActive:** `*bool` — Filter for active prices on active products (defaults to true if not specified)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**price:** `*int` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**productID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**productIDs:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**providerType:** `*schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -2546,7 +2638,7 @@ client.Billing.ListProductPrices(
 <dl>
 <dd>
 
-**priceUsageType:** `*schematichq.ListProductPricesRequestPriceUsageType` 
+**tiersMode:** `*schematichq.BillingTiersMode` 
     
 </dd>
 </dl>
@@ -2554,7 +2646,7 @@ client.Billing.ListProductPrices(
 <dl>
 <dd>
 
-**withoutLinkedToPlan:** `*bool` — Filter products that are not linked to any plan
+**usageType:** `*schematichq.BillingPriceUsageType` 
     
 </dd>
 </dl>
@@ -2562,31 +2654,7 @@ client.Billing.ListProductPrices(
 <dl>
 <dd>
 
-**withOneTimeCharges:** `*bool` — Filter products that are one time charges
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**withZeroPrice:** `*bool` — Filter products that have zero price for free subscription type
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**withPricesOnly:** `*bool` — Filter products that have prices
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**isActive:** `*bool` — Filter products that are active
+**withMeter:** `*bool` — Filter for prices with a meter
     
 </dd>
 </dl>
@@ -2723,6 +2791,14 @@ client.Billing.UpsertBillingProduct(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**providerType:** `*schematichq.BillingProviderType` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -2745,26 +2821,27 @@ client.Billing.UpsertBillingProduct(
 
 ```go
 request := &schematichq.ListBillingProductsRequest{
+        IsActive: schematichq.Bool(
+            true,
+        ),
         Name: schematichq.String(
             "name",
         ),
+        PriceUsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
         Q: schematichq.String(
             "q",
         ),
-        PriceUsageType: schematichq.ListBillingProductsRequestPriceUsageTypeLicensed.Ptr(),
-        WithoutLinkedToPlan: schematichq.Bool(
-            true,
-        ),
         WithOneTimeCharges: schematichq.Bool(
-            true,
-        ),
-        WithZeroPrice: schematichq.Bool(
             true,
         ),
         WithPricesOnly: schematichq.Bool(
             true,
         ),
-        IsActive: schematichq.Bool(
+        WithZeroPrice: schematichq.Bool(
+            true,
+        ),
+        WithoutLinkedToPlan: schematichq.Bool(
             true,
         ),
         Limit: schematichq.Int(
@@ -2801,7 +2878,31 @@ client.Billing.ListBillingProducts(
 <dl>
 <dd>
 
+**isActive:** `*bool` — Filter products that are active. Defaults to true if not specified
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **name:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**priceUsageType:** `*schematichq.BillingPriceUsageType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**providerType:** `*schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -2817,31 +2918,7 @@ client.Billing.ListBillingProducts(
 <dl>
 <dd>
 
-**priceUsageType:** `*schematichq.ListBillingProductsRequestPriceUsageType` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**withoutLinkedToPlan:** `*bool` — Filter products that are not linked to any plan
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **withOneTimeCharges:** `*bool` — Filter products that are one time charges
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**withZeroPrice:** `*bool` — Filter products that have zero price for free subscription type
     
 </dd>
 </dl>
@@ -2857,7 +2934,15 @@ client.Billing.ListBillingProducts(
 <dl>
 <dd>
 
-**isActive:** `*bool` — Filter products that are active
+**withZeroPrice:** `*bool` — Filter products that have zero price for free subscription type
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**withoutLinkedToPlan:** `*bool` — Filter products that are not linked to any plan
     
 </dd>
 </dl>
@@ -2899,26 +2984,27 @@ client.Billing.ListBillingProducts(
 
 ```go
 request := &schematichq.CountBillingProductsRequest{
+        IsActive: schematichq.Bool(
+            true,
+        ),
         Name: schematichq.String(
             "name",
         ),
+        PriceUsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
         Q: schematichq.String(
             "q",
         ),
-        PriceUsageType: schematichq.CountBillingProductsRequestPriceUsageTypeLicensed.Ptr(),
-        WithoutLinkedToPlan: schematichq.Bool(
-            true,
-        ),
         WithOneTimeCharges: schematichq.Bool(
-            true,
-        ),
-        WithZeroPrice: schematichq.Bool(
             true,
         ),
         WithPricesOnly: schematichq.Bool(
             true,
         ),
-        IsActive: schematichq.Bool(
+        WithZeroPrice: schematichq.Bool(
+            true,
+        ),
+        WithoutLinkedToPlan: schematichq.Bool(
             true,
         ),
         Limit: schematichq.Int(
@@ -2955,7 +3041,31 @@ client.Billing.CountBillingProducts(
 <dl>
 <dd>
 
+**isActive:** `*bool` — Filter products that are active. Defaults to true if not specified
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **name:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**priceUsageType:** `*schematichq.BillingPriceUsageType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**providerType:** `*schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -2971,31 +3081,7 @@ client.Billing.CountBillingProducts(
 <dl>
 <dd>
 
-**priceUsageType:** `*schematichq.CountBillingProductsRequestPriceUsageType` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**withoutLinkedToPlan:** `*bool` — Filter products that are not linked to any plan
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **withOneTimeCharges:** `*bool` — Filter products that are one time charges
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**withZeroPrice:** `*bool` — Filter products that have zero price for free subscription type
     
 </dd>
 </dl>
@@ -3011,7 +3097,15 @@ client.Billing.CountBillingProducts(
 <dl>
 <dd>
 
-**isActive:** `*bool` — Filter products that are active
+**withZeroPrice:** `*bool` — Filter products that have zero price for free subscription type
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**withoutLinkedToPlan:** `*bool` — Filter products that are not linked to any plan
     
 </dd>
 </dl>
@@ -3077,7 +3171,7 @@ request := &schematichq.CreateBillingSubscriptionRequestBody{
                 PriceExternalID: "price_external_id",
                 ProductExternalID: "product_external_id",
                 Quantity: 1,
-                UsageType: schematichq.BillingProductPricingUsageTypeLicensed,
+                UsageType: schematichq.BillingPriceUsageTypeLicensed,
             },
         },
         SubscriptionExternalID: "subscription_external_id",
@@ -3098,6 +3192,14 @@ client.Billing.UpsertBillingSubscription(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**applicationID:** `*string` 
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -3238,7 +3340,7 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
-**trialEndSetting:** `*schematichq.CreateBillingSubscriptionRequestBodyTrialEndSetting` 
+**trialEndSetting:** `*schematichq.BillingSubscriptionTrialEndSetting` 
     
 </dd>
 </dl>
@@ -3367,7 +3469,7 @@ client.Credits.CreateBillingCredit(
 <dl>
 <dd>
 
-**burnStrategy:** `*schematichq.CreateBillingCreditRequestBodyBurnStrategy` 
+**burnStrategy:** `*schematichq.BillingCreditBurnStrategy` 
     
 </dd>
 </dl>
@@ -3383,7 +3485,7 @@ client.Credits.CreateBillingCredit(
 <dl>
 <dd>
 
-**defaultExpiryUnit:** `*string` 
+**defaultExpiryUnit:** `*schematichq.BillingCreditExpiryUnit` 
     
 </dd>
 </dl>
@@ -3399,7 +3501,7 @@ client.Credits.CreateBillingCredit(
 <dl>
 <dd>
 
-**defaultRolloverPolicy:** `*schematichq.CreateBillingCreditRequestBodyDefaultRolloverPolicy` 
+**defaultRolloverPolicy:** `*schematichq.BillingCreditRolloverPolicy` 
     
 </dd>
 </dl>
@@ -3556,7 +3658,7 @@ client.Credits.UpdateBillingCredit(
 <dl>
 <dd>
 
-**burnStrategy:** `*schematichq.UpdateBillingCreditRequestBodyBurnStrategy` 
+**burnStrategy:** `*schematichq.BillingCreditBurnStrategy` 
     
 </dd>
 </dl>
@@ -3564,7 +3666,7 @@ client.Credits.UpdateBillingCredit(
 <dl>
 <dd>
 
-**defaultExpiryUnit:** `*string` 
+**defaultExpiryUnit:** `*schematichq.BillingCreditExpiryUnit` 
     
 </dd>
 </dl>
@@ -3580,7 +3682,7 @@ client.Credits.UpdateBillingCredit(
 <dl>
 <dd>
 
-**defaultRolloverPolicy:** `*schematichq.UpdateBillingCreditRequestBodyDefaultRolloverPolicy` 
+**defaultRolloverPolicy:** `*schematichq.BillingCreditRolloverPolicy` 
     
 </dd>
 </dl>
@@ -3709,7 +3811,10 @@ request := &schematichq.ListCreditBundlesRequest{
         CreditID: schematichq.String(
             "credit_id",
         ),
-        Status: schematichq.ListCreditBundlesRequestStatusActive.Ptr(),
+        Status: schematichq.BillingCreditBundleStatusActive.Ptr(),
+        BundleType: &schematichq.BillingCreditBundleType(
+            "fixed",
+        ),
         Limit: schematichq.Int(
             1,
         ),
@@ -3752,7 +3857,7 @@ client.Credits.ListCreditBundles(
 <dl>
 <dd>
 
-**status:** `*schematichq.ListCreditBundlesRequestStatus` 
+**status:** `*schematichq.BillingCreditBundleStatus` 
     
 </dd>
 </dl>
@@ -3760,7 +3865,7 @@ client.Credits.ListCreditBundles(
 <dl>
 <dd>
 
-**bundleType:** `*string` 
+**bundleType:** `*schematichq.BillingCreditBundleType` 
     
 </dd>
 </dl>
@@ -3834,7 +3939,7 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
-**bundleType:** `*string` 
+**bundleType:** `*schematichq.BillingCreditBundleType` 
     
 </dd>
 </dl>
@@ -3858,7 +3963,7 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
-**expiryType:** `*schematichq.CreateCreditBundleRequestBodyExpiryType` 
+**expiryType:** `*schematichq.BillingCreditExpiryType` 
     
 </dd>
 </dl>
@@ -3866,7 +3971,7 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
-**expiryUnit:** `*schematichq.CreateCreditBundleRequestBodyExpiryUnit` 
+**expiryUnit:** `*schematichq.BillingCreditExpiryUnit` 
     
 </dd>
 </dl>
@@ -3906,7 +4011,7 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
-**status:** `*schematichq.CreateCreditBundleRequestBodyStatus` 
+**status:** `*schematichq.BillingCreditBundleStatus` 
     
 </dd>
 </dl>
@@ -4015,7 +4120,7 @@ client.Credits.UpdateCreditBundleDetails(
 <dl>
 <dd>
 
-**expiryType:** `*schematichq.UpdateCreditBundleDetailsRequestBodyExpiryType` 
+**expiryType:** `*schematichq.BillingCreditExpiryType` 
     
 </dd>
 </dl>
@@ -4023,7 +4128,7 @@ client.Credits.UpdateCreditBundleDetails(
 <dl>
 <dd>
 
-**expiryUnit:** `*schematichq.UpdateCreditBundleDetailsRequestBodyExpiryUnit` 
+**expiryUnit:** `*schematichq.BillingCreditExpiryUnit` 
     
 </dd>
 </dl>
@@ -4063,7 +4168,7 @@ client.Credits.UpdateCreditBundleDetails(
 <dl>
 <dd>
 
-**status:** `*schematichq.UpdateCreditBundleDetailsRequestBodyStatus` 
+**status:** `*schematichq.BillingCreditBundleStatus` 
     
 </dd>
 </dl>
@@ -4136,7 +4241,10 @@ request := &schematichq.CountCreditBundlesRequest{
         CreditID: schematichq.String(
             "credit_id",
         ),
-        Status: schematichq.CountCreditBundlesRequestStatusActive.Ptr(),
+        Status: schematichq.BillingCreditBundleStatusActive.Ptr(),
+        BundleType: &schematichq.BillingCreditBundleType(
+            "fixed",
+        ),
         Limit: schematichq.Int(
             1,
         ),
@@ -4179,7 +4287,7 @@ client.Credits.CountCreditBundles(
 <dl>
 <dd>
 
-**status:** `*schematichq.CountCreditBundlesRequestStatus` 
+**status:** `*schematichq.BillingCreditBundleStatus` 
     
 </dd>
 </dl>
@@ -4187,7 +4295,7 @@ client.Credits.CountCreditBundles(
 <dl>
 <dd>
 
-**bundleType:** `*string` 
+**bundleType:** `*schematichq.BillingCreditBundleType` 
     
 </dd>
 </dl>
@@ -4336,7 +4444,7 @@ client.Credits.ZeroOutGrant(
 <dl>
 <dd>
 
-**reason:** `*schematichq.ZeroOutGrantRequestBodyReason` 
+**reason:** `*schematichq.BillingCreditGrantZeroedOutReason` 
     
 </dd>
 </dl>
@@ -4365,7 +4473,7 @@ request := &schematichq.CreateCompanyCreditGrant{
         CompanyID: "company_id",
         CreditID: "credit_id",
         Quantity: 1,
-        Reason: "reason",
+        Reason: schematichq.BillingCreditGrantReasonBillingCreditAutoTopup,
     }
 client.Credits.GrantBillingCreditsToCompany(
         context.TODO(),
@@ -4418,7 +4526,7 @@ client.Credits.GrantBillingCreditsToCompany(
 <dl>
 <dd>
 
-**expiryType:** `*schematichq.CreateCompanyCreditGrantExpiryType` 
+**expiryType:** `*schematichq.BillingCreditExpiryType` 
     
 </dd>
 </dl>
@@ -4426,7 +4534,7 @@ client.Credits.GrantBillingCreditsToCompany(
 <dl>
 <dd>
 
-**expiryUnit:** `*schematichq.CreateCompanyCreditGrantExpiryUnit` 
+**expiryUnit:** `*schematichq.BillingCreditExpiryUnit` 
     
 </dd>
 </dl>
@@ -4450,7 +4558,112 @@ client.Credits.GrantBillingCreditsToCompany(
 <dl>
 <dd>
 
-**reason:** `string` 
+**reason:** `*schematichq.BillingCreditGrantReason` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**renewalEnabled:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**renewalPeriod:** `*schematichq.BillingPlanCreditGrantResetStart` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.CountCompanyGrants() -> *schematichq.CountCompanyGrantsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountCompanyGrantsRequest{
+        CompanyID: schematichq.String(
+            "company_id",
+        ),
+        Order: schematichq.CreditGrantSortOrderCreatedAt.Ptr(),
+        Dir: schematichq.SortDirectionAsc.Ptr(),
+        Limit: schematichq.Int(
+            1,
+        ),
+        Offset: schematichq.Int(
+            1,
+        ),
+    }
+client.Credits.CountCompanyGrants(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**order:** `*schematichq.CreditGrantSortOrder` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**dir:** `*schematichq.SortDirection` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -4479,8 +4692,8 @@ request := &schematichq.ListCompanyGrantsRequest{
         CompanyID: schematichq.String(
             "company_id",
         ),
-        Order: schematichq.ListCompanyGrantsRequestOrderCreatedAt.Ptr(),
-        Dir: schematichq.ListCompanyGrantsRequestDirAsc.Ptr(),
+        Order: schematichq.CreditGrantSortOrderCreatedAt.Ptr(),
+        Dir: schematichq.SortDirectionAsc.Ptr(),
         Limit: schematichq.Int(
             1,
         ),
@@ -4515,7 +4728,7 @@ client.Credits.ListCompanyGrants(
 <dl>
 <dd>
 
-**order:** `*schematichq.ListCompanyGrantsRequestOrder` 
+**order:** `*schematichq.CreditGrantSortOrder` 
     
 </dd>
 </dl>
@@ -4523,7 +4736,7 @@ client.Credits.ListCompanyGrants(
 <dl>
 <dd>
 
-**dir:** `*schematichq.ListCompanyGrantsRequestDir` 
+**dir:** `*schematichq.SortDirection` 
     
 </dd>
 </dl>
@@ -4730,7 +4943,7 @@ request := &schematichq.GetEnrichedCreditLedgerRequest{
         FeatureID: schematichq.String(
             "feature_id",
         ),
-        Period: schematichq.GetEnrichedCreditLedgerRequestPeriodDaily,
+        Period: schematichq.CreditLedgerPeriodDaily,
         StartTime: schematichq.String(
             "start_time",
         ),
@@ -4787,7 +5000,7 @@ client.Credits.GetEnrichedCreditLedger(
 <dl>
 <dd>
 
-**period:** `*schematichq.GetEnrichedCreditLedgerRequestPeriod` 
+**period:** `*schematichq.CreditLedgerPeriod` 
     
 </dd>
 </dl>
@@ -4852,7 +5065,7 @@ request := &schematichq.CountCreditLedgerRequest{
         FeatureID: schematichq.String(
             "feature_id",
         ),
-        Period: schematichq.CountCreditLedgerRequestPeriodDaily,
+        Period: schematichq.CreditLedgerPeriodDaily,
         StartTime: schematichq.String(
             "start_time",
         ),
@@ -4909,7 +5122,7 @@ client.Credits.CountCreditLedger(
 <dl>
 <dd>
 
-**period:** `*schematichq.CountCreditLedgerRequestPeriod` 
+**period:** `*schematichq.CreditLedgerPeriod` 
     
 </dd>
 </dl>
@@ -5068,8 +5281,8 @@ request := &schematichq.CreateBillingPlanCreditGrantRequestBody{
         CreditAmount: 1,
         CreditID: "credit_id",
         PlanID: "plan_id",
-        ResetCadence: schematichq.CreateBillingPlanCreditGrantRequestBodyResetCadenceMonthly,
-        ResetStart: schematichq.CreateBillingPlanCreditGrantRequestBodyResetStartBillingPeriod,
+        ResetCadence: schematichq.BillingPlanCreditGrantResetCadenceDaily,
+        ResetStart: schematichq.BillingPlanCreditGrantResetStartBillingPeriod,
     }
 client.Credits.CreateBillingPlanCreditGrant(
         context.TODO(),
@@ -5090,79 +5303,7 @@ client.Credits.CreateBillingPlanCreditGrant(
 <dl>
 <dd>
 
-**applyToExisting:** `*bool` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**creditAmount:** `int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**creditID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**expiryType:** `*schematichq.CreateBillingPlanCreditGrantRequestBodyExpiryType` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**expiryUnit:** `*schematichq.CreateBillingPlanCreditGrantRequestBodyExpiryUnit` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**expiryUnitCount:** `*int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**planID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**resetCadence:** `*schematichq.CreateBillingPlanCreditGrantRequestBodyResetCadence` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**resetStart:** `*schematichq.CreateBillingPlanCreditGrantRequestBodyResetStart` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**resetType:** `*schematichq.CreateBillingPlanCreditGrantRequestBodyResetType` 
+**request:** `*schematichq.CreateBillingPlanCreditGrantRequestBody` 
     
 </dd>
 </dl>
@@ -5188,8 +5329,8 @@ client.Credits.CreateBillingPlanCreditGrant(
 
 ```go
 request := &schematichq.UpdateBillingPlanCreditGrantRequestBody{
-        ResetCadence: schematichq.UpdateBillingPlanCreditGrantRequestBodyResetCadenceMonthly,
-        ResetStart: schematichq.UpdateBillingPlanCreditGrantRequestBodyResetStartBillingPeriod,
+        ResetCadence: schematichq.BillingPlanCreditGrantResetCadenceDaily,
+        ResetStart: schematichq.BillingPlanCreditGrantResetStartBillingPeriod,
     }
 client.Credits.UpdateBillingPlanCreditGrant(
         context.TODO(),
@@ -5219,63 +5360,7 @@ client.Credits.UpdateBillingPlanCreditGrant(
 <dl>
 <dd>
 
-**applyToExisting:** `*bool` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**creditAmount:** `*int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**expiryType:** `*schematichq.UpdateBillingPlanCreditGrantRequestBodyExpiryType` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**expiryUnit:** `*schematichq.UpdateBillingPlanCreditGrantRequestBodyExpiryUnit` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**expiryUnitCount:** `*int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**resetCadence:** `*schematichq.UpdateBillingPlanCreditGrantRequestBodyResetCadence` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**resetStart:** `*schematichq.UpdateBillingPlanCreditGrantRequestBodyResetStart` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**resetType:** `*schematichq.UpdateBillingPlanCreditGrantRequestBodyResetType` 
+**request:** `*schematichq.UpdateBillingPlanCreditGrantRequestBody` 
     
 </dd>
 </dl>
@@ -5752,6 +5837,69 @@ client.Checkout.PreviewManagePlan(
 <dd>
 
 **request:** `*schematichq.ManagePlanRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Checkout.CancelSubscription(request) -> *schematichq.CancelSubscriptionResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CancelSubscriptionRequest{
+        CompanyID: "company_id",
+    }
+client.Checkout.CancelSubscription(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**cancelImmediately:** `*bool` — If false, subscription cancels at period end. Defaults to true.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**prorate:** `*bool` — If true and cancel_immediately is true, issue prorated credit. Defaults to true.
     
 </dd>
 </dl>
@@ -6255,7 +6403,7 @@ request := &schematichq.CountCompaniesForAdvancedFilterRequest{
         SortOrderColumn: schematichq.String(
             "sort_order_column",
         ),
-        SortOrderDirection: schematichq.CountCompaniesForAdvancedFilterRequestSortOrderDirectionAsc.Ptr(),
+        SortOrderDirection: schematichq.SortDirectionAsc.Ptr(),
         Limit: schematichq.Int(
             1,
         ),
@@ -6314,7 +6462,7 @@ client.Companies.CountCompaniesForAdvancedFilter(
 <dl>
 <dd>
 
-**subscriptionStatuses:** `*string` — Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
+**subscriptionStatuses:** `*schematichq.SubscriptionStatus` — Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
     
 </dd>
 </dl>
@@ -6322,7 +6470,7 @@ client.Companies.CountCompaniesForAdvancedFilter(
 <dl>
 <dd>
 
-**subscriptionTypes:** `*string` — Filter companies by one or more subscription types (paid, free, trial)
+**subscriptionTypes:** `*schematichq.SubscriptionType` — Filter companies by one or more subscription types (paid, free, trial)
     
 </dd>
 </dl>
@@ -6370,7 +6518,7 @@ client.Companies.CountCompaniesForAdvancedFilter(
 <dl>
 <dd>
 
-**sortOrderDirection:** `*schematichq.CountCompaniesForAdvancedFilterRequestSortOrderDirection` — Direction to sort by (asc or desc)
+**sortOrderDirection:** `*schematichq.SortDirection` — Direction to sort by (asc or desc)
     
 </dd>
 </dl>
@@ -6533,7 +6681,7 @@ request := &schematichq.ListCompaniesForAdvancedFilterRequest{
         SortOrderColumn: schematichq.String(
             "sort_order_column",
         ),
-        SortOrderDirection: schematichq.ListCompaniesForAdvancedFilterRequestSortOrderDirectionAsc.Ptr(),
+        SortOrderDirection: schematichq.SortDirectionAsc.Ptr(),
         Limit: schematichq.Int(
             1,
         ),
@@ -6592,7 +6740,7 @@ client.Companies.ListCompaniesForAdvancedFilter(
 <dl>
 <dd>
 
-**subscriptionStatuses:** `*string` — Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
+**subscriptionStatuses:** `*schematichq.SubscriptionStatus` — Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
     
 </dd>
 </dl>
@@ -6600,7 +6748,7 @@ client.Companies.ListCompaniesForAdvancedFilter(
 <dl>
 <dd>
 
-**subscriptionTypes:** `*string` — Filter companies by one or more subscription types (paid, free, trial)
+**subscriptionTypes:** `*schematichq.SubscriptionType` — Filter companies by one or more subscription types (paid, free, trial)
     
 </dd>
 </dl>
@@ -6648,7 +6796,7 @@ client.Companies.ListCompaniesForAdvancedFilter(
 <dl>
 <dd>
 
-**sortOrderDirection:** `*schematichq.ListCompaniesForAdvancedFilterRequestSortOrderDirection` — Direction to sort by (asc or desc)
+**sortOrderDirection:** `*schematichq.SortDirection` — Direction to sort by (asc or desc)
     
 </dd>
 </dl>
@@ -6722,84 +6870,6 @@ client.Companies.LookupCompany(
 <dd>
 
 **keys:** `map[string]string` — Key/value pairs
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Companies.GetActiveDeals() -> *schematichq.GetActiveDealsResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.GetActiveDealsRequest{
-        CompanyID: "company_id",
-        DealStage: "deal_stage",
-        Limit: schematichq.Int(
-            1,
-        ),
-        Offset: schematichq.Int(
-            1,
-        ),
-    }
-client.Companies.GetActiveDeals(
-        context.TODO(),
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**companyID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**dealStage:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**limit:** `*int` — Page limit (default 100)
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**offset:** `*int` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -7136,7 +7206,7 @@ client.Companies.UpsertCompanyTrait(
 
 ```go
 request := &schematichq.ListEntityKeyDefinitionsRequest{
-        EntityType: schematichq.ListEntityKeyDefinitionsRequestEntityTypeCompany.Ptr(),
+        EntityType: schematichq.EntityTypeCompany.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -7166,7 +7236,7 @@ client.Companies.ListEntityKeyDefinitions(
 <dl>
 <dd>
 
-**entityType:** `*schematichq.ListEntityKeyDefinitionsRequestEntityType` 
+**entityType:** `*schematichq.EntityType` 
     
 </dd>
 </dl>
@@ -7224,7 +7294,7 @@ client.Companies.ListEntityKeyDefinitions(
 
 ```go
 request := &schematichq.CountEntityKeyDefinitionsRequest{
-        EntityType: schematichq.CountEntityKeyDefinitionsRequestEntityTypeCompany.Ptr(),
+        EntityType: schematichq.EntityTypeCompany.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -7254,7 +7324,7 @@ client.Companies.CountEntityKeyDefinitions(
 <dl>
 <dd>
 
-**entityType:** `*schematichq.CountEntityKeyDefinitionsRequestEntityType` 
+**entityType:** `*schematichq.EntityType` 
     
 </dd>
 </dl>
@@ -7312,11 +7382,11 @@ client.Companies.CountEntityKeyDefinitions(
 
 ```go
 request := &schematichq.ListEntityTraitDefinitionsRequest{
-        EntityType: schematichq.ListEntityTraitDefinitionsRequestEntityTypeCompany.Ptr(),
+        EntityType: schematichq.EntityTypeCompany.Ptr(),
         Q: schematichq.String(
             "q",
         ),
-        TraitType: schematichq.ListEntityTraitDefinitionsRequestTraitTypeBoolean.Ptr(),
+        TraitType: schematichq.TraitTypeBoolean.Ptr(),
         Limit: schematichq.Int(
             1,
         ),
@@ -7343,7 +7413,7 @@ client.Companies.ListEntityTraitDefinitions(
 <dl>
 <dd>
 
-**entityType:** `*schematichq.ListEntityTraitDefinitionsRequestEntityType` 
+**entityType:** `*schematichq.EntityType` 
     
 </dd>
 </dl>
@@ -7367,7 +7437,15 @@ client.Companies.ListEntityTraitDefinitions(
 <dl>
 <dd>
 
-**traitType:** `*schematichq.ListEntityTraitDefinitionsRequestTraitType` 
+**traitType:** `*schematichq.TraitType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**traitTypes:** `*schematichq.TraitType` 
     
 </dd>
 </dl>
@@ -7409,11 +7487,11 @@ client.Companies.ListEntityTraitDefinitions(
 
 ```go
 request := &schematichq.CreateEntityTraitDefinitionRequestBody{
-        EntityType: schematichq.CreateEntityTraitDefinitionRequestBodyEntityTypeCompany,
+        EntityType: schematichq.EntityTypeCompany,
         Hierarchy: []string{
             "hierarchy",
         },
-        TraitType: schematichq.CreateEntityTraitDefinitionRequestBodyTraitTypeBoolean,
+        TraitType: schematichq.TraitTypeBoolean,
     }
 client.Companies.GetOrCreateEntityTraitDefinition(
         context.TODO(),
@@ -7442,7 +7520,7 @@ client.Companies.GetOrCreateEntityTraitDefinition(
 <dl>
 <dd>
 
-**entityType:** `*schematichq.CreateEntityTraitDefinitionRequestBodyEntityType` 
+**entityType:** `*schematichq.EntityType` 
     
 </dd>
 </dl>
@@ -7458,7 +7536,7 @@ client.Companies.GetOrCreateEntityTraitDefinition(
 <dl>
 <dd>
 
-**traitType:** `*schematichq.CreateEntityTraitDefinitionRequestBodyTraitType` 
+**traitType:** `*schematichq.TraitType` 
     
 </dd>
 </dl>
@@ -7528,7 +7606,7 @@ client.Companies.GetEntityTraitDefinition(
 
 ```go
 request := &schematichq.UpdateEntityTraitDefinitionRequestBody{
-        TraitType: schematichq.UpdateEntityTraitDefinitionRequestBodyTraitTypeBoolean,
+        TraitType: schematichq.TraitTypeBoolean,
     }
 client.Companies.UpdateEntityTraitDefinition(
         context.TODO(),
@@ -7566,7 +7644,7 @@ client.Companies.UpdateEntityTraitDefinition(
 <dl>
 <dd>
 
-**traitType:** `*schematichq.UpdateEntityTraitDefinitionRequestBodyTraitType` 
+**traitType:** `*schematichq.TraitType` 
     
 </dd>
 </dl>
@@ -7592,11 +7670,11 @@ client.Companies.UpdateEntityTraitDefinition(
 
 ```go
 request := &schematichq.CountEntityTraitDefinitionsRequest{
-        EntityType: schematichq.CountEntityTraitDefinitionsRequestEntityTypeCompany.Ptr(),
+        EntityType: schematichq.EntityTypeCompany.Ptr(),
         Q: schematichq.String(
             "q",
         ),
-        TraitType: schematichq.CountEntityTraitDefinitionsRequestTraitTypeBoolean.Ptr(),
+        TraitType: schematichq.TraitTypeBoolean.Ptr(),
         Limit: schematichq.Int(
             1,
         ),
@@ -7623,7 +7701,7 @@ client.Companies.CountEntityTraitDefinitions(
 <dl>
 <dd>
 
-**entityType:** `*schematichq.CountEntityTraitDefinitionsRequestEntityType` 
+**entityType:** `*schematichq.EntityType` 
     
 </dd>
 </dl>
@@ -7647,7 +7725,15 @@ client.Companies.CountEntityTraitDefinitions(
 <dl>
 <dd>
 
-**traitType:** `*schematichq.CountEntityTraitDefinitionsRequestTraitType` 
+**traitType:** `*schematichq.TraitType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**traitTypes:** `*schematichq.TraitType` 
     
 </dd>
 </dl>
@@ -8238,6 +8324,7 @@ client.Companies.DeletePlanTrait(
 
 ```go
 request := &schematichq.UpdatePlanTraitBulkRequestBody{
+        ApplyToExistingCompanies: true,
         PlanID: "plan_id",
         Traits: []*schematichq.UpdatePlanTraitTraitRequestBody{
             &schematichq.UpdatePlanTraitTraitRequestBody{
@@ -8261,6 +8348,14 @@ client.Companies.UpdatePlanTraitsBulk(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**applyToExistingCompanies:** `bool` 
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -9064,7 +9159,7 @@ client.Entitlements.ListCompanyOverrides(
 request := &schematichq.CreateCompanyOverrideRequestBody{
         CompanyID: "company_id",
         FeatureID: "feature_id",
-        ValueType: schematichq.CreateCompanyOverrideRequestBodyValueTypeBoolean,
+        ValueType: schematichq.EntitlementValueTypeBoolean,
     }
 client.Entitlements.CreateCompanyOverride(
         context.TODO(),
@@ -9173,7 +9268,7 @@ client.Entitlements.CreateCompanyOverride(
 <dl>
 <dd>
 
-**valueType:** `*schematichq.CreateCompanyOverrideRequestBodyValueType` 
+**valueType:** `*schematichq.EntitlementValueType` 
     
 </dd>
 </dl>
@@ -9243,7 +9338,7 @@ client.Entitlements.GetCompanyOverride(
 
 ```go
 request := &schematichq.UpdateCompanyOverrideRequestBody{
-        ValueType: schematichq.UpdateCompanyOverrideRequestBodyValueTypeBoolean,
+        ValueType: schematichq.EntitlementValueTypeBoolean,
     }
 client.Entitlements.UpdateCompanyOverride(
         context.TODO(),
@@ -9345,7 +9440,7 @@ client.Entitlements.UpdateCompanyOverride(
 <dl>
 <dd>
 
-**valueType:** `*schematichq.UpdateCompanyOverrideRequestBodyValueType` 
+**valueType:** `*schematichq.EntitlementValueType` 
     
 </dd>
 </dl>
@@ -9706,6 +9801,9 @@ request := &schematichq.ListFeatureUsageRequest{
         CompanyID: schematichq.String(
             "company_id",
         ),
+        IncludeUsageAggregation: schematichq.Bool(
+            true,
+        ),
         Q: schematichq.String(
             "q",
         ),
@@ -9755,6 +9853,14 @@ client.Entitlements.ListFeatureUsage(
 <dd>
 
 **featureIDs:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**includeUsageAggregation:** `*bool` — Include time-bucketed usage aggregation (today, this week, this month, billing period) for credit-based entitlements. Defaults to false for performance.
     
 </dd>
 </dl>
@@ -9815,6 +9921,9 @@ request := &schematichq.CountFeatureUsageRequest{
         CompanyID: schematichq.String(
             "company_id",
         ),
+        IncludeUsageAggregation: schematichq.Bool(
+            true,
+        ),
         Q: schematichq.String(
             "q",
         ),
@@ -9864,6 +9973,14 @@ client.Entitlements.CountFeatureUsage(
 <dd>
 
 **featureIDs:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**includeUsageAggregation:** `*bool` — Include time-bucketed usage aggregation (today, this week, this month, billing period) for credit-based entitlements. Defaults to false for performance.
     
 </dd>
 </dl>
@@ -10211,7 +10328,7 @@ client.Entitlements.ListPlanEntitlements(
 request := &schematichq.CreatePlanEntitlementRequestBody{
         FeatureID: "feature_id",
         PlanID: "plan_id",
-        ValueType: schematichq.CreatePlanEntitlementRequestBodyValueTypeBoolean,
+        ValueType: schematichq.EntitlementValueTypeBoolean,
     }
 client.Entitlements.CreatePlanEntitlement(
         context.TODO(),
@@ -10336,7 +10453,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**priceBehavior:** `*schematichq.CreatePlanEntitlementRequestBodyPriceBehavior` 
+**priceBehavior:** `*schematichq.EntitlementPriceBehavior` 
     
 </dd>
 </dl>
@@ -10360,7 +10477,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**tierMode:** `*string` 
+**tierMode:** `*schematichq.BillingTiersMode` 
     
 </dd>
 </dl>
@@ -10400,7 +10517,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**valueType:** `*schematichq.CreatePlanEntitlementRequestBodyValueType` 
+**valueType:** `*schematichq.EntitlementValueType` 
     
 </dd>
 </dl>
@@ -10502,7 +10619,7 @@ client.Entitlements.GetPlanEntitlement(
 
 ```go
 request := &schematichq.UpdatePlanEntitlementRequestBody{
-        ValueType: schematichq.UpdatePlanEntitlementRequestBodyValueTypeBoolean,
+        ValueType: schematichq.EntitlementValueTypeBoolean,
     }
 client.Entitlements.UpdatePlanEntitlement(
         context.TODO(),
@@ -10620,7 +10737,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**priceBehavior:** `*schematichq.UpdatePlanEntitlementRequestBodyPriceBehavior` 
+**priceBehavior:** `*schematichq.EntitlementPriceBehavior` 
     
 </dd>
 </dl>
@@ -10644,7 +10761,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**tierMode:** `*string` 
+**tierMode:** `*schematichq.BillingTiersMode` 
     
 </dd>
 </dl>
@@ -10684,7 +10801,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**valueType:** `*schematichq.UpdatePlanEntitlementRequestBodyValueType` 
+**valueType:** `*schematichq.EntitlementValueType` 
     
 </dd>
 </dl>
@@ -10900,6 +11017,62 @@ client.Entitlements.CountPlanEntitlements(
 </dl>
 </details>
 
+<details><summary><code>client.Entitlements.DuplicatePlanEntitlements(request) -> *schematichq.DuplicatePlanEntitlementsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.DuplicatePlanEntitlementsRequestBody{
+        SourcePlanID: "source_plan_id",
+        TargetPlanID: "target_plan_id",
+    }
+client.Entitlements.DuplicatePlanEntitlements(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**sourcePlanID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**targetPlanID:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Entitlements.GetFeatureUsageByCompany() -> *schematichq.GetFeatureUsageByCompanyResponse</code></summary>
 <dl>
 <dd>
@@ -11045,18 +11218,12 @@ request := &schematichq.ListPlansRequest{
         HasProductID: schematichq.Bool(
             true,
         ),
-        PlanType: schematichq.ListPlansRequestPlanTypePlan.Ptr(),
+        PlanType: schematichq.PlanTypePlan.Ptr(),
         Q: schematichq.String(
             "q",
         ),
-        RequiresPaymentMethod: schematichq.Bool(
-            true,
-        ),
         WithoutEntitlementFor: schematichq.String(
             "without_entitlement_for",
-        ),
-        WithoutProductID: schematichq.Bool(
-            true,
         ),
         WithoutPaidProductID: schematichq.Bool(
             true,
@@ -11135,7 +11302,7 @@ client.Plans.ListPlans(
 <dl>
 <dd>
 
-**planType:** `*schematichq.ListPlansRequestPlanType` — Filter by plan type
+**planType:** `*schematichq.PlanType` — Filter by plan type
     
 </dd>
 </dl>
@@ -11151,23 +11318,7 @@ client.Plans.ListPlans(
 <dl>
 <dd>
 
-**requiresPaymentMethod:** `*bool` — Filter for plans that require a payment method (inverse of ForInitialPlan)
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **withoutEntitlementFor:** `*string` — Filter out plans that already have a plan entitlement for the specified feature ID
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**withoutProductID:** `*bool` — Filter out plans that have a billing product ID
     
 </dd>
 </dl>
@@ -11219,7 +11370,7 @@ client.Plans.ListPlans(
 request := &schematichq.CreatePlanRequestBody{
         Description: "description",
         Name: "name",
-        PlanType: schematichq.CreatePlanRequestBodyPlanTypePlan,
+        PlanType: schematichq.PlanTypePlan,
     }
 client.Plans.CreatePlan(
         context.TODO(),
@@ -11240,31 +11391,7 @@ client.Plans.CreatePlan(
 <dl>
 <dd>
 
-**description:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**icon:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**name:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**planType:** `*schematichq.CreatePlanRequestBodyPlanType` 
+**request:** `*schematichq.CreatePlanRequestBody` 
     
 </dd>
 </dl>
@@ -11364,23 +11491,7 @@ client.Plans.UpdatePlan(
 <dl>
 <dd>
 
-**description:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**icon:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**name:** `string` 
+**request:** `*schematichq.UpdatePlanRequestBody` 
     
 </dd>
 </dl>
@@ -11450,7 +11561,7 @@ client.Plans.DeletePlan(
 
 ```go
 request := &schematichq.UpsertBillingProductRequestBody{
-        ChargeType: schematichq.UpsertBillingProductRequestBodyChargeTypeOneTime,
+        ChargeType: schematichq.ChargeTypeFree,
         IsTrialable: true,
     }
 client.Plans.UpsertBillingProductPlan(
@@ -11481,87 +11592,7 @@ client.Plans.UpsertBillingProductPlan(
 <dl>
 <dd>
 
-**billingProductID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**chargeType:** `*schematichq.UpsertBillingProductRequestBodyChargeType` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**currency:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**isTrialable:** `bool` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**monthlyPrice:** `*int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**monthlyPriceID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**oneTimePrice:** `*int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**oneTimePriceID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**trialDays:** `*int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**yearlyPrice:** `*int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**yearlyPriceID:** `*string` 
+**request:** `*schematichq.UpsertBillingProductRequestBody` 
     
 </dd>
 </dl>
@@ -11602,18 +11633,12 @@ request := &schematichq.CountPlansRequest{
         HasProductID: schematichq.Bool(
             true,
         ),
-        PlanType: schematichq.CountPlansRequestPlanTypePlan.Ptr(),
+        PlanType: schematichq.PlanTypePlan.Ptr(),
         Q: schematichq.String(
             "q",
         ),
-        RequiresPaymentMethod: schematichq.Bool(
-            true,
-        ),
         WithoutEntitlementFor: schematichq.String(
             "without_entitlement_for",
-        ),
-        WithoutProductID: schematichq.Bool(
-            true,
         ),
         WithoutPaidProductID: schematichq.Bool(
             true,
@@ -11692,7 +11717,7 @@ client.Plans.CountPlans(
 <dl>
 <dd>
 
-**planType:** `*schematichq.CountPlansRequestPlanType` — Filter by plan type
+**planType:** `*schematichq.PlanType` — Filter by plan type
     
 </dd>
 </dl>
@@ -11708,23 +11733,7 @@ client.Plans.CountPlans(
 <dl>
 <dd>
 
-**requiresPaymentMethod:** `*bool` — Filter for plans that require a payment method (inverse of ForInitialPlan)
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **withoutEntitlementFor:** `*string` — Filter out plans that already have a plan entitlement for the specified feature ID
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**withoutProductID:** `*bool` — Filter out plans that have a billing product ID
     
 </dd>
 </dl>
@@ -11893,7 +11902,7 @@ client.Components.ListComponents(
 
 ```go
 request := &schematichq.CreateComponentRequestBody{
-        EntityType: schematichq.CreateComponentRequestBodyEntityTypeEntitlement,
+        EntityType: schematichq.ComponentEntityTypeBilling,
         Name: "name",
     }
 client.Components.CreateComponent(
@@ -11923,7 +11932,7 @@ client.Components.CreateComponent(
 <dl>
 <dd>
 
-**entityType:** `*schematichq.CreateComponentRequestBodyEntityType` 
+**entityType:** `*schematichq.ComponentEntityType` 
     
 </dd>
 </dl>
@@ -12037,7 +12046,7 @@ client.Components.UpdateComponent(
 <dl>
 <dd>
 
-**entityType:** `*schematichq.UpdateComponentRequestBodyEntityType` 
+**entityType:** `*schematichq.ComponentEntityType` 
     
 </dd>
 </dl>
@@ -12053,7 +12062,7 @@ client.Components.UpdateComponent(
 <dl>
 <dd>
 
-**state:** `*schematichq.UpdateComponentRequestBodyState` 
+**state:** `*schematichq.ComponentState` 
     
 </dd>
 </dl>
@@ -12240,472 +12249,6 @@ client.Components.PreviewComponentData(
 </dl>
 </details>
 
-## crm
-<details><summary><code>client.Crm.UpsertDealLineItemAssociation(request) -> *schematichq.UpsertDealLineItemAssociationResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.CreateCrmDealLineItemAssociationRequestBody{
-        DealExternalID: "deal_external_id",
-        LineItemExternalID: "line_item_external_id",
-    }
-client.Crm.UpsertDealLineItemAssociation(
-        context.TODO(),
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**dealExternalID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**lineItemExternalID:** `string` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Crm.UpsertLineItem(request) -> *schematichq.UpsertLineItemResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.CreateCrmLineItemRequestBody{
-        Amount: "amount",
-        Interval: "interval",
-        LineItemExternalID: "line_item_external_id",
-        ProductExternalID: "product_external_id",
-        Quantity: 1,
-    }
-client.Crm.UpsertLineItem(
-        context.TODO(),
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**amount:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**discountPercentage:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**interval:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**lineItemExternalID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**productExternalID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**quantity:** `int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**termMonth:** `*int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**totalDiscount:** `*string` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Crm.UpsertCrmDeal(request) -> *schematichq.UpsertCrmDealResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.CreateCrmDealRequestBody{
-        CrmCompanyKey: "crm_company_key",
-        CrmType: "crm_type",
-        DealExternalID: "deal_external_id",
-    }
-client.Crm.UpsertCrmDeal(
-        context.TODO(),
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**arr:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**crmCompanyID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**crmCompanyKey:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**crmProductID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**crmType:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**dealExternalID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**dealName:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**dealStage:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**mrr:** `*string` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Crm.ListCrmProducts() -> *schematichq.ListCrmProductsResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.ListCrmProductsRequest{
-        Name: schematichq.String(
-            "name",
-        ),
-        Limit: schematichq.Int(
-            1,
-        ),
-        Offset: schematichq.Int(
-            1,
-        ),
-    }
-client.Crm.ListCrmProducts(
-        context.TODO(),
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**ids:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**name:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**limit:** `*int` — Page limit (default 100)
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**offset:** `*int` — Page offset (default 0)
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Crm.UpsertCrmProduct(request) -> *schematichq.UpsertCrmProductResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.CreateCrmProductRequestBody{
-        Currency: "currency",
-        Description: "description",
-        ExternalID: "external_id",
-        Interval: "interval",
-        Name: "name",
-        Price: "price",
-        Quantity: 1,
-        Sku: "sku",
-    }
-client.Crm.UpsertCrmProduct(
-        context.TODO(),
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**currency:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**description:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**externalID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**interval:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**name:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**price:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**quantity:** `int` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**sku:** `string` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 ## dataexports
 <details><summary><code>client.Dataexports.CreateDataExport(request) -> *schematichq.CreateDataExportResponse</code></summary>
 <dl>
@@ -12721,7 +12264,13 @@ client.Crm.UpsertCrmProduct(
 
 ```go
 request := &schematichq.CreateDataExportRequestBody{
+        ExportType: schematichq.DataExportType(
+            "company-feature-usage",
+        ),
         Metadata: "metadata",
+        OutputFileType: schematichq.DataExportOutputFileType(
+            "csv",
+        ),
     }
 client.Dataexports.CreateDataExport(
         context.TODO(),
@@ -12742,7 +12291,7 @@ client.Dataexports.CreateDataExport(
 <dl>
 <dd>
 
-**exportType:** `string` 
+**exportType:** `schematichq.DataExportType` 
     
 </dd>
 </dl>
@@ -12758,7 +12307,7 @@ client.Dataexports.CreateDataExport(
 <dl>
 <dd>
 
-**outputFileType:** `string` 
+**outputFileType:** `schematichq.DataExportOutputFileType` 
     
 </dd>
 </dl>
@@ -12831,7 +12380,7 @@ client.Dataexports.GetDataExportArtifact(
 request := &schematichq.CreateEventBatchRequestBody{
         Events: []*schematichq.CreateEventRequestBody{
             &schematichq.CreateEventRequestBody{
-                EventType: schematichq.CreateEventRequestBodyEventTypeIdentify,
+                EventType: schematichq.EventTypeFlagCheck,
             },
         },
     }
@@ -13013,7 +12562,7 @@ client.Events.ListEvents(
 <dl>
 <dd>
 
-**eventTypes:** `*schematichq.ListEventsRequestEventTypesItem` 
+**eventTypes:** `*schematichq.EventType` 
     
 </dd>
 </dl>
@@ -13071,7 +12620,7 @@ client.Events.ListEvents(
 
 ```go
 request := &schematichq.CreateEventRequestBody{
-        EventType: schematichq.CreateEventRequestBodyEventTypeIdentify,
+        EventType: schematichq.EventTypeFlagCheck,
     }
 client.Events.CreateEvent(
         context.TODO(),
@@ -13261,7 +12810,7 @@ client.Features.ListFeatures(
 <dl>
 <dd>
 
-**featureType:** `*string` — Filter by one or more feature types (boolean, event, trait)
+**featureType:** `*schematichq.FeatureType` — Filter by one or more feature types (boolean, event, trait)
     
 </dd>
 </dl>
@@ -13312,7 +12861,7 @@ client.Features.ListFeatures(
 ```go
 request := &schematichq.CreateFeatureRequestBody{
         Description: "description",
-        FeatureType: schematichq.CreateFeatureRequestBodyFeatureTypeBoolean,
+        FeatureType: schematichq.FeatureTypeBoolean,
         Name: "name",
     }
 client.Features.CreateFeature(
@@ -13350,7 +12899,7 @@ client.Features.CreateFeature(
 <dl>
 <dd>
 
-**featureType:** `*schematichq.CreateFeatureRequestBodyFeatureType` 
+**featureType:** `*schematichq.FeatureType` 
     
 </dd>
 </dl>
@@ -13374,7 +12923,7 @@ client.Features.CreateFeature(
 <dl>
 <dd>
 
-**lifecyclePhase:** `*schematichq.CreateFeatureRequestBodyLifecyclePhase` 
+**lifecyclePhase:** `*schematichq.FeatureLifecyclePhase` 
     
 </dd>
 </dl>
@@ -13528,7 +13077,7 @@ client.Features.UpdateFeature(
 <dl>
 <dd>
 
-**featureType:** `*schematichq.UpdateFeatureRequestBodyFeatureType` 
+**featureType:** `*schematichq.FeatureType` 
     
 </dd>
 </dl>
@@ -13552,7 +13101,7 @@ client.Features.UpdateFeature(
 <dl>
 <dd>
 
-**lifecyclePhase:** `*schematichq.UpdateFeatureRequestBodyLifecyclePhase` 
+**lifecyclePhase:** `*schematichq.FeatureLifecyclePhase` 
     
 </dd>
 </dl>
@@ -13732,7 +13281,7 @@ client.Features.CountFeatures(
 <dl>
 <dd>
 
-**featureType:** `*string` — Filter by one or more feature types (boolean, event, trait)
+**featureType:** `*schematichq.FeatureType` — Filter by one or more feature types (boolean, event, trait)
     
 </dd>
 </dl>
@@ -13874,6 +13423,9 @@ client.Features.ListFlags(
 request := &schematichq.CreateFlagRequestBody{
         DefaultValue: true,
         Description: "description",
+        FlagType: schematichq.FlagType(
+            "boolean",
+        ),
         Key: "key",
         Name: "name",
     }
@@ -13968,6 +13520,9 @@ client.Features.GetFlag(
 request := &schematichq.CreateFlagRequestBody{
         DefaultValue: true,
         Description: "description",
+        FlagType: schematichq.FlagType(
+            "boolean",
+        ),
         Key: "key",
         Name: "name",
     }
@@ -14238,6 +13793,55 @@ client.Features.CheckFlags(
 </dl>
 </details>
 
+<details><summary><code>client.Features.CheckFlagsBulk(request) -> *schematichq.CheckFlagsBulkResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CheckFlagsBulkRequestBody{
+        Contexts: []*schematichq.CheckFlagRequestBody{
+            &schematichq.CheckFlagRequestBody{},
+        },
+    }
+client.Features.CheckFlagsBulk(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**contexts:** `[]*schematichq.CheckFlagRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Features.CountFlags() -> *schematichq.CountFlagsResponse</code></summary>
 <dl>
 <dd>
@@ -14328,6 +13932,182 @@ client.Features.CountFlags(
 </dl>
 </details>
 
+## planbundle
+<details><summary><code>client.Planbundle.CreatePlanBundle(request) -> *schematichq.CreatePlanBundleResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreatePlanBundleRequestBody{
+        Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
+            &schematichq.PlanBundleEntitlementRequestBody{
+                Action: schematichq.PlanBundleActionCreate,
+            },
+        },
+    }
+client.Planbundle.CreatePlanBundle(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProduct:** `*schematichq.UpsertBillingProductRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditGrants:** `[]*schematichq.PlanBundleCreditGrantRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**entitlements:** `[]*schematichq.PlanBundleEntitlementRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**plan:** `*schematichq.CreatePlanRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**traits:** `[]*schematichq.UpdatePlanTraitTraitRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Planbundle.UpdatePlanBundle(PlanBundleID, request) -> *schematichq.UpdatePlanBundleResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdatePlanBundleRequestBody{
+        Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
+            &schematichq.PlanBundleEntitlementRequestBody{
+                Action: schematichq.PlanBundleActionCreate,
+            },
+        },
+    }
+client.Planbundle.UpdatePlanBundle(
+        context.TODO(),
+        "plan_bundle_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planBundleID:** `string` — plan_bundle_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**billingProduct:** `*schematichq.UpsertBillingProductRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditGrants:** `[]*schematichq.PlanBundleCreditGrantRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**entitlements:** `[]*schematichq.PlanBundleEntitlementRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**plan:** `*schematichq.UpdatePlanRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**traits:** `[]*schematichq.UpdatePlanTraitTraitRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## plangroups
 <details><summary><code>client.Plangroups.GetPlanGroup() -> *schematichq.GetPlanGroupResponse</code></summary>
 <dl>
@@ -14394,10 +14174,13 @@ request := &schematichq.CreatePlanGroupRequestBody{
             },
         },
         PreventDowngradesWhenOverLimit: true,
+        PreventSelfServiceDowngrade: true,
+        ProrationBehavior: schematichq.ProrationBehaviorCreateProrations,
+        ShowAsMonthlyPrices: true,
         ShowCredits: true,
         ShowPeriodToggle: true,
         ShowZeroPriceAsFree: true,
-        SyncCustomerBillingDetailsForTax: true,
+        SyncCustomerBillingDetails: true,
     }
 client.Plangroups.CreatePlanGroup(
         context.TODO(),
@@ -14538,6 +14321,46 @@ client.Plangroups.CreatePlanGroup(
 <dl>
 <dd>
 
+**preventSelfServiceDowngrade:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**preventSelfServiceDowngradeButtonText:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**preventSelfServiceDowngradeURL:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**prorationBehavior:** `*schematichq.ProrationBehavior` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**showAsMonthlyPrices:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **showCredits:** `bool` 
     
 </dd>
@@ -14562,7 +14385,7 @@ client.Plangroups.CreatePlanGroup(
 <dl>
 <dd>
 
-**syncCustomerBillingDetailsForTax:** `bool` 
+**syncCustomerBillingDetails:** `bool` 
     
 </dd>
 </dl>
@@ -14643,10 +14466,13 @@ request := &schematichq.UpdatePlanGroupRequestBody{
             },
         },
         PreventDowngradesWhenOverLimit: true,
+        PreventSelfServiceDowngrade: true,
+        ProrationBehavior: schematichq.ProrationBehaviorCreateProrations,
+        ShowAsMonthlyPrices: true,
         ShowCredits: true,
         ShowPeriodToggle: true,
         ShowZeroPriceAsFree: true,
-        SyncCustomerBillingDetailsForTax: true,
+        SyncCustomerBillingDetails: true,
     }
 client.Plangroups.UpdatePlanGroup(
         context.TODO(),
@@ -14796,6 +14622,46 @@ client.Plangroups.UpdatePlanGroup(
 <dl>
 <dd>
 
+**preventSelfServiceDowngrade:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**preventSelfServiceDowngradeButtonText:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**preventSelfServiceDowngradeURL:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**prorationBehavior:** `*schematichq.ProrationBehavior` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**showAsMonthlyPrices:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **showCredits:** `bool` 
     
 </dd>
@@ -14820,7 +14686,7 @@ client.Plangroups.UpdatePlanGroup(
 <dl>
 <dd>
 
-**syncCustomerBillingDetailsForTax:** `bool` 
+**syncCustomerBillingDetails:** `bool` 
     
 </dd>
 </dl>
@@ -14882,6 +14748,9 @@ request := &schematichq.IssueTemporaryAccessTokenRequestBody{
         Lookup: map[string]string{
             "key": "value",
         },
+        ResourceType: schematichq.TemporaryAccessTokenResourceType(
+            "company",
+        ),
     }
 client.Accesstokens.IssueTemporaryAccessToken(
         context.TODO(),
@@ -14910,7 +14779,7 @@ client.Accesstokens.IssueTemporaryAccessToken(
 <dl>
 <dd>
 
-**resourceType:** `string` 
+**resourceType:** `schematichq.TemporaryAccessTokenResourceType` 
     
 </dd>
 </dl>
@@ -15233,8 +15102,8 @@ client.Webhooks.ListWebhooks(
 ```go
 request := &schematichq.CreateWebhookRequestBody{
         Name: "name",
-        RequestTypes: []schematichq.CreateWebhookRequestBodyRequestTypesItem{
-            schematichq.CreateWebhookRequestBodyRequestTypesItemCompanyUpdated,
+        RequestTypes: []schematichq.WebhookRequestType{
+            schematichq.WebhookRequestTypeSubscriptionTrialEnded,
         },
         URL: "url",
     }
@@ -15281,7 +15150,7 @@ client.Webhooks.CreateWebhook(
 <dl>
 <dd>
 
-**requestTypes:** `[]*schematichq.CreateWebhookRequestBodyRequestTypesItem` 
+**requestTypes:** `[]*schematichq.WebhookRequestType` 
     
 </dd>
 </dl>
@@ -15411,7 +15280,7 @@ client.Webhooks.UpdateWebhook(
 <dl>
 <dd>
 
-**requestTypes:** `[]*schematichq.UpdateWebhookRequestBodyRequestTypesItem` 
+**requestTypes:** `[]*schematichq.WebhookRequestType` 
     
 </dd>
 </dl>
@@ -15419,7 +15288,7 @@ client.Webhooks.UpdateWebhook(
 <dl>
 <dd>
 
-**status:** `*schematichq.UpdateWebhookRequestBodyStatus` 
+**status:** `*schematichq.WebhookStatus` 
     
 </dd>
 </dl>

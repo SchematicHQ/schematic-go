@@ -11,19 +11,16 @@ import (
 )
 
 var (
-	issueTemporaryAccessTokenRequestBodyFieldLookup = big.NewInt(1 << 0)
+	issueTemporaryAccessTokenRequestBodyFieldLookup       = big.NewInt(1 << 0)
+	issueTemporaryAccessTokenRequestBodyFieldResourceType = big.NewInt(1 << 1)
 )
 
 type IssueTemporaryAccessTokenRequestBody struct {
-	Lookup       map[string]string `json:"lookup,omitempty" url:"-"`
-	resourceType string
+	Lookup       map[string]string                `json:"lookup,omitempty" url:"-"`
+	ResourceType TemporaryAccessTokenResourceType `json:"resource_type,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
-}
-
-func (i *IssueTemporaryAccessTokenRequestBody) ResourceType() string {
-	return i.resourceType
 }
 
 func (i *IssueTemporaryAccessTokenRequestBody) require(field *big.Int) {
@@ -40,28 +37,11 @@ func (i *IssueTemporaryAccessTokenRequestBody) SetLookup(lookup map[string]strin
 	i.require(issueTemporaryAccessTokenRequestBodyFieldLookup)
 }
 
-func (i *IssueTemporaryAccessTokenRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler IssueTemporaryAccessTokenRequestBody
-	var body unmarshaler
-	if err := json.Unmarshal(data, &body); err != nil {
-		return err
-	}
-	*i = IssueTemporaryAccessTokenRequestBody(body)
-	i.resourceType = "company"
-	return nil
-}
-
-func (i *IssueTemporaryAccessTokenRequestBody) MarshalJSON() ([]byte, error) {
-	type embed IssueTemporaryAccessTokenRequestBody
-	var marshaler = struct {
-		embed
-		ResourceType string `json:"resource_type"`
-	}{
-		embed:        embed(*i),
-		ResourceType: "company",
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
-	return json.Marshal(explicitMarshaler)
+// SetResourceType sets the ResourceType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IssueTemporaryAccessTokenRequestBody) SetResourceType(resourceType TemporaryAccessTokenResourceType) {
+	i.ResourceType = resourceType
+	i.require(issueTemporaryAccessTokenRequestBodyFieldResourceType)
 }
 
 var (
@@ -76,14 +56,14 @@ var (
 )
 
 type IssueTemporaryAccessTokenResponseData struct {
-	APIKeyID      string    `json:"api_key_id" url:"api_key_id"`
-	CreatedAt     time.Time `json:"created_at" url:"created_at"`
-	EnvironmentID string    `json:"environment_id" url:"environment_id"`
-	ExpiredAt     time.Time `json:"expired_at" url:"expired_at"`
-	ID            string    `json:"id" url:"id"`
-	ResourceType  string    `json:"resource_type" url:"resource_type"`
-	Token         string    `json:"token" url:"token"`
-	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
+	APIKeyID      string                           `json:"api_key_id" url:"api_key_id"`
+	CreatedAt     time.Time                        `json:"created_at" url:"created_at"`
+	EnvironmentID string                           `json:"environment_id" url:"environment_id"`
+	ExpiredAt     time.Time                        `json:"expired_at" url:"expired_at"`
+	ID            string                           `json:"id" url:"id"`
+	ResourceType  TemporaryAccessTokenResourceType `json:"resource_type" url:"resource_type"`
+	Token         string                           `json:"token" url:"token"`
+	UpdatedAt     time.Time                        `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -125,13 +105,6 @@ func (i *IssueTemporaryAccessTokenResponseData) GetID() string {
 		return ""
 	}
 	return i.ID
-}
-
-func (i *IssueTemporaryAccessTokenResponseData) GetResourceType() string {
-	if i == nil {
-		return ""
-	}
-	return i.ResourceType
 }
 
 func (i *IssueTemporaryAccessTokenResponseData) GetToken() string {
@@ -196,7 +169,7 @@ func (i *IssueTemporaryAccessTokenResponseData) SetID(id string) {
 
 // SetResourceType sets the ResourceType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *IssueTemporaryAccessTokenResponseData) SetResourceType(resourceType string) {
+func (i *IssueTemporaryAccessTokenResponseData) SetResourceType(resourceType TemporaryAccessTokenResourceType) {
 	i.ResourceType = resourceType
 	i.require(issueTemporaryAccessTokenResponseDataFieldResourceType)
 }
@@ -269,6 +242,8 @@ func (i *IssueTemporaryAccessTokenResponseData) String() string {
 	}
 	return fmt.Sprintf("%#v", i)
 }
+
+type TemporaryAccessTokenResourceType = string
 
 var (
 	issueTemporaryAccessTokenResponseFieldData   = big.NewInt(1 << 0)

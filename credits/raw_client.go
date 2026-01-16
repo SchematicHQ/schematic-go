@@ -675,6 +675,54 @@ func (r *RawClient) GrantBillingCreditsToCompany(
 	}, nil
 }
 
+func (r *RawClient) CountCompanyGrants(
+	ctx context.Context,
+	request *schematichq.CountCompanyGrantsRequest,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.CountCompanyGrantsResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := baseURL + "/billing/credits/grants/company/count"
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	var response *schematichq.CountCompanyGrantsResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.CountCompanyGrantsResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
 func (r *RawClient) ListCompanyGrants(
 	ctx context.Context,
 	request *schematichq.ListCompanyGrantsRequest,
@@ -979,7 +1027,6 @@ func (r *RawClient) CreateBillingPlanCreditGrant(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CreateBillingPlanCreditGrantResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -1027,7 +1074,6 @@ func (r *RawClient) UpdateBillingPlanCreditGrant(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	headers.Add("Content-Type", "application/json")
 	var response *schematichq.UpdateBillingPlanCreditGrantResponse
 	raw, err := r.caller.Call(
 		ctx,

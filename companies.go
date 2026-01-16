@@ -134,9 +134,9 @@ type CountCompaniesForAdvancedFilterRequest struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
 	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
-	SubscriptionStatuses []*string `json:"-" url:"subscription_statuses,omitempty"`
+	SubscriptionStatuses []*SubscriptionStatus `json:"-" url:"subscription_statuses,omitempty"`
 	// Filter companies by one or more subscription types (paid, free, trial)
-	SubscriptionTypes []*string `json:"-" url:"subscription_types,omitempty"`
+	SubscriptionTypes []*SubscriptionType `json:"-" url:"subscription_types,omitempty"`
 	// Filter companies that have monetized subscriptions
 	MonetizedSubscriptions *bool `json:"-" url:"monetized_subscriptions,omitempty"`
 	// Search for companies by name, keys or string traits
@@ -148,7 +148,7 @@ type CountCompaniesForAdvancedFilterRequest struct {
 	// Column to sort by (e.g. name, created_at, last_seen_at)
 	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
 	// Direction to sort by (asc or desc)
-	SortOrderDirection *CountCompaniesForAdvancedFilterRequestSortOrderDirection `json:"-" url:"sort_order_direction,omitempty"`
+	SortOrderDirection *SortDirection `json:"-" url:"sort_order_direction,omitempty"`
 	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
 	DisplayProperties []*string `json:"-" url:"display_properties,omitempty"`
 	// Page limit (default 100)
@@ -197,14 +197,14 @@ func (c *CountCompaniesForAdvancedFilterRequest) SetCreditTypeIDs(creditTypeIDs 
 
 // SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetSubscriptionStatuses(subscriptionStatuses []*string) {
+func (c *CountCompaniesForAdvancedFilterRequest) SetSubscriptionStatuses(subscriptionStatuses []*SubscriptionStatus) {
 	c.SubscriptionStatuses = subscriptionStatuses
 	c.require(countCompaniesForAdvancedFilterRequestFieldSubscriptionStatuses)
 }
 
 // SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetSubscriptionTypes(subscriptionTypes []*string) {
+func (c *CountCompaniesForAdvancedFilterRequest) SetSubscriptionTypes(subscriptionTypes []*SubscriptionType) {
 	c.SubscriptionTypes = subscriptionTypes
 	c.require(countCompaniesForAdvancedFilterRequestFieldSubscriptionTypes)
 }
@@ -246,7 +246,7 @@ func (c *CountCompaniesForAdvancedFilterRequest) SetSortOrderColumn(sortOrderCol
 
 // SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetSortOrderDirection(sortOrderDirection *CountCompaniesForAdvancedFilterRequestSortOrderDirection) {
+func (c *CountCompaniesForAdvancedFilterRequest) SetSortOrderDirection(sortOrderDirection *SortDirection) {
 	c.SortOrderDirection = sortOrderDirection
 	c.require(countCompaniesForAdvancedFilterRequestFieldSortOrderDirection)
 }
@@ -281,9 +281,9 @@ var (
 )
 
 type CountEntityKeyDefinitionsRequest struct {
-	EntityType *CountEntityKeyDefinitionsRequestEntityType `json:"-" url:"entity_type,omitempty"`
-	IDs        []*string                                   `json:"-" url:"ids,omitempty"`
-	Q          *string                                     `json:"-" url:"q,omitempty"`
+	EntityType *EntityType `json:"-" url:"entity_type,omitempty"`
+	IDs        []*string   `json:"-" url:"ids,omitempty"`
+	Q          *string     `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -302,7 +302,7 @@ func (c *CountEntityKeyDefinitionsRequest) require(field *big.Int) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityKeyDefinitionsRequest) SetEntityType(entityType *CountEntityKeyDefinitionsRequestEntityType) {
+func (c *CountEntityKeyDefinitionsRequest) SetEntityType(entityType *EntityType) {
 	c.EntityType = entityType
 	c.require(countEntityKeyDefinitionsRequestFieldEntityType)
 }
@@ -340,15 +340,17 @@ var (
 	countEntityTraitDefinitionsRequestFieldIDs        = big.NewInt(1 << 1)
 	countEntityTraitDefinitionsRequestFieldQ          = big.NewInt(1 << 2)
 	countEntityTraitDefinitionsRequestFieldTraitType  = big.NewInt(1 << 3)
-	countEntityTraitDefinitionsRequestFieldLimit      = big.NewInt(1 << 4)
-	countEntityTraitDefinitionsRequestFieldOffset     = big.NewInt(1 << 5)
+	countEntityTraitDefinitionsRequestFieldTraitTypes = big.NewInt(1 << 4)
+	countEntityTraitDefinitionsRequestFieldLimit      = big.NewInt(1 << 5)
+	countEntityTraitDefinitionsRequestFieldOffset     = big.NewInt(1 << 6)
 )
 
 type CountEntityTraitDefinitionsRequest struct {
-	EntityType *CountEntityTraitDefinitionsRequestEntityType `json:"-" url:"entity_type,omitempty"`
-	IDs        []*string                                     `json:"-" url:"ids,omitempty"`
-	Q          *string                                       `json:"-" url:"q,omitempty"`
-	TraitType  *CountEntityTraitDefinitionsRequestTraitType  `json:"-" url:"trait_type,omitempty"`
+	EntityType *EntityType  `json:"-" url:"entity_type,omitempty"`
+	IDs        []*string    `json:"-" url:"ids,omitempty"`
+	Q          *string      `json:"-" url:"q,omitempty"`
+	TraitType  *TraitType   `json:"-" url:"trait_type,omitempty"`
+	TraitTypes []*TraitType `json:"-" url:"trait_types,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -367,7 +369,7 @@ func (c *CountEntityTraitDefinitionsRequest) require(field *big.Int) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityTraitDefinitionsRequest) SetEntityType(entityType *CountEntityTraitDefinitionsRequestEntityType) {
+func (c *CountEntityTraitDefinitionsRequest) SetEntityType(entityType *EntityType) {
 	c.EntityType = entityType
 	c.require(countEntityTraitDefinitionsRequestFieldEntityType)
 }
@@ -388,9 +390,16 @@ func (c *CountEntityTraitDefinitionsRequest) SetQ(q *string) {
 
 // SetTraitType sets the TraitType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityTraitDefinitionsRequest) SetTraitType(traitType *CountEntityTraitDefinitionsRequestTraitType) {
+func (c *CountEntityTraitDefinitionsRequest) SetTraitType(traitType *TraitType) {
 	c.TraitType = traitType
 	c.require(countEntityTraitDefinitionsRequestFieldTraitType)
+}
+
+// SetTraitTypes sets the TraitTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityTraitDefinitionsRequest) SetTraitTypes(traitTypes []*TraitType) {
+	c.TraitTypes = traitTypes
+	c.require(countEntityTraitDefinitionsRequestFieldTraitTypes)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -687,60 +696,6 @@ func (g *GetActiveCompanySubscriptionRequest) SetOffset(offset *int) {
 }
 
 var (
-	getActiveDealsRequestFieldCompanyID = big.NewInt(1 << 0)
-	getActiveDealsRequestFieldDealStage = big.NewInt(1 << 1)
-	getActiveDealsRequestFieldLimit     = big.NewInt(1 << 2)
-	getActiveDealsRequestFieldOffset    = big.NewInt(1 << 3)
-)
-
-type GetActiveDealsRequest struct {
-	CompanyID string `json:"-" url:"company_id"`
-	DealStage string `json:"-" url:"deal_stage"`
-	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
-	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-}
-
-func (g *GetActiveDealsRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
-	}
-	g.explicitFields.Or(g.explicitFields, field)
-}
-
-// SetCompanyID sets the CompanyID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsRequest) SetCompanyID(companyID string) {
-	g.CompanyID = companyID
-	g.require(getActiveDealsRequestFieldCompanyID)
-}
-
-// SetDealStage sets the DealStage field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsRequest) SetDealStage(dealStage string) {
-	g.DealStage = dealStage
-	g.require(getActiveDealsRequestFieldDealStage)
-}
-
-// SetLimit sets the Limit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsRequest) SetLimit(limit *int) {
-	g.Limit = limit
-	g.require(getActiveDealsRequestFieldLimit)
-}
-
-// SetOffset sets the Offset field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsRequest) SetOffset(offset *int) {
-	g.Offset = offset
-	g.require(getActiveDealsRequestFieldOffset)
-}
-
-var (
 	getEntityTraitValuesRequestFieldDefinitionID = big.NewInt(1 << 0)
 	getEntityTraitValuesRequestFieldQ            = big.NewInt(1 << 1)
 	getEntityTraitValuesRequestFieldLimit        = big.NewInt(1 << 2)
@@ -836,10 +791,10 @@ var (
 )
 
 type CreateEntityTraitDefinitionRequestBody struct {
-	DisplayName *string                                          `json:"display_name,omitempty" url:"-"`
-	EntityType  CreateEntityTraitDefinitionRequestBodyEntityType `json:"entity_type" url:"-"`
-	Hierarchy   []string                                         `json:"hierarchy,omitempty" url:"-"`
-	TraitType   CreateEntityTraitDefinitionRequestBodyTraitType  `json:"trait_type" url:"-"`
+	DisplayName *string    `json:"display_name,omitempty" url:"-"`
+	EntityType  EntityType `json:"entity_type" url:"-"`
+	Hierarchy   []string   `json:"hierarchy,omitempty" url:"-"`
+	TraitType   TraitType  `json:"trait_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -861,7 +816,7 @@ func (c *CreateEntityTraitDefinitionRequestBody) SetDisplayName(displayName *str
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEntityTraitDefinitionRequestBody) SetEntityType(entityType CreateEntityTraitDefinitionRequestBodyEntityType) {
+func (c *CreateEntityTraitDefinitionRequestBody) SetEntityType(entityType EntityType) {
 	c.EntityType = entityType
 	c.require(createEntityTraitDefinitionRequestBodyFieldEntityType)
 }
@@ -875,7 +830,7 @@ func (c *CreateEntityTraitDefinitionRequestBody) SetHierarchy(hierarchy []string
 
 // SetTraitType sets the TraitType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEntityTraitDefinitionRequestBody) SetTraitType(traitType CreateEntityTraitDefinitionRequestBodyTraitType) {
+func (c *CreateEntityTraitDefinitionRequestBody) SetTraitType(traitType TraitType) {
 	c.TraitType = traitType
 	c.require(createEntityTraitDefinitionRequestBodyFieldTraitType)
 }
@@ -1004,9 +959,9 @@ type ListCompaniesForAdvancedFilterRequest struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
 	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
-	SubscriptionStatuses []*string `json:"-" url:"subscription_statuses,omitempty"`
+	SubscriptionStatuses []*SubscriptionStatus `json:"-" url:"subscription_statuses,omitempty"`
 	// Filter companies by one or more subscription types (paid, free, trial)
-	SubscriptionTypes []*string `json:"-" url:"subscription_types,omitempty"`
+	SubscriptionTypes []*SubscriptionType `json:"-" url:"subscription_types,omitempty"`
 	// Filter companies that have monetized subscriptions
 	MonetizedSubscriptions *bool `json:"-" url:"monetized_subscriptions,omitempty"`
 	// Search for companies by name, keys or string traits
@@ -1018,7 +973,7 @@ type ListCompaniesForAdvancedFilterRequest struct {
 	// Column to sort by (e.g. name, created_at, last_seen_at)
 	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
 	// Direction to sort by (asc or desc)
-	SortOrderDirection *ListCompaniesForAdvancedFilterRequestSortOrderDirection `json:"-" url:"sort_order_direction,omitempty"`
+	SortOrderDirection *SortDirection `json:"-" url:"sort_order_direction,omitempty"`
 	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
 	DisplayProperties []*string `json:"-" url:"display_properties,omitempty"`
 	// Page limit (default 100)
@@ -1067,14 +1022,14 @@ func (l *ListCompaniesForAdvancedFilterRequest) SetCreditTypeIDs(creditTypeIDs [
 
 // SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetSubscriptionStatuses(subscriptionStatuses []*string) {
+func (l *ListCompaniesForAdvancedFilterRequest) SetSubscriptionStatuses(subscriptionStatuses []*SubscriptionStatus) {
 	l.SubscriptionStatuses = subscriptionStatuses
 	l.require(listCompaniesForAdvancedFilterRequestFieldSubscriptionStatuses)
 }
 
 // SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetSubscriptionTypes(subscriptionTypes []*string) {
+func (l *ListCompaniesForAdvancedFilterRequest) SetSubscriptionTypes(subscriptionTypes []*SubscriptionType) {
 	l.SubscriptionTypes = subscriptionTypes
 	l.require(listCompaniesForAdvancedFilterRequestFieldSubscriptionTypes)
 }
@@ -1116,7 +1071,7 @@ func (l *ListCompaniesForAdvancedFilterRequest) SetSortOrderColumn(sortOrderColu
 
 // SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetSortOrderDirection(sortOrderDirection *ListCompaniesForAdvancedFilterRequestSortOrderDirection) {
+func (l *ListCompaniesForAdvancedFilterRequest) SetSortOrderDirection(sortOrderDirection *SortDirection) {
 	l.SortOrderDirection = sortOrderDirection
 	l.require(listCompaniesForAdvancedFilterRequestFieldSortOrderDirection)
 }
@@ -1205,9 +1160,9 @@ var (
 )
 
 type ListEntityKeyDefinitionsRequest struct {
-	EntityType *ListEntityKeyDefinitionsRequestEntityType `json:"-" url:"entity_type,omitempty"`
-	IDs        []*string                                  `json:"-" url:"ids,omitempty"`
-	Q          *string                                    `json:"-" url:"q,omitempty"`
+	EntityType *EntityType `json:"-" url:"entity_type,omitempty"`
+	IDs        []*string   `json:"-" url:"ids,omitempty"`
+	Q          *string     `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1226,7 +1181,7 @@ func (l *ListEntityKeyDefinitionsRequest) require(field *big.Int) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityKeyDefinitionsRequest) SetEntityType(entityType *ListEntityKeyDefinitionsRequestEntityType) {
+func (l *ListEntityKeyDefinitionsRequest) SetEntityType(entityType *EntityType) {
 	l.EntityType = entityType
 	l.require(listEntityKeyDefinitionsRequestFieldEntityType)
 }
@@ -1264,15 +1219,17 @@ var (
 	listEntityTraitDefinitionsRequestFieldIDs        = big.NewInt(1 << 1)
 	listEntityTraitDefinitionsRequestFieldQ          = big.NewInt(1 << 2)
 	listEntityTraitDefinitionsRequestFieldTraitType  = big.NewInt(1 << 3)
-	listEntityTraitDefinitionsRequestFieldLimit      = big.NewInt(1 << 4)
-	listEntityTraitDefinitionsRequestFieldOffset     = big.NewInt(1 << 5)
+	listEntityTraitDefinitionsRequestFieldTraitTypes = big.NewInt(1 << 4)
+	listEntityTraitDefinitionsRequestFieldLimit      = big.NewInt(1 << 5)
+	listEntityTraitDefinitionsRequestFieldOffset     = big.NewInt(1 << 6)
 )
 
 type ListEntityTraitDefinitionsRequest struct {
-	EntityType *ListEntityTraitDefinitionsRequestEntityType `json:"-" url:"entity_type,omitempty"`
-	IDs        []*string                                    `json:"-" url:"ids,omitempty"`
-	Q          *string                                      `json:"-" url:"q,omitempty"`
-	TraitType  *ListEntityTraitDefinitionsRequestTraitType  `json:"-" url:"trait_type,omitempty"`
+	EntityType *EntityType  `json:"-" url:"entity_type,omitempty"`
+	IDs        []*string    `json:"-" url:"ids,omitempty"`
+	Q          *string      `json:"-" url:"q,omitempty"`
+	TraitType  *TraitType   `json:"-" url:"trait_type,omitempty"`
+	TraitTypes []*TraitType `json:"-" url:"trait_types,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1291,7 +1248,7 @@ func (l *ListEntityTraitDefinitionsRequest) require(field *big.Int) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityTraitDefinitionsRequest) SetEntityType(entityType *ListEntityTraitDefinitionsRequestEntityType) {
+func (l *ListEntityTraitDefinitionsRequest) SetEntityType(entityType *EntityType) {
 	l.EntityType = entityType
 	l.require(listEntityTraitDefinitionsRequestFieldEntityType)
 }
@@ -1312,9 +1269,16 @@ func (l *ListEntityTraitDefinitionsRequest) SetQ(q *string) {
 
 // SetTraitType sets the TraitType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityTraitDefinitionsRequest) SetTraitType(traitType *ListEntityTraitDefinitionsRequestTraitType) {
+func (l *ListEntityTraitDefinitionsRequest) SetTraitType(traitType *TraitType) {
 	l.TraitType = traitType
 	l.require(listEntityTraitDefinitionsRequestFieldTraitType)
+}
+
+// SetTraitTypes sets the TraitTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListEntityTraitDefinitionsRequest) SetTraitTypes(traitTypes []*TraitType) {
+	l.TraitTypes = traitTypes
+	l.require(listEntityTraitDefinitionsRequestFieldTraitTypes)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -1610,148 +1574,6 @@ func (l *LookupUserRequest) require(field *big.Int) {
 func (l *LookupUserRequest) SetKeys(keys map[string]string) {
 	l.Keys = keys
 	l.require(lookupUserRequestFieldKeys)
-}
-
-var (
-	companyCrmDealsResponseDataFieldDealArr        = big.NewInt(1 << 0)
-	companyCrmDealsResponseDataFieldDealExternalID = big.NewInt(1 << 1)
-	companyCrmDealsResponseDataFieldDealMrr        = big.NewInt(1 << 2)
-	companyCrmDealsResponseDataFieldDealName       = big.NewInt(1 << 3)
-	companyCrmDealsResponseDataFieldLineItems      = big.NewInt(1 << 4)
-)
-
-type CompanyCrmDealsResponseData struct {
-	DealArr        string             `json:"deal_arr" url:"deal_arr"`
-	DealExternalID string             `json:"deal_external_id" url:"deal_external_id"`
-	DealMrr        string             `json:"deal_mrr" url:"deal_mrr"`
-	DealName       *string            `json:"deal_name,omitempty" url:"deal_name,omitempty"`
-	LineItems      []*CrmDealLineItem `json:"line_items" url:"line_items"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CompanyCrmDealsResponseData) GetDealArr() string {
-	if c == nil {
-		return ""
-	}
-	return c.DealArr
-}
-
-func (c *CompanyCrmDealsResponseData) GetDealExternalID() string {
-	if c == nil {
-		return ""
-	}
-	return c.DealExternalID
-}
-
-func (c *CompanyCrmDealsResponseData) GetDealMrr() string {
-	if c == nil {
-		return ""
-	}
-	return c.DealMrr
-}
-
-func (c *CompanyCrmDealsResponseData) GetDealName() *string {
-	if c == nil {
-		return nil
-	}
-	return c.DealName
-}
-
-func (c *CompanyCrmDealsResponseData) GetLineItems() []*CrmDealLineItem {
-	if c == nil {
-		return nil
-	}
-	return c.LineItems
-}
-
-func (c *CompanyCrmDealsResponseData) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CompanyCrmDealsResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetDealArr sets the DealArr field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyCrmDealsResponseData) SetDealArr(dealArr string) {
-	c.DealArr = dealArr
-	c.require(companyCrmDealsResponseDataFieldDealArr)
-}
-
-// SetDealExternalID sets the DealExternalID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyCrmDealsResponseData) SetDealExternalID(dealExternalID string) {
-	c.DealExternalID = dealExternalID
-	c.require(companyCrmDealsResponseDataFieldDealExternalID)
-}
-
-// SetDealMrr sets the DealMrr field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyCrmDealsResponseData) SetDealMrr(dealMrr string) {
-	c.DealMrr = dealMrr
-	c.require(companyCrmDealsResponseDataFieldDealMrr)
-}
-
-// SetDealName sets the DealName field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyCrmDealsResponseData) SetDealName(dealName *string) {
-	c.DealName = dealName
-	c.require(companyCrmDealsResponseDataFieldDealName)
-}
-
-// SetLineItems sets the LineItems field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyCrmDealsResponseData) SetLineItems(lineItems []*CrmDealLineItem) {
-	c.LineItems = lineItems
-	c.require(companyCrmDealsResponseDataFieldLineItems)
-}
-
-func (c *CompanyCrmDealsResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler CompanyCrmDealsResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CompanyCrmDealsResponseData(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CompanyCrmDealsResponseData) MarshalJSON() ([]byte, error) {
-	type embed CompanyCrmDealsResponseData
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*c),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *CompanyCrmDealsResponseData) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
 }
 
 var (
@@ -2561,10 +2383,11 @@ type CreditUsageResponseData struct {
 	CreditGrantCounts     map[string]float64   `json:"credit_grant_counts,omitempty" url:"credit_grant_counts,omitempty"`
 	CreditGrantDetails    []*CreditGrantDetail `json:"credit_grant_details" url:"credit_grant_details"`
 	CreditRemaining       *float64             `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
-	CreditTotal           *float64             `json:"credit_total,omitempty" url:"credit_total,omitempty"`
-	CreditTypeIcon        *string              `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
-	CreditTypeName        *string              `json:"credit_type_name,omitempty" url:"credit_type_name,omitempty"`
-	CreditUsed            *float64             `json:"credit_used,omitempty" url:"credit_used,omitempty"`
+	// Deprecated: Use credit_remaining instead.
+	CreditTotal    *float64 `json:"credit_total,omitempty" url:"credit_total,omitempty"`
+	CreditTypeIcon *string  `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
+	CreditTypeName *string  `json:"credit_type_name,omitempty" url:"credit_type_name,omitempty"`
+	CreditUsed     *float64 `json:"credit_used,omitempty" url:"credit_used,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2736,274 +2559,6 @@ func (c *CreditUsageResponseData) String() string {
 }
 
 var (
-	crmDealLineItemFieldBillingFrequency   = big.NewInt(1 << 0)
-	crmDealLineItemFieldCreatedAt          = big.NewInt(1 << 1)
-	crmDealLineItemFieldCurrency           = big.NewInt(1 << 2)
-	crmDealLineItemFieldDescription        = big.NewInt(1 << 3)
-	crmDealLineItemFieldDiscountPercentage = big.NewInt(1 << 4)
-	crmDealLineItemFieldID                 = big.NewInt(1 << 5)
-	crmDealLineItemFieldName               = big.NewInt(1 << 6)
-	crmDealLineItemFieldPrice              = big.NewInt(1 << 7)
-	crmDealLineItemFieldQuantity           = big.NewInt(1 << 8)
-	crmDealLineItemFieldTermMonth          = big.NewInt(1 << 9)
-	crmDealLineItemFieldTotalDiscount      = big.NewInt(1 << 10)
-	crmDealLineItemFieldUpdatedAt          = big.NewInt(1 << 11)
-)
-
-type CrmDealLineItem struct {
-	BillingFrequency   string    `json:"billing_frequency" url:"billing_frequency"`
-	CreatedAt          time.Time `json:"created_at" url:"created_at"`
-	Currency           string    `json:"currency" url:"currency"`
-	Description        string    `json:"description" url:"description"`
-	DiscountPercentage *Decimal  `json:"discount_percentage,omitempty" url:"discount_percentage,omitempty"`
-	ID                 string    `json:"id" url:"id"`
-	Name               string    `json:"name" url:"name"`
-	Price              float64   `json:"price" url:"price"`
-	Quantity           int       `json:"quantity" url:"quantity"`
-	TermMonth          *int      `json:"term_month,omitempty" url:"term_month,omitempty"`
-	TotalDiscount      *Decimal  `json:"total_discount,omitempty" url:"total_discount,omitempty"`
-	UpdatedAt          time.Time `json:"updated_at" url:"updated_at"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CrmDealLineItem) GetBillingFrequency() string {
-	if c == nil {
-		return ""
-	}
-	return c.BillingFrequency
-}
-
-func (c *CrmDealLineItem) GetCreatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.CreatedAt
-}
-
-func (c *CrmDealLineItem) GetCurrency() string {
-	if c == nil {
-		return ""
-	}
-	return c.Currency
-}
-
-func (c *CrmDealLineItem) GetDescription() string {
-	if c == nil {
-		return ""
-	}
-	return c.Description
-}
-
-func (c *CrmDealLineItem) GetDiscountPercentage() *Decimal {
-	if c == nil {
-		return nil
-	}
-	return c.DiscountPercentage
-}
-
-func (c *CrmDealLineItem) GetID() string {
-	if c == nil {
-		return ""
-	}
-	return c.ID
-}
-
-func (c *CrmDealLineItem) GetName() string {
-	if c == nil {
-		return ""
-	}
-	return c.Name
-}
-
-func (c *CrmDealLineItem) GetPrice() float64 {
-	if c == nil {
-		return 0
-	}
-	return c.Price
-}
-
-func (c *CrmDealLineItem) GetQuantity() int {
-	if c == nil {
-		return 0
-	}
-	return c.Quantity
-}
-
-func (c *CrmDealLineItem) GetTermMonth() *int {
-	if c == nil {
-		return nil
-	}
-	return c.TermMonth
-}
-
-func (c *CrmDealLineItem) GetTotalDiscount() *Decimal {
-	if c == nil {
-		return nil
-	}
-	return c.TotalDiscount
-}
-
-func (c *CrmDealLineItem) GetUpdatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.UpdatedAt
-}
-
-func (c *CrmDealLineItem) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CrmDealLineItem) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetBillingFrequency sets the BillingFrequency field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetBillingFrequency(billingFrequency string) {
-	c.BillingFrequency = billingFrequency
-	c.require(crmDealLineItemFieldBillingFrequency)
-}
-
-// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetCreatedAt(createdAt time.Time) {
-	c.CreatedAt = createdAt
-	c.require(crmDealLineItemFieldCreatedAt)
-}
-
-// SetCurrency sets the Currency field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetCurrency(currency string) {
-	c.Currency = currency
-	c.require(crmDealLineItemFieldCurrency)
-}
-
-// SetDescription sets the Description field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetDescription(description string) {
-	c.Description = description
-	c.require(crmDealLineItemFieldDescription)
-}
-
-// SetDiscountPercentage sets the DiscountPercentage field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetDiscountPercentage(discountPercentage *Decimal) {
-	c.DiscountPercentage = discountPercentage
-	c.require(crmDealLineItemFieldDiscountPercentage)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetID(id string) {
-	c.ID = id
-	c.require(crmDealLineItemFieldID)
-}
-
-// SetName sets the Name field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetName(name string) {
-	c.Name = name
-	c.require(crmDealLineItemFieldName)
-}
-
-// SetPrice sets the Price field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetPrice(price float64) {
-	c.Price = price
-	c.require(crmDealLineItemFieldPrice)
-}
-
-// SetQuantity sets the Quantity field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetQuantity(quantity int) {
-	c.Quantity = quantity
-	c.require(crmDealLineItemFieldQuantity)
-}
-
-// SetTermMonth sets the TermMonth field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetTermMonth(termMonth *int) {
-	c.TermMonth = termMonth
-	c.require(crmDealLineItemFieldTermMonth)
-}
-
-// SetTotalDiscount sets the TotalDiscount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetTotalDiscount(totalDiscount *Decimal) {
-	c.TotalDiscount = totalDiscount
-	c.require(crmDealLineItemFieldTotalDiscount)
-}
-
-// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CrmDealLineItem) SetUpdatedAt(updatedAt time.Time) {
-	c.UpdatedAt = updatedAt
-	c.require(crmDealLineItemFieldUpdatedAt)
-}
-
-func (c *CrmDealLineItem) UnmarshalJSON(data []byte) error {
-	type embed CrmDealLineItem
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*c),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*c = CrmDealLineItem(unmarshaler.embed)
-	c.CreatedAt = unmarshaler.CreatedAt.Time()
-	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CrmDealLineItem) MarshalJSON() ([]byte, error) {
-	type embed CrmDealLineItem
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*c),
-		CreatedAt: internal.NewDateTime(c.CreatedAt),
-		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *CrmDealLineItem) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-type Decimal = map[string]interface{}
-
-var (
 	entityTraitValueFieldDefinitionID = big.NewInt(1 << 0)
 	entityTraitValueFieldValue        = big.NewInt(1 << 1)
 )
@@ -3123,7 +2678,7 @@ type FeatureUsageDataResponseData struct {
 	EntitlementValueType   string                   `json:"entitlement_value_type" url:"entitlement_value_type"`
 	FeatureID              string                   `json:"feature_id" url:"feature_id"`
 	FeatureName            string                   `json:"feature_name" url:"feature_name"`
-	FeatureType            string                   `json:"feature_type" url:"feature_type"`
+	FeatureType            FeatureType              `json:"feature_type" url:"feature_type"`
 	HardLimit              string                   `json:"hard_limit" url:"hard_limit"`
 	HasAccess              bool                     `json:"has_access" url:"has_access"`
 	MetricResetAt          *time.Time               `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
@@ -3183,7 +2738,7 @@ func (f *FeatureUsageDataResponseData) GetFeatureName() string {
 	return f.FeatureName
 }
 
-func (f *FeatureUsageDataResponseData) GetFeatureType() string {
+func (f *FeatureUsageDataResponseData) GetFeatureType() FeatureType {
 	if f == nil {
 		return ""
 	}
@@ -3308,7 +2863,7 @@ func (f *FeatureUsageDataResponseData) SetFeatureName(featureName string) {
 
 // SetFeatureType sets the FeatureType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetFeatureType(featureType string) {
+func (f *FeatureUsageDataResponseData) SetFeatureType(featureType FeatureType) {
 	f.FeatureType = featureType
 	f.require(featureUsageDataResponseDataFieldFeatureType)
 }
@@ -3501,6 +3056,108 @@ func (k *KeysRequestBody) String() string {
 	return fmt.Sprintf("%#v", k)
 }
 
+type PlanChangeAction string
+
+const (
+	PlanChangeActionCheckout                  PlanChangeAction = "checkout"
+	PlanChangeActionCompanyUpsert             PlanChangeAction = "company_upsert"
+	PlanChangeActionFallbackPlan              PlanChangeAction = "fallback_plan"
+	PlanChangeActionManagePlan                PlanChangeAction = "manage_plan"
+	PlanChangeActionMigration                 PlanChangeAction = "migration"
+	PlanChangeActionPlanBillingProductChanged PlanChangeAction = "plan_billing_product_changed"
+	PlanChangeActionPlanDeleted               PlanChangeAction = "plan_deleted"
+	PlanChangeActionPlanTraitChange           PlanChangeAction = "plan_trait_change"
+	PlanChangeActionQuickstart                PlanChangeAction = "quickstart"
+	PlanChangeActionSubscriptionChange        PlanChangeAction = "subscription_change"
+)
+
+func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
+	switch s {
+	case "checkout":
+		return PlanChangeActionCheckout, nil
+	case "company_upsert":
+		return PlanChangeActionCompanyUpsert, nil
+	case "fallback_plan":
+		return PlanChangeActionFallbackPlan, nil
+	case "manage_plan":
+		return PlanChangeActionManagePlan, nil
+	case "migration":
+		return PlanChangeActionMigration, nil
+	case "plan_billing_product_changed":
+		return PlanChangeActionPlanBillingProductChanged, nil
+	case "plan_deleted":
+		return PlanChangeActionPlanDeleted, nil
+	case "plan_trait_change":
+		return PlanChangeActionPlanTraitChange, nil
+	case "quickstart":
+		return PlanChangeActionQuickstart, nil
+	case "subscription_change":
+		return PlanChangeActionSubscriptionChange, nil
+	}
+	var t PlanChangeAction
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanChangeAction) Ptr() *PlanChangeAction {
+	return &p
+}
+
+type PlanChangeActorType string
+
+const (
+	PlanChangeActorTypeAPIKey               PlanChangeActorType = "api_key"
+	PlanChangeActorTypeAppUser              PlanChangeActorType = "app_user"
+	PlanChangeActorTypeSystem               PlanChangeActorType = "system"
+	PlanChangeActorTypeTemporaryAccessToken PlanChangeActorType = "temporary_access_token"
+)
+
+func NewPlanChangeActorTypeFromString(s string) (PlanChangeActorType, error) {
+	switch s {
+	case "api_key":
+		return PlanChangeActorTypeAPIKey, nil
+	case "app_user":
+		return PlanChangeActorTypeAppUser, nil
+	case "system":
+		return PlanChangeActorTypeSystem, nil
+	case "temporary_access_token":
+		return PlanChangeActorTypeTemporaryAccessToken, nil
+	}
+	var t PlanChangeActorType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanChangeActorType) Ptr() *PlanChangeActorType {
+	return &p
+}
+
+type PlanChangeBasePlanAction string
+
+const (
+	PlanChangeBasePlanActionFallback    PlanChangeBasePlanAction = "fallback"
+	PlanChangeBasePlanActionInitial     PlanChangeBasePlanAction = "initial"
+	PlanChangeBasePlanActionTrait       PlanChangeBasePlanAction = "trait"
+	PlanChangeBasePlanActionTrialExpiry PlanChangeBasePlanAction = "trial_expiry"
+)
+
+func NewPlanChangeBasePlanActionFromString(s string) (PlanChangeBasePlanAction, error) {
+	switch s {
+	case "fallback":
+		return PlanChangeBasePlanActionFallback, nil
+	case "initial":
+		return PlanChangeBasePlanActionInitial, nil
+	case "trait":
+		return PlanChangeBasePlanActionTrait, nil
+	case "trial_expiry":
+		return PlanChangeBasePlanActionTrialExpiry, nil
+	}
+	var t PlanChangeBasePlanAction
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanChangeBasePlanAction) Ptr() *PlanChangeBasePlanAction {
+	return &p
+}
+
 var (
 	planChangeResponseDataFieldAction                   = big.NewInt(1 << 0)
 	planChangeResponseDataFieldActorType                = big.NewInt(1 << 1)
@@ -3525,24 +3182,22 @@ var (
 )
 
 type PlanChangeResponseData struct {
-	Action        PlanChangeResponseDataAction    `json:"action" url:"action"`
-	ActorType     PlanChangeResponseDataActorType `json:"actor_type" url:"actor_type"`
-	AddOnsAdded   []*PlanSnapshotView             `json:"add_ons_added" url:"add_ons_added"`
-	AddOnsRemoved []*PlanSnapshotView             `json:"add_ons_removed" url:"add_ons_removed"`
-	APIKey        *APIKeyResponseData             `json:"api_key,omitempty" url:"api_key,omitempty"`
-	APIKeyRequest *APIKeyRequestListResponseData  `json:"api_key_request,omitempty" url:"api_key_request,omitempty"`
-	BasePlan      *PlanSnapshotView               `json:"base_plan,omitempty" url:"base_plan,omitempty"`
-	// Any special behavior that affected the assignment of the base plan during this change.
-	BasePlanAction   *PlanChangeResponseDataBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
-	Company          *CompanyResponseData                  `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID        string                                `json:"company_id" url:"company_id"`
-	CreatedAt        time.Time                             `json:"created_at" url:"created_at"`
-	EnvironmentID    string                                `json:"environment_id" url:"environment_id"`
-	ID               string                                `json:"id" url:"id"`
-	PreviousBasePlan *PlanSnapshotView                     `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
-	RequestID        *string                               `json:"request_id,omitempty" url:"request_id,omitempty"`
-	// If a subscription was changed as a part of this plan change, indicates the type of change that was made.
-	SubscriptionChangeAction *PlanChangeResponseDataSubscriptionChangeAction `json:"subscription_change_action,omitempty" url:"subscription_change_action,omitempty"`
+	Action                   PlanChangeAction               `json:"action" url:"action"`
+	ActorType                PlanChangeActorType            `json:"actor_type" url:"actor_type"`
+	AddOnsAdded              []*PlanSnapshotView            `json:"add_ons_added" url:"add_ons_added"`
+	AddOnsRemoved            []*PlanSnapshotView            `json:"add_ons_removed" url:"add_ons_removed"`
+	APIKey                   *APIKeyResponseData            `json:"api_key,omitempty" url:"api_key,omitempty"`
+	APIKeyRequest            *APIKeyRequestListResponseData `json:"api_key_request,omitempty" url:"api_key_request,omitempty"`
+	BasePlan                 *PlanSnapshotView              `json:"base_plan,omitempty" url:"base_plan,omitempty"`
+	BasePlanAction           *PlanChangeBasePlanAction      `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
+	Company                  *CompanyResponseData           `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID                string                         `json:"company_id" url:"company_id"`
+	CreatedAt                time.Time                      `json:"created_at" url:"created_at"`
+	EnvironmentID            string                         `json:"environment_id" url:"environment_id"`
+	ID                       string                         `json:"id" url:"id"`
+	PreviousBasePlan         *PlanSnapshotView              `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
+	RequestID                *string                        `json:"request_id,omitempty" url:"request_id,omitempty"`
+	SubscriptionChangeAction *PlanChangeSubscriptionAction  `json:"subscription_change_action,omitempty" url:"subscription_change_action,omitempty"`
 	// Any traits were updated as part of this plan change (via pay-in-advance entitlements).
 	TraitsUpdated []*SubscriptionTraitUpdate `json:"traits_updated" url:"traits_updated"`
 	UpdatedAt     time.Time                  `json:"updated_at" url:"updated_at"`
@@ -3556,14 +3211,14 @@ type PlanChangeResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (p *PlanChangeResponseData) GetAction() PlanChangeResponseDataAction {
+func (p *PlanChangeResponseData) GetAction() PlanChangeAction {
 	if p == nil {
 		return ""
 	}
 	return p.Action
 }
 
-func (p *PlanChangeResponseData) GetActorType() PlanChangeResponseDataActorType {
+func (p *PlanChangeResponseData) GetActorType() PlanChangeActorType {
 	if p == nil {
 		return ""
 	}
@@ -3605,7 +3260,7 @@ func (p *PlanChangeResponseData) GetBasePlan() *PlanSnapshotView {
 	return p.BasePlan
 }
 
-func (p *PlanChangeResponseData) GetBasePlanAction() *PlanChangeResponseDataBasePlanAction {
+func (p *PlanChangeResponseData) GetBasePlanAction() *PlanChangeBasePlanAction {
 	if p == nil {
 		return nil
 	}
@@ -3661,7 +3316,7 @@ func (p *PlanChangeResponseData) GetRequestID() *string {
 	return p.RequestID
 }
 
-func (p *PlanChangeResponseData) GetSubscriptionChangeAction() *PlanChangeResponseDataSubscriptionChangeAction {
+func (p *PlanChangeResponseData) GetSubscriptionChangeAction() *PlanChangeSubscriptionAction {
 	if p == nil {
 		return nil
 	}
@@ -3709,14 +3364,14 @@ func (p *PlanChangeResponseData) require(field *big.Int) {
 
 // SetAction sets the Action field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanChangeResponseData) SetAction(action PlanChangeResponseDataAction) {
+func (p *PlanChangeResponseData) SetAction(action PlanChangeAction) {
 	p.Action = action
 	p.require(planChangeResponseDataFieldAction)
 }
 
 // SetActorType sets the ActorType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanChangeResponseData) SetActorType(actorType PlanChangeResponseDataActorType) {
+func (p *PlanChangeResponseData) SetActorType(actorType PlanChangeActorType) {
 	p.ActorType = actorType
 	p.require(planChangeResponseDataFieldActorType)
 }
@@ -3758,7 +3413,7 @@ func (p *PlanChangeResponseData) SetBasePlan(basePlan *PlanSnapshotView) {
 
 // SetBasePlanAction sets the BasePlanAction field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanChangeResponseData) SetBasePlanAction(basePlanAction *PlanChangeResponseDataBasePlanAction) {
+func (p *PlanChangeResponseData) SetBasePlanAction(basePlanAction *PlanChangeBasePlanAction) {
 	p.BasePlanAction = basePlanAction
 	p.require(planChangeResponseDataFieldBasePlanAction)
 }
@@ -3814,7 +3469,7 @@ func (p *PlanChangeResponseData) SetRequestID(requestID *string) {
 
 // SetSubscriptionChangeAction sets the SubscriptionChangeAction field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanChangeResponseData) SetSubscriptionChangeAction(subscriptionChangeAction *PlanChangeResponseDataSubscriptionChangeAction) {
+func (p *PlanChangeResponseData) SetSubscriptionChangeAction(subscriptionChangeAction *PlanChangeSubscriptionAction) {
 	p.SubscriptionChangeAction = subscriptionChangeAction
 	p.require(planChangeResponseDataFieldSubscriptionChangeAction)
 }
@@ -3898,138 +3553,40 @@ func (p *PlanChangeResponseData) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
-type PlanChangeResponseDataAction string
+type PlanChangeSubscriptionAction string
 
 const (
-	PlanChangeResponseDataActionCheckout                  PlanChangeResponseDataAction = "checkout"
-	PlanChangeResponseDataActionCompanyUpsert             PlanChangeResponseDataAction = "company_upsert"
-	PlanChangeResponseDataActionFallbackPlan              PlanChangeResponseDataAction = "fallback_plan"
-	PlanChangeResponseDataActionManagePlan                PlanChangeResponseDataAction = "manage_plan"
-	PlanChangeResponseDataActionMigration                 PlanChangeResponseDataAction = "migration"
-	PlanChangeResponseDataActionPlanBillingProductChanged PlanChangeResponseDataAction = "plan_billing_product_changed"
-	PlanChangeResponseDataActionPlanDeleted               PlanChangeResponseDataAction = "plan_deleted"
-	PlanChangeResponseDataActionQuickstart                PlanChangeResponseDataAction = "quickstart"
-	PlanChangeResponseDataActionSubscriptionChange        PlanChangeResponseDataAction = "subscription_change"
+	PlanChangeSubscriptionActionAdjustment   PlanChangeSubscriptionAction = "adjustment"
+	PlanChangeSubscriptionActionDowngrade    PlanChangeSubscriptionAction = "downgrade"
+	PlanChangeSubscriptionActionInvalid      PlanChangeSubscriptionAction = "invalid"
+	PlanChangeSubscriptionActionSubscribe    PlanChangeSubscriptionAction = "subscribe"
+	PlanChangeSubscriptionActionUnsubscribe  PlanChangeSubscriptionAction = "unsubscribe"
+	PlanChangeSubscriptionActionUpgrade      PlanChangeSubscriptionAction = "upgrade"
+	PlanChangeSubscriptionActionUpgradeTrial PlanChangeSubscriptionAction = "upgrade_trial"
 )
 
-func NewPlanChangeResponseDataActionFromString(s string) (PlanChangeResponseDataAction, error) {
+func NewPlanChangeSubscriptionActionFromString(s string) (PlanChangeSubscriptionAction, error) {
 	switch s {
-	case "checkout":
-		return PlanChangeResponseDataActionCheckout, nil
-	case "company_upsert":
-		return PlanChangeResponseDataActionCompanyUpsert, nil
-	case "fallback_plan":
-		return PlanChangeResponseDataActionFallbackPlan, nil
-	case "manage_plan":
-		return PlanChangeResponseDataActionManagePlan, nil
-	case "migration":
-		return PlanChangeResponseDataActionMigration, nil
-	case "plan_billing_product_changed":
-		return PlanChangeResponseDataActionPlanBillingProductChanged, nil
-	case "plan_deleted":
-		return PlanChangeResponseDataActionPlanDeleted, nil
-	case "quickstart":
-		return PlanChangeResponseDataActionQuickstart, nil
-	case "subscription_change":
-		return PlanChangeResponseDataActionSubscriptionChange, nil
-	}
-	var t PlanChangeResponseDataAction
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (p PlanChangeResponseDataAction) Ptr() *PlanChangeResponseDataAction {
-	return &p
-}
-
-type PlanChangeResponseDataActorType string
-
-const (
-	PlanChangeResponseDataActorTypeAppUser              PlanChangeResponseDataActorType = "app_user"
-	PlanChangeResponseDataActorTypeAPIKey               PlanChangeResponseDataActorType = "api_key"
-	PlanChangeResponseDataActorTypeSystem               PlanChangeResponseDataActorType = "system"
-	PlanChangeResponseDataActorTypeTemporaryAccessToken PlanChangeResponseDataActorType = "temporary_access_token"
-)
-
-func NewPlanChangeResponseDataActorTypeFromString(s string) (PlanChangeResponseDataActorType, error) {
-	switch s {
-	case "app_user":
-		return PlanChangeResponseDataActorTypeAppUser, nil
-	case "api_key":
-		return PlanChangeResponseDataActorTypeAPIKey, nil
-	case "system":
-		return PlanChangeResponseDataActorTypeSystem, nil
-	case "temporary_access_token":
-		return PlanChangeResponseDataActorTypeTemporaryAccessToken, nil
-	}
-	var t PlanChangeResponseDataActorType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (p PlanChangeResponseDataActorType) Ptr() *PlanChangeResponseDataActorType {
-	return &p
-}
-
-// Any special behavior that affected the assignment of the base plan during this change.
-type PlanChangeResponseDataBasePlanAction string
-
-const (
-	PlanChangeResponseDataBasePlanActionFallback    PlanChangeResponseDataBasePlanAction = "fallback"
-	PlanChangeResponseDataBasePlanActionInitial     PlanChangeResponseDataBasePlanAction = "initial"
-	PlanChangeResponseDataBasePlanActionTrait       PlanChangeResponseDataBasePlanAction = "trait"
-	PlanChangeResponseDataBasePlanActionTrialExpiry PlanChangeResponseDataBasePlanAction = "trial_expiry"
-)
-
-func NewPlanChangeResponseDataBasePlanActionFromString(s string) (PlanChangeResponseDataBasePlanAction, error) {
-	switch s {
-	case "fallback":
-		return PlanChangeResponseDataBasePlanActionFallback, nil
-	case "initial":
-		return PlanChangeResponseDataBasePlanActionInitial, nil
-	case "trait":
-		return PlanChangeResponseDataBasePlanActionTrait, nil
-	case "trial_expiry":
-		return PlanChangeResponseDataBasePlanActionTrialExpiry, nil
-	}
-	var t PlanChangeResponseDataBasePlanAction
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (p PlanChangeResponseDataBasePlanAction) Ptr() *PlanChangeResponseDataBasePlanAction {
-	return &p
-}
-
-// If a subscription was changed as a part of this plan change, indicates the type of change that was made.
-type PlanChangeResponseDataSubscriptionChangeAction string
-
-const (
-	PlanChangeResponseDataSubscriptionChangeActionDowngrade    PlanChangeResponseDataSubscriptionChangeAction = "downgrade"
-	PlanChangeResponseDataSubscriptionChangeActionInvalid      PlanChangeResponseDataSubscriptionChangeAction = "invalid"
-	PlanChangeResponseDataSubscriptionChangeActionSubscribe    PlanChangeResponseDataSubscriptionChangeAction = "subscribe"
-	PlanChangeResponseDataSubscriptionChangeActionUnsubscribe  PlanChangeResponseDataSubscriptionChangeAction = "unsubscribe"
-	PlanChangeResponseDataSubscriptionChangeActionUpgrade      PlanChangeResponseDataSubscriptionChangeAction = "upgrade"
-	PlanChangeResponseDataSubscriptionChangeActionUpgradeTrial PlanChangeResponseDataSubscriptionChangeAction = "upgrade_trial"
-)
-
-func NewPlanChangeResponseDataSubscriptionChangeActionFromString(s string) (PlanChangeResponseDataSubscriptionChangeAction, error) {
-	switch s {
+	case "adjustment":
+		return PlanChangeSubscriptionActionAdjustment, nil
 	case "downgrade":
-		return PlanChangeResponseDataSubscriptionChangeActionDowngrade, nil
+		return PlanChangeSubscriptionActionDowngrade, nil
 	case "invalid":
-		return PlanChangeResponseDataSubscriptionChangeActionInvalid, nil
+		return PlanChangeSubscriptionActionInvalid, nil
 	case "subscribe":
-		return PlanChangeResponseDataSubscriptionChangeActionSubscribe, nil
+		return PlanChangeSubscriptionActionSubscribe, nil
 	case "unsubscribe":
-		return PlanChangeResponseDataSubscriptionChangeActionUnsubscribe, nil
+		return PlanChangeSubscriptionActionUnsubscribe, nil
 	case "upgrade":
-		return PlanChangeResponseDataSubscriptionChangeActionUpgrade, nil
+		return PlanChangeSubscriptionActionUpgrade, nil
 	case "upgrade_trial":
-		return PlanChangeResponseDataSubscriptionChangeActionUpgradeTrial, nil
+		return PlanChangeSubscriptionActionUpgradeTrial, nil
 	}
-	var t PlanChangeResponseDataSubscriptionChangeAction
+	var t PlanChangeSubscriptionAction
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (p PlanChangeResponseDataSubscriptionChangeAction) Ptr() *PlanChangeResponseDataSubscriptionChangeAction {
+func (p PlanChangeSubscriptionAction) Ptr() *PlanChangeSubscriptionAction {
 	return &p
 }
 
@@ -4175,222 +3732,47 @@ func (p *PlanSnapshotView) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
-var (
-	planTraitResponseDataFieldAccountID     = big.NewInt(1 << 0)
-	planTraitResponseDataFieldCreatedAt     = big.NewInt(1 << 1)
-	planTraitResponseDataFieldEnvironmentID = big.NewInt(1 << 2)
-	planTraitResponseDataFieldID            = big.NewInt(1 << 3)
-	planTraitResponseDataFieldPlanID        = big.NewInt(1 << 4)
-	planTraitResponseDataFieldPlanType      = big.NewInt(1 << 5)
-	planTraitResponseDataFieldTraitID       = big.NewInt(1 << 6)
-	planTraitResponseDataFieldTraitValue    = big.NewInt(1 << 7)
-	planTraitResponseDataFieldUpdatedAt     = big.NewInt(1 << 8)
+type SubscriptionStatus string
+
+const (
+	SubscriptionStatusActive            SubscriptionStatus = "active"
+	SubscriptionStatusCanceled          SubscriptionStatus = "canceled"
+	SubscriptionStatusExpired           SubscriptionStatus = "expired"
+	SubscriptionStatusIncomplete        SubscriptionStatus = "incomplete"
+	SubscriptionStatusIncompleteExpired SubscriptionStatus = "incomplete_expired"
+	SubscriptionStatusPastDue           SubscriptionStatus = "past_due"
+	SubscriptionStatusPaused            SubscriptionStatus = "paused"
+	SubscriptionStatusTrialing          SubscriptionStatus = "trialing"
+	SubscriptionStatusUnpaid            SubscriptionStatus = "unpaid"
 )
 
-type PlanTraitResponseData struct {
-	AccountID     string    `json:"account_id" url:"account_id"`
-	CreatedAt     time.Time `json:"created_at" url:"created_at"`
-	EnvironmentID string    `json:"environment_id" url:"environment_id"`
-	ID            string    `json:"id" url:"id"`
-	PlanID        string    `json:"plan_id" url:"plan_id"`
-	PlanType      string    `json:"plan_type" url:"plan_type"`
-	TraitID       string    `json:"trait_id" url:"trait_id"`
-	TraitValue    string    `json:"trait_value" url:"trait_value"`
-	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (p *PlanTraitResponseData) GetAccountID() string {
-	if p == nil {
-		return ""
+func NewSubscriptionStatusFromString(s string) (SubscriptionStatus, error) {
+	switch s {
+	case "active":
+		return SubscriptionStatusActive, nil
+	case "canceled":
+		return SubscriptionStatusCanceled, nil
+	case "expired":
+		return SubscriptionStatusExpired, nil
+	case "incomplete":
+		return SubscriptionStatusIncomplete, nil
+	case "incomplete_expired":
+		return SubscriptionStatusIncompleteExpired, nil
+	case "past_due":
+		return SubscriptionStatusPastDue, nil
+	case "paused":
+		return SubscriptionStatusPaused, nil
+	case "trialing":
+		return SubscriptionStatusTrialing, nil
+	case "unpaid":
+		return SubscriptionStatusUnpaid, nil
 	}
-	return p.AccountID
+	var t SubscriptionStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (p *PlanTraitResponseData) GetCreatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.CreatedAt
-}
-
-func (p *PlanTraitResponseData) GetEnvironmentID() string {
-	if p == nil {
-		return ""
-	}
-	return p.EnvironmentID
-}
-
-func (p *PlanTraitResponseData) GetID() string {
-	if p == nil {
-		return ""
-	}
-	return p.ID
-}
-
-func (p *PlanTraitResponseData) GetPlanID() string {
-	if p == nil {
-		return ""
-	}
-	return p.PlanID
-}
-
-func (p *PlanTraitResponseData) GetPlanType() string {
-	if p == nil {
-		return ""
-	}
-	return p.PlanType
-}
-
-func (p *PlanTraitResponseData) GetTraitID() string {
-	if p == nil {
-		return ""
-	}
-	return p.TraitID
-}
-
-func (p *PlanTraitResponseData) GetTraitValue() string {
-	if p == nil {
-		return ""
-	}
-	return p.TraitValue
-}
-
-func (p *PlanTraitResponseData) GetUpdatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.UpdatedAt
-}
-
-func (p *PlanTraitResponseData) GetExtraProperties() map[string]interface{} {
-	return p.extraProperties
-}
-
-func (p *PlanTraitResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
-	}
-	p.explicitFields.Or(p.explicitFields, field)
-}
-
-// SetAccountID sets the AccountID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetAccountID(accountID string) {
-	p.AccountID = accountID
-	p.require(planTraitResponseDataFieldAccountID)
-}
-
-// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetCreatedAt(createdAt time.Time) {
-	p.CreatedAt = createdAt
-	p.require(planTraitResponseDataFieldCreatedAt)
-}
-
-// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetEnvironmentID(environmentID string) {
-	p.EnvironmentID = environmentID
-	p.require(planTraitResponseDataFieldEnvironmentID)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetID(id string) {
-	p.ID = id
-	p.require(planTraitResponseDataFieldID)
-}
-
-// SetPlanID sets the PlanID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetPlanID(planID string) {
-	p.PlanID = planID
-	p.require(planTraitResponseDataFieldPlanID)
-}
-
-// SetPlanType sets the PlanType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetPlanType(planType string) {
-	p.PlanType = planType
-	p.require(planTraitResponseDataFieldPlanType)
-}
-
-// SetTraitID sets the TraitID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetTraitID(traitID string) {
-	p.TraitID = traitID
-	p.require(planTraitResponseDataFieldTraitID)
-}
-
-// SetTraitValue sets the TraitValue field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetTraitValue(traitValue string) {
-	p.TraitValue = traitValue
-	p.require(planTraitResponseDataFieldTraitValue)
-}
-
-// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetUpdatedAt(updatedAt time.Time) {
-	p.UpdatedAt = updatedAt
-	p.require(planTraitResponseDataFieldUpdatedAt)
-}
-
-func (p *PlanTraitResponseData) UnmarshalJSON(data []byte) error {
-	type embed PlanTraitResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*p),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*p = PlanTraitResponseData(unmarshaler.embed)
-	p.CreatedAt = unmarshaler.CreatedAt.Time()
-	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *p)
-	if err != nil {
-		return err
-	}
-	p.extraProperties = extraProperties
-	p.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (p *PlanTraitResponseData) MarshalJSON() ([]byte, error) {
-	type embed PlanTraitResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*p),
-		CreatedAt: internal.NewDateTime(p.CreatedAt),
-		UpdatedAt: internal.NewDateTime(p.UpdatedAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (p *PlanTraitResponseData) String() string {
-	if len(p.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(p); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", p)
+func (s SubscriptionStatus) Ptr() *SubscriptionStatus {
+	return &s
 }
 
 var (
@@ -4404,13 +3786,13 @@ var (
 )
 
 type SubscriptionTraitUpdate struct {
-	FeatureID string   `json:"feature_id" url:"feature_id"`
-	Hierarchy []string `json:"hierarchy" url:"hierarchy"`
-	Reason    string   `json:"reason" url:"reason"`
-	TraitID   string   `json:"trait_id" url:"trait_id"`
-	TraitName string   `json:"trait_name" url:"trait_name"`
-	TraitType string   `json:"trait_type" url:"trait_type"`
-	Value     string   `json:"value" url:"value"`
+	FeatureID string    `json:"feature_id" url:"feature_id"`
+	Hierarchy []string  `json:"hierarchy" url:"hierarchy"`
+	Reason    string    `json:"reason" url:"reason"`
+	TraitID   string    `json:"trait_id" url:"trait_id"`
+	TraitName string    `json:"trait_name" url:"trait_name"`
+	TraitType TraitType `json:"trait_type" url:"trait_type"`
+	Value     string    `json:"value" url:"value"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4454,7 +3836,7 @@ func (s *SubscriptionTraitUpdate) GetTraitName() string {
 	return s.TraitName
 }
 
-func (s *SubscriptionTraitUpdate) GetTraitType() string {
+func (s *SubscriptionTraitUpdate) GetTraitType() TraitType {
 	if s == nil {
 		return ""
 	}
@@ -4516,7 +3898,7 @@ func (s *SubscriptionTraitUpdate) SetTraitName(traitName string) {
 
 // SetTraitType sets the TraitType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (s *SubscriptionTraitUpdate) SetTraitType(traitType string) {
+func (s *SubscriptionTraitUpdate) SetTraitType(traitType TraitType) {
 	s.TraitType = traitType
 	s.require(subscriptionTraitUpdateFieldTraitType)
 }
@@ -4567,98 +3949,32 @@ func (s *SubscriptionTraitUpdate) String() string {
 	return fmt.Sprintf("%#v", s)
 }
 
-var (
-	updatePlanTraitTraitRequestBodyFieldTraitID    = big.NewInt(1 << 0)
-	updatePlanTraitTraitRequestBodyFieldTraitValue = big.NewInt(1 << 1)
+type SubscriptionType string
+
+const (
+	SubscriptionTypeFree    SubscriptionType = "free"
+	SubscriptionTypeOneTime SubscriptionType = "one_time"
+	SubscriptionTypePaid    SubscriptionType = "paid"
+	SubscriptionTypeTrial   SubscriptionType = "trial"
 )
 
-type UpdatePlanTraitTraitRequestBody struct {
-	TraitID    string `json:"trait_id" url:"trait_id"`
-	TraitValue string `json:"trait_value" url:"trait_value"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) GetTraitID() string {
-	if u == nil {
-		return ""
+func NewSubscriptionTypeFromString(s string) (SubscriptionType, error) {
+	switch s {
+	case "free":
+		return SubscriptionTypeFree, nil
+	case "one_time":
+		return SubscriptionTypeOneTime, nil
+	case "paid":
+		return SubscriptionTypePaid, nil
+	case "trial":
+		return SubscriptionTypeTrial, nil
 	}
-	return u.TraitID
+	var t SubscriptionType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (u *UpdatePlanTraitTraitRequestBody) GetTraitValue() string {
-	if u == nil {
-		return ""
-	}
-	return u.TraitValue
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) GetExtraProperties() map[string]interface{} {
-	return u.extraProperties
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
-	}
-	u.explicitFields.Or(u.explicitFields, field)
-}
-
-// SetTraitID sets the TraitID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanTraitTraitRequestBody) SetTraitID(traitID string) {
-	u.TraitID = traitID
-	u.require(updatePlanTraitTraitRequestBodyFieldTraitID)
-}
-
-// SetTraitValue sets the TraitValue field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanTraitTraitRequestBody) SetTraitValue(traitValue string) {
-	u.TraitValue = traitValue
-	u.require(updatePlanTraitTraitRequestBodyFieldTraitValue)
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler UpdatePlanTraitTraitRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*u = UpdatePlanTraitTraitRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *u)
-	if err != nil {
-		return err
-	}
-	u.extraProperties = extraProperties
-	u.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) MarshalJSON() ([]byte, error) {
-	type embed UpdatePlanTraitTraitRequestBody
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*u),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) String() string {
-	if len(u.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(u); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", u)
+func (s SubscriptionType) Ptr() *SubscriptionType {
+	return &s
 }
 
 var (
@@ -5492,13 +4808,12 @@ type CountCompaniesForAdvancedFilterParams struct {
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
-	SortOrderColumn *string `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
-	// Direction to sort by (asc or desc)
-	SortOrderDirection *CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
+	SortOrderColumn    *string        `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	SortOrderDirection *SortDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
 	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
-	SubscriptionStatuses []string `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
+	SubscriptionStatuses []SubscriptionStatus `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
 	// Filter companies by one or more subscription types (paid, free, trial)
-	SubscriptionTypes []string `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
+	SubscriptionTypes []SubscriptionType `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
 	// Filter out companies that have a subscription
@@ -5581,21 +4896,21 @@ func (c *CountCompaniesForAdvancedFilterParams) GetSortOrderColumn() *string {
 	return c.SortOrderColumn
 }
 
-func (c *CountCompaniesForAdvancedFilterParams) GetSortOrderDirection() *CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection {
+func (c *CountCompaniesForAdvancedFilterParams) GetSortOrderDirection() *SortDirection {
 	if c == nil {
 		return nil
 	}
 	return c.SortOrderDirection
 }
 
-func (c *CountCompaniesForAdvancedFilterParams) GetSubscriptionStatuses() []string {
+func (c *CountCompaniesForAdvancedFilterParams) GetSubscriptionStatuses() []SubscriptionStatus {
 	if c == nil {
 		return nil
 	}
 	return c.SubscriptionStatuses
 }
 
-func (c *CountCompaniesForAdvancedFilterParams) GetSubscriptionTypes() []string {
+func (c *CountCompaniesForAdvancedFilterParams) GetSubscriptionTypes() []SubscriptionType {
 	if c == nil {
 		return nil
 	}
@@ -5699,21 +5014,21 @@ func (c *CountCompaniesForAdvancedFilterParams) SetSortOrderColumn(sortOrderColu
 
 // SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetSortOrderDirection(sortOrderDirection *CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection) {
+func (c *CountCompaniesForAdvancedFilterParams) SetSortOrderDirection(sortOrderDirection *SortDirection) {
 	c.SortOrderDirection = sortOrderDirection
 	c.require(countCompaniesForAdvancedFilterParamsFieldSortOrderDirection)
 }
 
 // SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetSubscriptionStatuses(subscriptionStatuses []string) {
+func (c *CountCompaniesForAdvancedFilterParams) SetSubscriptionStatuses(subscriptionStatuses []SubscriptionStatus) {
 	c.SubscriptionStatuses = subscriptionStatuses
 	c.require(countCompaniesForAdvancedFilterParamsFieldSubscriptionStatuses)
 }
 
 // SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetSubscriptionTypes(subscriptionTypes []string) {
+func (c *CountCompaniesForAdvancedFilterParams) SetSubscriptionTypes(subscriptionTypes []SubscriptionType) {
 	c.SubscriptionTypes = subscriptionTypes
 	c.require(countCompaniesForAdvancedFilterParamsFieldSubscriptionTypes)
 }
@@ -5769,29 +5084,6 @@ func (c *CountCompaniesForAdvancedFilterParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-// Direction to sort by (asc or desc)
-type CountCompaniesForAdvancedFilterRequestSortOrderDirection string
-
-const (
-	CountCompaniesForAdvancedFilterRequestSortOrderDirectionAsc  CountCompaniesForAdvancedFilterRequestSortOrderDirection = "asc"
-	CountCompaniesForAdvancedFilterRequestSortOrderDirectionDesc CountCompaniesForAdvancedFilterRequestSortOrderDirection = "desc"
-)
-
-func NewCountCompaniesForAdvancedFilterRequestSortOrderDirectionFromString(s string) (CountCompaniesForAdvancedFilterRequestSortOrderDirection, error) {
-	switch s {
-	case "asc":
-		return CountCompaniesForAdvancedFilterRequestSortOrderDirectionAsc, nil
-	case "desc":
-		return CountCompaniesForAdvancedFilterRequestSortOrderDirectionDesc, nil
-	}
-	var t CountCompaniesForAdvancedFilterRequestSortOrderDirection
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountCompaniesForAdvancedFilterRequestSortOrderDirection) Ptr() *CountCompaniesForAdvancedFilterRequestSortOrderDirection {
-	return &c
 }
 
 var (
@@ -5887,29 +5179,6 @@ func (c *CountCompaniesForAdvancedFilterResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-// Direction to sort by (asc or desc)
-type CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection string
-
-const (
-	CountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionAsc  CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection = "asc"
-	CountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionDesc CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection = "desc"
-)
-
-func NewCountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionFromString(s string) (CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection, error) {
-	switch s {
-	case "asc":
-		return CountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionAsc, nil
-	case "desc":
-		return CountCompaniesForAdvancedFilterResponseParamsSortOrderDirectionDesc, nil
-	}
-	var t CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection) Ptr() *CountCompaniesForAdvancedFilterResponseParamsSortOrderDirection {
-	return &c
 }
 
 // Input parameters
@@ -6216,8 +5485,8 @@ var (
 )
 
 type CountEntityKeyDefinitionsParams struct {
-	EntityType *CountEntityKeyDefinitionsResponseParamsEntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
-	IDs        []string                                           `json:"ids,omitempty" url:"ids,omitempty"`
+	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
+	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -6231,7 +5500,7 @@ type CountEntityKeyDefinitionsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountEntityKeyDefinitionsParams) GetEntityType() *CountEntityKeyDefinitionsResponseParamsEntityType {
+func (c *CountEntityKeyDefinitionsParams) GetEntityType() *EntityType {
 	if c == nil {
 		return nil
 	}
@@ -6279,7 +5548,7 @@ func (c *CountEntityKeyDefinitionsParams) require(field *big.Int) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityKeyDefinitionsParams) SetEntityType(entityType *CountEntityKeyDefinitionsResponseParamsEntityType) {
+func (c *CountEntityKeyDefinitionsParams) SetEntityType(entityType *EntityType) {
 	c.EntityType = entityType
 	c.require(countEntityKeyDefinitionsParamsFieldEntityType)
 }
@@ -6349,28 +5618,6 @@ func (c *CountEntityKeyDefinitionsParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CountEntityKeyDefinitionsRequestEntityType string
-
-const (
-	CountEntityKeyDefinitionsRequestEntityTypeCompany CountEntityKeyDefinitionsRequestEntityType = "company"
-	CountEntityKeyDefinitionsRequestEntityTypeUser    CountEntityKeyDefinitionsRequestEntityType = "user"
-)
-
-func NewCountEntityKeyDefinitionsRequestEntityTypeFromString(s string) (CountEntityKeyDefinitionsRequestEntityType, error) {
-	switch s {
-	case "company":
-		return CountEntityKeyDefinitionsRequestEntityTypeCompany, nil
-	case "user":
-		return CountEntityKeyDefinitionsRequestEntityTypeUser, nil
-	}
-	var t CountEntityKeyDefinitionsRequestEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountEntityKeyDefinitionsRequestEntityType) Ptr() *CountEntityKeyDefinitionsRequestEntityType {
-	return &c
 }
 
 var (
@@ -6468,28 +5715,6 @@ func (c *CountEntityKeyDefinitionsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-type CountEntityKeyDefinitionsResponseParamsEntityType string
-
-const (
-	CountEntityKeyDefinitionsResponseParamsEntityTypeCompany CountEntityKeyDefinitionsResponseParamsEntityType = "company"
-	CountEntityKeyDefinitionsResponseParamsEntityTypeUser    CountEntityKeyDefinitionsResponseParamsEntityType = "user"
-)
-
-func NewCountEntityKeyDefinitionsResponseParamsEntityTypeFromString(s string) (CountEntityKeyDefinitionsResponseParamsEntityType, error) {
-	switch s {
-	case "company":
-		return CountEntityKeyDefinitionsResponseParamsEntityTypeCompany, nil
-	case "user":
-		return CountEntityKeyDefinitionsResponseParamsEntityTypeUser, nil
-	}
-	var t CountEntityKeyDefinitionsResponseParamsEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountEntityKeyDefinitionsResponseParamsEntityType) Ptr() *CountEntityKeyDefinitionsResponseParamsEntityType {
-	return &c
-}
-
 // Input parameters
 var (
 	countEntityTraitDefinitionsParamsFieldEntityType = big.NewInt(1 << 0)
@@ -6498,17 +5723,19 @@ var (
 	countEntityTraitDefinitionsParamsFieldOffset     = big.NewInt(1 << 3)
 	countEntityTraitDefinitionsParamsFieldQ          = big.NewInt(1 << 4)
 	countEntityTraitDefinitionsParamsFieldTraitType  = big.NewInt(1 << 5)
+	countEntityTraitDefinitionsParamsFieldTraitTypes = big.NewInt(1 << 6)
 )
 
 type CountEntityTraitDefinitionsParams struct {
-	EntityType *CountEntityTraitDefinitionsResponseParamsEntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
-	IDs        []string                                             `json:"ids,omitempty" url:"ids,omitempty"`
+	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
+	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int                                                `json:"offset,omitempty" url:"offset,omitempty"`
-	Q         *string                                             `json:"q,omitempty" url:"q,omitempty"`
-	TraitType *CountEntityTraitDefinitionsResponseParamsTraitType `json:"trait_type,omitempty" url:"trait_type,omitempty"`
+	Offset     *int        `json:"offset,omitempty" url:"offset,omitempty"`
+	Q          *string     `json:"q,omitempty" url:"q,omitempty"`
+	TraitType  *TraitType  `json:"trait_type,omitempty" url:"trait_type,omitempty"`
+	TraitTypes []TraitType `json:"trait_types,omitempty" url:"trait_types,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6517,7 +5744,7 @@ type CountEntityTraitDefinitionsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountEntityTraitDefinitionsParams) GetEntityType() *CountEntityTraitDefinitionsResponseParamsEntityType {
+func (c *CountEntityTraitDefinitionsParams) GetEntityType() *EntityType {
 	if c == nil {
 		return nil
 	}
@@ -6552,11 +5779,18 @@ func (c *CountEntityTraitDefinitionsParams) GetQ() *string {
 	return c.Q
 }
 
-func (c *CountEntityTraitDefinitionsParams) GetTraitType() *CountEntityTraitDefinitionsResponseParamsTraitType {
+func (c *CountEntityTraitDefinitionsParams) GetTraitType() *TraitType {
 	if c == nil {
 		return nil
 	}
 	return c.TraitType
+}
+
+func (c *CountEntityTraitDefinitionsParams) GetTraitTypes() []TraitType {
+	if c == nil {
+		return nil
+	}
+	return c.TraitTypes
 }
 
 func (c *CountEntityTraitDefinitionsParams) GetExtraProperties() map[string]interface{} {
@@ -6572,7 +5806,7 @@ func (c *CountEntityTraitDefinitionsParams) require(field *big.Int) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityTraitDefinitionsParams) SetEntityType(entityType *CountEntityTraitDefinitionsResponseParamsEntityType) {
+func (c *CountEntityTraitDefinitionsParams) SetEntityType(entityType *EntityType) {
 	c.EntityType = entityType
 	c.require(countEntityTraitDefinitionsParamsFieldEntityType)
 }
@@ -6607,9 +5841,16 @@ func (c *CountEntityTraitDefinitionsParams) SetQ(q *string) {
 
 // SetTraitType sets the TraitType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityTraitDefinitionsParams) SetTraitType(traitType *CountEntityTraitDefinitionsResponseParamsTraitType) {
+func (c *CountEntityTraitDefinitionsParams) SetTraitType(traitType *TraitType) {
 	c.TraitType = traitType
 	c.require(countEntityTraitDefinitionsParamsFieldTraitType)
+}
+
+// SetTraitTypes sets the TraitTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityTraitDefinitionsParams) SetTraitTypes(traitTypes []TraitType) {
+	c.TraitTypes = traitTypes
+	c.require(countEntityTraitDefinitionsParamsFieldTraitTypes)
 }
 
 func (c *CountEntityTraitDefinitionsParams) UnmarshalJSON(data []byte) error {
@@ -6649,62 +5890,6 @@ func (c *CountEntityTraitDefinitionsParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CountEntityTraitDefinitionsRequestEntityType string
-
-const (
-	CountEntityTraitDefinitionsRequestEntityTypeCompany CountEntityTraitDefinitionsRequestEntityType = "company"
-	CountEntityTraitDefinitionsRequestEntityTypeUser    CountEntityTraitDefinitionsRequestEntityType = "user"
-)
-
-func NewCountEntityTraitDefinitionsRequestEntityTypeFromString(s string) (CountEntityTraitDefinitionsRequestEntityType, error) {
-	switch s {
-	case "company":
-		return CountEntityTraitDefinitionsRequestEntityTypeCompany, nil
-	case "user":
-		return CountEntityTraitDefinitionsRequestEntityTypeUser, nil
-	}
-	var t CountEntityTraitDefinitionsRequestEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountEntityTraitDefinitionsRequestEntityType) Ptr() *CountEntityTraitDefinitionsRequestEntityType {
-	return &c
-}
-
-type CountEntityTraitDefinitionsRequestTraitType string
-
-const (
-	CountEntityTraitDefinitionsRequestTraitTypeBoolean  CountEntityTraitDefinitionsRequestTraitType = "boolean"
-	CountEntityTraitDefinitionsRequestTraitTypeCurrency CountEntityTraitDefinitionsRequestTraitType = "currency"
-	CountEntityTraitDefinitionsRequestTraitTypeDate     CountEntityTraitDefinitionsRequestTraitType = "date"
-	CountEntityTraitDefinitionsRequestTraitTypeNumber   CountEntityTraitDefinitionsRequestTraitType = "number"
-	CountEntityTraitDefinitionsRequestTraitTypeString   CountEntityTraitDefinitionsRequestTraitType = "string"
-	CountEntityTraitDefinitionsRequestTraitTypeURL      CountEntityTraitDefinitionsRequestTraitType = "url"
-)
-
-func NewCountEntityTraitDefinitionsRequestTraitTypeFromString(s string) (CountEntityTraitDefinitionsRequestTraitType, error) {
-	switch s {
-	case "boolean":
-		return CountEntityTraitDefinitionsRequestTraitTypeBoolean, nil
-	case "currency":
-		return CountEntityTraitDefinitionsRequestTraitTypeCurrency, nil
-	case "date":
-		return CountEntityTraitDefinitionsRequestTraitTypeDate, nil
-	case "number":
-		return CountEntityTraitDefinitionsRequestTraitTypeNumber, nil
-	case "string":
-		return CountEntityTraitDefinitionsRequestTraitTypeString, nil
-	case "url":
-		return CountEntityTraitDefinitionsRequestTraitTypeURL, nil
-	}
-	var t CountEntityTraitDefinitionsRequestTraitType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountEntityTraitDefinitionsRequestTraitType) Ptr() *CountEntityTraitDefinitionsRequestTraitType {
-	return &c
 }
 
 var (
@@ -6800,62 +5985,6 @@ func (c *CountEntityTraitDefinitionsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CountEntityTraitDefinitionsResponseParamsEntityType string
-
-const (
-	CountEntityTraitDefinitionsResponseParamsEntityTypeCompany CountEntityTraitDefinitionsResponseParamsEntityType = "company"
-	CountEntityTraitDefinitionsResponseParamsEntityTypeUser    CountEntityTraitDefinitionsResponseParamsEntityType = "user"
-)
-
-func NewCountEntityTraitDefinitionsResponseParamsEntityTypeFromString(s string) (CountEntityTraitDefinitionsResponseParamsEntityType, error) {
-	switch s {
-	case "company":
-		return CountEntityTraitDefinitionsResponseParamsEntityTypeCompany, nil
-	case "user":
-		return CountEntityTraitDefinitionsResponseParamsEntityTypeUser, nil
-	}
-	var t CountEntityTraitDefinitionsResponseParamsEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountEntityTraitDefinitionsResponseParamsEntityType) Ptr() *CountEntityTraitDefinitionsResponseParamsEntityType {
-	return &c
-}
-
-type CountEntityTraitDefinitionsResponseParamsTraitType string
-
-const (
-	CountEntityTraitDefinitionsResponseParamsTraitTypeBoolean  CountEntityTraitDefinitionsResponseParamsTraitType = "boolean"
-	CountEntityTraitDefinitionsResponseParamsTraitTypeCurrency CountEntityTraitDefinitionsResponseParamsTraitType = "currency"
-	CountEntityTraitDefinitionsResponseParamsTraitTypeDate     CountEntityTraitDefinitionsResponseParamsTraitType = "date"
-	CountEntityTraitDefinitionsResponseParamsTraitTypeNumber   CountEntityTraitDefinitionsResponseParamsTraitType = "number"
-	CountEntityTraitDefinitionsResponseParamsTraitTypeString   CountEntityTraitDefinitionsResponseParamsTraitType = "string"
-	CountEntityTraitDefinitionsResponseParamsTraitTypeURL      CountEntityTraitDefinitionsResponseParamsTraitType = "url"
-)
-
-func NewCountEntityTraitDefinitionsResponseParamsTraitTypeFromString(s string) (CountEntityTraitDefinitionsResponseParamsTraitType, error) {
-	switch s {
-	case "boolean":
-		return CountEntityTraitDefinitionsResponseParamsTraitTypeBoolean, nil
-	case "currency":
-		return CountEntityTraitDefinitionsResponseParamsTraitTypeCurrency, nil
-	case "date":
-		return CountEntityTraitDefinitionsResponseParamsTraitTypeDate, nil
-	case "number":
-		return CountEntityTraitDefinitionsResponseParamsTraitTypeNumber, nil
-	case "string":
-		return CountEntityTraitDefinitionsResponseParamsTraitTypeString, nil
-	case "url":
-		return CountEntityTraitDefinitionsResponseParamsTraitTypeURL, nil
-	}
-	var t CountEntityTraitDefinitionsResponseParamsTraitType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountEntityTraitDefinitionsResponseParamsTraitType) Ptr() *CountEntityTraitDefinitionsResponseParamsTraitType {
-	return &c
 }
 
 // Input parameters
@@ -7467,62 +6596,6 @@ func (c *CreateCompanyResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CreateEntityTraitDefinitionRequestBodyEntityType string
-
-const (
-	CreateEntityTraitDefinitionRequestBodyEntityTypeCompany CreateEntityTraitDefinitionRequestBodyEntityType = "company"
-	CreateEntityTraitDefinitionRequestBodyEntityTypeUser    CreateEntityTraitDefinitionRequestBodyEntityType = "user"
-)
-
-func NewCreateEntityTraitDefinitionRequestBodyEntityTypeFromString(s string) (CreateEntityTraitDefinitionRequestBodyEntityType, error) {
-	switch s {
-	case "company":
-		return CreateEntityTraitDefinitionRequestBodyEntityTypeCompany, nil
-	case "user":
-		return CreateEntityTraitDefinitionRequestBodyEntityTypeUser, nil
-	}
-	var t CreateEntityTraitDefinitionRequestBodyEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateEntityTraitDefinitionRequestBodyEntityType) Ptr() *CreateEntityTraitDefinitionRequestBodyEntityType {
-	return &c
-}
-
-type CreateEntityTraitDefinitionRequestBodyTraitType string
-
-const (
-	CreateEntityTraitDefinitionRequestBodyTraitTypeBoolean  CreateEntityTraitDefinitionRequestBodyTraitType = "boolean"
-	CreateEntityTraitDefinitionRequestBodyTraitTypeCurrency CreateEntityTraitDefinitionRequestBodyTraitType = "currency"
-	CreateEntityTraitDefinitionRequestBodyTraitTypeDate     CreateEntityTraitDefinitionRequestBodyTraitType = "date"
-	CreateEntityTraitDefinitionRequestBodyTraitTypeNumber   CreateEntityTraitDefinitionRequestBodyTraitType = "number"
-	CreateEntityTraitDefinitionRequestBodyTraitTypeString   CreateEntityTraitDefinitionRequestBodyTraitType = "string"
-	CreateEntityTraitDefinitionRequestBodyTraitTypeURL      CreateEntityTraitDefinitionRequestBodyTraitType = "url"
-)
-
-func NewCreateEntityTraitDefinitionRequestBodyTraitTypeFromString(s string) (CreateEntityTraitDefinitionRequestBodyTraitType, error) {
-	switch s {
-	case "boolean":
-		return CreateEntityTraitDefinitionRequestBodyTraitTypeBoolean, nil
-	case "currency":
-		return CreateEntityTraitDefinitionRequestBodyTraitTypeCurrency, nil
-	case "date":
-		return CreateEntityTraitDefinitionRequestBodyTraitTypeDate, nil
-	case "number":
-		return CreateEntityTraitDefinitionRequestBodyTraitTypeNumber, nil
-	case "string":
-		return CreateEntityTraitDefinitionRequestBodyTraitTypeString, nil
-	case "url":
-		return CreateEntityTraitDefinitionRequestBodyTraitTypeURL, nil
-	}
-	var t CreateEntityTraitDefinitionRequestBodyTraitType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateEntityTraitDefinitionRequestBodyTraitType) Ptr() *CreateEntityTraitDefinitionRequestBodyTraitType {
-	return &c
 }
 
 var (
@@ -8604,230 +7677,6 @@ func (g *GetActiveCompanySubscriptionResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
-var (
-	getActiveDealsParamsFieldCompanyID = big.NewInt(1 << 0)
-	getActiveDealsParamsFieldDealStage = big.NewInt(1 << 1)
-	getActiveDealsParamsFieldLimit     = big.NewInt(1 << 2)
-	getActiveDealsParamsFieldOffset    = big.NewInt(1 << 3)
-)
-
-type GetActiveDealsParams struct {
-	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
-	DealStage *string `json:"deal_stage,omitempty" url:"deal_stage,omitempty"`
-	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
-	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (g *GetActiveDealsParams) GetCompanyID() *string {
-	if g == nil {
-		return nil
-	}
-	return g.CompanyID
-}
-
-func (g *GetActiveDealsParams) GetDealStage() *string {
-	if g == nil {
-		return nil
-	}
-	return g.DealStage
-}
-
-func (g *GetActiveDealsParams) GetLimit() *int {
-	if g == nil {
-		return nil
-	}
-	return g.Limit
-}
-
-func (g *GetActiveDealsParams) GetOffset() *int {
-	if g == nil {
-		return nil
-	}
-	return g.Offset
-}
-
-func (g *GetActiveDealsParams) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GetActiveDealsParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
-	}
-	g.explicitFields.Or(g.explicitFields, field)
-}
-
-// SetCompanyID sets the CompanyID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsParams) SetCompanyID(companyID *string) {
-	g.CompanyID = companyID
-	g.require(getActiveDealsParamsFieldCompanyID)
-}
-
-// SetDealStage sets the DealStage field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsParams) SetDealStage(dealStage *string) {
-	g.DealStage = dealStage
-	g.require(getActiveDealsParamsFieldDealStage)
-}
-
-// SetLimit sets the Limit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsParams) SetLimit(limit *int) {
-	g.Limit = limit
-	g.require(getActiveDealsParamsFieldLimit)
-}
-
-// SetOffset sets the Offset field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsParams) SetOffset(offset *int) {
-	g.Offset = offset
-	g.require(getActiveDealsParamsFieldOffset)
-}
-
-func (g *GetActiveDealsParams) UnmarshalJSON(data []byte) error {
-	type unmarshaler GetActiveDealsParams
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GetActiveDealsParams(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-	g.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GetActiveDealsParams) MarshalJSON() ([]byte, error) {
-	type embed GetActiveDealsParams
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*g),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (g *GetActiveDealsParams) String() string {
-	if len(g.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-var (
-	getActiveDealsResponseFieldData   = big.NewInt(1 << 0)
-	getActiveDealsResponseFieldParams = big.NewInt(1 << 1)
-)
-
-type GetActiveDealsResponse struct {
-	Data []*CompanyCrmDealsResponseData `json:"data" url:"data"`
-	// Input parameters
-	Params *GetActiveDealsParams `json:"params" url:"params"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (g *GetActiveDealsResponse) GetData() []*CompanyCrmDealsResponseData {
-	if g == nil {
-		return nil
-	}
-	return g.Data
-}
-
-func (g *GetActiveDealsResponse) GetParams() *GetActiveDealsParams {
-	if g == nil {
-		return nil
-	}
-	return g.Params
-}
-
-func (g *GetActiveDealsResponse) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GetActiveDealsResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
-	}
-	g.explicitFields.Or(g.explicitFields, field)
-}
-
-// SetData sets the Data field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsResponse) SetData(data []*CompanyCrmDealsResponseData) {
-	g.Data = data
-	g.require(getActiveDealsResponseFieldData)
-}
-
-// SetParams sets the Params field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveDealsResponse) SetParams(params *GetActiveDealsParams) {
-	g.Params = params
-	g.require(getActiveDealsResponseFieldParams)
-}
-
-func (g *GetActiveDealsResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler GetActiveDealsResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GetActiveDealsResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-	g.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GetActiveDealsResponse) MarshalJSON() ([]byte, error) {
-	type embed GetActiveDealsResponse
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*g),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (g *GetActiveDealsResponse) String() string {
-	if len(g.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
 var (
 	getCompanyResponseFieldData   = big.NewInt(1 << 0)
 	getCompanyResponseFieldParams = big.NewInt(1 << 1)
@@ -9756,13 +8605,12 @@ type ListCompaniesForAdvancedFilterParams struct {
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
-	SortOrderColumn *string `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
-	// Direction to sort by (asc or desc)
-	SortOrderDirection *ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
+	SortOrderColumn    *string        `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	SortOrderDirection *SortDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
 	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
-	SubscriptionStatuses []string `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
+	SubscriptionStatuses []SubscriptionStatus `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
 	// Filter companies by one or more subscription types (paid, free, trial)
-	SubscriptionTypes []string `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
+	SubscriptionTypes []SubscriptionType `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
 	// Filter out companies that have a subscription
@@ -9845,21 +8693,21 @@ func (l *ListCompaniesForAdvancedFilterParams) GetSortOrderColumn() *string {
 	return l.SortOrderColumn
 }
 
-func (l *ListCompaniesForAdvancedFilterParams) GetSortOrderDirection() *ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection {
+func (l *ListCompaniesForAdvancedFilterParams) GetSortOrderDirection() *SortDirection {
 	if l == nil {
 		return nil
 	}
 	return l.SortOrderDirection
 }
 
-func (l *ListCompaniesForAdvancedFilterParams) GetSubscriptionStatuses() []string {
+func (l *ListCompaniesForAdvancedFilterParams) GetSubscriptionStatuses() []SubscriptionStatus {
 	if l == nil {
 		return nil
 	}
 	return l.SubscriptionStatuses
 }
 
-func (l *ListCompaniesForAdvancedFilterParams) GetSubscriptionTypes() []string {
+func (l *ListCompaniesForAdvancedFilterParams) GetSubscriptionTypes() []SubscriptionType {
 	if l == nil {
 		return nil
 	}
@@ -9963,21 +8811,21 @@ func (l *ListCompaniesForAdvancedFilterParams) SetSortOrderColumn(sortOrderColum
 
 // SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetSortOrderDirection(sortOrderDirection *ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection) {
+func (l *ListCompaniesForAdvancedFilterParams) SetSortOrderDirection(sortOrderDirection *SortDirection) {
 	l.SortOrderDirection = sortOrderDirection
 	l.require(listCompaniesForAdvancedFilterParamsFieldSortOrderDirection)
 }
 
 // SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetSubscriptionStatuses(subscriptionStatuses []string) {
+func (l *ListCompaniesForAdvancedFilterParams) SetSubscriptionStatuses(subscriptionStatuses []SubscriptionStatus) {
 	l.SubscriptionStatuses = subscriptionStatuses
 	l.require(listCompaniesForAdvancedFilterParamsFieldSubscriptionStatuses)
 }
 
 // SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetSubscriptionTypes(subscriptionTypes []string) {
+func (l *ListCompaniesForAdvancedFilterParams) SetSubscriptionTypes(subscriptionTypes []SubscriptionType) {
 	l.SubscriptionTypes = subscriptionTypes
 	l.require(listCompaniesForAdvancedFilterParamsFieldSubscriptionTypes)
 }
@@ -10033,29 +8881,6 @@ func (l *ListCompaniesForAdvancedFilterParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-// Direction to sort by (asc or desc)
-type ListCompaniesForAdvancedFilterRequestSortOrderDirection string
-
-const (
-	ListCompaniesForAdvancedFilterRequestSortOrderDirectionAsc  ListCompaniesForAdvancedFilterRequestSortOrderDirection = "asc"
-	ListCompaniesForAdvancedFilterRequestSortOrderDirectionDesc ListCompaniesForAdvancedFilterRequestSortOrderDirection = "desc"
-)
-
-func NewListCompaniesForAdvancedFilterRequestSortOrderDirectionFromString(s string) (ListCompaniesForAdvancedFilterRequestSortOrderDirection, error) {
-	switch s {
-	case "asc":
-		return ListCompaniesForAdvancedFilterRequestSortOrderDirectionAsc, nil
-	case "desc":
-		return ListCompaniesForAdvancedFilterRequestSortOrderDirectionDesc, nil
-	}
-	var t ListCompaniesForAdvancedFilterRequestSortOrderDirection
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListCompaniesForAdvancedFilterRequestSortOrderDirection) Ptr() *ListCompaniesForAdvancedFilterRequestSortOrderDirection {
-	return &l
 }
 
 var (
@@ -10151,29 +8976,6 @@ func (l *ListCompaniesForAdvancedFilterResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-// Direction to sort by (asc or desc)
-type ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection string
-
-const (
-	ListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionAsc  ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection = "asc"
-	ListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionDesc ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection = "desc"
-)
-
-func NewListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionFromString(s string) (ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection, error) {
-	switch s {
-	case "asc":
-		return ListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionAsc, nil
-	case "desc":
-		return ListCompaniesForAdvancedFilterResponseParamsSortOrderDirectionDesc, nil
-	}
-	var t ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection) Ptr() *ListCompaniesForAdvancedFilterResponseParamsSortOrderDirection {
-	return &l
 }
 
 // Input parameters
@@ -10704,8 +9506,8 @@ var (
 )
 
 type ListEntityKeyDefinitionsParams struct {
-	EntityType *ListEntityKeyDefinitionsResponseParamsEntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
-	IDs        []string                                          `json:"ids,omitempty" url:"ids,omitempty"`
+	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
+	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -10719,7 +9521,7 @@ type ListEntityKeyDefinitionsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListEntityKeyDefinitionsParams) GetEntityType() *ListEntityKeyDefinitionsResponseParamsEntityType {
+func (l *ListEntityKeyDefinitionsParams) GetEntityType() *EntityType {
 	if l == nil {
 		return nil
 	}
@@ -10767,7 +9569,7 @@ func (l *ListEntityKeyDefinitionsParams) require(field *big.Int) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityKeyDefinitionsParams) SetEntityType(entityType *ListEntityKeyDefinitionsResponseParamsEntityType) {
+func (l *ListEntityKeyDefinitionsParams) SetEntityType(entityType *EntityType) {
 	l.EntityType = entityType
 	l.require(listEntityKeyDefinitionsParamsFieldEntityType)
 }
@@ -10837,28 +9639,6 @@ func (l *ListEntityKeyDefinitionsParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-type ListEntityKeyDefinitionsRequestEntityType string
-
-const (
-	ListEntityKeyDefinitionsRequestEntityTypeCompany ListEntityKeyDefinitionsRequestEntityType = "company"
-	ListEntityKeyDefinitionsRequestEntityTypeUser    ListEntityKeyDefinitionsRequestEntityType = "user"
-)
-
-func NewListEntityKeyDefinitionsRequestEntityTypeFromString(s string) (ListEntityKeyDefinitionsRequestEntityType, error) {
-	switch s {
-	case "company":
-		return ListEntityKeyDefinitionsRequestEntityTypeCompany, nil
-	case "user":
-		return ListEntityKeyDefinitionsRequestEntityTypeUser, nil
-	}
-	var t ListEntityKeyDefinitionsRequestEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListEntityKeyDefinitionsRequestEntityType) Ptr() *ListEntityKeyDefinitionsRequestEntityType {
-	return &l
 }
 
 var (
@@ -10956,28 +9736,6 @@ func (l *ListEntityKeyDefinitionsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-type ListEntityKeyDefinitionsResponseParamsEntityType string
-
-const (
-	ListEntityKeyDefinitionsResponseParamsEntityTypeCompany ListEntityKeyDefinitionsResponseParamsEntityType = "company"
-	ListEntityKeyDefinitionsResponseParamsEntityTypeUser    ListEntityKeyDefinitionsResponseParamsEntityType = "user"
-)
-
-func NewListEntityKeyDefinitionsResponseParamsEntityTypeFromString(s string) (ListEntityKeyDefinitionsResponseParamsEntityType, error) {
-	switch s {
-	case "company":
-		return ListEntityKeyDefinitionsResponseParamsEntityTypeCompany, nil
-	case "user":
-		return ListEntityKeyDefinitionsResponseParamsEntityTypeUser, nil
-	}
-	var t ListEntityKeyDefinitionsResponseParamsEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListEntityKeyDefinitionsResponseParamsEntityType) Ptr() *ListEntityKeyDefinitionsResponseParamsEntityType {
-	return &l
-}
-
 // Input parameters
 var (
 	listEntityTraitDefinitionsParamsFieldEntityType = big.NewInt(1 << 0)
@@ -10986,17 +9744,19 @@ var (
 	listEntityTraitDefinitionsParamsFieldOffset     = big.NewInt(1 << 3)
 	listEntityTraitDefinitionsParamsFieldQ          = big.NewInt(1 << 4)
 	listEntityTraitDefinitionsParamsFieldTraitType  = big.NewInt(1 << 5)
+	listEntityTraitDefinitionsParamsFieldTraitTypes = big.NewInt(1 << 6)
 )
 
 type ListEntityTraitDefinitionsParams struct {
-	EntityType *ListEntityTraitDefinitionsResponseParamsEntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
-	IDs        []string                                            `json:"ids,omitempty" url:"ids,omitempty"`
+	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
+	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int                                               `json:"offset,omitempty" url:"offset,omitempty"`
-	Q         *string                                            `json:"q,omitempty" url:"q,omitempty"`
-	TraitType *ListEntityTraitDefinitionsResponseParamsTraitType `json:"trait_type,omitempty" url:"trait_type,omitempty"`
+	Offset     *int        `json:"offset,omitempty" url:"offset,omitempty"`
+	Q          *string     `json:"q,omitempty" url:"q,omitempty"`
+	TraitType  *TraitType  `json:"trait_type,omitempty" url:"trait_type,omitempty"`
+	TraitTypes []TraitType `json:"trait_types,omitempty" url:"trait_types,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -11005,7 +9765,7 @@ type ListEntityTraitDefinitionsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListEntityTraitDefinitionsParams) GetEntityType() *ListEntityTraitDefinitionsResponseParamsEntityType {
+func (l *ListEntityTraitDefinitionsParams) GetEntityType() *EntityType {
 	if l == nil {
 		return nil
 	}
@@ -11040,11 +9800,18 @@ func (l *ListEntityTraitDefinitionsParams) GetQ() *string {
 	return l.Q
 }
 
-func (l *ListEntityTraitDefinitionsParams) GetTraitType() *ListEntityTraitDefinitionsResponseParamsTraitType {
+func (l *ListEntityTraitDefinitionsParams) GetTraitType() *TraitType {
 	if l == nil {
 		return nil
 	}
 	return l.TraitType
+}
+
+func (l *ListEntityTraitDefinitionsParams) GetTraitTypes() []TraitType {
+	if l == nil {
+		return nil
+	}
+	return l.TraitTypes
 }
 
 func (l *ListEntityTraitDefinitionsParams) GetExtraProperties() map[string]interface{} {
@@ -11060,7 +9827,7 @@ func (l *ListEntityTraitDefinitionsParams) require(field *big.Int) {
 
 // SetEntityType sets the EntityType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityTraitDefinitionsParams) SetEntityType(entityType *ListEntityTraitDefinitionsResponseParamsEntityType) {
+func (l *ListEntityTraitDefinitionsParams) SetEntityType(entityType *EntityType) {
 	l.EntityType = entityType
 	l.require(listEntityTraitDefinitionsParamsFieldEntityType)
 }
@@ -11095,9 +9862,16 @@ func (l *ListEntityTraitDefinitionsParams) SetQ(q *string) {
 
 // SetTraitType sets the TraitType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityTraitDefinitionsParams) SetTraitType(traitType *ListEntityTraitDefinitionsResponseParamsTraitType) {
+func (l *ListEntityTraitDefinitionsParams) SetTraitType(traitType *TraitType) {
 	l.TraitType = traitType
 	l.require(listEntityTraitDefinitionsParamsFieldTraitType)
+}
+
+// SetTraitTypes sets the TraitTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListEntityTraitDefinitionsParams) SetTraitTypes(traitTypes []TraitType) {
+	l.TraitTypes = traitTypes
+	l.require(listEntityTraitDefinitionsParamsFieldTraitTypes)
 }
 
 func (l *ListEntityTraitDefinitionsParams) UnmarshalJSON(data []byte) error {
@@ -11137,62 +9911,6 @@ func (l *ListEntityTraitDefinitionsParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-type ListEntityTraitDefinitionsRequestEntityType string
-
-const (
-	ListEntityTraitDefinitionsRequestEntityTypeCompany ListEntityTraitDefinitionsRequestEntityType = "company"
-	ListEntityTraitDefinitionsRequestEntityTypeUser    ListEntityTraitDefinitionsRequestEntityType = "user"
-)
-
-func NewListEntityTraitDefinitionsRequestEntityTypeFromString(s string) (ListEntityTraitDefinitionsRequestEntityType, error) {
-	switch s {
-	case "company":
-		return ListEntityTraitDefinitionsRequestEntityTypeCompany, nil
-	case "user":
-		return ListEntityTraitDefinitionsRequestEntityTypeUser, nil
-	}
-	var t ListEntityTraitDefinitionsRequestEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListEntityTraitDefinitionsRequestEntityType) Ptr() *ListEntityTraitDefinitionsRequestEntityType {
-	return &l
-}
-
-type ListEntityTraitDefinitionsRequestTraitType string
-
-const (
-	ListEntityTraitDefinitionsRequestTraitTypeBoolean  ListEntityTraitDefinitionsRequestTraitType = "boolean"
-	ListEntityTraitDefinitionsRequestTraitTypeCurrency ListEntityTraitDefinitionsRequestTraitType = "currency"
-	ListEntityTraitDefinitionsRequestTraitTypeDate     ListEntityTraitDefinitionsRequestTraitType = "date"
-	ListEntityTraitDefinitionsRequestTraitTypeNumber   ListEntityTraitDefinitionsRequestTraitType = "number"
-	ListEntityTraitDefinitionsRequestTraitTypeString   ListEntityTraitDefinitionsRequestTraitType = "string"
-	ListEntityTraitDefinitionsRequestTraitTypeURL      ListEntityTraitDefinitionsRequestTraitType = "url"
-)
-
-func NewListEntityTraitDefinitionsRequestTraitTypeFromString(s string) (ListEntityTraitDefinitionsRequestTraitType, error) {
-	switch s {
-	case "boolean":
-		return ListEntityTraitDefinitionsRequestTraitTypeBoolean, nil
-	case "currency":
-		return ListEntityTraitDefinitionsRequestTraitTypeCurrency, nil
-	case "date":
-		return ListEntityTraitDefinitionsRequestTraitTypeDate, nil
-	case "number":
-		return ListEntityTraitDefinitionsRequestTraitTypeNumber, nil
-	case "string":
-		return ListEntityTraitDefinitionsRequestTraitTypeString, nil
-	case "url":
-		return ListEntityTraitDefinitionsRequestTraitTypeURL, nil
-	}
-	var t ListEntityTraitDefinitionsRequestTraitType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListEntityTraitDefinitionsRequestTraitType) Ptr() *ListEntityTraitDefinitionsRequestTraitType {
-	return &l
 }
 
 var (
@@ -11288,62 +10006,6 @@ func (l *ListEntityTraitDefinitionsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-type ListEntityTraitDefinitionsResponseParamsEntityType string
-
-const (
-	ListEntityTraitDefinitionsResponseParamsEntityTypeCompany ListEntityTraitDefinitionsResponseParamsEntityType = "company"
-	ListEntityTraitDefinitionsResponseParamsEntityTypeUser    ListEntityTraitDefinitionsResponseParamsEntityType = "user"
-)
-
-func NewListEntityTraitDefinitionsResponseParamsEntityTypeFromString(s string) (ListEntityTraitDefinitionsResponseParamsEntityType, error) {
-	switch s {
-	case "company":
-		return ListEntityTraitDefinitionsResponseParamsEntityTypeCompany, nil
-	case "user":
-		return ListEntityTraitDefinitionsResponseParamsEntityTypeUser, nil
-	}
-	var t ListEntityTraitDefinitionsResponseParamsEntityType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListEntityTraitDefinitionsResponseParamsEntityType) Ptr() *ListEntityTraitDefinitionsResponseParamsEntityType {
-	return &l
-}
-
-type ListEntityTraitDefinitionsResponseParamsTraitType string
-
-const (
-	ListEntityTraitDefinitionsResponseParamsTraitTypeBoolean  ListEntityTraitDefinitionsResponseParamsTraitType = "boolean"
-	ListEntityTraitDefinitionsResponseParamsTraitTypeCurrency ListEntityTraitDefinitionsResponseParamsTraitType = "currency"
-	ListEntityTraitDefinitionsResponseParamsTraitTypeDate     ListEntityTraitDefinitionsResponseParamsTraitType = "date"
-	ListEntityTraitDefinitionsResponseParamsTraitTypeNumber   ListEntityTraitDefinitionsResponseParamsTraitType = "number"
-	ListEntityTraitDefinitionsResponseParamsTraitTypeString   ListEntityTraitDefinitionsResponseParamsTraitType = "string"
-	ListEntityTraitDefinitionsResponseParamsTraitTypeURL      ListEntityTraitDefinitionsResponseParamsTraitType = "url"
-)
-
-func NewListEntityTraitDefinitionsResponseParamsTraitTypeFromString(s string) (ListEntityTraitDefinitionsResponseParamsTraitType, error) {
-	switch s {
-	case "boolean":
-		return ListEntityTraitDefinitionsResponseParamsTraitTypeBoolean, nil
-	case "currency":
-		return ListEntityTraitDefinitionsResponseParamsTraitTypeCurrency, nil
-	case "date":
-		return ListEntityTraitDefinitionsResponseParamsTraitTypeDate, nil
-	case "number":
-		return ListEntityTraitDefinitionsResponseParamsTraitTypeNumber, nil
-	case "string":
-		return ListEntityTraitDefinitionsResponseParamsTraitTypeString, nil
-	case "url":
-		return ListEntityTraitDefinitionsResponseParamsTraitTypeURL, nil
-	}
-	var t ListEntityTraitDefinitionsResponseParamsTraitType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListEntityTraitDefinitionsResponseParamsTraitType) Ptr() *ListEntityTraitDefinitionsResponseParamsTraitType {
-	return &l
 }
 
 // Input parameters
@@ -12482,40 +11144,6 @@ func (l *LookupUserResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-type UpdateEntityTraitDefinitionRequestBodyTraitType string
-
-const (
-	UpdateEntityTraitDefinitionRequestBodyTraitTypeBoolean  UpdateEntityTraitDefinitionRequestBodyTraitType = "boolean"
-	UpdateEntityTraitDefinitionRequestBodyTraitTypeCurrency UpdateEntityTraitDefinitionRequestBodyTraitType = "currency"
-	UpdateEntityTraitDefinitionRequestBodyTraitTypeDate     UpdateEntityTraitDefinitionRequestBodyTraitType = "date"
-	UpdateEntityTraitDefinitionRequestBodyTraitTypeNumber   UpdateEntityTraitDefinitionRequestBodyTraitType = "number"
-	UpdateEntityTraitDefinitionRequestBodyTraitTypeString   UpdateEntityTraitDefinitionRequestBodyTraitType = "string"
-	UpdateEntityTraitDefinitionRequestBodyTraitTypeURL      UpdateEntityTraitDefinitionRequestBodyTraitType = "url"
-)
-
-func NewUpdateEntityTraitDefinitionRequestBodyTraitTypeFromString(s string) (UpdateEntityTraitDefinitionRequestBodyTraitType, error) {
-	switch s {
-	case "boolean":
-		return UpdateEntityTraitDefinitionRequestBodyTraitTypeBoolean, nil
-	case "currency":
-		return UpdateEntityTraitDefinitionRequestBodyTraitTypeCurrency, nil
-	case "date":
-		return UpdateEntityTraitDefinitionRequestBodyTraitTypeDate, nil
-	case "number":
-		return UpdateEntityTraitDefinitionRequestBodyTraitTypeNumber, nil
-	case "string":
-		return UpdateEntityTraitDefinitionRequestBodyTraitTypeString, nil
-	case "url":
-		return UpdateEntityTraitDefinitionRequestBodyTraitTypeURL, nil
-	}
-	var t UpdateEntityTraitDefinitionRequestBodyTraitType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateEntityTraitDefinitionRequestBodyTraitType) Ptr() *UpdateEntityTraitDefinitionRequestBodyTraitType {
-	return &u
-}
-
 var (
 	updateEntityTraitDefinitionResponseFieldData   = big.NewInt(1 << 0)
 	updateEntityTraitDefinitionResponseFieldParams = big.NewInt(1 << 1)
@@ -13187,8 +11815,8 @@ var (
 )
 
 type UpdateEntityTraitDefinitionRequestBody struct {
-	DisplayName *string                                         `json:"display_name,omitempty" url:"-"`
-	TraitType   UpdateEntityTraitDefinitionRequestBodyTraitType `json:"trait_type" url:"-"`
+	DisplayName *string   `json:"display_name,omitempty" url:"-"`
+	TraitType   TraitType `json:"trait_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -13210,7 +11838,7 @@ func (u *UpdateEntityTraitDefinitionRequestBody) SetDisplayName(displayName *str
 
 // SetTraitType sets the TraitType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateEntityTraitDefinitionRequestBody) SetTraitType(traitType UpdateEntityTraitDefinitionRequestBodyTraitType) {
+func (u *UpdateEntityTraitDefinitionRequestBody) SetTraitType(traitType TraitType) {
 	u.TraitType = traitType
 	u.require(updateEntityTraitDefinitionRequestBodyFieldTraitType)
 }
@@ -13250,13 +11878,15 @@ func (u *UpdatePlanTraitRequestBody) SetTraitValue(traitValue string) {
 }
 
 var (
-	updatePlanTraitBulkRequestBodyFieldPlanID = big.NewInt(1 << 0)
-	updatePlanTraitBulkRequestBodyFieldTraits = big.NewInt(1 << 1)
+	updatePlanTraitBulkRequestBodyFieldApplyToExistingCompanies = big.NewInt(1 << 0)
+	updatePlanTraitBulkRequestBodyFieldPlanID                   = big.NewInt(1 << 1)
+	updatePlanTraitBulkRequestBodyFieldTraits                   = big.NewInt(1 << 2)
 )
 
 type UpdatePlanTraitBulkRequestBody struct {
-	PlanID string                             `json:"plan_id" url:"-"`
-	Traits []*UpdatePlanTraitTraitRequestBody `json:"traits,omitempty" url:"-"`
+	ApplyToExistingCompanies bool                               `json:"apply_to_existing_companies" url:"-"`
+	PlanID                   string                             `json:"plan_id" url:"-"`
+	Traits                   []*UpdatePlanTraitTraitRequestBody `json:"traits,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -13267,6 +11897,13 @@ func (u *UpdatePlanTraitBulkRequestBody) require(field *big.Int) {
 		u.explicitFields = big.NewInt(0)
 	}
 	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetApplyToExistingCompanies sets the ApplyToExistingCompanies field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanTraitBulkRequestBody) SetApplyToExistingCompanies(applyToExistingCompanies bool) {
+	u.ApplyToExistingCompanies = applyToExistingCompanies
+	u.require(updatePlanTraitBulkRequestBodyFieldApplyToExistingCompanies)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;

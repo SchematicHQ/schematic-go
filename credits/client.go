@@ -269,6 +269,22 @@ func (c *Client) GrantBillingCreditsToCompany(
 	return response.Body, nil
 }
 
+func (c *Client) CountCompanyGrants(
+	ctx context.Context,
+	request *schematichq.CountCompanyGrantsRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CountCompanyGrantsResponse, error) {
+	response, err := c.WithRawResponse.CountCompanyGrants(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) ListCompanyGrants(
 	ctx context.Context,
 	request *schematichq.ListCompanyGrantsRequest,

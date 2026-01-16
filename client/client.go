@@ -12,13 +12,13 @@ import (
 	components "github.com/schematichq/schematic-go/components"
 	core "github.com/schematichq/schematic-go/core"
 	credits "github.com/schematichq/schematic-go/credits"
-	crm "github.com/schematichq/schematic-go/crm"
 	dataexports "github.com/schematichq/schematic-go/dataexports"
 	entitlements "github.com/schematichq/schematic-go/entitlements"
 	events "github.com/schematichq/schematic-go/events"
 	features "github.com/schematichq/schematic-go/features"
 	internal "github.com/schematichq/schematic-go/internal"
 	option "github.com/schematichq/schematic-go/option"
+	planbundle "github.com/schematichq/schematic-go/planbundle"
 	plangroups "github.com/schematichq/schematic-go/plangroups"
 	plans "github.com/schematichq/schematic-go/plans"
 	webhooks "github.com/schematichq/schematic-go/webhooks"
@@ -34,10 +34,10 @@ type Client struct {
 	Entitlements    *entitlements.Client
 	Plans           *plans.Client
 	Components      *components.Client
-	Crm             *crm.Client
 	Dataexports     *dataexports.Client
 	Events          *events.Client
 	Features        *features.Client
+	Planbundle      *planbundle.Client
 	Plangroups      *plangroups.Client
 	Accesstokens    *accesstokens.Client
 	Webhooks        *webhooks.Client
@@ -58,10 +58,10 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Entitlements:    entitlements.NewClient(options),
 		Plans:           plans.NewClient(options),
 		Components:      components.NewClient(options),
-		Crm:             crm.NewClient(options),
 		Dataexports:     dataexports.NewClient(options),
 		Events:          events.NewClient(options),
 		Features:        features.NewClient(options),
+		Planbundle:      planbundle.NewClient(options),
 		Plangroups:      plangroups.NewClient(options),
 		Accesstokens:    accesstokens.NewClient(options),
 		Webhooks:        webhooks.NewClient(options),

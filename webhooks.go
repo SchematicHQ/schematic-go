@@ -127,11 +127,11 @@ var (
 )
 
 type CreateWebhookRequestBody struct {
-	CreditTriggerConfigs      []*CreditTriggerConfig                     `json:"credit_trigger_configs,omitempty" url:"-"`
-	EntitlementTriggerConfigs []*EntitlementTriggerConfig                `json:"entitlement_trigger_configs,omitempty" url:"-"`
-	Name                      string                                     `json:"name" url:"-"`
-	RequestTypes              []CreateWebhookRequestBodyRequestTypesItem `json:"request_types,omitempty" url:"-"`
-	URL                       string                                     `json:"url" url:"-"`
+	CreditTriggerConfigs      []*CreditTriggerConfig      `json:"credit_trigger_configs,omitempty" url:"-"`
+	EntitlementTriggerConfigs []*EntitlementTriggerConfig `json:"entitlement_trigger_configs,omitempty" url:"-"`
+	Name                      string                      `json:"name" url:"-"`
+	RequestTypes              []WebhookRequestType        `json:"request_types,omitempty" url:"-"`
+	URL                       string                      `json:"url" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -167,7 +167,7 @@ func (c *CreateWebhookRequestBody) SetName(name string) {
 
 // SetRequestTypes sets the RequestTypes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateWebhookRequestBody) SetRequestTypes(requestTypes []CreateWebhookRequestBodyRequestTypesItem) {
+func (c *CreateWebhookRequestBody) SetRequestTypes(requestTypes []WebhookRequestType) {
 	c.RequestTypes = requestTypes
 	c.require(createWebhookRequestBodyFieldRequestTypes)
 }
@@ -460,10 +460,10 @@ type WebhookEventDetailResponseData struct {
 	CreatedAt    time.Time            `json:"created_at" url:"created_at"`
 	ID           string               `json:"id" url:"id"`
 	Payload      *string              `json:"payload,omitempty" url:"payload,omitempty"`
-	RequestType  string               `json:"request_type" url:"request_type"`
+	RequestType  WebhookRequestType   `json:"request_type" url:"request_type"`
 	ResponseCode *int                 `json:"response_code,omitempty" url:"response_code,omitempty"`
 	SentAt       *time.Time           `json:"sent_at,omitempty" url:"sent_at,omitempty"`
-	Status       string               `json:"status" url:"status"`
+	Status       WebhookEventStatus   `json:"status" url:"status"`
 	UpdatedAt    time.Time            `json:"updated_at" url:"updated_at"`
 	Webhook      *WebhookResponseData `json:"webhook,omitempty" url:"webhook,omitempty"`
 	WebhookID    string               `json:"webhook_id" url:"webhook_id"`
@@ -496,7 +496,7 @@ func (w *WebhookEventDetailResponseData) GetPayload() *string {
 	return w.Payload
 }
 
-func (w *WebhookEventDetailResponseData) GetRequestType() string {
+func (w *WebhookEventDetailResponseData) GetRequestType() WebhookRequestType {
 	if w == nil {
 		return ""
 	}
@@ -517,7 +517,7 @@ func (w *WebhookEventDetailResponseData) GetSentAt() *time.Time {
 	return w.SentAt
 }
 
-func (w *WebhookEventDetailResponseData) GetStatus() string {
+func (w *WebhookEventDetailResponseData) GetStatus() WebhookEventStatus {
 	if w == nil {
 		return ""
 	}
@@ -579,7 +579,7 @@ func (w *WebhookEventDetailResponseData) SetPayload(payload *string) {
 
 // SetRequestType sets the RequestType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WebhookEventDetailResponseData) SetRequestType(requestType string) {
+func (w *WebhookEventDetailResponseData) SetRequestType(requestType WebhookRequestType) {
 	w.RequestType = requestType
 	w.require(webhookEventDetailResponseDataFieldRequestType)
 }
@@ -600,7 +600,7 @@ func (w *WebhookEventDetailResponseData) SetSentAt(sentAt *time.Time) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WebhookEventDetailResponseData) SetStatus(status string) {
+func (w *WebhookEventDetailResponseData) SetStatus(status WebhookEventStatus) {
 	w.Status = status
 	w.require(webhookEventDetailResponseDataFieldStatus)
 }
@@ -681,6 +681,158 @@ func (w *WebhookEventDetailResponseData) String() string {
 	return fmt.Sprintf("%#v", w)
 }
 
+type WebhookEventStatus string
+
+const (
+	WebhookEventStatusFailure WebhookEventStatus = "failure"
+	WebhookEventStatusPending WebhookEventStatus = "pending"
+	WebhookEventStatusSuccess WebhookEventStatus = "success"
+)
+
+func NewWebhookEventStatusFromString(s string) (WebhookEventStatus, error) {
+	switch s {
+	case "failure":
+		return WebhookEventStatusFailure, nil
+	case "pending":
+		return WebhookEventStatusPending, nil
+	case "success":
+		return WebhookEventStatusSuccess, nil
+	}
+	var t WebhookEventStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (w WebhookEventStatus) Ptr() *WebhookEventStatus {
+	return &w
+}
+
+type WebhookRequestType string
+
+const (
+	WebhookRequestTypeSubscriptionTrialEnded      WebhookRequestType = "subscription.trial.ended"
+	WebhookRequestTypeCompanyCreated              WebhookRequestType = "company.created"
+	WebhookRequestTypeCompanyDeleted              WebhookRequestType = "company.deleted"
+	WebhookRequestTypeCompanyOverrideCreated      WebhookRequestType = "company.override.created"
+	WebhookRequestTypeCompanyOverrideDeleted      WebhookRequestType = "company.override.deleted"
+	WebhookRequestTypeCompanyOverrideExpired      WebhookRequestType = "company.override.expired"
+	WebhookRequestTypeCompanyOverrideUpdated      WebhookRequestType = "company.override.updated"
+	WebhookRequestTypeCompanyPlanChanged          WebhookRequestType = "company.plan_changed"
+	WebhookRequestTypeCompanyUpdated              WebhookRequestType = "company.updated"
+	WebhookRequestTypeCreditLimitReached          WebhookRequestType = "credit.limit.reached"
+	WebhookRequestTypeCreditLimitWarning          WebhookRequestType = "credit.limit.warning"
+	WebhookRequestTypeEntitlementLimitReached     WebhookRequestType = "entitlement.limit.reached"
+	WebhookRequestTypeEntitlementLimitWarning     WebhookRequestType = "entitlement.limit.warning"
+	WebhookRequestTypeEntitlementSoftLimitReached WebhookRequestType = "entitlement.soft_limit.reached"
+	WebhookRequestTypeEntitlementSoftLimitWarning WebhookRequestType = "entitlement.soft_limit.warning"
+	WebhookRequestTypeEntitlementTierLimitReached WebhookRequestType = "entitlement.tier_limit.reached"
+	WebhookRequestTypeEntitlementTierLimitWarning WebhookRequestType = "entitlement.tier_limit.warning"
+	WebhookRequestTypeFeatureCreated              WebhookRequestType = "feature.created"
+	WebhookRequestTypeFeatureDeleted              WebhookRequestType = "feature.deleted"
+	WebhookRequestTypeFeatureUpdated              WebhookRequestType = "feature.updated"
+	WebhookRequestTypeFlagCreated                 WebhookRequestType = "flag.created"
+	WebhookRequestTypeFlagDeleted                 WebhookRequestType = "flag.deleted"
+	WebhookRequestTypeFlagRulesUpdated            WebhookRequestType = "flag_rules.updated"
+	WebhookRequestTypeFlagUpdated                 WebhookRequestType = "flag.updated"
+	WebhookRequestTypePlanCreated                 WebhookRequestType = "plan.created"
+	WebhookRequestTypePlanDeleted                 WebhookRequestType = "plan.deleted"
+	WebhookRequestTypePlanEntitlementCreated      WebhookRequestType = "plan.entitlement.created"
+	WebhookRequestTypePlanEntitlementDeleted      WebhookRequestType = "plan.entitlement.deleted"
+	WebhookRequestTypePlanEntitlementUpdated      WebhookRequestType = "plan.entitlement.updated"
+	WebhookRequestTypePlanUpdated                 WebhookRequestType = "plan.updated"
+	WebhookRequestTypeRuleDeleted                 WebhookRequestType = "rule.deleted"
+	WebhookRequestTypeTestSend                    WebhookRequestType = "test.send"
+	WebhookRequestTypeUserCreated                 WebhookRequestType = "user.created"
+	WebhookRequestTypeUserDeleted                 WebhookRequestType = "user.deleted"
+	WebhookRequestTypeUserUpdated                 WebhookRequestType = "user.updated"
+	WebhookRequestTypeAutoTopupHardFailure        WebhookRequestType = "auto.topup.hard.failure"
+	WebhookRequestTypeAutoTopupRetryExceeded      WebhookRequestType = "auto.topup.retry.exceeded"
+)
+
+func NewWebhookRequestTypeFromString(s string) (WebhookRequestType, error) {
+	switch s {
+	case "subscription.trial.ended":
+		return WebhookRequestTypeSubscriptionTrialEnded, nil
+	case "company.created":
+		return WebhookRequestTypeCompanyCreated, nil
+	case "company.deleted":
+		return WebhookRequestTypeCompanyDeleted, nil
+	case "company.override.created":
+		return WebhookRequestTypeCompanyOverrideCreated, nil
+	case "company.override.deleted":
+		return WebhookRequestTypeCompanyOverrideDeleted, nil
+	case "company.override.expired":
+		return WebhookRequestTypeCompanyOverrideExpired, nil
+	case "company.override.updated":
+		return WebhookRequestTypeCompanyOverrideUpdated, nil
+	case "company.plan_changed":
+		return WebhookRequestTypeCompanyPlanChanged, nil
+	case "company.updated":
+		return WebhookRequestTypeCompanyUpdated, nil
+	case "credit.limit.reached":
+		return WebhookRequestTypeCreditLimitReached, nil
+	case "credit.limit.warning":
+		return WebhookRequestTypeCreditLimitWarning, nil
+	case "entitlement.limit.reached":
+		return WebhookRequestTypeEntitlementLimitReached, nil
+	case "entitlement.limit.warning":
+		return WebhookRequestTypeEntitlementLimitWarning, nil
+	case "entitlement.soft_limit.reached":
+		return WebhookRequestTypeEntitlementSoftLimitReached, nil
+	case "entitlement.soft_limit.warning":
+		return WebhookRequestTypeEntitlementSoftLimitWarning, nil
+	case "entitlement.tier_limit.reached":
+		return WebhookRequestTypeEntitlementTierLimitReached, nil
+	case "entitlement.tier_limit.warning":
+		return WebhookRequestTypeEntitlementTierLimitWarning, nil
+	case "feature.created":
+		return WebhookRequestTypeFeatureCreated, nil
+	case "feature.deleted":
+		return WebhookRequestTypeFeatureDeleted, nil
+	case "feature.updated":
+		return WebhookRequestTypeFeatureUpdated, nil
+	case "flag.created":
+		return WebhookRequestTypeFlagCreated, nil
+	case "flag.deleted":
+		return WebhookRequestTypeFlagDeleted, nil
+	case "flag_rules.updated":
+		return WebhookRequestTypeFlagRulesUpdated, nil
+	case "flag.updated":
+		return WebhookRequestTypeFlagUpdated, nil
+	case "plan.created":
+		return WebhookRequestTypePlanCreated, nil
+	case "plan.deleted":
+		return WebhookRequestTypePlanDeleted, nil
+	case "plan.entitlement.created":
+		return WebhookRequestTypePlanEntitlementCreated, nil
+	case "plan.entitlement.deleted":
+		return WebhookRequestTypePlanEntitlementDeleted, nil
+	case "plan.entitlement.updated":
+		return WebhookRequestTypePlanEntitlementUpdated, nil
+	case "plan.updated":
+		return WebhookRequestTypePlanUpdated, nil
+	case "rule.deleted":
+		return WebhookRequestTypeRuleDeleted, nil
+	case "test.send":
+		return WebhookRequestTypeTestSend, nil
+	case "user.created":
+		return WebhookRequestTypeUserCreated, nil
+	case "user.deleted":
+		return WebhookRequestTypeUserDeleted, nil
+	case "user.updated":
+		return WebhookRequestTypeUserUpdated, nil
+	case "auto.topup.hard.failure":
+		return WebhookRequestTypeAutoTopupHardFailure, nil
+	case "auto.topup.retry.exceeded":
+		return WebhookRequestTypeAutoTopupRetryExceeded, nil
+	}
+	var t WebhookRequestType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (w WebhookRequestType) Ptr() *WebhookRequestType {
+	return &w
+}
+
 var (
 	webhookResponseDataFieldCreatedAt                 = big.NewInt(1 << 0)
 	webhookResponseDataFieldCreditTriggerConfigs      = big.NewInt(1 << 1)
@@ -700,9 +852,9 @@ type WebhookResponseData struct {
 	EntitlementTriggerConfigs []*EntitlementTriggerConfig `json:"entitlement_trigger_configs,omitempty" url:"entitlement_trigger_configs,omitempty"`
 	ID                        string                      `json:"id" url:"id"`
 	Name                      string                      `json:"name" url:"name"`
-	RequestTypes              []string                    `json:"request_types" url:"request_types"`
+	RequestTypes              []WebhookRequestType        `json:"request_types" url:"request_types"`
 	Secret                    string                      `json:"secret" url:"secret"`
-	Status                    string                      `json:"status" url:"status"`
+	Status                    WebhookStatus               `json:"status" url:"status"`
 	UpdatedAt                 time.Time                   `json:"updated_at" url:"updated_at"`
 	URL                       string                      `json:"url" url:"url"`
 
@@ -748,7 +900,7 @@ func (w *WebhookResponseData) GetName() string {
 	return w.Name
 }
 
-func (w *WebhookResponseData) GetRequestTypes() []string {
+func (w *WebhookResponseData) GetRequestTypes() []WebhookRequestType {
 	if w == nil {
 		return nil
 	}
@@ -762,7 +914,7 @@ func (w *WebhookResponseData) GetSecret() string {
 	return w.Secret
 }
 
-func (w *WebhookResponseData) GetStatus() string {
+func (w *WebhookResponseData) GetStatus() WebhookStatus {
 	if w == nil {
 		return ""
 	}
@@ -831,7 +983,7 @@ func (w *WebhookResponseData) SetName(name string) {
 
 // SetRequestTypes sets the RequestTypes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WebhookResponseData) SetRequestTypes(requestTypes []string) {
+func (w *WebhookResponseData) SetRequestTypes(requestTypes []WebhookRequestType) {
 	w.RequestTypes = requestTypes
 	w.require(webhookResponseDataFieldRequestTypes)
 }
@@ -845,7 +997,7 @@ func (w *WebhookResponseData) SetSecret(secret string) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WebhookResponseData) SetStatus(status string) {
+func (w *WebhookResponseData) SetStatus(status WebhookStatus) {
 	w.Status = status
 	w.require(webhookResponseDataFieldStatus)
 }
@@ -913,6 +1065,28 @@ func (w *WebhookResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", w)
+}
+
+type WebhookStatus string
+
+const (
+	WebhookStatusActive   WebhookStatus = "active"
+	WebhookStatusInactive WebhookStatus = "inactive"
+)
+
+func NewWebhookStatusFromString(s string) (WebhookStatus, error) {
+	switch s {
+	case "active":
+		return WebhookStatusActive, nil
+	case "inactive":
+		return WebhookStatusInactive, nil
+	}
+	var t WebhookStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (w WebhookStatus) Ptr() *WebhookStatus {
+	return &w
 }
 
 // Input parameters
@@ -1361,121 +1535,6 @@ func (c *CountWebhooksResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CreateWebhookRequestBodyRequestTypesItem string
-
-const (
-	CreateWebhookRequestBodyRequestTypesItemCompanyUpdated              CreateWebhookRequestBodyRequestTypesItem = "company.updated"
-	CreateWebhookRequestBodyRequestTypesItemUserUpdated                 CreateWebhookRequestBodyRequestTypesItem = "user.updated"
-	CreateWebhookRequestBodyRequestTypesItemPlanUpdated                 CreateWebhookRequestBodyRequestTypesItem = "plan.updated"
-	CreateWebhookRequestBodyRequestTypesItemPlanEntitlementUpdated      CreateWebhookRequestBodyRequestTypesItem = "plan.entitlement.updated"
-	CreateWebhookRequestBodyRequestTypesItemCompanyOverrideUpdated      CreateWebhookRequestBodyRequestTypesItem = "company.override.updated"
-	CreateWebhookRequestBodyRequestTypesItemFeatureUpdated              CreateWebhookRequestBodyRequestTypesItem = "feature.updated"
-	CreateWebhookRequestBodyRequestTypesItemFlagUpdated                 CreateWebhookRequestBodyRequestTypesItem = "flag.updated"
-	CreateWebhookRequestBodyRequestTypesItemFlagRulesUpdated            CreateWebhookRequestBodyRequestTypesItem = "flag_rules.updated"
-	CreateWebhookRequestBodyRequestTypesItemCompanyCreated              CreateWebhookRequestBodyRequestTypesItem = "company.created"
-	CreateWebhookRequestBodyRequestTypesItemUserCreated                 CreateWebhookRequestBodyRequestTypesItem = "user.created"
-	CreateWebhookRequestBodyRequestTypesItemPlanCreated                 CreateWebhookRequestBodyRequestTypesItem = "plan.created"
-	CreateWebhookRequestBodyRequestTypesItemPlanEntitlementCreated      CreateWebhookRequestBodyRequestTypesItem = "plan.entitlement.created"
-	CreateWebhookRequestBodyRequestTypesItemCompanyOverrideCreated      CreateWebhookRequestBodyRequestTypesItem = "company.override.created"
-	CreateWebhookRequestBodyRequestTypesItemFeatureCreated              CreateWebhookRequestBodyRequestTypesItem = "feature.created"
-	CreateWebhookRequestBodyRequestTypesItemFlagCreated                 CreateWebhookRequestBodyRequestTypesItem = "flag.created"
-	CreateWebhookRequestBodyRequestTypesItemCompanyDeleted              CreateWebhookRequestBodyRequestTypesItem = "company.deleted"
-	CreateWebhookRequestBodyRequestTypesItemUserDeleted                 CreateWebhookRequestBodyRequestTypesItem = "user.deleted"
-	CreateWebhookRequestBodyRequestTypesItemPlanDeleted                 CreateWebhookRequestBodyRequestTypesItem = "plan.deleted"
-	CreateWebhookRequestBodyRequestTypesItemPlanEntitlementDeleted      CreateWebhookRequestBodyRequestTypesItem = "plan.entitlement.deleted"
-	CreateWebhookRequestBodyRequestTypesItemCompanyOverrideDeleted      CreateWebhookRequestBodyRequestTypesItem = "company.override.deleted"
-	CreateWebhookRequestBodyRequestTypesItemFeatureDeleted              CreateWebhookRequestBodyRequestTypesItem = "feature.deleted"
-	CreateWebhookRequestBodyRequestTypesItemFlagDeleted                 CreateWebhookRequestBodyRequestTypesItem = "flag.deleted"
-	CreateWebhookRequestBodyRequestTypesItemTestSend                    CreateWebhookRequestBodyRequestTypesItem = "test.send"
-	CreateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded      CreateWebhookRequestBodyRequestTypesItem = "subscription.trial.ended"
-	CreateWebhookRequestBodyRequestTypesItemEntitlementLimitWarning     CreateWebhookRequestBodyRequestTypesItem = "entitlement.limit.warning"
-	CreateWebhookRequestBodyRequestTypesItemEntitlementLimitReached     CreateWebhookRequestBodyRequestTypesItem = "entitlement.limit.reached"
-	CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning CreateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.warning"
-	CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached CreateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.reached"
-	CreateWebhookRequestBodyRequestTypesItemEntitlementTierLimitWarning CreateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.warning"
-	CreateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached CreateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.reached"
-	CreateWebhookRequestBodyRequestTypesItemCreditLimitWarning          CreateWebhookRequestBodyRequestTypesItem = "credit.limit.warning"
-	CreateWebhookRequestBodyRequestTypesItemCreditLimitReached          CreateWebhookRequestBodyRequestTypesItem = "credit.limit.reached"
-	CreateWebhookRequestBodyRequestTypesItemCompanyPlanChange           CreateWebhookRequestBodyRequestTypesItem = "company.plan_change"
-)
-
-func NewCreateWebhookRequestBodyRequestTypesItemFromString(s string) (CreateWebhookRequestBodyRequestTypesItem, error) {
-	switch s {
-	case "company.updated":
-		return CreateWebhookRequestBodyRequestTypesItemCompanyUpdated, nil
-	case "user.updated":
-		return CreateWebhookRequestBodyRequestTypesItemUserUpdated, nil
-	case "plan.updated":
-		return CreateWebhookRequestBodyRequestTypesItemPlanUpdated, nil
-	case "plan.entitlement.updated":
-		return CreateWebhookRequestBodyRequestTypesItemPlanEntitlementUpdated, nil
-	case "company.override.updated":
-		return CreateWebhookRequestBodyRequestTypesItemCompanyOverrideUpdated, nil
-	case "feature.updated":
-		return CreateWebhookRequestBodyRequestTypesItemFeatureUpdated, nil
-	case "flag.updated":
-		return CreateWebhookRequestBodyRequestTypesItemFlagUpdated, nil
-	case "flag_rules.updated":
-		return CreateWebhookRequestBodyRequestTypesItemFlagRulesUpdated, nil
-	case "company.created":
-		return CreateWebhookRequestBodyRequestTypesItemCompanyCreated, nil
-	case "user.created":
-		return CreateWebhookRequestBodyRequestTypesItemUserCreated, nil
-	case "plan.created":
-		return CreateWebhookRequestBodyRequestTypesItemPlanCreated, nil
-	case "plan.entitlement.created":
-		return CreateWebhookRequestBodyRequestTypesItemPlanEntitlementCreated, nil
-	case "company.override.created":
-		return CreateWebhookRequestBodyRequestTypesItemCompanyOverrideCreated, nil
-	case "feature.created":
-		return CreateWebhookRequestBodyRequestTypesItemFeatureCreated, nil
-	case "flag.created":
-		return CreateWebhookRequestBodyRequestTypesItemFlagCreated, nil
-	case "company.deleted":
-		return CreateWebhookRequestBodyRequestTypesItemCompanyDeleted, nil
-	case "user.deleted":
-		return CreateWebhookRequestBodyRequestTypesItemUserDeleted, nil
-	case "plan.deleted":
-		return CreateWebhookRequestBodyRequestTypesItemPlanDeleted, nil
-	case "plan.entitlement.deleted":
-		return CreateWebhookRequestBodyRequestTypesItemPlanEntitlementDeleted, nil
-	case "company.override.deleted":
-		return CreateWebhookRequestBodyRequestTypesItemCompanyOverrideDeleted, nil
-	case "feature.deleted":
-		return CreateWebhookRequestBodyRequestTypesItemFeatureDeleted, nil
-	case "flag.deleted":
-		return CreateWebhookRequestBodyRequestTypesItemFlagDeleted, nil
-	case "test.send":
-		return CreateWebhookRequestBodyRequestTypesItemTestSend, nil
-	case "subscription.trial.ended":
-		return CreateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded, nil
-	case "entitlement.limit.warning":
-		return CreateWebhookRequestBodyRequestTypesItemEntitlementLimitWarning, nil
-	case "entitlement.limit.reached":
-		return CreateWebhookRequestBodyRequestTypesItemEntitlementLimitReached, nil
-	case "entitlement.soft_limit.warning":
-		return CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning, nil
-	case "entitlement.soft_limit.reached":
-		return CreateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached, nil
-	case "entitlement.tier_limit.warning":
-		return CreateWebhookRequestBodyRequestTypesItemEntitlementTierLimitWarning, nil
-	case "entitlement.tier_limit.reached":
-		return CreateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached, nil
-	case "credit.limit.warning":
-		return CreateWebhookRequestBodyRequestTypesItemCreditLimitWarning, nil
-	case "credit.limit.reached":
-		return CreateWebhookRequestBodyRequestTypesItemCreditLimitReached, nil
-	case "company.plan_change":
-		return CreateWebhookRequestBodyRequestTypesItemCompanyPlanChange, nil
-	}
-	var t CreateWebhookRequestBodyRequestTypesItem
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateWebhookRequestBodyRequestTypesItem) Ptr() *CreateWebhookRequestBodyRequestTypesItem {
-	return &c
 }
 
 var (
@@ -2306,143 +2365,6 @@ func (l *ListWebhooksResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-type UpdateWebhookRequestBodyRequestTypesItem string
-
-const (
-	UpdateWebhookRequestBodyRequestTypesItemCompanyUpdated              UpdateWebhookRequestBodyRequestTypesItem = "company.updated"
-	UpdateWebhookRequestBodyRequestTypesItemUserUpdated                 UpdateWebhookRequestBodyRequestTypesItem = "user.updated"
-	UpdateWebhookRequestBodyRequestTypesItemPlanUpdated                 UpdateWebhookRequestBodyRequestTypesItem = "plan.updated"
-	UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementUpdated      UpdateWebhookRequestBodyRequestTypesItem = "plan.entitlement.updated"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideUpdated      UpdateWebhookRequestBodyRequestTypesItem = "company.override.updated"
-	UpdateWebhookRequestBodyRequestTypesItemFeatureUpdated              UpdateWebhookRequestBodyRequestTypesItem = "feature.updated"
-	UpdateWebhookRequestBodyRequestTypesItemFlagUpdated                 UpdateWebhookRequestBodyRequestTypesItem = "flag.updated"
-	UpdateWebhookRequestBodyRequestTypesItemFlagRulesUpdated            UpdateWebhookRequestBodyRequestTypesItem = "flag_rules.updated"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyCreated              UpdateWebhookRequestBodyRequestTypesItem = "company.created"
-	UpdateWebhookRequestBodyRequestTypesItemUserCreated                 UpdateWebhookRequestBodyRequestTypesItem = "user.created"
-	UpdateWebhookRequestBodyRequestTypesItemPlanCreated                 UpdateWebhookRequestBodyRequestTypesItem = "plan.created"
-	UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementCreated      UpdateWebhookRequestBodyRequestTypesItem = "plan.entitlement.created"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideCreated      UpdateWebhookRequestBodyRequestTypesItem = "company.override.created"
-	UpdateWebhookRequestBodyRequestTypesItemFeatureCreated              UpdateWebhookRequestBodyRequestTypesItem = "feature.created"
-	UpdateWebhookRequestBodyRequestTypesItemFlagCreated                 UpdateWebhookRequestBodyRequestTypesItem = "flag.created"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyDeleted              UpdateWebhookRequestBodyRequestTypesItem = "company.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemUserDeleted                 UpdateWebhookRequestBodyRequestTypesItem = "user.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemPlanDeleted                 UpdateWebhookRequestBodyRequestTypesItem = "plan.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementDeleted      UpdateWebhookRequestBodyRequestTypesItem = "plan.entitlement.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideDeleted      UpdateWebhookRequestBodyRequestTypesItem = "company.override.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemFeatureDeleted              UpdateWebhookRequestBodyRequestTypesItem = "feature.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemFlagDeleted                 UpdateWebhookRequestBodyRequestTypesItem = "flag.deleted"
-	UpdateWebhookRequestBodyRequestTypesItemTestSend                    UpdateWebhookRequestBodyRequestTypesItem = "test.send"
-	UpdateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded      UpdateWebhookRequestBodyRequestTypesItem = "subscription.trial.ended"
-	UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitWarning     UpdateWebhookRequestBodyRequestTypesItem = "entitlement.limit.warning"
-	UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitReached     UpdateWebhookRequestBodyRequestTypesItem = "entitlement.limit.reached"
-	UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning UpdateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.warning"
-	UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached UpdateWebhookRequestBodyRequestTypesItem = "entitlement.soft_limit.reached"
-	UpdateWebhookRequestBodyRequestTypesItemEntitlementTierLimitWarning UpdateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.warning"
-	UpdateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached UpdateWebhookRequestBodyRequestTypesItem = "entitlement.tier_limit.reached"
-	UpdateWebhookRequestBodyRequestTypesItemCreditLimitWarning          UpdateWebhookRequestBodyRequestTypesItem = "credit.limit.warning"
-	UpdateWebhookRequestBodyRequestTypesItemCreditLimitReached          UpdateWebhookRequestBodyRequestTypesItem = "credit.limit.reached"
-	UpdateWebhookRequestBodyRequestTypesItemCompanyPlanChange           UpdateWebhookRequestBodyRequestTypesItem = "company.plan_change"
-)
-
-func NewUpdateWebhookRequestBodyRequestTypesItemFromString(s string) (UpdateWebhookRequestBodyRequestTypesItem, error) {
-	switch s {
-	case "company.updated":
-		return UpdateWebhookRequestBodyRequestTypesItemCompanyUpdated, nil
-	case "user.updated":
-		return UpdateWebhookRequestBodyRequestTypesItemUserUpdated, nil
-	case "plan.updated":
-		return UpdateWebhookRequestBodyRequestTypesItemPlanUpdated, nil
-	case "plan.entitlement.updated":
-		return UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementUpdated, nil
-	case "company.override.updated":
-		return UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideUpdated, nil
-	case "feature.updated":
-		return UpdateWebhookRequestBodyRequestTypesItemFeatureUpdated, nil
-	case "flag.updated":
-		return UpdateWebhookRequestBodyRequestTypesItemFlagUpdated, nil
-	case "flag_rules.updated":
-		return UpdateWebhookRequestBodyRequestTypesItemFlagRulesUpdated, nil
-	case "company.created":
-		return UpdateWebhookRequestBodyRequestTypesItemCompanyCreated, nil
-	case "user.created":
-		return UpdateWebhookRequestBodyRequestTypesItemUserCreated, nil
-	case "plan.created":
-		return UpdateWebhookRequestBodyRequestTypesItemPlanCreated, nil
-	case "plan.entitlement.created":
-		return UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementCreated, nil
-	case "company.override.created":
-		return UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideCreated, nil
-	case "feature.created":
-		return UpdateWebhookRequestBodyRequestTypesItemFeatureCreated, nil
-	case "flag.created":
-		return UpdateWebhookRequestBodyRequestTypesItemFlagCreated, nil
-	case "company.deleted":
-		return UpdateWebhookRequestBodyRequestTypesItemCompanyDeleted, nil
-	case "user.deleted":
-		return UpdateWebhookRequestBodyRequestTypesItemUserDeleted, nil
-	case "plan.deleted":
-		return UpdateWebhookRequestBodyRequestTypesItemPlanDeleted, nil
-	case "plan.entitlement.deleted":
-		return UpdateWebhookRequestBodyRequestTypesItemPlanEntitlementDeleted, nil
-	case "company.override.deleted":
-		return UpdateWebhookRequestBodyRequestTypesItemCompanyOverrideDeleted, nil
-	case "feature.deleted":
-		return UpdateWebhookRequestBodyRequestTypesItemFeatureDeleted, nil
-	case "flag.deleted":
-		return UpdateWebhookRequestBodyRequestTypesItemFlagDeleted, nil
-	case "test.send":
-		return UpdateWebhookRequestBodyRequestTypesItemTestSend, nil
-	case "subscription.trial.ended":
-		return UpdateWebhookRequestBodyRequestTypesItemSubscriptionTrialEnded, nil
-	case "entitlement.limit.warning":
-		return UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitWarning, nil
-	case "entitlement.limit.reached":
-		return UpdateWebhookRequestBodyRequestTypesItemEntitlementLimitReached, nil
-	case "entitlement.soft_limit.warning":
-		return UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitWarning, nil
-	case "entitlement.soft_limit.reached":
-		return UpdateWebhookRequestBodyRequestTypesItemEntitlementSoftLimitReached, nil
-	case "entitlement.tier_limit.warning":
-		return UpdateWebhookRequestBodyRequestTypesItemEntitlementTierLimitWarning, nil
-	case "entitlement.tier_limit.reached":
-		return UpdateWebhookRequestBodyRequestTypesItemEntitlementTierLimitReached, nil
-	case "credit.limit.warning":
-		return UpdateWebhookRequestBodyRequestTypesItemCreditLimitWarning, nil
-	case "credit.limit.reached":
-		return UpdateWebhookRequestBodyRequestTypesItemCreditLimitReached, nil
-	case "company.plan_change":
-		return UpdateWebhookRequestBodyRequestTypesItemCompanyPlanChange, nil
-	}
-	var t UpdateWebhookRequestBodyRequestTypesItem
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateWebhookRequestBodyRequestTypesItem) Ptr() *UpdateWebhookRequestBodyRequestTypesItem {
-	return &u
-}
-
-type UpdateWebhookRequestBodyStatus string
-
-const (
-	UpdateWebhookRequestBodyStatusActive   UpdateWebhookRequestBodyStatus = "active"
-	UpdateWebhookRequestBodyStatusInactive UpdateWebhookRequestBodyStatus = "inactive"
-)
-
-func NewUpdateWebhookRequestBodyStatusFromString(s string) (UpdateWebhookRequestBodyStatus, error) {
-	switch s {
-	case "active":
-		return UpdateWebhookRequestBodyStatusActive, nil
-	case "inactive":
-		return UpdateWebhookRequestBodyStatusInactive, nil
-	}
-	var t UpdateWebhookRequestBodyStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateWebhookRequestBodyStatus) Ptr() *UpdateWebhookRequestBodyStatus {
-	return &u
-}
-
 var (
 	updateWebhookResponseFieldData   = big.NewInt(1 << 0)
 	updateWebhookResponseFieldParams = big.NewInt(1 << 1)
@@ -2548,12 +2470,12 @@ var (
 )
 
 type UpdateWebhookRequestBody struct {
-	CreditTriggerConfigs      []*CreditTriggerConfig                     `json:"credit_trigger_configs,omitempty" url:"-"`
-	EntitlementTriggerConfigs []*EntitlementTriggerConfig                `json:"entitlement_trigger_configs,omitempty" url:"-"`
-	Name                      *string                                    `json:"name,omitempty" url:"-"`
-	RequestTypes              []UpdateWebhookRequestBodyRequestTypesItem `json:"request_types,omitempty" url:"-"`
-	Status                    *UpdateWebhookRequestBodyStatus            `json:"status,omitempty" url:"-"`
-	URL                       *string                                    `json:"url,omitempty" url:"-"`
+	CreditTriggerConfigs      []*CreditTriggerConfig      `json:"credit_trigger_configs,omitempty" url:"-"`
+	EntitlementTriggerConfigs []*EntitlementTriggerConfig `json:"entitlement_trigger_configs,omitempty" url:"-"`
+	Name                      *string                     `json:"name,omitempty" url:"-"`
+	RequestTypes              []WebhookRequestType        `json:"request_types,omitempty" url:"-"`
+	Status                    *WebhookStatus              `json:"status,omitempty" url:"-"`
+	URL                       *string                     `json:"url,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2589,14 +2511,14 @@ func (u *UpdateWebhookRequestBody) SetName(name *string) {
 
 // SetRequestTypes sets the RequestTypes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateWebhookRequestBody) SetRequestTypes(requestTypes []UpdateWebhookRequestBodyRequestTypesItem) {
+func (u *UpdateWebhookRequestBody) SetRequestTypes(requestTypes []WebhookRequestType) {
 	u.RequestTypes = requestTypes
 	u.require(updateWebhookRequestBodyFieldRequestTypes)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateWebhookRequestBody) SetStatus(status *UpdateWebhookRequestBodyStatus) {
+func (u *UpdateWebhookRequestBody) SetStatus(status *WebhookStatus) {
 	u.Status = status
 	u.require(updateWebhookRequestBodyFieldStatus)
 }

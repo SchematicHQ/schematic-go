@@ -41,11 +41,12 @@ type DataStreamClient struct {
 	connected bool
 
 	// Replicator mode configuration
-	replicatorMode        bool
-	replicatorHealthURL   string
-	replicatorHealthCheck time.Duration
-	replicatorReady       bool
-	replicatorHealthDone  chan bool
+	replicatorMode         bool
+	replicatorHealthURL    string
+	replicatorHealthCheck  time.Duration
+	replicatorReady        bool
+	replicatorCacheVersion string
+	replicatorHealthDone   chan bool
 
 	// Locks
 	flagsMu          sync.RWMutex // For flags cache operations

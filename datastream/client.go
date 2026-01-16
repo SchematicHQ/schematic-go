@@ -186,7 +186,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 	c.flagsMu.Lock()
 	var cacheKeys []string
 	for _, flag := range flagsData {
-		cacheKey := flagCacheKey(flag.Key)
+		cacheKey := c.flagCacheKey(flag.Key)
 		if err := c.flagsCacheProvider.Set(ctx, cacheKey, flag, nil); err != nil {
 			c.logger.Warn(ctx, fmt.Sprintf("Failed to cache flag '%s': %v", flag.Key, err))
 		}
@@ -220,7 +220,7 @@ func (c *DataStreamClient) handleFlagMessage(ctx context.Context, resp *schemati
 		}
 	}()
 
-	cacheKey := flagCacheKey(flag.Key)
+	cacheKey := c.flagCacheKey(flag.Key)
 	switch resp.MessageType {
 	case schematicdatastreamws.MessageTypeDelete:
 		if err := c.flagsCacheProvider.Delete(ctx, cacheKey); err != nil {
@@ -247,7 +247,7 @@ func (c *DataStreamClient) notifyPendingCompanyRequests(_ context.Context, keys 
 
 	// For each relevant key, notify all waiting channels
 	for key, value := range keys {
-		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+		cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 
 		// Check if there are channels waiting for this key
 		if channels, ok := c.pendingCompanyRequests[cacheKey]; ok {
@@ -279,7 +279,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 	if resp.MessageType == schematicdatastreamws.MessageTypeDelete {
 		// Remove the company from the cache
 		for key, value := range company.Keys {
-			companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+			companyKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 			if err := c.companyCacheProvider.Delete(ctx, companyKey); err != nil {
 				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete company from cache '%s': %v", companyKey, err))
 			}
@@ -316,7 +316,7 @@ func (c *DataStreamClient) notifyPendingUserRequests(_ context.Context, keys map
 
 	// For each relevant key, notify all waiting channels
 	for key, value := range keys {
-		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+		cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		if channels, ok := c.pendingUserRequests[cacheKey]; ok {
 			for _, ch := range channels {
 				// Non-blocking send - if the channel is full, we'll just continue
@@ -345,7 +345,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 	if resp.MessageType == schematicdatastreamws.MessageTypeDelete {
 		// Remove the user from the cache
 		for key, value := range user.Keys {
-			userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+			userKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 			if err := c.userCacheProvider.Delete(ctx, userKey); err != nil {
 				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete user from cache '%s': %v", userKey, err))
 			}
@@ -358,7 +358,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 	cacheResults := make(map[string]error)
 
 	for key, value := range user.Keys {
-		userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+		userKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		ttl := c.cacheTTL
 		err := c.userCacheProvider.Set(ctx, userKey, user, &ttl)
 
@@ -532,7 +532,7 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 	c.companyMu.Lock()
 	shouldSendRequest := true
 	for key, value := range keys {
-		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+		cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		cacheKeys = append(cacheKeys, cacheKey)
 		if existingChannels, ok := c.pendingCompanyRequests[cacheKey]; ok {
 			c.pendingCompanyRequests[cacheKey] = append(existingChannels, waitCh)
@@ -554,7 +554,7 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 
 		c.pendingCompReqMu.Lock()
 		for key, value := range keys {
-			cacheKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+			cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 			c.pendingCompanyRequests[cacheKey] = []chan *rulesengine.Company{waitCh}
 		}
 		c.pendingCompReqMu.Unlock()
@@ -587,7 +587,7 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 	c.pendingUserReqMu.Lock()
 	shouldSendRequest := true
 	for key, value := range keys {
-		cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value) // If there are already pending requests for this key, just add our channel
+		cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value) // If there are already pending requests for this key, just add our channel
 		cacheKeys = append(cacheKeys, cacheKey)
 		if existingChannels, ok := c.pendingUserRequests[cacheKey]; ok {
 			c.pendingUserRequests[cacheKey] = append(existingChannels, waitCh)
@@ -609,7 +609,7 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 
 		c.pendingUserReqMu.Lock()
 		for key, value := range keys {
-			cacheKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+			cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 			c.pendingUserRequests[cacheKey] = []chan *rulesengine.User{waitCh}
 		}
 		c.pendingUserReqMu.Unlock()
@@ -634,7 +634,7 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 func (c *DataStreamClient) getFlag(ctx context.Context, key string) (*rulesengine.Flag, bool) {
 	c.flagsMu.RLock()
 	defer c.flagsMu.RUnlock()
-	flag, exists := c.flagsCacheProvider.Get(ctx, flagCacheKey(key))
+	flag, exists := c.flagsCacheProvider.Get(ctx, c.flagCacheKey(key))
 	if !exists {
 		return nil, false
 	}
@@ -651,7 +651,7 @@ func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *ruleseng
 	c.companyMu.RLock()
 	defer c.companyMu.RUnlock()
 	for key, value := range keys {
-		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+		companyKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		company, exists := c.companyCacheProvider.Get(context.Background(), companyKey)
 		if exists {
 			return company
@@ -665,7 +665,7 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 	c.userMu.RLock()
 	defer c.userMu.RUnlock()
 	for key, value := range keys {
-		userKey := resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+		userKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		user, exists := c.userCacheProvider.Get(context.Background(), userKey)
 		if exists {
 			return user
@@ -675,12 +675,20 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 	return nil
 }
 
-func flagCacheKey(key string) string {
-	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, rulesengine.VersionKey, strings.ToLower(key))
+func (c *DataStreamClient) flagCacheKey(key string) string {
+	versionKey := c.GetCacheVersion()
+	if versionKey == "" {
+		versionKey = rulesengine.VersionKey
+	}
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, versionKey, strings.ToLower(key))
 }
 
-func resourceKeyToCacheKey(resourceType string, key string, value string) string {
-	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, rulesengine.VersionKey, strings.ToLower(key), strings.ToLower(value))
+func (c *DataStreamClient) resourceKeyToCacheKey(resourceType string, key string, value string) string {
+	versionKey := c.GetCacheVersion()
+	if versionKey == "" {
+		versionKey = rulesengine.VersionKey
+	}
+	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, versionKey, strings.ToLower(key), strings.ToLower(value))
 }
 
 // Helper function to clean up pending company requests
@@ -743,7 +751,7 @@ func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rul
 
 	// Try to cache the company for all keys
 	for key, value := range company.Keys {
-		companyKey := resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
+		companyKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 		ttl := c.cacheTTL
 		err := c.companyCacheProvider.Set(ctx, companyKey, company, &ttl)
 
@@ -897,7 +905,7 @@ func (c *DataStreamClient) checkReplicatorHealth(ctx context.Context) {
 
 	resp, err := client.Get(c.replicatorHealthURL)
 	if err != nil {
-		c.setReplicatorReady(false)
+		c.setReplicatorReady(false, "")
 		c.logger.Debug(ctx, fmt.Sprintf("Replicator health check failed: %v", err))
 		return
 	}
@@ -906,31 +914,38 @@ func (c *DataStreamClient) checkReplicatorHealth(ctx context.Context) {
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		c.setReplicatorReady(false)
+		c.setReplicatorReady(false, "")
 		c.logger.Warn(ctx, fmt.Sprintf("Failed to read replicator health response: %v", err))
 		return
 	}
 
 	// Parse the JSON response
 	var healthResp struct {
-		Ready bool `json:"ready"`
+		Ready        bool   `json:"ready"`
+		CacheVersion string `json:"cache_version"`
 	}
 
 	if err := json.Unmarshal(body, &healthResp); err != nil {
-		c.setReplicatorReady(false)
+		c.setReplicatorReady(false, "")
 		c.logger.Warn(ctx, fmt.Sprintf("Failed to parse replicator health response: %v", err))
 		return
 	}
 
-	// Update replicator ready state
+	// Update replicator ready state and cache version
 	wasReady := c.IsReplicatorReady()
-	c.setReplicatorReady(healthResp.Ready)
+	oldCacheVersion := c.GetCacheVersion()
+	c.setReplicatorReady(healthResp.Ready, healthResp.CacheVersion)
 
 	// Log state changes
 	if healthResp.Ready && !wasReady {
-		c.logger.Info(ctx, "External replicator is now ready")
+		c.logger.Info(ctx, fmt.Sprintf("External replicator is now ready (cache_version: %s)", healthResp.CacheVersion))
 	} else if !healthResp.Ready && wasReady {
 		c.logger.Info(ctx, "External replicator is no longer ready")
+	}
+
+	// Log cache version changes
+	if healthResp.CacheVersion != "" && healthResp.CacheVersion != oldCacheVersion {
+		c.logger.Info(ctx, fmt.Sprintf("Replicator cache version changed: %s -> %s", oldCacheVersion, healthResp.CacheVersion))
 	}
 }
 
@@ -941,11 +956,27 @@ func (c *DataStreamClient) IsReplicatorReady() bool {
 	return c.replicatorReady
 }
 
-// setReplicatorReady updates the replicator ready state
-func (c *DataStreamClient) setReplicatorReady(ready bool) {
+// setReplicatorReady updates the replicator ready state and cache version
+func (c *DataStreamClient) setReplicatorReady(ready bool, cacheVersion string) {
 	c.replicatorMu.Lock()
 	defer c.replicatorMu.Unlock()
 	c.replicatorReady = ready
+	// Only update cache version if a non-empty value is provided
+	// This preserves the existing version when the replicator is temporarily unavailable
+	if cacheVersion != "" {
+		c.replicatorCacheVersion = cacheVersion
+	}
+}
+
+// GetCacheVersion returns the cache version from the replicator (in replicator mode)
+// or the local rulesengine version key (in direct WebSocket mode)
+func (c *DataStreamClient) GetCacheVersion() string {
+	if c.replicatorMode {
+		c.replicatorMu.RLock()
+		defer c.replicatorMu.RUnlock()
+		return c.replicatorCacheVersion
+	}
+	return rulesengine.VersionKey
 }
 
 // IsReplicatorMode returns whether the client is running in replicator mode

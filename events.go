@@ -100,11 +100,11 @@ var (
 )
 
 type ListEventsRequest struct {
-	CompanyID    *string                            `json:"-" url:"company_id,omitempty"`
-	EventSubtype *string                            `json:"-" url:"event_subtype,omitempty"`
-	EventTypes   []*ListEventsRequestEventTypesItem `json:"-" url:"event_types,omitempty"`
-	FlagID       *string                            `json:"-" url:"flag_id,omitempty"`
-	UserID       *string                            `json:"-" url:"user_id,omitempty"`
+	CompanyID    *string      `json:"-" url:"company_id,omitempty"`
+	EventSubtype *string      `json:"-" url:"event_subtype,omitempty"`
+	EventTypes   []*EventType `json:"-" url:"event_types,omitempty"`
+	FlagID       *string      `json:"-" url:"flag_id,omitempty"`
+	UserID       *string      `json:"-" url:"user_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -137,7 +137,7 @@ func (l *ListEventsRequest) SetEventSubtype(eventSubtype *string) {
 
 // SetEventTypes sets the EventTypes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEventsRequest) SetEventTypes(eventTypes []*ListEventsRequestEventTypesItem) {
+func (l *ListEventsRequest) SetEventTypes(eventTypes []*EventType) {
 	l.EventTypes = eventTypes
 	l.require(listEventsRequestFieldEventTypes)
 }
@@ -177,9 +177,8 @@ var (
 )
 
 type CreateEventRequestBody struct {
-	Body *EventBody `json:"body,omitempty" url:"body,omitempty"`
-	// Either 'identify' or 'track'
-	EventType CreateEventRequestBodyEventType `json:"event_type" url:"event_type"`
+	Body      *EventBody `json:"body,omitempty" url:"body,omitempty"`
+	EventType EventType  `json:"event_type" url:"event_type"`
 	// Optionally provide a timestamp at which the event was sent to Schematic
 	SentAt *time.Time `json:"sent_at,omitempty" url:"sent_at,omitempty"`
 
@@ -197,7 +196,7 @@ func (c *CreateEventRequestBody) GetBody() *EventBody {
 	return c.Body
 }
 
-func (c *CreateEventRequestBody) GetEventType() CreateEventRequestBodyEventType {
+func (c *CreateEventRequestBody) GetEventType() EventType {
 	if c == nil {
 		return ""
 	}
@@ -231,7 +230,7 @@ func (c *CreateEventRequestBody) SetBody(body *EventBody) {
 
 // SetEventType sets the EventType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEventRequestBody) SetEventType(eventType CreateEventRequestBodyEventType) {
+func (c *CreateEventRequestBody) SetEventType(eventType EventType) {
 	c.EventType = eventType
 	c.require(createEventRequestBodyFieldEventType)
 }
@@ -288,32 +287,6 @@ func (c *CreateEventRequestBody) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-// Either 'identify' or 'track'
-type CreateEventRequestBodyEventType string
-
-const (
-	CreateEventRequestBodyEventTypeIdentify  CreateEventRequestBodyEventType = "identify"
-	CreateEventRequestBodyEventTypeTrack     CreateEventRequestBodyEventType = "track"
-	CreateEventRequestBodyEventTypeFlagCheck CreateEventRequestBodyEventType = "flag_check"
-)
-
-func NewCreateEventRequestBodyEventTypeFromString(s string) (CreateEventRequestBodyEventType, error) {
-	switch s {
-	case "identify":
-		return CreateEventRequestBodyEventTypeIdentify, nil
-	case "track":
-		return CreateEventRequestBodyEventTypeTrack, nil
-	case "flag_check":
-		return CreateEventRequestBodyEventTypeFlagCheck, nil
-	}
-	var t CreateEventRequestBodyEventType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateEventRequestBodyEventType) Ptr() *CreateEventRequestBodyEventType {
-	return &c
 }
 
 type EventBody struct {
@@ -1064,9 +1037,9 @@ type EventDetailResponseData struct {
 	ProcessedAt   *time.Time             `json:"processed_at,omitempty" url:"processed_at,omitempty"`
 	Quantity      int                    `json:"quantity" url:"quantity"`
 	SentAt        *time.Time             `json:"sent_at,omitempty" url:"sent_at,omitempty"`
-	Status        string                 `json:"status" url:"status"`
+	Status        EventStatus            `json:"status" url:"status"`
 	Subtype       *string                `json:"subtype,omitempty" url:"subtype,omitempty"`
-	Type          string                 `json:"type" url:"type"`
+	Type          EventType              `json:"type" url:"type"`
 	UpdatedAt     time.Time              `json:"updated_at" url:"updated_at"`
 	User          *PreviewObject         `json:"user,omitempty" url:"user,omitempty"`
 	UserID        *string                `json:"user_id,omitempty" url:"user_id,omitempty"`
@@ -1190,7 +1163,7 @@ func (e *EventDetailResponseData) GetSentAt() *time.Time {
 	return e.SentAt
 }
 
-func (e *EventDetailResponseData) GetStatus() string {
+func (e *EventDetailResponseData) GetStatus() EventStatus {
 	if e == nil {
 		return ""
 	}
@@ -1204,7 +1177,7 @@ func (e *EventDetailResponseData) GetSubtype() *string {
 	return e.Subtype
 }
 
-func (e *EventDetailResponseData) GetType() string {
+func (e *EventDetailResponseData) GetType() EventType {
 	if e == nil {
 		return ""
 	}
@@ -1357,7 +1330,7 @@ func (e *EventDetailResponseData) SetSentAt(sentAt *time.Time) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventDetailResponseData) SetStatus(status string) {
+func (e *EventDetailResponseData) SetStatus(status EventStatus) {
 	e.Status = status
 	e.require(eventDetailResponseDataFieldStatus)
 }
@@ -1371,7 +1344,7 @@ func (e *EventDetailResponseData) SetSubtype(subtype *string) {
 
 // SetType sets the Type field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventDetailResponseData) SetType(type_ string) {
+func (e *EventDetailResponseData) SetType(type_ EventType) {
 	e.Type = type_
 	e.require(eventDetailResponseDataFieldType)
 }
@@ -1462,6 +1435,62 @@ func (e *EventDetailResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
+}
+
+type EventStatus string
+
+const (
+	EventStatusEnriched  EventStatus = "enriched"
+	EventStatusFailed    EventStatus = "failed"
+	EventStatusPending   EventStatus = "pending"
+	EventStatusProcessed EventStatus = "processed"
+	EventStatusUnknown   EventStatus = "unknown"
+)
+
+func NewEventStatusFromString(s string) (EventStatus, error) {
+	switch s {
+	case "enriched":
+		return EventStatusEnriched, nil
+	case "failed":
+		return EventStatusFailed, nil
+	case "pending":
+		return EventStatusPending, nil
+	case "processed":
+		return EventStatusProcessed, nil
+	case "unknown":
+		return EventStatusUnknown, nil
+	}
+	var t EventStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (e EventStatus) Ptr() *EventStatus {
+	return &e
+}
+
+type EventType string
+
+const (
+	EventTypeFlagCheck EventType = "flag_check"
+	EventTypeIdentify  EventType = "identify"
+	EventTypeTrack     EventType = "track"
+)
+
+func NewEventTypeFromString(s string) (EventType, error) {
+	switch s {
+	case "flag_check":
+		return EventTypeFlagCheck, nil
+	case "identify":
+		return EventTypeIdentify, nil
+	case "track":
+		return EventTypeTrack, nil
+	}
+	var t EventType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (e EventType) Ptr() *EventType {
+	return &e
 }
 
 var (
@@ -2426,10 +2455,10 @@ var (
 )
 
 type ListEventsParams struct {
-	CompanyID    *string                                  `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EventSubtype *string                                  `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	EventTypes   []ListEventsResponseParamsEventTypesItem `json:"event_types,omitempty" url:"event_types,omitempty"`
-	FlagID       *string                                  `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	CompanyID    *string     `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EventSubtype *string     `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	EventTypes   []EventType `json:"event_types,omitempty" url:"event_types,omitempty"`
+	FlagID       *string     `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -2457,7 +2486,7 @@ func (l *ListEventsParams) GetEventSubtype() *string {
 	return l.EventSubtype
 }
 
-func (l *ListEventsParams) GetEventTypes() []ListEventsResponseParamsEventTypesItem {
+func (l *ListEventsParams) GetEventTypes() []EventType {
 	if l == nil {
 		return nil
 	}
@@ -2519,7 +2548,7 @@ func (l *ListEventsParams) SetEventSubtype(eventSubtype *string) {
 
 // SetEventTypes sets the EventTypes field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEventsParams) SetEventTypes(eventTypes []ListEventsResponseParamsEventTypesItem) {
+func (l *ListEventsParams) SetEventTypes(eventTypes []EventType) {
 	l.EventTypes = eventTypes
 	l.require(listEventsParamsFieldEventTypes)
 }
@@ -2589,31 +2618,6 @@ func (l *ListEventsParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-type ListEventsRequestEventTypesItem string
-
-const (
-	ListEventsRequestEventTypesItemIdentify  ListEventsRequestEventTypesItem = "identify"
-	ListEventsRequestEventTypesItemTrack     ListEventsRequestEventTypesItem = "track"
-	ListEventsRequestEventTypesItemFlagCheck ListEventsRequestEventTypesItem = "flag_check"
-)
-
-func NewListEventsRequestEventTypesItemFromString(s string) (ListEventsRequestEventTypesItem, error) {
-	switch s {
-	case "identify":
-		return ListEventsRequestEventTypesItemIdentify, nil
-	case "track":
-		return ListEventsRequestEventTypesItemTrack, nil
-	case "flag_check":
-		return ListEventsRequestEventTypesItemFlagCheck, nil
-	}
-	var t ListEventsRequestEventTypesItem
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListEventsRequestEventTypesItem) Ptr() *ListEventsRequestEventTypesItem {
-	return &l
 }
 
 var (
@@ -2709,29 +2713,4 @@ func (l *ListEventsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-type ListEventsResponseParamsEventTypesItem string
-
-const (
-	ListEventsResponseParamsEventTypesItemIdentify  ListEventsResponseParamsEventTypesItem = "identify"
-	ListEventsResponseParamsEventTypesItemTrack     ListEventsResponseParamsEventTypesItem = "track"
-	ListEventsResponseParamsEventTypesItemFlagCheck ListEventsResponseParamsEventTypesItem = "flag_check"
-)
-
-func NewListEventsResponseParamsEventTypesItemFromString(s string) (ListEventsResponseParamsEventTypesItem, error) {
-	switch s {
-	case "identify":
-		return ListEventsResponseParamsEventTypesItemIdentify, nil
-	case "track":
-		return ListEventsResponseParamsEventTypesItemTrack, nil
-	case "flag_check":
-		return ListEventsResponseParamsEventTypesItemFlagCheck, nil
-	}
-	var t ListEventsResponseParamsEventTypesItem
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListEventsResponseParamsEventTypesItem) Ptr() *ListEventsResponseParamsEventTypesItem {
-	return &l
 }

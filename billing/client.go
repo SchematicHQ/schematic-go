@@ -208,12 +208,12 @@ func (c *Client) UpsertPaymentMethod(
 	return response.Body, nil
 }
 
-func (c *Client) SearchBillingPrices(
+func (c *Client) ListBillingPrices(
 	ctx context.Context,
-	request *schematichq.SearchBillingPricesRequest,
+	request *schematichq.ListBillingPricesRequest,
 	opts ...option.RequestOption,
-) (*schematichq.SearchBillingPricesResponse, error) {
-	response, err := c.WithRawResponse.SearchBillingPrices(
+) (*schematichq.ListBillingPricesResponse, error) {
+	response, err := c.WithRawResponse.ListBillingPrices(
 		ctx,
 		request,
 		opts...,
@@ -257,12 +257,12 @@ func (c *Client) DeleteBillingProduct(
 	return response.Body, nil
 }
 
-func (c *Client) ListProductPrices(
+func (c *Client) ListBillingProductPrices(
 	ctx context.Context,
-	request *schematichq.ListProductPricesRequest,
+	request *schematichq.ListBillingProductPricesRequest,
 	opts ...option.RequestOption,
-) (*schematichq.ListProductPricesResponse, error) {
-	response, err := c.WithRawResponse.ListProductPrices(
+) (*schematichq.ListBillingProductPricesResponse, error) {
+	response, err := c.WithRawResponse.ListBillingProductPrices(
 		ctx,
 		request,
 		opts...,

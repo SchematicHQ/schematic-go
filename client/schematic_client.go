@@ -270,7 +270,7 @@ func (c *SchematicClient) enqueueEvent(
 
 	now := time.Now().UTC()
 	eventBody := &schematicgo.CreateEventRequestBody{
-		EventType: schematicgo.CreateEventRequestBodyEventType(eventType),
+		EventType: schematicgo.EventType(eventType),
 		Body:      &body,
 		SentAt:    &now,
 	}

@@ -142,7 +142,6 @@ func (r *RawClient) CreatePlan(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CreatePlanResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -235,7 +234,6 @@ func (r *RawClient) UpdatePlan(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	headers.Add("Content-Type", "application/json")
 	var response *schematichq.UpdatePlanResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -328,7 +326,6 @@ func (r *RawClient) UpsertBillingProductPlan(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	headers.Add("Content-Type", "application/json")
 	var response *schematichq.UpsertBillingProductPlanResponse
 	raw, err := r.caller.Call(
 		ctx,

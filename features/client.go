@@ -272,6 +272,22 @@ func (c *Client) CheckFlags(
 	return response.Body, nil
 }
 
+func (c *Client) CheckFlagsBulk(
+	ctx context.Context,
+	request *schematichq.CheckFlagsBulkRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.CheckFlagsBulkResponse, error) {
+	response, err := c.WithRawResponse.CheckFlagsBulk(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CountFlags(
 	ctx context.Context,
 	request *schematichq.CountFlagsRequest,

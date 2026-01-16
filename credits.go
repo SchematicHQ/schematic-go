@@ -191,6 +191,69 @@ func (c *CountBillingPlanCreditGrantsRequest) SetOffset(offset *int) {
 }
 
 var (
+	countCompanyGrantsRequestFieldCompanyID = big.NewInt(1 << 0)
+	countCompanyGrantsRequestFieldOrder     = big.NewInt(1 << 1)
+	countCompanyGrantsRequestFieldDir       = big.NewInt(1 << 2)
+	countCompanyGrantsRequestFieldLimit     = big.NewInt(1 << 3)
+	countCompanyGrantsRequestFieldOffset    = big.NewInt(1 << 4)
+)
+
+type CountCompanyGrantsRequest struct {
+	CompanyID *string               `json:"-" url:"company_id,omitempty"`
+	Order     *CreditGrantSortOrder `json:"-" url:"order,omitempty"`
+	Dir       *SortDirection        `json:"-" url:"dir,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CountCompanyGrantsRequest) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsRequest) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(countCompanyGrantsRequestFieldCompanyID)
+}
+
+// SetOrder sets the Order field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsRequest) SetOrder(order *CreditGrantSortOrder) {
+	c.Order = order
+	c.require(countCompanyGrantsRequestFieldOrder)
+}
+
+// SetDir sets the Dir field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsRequest) SetDir(dir *SortDirection) {
+	c.Dir = dir
+	c.require(countCompanyGrantsRequestFieldDir)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsRequest) SetLimit(limit *int) {
+	c.Limit = limit
+	c.require(countCompanyGrantsRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsRequest) SetOffset(offset *int) {
+	c.Offset = offset
+	c.require(countCompanyGrantsRequestFieldOffset)
+}
+
+var (
 	countCreditBundlesRequestFieldIDs        = big.NewInt(1 << 0)
 	countCreditBundlesRequestFieldCreditID   = big.NewInt(1 << 1)
 	countCreditBundlesRequestFieldStatus     = big.NewInt(1 << 2)
@@ -200,10 +263,10 @@ var (
 )
 
 type CountCreditBundlesRequest struct {
-	IDs        []*string                        `json:"-" url:"ids,omitempty"`
-	CreditID   *string                          `json:"-" url:"credit_id,omitempty"`
-	Status     *CountCreditBundlesRequestStatus `json:"-" url:"status,omitempty"`
-	BundleType *string                          `json:"-" url:"bundle_type,omitempty"`
+	IDs        []*string                  `json:"-" url:"ids,omitempty"`
+	CreditID   *string                    `json:"-" url:"credit_id,omitempty"`
+	Status     *BillingCreditBundleStatus `json:"-" url:"status,omitempty"`
+	BundleType *BillingCreditBundleType   `json:"-" url:"bundle_type,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -236,14 +299,14 @@ func (c *CountCreditBundlesRequest) SetCreditID(creditID *string) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditBundlesRequest) SetStatus(status *CountCreditBundlesRequestStatus) {
+func (c *CountCreditBundlesRequest) SetStatus(status *BillingCreditBundleStatus) {
 	c.Status = status
 	c.require(countCreditBundlesRequestFieldStatus)
 }
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditBundlesRequest) SetBundleType(bundleType *string) {
+func (c *CountCreditBundlesRequest) SetBundleType(bundleType *BillingCreditBundleType) {
 	c.BundleType = bundleType
 	c.require(countCreditBundlesRequestFieldBundleType)
 }
@@ -274,12 +337,12 @@ var (
 )
 
 type CountCreditLedgerRequest struct {
-	CompanyID       string                         `json:"-" url:"company_id"`
-	BillingCreditID *string                        `json:"-" url:"billing_credit_id,omitempty"`
-	FeatureID       *string                        `json:"-" url:"feature_id,omitempty"`
-	Period          CountCreditLedgerRequestPeriod `json:"-" url:"period"`
-	StartTime       *string                        `json:"-" url:"start_time,omitempty"`
-	EndTime         *string                        `json:"-" url:"end_time,omitempty"`
+	CompanyID       string             `json:"-" url:"company_id"`
+	BillingCreditID *string            `json:"-" url:"billing_credit_id,omitempty"`
+	FeatureID       *string            `json:"-" url:"feature_id,omitempty"`
+	Period          CreditLedgerPeriod `json:"-" url:"period"`
+	StartTime       *string            `json:"-" url:"start_time,omitempty"`
+	EndTime         *string            `json:"-" url:"end_time,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -319,7 +382,7 @@ func (c *CountCreditLedgerRequest) SetFeatureID(featureID *string) {
 
 // SetPeriod sets the Period field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditLedgerRequest) SetPeriod(period CountCreditLedgerRequestPeriod) {
+func (c *CountCreditLedgerRequest) SetPeriod(period CreditLedgerPeriod) {
 	c.Period = period
 	c.require(countCreditLedgerRequestFieldPeriod)
 }
@@ -368,18 +431,18 @@ var (
 )
 
 type CreateBillingCreditRequestBody struct {
-	BurnStrategy           *CreateBillingCreditRequestBodyBurnStrategy          `json:"burn_strategy,omitempty" url:"-"`
-	Currency               string                                               `json:"currency" url:"-"`
-	DefaultExpiryUnit      *string                                              `json:"default_expiry_unit,omitempty" url:"-"`
-	DefaultExpiryUnitCount *int                                                 `json:"default_expiry_unit_count,omitempty" url:"-"`
-	DefaultRolloverPolicy  *CreateBillingCreditRequestBodyDefaultRolloverPolicy `json:"default_rollover_policy,omitempty" url:"-"`
-	Description            string                                               `json:"description" url:"-"`
-	Icon                   *string                                              `json:"icon,omitempty" url:"-"`
-	Name                   string                                               `json:"name" url:"-"`
-	PerUnitPrice           *int                                                 `json:"per_unit_price,omitempty" url:"-"`
-	PerUnitPriceDecimal    *string                                              `json:"per_unit_price_decimal,omitempty" url:"-"`
-	PluralName             *string                                              `json:"plural_name,omitempty" url:"-"`
-	SingularName           *string                                              `json:"singular_name,omitempty" url:"-"`
+	BurnStrategy           *BillingCreditBurnStrategy   `json:"burn_strategy,omitempty" url:"-"`
+	Currency               string                       `json:"currency" url:"-"`
+	DefaultExpiryUnit      *BillingCreditExpiryUnit     `json:"default_expiry_unit,omitempty" url:"-"`
+	DefaultExpiryUnitCount *int                         `json:"default_expiry_unit_count,omitempty" url:"-"`
+	DefaultRolloverPolicy  *BillingCreditRolloverPolicy `json:"default_rollover_policy,omitempty" url:"-"`
+	Description            string                       `json:"description" url:"-"`
+	Icon                   *string                      `json:"icon,omitempty" url:"-"`
+	Name                   string                       `json:"name" url:"-"`
+	PerUnitPrice           *int                         `json:"per_unit_price,omitempty" url:"-"`
+	PerUnitPriceDecimal    *string                      `json:"per_unit_price_decimal,omitempty" url:"-"`
+	PluralName             *string                      `json:"plural_name,omitempty" url:"-"`
+	SingularName           *string                      `json:"singular_name,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -394,7 +457,7 @@ func (c *CreateBillingCreditRequestBody) require(field *big.Int) {
 
 // SetBurnStrategy sets the BurnStrategy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingCreditRequestBody) SetBurnStrategy(burnStrategy *CreateBillingCreditRequestBodyBurnStrategy) {
+func (c *CreateBillingCreditRequestBody) SetBurnStrategy(burnStrategy *BillingCreditBurnStrategy) {
 	c.BurnStrategy = burnStrategy
 	c.require(createBillingCreditRequestBodyFieldBurnStrategy)
 }
@@ -408,7 +471,7 @@ func (c *CreateBillingCreditRequestBody) SetCurrency(currency string) {
 
 // SetDefaultExpiryUnit sets the DefaultExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingCreditRequestBody) SetDefaultExpiryUnit(defaultExpiryUnit *string) {
+func (c *CreateBillingCreditRequestBody) SetDefaultExpiryUnit(defaultExpiryUnit *BillingCreditExpiryUnit) {
 	c.DefaultExpiryUnit = defaultExpiryUnit
 	c.require(createBillingCreditRequestBodyFieldDefaultExpiryUnit)
 }
@@ -422,7 +485,7 @@ func (c *CreateBillingCreditRequestBody) SetDefaultExpiryUnitCount(defaultExpiry
 
 // SetDefaultRolloverPolicy sets the DefaultRolloverPolicy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingCreditRequestBody) SetDefaultRolloverPolicy(defaultRolloverPolicy *CreateBillingCreditRequestBodyDefaultRolloverPolicy) {
+func (c *CreateBillingCreditRequestBody) SetDefaultRolloverPolicy(defaultRolloverPolicy *BillingCreditRolloverPolicy) {
 	c.DefaultRolloverPolicy = defaultRolloverPolicy
 	c.require(createBillingCreditRequestBodyFieldDefaultRolloverPolicy)
 }
@@ -477,112 +540,6 @@ func (c *CreateBillingCreditRequestBody) SetSingularName(singularName *string) {
 }
 
 var (
-	createBillingPlanCreditGrantRequestBodyFieldApplyToExisting = big.NewInt(1 << 0)
-	createBillingPlanCreditGrantRequestBodyFieldCreditAmount    = big.NewInt(1 << 1)
-	createBillingPlanCreditGrantRequestBodyFieldCreditID        = big.NewInt(1 << 2)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryType      = big.NewInt(1 << 3)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit      = big.NewInt(1 << 4)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount = big.NewInt(1 << 5)
-	createBillingPlanCreditGrantRequestBodyFieldPlanID          = big.NewInt(1 << 6)
-	createBillingPlanCreditGrantRequestBodyFieldResetCadence    = big.NewInt(1 << 7)
-	createBillingPlanCreditGrantRequestBodyFieldResetStart      = big.NewInt(1 << 8)
-	createBillingPlanCreditGrantRequestBodyFieldResetType       = big.NewInt(1 << 9)
-)
-
-type CreateBillingPlanCreditGrantRequestBody struct {
-	ApplyToExisting *bool                                               `json:"apply_to_existing,omitempty" url:"-"`
-	CreditAmount    int                                                 `json:"credit_amount" url:"-"`
-	CreditID        string                                              `json:"credit_id" url:"-"`
-	ExpiryType      *CreateBillingPlanCreditGrantRequestBodyExpiryType  `json:"expiry_type,omitempty" url:"-"`
-	ExpiryUnit      *CreateBillingPlanCreditGrantRequestBodyExpiryUnit  `json:"expiry_unit,omitempty" url:"-"`
-	ExpiryUnitCount *int                                                `json:"expiry_unit_count,omitempty" url:"-"`
-	PlanID          string                                              `json:"plan_id" url:"-"`
-	ResetCadence    CreateBillingPlanCreditGrantRequestBodyResetCadence `json:"reset_cadence" url:"-"`
-	ResetStart      CreateBillingPlanCreditGrantRequestBodyResetStart   `json:"reset_start" url:"-"`
-	ResetType       *CreateBillingPlanCreditGrantRequestBodyResetType   `json:"reset_type,omitempty" url:"-"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-}
-
-func (c *CreateBillingPlanCreditGrantRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetApplyToExisting sets the ApplyToExisting field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetApplyToExisting(applyToExisting *bool) {
-	c.ApplyToExisting = applyToExisting
-	c.require(createBillingPlanCreditGrantRequestBodyFieldApplyToExisting)
-}
-
-// SetCreditAmount sets the CreditAmount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetCreditAmount(creditAmount int) {
-	c.CreditAmount = creditAmount
-	c.require(createBillingPlanCreditGrantRequestBodyFieldCreditAmount)
-}
-
-// SetCreditID sets the CreditID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetCreditID(creditID string) {
-	c.CreditID = creditID
-	c.require(createBillingPlanCreditGrantRequestBodyFieldCreditID)
-}
-
-// SetExpiryType sets the ExpiryType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetExpiryType(expiryType *CreateBillingPlanCreditGrantRequestBodyExpiryType) {
-	c.ExpiryType = expiryType
-	c.require(createBillingPlanCreditGrantRequestBodyFieldExpiryType)
-}
-
-// SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetExpiryUnit(expiryUnit *CreateBillingPlanCreditGrantRequestBodyExpiryUnit) {
-	c.ExpiryUnit = expiryUnit
-	c.require(createBillingPlanCreditGrantRequestBodyFieldExpiryUnit)
-}
-
-// SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetExpiryUnitCount(expiryUnitCount *int) {
-	c.ExpiryUnitCount = expiryUnitCount
-	c.require(createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount)
-}
-
-// SetPlanID sets the PlanID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetPlanID(planID string) {
-	c.PlanID = planID
-	c.require(createBillingPlanCreditGrantRequestBodyFieldPlanID)
-}
-
-// SetResetCadence sets the ResetCadence field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetResetCadence(resetCadence CreateBillingPlanCreditGrantRequestBodyResetCadence) {
-	c.ResetCadence = resetCadence
-	c.require(createBillingPlanCreditGrantRequestBodyFieldResetCadence)
-}
-
-// SetResetStart sets the ResetStart field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetResetStart(resetStart CreateBillingPlanCreditGrantRequestBodyResetStart) {
-	c.ResetStart = resetStart
-	c.require(createBillingPlanCreditGrantRequestBodyFieldResetStart)
-}
-
-// SetResetType sets the ResetType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetResetType(resetType *CreateBillingPlanCreditGrantRequestBodyResetType) {
-	c.ResetType = resetType
-	c.require(createBillingPlanCreditGrantRequestBodyFieldResetType)
-}
-
-var (
 	createCreditBundleRequestBodyFieldBundleName          = big.NewInt(1 << 0)
 	createCreditBundleRequestBodyFieldBundleType          = big.NewInt(1 << 1)
 	createCreditBundleRequestBodyFieldCreditID            = big.NewInt(1 << 2)
@@ -597,17 +554,17 @@ var (
 )
 
 type CreateCreditBundleRequestBody struct {
-	BundleName          string                                   `json:"bundle_name" url:"-"`
-	BundleType          *string                                  `json:"bundle_type,omitempty" url:"-"`
-	CreditID            string                                   `json:"credit_id" url:"-"`
-	Currency            string                                   `json:"currency" url:"-"`
-	ExpiryType          *CreateCreditBundleRequestBodyExpiryType `json:"expiry_type,omitempty" url:"-"`
-	ExpiryUnit          *CreateCreditBundleRequestBodyExpiryUnit `json:"expiry_unit,omitempty" url:"-"`
-	ExpiryUnitCount     *int                                     `json:"expiry_unit_count,omitempty" url:"-"`
-	PricePerUnit        int                                      `json:"price_per_unit" url:"-"`
-	PricePerUnitDecimal *string                                  `json:"price_per_unit_decimal,omitempty" url:"-"`
-	Quantity            *int                                     `json:"quantity,omitempty" url:"-"`
-	Status              *CreateCreditBundleRequestBodyStatus     `json:"status,omitempty" url:"-"`
+	BundleName          string                     `json:"bundle_name" url:"-"`
+	BundleType          *BillingCreditBundleType   `json:"bundle_type,omitempty" url:"-"`
+	CreditID            string                     `json:"credit_id" url:"-"`
+	Currency            string                     `json:"currency" url:"-"`
+	ExpiryType          *BillingCreditExpiryType   `json:"expiry_type,omitempty" url:"-"`
+	ExpiryUnit          *BillingCreditExpiryUnit   `json:"expiry_unit,omitempty" url:"-"`
+	ExpiryUnitCount     *int                       `json:"expiry_unit_count,omitempty" url:"-"`
+	PricePerUnit        int                        `json:"price_per_unit" url:"-"`
+	PricePerUnitDecimal *string                    `json:"price_per_unit_decimal,omitempty" url:"-"`
+	Quantity            *int                       `json:"quantity,omitempty" url:"-"`
+	Status              *BillingCreditBundleStatus `json:"status,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -629,7 +586,7 @@ func (c *CreateCreditBundleRequestBody) SetBundleName(bundleName string) {
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCreditBundleRequestBody) SetBundleType(bundleType *string) {
+func (c *CreateCreditBundleRequestBody) SetBundleType(bundleType *BillingCreditBundleType) {
 	c.BundleType = bundleType
 	c.require(createCreditBundleRequestBodyFieldBundleType)
 }
@@ -650,14 +607,14 @@ func (c *CreateCreditBundleRequestBody) SetCurrency(currency string) {
 
 // SetExpiryType sets the ExpiryType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCreditBundleRequestBody) SetExpiryType(expiryType *CreateCreditBundleRequestBodyExpiryType) {
+func (c *CreateCreditBundleRequestBody) SetExpiryType(expiryType *BillingCreditExpiryType) {
 	c.ExpiryType = expiryType
 	c.require(createCreditBundleRequestBodyFieldExpiryType)
 }
 
 // SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCreditBundleRequestBody) SetExpiryUnit(expiryUnit *CreateCreditBundleRequestBodyExpiryUnit) {
+func (c *CreateCreditBundleRequestBody) SetExpiryUnit(expiryUnit *BillingCreditExpiryUnit) {
 	c.ExpiryUnit = expiryUnit
 	c.require(createCreditBundleRequestBodyFieldExpiryUnit)
 }
@@ -692,7 +649,7 @@ func (c *CreateCreditBundleRequestBody) SetQuantity(quantity *int) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCreditBundleRequestBody) SetStatus(status *CreateCreditBundleRequestBodyStatus) {
+func (c *CreateCreditBundleRequestBody) SetStatus(status *BillingCreditBundleStatus) {
 	c.Status = status
 	c.require(createCreditBundleRequestBodyFieldStatus)
 }
@@ -734,12 +691,12 @@ var (
 )
 
 type GetEnrichedCreditLedgerRequest struct {
-	CompanyID       string                               `json:"-" url:"company_id"`
-	BillingCreditID *string                              `json:"-" url:"billing_credit_id,omitempty"`
-	FeatureID       *string                              `json:"-" url:"feature_id,omitempty"`
-	Period          GetEnrichedCreditLedgerRequestPeriod `json:"-" url:"period"`
-	StartTime       *string                              `json:"-" url:"start_time,omitempty"`
-	EndTime         *string                              `json:"-" url:"end_time,omitempty"`
+	CompanyID       string             `json:"-" url:"company_id"`
+	BillingCreditID *string            `json:"-" url:"billing_credit_id,omitempty"`
+	FeatureID       *string            `json:"-" url:"feature_id,omitempty"`
+	Period          CreditLedgerPeriod `json:"-" url:"period"`
+	StartTime       *string            `json:"-" url:"start_time,omitempty"`
+	EndTime         *string            `json:"-" url:"end_time,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -779,7 +736,7 @@ func (g *GetEnrichedCreditLedgerRequest) SetFeatureID(featureID *string) {
 
 // SetPeriod sets the Period field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEnrichedCreditLedgerRequest) SetPeriod(period GetEnrichedCreditLedgerRequestPeriod) {
+func (g *GetEnrichedCreditLedgerRequest) SetPeriod(period CreditLedgerPeriod) {
 	g.Period = period
 	g.require(getEnrichedCreditLedgerRequestFieldPeriod)
 }
@@ -822,18 +779,22 @@ var (
 	createCompanyCreditGrantFieldExpiryUnitCount     = big.NewInt(1 << 6)
 	createCompanyCreditGrantFieldQuantity            = big.NewInt(1 << 7)
 	createCompanyCreditGrantFieldReason              = big.NewInt(1 << 8)
+	createCompanyCreditGrantFieldRenewalEnabled      = big.NewInt(1 << 9)
+	createCompanyCreditGrantFieldRenewalPeriod       = big.NewInt(1 << 10)
 )
 
 type CreateCompanyCreditGrant struct {
-	BillingPeriodsCount *int                                `json:"billing_periods_count,omitempty" url:"-"`
-	CompanyID           string                              `json:"company_id" url:"-"`
-	CreditID            string                              `json:"credit_id" url:"-"`
-	ExpiresAt           *time.Time                          `json:"expires_at,omitempty" url:"-"`
-	ExpiryType          *CreateCompanyCreditGrantExpiryType `json:"expiry_type,omitempty" url:"-"`
-	ExpiryUnit          *CreateCompanyCreditGrantExpiryUnit `json:"expiry_unit,omitempty" url:"-"`
-	ExpiryUnitCount     *int                                `json:"expiry_unit_count,omitempty" url:"-"`
-	Quantity            int                                 `json:"quantity" url:"-"`
-	Reason              string                              `json:"reason" url:"-"`
+	BillingPeriodsCount *int                              `json:"billing_periods_count,omitempty" url:"-"`
+	CompanyID           string                            `json:"company_id" url:"-"`
+	CreditID            string                            `json:"credit_id" url:"-"`
+	ExpiresAt           *time.Time                        `json:"expires_at,omitempty" url:"-"`
+	ExpiryType          *BillingCreditExpiryType          `json:"expiry_type,omitempty" url:"-"`
+	ExpiryUnit          *BillingCreditExpiryUnit          `json:"expiry_unit,omitempty" url:"-"`
+	ExpiryUnitCount     *int                              `json:"expiry_unit_count,omitempty" url:"-"`
+	Quantity            int                               `json:"quantity" url:"-"`
+	Reason              BillingCreditGrantReason          `json:"reason" url:"-"`
+	RenewalEnabled      *bool                             `json:"renewal_enabled,omitempty" url:"-"`
+	RenewalPeriod       *BillingPlanCreditGrantResetStart `json:"renewal_period,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -876,14 +837,14 @@ func (c *CreateCompanyCreditGrant) SetExpiresAt(expiresAt *time.Time) {
 
 // SetExpiryType sets the ExpiryType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyCreditGrant) SetExpiryType(expiryType *CreateCompanyCreditGrantExpiryType) {
+func (c *CreateCompanyCreditGrant) SetExpiryType(expiryType *BillingCreditExpiryType) {
 	c.ExpiryType = expiryType
 	c.require(createCompanyCreditGrantFieldExpiryType)
 }
 
 // SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyCreditGrant) SetExpiryUnit(expiryUnit *CreateCompanyCreditGrantExpiryUnit) {
+func (c *CreateCompanyCreditGrant) SetExpiryUnit(expiryUnit *BillingCreditExpiryUnit) {
 	c.ExpiryUnit = expiryUnit
 	c.require(createCompanyCreditGrantFieldExpiryUnit)
 }
@@ -904,9 +865,23 @@ func (c *CreateCompanyCreditGrant) SetQuantity(quantity int) {
 
 // SetReason sets the Reason field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyCreditGrant) SetReason(reason string) {
+func (c *CreateCompanyCreditGrant) SetReason(reason BillingCreditGrantReason) {
 	c.Reason = reason
 	c.require(createCompanyCreditGrantFieldReason)
+}
+
+// SetRenewalEnabled sets the RenewalEnabled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCompanyCreditGrant) SetRenewalEnabled(renewalEnabled *bool) {
+	c.RenewalEnabled = renewalEnabled
+	c.require(createCompanyCreditGrantFieldRenewalEnabled)
+}
+
+// SetRenewalPeriod sets the RenewalPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCompanyCreditGrant) SetRenewalPeriod(renewalPeriod *BillingPlanCreditGrantResetStart) {
+	c.RenewalPeriod = renewalPeriod
+	c.require(createCompanyCreditGrantFieldRenewalPeriod)
 }
 
 func (c *CreateCompanyCreditGrant) UnmarshalJSON(data []byte) error {
@@ -1067,9 +1042,9 @@ var (
 )
 
 type ListCompanyGrantsRequest struct {
-	CompanyID *string                        `json:"-" url:"company_id,omitempty"`
-	Order     *ListCompanyGrantsRequestOrder `json:"-" url:"order,omitempty"`
-	Dir       *ListCompanyGrantsRequestDir   `json:"-" url:"dir,omitempty"`
+	CompanyID *string               `json:"-" url:"company_id,omitempty"`
+	Order     *CreditGrantSortOrder `json:"-" url:"order,omitempty"`
+	Dir       *SortDirection        `json:"-" url:"dir,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1095,14 +1070,14 @@ func (l *ListCompanyGrantsRequest) SetCompanyID(companyID *string) {
 
 // SetOrder sets the Order field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyGrantsRequest) SetOrder(order *ListCompanyGrantsRequestOrder) {
+func (l *ListCompanyGrantsRequest) SetOrder(order *CreditGrantSortOrder) {
 	l.Order = order
 	l.require(listCompanyGrantsRequestFieldOrder)
 }
 
 // SetDir sets the Dir field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyGrantsRequest) SetDir(dir *ListCompanyGrantsRequestDir) {
+func (l *ListCompanyGrantsRequest) SetDir(dir *SortDirection) {
 	l.Dir = dir
 	l.require(listCompanyGrantsRequestFieldDir)
 }
@@ -1131,10 +1106,10 @@ var (
 )
 
 type ListCreditBundlesRequest struct {
-	IDs        []*string                       `json:"-" url:"ids,omitempty"`
-	CreditID   *string                         `json:"-" url:"credit_id,omitempty"`
-	Status     *ListCreditBundlesRequestStatus `json:"-" url:"status,omitempty"`
-	BundleType *string                         `json:"-" url:"bundle_type,omitempty"`
+	IDs        []*string                  `json:"-" url:"ids,omitempty"`
+	CreditID   *string                    `json:"-" url:"credit_id,omitempty"`
+	Status     *BillingCreditBundleStatus `json:"-" url:"status,omitempty"`
+	BundleType *BillingCreditBundleType   `json:"-" url:"bundle_type,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1167,14 +1142,14 @@ func (l *ListCreditBundlesRequest) SetCreditID(creditID *string) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditBundlesRequest) SetStatus(status *ListCreditBundlesRequestStatus) {
+func (l *ListCreditBundlesRequest) SetStatus(status *BillingCreditBundleStatus) {
 	l.Status = status
 	l.require(listCreditBundlesRequestFieldStatus)
 }
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditBundlesRequest) SetBundleType(bundleType *string) {
+func (l *ListCreditBundlesRequest) SetBundleType(bundleType *BillingCreditBundleType) {
 	l.BundleType = bundleType
 	l.require(listCreditBundlesRequestFieldBundleType)
 }
@@ -1263,34 +1238,40 @@ var (
 	billingCreditGrantResponseDataFieldQuantity          = big.NewInt(1 << 12)
 	billingCreditGrantResponseDataFieldQuantityRemaining = big.NewInt(1 << 13)
 	billingCreditGrantResponseDataFieldQuantityUsed      = big.NewInt(1 << 14)
-	billingCreditGrantResponseDataFieldSourceLabel       = big.NewInt(1 << 15)
-	billingCreditGrantResponseDataFieldUpdatedAt         = big.NewInt(1 << 16)
-	billingCreditGrantResponseDataFieldValidFrom         = big.NewInt(1 << 17)
-	billingCreditGrantResponseDataFieldZeroedOutDate     = big.NewInt(1 << 18)
-	billingCreditGrantResponseDataFieldZeroedOutReason   = big.NewInt(1 << 19)
+	billingCreditGrantResponseDataFieldRenewalEnabled    = big.NewInt(1 << 15)
+	billingCreditGrantResponseDataFieldRenewalPeriod     = big.NewInt(1 << 16)
+	billingCreditGrantResponseDataFieldSourceLabel       = big.NewInt(1 << 17)
+	billingCreditGrantResponseDataFieldTransfers         = big.NewInt(1 << 18)
+	billingCreditGrantResponseDataFieldUpdatedAt         = big.NewInt(1 << 19)
+	billingCreditGrantResponseDataFieldValidFrom         = big.NewInt(1 << 20)
+	billingCreditGrantResponseDataFieldZeroedOutDate     = big.NewInt(1 << 21)
+	billingCreditGrantResponseDataFieldZeroedOutReason   = big.NewInt(1 << 22)
 )
 
 type BillingCreditGrantResponseData struct {
-	CompanyID         string                    `json:"company_id" url:"company_id"`
-	CompanyName       string                    `json:"company_name" url:"company_name"`
-	CreatedAt         time.Time                 `json:"created_at" url:"created_at"`
-	CreditIcon        *string                   `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
-	CreditID          string                    `json:"credit_id" url:"credit_id"`
-	CreditName        string                    `json:"credit_name" url:"credit_name"`
-	ExpiresAt         *time.Time                `json:"expires_at,omitempty" url:"expires_at,omitempty"`
-	GrantReason       string                    `json:"grant_reason" url:"grant_reason"`
-	ID                string                    `json:"id" url:"id"`
-	PlanID            *string                   `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	PlanName          *string                   `json:"plan_name,omitempty" url:"plan_name,omitempty"`
-	Price             *BillingPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
-	Quantity          int                       `json:"quantity" url:"quantity"`
-	QuantityRemaining float64                   `json:"quantity_remaining" url:"quantity_remaining"`
-	QuantityUsed      float64                   `json:"quantity_used" url:"quantity_used"`
-	SourceLabel       string                    `json:"source_label" url:"source_label"`
-	UpdatedAt         time.Time                 `json:"updated_at" url:"updated_at"`
-	ValidFrom         *time.Time                `json:"valid_from,omitempty" url:"valid_from,omitempty"`
-	ZeroedOutDate     *time.Time                `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
-	ZeroedOutReason   *string                   `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
+	CompanyID         string                              `json:"company_id" url:"company_id"`
+	CompanyName       string                              `json:"company_name" url:"company_name"`
+	CreatedAt         time.Time                           `json:"created_at" url:"created_at"`
+	CreditIcon        *string                             `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID          string                              `json:"credit_id" url:"credit_id"`
+	CreditName        string                              `json:"credit_name" url:"credit_name"`
+	ExpiresAt         *time.Time                          `json:"expires_at,omitempty" url:"expires_at,omitempty"`
+	GrantReason       BillingCreditGrantReason            `json:"grant_reason" url:"grant_reason"`
+	ID                string                              `json:"id" url:"id"`
+	PlanID            *string                             `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanName          *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
+	Price             *BillingPriceResponseData           `json:"price,omitempty" url:"price,omitempty"`
+	Quantity          int                                 `json:"quantity" url:"quantity"`
+	QuantityRemaining float64                             `json:"quantity_remaining" url:"quantity_remaining"`
+	QuantityUsed      float64                             `json:"quantity_used" url:"quantity_used"`
+	RenewalEnabled    bool                                `json:"renewal_enabled" url:"renewal_enabled"`
+	RenewalPeriod     *BillingPlanCreditGrantResetCadence `json:"renewal_period,omitempty" url:"renewal_period,omitempty"`
+	SourceLabel       string                              `json:"source_label" url:"source_label"`
+	Transfers         []*CreditTransferResponseData       `json:"transfers,omitempty" url:"transfers,omitempty"`
+	UpdatedAt         time.Time                           `json:"updated_at" url:"updated_at"`
+	ValidFrom         *time.Time                          `json:"valid_from,omitempty" url:"valid_from,omitempty"`
+	ZeroedOutDate     *time.Time                          `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
+	ZeroedOutReason   *BillingCreditGrantZeroedOutReason  `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1348,7 +1329,7 @@ func (b *BillingCreditGrantResponseData) GetExpiresAt() *time.Time {
 	return b.ExpiresAt
 }
 
-func (b *BillingCreditGrantResponseData) GetGrantReason() string {
+func (b *BillingCreditGrantResponseData) GetGrantReason() BillingCreditGrantReason {
 	if b == nil {
 		return ""
 	}
@@ -1404,11 +1385,32 @@ func (b *BillingCreditGrantResponseData) GetQuantityUsed() float64 {
 	return b.QuantityUsed
 }
 
+func (b *BillingCreditGrantResponseData) GetRenewalEnabled() bool {
+	if b == nil {
+		return false
+	}
+	return b.RenewalEnabled
+}
+
+func (b *BillingCreditGrantResponseData) GetRenewalPeriod() *BillingPlanCreditGrantResetCadence {
+	if b == nil {
+		return nil
+	}
+	return b.RenewalPeriod
+}
+
 func (b *BillingCreditGrantResponseData) GetSourceLabel() string {
 	if b == nil {
 		return ""
 	}
 	return b.SourceLabel
+}
+
+func (b *BillingCreditGrantResponseData) GetTransfers() []*CreditTransferResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Transfers
 }
 
 func (b *BillingCreditGrantResponseData) GetUpdatedAt() time.Time {
@@ -1432,7 +1434,7 @@ func (b *BillingCreditGrantResponseData) GetZeroedOutDate() *time.Time {
 	return b.ZeroedOutDate
 }
 
-func (b *BillingCreditGrantResponseData) GetZeroedOutReason() *string {
+func (b *BillingCreditGrantResponseData) GetZeroedOutReason() *BillingCreditGrantZeroedOutReason {
 	if b == nil {
 		return nil
 	}
@@ -1501,7 +1503,7 @@ func (b *BillingCreditGrantResponseData) SetExpiresAt(expiresAt *time.Time) {
 
 // SetGrantReason sets the GrantReason field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditGrantResponseData) SetGrantReason(grantReason string) {
+func (b *BillingCreditGrantResponseData) SetGrantReason(grantReason BillingCreditGrantReason) {
 	b.GrantReason = grantReason
 	b.require(billingCreditGrantResponseDataFieldGrantReason)
 }
@@ -1555,11 +1557,32 @@ func (b *BillingCreditGrantResponseData) SetQuantityUsed(quantityUsed float64) {
 	b.require(billingCreditGrantResponseDataFieldQuantityUsed)
 }
 
+// SetRenewalEnabled sets the RenewalEnabled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetRenewalEnabled(renewalEnabled bool) {
+	b.RenewalEnabled = renewalEnabled
+	b.require(billingCreditGrantResponseDataFieldRenewalEnabled)
+}
+
+// SetRenewalPeriod sets the RenewalPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetRenewalPeriod(renewalPeriod *BillingPlanCreditGrantResetCadence) {
+	b.RenewalPeriod = renewalPeriod
+	b.require(billingCreditGrantResponseDataFieldRenewalPeriod)
+}
+
 // SetSourceLabel sets the SourceLabel field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingCreditGrantResponseData) SetSourceLabel(sourceLabel string) {
 	b.SourceLabel = sourceLabel
 	b.require(billingCreditGrantResponseDataFieldSourceLabel)
+}
+
+// SetTransfers sets the Transfers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetTransfers(transfers []*CreditTransferResponseData) {
+	b.Transfers = transfers
+	b.require(billingCreditGrantResponseDataFieldTransfers)
 }
 
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
@@ -1585,7 +1608,7 @@ func (b *BillingCreditGrantResponseData) SetZeroedOutDate(zeroedOutDate *time.Ti
 
 // SetZeroedOutReason sets the ZeroedOutReason field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditGrantResponseData) SetZeroedOutReason(zeroedOutReason *string) {
+func (b *BillingCreditGrantResponseData) SetZeroedOutReason(zeroedOutReason *BillingCreditGrantZeroedOutReason) {
 	b.ZeroedOutReason = zeroedOutReason
 	b.require(billingCreditGrantResponseDataFieldZeroedOutReason)
 }
@@ -1921,58 +1944,95 @@ func (c *CompanyLedgerResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreditGrantSortOrder string
+
+const (
+	CreditGrantSortOrderCreatedAt         CreditGrantSortOrder = "created_at"
+	CreditGrantSortOrderExpiresAt         CreditGrantSortOrder = "expires_at"
+	CreditGrantSortOrderQuantity          CreditGrantSortOrder = "quantity"
+	CreditGrantSortOrderQuantityRemaining CreditGrantSortOrder = "quantity_remaining"
+)
+
+func NewCreditGrantSortOrderFromString(s string) (CreditGrantSortOrder, error) {
+	switch s {
+	case "created_at":
+		return CreditGrantSortOrderCreatedAt, nil
+	case "expires_at":
+		return CreditGrantSortOrderExpiresAt, nil
+	case "quantity":
+		return CreditGrantSortOrderQuantity, nil
+	case "quantity_remaining":
+		return CreditGrantSortOrderQuantityRemaining, nil
+	}
+	var t CreditGrantSortOrder
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreditGrantSortOrder) Ptr() *CreditGrantSortOrder {
+	return &c
+}
+
 var (
-	creditLedgerEnrichedEntryResponseDataFieldBillingCreditID     = big.NewInt(1 << 0)
-	creditLedgerEnrichedEntryResponseDataFieldCompany             = big.NewInt(1 << 1)
-	creditLedgerEnrichedEntryResponseDataFieldCompanyID           = big.NewInt(1 << 2)
-	creditLedgerEnrichedEntryResponseDataFieldCredit              = big.NewInt(1 << 3)
-	creditLedgerEnrichedEntryResponseDataFieldExpiredGrantCount   = big.NewInt(1 << 4)
-	creditLedgerEnrichedEntryResponseDataFieldFeature             = big.NewInt(1 << 5)
-	creditLedgerEnrichedEntryResponseDataFieldFeatureID           = big.NewInt(1 << 6)
-	creditLedgerEnrichedEntryResponseDataFieldFirstTransactionAt  = big.NewInt(1 << 7)
-	creditLedgerEnrichedEntryResponseDataFieldFreeGrantCount      = big.NewInt(1 << 8)
-	creditLedgerEnrichedEntryResponseDataFieldGrantCount          = big.NewInt(1 << 9)
-	creditLedgerEnrichedEntryResponseDataFieldLastTransactionAt   = big.NewInt(1 << 10)
-	creditLedgerEnrichedEntryResponseDataFieldManuallyZeroedCount = big.NewInt(1 << 11)
-	creditLedgerEnrichedEntryResponseDataFieldNetChange           = big.NewInt(1 << 12)
-	creditLedgerEnrichedEntryResponseDataFieldPlanGrantCount      = big.NewInt(1 << 13)
-	creditLedgerEnrichedEntryResponseDataFieldPurchasedGrantCount = big.NewInt(1 << 14)
-	creditLedgerEnrichedEntryResponseDataFieldTimeBucket          = big.NewInt(1 << 15)
-	creditLedgerEnrichedEntryResponseDataFieldTotalConsumed       = big.NewInt(1 << 16)
-	creditLedgerEnrichedEntryResponseDataFieldTotalGranted        = big.NewInt(1 << 17)
-	creditLedgerEnrichedEntryResponseDataFieldTransactionCount    = big.NewInt(1 << 18)
-	creditLedgerEnrichedEntryResponseDataFieldUsageCount          = big.NewInt(1 << 19)
-	creditLedgerEnrichedEntryResponseDataFieldZeroedOutCount      = big.NewInt(1 << 20)
+	creditLedgerEnrichedEntryResponseDataFieldBillingCreditAutoTopupGrantCount = big.NewInt(1 << 0)
+	creditLedgerEnrichedEntryResponseDataFieldBillingCreditID                  = big.NewInt(1 << 1)
+	creditLedgerEnrichedEntryResponseDataFieldCompany                          = big.NewInt(1 << 2)
+	creditLedgerEnrichedEntryResponseDataFieldCompanyID                        = big.NewInt(1 << 3)
+	creditLedgerEnrichedEntryResponseDataFieldCredit                           = big.NewInt(1 << 4)
+	creditLedgerEnrichedEntryResponseDataFieldExpiredGrantCount                = big.NewInt(1 << 5)
+	creditLedgerEnrichedEntryResponseDataFieldFeature                          = big.NewInt(1 << 6)
+	creditLedgerEnrichedEntryResponseDataFieldFeatureID                        = big.NewInt(1 << 7)
+	creditLedgerEnrichedEntryResponseDataFieldFirstTransactionAt               = big.NewInt(1 << 8)
+	creditLedgerEnrichedEntryResponseDataFieldFreeGrantCount                   = big.NewInt(1 << 9)
+	creditLedgerEnrichedEntryResponseDataFieldGrantCount                       = big.NewInt(1 << 10)
+	creditLedgerEnrichedEntryResponseDataFieldLastTransactionAt                = big.NewInt(1 << 11)
+	creditLedgerEnrichedEntryResponseDataFieldManuallyZeroedCount              = big.NewInt(1 << 12)
+	creditLedgerEnrichedEntryResponseDataFieldNetChange                        = big.NewInt(1 << 13)
+	creditLedgerEnrichedEntryResponseDataFieldPlanGrantCount                   = big.NewInt(1 << 14)
+	creditLedgerEnrichedEntryResponseDataFieldPurchasedGrantCount              = big.NewInt(1 << 15)
+	creditLedgerEnrichedEntryResponseDataFieldTimeBucket                       = big.NewInt(1 << 16)
+	creditLedgerEnrichedEntryResponseDataFieldTotalConsumed                    = big.NewInt(1 << 17)
+	creditLedgerEnrichedEntryResponseDataFieldTotalGranted                     = big.NewInt(1 << 18)
+	creditLedgerEnrichedEntryResponseDataFieldTransactionCount                 = big.NewInt(1 << 19)
+	creditLedgerEnrichedEntryResponseDataFieldUsageCount                       = big.NewInt(1 << 20)
+	creditLedgerEnrichedEntryResponseDataFieldZeroedOutCount                   = big.NewInt(1 << 21)
 )
 
 type CreditLedgerEnrichedEntryResponseData struct {
-	BillingCreditID     string                           `json:"billing_credit_id" url:"billing_credit_id"`
-	Company             *CompanyLedgerResponseData       `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID           string                           `json:"company_id" url:"company_id"`
-	Credit              *BillingCreditLedgerResponseData `json:"credit,omitempty" url:"credit,omitempty"`
-	ExpiredGrantCount   int                              `json:"expired_grant_count" url:"expired_grant_count"`
-	Feature             *FeatureLedgerResponseData       `json:"feature,omitempty" url:"feature,omitempty"`
-	FeatureID           *string                          `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	FirstTransactionAt  time.Time                        `json:"first_transaction_at" url:"first_transaction_at"`
-	FreeGrantCount      int                              `json:"free_grant_count" url:"free_grant_count"`
-	GrantCount          int                              `json:"grant_count" url:"grant_count"`
-	LastTransactionAt   time.Time                        `json:"last_transaction_at" url:"last_transaction_at"`
-	ManuallyZeroedCount int                              `json:"manually_zeroed_count" url:"manually_zeroed_count"`
-	NetChange           float64                          `json:"net_change" url:"net_change"`
-	PlanGrantCount      int                              `json:"plan_grant_count" url:"plan_grant_count"`
-	PurchasedGrantCount int                              `json:"purchased_grant_count" url:"purchased_grant_count"`
-	TimeBucket          time.Time                        `json:"time_bucket" url:"time_bucket"`
-	TotalConsumed       float64                          `json:"total_consumed" url:"total_consumed"`
-	TotalGranted        float64                          `json:"total_granted" url:"total_granted"`
-	TransactionCount    int                              `json:"transaction_count" url:"transaction_count"`
-	UsageCount          int                              `json:"usage_count" url:"usage_count"`
-	ZeroedOutCount      int                              `json:"zeroed_out_count" url:"zeroed_out_count"`
+	BillingCreditAutoTopupGrantCount int                              `json:"billing_credit_auto_topup_grant_count" url:"billing_credit_auto_topup_grant_count"`
+	BillingCreditID                  string                           `json:"billing_credit_id" url:"billing_credit_id"`
+	Company                          *CompanyLedgerResponseData       `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID                        string                           `json:"company_id" url:"company_id"`
+	Credit                           *BillingCreditLedgerResponseData `json:"credit,omitempty" url:"credit,omitempty"`
+	ExpiredGrantCount                int                              `json:"expired_grant_count" url:"expired_grant_count"`
+	Feature                          *FeatureLedgerResponseData       `json:"feature,omitempty" url:"feature,omitempty"`
+	FeatureID                        *string                          `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FirstTransactionAt               time.Time                        `json:"first_transaction_at" url:"first_transaction_at"`
+	FreeGrantCount                   int                              `json:"free_grant_count" url:"free_grant_count"`
+	GrantCount                       int                              `json:"grant_count" url:"grant_count"`
+	LastTransactionAt                time.Time                        `json:"last_transaction_at" url:"last_transaction_at"`
+	ManuallyZeroedCount              int                              `json:"manually_zeroed_count" url:"manually_zeroed_count"`
+	NetChange                        float64                          `json:"net_change" url:"net_change"`
+	PlanGrantCount                   int                              `json:"plan_grant_count" url:"plan_grant_count"`
+	PurchasedGrantCount              int                              `json:"purchased_grant_count" url:"purchased_grant_count"`
+	TimeBucket                       time.Time                        `json:"time_bucket" url:"time_bucket"`
+	TotalConsumed                    float64                          `json:"total_consumed" url:"total_consumed"`
+	TotalGranted                     float64                          `json:"total_granted" url:"total_granted"`
+	TransactionCount                 int                              `json:"transaction_count" url:"transaction_count"`
+	UsageCount                       int                              `json:"usage_count" url:"usage_count"`
+	ZeroedOutCount                   int                              `json:"zeroed_out_count" url:"zeroed_out_count"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CreditLedgerEnrichedEntryResponseData) GetBillingCreditAutoTopupGrantCount() int {
+	if c == nil {
+		return 0
+	}
+	return c.BillingCreditAutoTopupGrantCount
 }
 
 func (c *CreditLedgerEnrichedEntryResponseData) GetBillingCreditID() string {
@@ -2131,6 +2191,13 @@ func (c *CreditLedgerEnrichedEntryResponseData) require(field *big.Int) {
 		c.explicitFields = big.NewInt(0)
 	}
 	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingCreditAutoTopupGrantCount sets the BillingCreditAutoTopupGrantCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLedgerEnrichedEntryResponseData) SetBillingCreditAutoTopupGrantCount(billingCreditAutoTopupGrantCount int) {
+	c.BillingCreditAutoTopupGrantCount = billingCreditAutoTopupGrantCount
+	c.require(creditLedgerEnrichedEntryResponseDataFieldBillingCreditAutoTopupGrantCount)
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -2324,6 +2391,200 @@ func (c *CreditLedgerEnrichedEntryResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditLedgerEnrichedEntryResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CreditLedgerPeriod string
+
+const (
+	CreditLedgerPeriodDaily   CreditLedgerPeriod = "daily"
+	CreditLedgerPeriodMonthly CreditLedgerPeriod = "monthly"
+	CreditLedgerPeriodRaw     CreditLedgerPeriod = "raw"
+	CreditLedgerPeriodWeekly  CreditLedgerPeriod = "weekly"
+)
+
+func NewCreditLedgerPeriodFromString(s string) (CreditLedgerPeriod, error) {
+	switch s {
+	case "daily":
+		return CreditLedgerPeriodDaily, nil
+	case "monthly":
+		return CreditLedgerPeriodMonthly, nil
+	case "raw":
+		return CreditLedgerPeriodRaw, nil
+	case "weekly":
+		return CreditLedgerPeriodWeekly, nil
+	}
+	var t CreditLedgerPeriod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreditLedgerPeriod) Ptr() *CreditLedgerPeriod {
+	return &c
+}
+
+var (
+	creditTransferResponseDataFieldAmount         = big.NewInt(1 << 0)
+	creditTransferResponseDataFieldCreatedAt      = big.NewInt(1 << 1)
+	creditTransferResponseDataFieldDirection      = big.NewInt(1 << 2)
+	creditTransferResponseDataFieldID             = big.NewInt(1 << 3)
+	creditTransferResponseDataFieldReason         = big.NewInt(1 << 4)
+	creditTransferResponseDataFieldRelatedGrantID = big.NewInt(1 << 5)
+)
+
+type CreditTransferResponseData struct {
+	Amount         float64   `json:"amount" url:"amount"`
+	CreatedAt      time.Time `json:"created_at" url:"created_at"`
+	Direction      string    `json:"direction" url:"direction"`
+	ID             string    `json:"id" url:"id"`
+	Reason         string    `json:"reason" url:"reason"`
+	RelatedGrantID string    `json:"related_grant_id" url:"related_grant_id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditTransferResponseData) GetAmount() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Amount
+}
+
+func (c *CreditTransferResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CreditTransferResponseData) GetDirection() string {
+	if c == nil {
+		return ""
+	}
+	return c.Direction
+}
+
+func (c *CreditTransferResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CreditTransferResponseData) GetReason() string {
+	if c == nil {
+		return ""
+	}
+	return c.Reason
+}
+
+func (c *CreditTransferResponseData) GetRelatedGrantID() string {
+	if c == nil {
+		return ""
+	}
+	return c.RelatedGrantID
+}
+
+func (c *CreditTransferResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditTransferResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditTransferResponseData) SetAmount(amount float64) {
+	c.Amount = amount
+	c.require(creditTransferResponseDataFieldAmount)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditTransferResponseData) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(creditTransferResponseDataFieldCreatedAt)
+}
+
+// SetDirection sets the Direction field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditTransferResponseData) SetDirection(direction string) {
+	c.Direction = direction
+	c.require(creditTransferResponseDataFieldDirection)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditTransferResponseData) SetID(id string) {
+	c.ID = id
+	c.require(creditTransferResponseDataFieldID)
+}
+
+// SetReason sets the Reason field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditTransferResponseData) SetReason(reason string) {
+	c.Reason = reason
+	c.require(creditTransferResponseDataFieldReason)
+}
+
+// SetRelatedGrantID sets the RelatedGrantID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditTransferResponseData) SetRelatedGrantID(relatedGrantID string) {
+	c.RelatedGrantID = relatedGrantID
+	c.require(creditTransferResponseDataFieldRelatedGrantID)
+}
+
+func (c *CreditTransferResponseData) UnmarshalJSON(data []byte) error {
+	type embed CreditTransferResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CreditTransferResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditTransferResponseData) MarshalJSON() ([]byte, error) {
+	type embed CreditTransferResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditTransferResponseData) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3167,6 +3428,246 @@ func (c *CountBillingPlanCreditGrantsResponse) String() string {
 
 // Input parameters
 var (
+	countCompanyGrantsParamsFieldCompanyID = big.NewInt(1 << 0)
+	countCompanyGrantsParamsFieldDir       = big.NewInt(1 << 1)
+	countCompanyGrantsParamsFieldLimit     = big.NewInt(1 << 2)
+	countCompanyGrantsParamsFieldOffset    = big.NewInt(1 << 3)
+	countCompanyGrantsParamsFieldOrder     = big.NewInt(1 << 4)
+)
+
+type CountCompanyGrantsParams struct {
+	CompanyID *string        `json:"company_id,omitempty" url:"company_id,omitempty"`
+	Dir       *SortDirection `json:"dir,omitempty" url:"dir,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int                  `json:"offset,omitempty" url:"offset,omitempty"`
+	Order  *CreditGrantSortOrder `json:"order,omitempty" url:"order,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompanyGrantsParams) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CountCompanyGrantsParams) GetDir() *SortDirection {
+	if c == nil {
+		return nil
+	}
+	return c.Dir
+}
+
+func (c *CountCompanyGrantsParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountCompanyGrantsParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountCompanyGrantsParams) GetOrder() *CreditGrantSortOrder {
+	if c == nil {
+		return nil
+	}
+	return c.Order
+}
+
+func (c *CountCompanyGrantsParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCompanyGrantsParams) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsParams) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(countCompanyGrantsParamsFieldCompanyID)
+}
+
+// SetDir sets the Dir field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsParams) SetDir(dir *SortDirection) {
+	c.Dir = dir
+	c.require(countCompanyGrantsParamsFieldDir)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsParams) SetLimit(limit *int) {
+	c.Limit = limit
+	c.require(countCompanyGrantsParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsParams) SetOffset(offset *int) {
+	c.Offset = offset
+	c.require(countCompanyGrantsParamsFieldOffset)
+}
+
+// SetOrder sets the Order field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsParams) SetOrder(order *CreditGrantSortOrder) {
+	c.Order = order
+	c.require(countCompanyGrantsParamsFieldOrder)
+}
+
+func (c *CountCompanyGrantsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCompanyGrantsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCompanyGrantsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCompanyGrantsParams) MarshalJSON() ([]byte, error) {
+	type embed CountCompanyGrantsParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountCompanyGrantsParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	countCompanyGrantsResponseFieldData   = big.NewInt(1 << 0)
+	countCompanyGrantsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CountCompanyGrantsResponse struct {
+	Data *CountResponse `json:"data" url:"data"`
+	// Input parameters
+	Params *CountCompanyGrantsParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompanyGrantsResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountCompanyGrantsResponse) GetParams() *CountCompanyGrantsParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountCompanyGrantsResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCompanyGrantsResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsResponse) SetData(data *CountResponse) {
+	c.Data = data
+	c.require(countCompanyGrantsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyGrantsResponse) SetParams(params *CountCompanyGrantsParams) {
+	c.Params = params
+	c.require(countCompanyGrantsResponseFieldParams)
+}
+
+func (c *CountCompanyGrantsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCompanyGrantsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCompanyGrantsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCompanyGrantsResponse) MarshalJSON() ([]byte, error) {
+	type embed CountCompanyGrantsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountCompanyGrantsResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+var (
 	countCreditBundlesParamsFieldBundleType = big.NewInt(1 << 0)
 	countCreditBundlesParamsFieldCreditID   = big.NewInt(1 << 1)
 	countCreditBundlesParamsFieldIDs        = big.NewInt(1 << 2)
@@ -3176,14 +3677,14 @@ var (
 )
 
 type CountCreditBundlesParams struct {
-	BundleType *string  `json:"bundle_type,omitempty" url:"bundle_type,omitempty"`
-	CreditID   *string  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
-	IDs        []string `json:"ids,omitempty" url:"ids,omitempty"`
+	BundleType *BillingCreditBundleType `json:"bundle_type,omitempty" url:"bundle_type,omitempty"`
+	CreditID   *string                  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
+	IDs        []string                 `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int                                    `json:"offset,omitempty" url:"offset,omitempty"`
-	Status *CountCreditBundlesResponseParamsStatus `json:"status,omitempty" url:"status,omitempty"`
+	Offset *int                       `json:"offset,omitempty" url:"offset,omitempty"`
+	Status *BillingCreditBundleStatus `json:"status,omitempty" url:"status,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3220,7 +3721,7 @@ func (c *CountCreditBundlesParams) GetOffset() *int {
 	return c.Offset
 }
 
-func (c *CountCreditBundlesParams) GetStatus() *CountCreditBundlesResponseParamsStatus {
+func (c *CountCreditBundlesParams) GetStatus() *BillingCreditBundleStatus {
 	if c == nil {
 		return nil
 	}
@@ -3240,7 +3741,7 @@ func (c *CountCreditBundlesParams) require(field *big.Int) {
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditBundlesParams) SetBundleType(bundleType *string) {
+func (c *CountCreditBundlesParams) SetBundleType(bundleType *BillingCreditBundleType) {
 	c.BundleType = bundleType
 	c.require(countCreditBundlesParamsFieldBundleType)
 }
@@ -3275,7 +3776,7 @@ func (c *CountCreditBundlesParams) SetOffset(offset *int) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditBundlesParams) SetStatus(status *CountCreditBundlesResponseParamsStatus) {
+func (c *CountCreditBundlesParams) SetStatus(status *BillingCreditBundleStatus) {
 	c.Status = status
 	c.require(countCreditBundlesParamsFieldStatus)
 }
@@ -3317,28 +3818,6 @@ func (c *CountCreditBundlesParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CountCreditBundlesRequestStatus string
-
-const (
-	CountCreditBundlesRequestStatusActive   CountCreditBundlesRequestStatus = "active"
-	CountCreditBundlesRequestStatusInactive CountCreditBundlesRequestStatus = "inactive"
-)
-
-func NewCountCreditBundlesRequestStatusFromString(s string) (CountCreditBundlesRequestStatus, error) {
-	switch s {
-	case "active":
-		return CountCreditBundlesRequestStatusActive, nil
-	case "inactive":
-		return CountCreditBundlesRequestStatusInactive, nil
-	}
-	var t CountCreditBundlesRequestStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountCreditBundlesRequestStatus) Ptr() *CountCreditBundlesRequestStatus {
-	return &c
 }
 
 var (
@@ -3436,28 +3915,6 @@ func (c *CountCreditBundlesResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-type CountCreditBundlesResponseParamsStatus string
-
-const (
-	CountCreditBundlesResponseParamsStatusActive   CountCreditBundlesResponseParamsStatus = "active"
-	CountCreditBundlesResponseParamsStatusInactive CountCreditBundlesResponseParamsStatus = "inactive"
-)
-
-func NewCountCreditBundlesResponseParamsStatusFromString(s string) (CountCreditBundlesResponseParamsStatus, error) {
-	switch s {
-	case "active":
-		return CountCreditBundlesResponseParamsStatusActive, nil
-	case "inactive":
-		return CountCreditBundlesResponseParamsStatusInactive, nil
-	}
-	var t CountCreditBundlesResponseParamsStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountCreditBundlesResponseParamsStatus) Ptr() *CountCreditBundlesResponseParamsStatus {
-	return &c
-}
-
 // Input parameters
 var (
 	countCreditLedgerParamsFieldBillingCreditID = big.NewInt(1 << 0)
@@ -3478,9 +3935,9 @@ type CountCreditLedgerParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int                                   `json:"offset,omitempty" url:"offset,omitempty"`
-	Period    *CountCreditLedgerResponseParamsPeriod `json:"period,omitempty" url:"period,omitempty"`
-	StartTime *string                                `json:"start_time,omitempty" url:"start_time,omitempty"`
+	Offset    *int                `json:"offset,omitempty" url:"offset,omitempty"`
+	Period    *CreditLedgerPeriod `json:"period,omitempty" url:"period,omitempty"`
+	StartTime *string             `json:"start_time,omitempty" url:"start_time,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3531,7 +3988,7 @@ func (c *CountCreditLedgerParams) GetOffset() *int {
 	return c.Offset
 }
 
-func (c *CountCreditLedgerParams) GetPeriod() *CountCreditLedgerResponseParamsPeriod {
+func (c *CountCreditLedgerParams) GetPeriod() *CreditLedgerPeriod {
 	if c == nil {
 		return nil
 	}
@@ -3600,7 +4057,7 @@ func (c *CountCreditLedgerParams) SetOffset(offset *int) {
 
 // SetPeriod sets the Period field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditLedgerParams) SetPeriod(period *CountCreditLedgerResponseParamsPeriod) {
+func (c *CountCreditLedgerParams) SetPeriod(period *CreditLedgerPeriod) {
 	c.Period = period
 	c.require(countCreditLedgerParamsFieldPeriod)
 }
@@ -3649,34 +4106,6 @@ func (c *CountCreditLedgerParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CountCreditLedgerRequestPeriod string
-
-const (
-	CountCreditLedgerRequestPeriodDaily   CountCreditLedgerRequestPeriod = "daily"
-	CountCreditLedgerRequestPeriodWeekly  CountCreditLedgerRequestPeriod = "weekly"
-	CountCreditLedgerRequestPeriodMonthly CountCreditLedgerRequestPeriod = "monthly"
-	CountCreditLedgerRequestPeriodRaw     CountCreditLedgerRequestPeriod = "raw"
-)
-
-func NewCountCreditLedgerRequestPeriodFromString(s string) (CountCreditLedgerRequestPeriod, error) {
-	switch s {
-	case "daily":
-		return CountCreditLedgerRequestPeriodDaily, nil
-	case "weekly":
-		return CountCreditLedgerRequestPeriodWeekly, nil
-	case "monthly":
-		return CountCreditLedgerRequestPeriodMonthly, nil
-	case "raw":
-		return CountCreditLedgerRequestPeriodRaw, nil
-	}
-	var t CountCreditLedgerRequestPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountCreditLedgerRequestPeriod) Ptr() *CountCreditLedgerRequestPeriod {
-	return &c
 }
 
 var (
@@ -3774,87 +4203,6 @@ func (c *CountCreditLedgerResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-type CountCreditLedgerResponseParamsPeriod string
-
-const (
-	CountCreditLedgerResponseParamsPeriodDaily   CountCreditLedgerResponseParamsPeriod = "daily"
-	CountCreditLedgerResponseParamsPeriodWeekly  CountCreditLedgerResponseParamsPeriod = "weekly"
-	CountCreditLedgerResponseParamsPeriodMonthly CountCreditLedgerResponseParamsPeriod = "monthly"
-	CountCreditLedgerResponseParamsPeriodRaw     CountCreditLedgerResponseParamsPeriod = "raw"
-)
-
-func NewCountCreditLedgerResponseParamsPeriodFromString(s string) (CountCreditLedgerResponseParamsPeriod, error) {
-	switch s {
-	case "daily":
-		return CountCreditLedgerResponseParamsPeriodDaily, nil
-	case "weekly":
-		return CountCreditLedgerResponseParamsPeriodWeekly, nil
-	case "monthly":
-		return CountCreditLedgerResponseParamsPeriodMonthly, nil
-	case "raw":
-		return CountCreditLedgerResponseParamsPeriodRaw, nil
-	}
-	var t CountCreditLedgerResponseParamsPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CountCreditLedgerResponseParamsPeriod) Ptr() *CountCreditLedgerResponseParamsPeriod {
-	return &c
-}
-
-type CreateBillingCreditRequestBodyBurnStrategy string
-
-const (
-	CreateBillingCreditRequestBodyBurnStrategyPlanFirstThenCreditBundlesFirstInFirstOut CreateBillingCreditRequestBodyBurnStrategy = "plan_first_then_credit_bundles_first_in_first_out"
-	CreateBillingCreditRequestBodyBurnStrategyFirstInFirstOut                           CreateBillingCreditRequestBodyBurnStrategy = "first_in_first_out"
-	CreateBillingCreditRequestBodyBurnStrategyLastInFirstOut                            CreateBillingCreditRequestBodyBurnStrategy = "last_in_first_out"
-	CreateBillingCreditRequestBodyBurnStrategyExpirationPriority                        CreateBillingCreditRequestBodyBurnStrategy = "expiration_priority"
-)
-
-func NewCreateBillingCreditRequestBodyBurnStrategyFromString(s string) (CreateBillingCreditRequestBodyBurnStrategy, error) {
-	switch s {
-	case "plan_first_then_credit_bundles_first_in_first_out":
-		return CreateBillingCreditRequestBodyBurnStrategyPlanFirstThenCreditBundlesFirstInFirstOut, nil
-	case "first_in_first_out":
-		return CreateBillingCreditRequestBodyBurnStrategyFirstInFirstOut, nil
-	case "last_in_first_out":
-		return CreateBillingCreditRequestBodyBurnStrategyLastInFirstOut, nil
-	case "expiration_priority":
-		return CreateBillingCreditRequestBodyBurnStrategyExpirationPriority, nil
-	}
-	var t CreateBillingCreditRequestBodyBurnStrategy
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateBillingCreditRequestBodyBurnStrategy) Ptr() *CreateBillingCreditRequestBodyBurnStrategy {
-	return &c
-}
-
-type CreateBillingCreditRequestBodyDefaultRolloverPolicy string
-
-const (
-	CreateBillingCreditRequestBodyDefaultRolloverPolicyNone     CreateBillingCreditRequestBodyDefaultRolloverPolicy = "none"
-	CreateBillingCreditRequestBodyDefaultRolloverPolicyRollover CreateBillingCreditRequestBodyDefaultRolloverPolicy = "rollover"
-	CreateBillingCreditRequestBodyDefaultRolloverPolicyExpire   CreateBillingCreditRequestBodyDefaultRolloverPolicy = "expire"
-)
-
-func NewCreateBillingCreditRequestBodyDefaultRolloverPolicyFromString(s string) (CreateBillingCreditRequestBodyDefaultRolloverPolicy, error) {
-	switch s {
-	case "none":
-		return CreateBillingCreditRequestBodyDefaultRolloverPolicyNone, nil
-	case "rollover":
-		return CreateBillingCreditRequestBodyDefaultRolloverPolicyRollover, nil
-	case "expire":
-		return CreateBillingCreditRequestBodyDefaultRolloverPolicyExpire, nil
-	}
-	var t CreateBillingCreditRequestBodyDefaultRolloverPolicy
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateBillingCreditRequestBodyDefaultRolloverPolicy) Ptr() *CreateBillingCreditRequestBodyDefaultRolloverPolicy {
-	return &c
-}
-
 var (
 	createBillingCreditResponseFieldData   = big.NewInt(1 << 0)
 	createBillingCreditResponseFieldParams = big.NewInt(1 << 1)
@@ -3950,131 +4298,6 @@ func (c *CreateBillingCreditResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-type CreateBillingPlanCreditGrantRequestBodyExpiryType string
-
-const (
-	CreateBillingPlanCreditGrantRequestBodyExpiryTypeDuration               CreateBillingPlanCreditGrantRequestBodyExpiryType = "duration"
-	CreateBillingPlanCreditGrantRequestBodyExpiryTypeNoExpiry               CreateBillingPlanCreditGrantRequestBodyExpiryType = "no_expiry"
-	CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfTrial             CreateBillingPlanCreditGrantRequestBodyExpiryType = "end_of_trial"
-	CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfBillingPeriod     CreateBillingPlanCreditGrantRequestBodyExpiryType = "end_of_billing_period"
-	CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfNextBillingPeriod CreateBillingPlanCreditGrantRequestBodyExpiryType = "end_of_next_billing_period"
-)
-
-func NewCreateBillingPlanCreditGrantRequestBodyExpiryTypeFromString(s string) (CreateBillingPlanCreditGrantRequestBodyExpiryType, error) {
-	switch s {
-	case "duration":
-		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeDuration, nil
-	case "no_expiry":
-		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeNoExpiry, nil
-	case "end_of_trial":
-		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfTrial, nil
-	case "end_of_billing_period":
-		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfBillingPeriod, nil
-	case "end_of_next_billing_period":
-		return CreateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfNextBillingPeriod, nil
-	}
-	var t CreateBillingPlanCreditGrantRequestBodyExpiryType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateBillingPlanCreditGrantRequestBodyExpiryType) Ptr() *CreateBillingPlanCreditGrantRequestBodyExpiryType {
-	return &c
-}
-
-type CreateBillingPlanCreditGrantRequestBodyExpiryUnit string
-
-const (
-	CreateBillingPlanCreditGrantRequestBodyExpiryUnitDays           CreateBillingPlanCreditGrantRequestBodyExpiryUnit = "days"
-	CreateBillingPlanCreditGrantRequestBodyExpiryUnitBillingPeriods CreateBillingPlanCreditGrantRequestBodyExpiryUnit = "billing_periods"
-)
-
-func NewCreateBillingPlanCreditGrantRequestBodyExpiryUnitFromString(s string) (CreateBillingPlanCreditGrantRequestBodyExpiryUnit, error) {
-	switch s {
-	case "days":
-		return CreateBillingPlanCreditGrantRequestBodyExpiryUnitDays, nil
-	case "billing_periods":
-		return CreateBillingPlanCreditGrantRequestBodyExpiryUnitBillingPeriods, nil
-	}
-	var t CreateBillingPlanCreditGrantRequestBodyExpiryUnit
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateBillingPlanCreditGrantRequestBodyExpiryUnit) Ptr() *CreateBillingPlanCreditGrantRequestBodyExpiryUnit {
-	return &c
-}
-
-type CreateBillingPlanCreditGrantRequestBodyResetCadence string
-
-const (
-	CreateBillingPlanCreditGrantRequestBodyResetCadenceMonthly CreateBillingPlanCreditGrantRequestBodyResetCadence = "monthly"
-	CreateBillingPlanCreditGrantRequestBodyResetCadenceYearly  CreateBillingPlanCreditGrantRequestBodyResetCadence = "yearly"
-	CreateBillingPlanCreditGrantRequestBodyResetCadenceDaily   CreateBillingPlanCreditGrantRequestBodyResetCadence = "daily"
-	CreateBillingPlanCreditGrantRequestBodyResetCadenceWeekly  CreateBillingPlanCreditGrantRequestBodyResetCadence = "weekly"
-)
-
-func NewCreateBillingPlanCreditGrantRequestBodyResetCadenceFromString(s string) (CreateBillingPlanCreditGrantRequestBodyResetCadence, error) {
-	switch s {
-	case "monthly":
-		return CreateBillingPlanCreditGrantRequestBodyResetCadenceMonthly, nil
-	case "yearly":
-		return CreateBillingPlanCreditGrantRequestBodyResetCadenceYearly, nil
-	case "daily":
-		return CreateBillingPlanCreditGrantRequestBodyResetCadenceDaily, nil
-	case "weekly":
-		return CreateBillingPlanCreditGrantRequestBodyResetCadenceWeekly, nil
-	}
-	var t CreateBillingPlanCreditGrantRequestBodyResetCadence
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateBillingPlanCreditGrantRequestBodyResetCadence) Ptr() *CreateBillingPlanCreditGrantRequestBodyResetCadence {
-	return &c
-}
-
-type CreateBillingPlanCreditGrantRequestBodyResetStart string
-
-const (
-	CreateBillingPlanCreditGrantRequestBodyResetStartBillingPeriod CreateBillingPlanCreditGrantRequestBodyResetStart = "billing_period"
-	CreateBillingPlanCreditGrantRequestBodyResetStartFirstOfMonth  CreateBillingPlanCreditGrantRequestBodyResetStart = "first_of_month"
-)
-
-func NewCreateBillingPlanCreditGrantRequestBodyResetStartFromString(s string) (CreateBillingPlanCreditGrantRequestBodyResetStart, error) {
-	switch s {
-	case "billing_period":
-		return CreateBillingPlanCreditGrantRequestBodyResetStartBillingPeriod, nil
-	case "first_of_month":
-		return CreateBillingPlanCreditGrantRequestBodyResetStartFirstOfMonth, nil
-	}
-	var t CreateBillingPlanCreditGrantRequestBodyResetStart
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateBillingPlanCreditGrantRequestBodyResetStart) Ptr() *CreateBillingPlanCreditGrantRequestBodyResetStart {
-	return &c
-}
-
-type CreateBillingPlanCreditGrantRequestBodyResetType string
-
-const (
-	CreateBillingPlanCreditGrantRequestBodyResetTypePlanPeriod CreateBillingPlanCreditGrantRequestBodyResetType = "plan_period"
-	CreateBillingPlanCreditGrantRequestBodyResetTypeNoReset    CreateBillingPlanCreditGrantRequestBodyResetType = "no_reset"
-)
-
-func NewCreateBillingPlanCreditGrantRequestBodyResetTypeFromString(s string) (CreateBillingPlanCreditGrantRequestBodyResetType, error) {
-	switch s {
-	case "plan_period":
-		return CreateBillingPlanCreditGrantRequestBodyResetTypePlanPeriod, nil
-	case "no_reset":
-		return CreateBillingPlanCreditGrantRequestBodyResetTypeNoReset, nil
-	}
-	var t CreateBillingPlanCreditGrantRequestBodyResetType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateBillingPlanCreditGrantRequestBodyResetType) Ptr() *CreateBillingPlanCreditGrantRequestBodyResetType {
-	return &c
-}
-
 var (
 	createBillingPlanCreditGrantResponseFieldData   = big.NewInt(1 << 0)
 	createBillingPlanCreditGrantResponseFieldParams = big.NewInt(1 << 1)
@@ -4168,134 +4391,6 @@ func (c *CreateBillingPlanCreditGrantResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CreateCompanyCreditGrantExpiryType string
-
-const (
-	CreateCompanyCreditGrantExpiryTypeDuration               CreateCompanyCreditGrantExpiryType = "duration"
-	CreateCompanyCreditGrantExpiryTypeNoExpiry               CreateCompanyCreditGrantExpiryType = "no_expiry"
-	CreateCompanyCreditGrantExpiryTypeEndOfTrial             CreateCompanyCreditGrantExpiryType = "end_of_trial"
-	CreateCompanyCreditGrantExpiryTypeEndOfBillingPeriod     CreateCompanyCreditGrantExpiryType = "end_of_billing_period"
-	CreateCompanyCreditGrantExpiryTypeEndOfNextBillingPeriod CreateCompanyCreditGrantExpiryType = "end_of_next_billing_period"
-)
-
-func NewCreateCompanyCreditGrantExpiryTypeFromString(s string) (CreateCompanyCreditGrantExpiryType, error) {
-	switch s {
-	case "duration":
-		return CreateCompanyCreditGrantExpiryTypeDuration, nil
-	case "no_expiry":
-		return CreateCompanyCreditGrantExpiryTypeNoExpiry, nil
-	case "end_of_trial":
-		return CreateCompanyCreditGrantExpiryTypeEndOfTrial, nil
-	case "end_of_billing_period":
-		return CreateCompanyCreditGrantExpiryTypeEndOfBillingPeriod, nil
-	case "end_of_next_billing_period":
-		return CreateCompanyCreditGrantExpiryTypeEndOfNextBillingPeriod, nil
-	}
-	var t CreateCompanyCreditGrantExpiryType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateCompanyCreditGrantExpiryType) Ptr() *CreateCompanyCreditGrantExpiryType {
-	return &c
-}
-
-type CreateCompanyCreditGrantExpiryUnit string
-
-const (
-	CreateCompanyCreditGrantExpiryUnitDays           CreateCompanyCreditGrantExpiryUnit = "days"
-	CreateCompanyCreditGrantExpiryUnitBillingPeriods CreateCompanyCreditGrantExpiryUnit = "billing_periods"
-)
-
-func NewCreateCompanyCreditGrantExpiryUnitFromString(s string) (CreateCompanyCreditGrantExpiryUnit, error) {
-	switch s {
-	case "days":
-		return CreateCompanyCreditGrantExpiryUnitDays, nil
-	case "billing_periods":
-		return CreateCompanyCreditGrantExpiryUnitBillingPeriods, nil
-	}
-	var t CreateCompanyCreditGrantExpiryUnit
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateCompanyCreditGrantExpiryUnit) Ptr() *CreateCompanyCreditGrantExpiryUnit {
-	return &c
-}
-
-type CreateCreditBundleRequestBodyExpiryType string
-
-const (
-	CreateCreditBundleRequestBodyExpiryTypeDuration               CreateCreditBundleRequestBodyExpiryType = "duration"
-	CreateCreditBundleRequestBodyExpiryTypeNoExpiry               CreateCreditBundleRequestBodyExpiryType = "no_expiry"
-	CreateCreditBundleRequestBodyExpiryTypeEndOfTrial             CreateCreditBundleRequestBodyExpiryType = "end_of_trial"
-	CreateCreditBundleRequestBodyExpiryTypeEndOfBillingPeriod     CreateCreditBundleRequestBodyExpiryType = "end_of_billing_period"
-	CreateCreditBundleRequestBodyExpiryTypeEndOfNextBillingPeriod CreateCreditBundleRequestBodyExpiryType = "end_of_next_billing_period"
-)
-
-func NewCreateCreditBundleRequestBodyExpiryTypeFromString(s string) (CreateCreditBundleRequestBodyExpiryType, error) {
-	switch s {
-	case "duration":
-		return CreateCreditBundleRequestBodyExpiryTypeDuration, nil
-	case "no_expiry":
-		return CreateCreditBundleRequestBodyExpiryTypeNoExpiry, nil
-	case "end_of_trial":
-		return CreateCreditBundleRequestBodyExpiryTypeEndOfTrial, nil
-	case "end_of_billing_period":
-		return CreateCreditBundleRequestBodyExpiryTypeEndOfBillingPeriod, nil
-	case "end_of_next_billing_period":
-		return CreateCreditBundleRequestBodyExpiryTypeEndOfNextBillingPeriod, nil
-	}
-	var t CreateCreditBundleRequestBodyExpiryType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateCreditBundleRequestBodyExpiryType) Ptr() *CreateCreditBundleRequestBodyExpiryType {
-	return &c
-}
-
-type CreateCreditBundleRequestBodyExpiryUnit string
-
-const (
-	CreateCreditBundleRequestBodyExpiryUnitDays           CreateCreditBundleRequestBodyExpiryUnit = "days"
-	CreateCreditBundleRequestBodyExpiryUnitBillingPeriods CreateCreditBundleRequestBodyExpiryUnit = "billing_periods"
-)
-
-func NewCreateCreditBundleRequestBodyExpiryUnitFromString(s string) (CreateCreditBundleRequestBodyExpiryUnit, error) {
-	switch s {
-	case "days":
-		return CreateCreditBundleRequestBodyExpiryUnitDays, nil
-	case "billing_periods":
-		return CreateCreditBundleRequestBodyExpiryUnitBillingPeriods, nil
-	}
-	var t CreateCreditBundleRequestBodyExpiryUnit
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateCreditBundleRequestBodyExpiryUnit) Ptr() *CreateCreditBundleRequestBodyExpiryUnit {
-	return &c
-}
-
-type CreateCreditBundleRequestBodyStatus string
-
-const (
-	CreateCreditBundleRequestBodyStatusActive   CreateCreditBundleRequestBodyStatus = "active"
-	CreateCreditBundleRequestBodyStatusInactive CreateCreditBundleRequestBodyStatus = "inactive"
-)
-
-func NewCreateCreditBundleRequestBodyStatusFromString(s string) (CreateCreditBundleRequestBodyStatus, error) {
-	switch s {
-	case "active":
-		return CreateCreditBundleRequestBodyStatusActive, nil
-	case "inactive":
-		return CreateCreditBundleRequestBodyStatusInactive, nil
-	}
-	var t CreateCreditBundleRequestBodyStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateCreditBundleRequestBodyStatus) Ptr() *CreateCreditBundleRequestBodyStatus {
-	return &c
 }
 
 var (
@@ -4777,9 +4872,9 @@ type GetEnrichedCreditLedgerParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int                                         `json:"offset,omitempty" url:"offset,omitempty"`
-	Period    *GetEnrichedCreditLedgerResponseParamsPeriod `json:"period,omitempty" url:"period,omitempty"`
-	StartTime *string                                      `json:"start_time,omitempty" url:"start_time,omitempty"`
+	Offset    *int                `json:"offset,omitempty" url:"offset,omitempty"`
+	Period    *CreditLedgerPeriod `json:"period,omitempty" url:"period,omitempty"`
+	StartTime *string             `json:"start_time,omitempty" url:"start_time,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4830,7 +4925,7 @@ func (g *GetEnrichedCreditLedgerParams) GetOffset() *int {
 	return g.Offset
 }
 
-func (g *GetEnrichedCreditLedgerParams) GetPeriod() *GetEnrichedCreditLedgerResponseParamsPeriod {
+func (g *GetEnrichedCreditLedgerParams) GetPeriod() *CreditLedgerPeriod {
 	if g == nil {
 		return nil
 	}
@@ -4899,7 +4994,7 @@ func (g *GetEnrichedCreditLedgerParams) SetOffset(offset *int) {
 
 // SetPeriod sets the Period field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEnrichedCreditLedgerParams) SetPeriod(period *GetEnrichedCreditLedgerResponseParamsPeriod) {
+func (g *GetEnrichedCreditLedgerParams) SetPeriod(period *CreditLedgerPeriod) {
 	g.Period = period
 	g.require(getEnrichedCreditLedgerParamsFieldPeriod)
 }
@@ -4948,34 +5043,6 @@ func (g *GetEnrichedCreditLedgerParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
-}
-
-type GetEnrichedCreditLedgerRequestPeriod string
-
-const (
-	GetEnrichedCreditLedgerRequestPeriodDaily   GetEnrichedCreditLedgerRequestPeriod = "daily"
-	GetEnrichedCreditLedgerRequestPeriodWeekly  GetEnrichedCreditLedgerRequestPeriod = "weekly"
-	GetEnrichedCreditLedgerRequestPeriodMonthly GetEnrichedCreditLedgerRequestPeriod = "monthly"
-	GetEnrichedCreditLedgerRequestPeriodRaw     GetEnrichedCreditLedgerRequestPeriod = "raw"
-)
-
-func NewGetEnrichedCreditLedgerRequestPeriodFromString(s string) (GetEnrichedCreditLedgerRequestPeriod, error) {
-	switch s {
-	case "daily":
-		return GetEnrichedCreditLedgerRequestPeriodDaily, nil
-	case "weekly":
-		return GetEnrichedCreditLedgerRequestPeriodWeekly, nil
-	case "monthly":
-		return GetEnrichedCreditLedgerRequestPeriodMonthly, nil
-	case "raw":
-		return GetEnrichedCreditLedgerRequestPeriodRaw, nil
-	}
-	var t GetEnrichedCreditLedgerRequestPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (g GetEnrichedCreditLedgerRequestPeriod) Ptr() *GetEnrichedCreditLedgerRequestPeriod {
-	return &g
 }
 
 var (
@@ -5071,34 +5138,6 @@ func (g *GetEnrichedCreditLedgerResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
-}
-
-type GetEnrichedCreditLedgerResponseParamsPeriod string
-
-const (
-	GetEnrichedCreditLedgerResponseParamsPeriodDaily   GetEnrichedCreditLedgerResponseParamsPeriod = "daily"
-	GetEnrichedCreditLedgerResponseParamsPeriodWeekly  GetEnrichedCreditLedgerResponseParamsPeriod = "weekly"
-	GetEnrichedCreditLedgerResponseParamsPeriodMonthly GetEnrichedCreditLedgerResponseParamsPeriod = "monthly"
-	GetEnrichedCreditLedgerResponseParamsPeriodRaw     GetEnrichedCreditLedgerResponseParamsPeriod = "raw"
-)
-
-func NewGetEnrichedCreditLedgerResponseParamsPeriodFromString(s string) (GetEnrichedCreditLedgerResponseParamsPeriod, error) {
-	switch s {
-	case "daily":
-		return GetEnrichedCreditLedgerResponseParamsPeriodDaily, nil
-	case "weekly":
-		return GetEnrichedCreditLedgerResponseParamsPeriodWeekly, nil
-	case "monthly":
-		return GetEnrichedCreditLedgerResponseParamsPeriodMonthly, nil
-	case "raw":
-		return GetEnrichedCreditLedgerResponseParamsPeriodRaw, nil
-	}
-	var t GetEnrichedCreditLedgerResponseParamsPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (g GetEnrichedCreditLedgerResponseParamsPeriod) Ptr() *GetEnrichedCreditLedgerResponseParamsPeriod {
-	return &g
 }
 
 var (
@@ -5781,13 +5820,13 @@ var (
 )
 
 type ListCompanyGrantsParams struct {
-	CompanyID *string                             `json:"company_id,omitempty" url:"company_id,omitempty"`
-	Dir       *ListCompanyGrantsResponseParamsDir `json:"dir,omitempty" url:"dir,omitempty"`
+	CompanyID *string        `json:"company_id,omitempty" url:"company_id,omitempty"`
+	Dir       *SortDirection `json:"dir,omitempty" url:"dir,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int                                  `json:"offset,omitempty" url:"offset,omitempty"`
-	Order  *ListCompanyGrantsResponseParamsOrder `json:"order,omitempty" url:"order,omitempty"`
+	Offset *int                  `json:"offset,omitempty" url:"offset,omitempty"`
+	Order  *CreditGrantSortOrder `json:"order,omitempty" url:"order,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5803,7 +5842,7 @@ func (l *ListCompanyGrantsParams) GetCompanyID() *string {
 	return l.CompanyID
 }
 
-func (l *ListCompanyGrantsParams) GetDir() *ListCompanyGrantsResponseParamsDir {
+func (l *ListCompanyGrantsParams) GetDir() *SortDirection {
 	if l == nil {
 		return nil
 	}
@@ -5824,7 +5863,7 @@ func (l *ListCompanyGrantsParams) GetOffset() *int {
 	return l.Offset
 }
 
-func (l *ListCompanyGrantsParams) GetOrder() *ListCompanyGrantsResponseParamsOrder {
+func (l *ListCompanyGrantsParams) GetOrder() *CreditGrantSortOrder {
 	if l == nil {
 		return nil
 	}
@@ -5851,7 +5890,7 @@ func (l *ListCompanyGrantsParams) SetCompanyID(companyID *string) {
 
 // SetDir sets the Dir field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyGrantsParams) SetDir(dir *ListCompanyGrantsResponseParamsDir) {
+func (l *ListCompanyGrantsParams) SetDir(dir *SortDirection) {
 	l.Dir = dir
 	l.require(listCompanyGrantsParamsFieldDir)
 }
@@ -5872,7 +5911,7 @@ func (l *ListCompanyGrantsParams) SetOffset(offset *int) {
 
 // SetOrder sets the Order field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyGrantsParams) SetOrder(order *ListCompanyGrantsResponseParamsOrder) {
+func (l *ListCompanyGrantsParams) SetOrder(order *CreditGrantSortOrder) {
 	l.Order = order
 	l.require(listCompanyGrantsParamsFieldOrder)
 }
@@ -5914,56 +5953,6 @@ func (l *ListCompanyGrantsParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-type ListCompanyGrantsRequestDir string
-
-const (
-	ListCompanyGrantsRequestDirAsc  ListCompanyGrantsRequestDir = "asc"
-	ListCompanyGrantsRequestDirDesc ListCompanyGrantsRequestDir = "desc"
-)
-
-func NewListCompanyGrantsRequestDirFromString(s string) (ListCompanyGrantsRequestDir, error) {
-	switch s {
-	case "asc":
-		return ListCompanyGrantsRequestDirAsc, nil
-	case "desc":
-		return ListCompanyGrantsRequestDirDesc, nil
-	}
-	var t ListCompanyGrantsRequestDir
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListCompanyGrantsRequestDir) Ptr() *ListCompanyGrantsRequestDir {
-	return &l
-}
-
-type ListCompanyGrantsRequestOrder string
-
-const (
-	ListCompanyGrantsRequestOrderCreatedAt         ListCompanyGrantsRequestOrder = "created_at"
-	ListCompanyGrantsRequestOrderExpiresAt         ListCompanyGrantsRequestOrder = "expires_at"
-	ListCompanyGrantsRequestOrderQuantity          ListCompanyGrantsRequestOrder = "quantity"
-	ListCompanyGrantsRequestOrderQuantityRemaining ListCompanyGrantsRequestOrder = "quantity_remaining"
-)
-
-func NewListCompanyGrantsRequestOrderFromString(s string) (ListCompanyGrantsRequestOrder, error) {
-	switch s {
-	case "created_at":
-		return ListCompanyGrantsRequestOrderCreatedAt, nil
-	case "expires_at":
-		return ListCompanyGrantsRequestOrderExpiresAt, nil
-	case "quantity":
-		return ListCompanyGrantsRequestOrderQuantity, nil
-	case "quantity_remaining":
-		return ListCompanyGrantsRequestOrderQuantityRemaining, nil
-	}
-	var t ListCompanyGrantsRequestOrder
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListCompanyGrantsRequestOrder) Ptr() *ListCompanyGrantsRequestOrder {
-	return &l
 }
 
 var (
@@ -6061,56 +6050,6 @@ func (l *ListCompanyGrantsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-type ListCompanyGrantsResponseParamsDir string
-
-const (
-	ListCompanyGrantsResponseParamsDirAsc  ListCompanyGrantsResponseParamsDir = "asc"
-	ListCompanyGrantsResponseParamsDirDesc ListCompanyGrantsResponseParamsDir = "desc"
-)
-
-func NewListCompanyGrantsResponseParamsDirFromString(s string) (ListCompanyGrantsResponseParamsDir, error) {
-	switch s {
-	case "asc":
-		return ListCompanyGrantsResponseParamsDirAsc, nil
-	case "desc":
-		return ListCompanyGrantsResponseParamsDirDesc, nil
-	}
-	var t ListCompanyGrantsResponseParamsDir
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListCompanyGrantsResponseParamsDir) Ptr() *ListCompanyGrantsResponseParamsDir {
-	return &l
-}
-
-type ListCompanyGrantsResponseParamsOrder string
-
-const (
-	ListCompanyGrantsResponseParamsOrderCreatedAt         ListCompanyGrantsResponseParamsOrder = "created_at"
-	ListCompanyGrantsResponseParamsOrderExpiresAt         ListCompanyGrantsResponseParamsOrder = "expires_at"
-	ListCompanyGrantsResponseParamsOrderQuantity          ListCompanyGrantsResponseParamsOrder = "quantity"
-	ListCompanyGrantsResponseParamsOrderQuantityRemaining ListCompanyGrantsResponseParamsOrder = "quantity_remaining"
-)
-
-func NewListCompanyGrantsResponseParamsOrderFromString(s string) (ListCompanyGrantsResponseParamsOrder, error) {
-	switch s {
-	case "created_at":
-		return ListCompanyGrantsResponseParamsOrderCreatedAt, nil
-	case "expires_at":
-		return ListCompanyGrantsResponseParamsOrderExpiresAt, nil
-	case "quantity":
-		return ListCompanyGrantsResponseParamsOrderQuantity, nil
-	case "quantity_remaining":
-		return ListCompanyGrantsResponseParamsOrderQuantityRemaining, nil
-	}
-	var t ListCompanyGrantsResponseParamsOrder
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListCompanyGrantsResponseParamsOrder) Ptr() *ListCompanyGrantsResponseParamsOrder {
-	return &l
-}
-
 // Input parameters
 var (
 	listCreditBundlesParamsFieldBundleType = big.NewInt(1 << 0)
@@ -6122,14 +6061,14 @@ var (
 )
 
 type ListCreditBundlesParams struct {
-	BundleType *string  `json:"bundle_type,omitempty" url:"bundle_type,omitempty"`
-	CreditID   *string  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
-	IDs        []string `json:"ids,omitempty" url:"ids,omitempty"`
+	BundleType *BillingCreditBundleType `json:"bundle_type,omitempty" url:"bundle_type,omitempty"`
+	CreditID   *string                  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
+	IDs        []string                 `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int                                   `json:"offset,omitempty" url:"offset,omitempty"`
-	Status *ListCreditBundlesResponseParamsStatus `json:"status,omitempty" url:"status,omitempty"`
+	Offset *int                       `json:"offset,omitempty" url:"offset,omitempty"`
+	Status *BillingCreditBundleStatus `json:"status,omitempty" url:"status,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6166,7 +6105,7 @@ func (l *ListCreditBundlesParams) GetOffset() *int {
 	return l.Offset
 }
 
-func (l *ListCreditBundlesParams) GetStatus() *ListCreditBundlesResponseParamsStatus {
+func (l *ListCreditBundlesParams) GetStatus() *BillingCreditBundleStatus {
 	if l == nil {
 		return nil
 	}
@@ -6186,7 +6125,7 @@ func (l *ListCreditBundlesParams) require(field *big.Int) {
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditBundlesParams) SetBundleType(bundleType *string) {
+func (l *ListCreditBundlesParams) SetBundleType(bundleType *BillingCreditBundleType) {
 	l.BundleType = bundleType
 	l.require(listCreditBundlesParamsFieldBundleType)
 }
@@ -6221,7 +6160,7 @@ func (l *ListCreditBundlesParams) SetOffset(offset *int) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditBundlesParams) SetStatus(status *ListCreditBundlesResponseParamsStatus) {
+func (l *ListCreditBundlesParams) SetStatus(status *BillingCreditBundleStatus) {
 	l.Status = status
 	l.require(listCreditBundlesParamsFieldStatus)
 }
@@ -6263,28 +6202,6 @@ func (l *ListCreditBundlesParams) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-type ListCreditBundlesRequestStatus string
-
-const (
-	ListCreditBundlesRequestStatusActive   ListCreditBundlesRequestStatus = "active"
-	ListCreditBundlesRequestStatusInactive ListCreditBundlesRequestStatus = "inactive"
-)
-
-func NewListCreditBundlesRequestStatusFromString(s string) (ListCreditBundlesRequestStatus, error) {
-	switch s {
-	case "active":
-		return ListCreditBundlesRequestStatusActive, nil
-	case "inactive":
-		return ListCreditBundlesRequestStatusInactive, nil
-	}
-	var t ListCreditBundlesRequestStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListCreditBundlesRequestStatus) Ptr() *ListCreditBundlesRequestStatus {
-	return &l
 }
 
 var (
@@ -6380,28 +6297,6 @@ func (l *ListCreditBundlesResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
-}
-
-type ListCreditBundlesResponseParamsStatus string
-
-const (
-	ListCreditBundlesResponseParamsStatusActive   ListCreditBundlesResponseParamsStatus = "active"
-	ListCreditBundlesResponseParamsStatusInactive ListCreditBundlesResponseParamsStatus = "inactive"
-)
-
-func NewListCreditBundlesResponseParamsStatusFromString(s string) (ListCreditBundlesResponseParamsStatus, error) {
-	switch s {
-	case "active":
-		return ListCreditBundlesResponseParamsStatusActive, nil
-	case "inactive":
-		return ListCreditBundlesResponseParamsStatusInactive, nil
-	}
-	var t ListCreditBundlesResponseParamsStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (l ListCreditBundlesResponseParamsStatus) Ptr() *ListCreditBundlesResponseParamsStatus {
-	return &l
 }
 
 // Input parameters
@@ -6723,59 +6618,6 @@ func (s *SoftDeleteBillingCreditResponse) String() string {
 	return fmt.Sprintf("%#v", s)
 }
 
-type UpdateBillingCreditRequestBodyBurnStrategy string
-
-const (
-	UpdateBillingCreditRequestBodyBurnStrategyPlanFirstThenCreditBundlesFirstInFirstOut UpdateBillingCreditRequestBodyBurnStrategy = "plan_first_then_credit_bundles_first_in_first_out"
-	UpdateBillingCreditRequestBodyBurnStrategyFirstInFirstOut                           UpdateBillingCreditRequestBodyBurnStrategy = "first_in_first_out"
-	UpdateBillingCreditRequestBodyBurnStrategyLastInFirstOut                            UpdateBillingCreditRequestBodyBurnStrategy = "last_in_first_out"
-	UpdateBillingCreditRequestBodyBurnStrategyExpirationPriority                        UpdateBillingCreditRequestBodyBurnStrategy = "expiration_priority"
-)
-
-func NewUpdateBillingCreditRequestBodyBurnStrategyFromString(s string) (UpdateBillingCreditRequestBodyBurnStrategy, error) {
-	switch s {
-	case "plan_first_then_credit_bundles_first_in_first_out":
-		return UpdateBillingCreditRequestBodyBurnStrategyPlanFirstThenCreditBundlesFirstInFirstOut, nil
-	case "first_in_first_out":
-		return UpdateBillingCreditRequestBodyBurnStrategyFirstInFirstOut, nil
-	case "last_in_first_out":
-		return UpdateBillingCreditRequestBodyBurnStrategyLastInFirstOut, nil
-	case "expiration_priority":
-		return UpdateBillingCreditRequestBodyBurnStrategyExpirationPriority, nil
-	}
-	var t UpdateBillingCreditRequestBodyBurnStrategy
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateBillingCreditRequestBodyBurnStrategy) Ptr() *UpdateBillingCreditRequestBodyBurnStrategy {
-	return &u
-}
-
-type UpdateBillingCreditRequestBodyDefaultRolloverPolicy string
-
-const (
-	UpdateBillingCreditRequestBodyDefaultRolloverPolicyNone     UpdateBillingCreditRequestBodyDefaultRolloverPolicy = "none"
-	UpdateBillingCreditRequestBodyDefaultRolloverPolicyRollover UpdateBillingCreditRequestBodyDefaultRolloverPolicy = "rollover"
-	UpdateBillingCreditRequestBodyDefaultRolloverPolicyExpire   UpdateBillingCreditRequestBodyDefaultRolloverPolicy = "expire"
-)
-
-func NewUpdateBillingCreditRequestBodyDefaultRolloverPolicyFromString(s string) (UpdateBillingCreditRequestBodyDefaultRolloverPolicy, error) {
-	switch s {
-	case "none":
-		return UpdateBillingCreditRequestBodyDefaultRolloverPolicyNone, nil
-	case "rollover":
-		return UpdateBillingCreditRequestBodyDefaultRolloverPolicyRollover, nil
-	case "expire":
-		return UpdateBillingCreditRequestBodyDefaultRolloverPolicyExpire, nil
-	}
-	var t UpdateBillingCreditRequestBodyDefaultRolloverPolicy
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateBillingCreditRequestBodyDefaultRolloverPolicy) Ptr() *UpdateBillingCreditRequestBodyDefaultRolloverPolicy {
-	return &u
-}
-
 var (
 	updateBillingCreditResponseFieldData   = big.NewInt(1 << 0)
 	updateBillingCreditResponseFieldParams = big.NewInt(1 << 1)
@@ -6869,131 +6711,6 @@ func (u *UpdateBillingCreditResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
-}
-
-type UpdateBillingPlanCreditGrantRequestBodyExpiryType string
-
-const (
-	UpdateBillingPlanCreditGrantRequestBodyExpiryTypeDuration               UpdateBillingPlanCreditGrantRequestBodyExpiryType = "duration"
-	UpdateBillingPlanCreditGrantRequestBodyExpiryTypeNoExpiry               UpdateBillingPlanCreditGrantRequestBodyExpiryType = "no_expiry"
-	UpdateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfTrial             UpdateBillingPlanCreditGrantRequestBodyExpiryType = "end_of_trial"
-	UpdateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfBillingPeriod     UpdateBillingPlanCreditGrantRequestBodyExpiryType = "end_of_billing_period"
-	UpdateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfNextBillingPeriod UpdateBillingPlanCreditGrantRequestBodyExpiryType = "end_of_next_billing_period"
-)
-
-func NewUpdateBillingPlanCreditGrantRequestBodyExpiryTypeFromString(s string) (UpdateBillingPlanCreditGrantRequestBodyExpiryType, error) {
-	switch s {
-	case "duration":
-		return UpdateBillingPlanCreditGrantRequestBodyExpiryTypeDuration, nil
-	case "no_expiry":
-		return UpdateBillingPlanCreditGrantRequestBodyExpiryTypeNoExpiry, nil
-	case "end_of_trial":
-		return UpdateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfTrial, nil
-	case "end_of_billing_period":
-		return UpdateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfBillingPeriod, nil
-	case "end_of_next_billing_period":
-		return UpdateBillingPlanCreditGrantRequestBodyExpiryTypeEndOfNextBillingPeriod, nil
-	}
-	var t UpdateBillingPlanCreditGrantRequestBodyExpiryType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateBillingPlanCreditGrantRequestBodyExpiryType) Ptr() *UpdateBillingPlanCreditGrantRequestBodyExpiryType {
-	return &u
-}
-
-type UpdateBillingPlanCreditGrantRequestBodyExpiryUnit string
-
-const (
-	UpdateBillingPlanCreditGrantRequestBodyExpiryUnitDays           UpdateBillingPlanCreditGrantRequestBodyExpiryUnit = "days"
-	UpdateBillingPlanCreditGrantRequestBodyExpiryUnitBillingPeriods UpdateBillingPlanCreditGrantRequestBodyExpiryUnit = "billing_periods"
-)
-
-func NewUpdateBillingPlanCreditGrantRequestBodyExpiryUnitFromString(s string) (UpdateBillingPlanCreditGrantRequestBodyExpiryUnit, error) {
-	switch s {
-	case "days":
-		return UpdateBillingPlanCreditGrantRequestBodyExpiryUnitDays, nil
-	case "billing_periods":
-		return UpdateBillingPlanCreditGrantRequestBodyExpiryUnitBillingPeriods, nil
-	}
-	var t UpdateBillingPlanCreditGrantRequestBodyExpiryUnit
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateBillingPlanCreditGrantRequestBodyExpiryUnit) Ptr() *UpdateBillingPlanCreditGrantRequestBodyExpiryUnit {
-	return &u
-}
-
-type UpdateBillingPlanCreditGrantRequestBodyResetCadence string
-
-const (
-	UpdateBillingPlanCreditGrantRequestBodyResetCadenceMonthly UpdateBillingPlanCreditGrantRequestBodyResetCadence = "monthly"
-	UpdateBillingPlanCreditGrantRequestBodyResetCadenceYearly  UpdateBillingPlanCreditGrantRequestBodyResetCadence = "yearly"
-	UpdateBillingPlanCreditGrantRequestBodyResetCadenceDaily   UpdateBillingPlanCreditGrantRequestBodyResetCadence = "daily"
-	UpdateBillingPlanCreditGrantRequestBodyResetCadenceWeekly  UpdateBillingPlanCreditGrantRequestBodyResetCadence = "weekly"
-)
-
-func NewUpdateBillingPlanCreditGrantRequestBodyResetCadenceFromString(s string) (UpdateBillingPlanCreditGrantRequestBodyResetCadence, error) {
-	switch s {
-	case "monthly":
-		return UpdateBillingPlanCreditGrantRequestBodyResetCadenceMonthly, nil
-	case "yearly":
-		return UpdateBillingPlanCreditGrantRequestBodyResetCadenceYearly, nil
-	case "daily":
-		return UpdateBillingPlanCreditGrantRequestBodyResetCadenceDaily, nil
-	case "weekly":
-		return UpdateBillingPlanCreditGrantRequestBodyResetCadenceWeekly, nil
-	}
-	var t UpdateBillingPlanCreditGrantRequestBodyResetCadence
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateBillingPlanCreditGrantRequestBodyResetCadence) Ptr() *UpdateBillingPlanCreditGrantRequestBodyResetCadence {
-	return &u
-}
-
-type UpdateBillingPlanCreditGrantRequestBodyResetStart string
-
-const (
-	UpdateBillingPlanCreditGrantRequestBodyResetStartBillingPeriod UpdateBillingPlanCreditGrantRequestBodyResetStart = "billing_period"
-	UpdateBillingPlanCreditGrantRequestBodyResetStartFirstOfMonth  UpdateBillingPlanCreditGrantRequestBodyResetStart = "first_of_month"
-)
-
-func NewUpdateBillingPlanCreditGrantRequestBodyResetStartFromString(s string) (UpdateBillingPlanCreditGrantRequestBodyResetStart, error) {
-	switch s {
-	case "billing_period":
-		return UpdateBillingPlanCreditGrantRequestBodyResetStartBillingPeriod, nil
-	case "first_of_month":
-		return UpdateBillingPlanCreditGrantRequestBodyResetStartFirstOfMonth, nil
-	}
-	var t UpdateBillingPlanCreditGrantRequestBodyResetStart
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateBillingPlanCreditGrantRequestBodyResetStart) Ptr() *UpdateBillingPlanCreditGrantRequestBodyResetStart {
-	return &u
-}
-
-type UpdateBillingPlanCreditGrantRequestBodyResetType string
-
-const (
-	UpdateBillingPlanCreditGrantRequestBodyResetTypePlanPeriod UpdateBillingPlanCreditGrantRequestBodyResetType = "plan_period"
-	UpdateBillingPlanCreditGrantRequestBodyResetTypeNoReset    UpdateBillingPlanCreditGrantRequestBodyResetType = "no_reset"
-)
-
-func NewUpdateBillingPlanCreditGrantRequestBodyResetTypeFromString(s string) (UpdateBillingPlanCreditGrantRequestBodyResetType, error) {
-	switch s {
-	case "plan_period":
-		return UpdateBillingPlanCreditGrantRequestBodyResetTypePlanPeriod, nil
-	case "no_reset":
-		return UpdateBillingPlanCreditGrantRequestBodyResetTypeNoReset, nil
-	}
-	var t UpdateBillingPlanCreditGrantRequestBodyResetType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateBillingPlanCreditGrantRequestBodyResetType) Ptr() *UpdateBillingPlanCreditGrantRequestBodyResetType {
-	return &u
 }
 
 var (
@@ -7091,81 +6808,6 @@ func (u *UpdateBillingPlanCreditGrantResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
-type UpdateCreditBundleDetailsRequestBodyExpiryType string
-
-const (
-	UpdateCreditBundleDetailsRequestBodyExpiryTypeDuration               UpdateCreditBundleDetailsRequestBodyExpiryType = "duration"
-	UpdateCreditBundleDetailsRequestBodyExpiryTypeNoExpiry               UpdateCreditBundleDetailsRequestBodyExpiryType = "no_expiry"
-	UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfTrial             UpdateCreditBundleDetailsRequestBodyExpiryType = "end_of_trial"
-	UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfBillingPeriod     UpdateCreditBundleDetailsRequestBodyExpiryType = "end_of_billing_period"
-	UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfNextBillingPeriod UpdateCreditBundleDetailsRequestBodyExpiryType = "end_of_next_billing_period"
-)
-
-func NewUpdateCreditBundleDetailsRequestBodyExpiryTypeFromString(s string) (UpdateCreditBundleDetailsRequestBodyExpiryType, error) {
-	switch s {
-	case "duration":
-		return UpdateCreditBundleDetailsRequestBodyExpiryTypeDuration, nil
-	case "no_expiry":
-		return UpdateCreditBundleDetailsRequestBodyExpiryTypeNoExpiry, nil
-	case "end_of_trial":
-		return UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfTrial, nil
-	case "end_of_billing_period":
-		return UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfBillingPeriod, nil
-	case "end_of_next_billing_period":
-		return UpdateCreditBundleDetailsRequestBodyExpiryTypeEndOfNextBillingPeriod, nil
-	}
-	var t UpdateCreditBundleDetailsRequestBodyExpiryType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateCreditBundleDetailsRequestBodyExpiryType) Ptr() *UpdateCreditBundleDetailsRequestBodyExpiryType {
-	return &u
-}
-
-type UpdateCreditBundleDetailsRequestBodyExpiryUnit string
-
-const (
-	UpdateCreditBundleDetailsRequestBodyExpiryUnitDays           UpdateCreditBundleDetailsRequestBodyExpiryUnit = "days"
-	UpdateCreditBundleDetailsRequestBodyExpiryUnitBillingPeriods UpdateCreditBundleDetailsRequestBodyExpiryUnit = "billing_periods"
-)
-
-func NewUpdateCreditBundleDetailsRequestBodyExpiryUnitFromString(s string) (UpdateCreditBundleDetailsRequestBodyExpiryUnit, error) {
-	switch s {
-	case "days":
-		return UpdateCreditBundleDetailsRequestBodyExpiryUnitDays, nil
-	case "billing_periods":
-		return UpdateCreditBundleDetailsRequestBodyExpiryUnitBillingPeriods, nil
-	}
-	var t UpdateCreditBundleDetailsRequestBodyExpiryUnit
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateCreditBundleDetailsRequestBodyExpiryUnit) Ptr() *UpdateCreditBundleDetailsRequestBodyExpiryUnit {
-	return &u
-}
-
-type UpdateCreditBundleDetailsRequestBodyStatus string
-
-const (
-	UpdateCreditBundleDetailsRequestBodyStatusActive   UpdateCreditBundleDetailsRequestBodyStatus = "active"
-	UpdateCreditBundleDetailsRequestBodyStatusInactive UpdateCreditBundleDetailsRequestBodyStatus = "inactive"
-)
-
-func NewUpdateCreditBundleDetailsRequestBodyStatusFromString(s string) (UpdateCreditBundleDetailsRequestBodyStatus, error) {
-	switch s {
-	case "active":
-		return UpdateCreditBundleDetailsRequestBodyStatusActive, nil
-	case "inactive":
-		return UpdateCreditBundleDetailsRequestBodyStatusInactive, nil
-	}
-	var t UpdateCreditBundleDetailsRequestBodyStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateCreditBundleDetailsRequestBodyStatus) Ptr() *UpdateCreditBundleDetailsRequestBodyStatus {
-	return &u
-}
-
 var (
 	updateCreditBundleDetailsResponseFieldData   = big.NewInt(1 << 0)
 	updateCreditBundleDetailsResponseFieldParams = big.NewInt(1 << 1)
@@ -7259,34 +6901,6 @@ func (u *UpdateCreditBundleDetailsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
-}
-
-type ZeroOutGrantRequestBodyReason string
-
-const (
-	ZeroOutGrantRequestBodyReasonPlanChange      ZeroOutGrantRequestBodyReason = "plan_change"
-	ZeroOutGrantRequestBodyReasonManual          ZeroOutGrantRequestBodyReason = "manual"
-	ZeroOutGrantRequestBodyReasonPlanPeriodReset ZeroOutGrantRequestBodyReason = "plan_period_reset"
-	ZeroOutGrantRequestBodyReasonExpired         ZeroOutGrantRequestBodyReason = "expired"
-)
-
-func NewZeroOutGrantRequestBodyReasonFromString(s string) (ZeroOutGrantRequestBodyReason, error) {
-	switch s {
-	case "plan_change":
-		return ZeroOutGrantRequestBodyReasonPlanChange, nil
-	case "manual":
-		return ZeroOutGrantRequestBodyReasonManual, nil
-	case "plan_period_reset":
-		return ZeroOutGrantRequestBodyReasonPlanPeriodReset, nil
-	case "expired":
-		return ZeroOutGrantRequestBodyReasonExpired, nil
-	}
-	var t ZeroOutGrantRequestBodyReason
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (z ZeroOutGrantRequestBodyReason) Ptr() *ZeroOutGrantRequestBodyReason {
-	return &z
 }
 
 var (
@@ -7399,17 +7013,17 @@ var (
 )
 
 type UpdateBillingCreditRequestBody struct {
-	BurnStrategy           *UpdateBillingCreditRequestBodyBurnStrategy          `json:"burn_strategy,omitempty" url:"-"`
-	DefaultExpiryUnit      *string                                              `json:"default_expiry_unit,omitempty" url:"-"`
-	DefaultExpiryUnitCount *int                                                 `json:"default_expiry_unit_count,omitempty" url:"-"`
-	DefaultRolloverPolicy  *UpdateBillingCreditRequestBodyDefaultRolloverPolicy `json:"default_rollover_policy,omitempty" url:"-"`
-	Description            string                                               `json:"description" url:"-"`
-	Icon                   *string                                              `json:"icon,omitempty" url:"-"`
-	Name                   string                                               `json:"name" url:"-"`
-	PerUnitPrice           *int                                                 `json:"per_unit_price,omitempty" url:"-"`
-	PerUnitPriceDecimal    *string                                              `json:"per_unit_price_decimal,omitempty" url:"-"`
-	PluralName             *string                                              `json:"plural_name,omitempty" url:"-"`
-	SingularName           *string                                              `json:"singular_name,omitempty" url:"-"`
+	BurnStrategy           *BillingCreditBurnStrategy   `json:"burn_strategy,omitempty" url:"-"`
+	DefaultExpiryUnit      *BillingCreditExpiryUnit     `json:"default_expiry_unit,omitempty" url:"-"`
+	DefaultExpiryUnitCount *int                         `json:"default_expiry_unit_count,omitempty" url:"-"`
+	DefaultRolloverPolicy  *BillingCreditRolloverPolicy `json:"default_rollover_policy,omitempty" url:"-"`
+	Description            string                       `json:"description" url:"-"`
+	Icon                   *string                      `json:"icon,omitempty" url:"-"`
+	Name                   string                       `json:"name" url:"-"`
+	PerUnitPrice           *int                         `json:"per_unit_price,omitempty" url:"-"`
+	PerUnitPriceDecimal    *string                      `json:"per_unit_price_decimal,omitempty" url:"-"`
+	PluralName             *string                      `json:"plural_name,omitempty" url:"-"`
+	SingularName           *string                      `json:"singular_name,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7424,14 +7038,14 @@ func (u *UpdateBillingCreditRequestBody) require(field *big.Int) {
 
 // SetBurnStrategy sets the BurnStrategy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingCreditRequestBody) SetBurnStrategy(burnStrategy *UpdateBillingCreditRequestBodyBurnStrategy) {
+func (u *UpdateBillingCreditRequestBody) SetBurnStrategy(burnStrategy *BillingCreditBurnStrategy) {
 	u.BurnStrategy = burnStrategy
 	u.require(updateBillingCreditRequestBodyFieldBurnStrategy)
 }
 
 // SetDefaultExpiryUnit sets the DefaultExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingCreditRequestBody) SetDefaultExpiryUnit(defaultExpiryUnit *string) {
+func (u *UpdateBillingCreditRequestBody) SetDefaultExpiryUnit(defaultExpiryUnit *BillingCreditExpiryUnit) {
 	u.DefaultExpiryUnit = defaultExpiryUnit
 	u.require(updateBillingCreditRequestBodyFieldDefaultExpiryUnit)
 }
@@ -7445,7 +7059,7 @@ func (u *UpdateBillingCreditRequestBody) SetDefaultExpiryUnitCount(defaultExpiry
 
 // SetDefaultRolloverPolicy sets the DefaultRolloverPolicy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingCreditRequestBody) SetDefaultRolloverPolicy(defaultRolloverPolicy *UpdateBillingCreditRequestBodyDefaultRolloverPolicy) {
+func (u *UpdateBillingCreditRequestBody) SetDefaultRolloverPolicy(defaultRolloverPolicy *BillingCreditRolloverPolicy) {
 	u.DefaultRolloverPolicy = defaultRolloverPolicy
 	u.require(updateBillingCreditRequestBodyFieldDefaultRolloverPolicy)
 }
@@ -7500,94 +7114,6 @@ func (u *UpdateBillingCreditRequestBody) SetSingularName(singularName *string) {
 }
 
 var (
-	updateBillingPlanCreditGrantRequestBodyFieldApplyToExisting = big.NewInt(1 << 0)
-	updateBillingPlanCreditGrantRequestBodyFieldCreditAmount    = big.NewInt(1 << 1)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryType      = big.NewInt(1 << 2)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit      = big.NewInt(1 << 3)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount = big.NewInt(1 << 4)
-	updateBillingPlanCreditGrantRequestBodyFieldResetCadence    = big.NewInt(1 << 5)
-	updateBillingPlanCreditGrantRequestBodyFieldResetStart      = big.NewInt(1 << 6)
-	updateBillingPlanCreditGrantRequestBodyFieldResetType       = big.NewInt(1 << 7)
-)
-
-type UpdateBillingPlanCreditGrantRequestBody struct {
-	ApplyToExisting *bool                                               `json:"apply_to_existing,omitempty" url:"-"`
-	CreditAmount    *int                                                `json:"credit_amount,omitempty" url:"-"`
-	ExpiryType      *UpdateBillingPlanCreditGrantRequestBodyExpiryType  `json:"expiry_type,omitempty" url:"-"`
-	ExpiryUnit      *UpdateBillingPlanCreditGrantRequestBodyExpiryUnit  `json:"expiry_unit,omitempty" url:"-"`
-	ExpiryUnitCount *int                                                `json:"expiry_unit_count,omitempty" url:"-"`
-	ResetCadence    UpdateBillingPlanCreditGrantRequestBodyResetCadence `json:"reset_cadence" url:"-"`
-	ResetStart      UpdateBillingPlanCreditGrantRequestBodyResetStart   `json:"reset_start" url:"-"`
-	ResetType       *UpdateBillingPlanCreditGrantRequestBodyResetType   `json:"reset_type,omitempty" url:"-"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-}
-
-func (u *UpdateBillingPlanCreditGrantRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
-	}
-	u.explicitFields.Or(u.explicitFields, field)
-}
-
-// SetApplyToExisting sets the ApplyToExisting field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetApplyToExisting(applyToExisting *bool) {
-	u.ApplyToExisting = applyToExisting
-	u.require(updateBillingPlanCreditGrantRequestBodyFieldApplyToExisting)
-}
-
-// SetCreditAmount sets the CreditAmount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetCreditAmount(creditAmount *int) {
-	u.CreditAmount = creditAmount
-	u.require(updateBillingPlanCreditGrantRequestBodyFieldCreditAmount)
-}
-
-// SetExpiryType sets the ExpiryType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetExpiryType(expiryType *UpdateBillingPlanCreditGrantRequestBodyExpiryType) {
-	u.ExpiryType = expiryType
-	u.require(updateBillingPlanCreditGrantRequestBodyFieldExpiryType)
-}
-
-// SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetExpiryUnit(expiryUnit *UpdateBillingPlanCreditGrantRequestBodyExpiryUnit) {
-	u.ExpiryUnit = expiryUnit
-	u.require(updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit)
-}
-
-// SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetExpiryUnitCount(expiryUnitCount *int) {
-	u.ExpiryUnitCount = expiryUnitCount
-	u.require(updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount)
-}
-
-// SetResetCadence sets the ResetCadence field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetResetCadence(resetCadence UpdateBillingPlanCreditGrantRequestBodyResetCadence) {
-	u.ResetCadence = resetCadence
-	u.require(updateBillingPlanCreditGrantRequestBodyFieldResetCadence)
-}
-
-// SetResetStart sets the ResetStart field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetResetStart(resetStart UpdateBillingPlanCreditGrantRequestBodyResetStart) {
-	u.ResetStart = resetStart
-	u.require(updateBillingPlanCreditGrantRequestBodyFieldResetStart)
-}
-
-// SetResetType sets the ResetType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetResetType(resetType *UpdateBillingPlanCreditGrantRequestBodyResetType) {
-	u.ResetType = resetType
-	u.require(updateBillingPlanCreditGrantRequestBodyFieldResetType)
-}
-
-var (
 	updateCreditBundleDetailsRequestBodyFieldBundleName          = big.NewInt(1 << 0)
 	updateCreditBundleDetailsRequestBodyFieldExpiryType          = big.NewInt(1 << 1)
 	updateCreditBundleDetailsRequestBodyFieldExpiryUnit          = big.NewInt(1 << 2)
@@ -7599,14 +7125,14 @@ var (
 )
 
 type UpdateCreditBundleDetailsRequestBody struct {
-	BundleName          string                                          `json:"bundle_name" url:"-"`
-	ExpiryType          *UpdateCreditBundleDetailsRequestBodyExpiryType `json:"expiry_type,omitempty" url:"-"`
-	ExpiryUnit          *UpdateCreditBundleDetailsRequestBodyExpiryUnit `json:"expiry_unit,omitempty" url:"-"`
-	ExpiryUnitCount     *int                                            `json:"expiry_unit_count,omitempty" url:"-"`
-	PricePerUnit        int                                             `json:"price_per_unit" url:"-"`
-	PricePerUnitDecimal *string                                         `json:"price_per_unit_decimal,omitempty" url:"-"`
-	Quantity            *int                                            `json:"quantity,omitempty" url:"-"`
-	Status              *UpdateCreditBundleDetailsRequestBodyStatus     `json:"status,omitempty" url:"-"`
+	BundleName          string                     `json:"bundle_name" url:"-"`
+	ExpiryType          *BillingCreditExpiryType   `json:"expiry_type,omitempty" url:"-"`
+	ExpiryUnit          *BillingCreditExpiryUnit   `json:"expiry_unit,omitempty" url:"-"`
+	ExpiryUnitCount     *int                       `json:"expiry_unit_count,omitempty" url:"-"`
+	PricePerUnit        int                        `json:"price_per_unit" url:"-"`
+	PricePerUnitDecimal *string                    `json:"price_per_unit_decimal,omitempty" url:"-"`
+	Quantity            *int                       `json:"quantity,omitempty" url:"-"`
+	Status              *BillingCreditBundleStatus `json:"status,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7628,14 +7154,14 @@ func (u *UpdateCreditBundleDetailsRequestBody) SetBundleName(bundleName string) 
 
 // SetExpiryType sets the ExpiryType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCreditBundleDetailsRequestBody) SetExpiryType(expiryType *UpdateCreditBundleDetailsRequestBodyExpiryType) {
+func (u *UpdateCreditBundleDetailsRequestBody) SetExpiryType(expiryType *BillingCreditExpiryType) {
 	u.ExpiryType = expiryType
 	u.require(updateCreditBundleDetailsRequestBodyFieldExpiryType)
 }
 
 // SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCreditBundleDetailsRequestBody) SetExpiryUnit(expiryUnit *UpdateCreditBundleDetailsRequestBodyExpiryUnit) {
+func (u *UpdateCreditBundleDetailsRequestBody) SetExpiryUnit(expiryUnit *BillingCreditExpiryUnit) {
 	u.ExpiryUnit = expiryUnit
 	u.require(updateCreditBundleDetailsRequestBodyFieldExpiryUnit)
 }
@@ -7670,7 +7196,7 @@ func (u *UpdateCreditBundleDetailsRequestBody) SetQuantity(quantity *int) {
 
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCreditBundleDetailsRequestBody) SetStatus(status *UpdateCreditBundleDetailsRequestBodyStatus) {
+func (u *UpdateCreditBundleDetailsRequestBody) SetStatus(status *BillingCreditBundleStatus) {
 	u.Status = status
 	u.require(updateCreditBundleDetailsRequestBodyFieldStatus)
 }
@@ -7680,7 +7206,7 @@ var (
 )
 
 type ZeroOutGrantRequestBody struct {
-	Reason *ZeroOutGrantRequestBodyReason `json:"reason,omitempty" url:"-"`
+	Reason *BillingCreditGrantZeroedOutReason `json:"reason,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7695,7 +7221,7 @@ func (z *ZeroOutGrantRequestBody) require(field *big.Int) {
 
 // SetReason sets the Reason field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (z *ZeroOutGrantRequestBody) SetReason(reason *ZeroOutGrantRequestBodyReason) {
+func (z *ZeroOutGrantRequestBody) SetReason(reason *BillingCreditGrantZeroedOutReason) {
 	z.Reason = reason
 	z.require(zeroOutGrantRequestBodyFieldReason)
 }

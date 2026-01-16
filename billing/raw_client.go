@@ -533,11 +533,11 @@ func (r *RawClient) UpsertPaymentMethod(
 	}, nil
 }
 
-func (r *RawClient) SearchBillingPrices(
+func (r *RawClient) ListBillingPrices(
 	ctx context.Context,
-	request *schematichq.SearchBillingPricesRequest,
+	request *schematichq.ListBillingPricesRequest,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.SearchBillingPricesResponse], error) {
+) (*core.Response[*schematichq.ListBillingPricesResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -556,7 +556,7 @@ func (r *RawClient) SearchBillingPrices(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	var response *schematichq.SearchBillingPricesResponse
+	var response *schematichq.ListBillingPricesResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -574,7 +574,7 @@ func (r *RawClient) SearchBillingPrices(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.SearchBillingPricesResponse]{
+	return &core.Response[*schematichq.ListBillingPricesResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,
@@ -669,11 +669,11 @@ func (r *RawClient) DeleteBillingProduct(
 	}, nil
 }
 
-func (r *RawClient) ListProductPrices(
+func (r *RawClient) ListBillingProductPrices(
 	ctx context.Context,
-	request *schematichq.ListProductPricesRequest,
+	request *schematichq.ListBillingProductPricesRequest,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.ListProductPricesResponse], error) {
+) (*core.Response[*schematichq.ListBillingProductPricesResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -692,7 +692,7 @@ func (r *RawClient) ListProductPrices(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	var response *schematichq.ListProductPricesResponse
+	var response *schematichq.ListBillingProductPricesResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -710,7 +710,7 @@ func (r *RawClient) ListProductPrices(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.ListProductPricesResponse]{
+	return &core.Response[*schematichq.ListBillingProductPricesResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,

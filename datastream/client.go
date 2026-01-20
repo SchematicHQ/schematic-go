@@ -822,7 +822,6 @@ func deepCopyCompany(company *rulesengine.Company) *rulesengine.Company {
 		EnvironmentID:     company.EnvironmentID,
 		BasePlanID:        company.BasePlanID,
 		BillingProductIDs: append([]string{}, company.BillingProductIDs...),
-		CRMProductIDs:     append([]string{}, company.CRMProductIDs...),
 		PlanIDs:           append([]string{}, company.PlanIDs...),
 		Subscription:      company.Subscription, // Note: this is a shallow copy, as Subscription isn't modified in our case
 		Keys:              make(map[string]string),

@@ -95,12 +95,8 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	}
 
 	if c.useDataStream() {
-		// In replicator mode, check if replicator is ready before using datastream
-		if c.datastreamClient.IsReplicatorMode() && !c.datastreamClient.IsReplicatorReady() {
-			c.logger.Debug(ctx, "Replicator mode enabled but replicator not ready, falling back to API")
-			return c.checkFlag(ctx, evalCtx, flagKey)
-		}
-
+		// Try datastream first - it will check cache and handle replicator mode appropriately
+		// If replicator mode is enabled, datastream will use cached data even if replicator is not ready
 		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
 
 		// Fall back to API if datastream fails

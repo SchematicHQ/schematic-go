@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"net/http"
 	"sync"
 	"time"
 
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/events"
+	"github.com/schematichq/schematic-go/internal"
 )
 
 const defaultEventBufferPeriod = 5 * time.Second
@@ -27,6 +29,12 @@ type eventBuffer struct {
 
 	// API client
 	eventClient *events.Client
+
+	// request options (includes API key, base URL, etc.)
+	options *core.RequestOptions
+
+	// caller for making HTTP requests with retry logic
+	caller *internal.Caller
 
 	// frequency to flush the buffer
 	interval time.Duration
@@ -53,6 +61,8 @@ type eventBuffer struct {
 
 func NewEventBuffer(
 	client *events.Client,
+	options *core.RequestOptions,
+	caller *internal.Caller,
 	errors chan error,
 	logger core.Logger,
 	_period *time.Duration,
@@ -62,9 +72,17 @@ func NewEventBuffer(
 		period = *_period
 	}
 
+	// Set default CaptureURL if not explicitly provided
+	options.CaptureURL = internal.ResolveBaseURL(
+		options.CaptureURL,
+		"https://capture.schematichq.com",
+	)
+
 	buffer := &eventBuffer{
 		events:            []*schematicgo.CreateEventRequestBody{},
 		eventClient:       client,
+		options:           options,
+		caller:            caller,
 		errors:            errors,
 		interval:          period,
 		logger:            logger,
@@ -109,10 +127,6 @@ func (b *eventBuffer) flushLocked() {
 		return
 	}
 
-	req := &schematicgo.CreateEventBatchRequestBody{
-		Events: events,
-	}
-
 	// Initialize retry counter and success flag
 	retryCount := 0
 	success := false
@@ -125,8 +139,8 @@ func (b *eventBuffer) flushLocked() {
 			b.logger.Info(context.Background(), fmt.Sprintf("Retrying event batch submission (attempt %d of %d)", retryCount, b.maxRetries))
 		}
 
-		// Attempt to send events
-		_, err := b.eventClient.CreateEventBatch(context.Background(), req)
+		// Attempt to send events to custom batch endpoint
+		err := b.sendBatchEvents(events)
 		if err == nil {
 			success = true
 		} else {
@@ -211,4 +225,49 @@ func (b *eventBuffer) Stop() {
 	}()
 
 	close(b.shutdown)
+}
+
+// sendBatchEvents sends events to the /batch endpoint on the capture subdomain
+func (b *eventBuffer) sendBatchEvents(events []*schematicgo.CreateEventRequestBody) error {
+	// Use CaptureURL from options (set during initialization)
+	endpoint := b.options.CaptureURL + "/batch"
+
+	// Transform CreateEventRequestBody to EventPayload format expected by capture service
+	// Each event needs: api_key, body, type, sent_at
+	eventPayloads := make([]map[string]interface{}, 0, len(events))
+	for _, event := range events {
+		payload := map[string]interface{}{
+			"api_key": b.options.APIKey,
+			"body":    event.Body,
+			"type":    event.EventType,
+			"sent_at": event.SentAt,
+		}
+		eventPayloads = append(eventPayloads, payload)
+	}
+
+	// Create batch payload with transformed events
+	batchPayload := map[string]interface{}{
+		"events": eventPayloads,
+	}
+
+	// Use SDK utilities to build headers (includes API key and SDK tracking headers)
+	headers := b.options.ToHeader()
+	headers.Add("Content-Type", "application/json")
+
+	// Use internal.Caller to make the request with built-in retry logic
+	_, err := b.caller.Call(context.Background(), &internal.CallParams{
+		URL:            endpoint,
+		Method:         http.MethodPost,
+		Headers:        headers,
+		BodyProperties: batchPayload,
+		MaxAttempts:    b.options.MaxAttempts,
+		Response:       nil, // We don't need to parse the response
+		ErrorDecoder:   nil, // Could use schematichq.ErrorCodes if capture API returns same format
+	})
+
+	if err != nil {
+		return fmt.Errorf("failed to send batch events: %w", err)
+	}
+
+	return nil
 }

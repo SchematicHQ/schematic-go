@@ -11,6 +11,7 @@ import (
 	core "github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/datastream"
 	"github.com/schematichq/schematic-go/flags"
+	"github.com/schematichq/schematic-go/internal"
 	"github.com/schematichq/schematic-go/logger"
 	option "github.com/schematichq/schematic-go/option"
 )
@@ -27,6 +28,7 @@ type SchematicClient struct {
 	flagDefaults            map[string]bool
 	isOffline               bool
 	logger                  core.Logger
+	options                 *core.RequestOptions
 	stopWorker              chan struct{}
 	workerInterval          time.Duration
 }
@@ -64,6 +66,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		flagDefaults:            options.FlagDefaults,
 		isOffline:               options.OfflineMode,
 		logger:                  options.Logger,
+		options:                 options,
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
 	}
@@ -297,8 +300,18 @@ func (c *SchematicClient) worker() {
 		}
 	}()
 
+	// Create a caller for the buffer to use with the same HTTP client and retry settings
+	caller := internal.NewCaller(
+		&internal.CallerParams{
+			Client:      c.options.HTTPClient,
+			MaxAttempts: c.options.MaxAttempts,
+		},
+	)
+
 	buffer := buffer.NewEventBuffer(
 		c.Events,
+		c.options,
+		caller,
 		c.errors,
 		c.logger,
 		c.eventBufferPeriod,

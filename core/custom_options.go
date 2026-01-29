@@ -50,18 +50,18 @@ func WithEventBufferPeriod(period time.Duration) RequestOption {
 	}
 }
 
-// Capture URL
+// Event Capture Base URL
 
-type ClientOptCaptureURL struct {
+type ClientOptEventCaptureBaseURL struct {
 	url string
 }
 
-func (c ClientOptCaptureURL) applyRequestOptions(opts *RequestOptions) {
-	opts.CaptureURL = c.url
+func (c ClientOptEventCaptureBaseURL) applyRequestOptions(opts *RequestOptions) {
+	opts.EventCaptureBaseURL = c.url
 }
 
-func WithCaptureURL(url string) RequestOption {
-	return ClientOptCaptureURL{
+func WithEventCaptureBaseURL(url string) RequestOption {
+	return ClientOptEventCaptureBaseURL{
 		url: url,
 	}
 }

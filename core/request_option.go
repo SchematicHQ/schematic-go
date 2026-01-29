@@ -32,7 +32,7 @@ type RequestOptions struct {
 	UseDataStream     bool
 
 	// Schematic custom request option fields
-	CaptureURL              string
+	EventCaptureBaseURL     string
 	EventBufferPeriod       *time.Duration
 	FlagCheckCacheProviders []cache.CacheProvider[bool]
 	FlagDefaults            map[string]bool

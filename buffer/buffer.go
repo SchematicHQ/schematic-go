@@ -73,8 +73,8 @@ func NewEventBuffer(
 	}
 
 	// Set default CaptureURL if not explicitly provided
-	options.CaptureURL = internal.ResolveBaseURL(
-		options.CaptureURL,
+	options.EventCaptureBaseURL = internal.ResolveBaseURL(
+		options.EventCaptureBaseURL,
 		"https://capture.schematichq.com",
 	)
 
@@ -229,8 +229,8 @@ func (b *eventBuffer) Stop() {
 
 // sendBatchEvents sends events to the /batch endpoint on the capture subdomain
 func (b *eventBuffer) sendBatchEvents(events []*schematicgo.CreateEventRequestBody) error {
-	// Use CaptureURL from options (set during initialization)
-	endpoint := b.options.CaptureURL + "/batch"
+	// Use EventCaptureBaseURL from options (set during initialization)
+	endpoint := b.options.EventCaptureBaseURL + "/batch"
 
 	// Transform CreateEventRequestBody to EventPayload format expected by capture service
 	// Each event needs: api_key, body, type, sent_at

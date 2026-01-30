@@ -5174,21 +5174,22 @@ var (
 	companyDetailResponseDataFieldBillingSubscriptions  = big.NewInt(1 << 3)
 	companyDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 4)
 	companyDetailResponseDataFieldDefaultPaymentMethod  = big.NewInt(1 << 5)
-	companyDetailResponseDataFieldEntityTraits          = big.NewInt(1 << 6)
-	companyDetailResponseDataFieldEnvironmentID         = big.NewInt(1 << 7)
-	companyDetailResponseDataFieldID                    = big.NewInt(1 << 8)
-	companyDetailResponseDataFieldKeys                  = big.NewInt(1 << 9)
-	companyDetailResponseDataFieldLastSeenAt            = big.NewInt(1 << 10)
-	companyDetailResponseDataFieldLogoURL               = big.NewInt(1 << 11)
-	companyDetailResponseDataFieldMetrics               = big.NewInt(1 << 12)
-	companyDetailResponseDataFieldName                  = big.NewInt(1 << 13)
-	companyDetailResponseDataFieldPaymentMethods        = big.NewInt(1 << 14)
-	companyDetailResponseDataFieldPlan                  = big.NewInt(1 << 15)
-	companyDetailResponseDataFieldPlans                 = big.NewInt(1 << 16)
-	companyDetailResponseDataFieldRules                 = big.NewInt(1 << 17)
-	companyDetailResponseDataFieldTraits                = big.NewInt(1 << 18)
-	companyDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 19)
-	companyDetailResponseDataFieldUserCount             = big.NewInt(1 << 20)
+	companyDetailResponseDataFieldEntitlements          = big.NewInt(1 << 6)
+	companyDetailResponseDataFieldEntityTraits          = big.NewInt(1 << 7)
+	companyDetailResponseDataFieldEnvironmentID         = big.NewInt(1 << 8)
+	companyDetailResponseDataFieldID                    = big.NewInt(1 << 9)
+	companyDetailResponseDataFieldKeys                  = big.NewInt(1 << 10)
+	companyDetailResponseDataFieldLastSeenAt            = big.NewInt(1 << 11)
+	companyDetailResponseDataFieldLogoURL               = big.NewInt(1 << 12)
+	companyDetailResponseDataFieldMetrics               = big.NewInt(1 << 13)
+	companyDetailResponseDataFieldName                  = big.NewInt(1 << 14)
+	companyDetailResponseDataFieldPaymentMethods        = big.NewInt(1 << 15)
+	companyDetailResponseDataFieldPlan                  = big.NewInt(1 << 16)
+	companyDetailResponseDataFieldPlans                 = big.NewInt(1 << 17)
+	companyDetailResponseDataFieldRules                 = big.NewInt(1 << 18)
+	companyDetailResponseDataFieldTraits                = big.NewInt(1 << 19)
+	companyDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 20)
+	companyDetailResponseDataFieldUserCount             = big.NewInt(1 << 21)
 )
 
 type CompanyDetailResponseData struct {
@@ -5198,6 +5199,7 @@ type CompanyDetailResponseData struct {
 	BillingSubscriptions  []*BillingSubscriptionView               `json:"billing_subscriptions" url:"billing_subscriptions"`
 	CreatedAt             time.Time                                `json:"created_at" url:"created_at"`
 	DefaultPaymentMethod  *PaymentMethodResponseData               `json:"default_payment_method,omitempty" url:"default_payment_method,omitempty"`
+	Entitlements          []*FeatureEntitlement                    `json:"entitlements" url:"entitlements"`
 	EntityTraits          []*EntityTraitDetailResponseData         `json:"entity_traits" url:"entity_traits"`
 	EnvironmentID         string                                   `json:"environment_id" url:"environment_id"`
 	ID                    string                                   `json:"id" url:"id"`
@@ -5262,6 +5264,13 @@ func (c *CompanyDetailResponseData) GetDefaultPaymentMethod() *PaymentMethodResp
 		return nil
 	}
 	return c.DefaultPaymentMethod
+}
+
+func (c *CompanyDetailResponseData) GetEntitlements() []*FeatureEntitlement {
+	if c == nil {
+		return nil
+	}
+	return c.Entitlements
 }
 
 func (c *CompanyDetailResponseData) GetEntityTraits() []*EntityTraitDetailResponseData {
@@ -5420,6 +5429,13 @@ func (c *CompanyDetailResponseData) SetCreatedAt(createdAt time.Time) {
 func (c *CompanyDetailResponseData) SetDefaultPaymentMethod(defaultPaymentMethod *PaymentMethodResponseData) {
 	c.DefaultPaymentMethod = defaultPaymentMethod
 	c.require(companyDetailResponseDataFieldDefaultPaymentMethod)
+}
+
+// SetEntitlements sets the Entitlements field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyDetailResponseData) SetEntitlements(entitlements []*FeatureEntitlement) {
+	c.Entitlements = entitlements
+	c.require(companyDetailResponseDataFieldEntitlements)
 }
 
 // SetEntityTraits sets the EntityTraits field and marks it as non-optional;
@@ -7975,9 +7991,9 @@ const (
 	ConditionConditionTypeBillingProduct ConditionConditionType = "billing_product"
 	ConditionConditionTypeCompany        ConditionConditionType = "company"
 	ConditionConditionTypeCredit         ConditionConditionType = "credit"
-	ConditionConditionTypeCrmProduct     ConditionConditionType = "crm_product"
 	ConditionConditionTypeMetric         ConditionConditionType = "metric"
 	ConditionConditionTypePlan           ConditionConditionType = "plan"
+	ConditionConditionTypePlanVersion    ConditionConditionType = "plan_version"
 	ConditionConditionTypeTrait          ConditionConditionType = "trait"
 	ConditionConditionTypeUser           ConditionConditionType = "user"
 )
@@ -7992,12 +8008,12 @@ func NewConditionConditionTypeFromString(s string) (ConditionConditionType, erro
 		return ConditionConditionTypeCompany, nil
 	case "credit":
 		return ConditionConditionTypeCredit, nil
-	case "crm_product":
-		return ConditionConditionTypeCrmProduct, nil
 	case "metric":
 		return ConditionConditionTypeMetric, nil
 	case "plan":
 		return ConditionConditionTypePlan, nil
+	case "plan_version":
+		return ConditionConditionTypePlanVersion, nil
 	case "trait":
 		return ConditionConditionTypeTrait, nil
 	case "user":
@@ -8078,6 +8094,426 @@ func (c *ConditionGroup) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ConditionGroup) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	conditionGroupResponseDataFieldAccountID     = big.NewInt(1 << 0)
+	conditionGroupResponseDataFieldCreatedAt     = big.NewInt(1 << 1)
+	conditionGroupResponseDataFieldEnvironmentID = big.NewInt(1 << 2)
+	conditionGroupResponseDataFieldFlagID        = big.NewInt(1 << 3)
+	conditionGroupResponseDataFieldID            = big.NewInt(1 << 4)
+	conditionGroupResponseDataFieldPlanVersionID = big.NewInt(1 << 5)
+	conditionGroupResponseDataFieldRuleID        = big.NewInt(1 << 6)
+	conditionGroupResponseDataFieldUpdatedAt     = big.NewInt(1 << 7)
+)
+
+type ConditionGroupResponseData struct {
+	AccountID     string    `json:"account_id" url:"account_id"`
+	CreatedAt     time.Time `json:"created_at" url:"created_at"`
+	EnvironmentID string    `json:"environment_id" url:"environment_id"`
+	FlagID        *string   `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	ID            string    `json:"id" url:"id"`
+	PlanVersionID *string   `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	RuleID        string    `json:"rule_id" url:"rule_id"`
+	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *ConditionGroupResponseData) GetAccountID() string {
+	if c == nil {
+		return ""
+	}
+	return c.AccountID
+}
+
+func (c *ConditionGroupResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *ConditionGroupResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *ConditionGroupResponseData) GetFlagID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FlagID
+}
+
+func (c *ConditionGroupResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *ConditionGroupResponseData) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
+}
+
+func (c *ConditionGroupResponseData) GetRuleID() string {
+	if c == nil {
+		return ""
+	}
+	return c.RuleID
+}
+
+func (c *ConditionGroupResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *ConditionGroupResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *ConditionGroupResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupResponseData) SetAccountID(accountID string) {
+	c.AccountID = accountID
+	c.require(conditionGroupResponseDataFieldAccountID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupResponseData) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(conditionGroupResponseDataFieldCreatedAt)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupResponseData) SetEnvironmentID(environmentID string) {
+	c.EnvironmentID = environmentID
+	c.require(conditionGroupResponseDataFieldEnvironmentID)
+}
+
+// SetFlagID sets the FlagID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupResponseData) SetFlagID(flagID *string) {
+	c.FlagID = flagID
+	c.require(conditionGroupResponseDataFieldFlagID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupResponseData) SetID(id string) {
+	c.ID = id
+	c.require(conditionGroupResponseDataFieldID)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupResponseData) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(conditionGroupResponseDataFieldPlanVersionID)
+}
+
+// SetRuleID sets the RuleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupResponseData) SetRuleID(ruleID string) {
+	c.RuleID = ruleID
+	c.require(conditionGroupResponseDataFieldRuleID)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupResponseData) SetUpdatedAt(updatedAt time.Time) {
+	c.UpdatedAt = updatedAt
+	c.require(conditionGroupResponseDataFieldUpdatedAt)
+}
+
+func (c *ConditionGroupResponseData) UnmarshalJSON(data []byte) error {
+	type embed ConditionGroupResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = ConditionGroupResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ConditionGroupResponseData) MarshalJSON() ([]byte, error) {
+	type embed ConditionGroupResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *ConditionGroupResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	conditionGroupViewFieldAccountID     = big.NewInt(1 << 0)
+	conditionGroupViewFieldConditions    = big.NewInt(1 << 1)
+	conditionGroupViewFieldCreatedAt     = big.NewInt(1 << 2)
+	conditionGroupViewFieldEnvironmentID = big.NewInt(1 << 3)
+	conditionGroupViewFieldFlagID        = big.NewInt(1 << 4)
+	conditionGroupViewFieldID            = big.NewInt(1 << 5)
+	conditionGroupViewFieldPlanVersionID = big.NewInt(1 << 6)
+	conditionGroupViewFieldRuleID        = big.NewInt(1 << 7)
+	conditionGroupViewFieldUpdatedAt     = big.NewInt(1 << 8)
+)
+
+type ConditionGroupView struct {
+	AccountID     string           `json:"account_id" url:"account_id"`
+	Conditions    []*ConditionView `json:"conditions" url:"conditions"`
+	CreatedAt     time.Time        `json:"created_at" url:"created_at"`
+	EnvironmentID string           `json:"environment_id" url:"environment_id"`
+	FlagID        *string          `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	ID            string           `json:"id" url:"id"`
+	PlanVersionID *string          `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	RuleID        string           `json:"rule_id" url:"rule_id"`
+	UpdatedAt     time.Time        `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *ConditionGroupView) GetAccountID() string {
+	if c == nil {
+		return ""
+	}
+	return c.AccountID
+}
+
+func (c *ConditionGroupView) GetConditions() []*ConditionView {
+	if c == nil {
+		return nil
+	}
+	return c.Conditions
+}
+
+func (c *ConditionGroupView) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *ConditionGroupView) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *ConditionGroupView) GetFlagID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FlagID
+}
+
+func (c *ConditionGroupView) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *ConditionGroupView) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
+}
+
+func (c *ConditionGroupView) GetRuleID() string {
+	if c == nil {
+		return ""
+	}
+	return c.RuleID
+}
+
+func (c *ConditionGroupView) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *ConditionGroupView) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *ConditionGroupView) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupView) SetAccountID(accountID string) {
+	c.AccountID = accountID
+	c.require(conditionGroupViewFieldAccountID)
+}
+
+// SetConditions sets the Conditions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupView) SetConditions(conditions []*ConditionView) {
+	c.Conditions = conditions
+	c.require(conditionGroupViewFieldConditions)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupView) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(conditionGroupViewFieldCreatedAt)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupView) SetEnvironmentID(environmentID string) {
+	c.EnvironmentID = environmentID
+	c.require(conditionGroupViewFieldEnvironmentID)
+}
+
+// SetFlagID sets the FlagID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupView) SetFlagID(flagID *string) {
+	c.FlagID = flagID
+	c.require(conditionGroupViewFieldFlagID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupView) SetID(id string) {
+	c.ID = id
+	c.require(conditionGroupViewFieldID)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupView) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(conditionGroupViewFieldPlanVersionID)
+}
+
+// SetRuleID sets the RuleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupView) SetRuleID(ruleID string) {
+	c.RuleID = ruleID
+	c.require(conditionGroupViewFieldRuleID)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionGroupView) SetUpdatedAt(updatedAt time.Time) {
+	c.UpdatedAt = updatedAt
+	c.require(conditionGroupViewFieldUpdatedAt)
+}
+
+func (c *ConditionGroupView) UnmarshalJSON(data []byte) error {
+	type embed ConditionGroupView
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = ConditionGroupView(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ConditionGroupView) MarshalJSON() ([]byte, error) {
+	type embed ConditionGroupView
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *ConditionGroupView) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -8177,6 +8613,1058 @@ func NewConditionOperatorFromString(s string) (ConditionOperator, error) {
 
 func (c ConditionOperator) Ptr() *ConditionOperator {
 	return &c
+}
+
+var (
+	conditionResponseDataFieldAccountID              = big.NewInt(1 << 0)
+	conditionResponseDataFieldComparisonTraitID      = big.NewInt(1 << 1)
+	conditionResponseDataFieldConditionGroupID       = big.NewInt(1 << 2)
+	conditionResponseDataFieldConditionType          = big.NewInt(1 << 3)
+	conditionResponseDataFieldConsumptionRate        = big.NewInt(1 << 4)
+	conditionResponseDataFieldCreatedAt              = big.NewInt(1 << 5)
+	conditionResponseDataFieldCreditID               = big.NewInt(1 << 6)
+	conditionResponseDataFieldEnvironmentID          = big.NewInt(1 << 7)
+	conditionResponseDataFieldEventSubtype           = big.NewInt(1 << 8)
+	conditionResponseDataFieldFlagID                 = big.NewInt(1 << 9)
+	conditionResponseDataFieldID                     = big.NewInt(1 << 10)
+	conditionResponseDataFieldMetricPeriod           = big.NewInt(1 << 11)
+	conditionResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 12)
+	conditionResponseDataFieldMetricValue            = big.NewInt(1 << 13)
+	conditionResponseDataFieldOperator               = big.NewInt(1 << 14)
+	conditionResponseDataFieldPlanVersionID          = big.NewInt(1 << 15)
+	conditionResponseDataFieldResourceUnspecifiedIDs = big.NewInt(1 << 16)
+	conditionResponseDataFieldRuleID                 = big.NewInt(1 << 17)
+	conditionResponseDataFieldTraitEntityType        = big.NewInt(1 << 18)
+	conditionResponseDataFieldTraitID                = big.NewInt(1 << 19)
+	conditionResponseDataFieldTraitValue             = big.NewInt(1 << 20)
+	conditionResponseDataFieldTraitValueBool         = big.NewInt(1 << 21)
+	conditionResponseDataFieldTraitValueDate         = big.NewInt(1 << 22)
+	conditionResponseDataFieldTraitValueInt          = big.NewInt(1 << 23)
+	conditionResponseDataFieldUpdatedAt              = big.NewInt(1 << 24)
+)
+
+type ConditionResponseData struct {
+	AccountID              string      `json:"account_id" url:"account_id"`
+	ComparisonTraitID      *string     `json:"comparison_trait_id,omitempty" url:"comparison_trait_id,omitempty"`
+	ConditionGroupID       *string     `json:"condition_group_id,omitempty" url:"condition_group_id,omitempty"`
+	ConditionType          string      `json:"condition_type" url:"condition_type"`
+	ConsumptionRate        *float64    `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
+	CreatedAt              time.Time   `json:"created_at" url:"created_at"`
+	CreditID               *string     `json:"credit_id,omitempty" url:"credit_id,omitempty"`
+	EnvironmentID          string      `json:"environment_id" url:"environment_id"`
+	EventSubtype           *string     `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	FlagID                 *string     `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	ID                     string      `json:"id" url:"id"`
+	MetricPeriod           *string     `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset *string     `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	MetricValue            *int        `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	Operator               string      `json:"operator" url:"operator"`
+	PlanVersionID          *string     `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	ResourceUnspecifiedIDs []string    `json:"resource_unspecified_ids" url:"resource_unspecified_ids"`
+	RuleID                 string      `json:"rule_id" url:"rule_id"`
+	TraitEntityType        *EntityType `json:"trait_entity_type,omitempty" url:"trait_entity_type,omitempty"`
+	TraitID                *string     `json:"trait_id,omitempty" url:"trait_id,omitempty"`
+	TraitValue             string      `json:"trait_value" url:"trait_value"`
+	TraitValueBool         bool        `json:"trait_value_bool" url:"trait_value_bool"`
+	TraitValueDate         *time.Time  `json:"trait_value_date,omitempty" url:"trait_value_date,omitempty"`
+	TraitValueInt          int         `json:"trait_value_int" url:"trait_value_int"`
+	UpdatedAt              time.Time   `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *ConditionResponseData) GetAccountID() string {
+	if c == nil {
+		return ""
+	}
+	return c.AccountID
+}
+
+func (c *ConditionResponseData) GetComparisonTraitID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ComparisonTraitID
+}
+
+func (c *ConditionResponseData) GetConditionGroupID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ConditionGroupID
+}
+
+func (c *ConditionResponseData) GetConditionType() string {
+	if c == nil {
+		return ""
+	}
+	return c.ConditionType
+}
+
+func (c *ConditionResponseData) GetConsumptionRate() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.ConsumptionRate
+}
+
+func (c *ConditionResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *ConditionResponseData) GetCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditID
+}
+
+func (c *ConditionResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *ConditionResponseData) GetEventSubtype() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EventSubtype
+}
+
+func (c *ConditionResponseData) GetFlagID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FlagID
+}
+
+func (c *ConditionResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *ConditionResponseData) GetMetricPeriod() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriod
+}
+
+func (c *ConditionResponseData) GetMetricPeriodMonthReset() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriodMonthReset
+}
+
+func (c *ConditionResponseData) GetMetricValue() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MetricValue
+}
+
+func (c *ConditionResponseData) GetOperator() string {
+	if c == nil {
+		return ""
+	}
+	return c.Operator
+}
+
+func (c *ConditionResponseData) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
+}
+
+func (c *ConditionResponseData) GetResourceUnspecifiedIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.ResourceUnspecifiedIDs
+}
+
+func (c *ConditionResponseData) GetRuleID() string {
+	if c == nil {
+		return ""
+	}
+	return c.RuleID
+}
+
+func (c *ConditionResponseData) GetTraitEntityType() *EntityType {
+	if c == nil {
+		return nil
+	}
+	return c.TraitEntityType
+}
+
+func (c *ConditionResponseData) GetTraitID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.TraitID
+}
+
+func (c *ConditionResponseData) GetTraitValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.TraitValue
+}
+
+func (c *ConditionResponseData) GetTraitValueBool() bool {
+	if c == nil {
+		return false
+	}
+	return c.TraitValueBool
+}
+
+func (c *ConditionResponseData) GetTraitValueDate() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.TraitValueDate
+}
+
+func (c *ConditionResponseData) GetTraitValueInt() int {
+	if c == nil {
+		return 0
+	}
+	return c.TraitValueInt
+}
+
+func (c *ConditionResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *ConditionResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *ConditionResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetAccountID(accountID string) {
+	c.AccountID = accountID
+	c.require(conditionResponseDataFieldAccountID)
+}
+
+// SetComparisonTraitID sets the ComparisonTraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetComparisonTraitID(comparisonTraitID *string) {
+	c.ComparisonTraitID = comparisonTraitID
+	c.require(conditionResponseDataFieldComparisonTraitID)
+}
+
+// SetConditionGroupID sets the ConditionGroupID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetConditionGroupID(conditionGroupID *string) {
+	c.ConditionGroupID = conditionGroupID
+	c.require(conditionResponseDataFieldConditionGroupID)
+}
+
+// SetConditionType sets the ConditionType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetConditionType(conditionType string) {
+	c.ConditionType = conditionType
+	c.require(conditionResponseDataFieldConditionType)
+}
+
+// SetConsumptionRate sets the ConsumptionRate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetConsumptionRate(consumptionRate *float64) {
+	c.ConsumptionRate = consumptionRate
+	c.require(conditionResponseDataFieldConsumptionRate)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(conditionResponseDataFieldCreatedAt)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetCreditID(creditID *string) {
+	c.CreditID = creditID
+	c.require(conditionResponseDataFieldCreditID)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetEnvironmentID(environmentID string) {
+	c.EnvironmentID = environmentID
+	c.require(conditionResponseDataFieldEnvironmentID)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetEventSubtype(eventSubtype *string) {
+	c.EventSubtype = eventSubtype
+	c.require(conditionResponseDataFieldEventSubtype)
+}
+
+// SetFlagID sets the FlagID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetFlagID(flagID *string) {
+	c.FlagID = flagID
+	c.require(conditionResponseDataFieldFlagID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetID(id string) {
+	c.ID = id
+	c.require(conditionResponseDataFieldID)
+}
+
+// SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetMetricPeriod(metricPeriod *string) {
+	c.MetricPeriod = metricPeriod
+	c.require(conditionResponseDataFieldMetricPeriod)
+}
+
+// SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetMetricPeriodMonthReset(metricPeriodMonthReset *string) {
+	c.MetricPeriodMonthReset = metricPeriodMonthReset
+	c.require(conditionResponseDataFieldMetricPeriodMonthReset)
+}
+
+// SetMetricValue sets the MetricValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetMetricValue(metricValue *int) {
+	c.MetricValue = metricValue
+	c.require(conditionResponseDataFieldMetricValue)
+}
+
+// SetOperator sets the Operator field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetOperator(operator string) {
+	c.Operator = operator
+	c.require(conditionResponseDataFieldOperator)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(conditionResponseDataFieldPlanVersionID)
+}
+
+// SetResourceUnspecifiedIDs sets the ResourceUnspecifiedIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetResourceUnspecifiedIDs(resourceUnspecifiedIDs []string) {
+	c.ResourceUnspecifiedIDs = resourceUnspecifiedIDs
+	c.require(conditionResponseDataFieldResourceUnspecifiedIDs)
+}
+
+// SetRuleID sets the RuleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetRuleID(ruleID string) {
+	c.RuleID = ruleID
+	c.require(conditionResponseDataFieldRuleID)
+}
+
+// SetTraitEntityType sets the TraitEntityType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetTraitEntityType(traitEntityType *EntityType) {
+	c.TraitEntityType = traitEntityType
+	c.require(conditionResponseDataFieldTraitEntityType)
+}
+
+// SetTraitID sets the TraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetTraitID(traitID *string) {
+	c.TraitID = traitID
+	c.require(conditionResponseDataFieldTraitID)
+}
+
+// SetTraitValue sets the TraitValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetTraitValue(traitValue string) {
+	c.TraitValue = traitValue
+	c.require(conditionResponseDataFieldTraitValue)
+}
+
+// SetTraitValueBool sets the TraitValueBool field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetTraitValueBool(traitValueBool bool) {
+	c.TraitValueBool = traitValueBool
+	c.require(conditionResponseDataFieldTraitValueBool)
+}
+
+// SetTraitValueDate sets the TraitValueDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetTraitValueDate(traitValueDate *time.Time) {
+	c.TraitValueDate = traitValueDate
+	c.require(conditionResponseDataFieldTraitValueDate)
+}
+
+// SetTraitValueInt sets the TraitValueInt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetTraitValueInt(traitValueInt int) {
+	c.TraitValueInt = traitValueInt
+	c.require(conditionResponseDataFieldTraitValueInt)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetUpdatedAt(updatedAt time.Time) {
+	c.UpdatedAt = updatedAt
+	c.require(conditionResponseDataFieldUpdatedAt)
+}
+
+func (c *ConditionResponseData) UnmarshalJSON(data []byte) error {
+	type embed ConditionResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt      *internal.DateTime `json:"created_at"`
+		TraitValueDate *internal.DateTime `json:"trait_value_date,omitempty"`
+		UpdatedAt      *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = ConditionResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.TraitValueDate = unmarshaler.TraitValueDate.TimePtr()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ConditionResponseData) MarshalJSON() ([]byte, error) {
+	type embed ConditionResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt      *internal.DateTime `json:"created_at"`
+		TraitValueDate *internal.DateTime `json:"trait_value_date,omitempty"`
+		UpdatedAt      *internal.DateTime `json:"updated_at"`
+	}{
+		embed:          embed(*c),
+		CreatedAt:      internal.NewDateTime(c.CreatedAt),
+		TraitValueDate: internal.NewOptionalDateTime(c.TraitValueDate),
+		UpdatedAt:      internal.NewDateTime(c.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *ConditionResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	conditionViewFieldAccountID              = big.NewInt(1 << 0)
+	conditionViewFieldBillingProducts        = big.NewInt(1 << 1)
+	conditionViewFieldCompanies              = big.NewInt(1 << 2)
+	conditionViewFieldComparisonTrait        = big.NewInt(1 << 3)
+	conditionViewFieldComparisonTraitID      = big.NewInt(1 << 4)
+	conditionViewFieldConditionGroupID       = big.NewInt(1 << 5)
+	conditionViewFieldConditionType          = big.NewInt(1 << 6)
+	conditionViewFieldConsumptionRate        = big.NewInt(1 << 7)
+	conditionViewFieldCreatedAt              = big.NewInt(1 << 8)
+	conditionViewFieldCreditID               = big.NewInt(1 << 9)
+	conditionViewFieldEnvironmentID          = big.NewInt(1 << 10)
+	conditionViewFieldEventSubtype           = big.NewInt(1 << 11)
+	conditionViewFieldFlagID                 = big.NewInt(1 << 12)
+	conditionViewFieldID                     = big.NewInt(1 << 13)
+	conditionViewFieldMetricPeriod           = big.NewInt(1 << 14)
+	conditionViewFieldMetricPeriodMonthReset = big.NewInt(1 << 15)
+	conditionViewFieldMetricValue            = big.NewInt(1 << 16)
+	conditionViewFieldOperator               = big.NewInt(1 << 17)
+	conditionViewFieldPlanVersionID          = big.NewInt(1 << 18)
+	conditionViewFieldPlans                  = big.NewInt(1 << 19)
+	conditionViewFieldResourceUnspecifiedIDs = big.NewInt(1 << 20)
+	conditionViewFieldRuleID                 = big.NewInt(1 << 21)
+	conditionViewFieldTrait                  = big.NewInt(1 << 22)
+	conditionViewFieldTraitEntityType        = big.NewInt(1 << 23)
+	conditionViewFieldTraitID                = big.NewInt(1 << 24)
+	conditionViewFieldTraitValue             = big.NewInt(1 << 25)
+	conditionViewFieldTraitValueBool         = big.NewInt(1 << 26)
+	conditionViewFieldTraitValueDate         = big.NewInt(1 << 27)
+	conditionViewFieldTraitValueInt          = big.NewInt(1 << 28)
+	conditionViewFieldUpdatedAt              = big.NewInt(1 << 29)
+	conditionViewFieldUsers                  = big.NewInt(1 << 30)
+)
+
+type ConditionView struct {
+	AccountID              string                             `json:"account_id" url:"account_id"`
+	BillingProducts        []*GenericPreviewObject            `json:"billing_products" url:"billing_products"`
+	Companies              []*GenericPreviewObject            `json:"companies" url:"companies"`
+	ComparisonTrait        *EntityTraitDefinitionResponseData `json:"comparison_trait,omitempty" url:"comparison_trait,omitempty"`
+	ComparisonTraitID      *string                            `json:"comparison_trait_id,omitempty" url:"comparison_trait_id,omitempty"`
+	ConditionGroupID       *string                            `json:"condition_group_id,omitempty" url:"condition_group_id,omitempty"`
+	ConditionType          string                             `json:"condition_type" url:"condition_type"`
+	ConsumptionRate        *float64                           `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
+	CreatedAt              time.Time                          `json:"created_at" url:"created_at"`
+	CreditID               *string                            `json:"credit_id,omitempty" url:"credit_id,omitempty"`
+	EnvironmentID          string                             `json:"environment_id" url:"environment_id"`
+	EventSubtype           *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	FlagID                 *string                            `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	ID                     string                             `json:"id" url:"id"`
+	MetricPeriod           *string                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset *string                            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	MetricValue            *int                               `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	Operator               string                             `json:"operator" url:"operator"`
+	PlanVersionID          *string                            `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	Plans                  []*GenericPreviewObject            `json:"plans" url:"plans"`
+	ResourceUnspecifiedIDs []string                           `json:"resource_unspecified_ids" url:"resource_unspecified_ids"`
+	RuleID                 string                             `json:"rule_id" url:"rule_id"`
+	Trait                  *EntityTraitDefinitionResponseData `json:"trait,omitempty" url:"trait,omitempty"`
+	TraitEntityType        *EntityType                        `json:"trait_entity_type,omitempty" url:"trait_entity_type,omitempty"`
+	TraitID                *string                            `json:"trait_id,omitempty" url:"trait_id,omitempty"`
+	TraitValue             string                             `json:"trait_value" url:"trait_value"`
+	TraitValueBool         bool                               `json:"trait_value_bool" url:"trait_value_bool"`
+	TraitValueDate         *time.Time                         `json:"trait_value_date,omitempty" url:"trait_value_date,omitempty"`
+	TraitValueInt          int                                `json:"trait_value_int" url:"trait_value_int"`
+	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
+	Users                  []*GenericPreviewObject            `json:"users" url:"users"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *ConditionView) GetAccountID() string {
+	if c == nil {
+		return ""
+	}
+	return c.AccountID
+}
+
+func (c *ConditionView) GetBillingProducts() []*GenericPreviewObject {
+	if c == nil {
+		return nil
+	}
+	return c.BillingProducts
+}
+
+func (c *ConditionView) GetCompanies() []*GenericPreviewObject {
+	if c == nil {
+		return nil
+	}
+	return c.Companies
+}
+
+func (c *ConditionView) GetComparisonTrait() *EntityTraitDefinitionResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.ComparisonTrait
+}
+
+func (c *ConditionView) GetComparisonTraitID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ComparisonTraitID
+}
+
+func (c *ConditionView) GetConditionGroupID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ConditionGroupID
+}
+
+func (c *ConditionView) GetConditionType() string {
+	if c == nil {
+		return ""
+	}
+	return c.ConditionType
+}
+
+func (c *ConditionView) GetConsumptionRate() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.ConsumptionRate
+}
+
+func (c *ConditionView) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *ConditionView) GetCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditID
+}
+
+func (c *ConditionView) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *ConditionView) GetEventSubtype() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EventSubtype
+}
+
+func (c *ConditionView) GetFlagID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FlagID
+}
+
+func (c *ConditionView) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *ConditionView) GetMetricPeriod() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriod
+}
+
+func (c *ConditionView) GetMetricPeriodMonthReset() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriodMonthReset
+}
+
+func (c *ConditionView) GetMetricValue() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MetricValue
+}
+
+func (c *ConditionView) GetOperator() string {
+	if c == nil {
+		return ""
+	}
+	return c.Operator
+}
+
+func (c *ConditionView) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
+}
+
+func (c *ConditionView) GetPlans() []*GenericPreviewObject {
+	if c == nil {
+		return nil
+	}
+	return c.Plans
+}
+
+func (c *ConditionView) GetResourceUnspecifiedIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.ResourceUnspecifiedIDs
+}
+
+func (c *ConditionView) GetRuleID() string {
+	if c == nil {
+		return ""
+	}
+	return c.RuleID
+}
+
+func (c *ConditionView) GetTrait() *EntityTraitDefinitionResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Trait
+}
+
+func (c *ConditionView) GetTraitEntityType() *EntityType {
+	if c == nil {
+		return nil
+	}
+	return c.TraitEntityType
+}
+
+func (c *ConditionView) GetTraitID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.TraitID
+}
+
+func (c *ConditionView) GetTraitValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.TraitValue
+}
+
+func (c *ConditionView) GetTraitValueBool() bool {
+	if c == nil {
+		return false
+	}
+	return c.TraitValueBool
+}
+
+func (c *ConditionView) GetTraitValueDate() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.TraitValueDate
+}
+
+func (c *ConditionView) GetTraitValueInt() int {
+	if c == nil {
+		return 0
+	}
+	return c.TraitValueInt
+}
+
+func (c *ConditionView) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *ConditionView) GetUsers() []*GenericPreviewObject {
+	if c == nil {
+		return nil
+	}
+	return c.Users
+}
+
+func (c *ConditionView) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *ConditionView) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetAccountID(accountID string) {
+	c.AccountID = accountID
+	c.require(conditionViewFieldAccountID)
+}
+
+// SetBillingProducts sets the BillingProducts field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetBillingProducts(billingProducts []*GenericPreviewObject) {
+	c.BillingProducts = billingProducts
+	c.require(conditionViewFieldBillingProducts)
+}
+
+// SetCompanies sets the Companies field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetCompanies(companies []*GenericPreviewObject) {
+	c.Companies = companies
+	c.require(conditionViewFieldCompanies)
+}
+
+// SetComparisonTrait sets the ComparisonTrait field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetComparisonTrait(comparisonTrait *EntityTraitDefinitionResponseData) {
+	c.ComparisonTrait = comparisonTrait
+	c.require(conditionViewFieldComparisonTrait)
+}
+
+// SetComparisonTraitID sets the ComparisonTraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetComparisonTraitID(comparisonTraitID *string) {
+	c.ComparisonTraitID = comparisonTraitID
+	c.require(conditionViewFieldComparisonTraitID)
+}
+
+// SetConditionGroupID sets the ConditionGroupID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetConditionGroupID(conditionGroupID *string) {
+	c.ConditionGroupID = conditionGroupID
+	c.require(conditionViewFieldConditionGroupID)
+}
+
+// SetConditionType sets the ConditionType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetConditionType(conditionType string) {
+	c.ConditionType = conditionType
+	c.require(conditionViewFieldConditionType)
+}
+
+// SetConsumptionRate sets the ConsumptionRate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetConsumptionRate(consumptionRate *float64) {
+	c.ConsumptionRate = consumptionRate
+	c.require(conditionViewFieldConsumptionRate)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(conditionViewFieldCreatedAt)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetCreditID(creditID *string) {
+	c.CreditID = creditID
+	c.require(conditionViewFieldCreditID)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetEnvironmentID(environmentID string) {
+	c.EnvironmentID = environmentID
+	c.require(conditionViewFieldEnvironmentID)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetEventSubtype(eventSubtype *string) {
+	c.EventSubtype = eventSubtype
+	c.require(conditionViewFieldEventSubtype)
+}
+
+// SetFlagID sets the FlagID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetFlagID(flagID *string) {
+	c.FlagID = flagID
+	c.require(conditionViewFieldFlagID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetID(id string) {
+	c.ID = id
+	c.require(conditionViewFieldID)
+}
+
+// SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetMetricPeriod(metricPeriod *string) {
+	c.MetricPeriod = metricPeriod
+	c.require(conditionViewFieldMetricPeriod)
+}
+
+// SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetMetricPeriodMonthReset(metricPeriodMonthReset *string) {
+	c.MetricPeriodMonthReset = metricPeriodMonthReset
+	c.require(conditionViewFieldMetricPeriodMonthReset)
+}
+
+// SetMetricValue sets the MetricValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetMetricValue(metricValue *int) {
+	c.MetricValue = metricValue
+	c.require(conditionViewFieldMetricValue)
+}
+
+// SetOperator sets the Operator field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetOperator(operator string) {
+	c.Operator = operator
+	c.require(conditionViewFieldOperator)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(conditionViewFieldPlanVersionID)
+}
+
+// SetPlans sets the Plans field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetPlans(plans []*GenericPreviewObject) {
+	c.Plans = plans
+	c.require(conditionViewFieldPlans)
+}
+
+// SetResourceUnspecifiedIDs sets the ResourceUnspecifiedIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetResourceUnspecifiedIDs(resourceUnspecifiedIDs []string) {
+	c.ResourceUnspecifiedIDs = resourceUnspecifiedIDs
+	c.require(conditionViewFieldResourceUnspecifiedIDs)
+}
+
+// SetRuleID sets the RuleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetRuleID(ruleID string) {
+	c.RuleID = ruleID
+	c.require(conditionViewFieldRuleID)
+}
+
+// SetTrait sets the Trait field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetTrait(trait *EntityTraitDefinitionResponseData) {
+	c.Trait = trait
+	c.require(conditionViewFieldTrait)
+}
+
+// SetTraitEntityType sets the TraitEntityType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetTraitEntityType(traitEntityType *EntityType) {
+	c.TraitEntityType = traitEntityType
+	c.require(conditionViewFieldTraitEntityType)
+}
+
+// SetTraitID sets the TraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetTraitID(traitID *string) {
+	c.TraitID = traitID
+	c.require(conditionViewFieldTraitID)
+}
+
+// SetTraitValue sets the TraitValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetTraitValue(traitValue string) {
+	c.TraitValue = traitValue
+	c.require(conditionViewFieldTraitValue)
+}
+
+// SetTraitValueBool sets the TraitValueBool field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetTraitValueBool(traitValueBool bool) {
+	c.TraitValueBool = traitValueBool
+	c.require(conditionViewFieldTraitValueBool)
+}
+
+// SetTraitValueDate sets the TraitValueDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetTraitValueDate(traitValueDate *time.Time) {
+	c.TraitValueDate = traitValueDate
+	c.require(conditionViewFieldTraitValueDate)
+}
+
+// SetTraitValueInt sets the TraitValueInt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetTraitValueInt(traitValueInt int) {
+	c.TraitValueInt = traitValueInt
+	c.require(conditionViewFieldTraitValueInt)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetUpdatedAt(updatedAt time.Time) {
+	c.UpdatedAt = updatedAt
+	c.require(conditionViewFieldUpdatedAt)
+}
+
+// SetUsers sets the Users field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetUsers(users []*GenericPreviewObject) {
+	c.Users = users
+	c.require(conditionViewFieldUsers)
+}
+
+func (c *ConditionView) UnmarshalJSON(data []byte) error {
+	type embed ConditionView
+	var unmarshaler = struct {
+		embed
+		CreatedAt      *internal.DateTime `json:"created_at"`
+		TraitValueDate *internal.DateTime `json:"trait_value_date,omitempty"`
+		UpdatedAt      *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = ConditionView(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.TraitValueDate = unmarshaler.TraitValueDate.TimePtr()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ConditionView) MarshalJSON() ([]byte, error) {
+	type embed ConditionView
+	var marshaler = struct {
+		embed
+		CreatedAt      *internal.DateTime `json:"created_at"`
+		TraitValueDate *internal.DateTime `json:"trait_value_date,omitempty"`
+		UpdatedAt      *internal.DateTime `json:"updated_at"`
+	}{
+		embed:          embed(*c),
+		CreatedAt:      internal.NewDateTime(c.CreatedAt),
+		TraitValueDate: internal.NewOptionalDateTime(c.TraitValueDate),
+		UpdatedAt:      internal.NewDateTime(c.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *ConditionView) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 var (
@@ -9696,6 +11184,462 @@ func (c *CreditUsageAggregation) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditUsageAggregation) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditsAutoTopupCompanySummaryFieldID   = big.NewInt(1 << 0)
+	creditsAutoTopupCompanySummaryFieldName = big.NewInt(1 << 1)
+)
+
+type CreditsAutoTopupCompanySummary struct {
+	ID   string `json:"id" url:"id"`
+	Name string `json:"name" url:"name"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditsAutoTopupCompanySummary) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CreditsAutoTopupCompanySummary) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreditsAutoTopupCompanySummary) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditsAutoTopupCompanySummary) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupCompanySummary) SetID(id string) {
+	c.ID = id
+	c.require(creditsAutoTopupCompanySummaryFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupCompanySummary) SetName(name string) {
+	c.Name = name
+	c.require(creditsAutoTopupCompanySummaryFieldName)
+}
+
+func (c *CreditsAutoTopupCompanySummary) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditsAutoTopupCompanySummary
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditsAutoTopupCompanySummary(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditsAutoTopupCompanySummary) MarshalJSON() ([]byte, error) {
+	type embed CreditsAutoTopupCompanySummary
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditsAutoTopupCompanySummary) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditsAutoTopupCreditSummaryFieldID   = big.NewInt(1 << 0)
+	creditsAutoTopupCreditSummaryFieldName = big.NewInt(1 << 1)
+)
+
+type CreditsAutoTopupCreditSummary struct {
+	ID   string `json:"id" url:"id"`
+	Name string `json:"name" url:"name"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditsAutoTopupCreditSummary) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CreditsAutoTopupCreditSummary) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreditsAutoTopupCreditSummary) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditsAutoTopupCreditSummary) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupCreditSummary) SetID(id string) {
+	c.ID = id
+	c.require(creditsAutoTopupCreditSummaryFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupCreditSummary) SetName(name string) {
+	c.Name = name
+	c.require(creditsAutoTopupCreditSummaryFieldName)
+}
+
+func (c *CreditsAutoTopupCreditSummary) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditsAutoTopupCreditSummary
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditsAutoTopupCreditSummary(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditsAutoTopupCreditSummary) MarshalJSON() ([]byte, error) {
+	type embed CreditsAutoTopupCreditSummary
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditsAutoTopupCreditSummary) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditsAutoTopupHardFailureFieldCompany         = big.NewInt(1 << 0)
+	creditsAutoTopupHardFailureFieldCredit          = big.NewInt(1 << 1)
+	creditsAutoTopupHardFailureFieldErrorMessage    = big.NewInt(1 << 2)
+	creditsAutoTopupHardFailureFieldStripeErrorCode = big.NewInt(1 << 3)
+)
+
+type CreditsAutoTopupHardFailure struct {
+	Company         *CreditsAutoTopupCompanySummary `json:"company,omitempty" url:"company,omitempty"`
+	Credit          *CreditsAutoTopupCreditSummary  `json:"credit,omitempty" url:"credit,omitempty"`
+	ErrorMessage    *string                         `json:"error_message,omitempty" url:"error_message,omitempty"`
+	StripeErrorCode *string                         `json:"stripe_error_code,omitempty" url:"stripe_error_code,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditsAutoTopupHardFailure) GetCompany() *CreditsAutoTopupCompanySummary {
+	if c == nil {
+		return nil
+	}
+	return c.Company
+}
+
+func (c *CreditsAutoTopupHardFailure) GetCredit() *CreditsAutoTopupCreditSummary {
+	if c == nil {
+		return nil
+	}
+	return c.Credit
+}
+
+func (c *CreditsAutoTopupHardFailure) GetErrorMessage() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ErrorMessage
+}
+
+func (c *CreditsAutoTopupHardFailure) GetStripeErrorCode() *string {
+	if c == nil {
+		return nil
+	}
+	return c.StripeErrorCode
+}
+
+func (c *CreditsAutoTopupHardFailure) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditsAutoTopupHardFailure) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCompany sets the Company field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupHardFailure) SetCompany(company *CreditsAutoTopupCompanySummary) {
+	c.Company = company
+	c.require(creditsAutoTopupHardFailureFieldCompany)
+}
+
+// SetCredit sets the Credit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupHardFailure) SetCredit(credit *CreditsAutoTopupCreditSummary) {
+	c.Credit = credit
+	c.require(creditsAutoTopupHardFailureFieldCredit)
+}
+
+// SetErrorMessage sets the ErrorMessage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupHardFailure) SetErrorMessage(errorMessage *string) {
+	c.ErrorMessage = errorMessage
+	c.require(creditsAutoTopupHardFailureFieldErrorMessage)
+}
+
+// SetStripeErrorCode sets the StripeErrorCode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupHardFailure) SetStripeErrorCode(stripeErrorCode *string) {
+	c.StripeErrorCode = stripeErrorCode
+	c.require(creditsAutoTopupHardFailureFieldStripeErrorCode)
+}
+
+func (c *CreditsAutoTopupHardFailure) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditsAutoTopupHardFailure
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditsAutoTopupHardFailure(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditsAutoTopupHardFailure) MarshalJSON() ([]byte, error) {
+	type embed CreditsAutoTopupHardFailure
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditsAutoTopupHardFailure) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditsAutoTopupRetryFailureFieldCompany             = big.NewInt(1 << 0)
+	creditsAutoTopupRetryFailureFieldConsecutiveFailures = big.NewInt(1 << 1)
+	creditsAutoTopupRetryFailureFieldCredit              = big.NewInt(1 << 2)
+	creditsAutoTopupRetryFailureFieldLastErrorMessage    = big.NewInt(1 << 3)
+	creditsAutoTopupRetryFailureFieldStripeErrorCode     = big.NewInt(1 << 4)
+)
+
+type CreditsAutoTopupRetryFailure struct {
+	Company             *CreditsAutoTopupCompanySummary `json:"company,omitempty" url:"company,omitempty"`
+	ConsecutiveFailures int                             `json:"consecutive_failures" url:"consecutive_failures"`
+	Credit              *CreditsAutoTopupCreditSummary  `json:"credit,omitempty" url:"credit,omitempty"`
+	LastErrorMessage    *string                         `json:"last_error_message,omitempty" url:"last_error_message,omitempty"`
+	StripeErrorCode     *string                         `json:"stripe_error_code,omitempty" url:"stripe_error_code,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditsAutoTopupRetryFailure) GetCompany() *CreditsAutoTopupCompanySummary {
+	if c == nil {
+		return nil
+	}
+	return c.Company
+}
+
+func (c *CreditsAutoTopupRetryFailure) GetConsecutiveFailures() int {
+	if c == nil {
+		return 0
+	}
+	return c.ConsecutiveFailures
+}
+
+func (c *CreditsAutoTopupRetryFailure) GetCredit() *CreditsAutoTopupCreditSummary {
+	if c == nil {
+		return nil
+	}
+	return c.Credit
+}
+
+func (c *CreditsAutoTopupRetryFailure) GetLastErrorMessage() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LastErrorMessage
+}
+
+func (c *CreditsAutoTopupRetryFailure) GetStripeErrorCode() *string {
+	if c == nil {
+		return nil
+	}
+	return c.StripeErrorCode
+}
+
+func (c *CreditsAutoTopupRetryFailure) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditsAutoTopupRetryFailure) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCompany sets the Company field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupRetryFailure) SetCompany(company *CreditsAutoTopupCompanySummary) {
+	c.Company = company
+	c.require(creditsAutoTopupRetryFailureFieldCompany)
+}
+
+// SetConsecutiveFailures sets the ConsecutiveFailures field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupRetryFailure) SetConsecutiveFailures(consecutiveFailures int) {
+	c.ConsecutiveFailures = consecutiveFailures
+	c.require(creditsAutoTopupRetryFailureFieldConsecutiveFailures)
+}
+
+// SetCredit sets the Credit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupRetryFailure) SetCredit(credit *CreditsAutoTopupCreditSummary) {
+	c.Credit = credit
+	c.require(creditsAutoTopupRetryFailureFieldCredit)
+}
+
+// SetLastErrorMessage sets the LastErrorMessage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupRetryFailure) SetLastErrorMessage(lastErrorMessage *string) {
+	c.LastErrorMessage = lastErrorMessage
+	c.require(creditsAutoTopupRetryFailureFieldLastErrorMessage)
+}
+
+// SetStripeErrorCode sets the StripeErrorCode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsAutoTopupRetryFailure) SetStripeErrorCode(stripeErrorCode *string) {
+	c.StripeErrorCode = stripeErrorCode
+	c.require(creditsAutoTopupRetryFailureFieldStripeErrorCode)
+}
+
+func (c *CreditsAutoTopupRetryFailure) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditsAutoTopupRetryFailure
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditsAutoTopupRetryFailure(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditsAutoTopupRetryFailure) MarshalJSON() ([]byte, error) {
+	type embed CreditsAutoTopupRetryFailure
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditsAutoTopupRetryFailure) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -12062,6 +14006,348 @@ func (f *FeatureDetailResponseData) String() string {
 	return fmt.Sprintf("%#v", f)
 }
 
+var (
+	featureEntitlementFieldAllocation      = big.NewInt(1 << 0)
+	featureEntitlementFieldCreditID        = big.NewInt(1 << 1)
+	featureEntitlementFieldCreditRemaining = big.NewInt(1 << 2)
+	featureEntitlementFieldCreditTotal     = big.NewInt(1 << 3)
+	featureEntitlementFieldCreditUsed      = big.NewInt(1 << 4)
+	featureEntitlementFieldEventName       = big.NewInt(1 << 5)
+	featureEntitlementFieldFeatureID       = big.NewInt(1 << 6)
+	featureEntitlementFieldFeatureKey      = big.NewInt(1 << 7)
+	featureEntitlementFieldMetricPeriod    = big.NewInt(1 << 8)
+	featureEntitlementFieldMetricResetAt   = big.NewInt(1 << 9)
+	featureEntitlementFieldMonthReset      = big.NewInt(1 << 10)
+	featureEntitlementFieldUsage           = big.NewInt(1 << 11)
+	featureEntitlementFieldValueType       = big.NewInt(1 << 12)
+)
+
+type FeatureEntitlement struct {
+	// If a numeric feature entitlement rule was matched, its allocation
+	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	// If a credit-based feature entitlement rule was matched, the ID of the credit
+	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
+	// If a credit-based feature entitlement rule was matched, the remaining credit amount
+	CreditRemaining *float64 `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
+	// If a credit-based feature entitlement rule was matched, the total credit amount
+	CreditTotal *float64 `json:"credit_total,omitempty" url:"credit_total,omitempty"`
+	// If a credit-based feature entitlement rule was matched, the amount of credit used
+	CreditUsed *float64 `json:"credit_used,omitempty" url:"credit_used,omitempty"`
+	// For event-based feature entitlement rules, the name of the event being tracked
+	EventName *string `json:"event_name,omitempty" url:"event_name,omitempty"`
+	// The ID of the feature
+	FeatureID string `json:"feature_id" url:"feature_id"`
+	// The key of the feature
+	FeatureKey string `json:"feature_key" url:"feature_key"`
+	// For event-based feature entitlement rules, the period over which usage is tracked (current_month, current_day, current_week, all_time)
+	MetricPeriod *FeatureEntitlementMetricPeriod `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	// For event-based feature entitlement rules, when the usage period will reset
+	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
+	// For event-based feature entitlement rules, when the usage period resets (first_of_month or billing_cycle)
+	MonthReset *FeatureEntitlementMonthReset `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	// If a numeric feature entitlement rule was matched, the company's usage
+	Usage     *int                 `json:"usage,omitempty" url:"usage,omitempty"`
+	ValueType EntitlementValueType `json:"value_type" url:"value_type"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FeatureEntitlement) GetAllocation() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Allocation
+}
+
+func (f *FeatureEntitlement) GetCreditID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.CreditID
+}
+
+func (f *FeatureEntitlement) GetCreditRemaining() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditRemaining
+}
+
+func (f *FeatureEntitlement) GetCreditTotal() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditTotal
+}
+
+func (f *FeatureEntitlement) GetCreditUsed() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditUsed
+}
+
+func (f *FeatureEntitlement) GetEventName() *string {
+	if f == nil {
+		return nil
+	}
+	return f.EventName
+}
+
+func (f *FeatureEntitlement) GetFeatureID() string {
+	if f == nil {
+		return ""
+	}
+	return f.FeatureID
+}
+
+func (f *FeatureEntitlement) GetFeatureKey() string {
+	if f == nil {
+		return ""
+	}
+	return f.FeatureKey
+}
+
+func (f *FeatureEntitlement) GetMetricPeriod() *FeatureEntitlementMetricPeriod {
+	if f == nil {
+		return nil
+	}
+	return f.MetricPeriod
+}
+
+func (f *FeatureEntitlement) GetMetricResetAt() *time.Time {
+	if f == nil {
+		return nil
+	}
+	return f.MetricResetAt
+}
+
+func (f *FeatureEntitlement) GetMonthReset() *FeatureEntitlementMonthReset {
+	if f == nil {
+		return nil
+	}
+	return f.MonthReset
+}
+
+func (f *FeatureEntitlement) GetUsage() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Usage
+}
+
+func (f *FeatureEntitlement) GetValueType() EntitlementValueType {
+	if f == nil {
+		return ""
+	}
+	return f.ValueType
+}
+
+func (f *FeatureEntitlement) GetExtraProperties() map[string]interface{} {
+	return f.extraProperties
+}
+
+func (f *FeatureEntitlement) require(field *big.Int) {
+	if f.explicitFields == nil {
+		f.explicitFields = big.NewInt(0)
+	}
+	f.explicitFields.Or(f.explicitFields, field)
+}
+
+// SetAllocation sets the Allocation field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetAllocation(allocation *int) {
+	f.Allocation = allocation
+	f.require(featureEntitlementFieldAllocation)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetCreditID(creditID *string) {
+	f.CreditID = creditID
+	f.require(featureEntitlementFieldCreditID)
+}
+
+// SetCreditRemaining sets the CreditRemaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetCreditRemaining(creditRemaining *float64) {
+	f.CreditRemaining = creditRemaining
+	f.require(featureEntitlementFieldCreditRemaining)
+}
+
+// SetCreditTotal sets the CreditTotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetCreditTotal(creditTotal *float64) {
+	f.CreditTotal = creditTotal
+	f.require(featureEntitlementFieldCreditTotal)
+}
+
+// SetCreditUsed sets the CreditUsed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetCreditUsed(creditUsed *float64) {
+	f.CreditUsed = creditUsed
+	f.require(featureEntitlementFieldCreditUsed)
+}
+
+// SetEventName sets the EventName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetEventName(eventName *string) {
+	f.EventName = eventName
+	f.require(featureEntitlementFieldEventName)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetFeatureID(featureID string) {
+	f.FeatureID = featureID
+	f.require(featureEntitlementFieldFeatureID)
+}
+
+// SetFeatureKey sets the FeatureKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetFeatureKey(featureKey string) {
+	f.FeatureKey = featureKey
+	f.require(featureEntitlementFieldFeatureKey)
+}
+
+// SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetMetricPeriod(metricPeriod *FeatureEntitlementMetricPeriod) {
+	f.MetricPeriod = metricPeriod
+	f.require(featureEntitlementFieldMetricPeriod)
+}
+
+// SetMetricResetAt sets the MetricResetAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetMetricResetAt(metricResetAt *time.Time) {
+	f.MetricResetAt = metricResetAt
+	f.require(featureEntitlementFieldMetricResetAt)
+}
+
+// SetMonthReset sets the MonthReset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetMonthReset(monthReset *FeatureEntitlementMonthReset) {
+	f.MonthReset = monthReset
+	f.require(featureEntitlementFieldMonthReset)
+}
+
+// SetUsage sets the Usage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetUsage(usage *int) {
+	f.Usage = usage
+	f.require(featureEntitlementFieldUsage)
+}
+
+// SetValueType sets the ValueType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetValueType(valueType EntitlementValueType) {
+	f.ValueType = valueType
+	f.require(featureEntitlementFieldValueType)
+}
+
+func (f *FeatureEntitlement) UnmarshalJSON(data []byte) error {
+	type embed FeatureEntitlement
+	var unmarshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed: embed(*f),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*f = FeatureEntitlement(unmarshaler.embed)
+	f.MetricResetAt = unmarshaler.MetricResetAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FeatureEntitlement) MarshalJSON() ([]byte, error) {
+	type embed FeatureEntitlement
+	var marshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed:         embed(*f),
+		MetricResetAt: internal.NewOptionalDateTime(f.MetricResetAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, f.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (f *FeatureEntitlement) String() string {
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
+}
+
+// For event-based feature entitlement rules, the period over which usage is tracked (current_month, current_day, current_week, all_time)
+type FeatureEntitlementMetricPeriod string
+
+const (
+	FeatureEntitlementMetricPeriodAllTime      FeatureEntitlementMetricPeriod = "all_time"
+	FeatureEntitlementMetricPeriodCurrentDay   FeatureEntitlementMetricPeriod = "current_day"
+	FeatureEntitlementMetricPeriodCurrentMonth FeatureEntitlementMetricPeriod = "current_month"
+	FeatureEntitlementMetricPeriodCurrentWeek  FeatureEntitlementMetricPeriod = "current_week"
+)
+
+func NewFeatureEntitlementMetricPeriodFromString(s string) (FeatureEntitlementMetricPeriod, error) {
+	switch s {
+	case "all_time":
+		return FeatureEntitlementMetricPeriodAllTime, nil
+	case "current_day":
+		return FeatureEntitlementMetricPeriodCurrentDay, nil
+	case "current_month":
+		return FeatureEntitlementMetricPeriodCurrentMonth, nil
+	case "current_week":
+		return FeatureEntitlementMetricPeriodCurrentWeek, nil
+	}
+	var t FeatureEntitlementMetricPeriod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (f FeatureEntitlementMetricPeriod) Ptr() *FeatureEntitlementMetricPeriod {
+	return &f
+}
+
+// For event-based feature entitlement rules, when the usage period resets (first_of_month or billing_cycle)
+type FeatureEntitlementMonthReset string
+
+const (
+	FeatureEntitlementMonthResetFirstOfMonth FeatureEntitlementMonthReset = "first_of_month"
+	FeatureEntitlementMonthResetBillingCycle FeatureEntitlementMonthReset = "billing_cycle"
+)
+
+func NewFeatureEntitlementMonthResetFromString(s string) (FeatureEntitlementMonthReset, error) {
+	switch s {
+	case "first_of_month":
+		return FeatureEntitlementMonthResetFirstOfMonth, nil
+	case "billing_cycle":
+		return FeatureEntitlementMonthResetBillingCycle, nil
+	}
+	var t FeatureEntitlementMonthReset
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (f FeatureEntitlementMonthReset) Ptr() *FeatureEntitlementMonthReset {
+	return &f
+}
+
 type FeatureLifecyclePhase string
 
 const (
@@ -12479,6 +14765,172 @@ func (f *FeatureUsageDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureUsageDetailResponseData) String() string {
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
+}
+
+var (
+	featureUsageLegacyResponseDataFieldAllocation    = big.NewInt(1 << 0)
+	featureUsageLegacyResponseDataFieldCreditUsage   = big.NewInt(1 << 1)
+	featureUsageLegacyResponseDataFieldEntitlement   = big.NewInt(1 << 2)
+	featureUsageLegacyResponseDataFieldFeature       = big.NewInt(1 << 3)
+	featureUsageLegacyResponseDataFieldMetricResetAt = big.NewInt(1 << 4)
+	featureUsageLegacyResponseDataFieldUsage         = big.NewInt(1 << 5)
+)
+
+type FeatureUsageLegacyResponseData struct {
+	Allocation    *int         `json:"Allocation,omitempty" url:"Allocation,omitempty"`
+	CreditUsage   *CreditUsage `json:"CreditUsage,omitempty" url:"CreditUsage,omitempty"`
+	Entitlement   string       `json:"Entitlement" url:"Entitlement"`
+	Feature       *FeatureView `json:"Feature,omitempty" url:"Feature,omitempty"`
+	MetricResetAt *time.Time   `json:"MetricResetAt,omitempty" url:"MetricResetAt,omitempty"`
+	Usage         *int         `json:"Usage,omitempty" url:"Usage,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FeatureUsageLegacyResponseData) GetAllocation() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Allocation
+}
+
+func (f *FeatureUsageLegacyResponseData) GetCreditUsage() *CreditUsage {
+	if f == nil {
+		return nil
+	}
+	return f.CreditUsage
+}
+
+func (f *FeatureUsageLegacyResponseData) GetEntitlement() string {
+	if f == nil {
+		return ""
+	}
+	return f.Entitlement
+}
+
+func (f *FeatureUsageLegacyResponseData) GetFeature() *FeatureView {
+	if f == nil {
+		return nil
+	}
+	return f.Feature
+}
+
+func (f *FeatureUsageLegacyResponseData) GetMetricResetAt() *time.Time {
+	if f == nil {
+		return nil
+	}
+	return f.MetricResetAt
+}
+
+func (f *FeatureUsageLegacyResponseData) GetUsage() *int {
+	if f == nil {
+		return nil
+	}
+	return f.Usage
+}
+
+func (f *FeatureUsageLegacyResponseData) GetExtraProperties() map[string]interface{} {
+	return f.extraProperties
+}
+
+func (f *FeatureUsageLegacyResponseData) require(field *big.Int) {
+	if f.explicitFields == nil {
+		f.explicitFields = big.NewInt(0)
+	}
+	f.explicitFields.Or(f.explicitFields, field)
+}
+
+// SetAllocation sets the Allocation field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageLegacyResponseData) SetAllocation(allocation *int) {
+	f.Allocation = allocation
+	f.require(featureUsageLegacyResponseDataFieldAllocation)
+}
+
+// SetCreditUsage sets the CreditUsage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageLegacyResponseData) SetCreditUsage(creditUsage *CreditUsage) {
+	f.CreditUsage = creditUsage
+	f.require(featureUsageLegacyResponseDataFieldCreditUsage)
+}
+
+// SetEntitlement sets the Entitlement field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageLegacyResponseData) SetEntitlement(entitlement string) {
+	f.Entitlement = entitlement
+	f.require(featureUsageLegacyResponseDataFieldEntitlement)
+}
+
+// SetFeature sets the Feature field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageLegacyResponseData) SetFeature(feature *FeatureView) {
+	f.Feature = feature
+	f.require(featureUsageLegacyResponseDataFieldFeature)
+}
+
+// SetMetricResetAt sets the MetricResetAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageLegacyResponseData) SetMetricResetAt(metricResetAt *time.Time) {
+	f.MetricResetAt = metricResetAt
+	f.require(featureUsageLegacyResponseDataFieldMetricResetAt)
+}
+
+// SetUsage sets the Usage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageLegacyResponseData) SetUsage(usage *int) {
+	f.Usage = usage
+	f.require(featureUsageLegacyResponseDataFieldUsage)
+}
+
+func (f *FeatureUsageLegacyResponseData) UnmarshalJSON(data []byte) error {
+	type embed FeatureUsageLegacyResponseData
+	var unmarshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"MetricResetAt,omitempty"`
+	}{
+		embed: embed(*f),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*f = FeatureUsageLegacyResponseData(unmarshaler.embed)
+	f.MetricResetAt = unmarshaler.MetricResetAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FeatureUsageLegacyResponseData) MarshalJSON() ([]byte, error) {
+	type embed FeatureUsageLegacyResponseData
+	var marshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"MetricResetAt,omitempty"`
+	}{
+		embed:         embed(*f),
+		MetricResetAt: internal.NewOptionalDateTime(f.MetricResetAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, f.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (f *FeatureUsageLegacyResponseData) String() string {
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -13126,6 +15578,368 @@ func (f *FeatureUsageResponseData) String() string {
 }
 
 var (
+	featureViewFieldAccountID      = big.NewInt(1 << 0)
+	featureViewFieldCreatedAt      = big.NewInt(1 << 1)
+	featureViewFieldDescription    = big.NewInt(1 << 2)
+	featureViewFieldEventSubtype   = big.NewInt(1 << 3)
+	featureViewFieldEventSummary   = big.NewInt(1 << 4)
+	featureViewFieldFeatureType    = big.NewInt(1 << 5)
+	featureViewFieldFlags          = big.NewInt(1 << 6)
+	featureViewFieldIcon           = big.NewInt(1 << 7)
+	featureViewFieldID             = big.NewInt(1 << 8)
+	featureViewFieldLifecyclePhase = big.NewInt(1 << 9)
+	featureViewFieldMaintainerID   = big.NewInt(1 << 10)
+	featureViewFieldName           = big.NewInt(1 << 11)
+	featureViewFieldPlans          = big.NewInt(1 << 12)
+	featureViewFieldPluralName     = big.NewInt(1 << 13)
+	featureViewFieldSingularName   = big.NewInt(1 << 14)
+	featureViewFieldTrait          = big.NewInt(1 << 15)
+	featureViewFieldTraitID        = big.NewInt(1 << 16)
+	featureViewFieldUpdatedAt      = big.NewInt(1 << 17)
+)
+
+type FeatureView struct {
+	AccountID      string                             `json:"account_id" url:"account_id"`
+	CreatedAt      time.Time                          `json:"created_at" url:"created_at"`
+	Description    string                             `json:"description" url:"description"`
+	EventSubtype   *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	EventSummary   *EventSummaryResponseData          `json:"event_summary,omitempty" url:"event_summary,omitempty"`
+	FeatureType    FeatureType                        `json:"feature_type" url:"feature_type"`
+	Flags          []*FlagView                        `json:"flags" url:"flags"`
+	Icon           string                             `json:"icon" url:"icon"`
+	ID             string                             `json:"id" url:"id"`
+	LifecyclePhase *FeatureLifecyclePhase             `json:"lifecycle_phase,omitempty" url:"lifecycle_phase,omitempty"`
+	MaintainerID   *string                            `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
+	Name           string                             `json:"name" url:"name"`
+	Plans          []*PreviewObject                   `json:"plans" url:"plans"`
+	PluralName     *string                            `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	SingularName   *string                            `json:"singular_name,omitempty" url:"singular_name,omitempty"`
+	Trait          *EntityTraitDefinitionResponseData `json:"trait,omitempty" url:"trait,omitempty"`
+	TraitID        *string                            `json:"trait_id,omitempty" url:"trait_id,omitempty"`
+	UpdatedAt      time.Time                          `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FeatureView) GetAccountID() string {
+	if f == nil {
+		return ""
+	}
+	return f.AccountID
+}
+
+func (f *FeatureView) GetCreatedAt() time.Time {
+	if f == nil {
+		return time.Time{}
+	}
+	return f.CreatedAt
+}
+
+func (f *FeatureView) GetDescription() string {
+	if f == nil {
+		return ""
+	}
+	return f.Description
+}
+
+func (f *FeatureView) GetEventSubtype() *string {
+	if f == nil {
+		return nil
+	}
+	return f.EventSubtype
+}
+
+func (f *FeatureView) GetEventSummary() *EventSummaryResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.EventSummary
+}
+
+func (f *FeatureView) GetFeatureType() FeatureType {
+	if f == nil {
+		return ""
+	}
+	return f.FeatureType
+}
+
+func (f *FeatureView) GetFlags() []*FlagView {
+	if f == nil {
+		return nil
+	}
+	return f.Flags
+}
+
+func (f *FeatureView) GetIcon() string {
+	if f == nil {
+		return ""
+	}
+	return f.Icon
+}
+
+func (f *FeatureView) GetID() string {
+	if f == nil {
+		return ""
+	}
+	return f.ID
+}
+
+func (f *FeatureView) GetLifecyclePhase() *FeatureLifecyclePhase {
+	if f == nil {
+		return nil
+	}
+	return f.LifecyclePhase
+}
+
+func (f *FeatureView) GetMaintainerID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.MaintainerID
+}
+
+func (f *FeatureView) GetName() string {
+	if f == nil {
+		return ""
+	}
+	return f.Name
+}
+
+func (f *FeatureView) GetPlans() []*PreviewObject {
+	if f == nil {
+		return nil
+	}
+	return f.Plans
+}
+
+func (f *FeatureView) GetPluralName() *string {
+	if f == nil {
+		return nil
+	}
+	return f.PluralName
+}
+
+func (f *FeatureView) GetSingularName() *string {
+	if f == nil {
+		return nil
+	}
+	return f.SingularName
+}
+
+func (f *FeatureView) GetTrait() *EntityTraitDefinitionResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Trait
+}
+
+func (f *FeatureView) GetTraitID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.TraitID
+}
+
+func (f *FeatureView) GetUpdatedAt() time.Time {
+	if f == nil {
+		return time.Time{}
+	}
+	return f.UpdatedAt
+}
+
+func (f *FeatureView) GetExtraProperties() map[string]interface{} {
+	return f.extraProperties
+}
+
+func (f *FeatureView) require(field *big.Int) {
+	if f.explicitFields == nil {
+		f.explicitFields = big.NewInt(0)
+	}
+	f.explicitFields.Or(f.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetAccountID(accountID string) {
+	f.AccountID = accountID
+	f.require(featureViewFieldAccountID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetCreatedAt(createdAt time.Time) {
+	f.CreatedAt = createdAt
+	f.require(featureViewFieldCreatedAt)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetDescription(description string) {
+	f.Description = description
+	f.require(featureViewFieldDescription)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetEventSubtype(eventSubtype *string) {
+	f.EventSubtype = eventSubtype
+	f.require(featureViewFieldEventSubtype)
+}
+
+// SetEventSummary sets the EventSummary field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetEventSummary(eventSummary *EventSummaryResponseData) {
+	f.EventSummary = eventSummary
+	f.require(featureViewFieldEventSummary)
+}
+
+// SetFeatureType sets the FeatureType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetFeatureType(featureType FeatureType) {
+	f.FeatureType = featureType
+	f.require(featureViewFieldFeatureType)
+}
+
+// SetFlags sets the Flags field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetFlags(flags []*FlagView) {
+	f.Flags = flags
+	f.require(featureViewFieldFlags)
+}
+
+// SetIcon sets the Icon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetIcon(icon string) {
+	f.Icon = icon
+	f.require(featureViewFieldIcon)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetID(id string) {
+	f.ID = id
+	f.require(featureViewFieldID)
+}
+
+// SetLifecyclePhase sets the LifecyclePhase field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetLifecyclePhase(lifecyclePhase *FeatureLifecyclePhase) {
+	f.LifecyclePhase = lifecyclePhase
+	f.require(featureViewFieldLifecyclePhase)
+}
+
+// SetMaintainerID sets the MaintainerID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetMaintainerID(maintainerID *string) {
+	f.MaintainerID = maintainerID
+	f.require(featureViewFieldMaintainerID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetName(name string) {
+	f.Name = name
+	f.require(featureViewFieldName)
+}
+
+// SetPlans sets the Plans field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetPlans(plans []*PreviewObject) {
+	f.Plans = plans
+	f.require(featureViewFieldPlans)
+}
+
+// SetPluralName sets the PluralName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetPluralName(pluralName *string) {
+	f.PluralName = pluralName
+	f.require(featureViewFieldPluralName)
+}
+
+// SetSingularName sets the SingularName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetSingularName(singularName *string) {
+	f.SingularName = singularName
+	f.require(featureViewFieldSingularName)
+}
+
+// SetTrait sets the Trait field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetTrait(trait *EntityTraitDefinitionResponseData) {
+	f.Trait = trait
+	f.require(featureViewFieldTrait)
+}
+
+// SetTraitID sets the TraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetTraitID(traitID *string) {
+	f.TraitID = traitID
+	f.require(featureViewFieldTraitID)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetUpdatedAt(updatedAt time.Time) {
+	f.UpdatedAt = updatedAt
+	f.require(featureViewFieldUpdatedAt)
+}
+
+func (f *FeatureView) UnmarshalJSON(data []byte) error {
+	type embed FeatureView
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*f),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*f = FeatureView(unmarshaler.embed)
+	f.CreatedAt = unmarshaler.CreatedAt.Time()
+	f.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FeatureView) MarshalJSON() ([]byte, error) {
+	type embed FeatureView
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*f),
+		CreatedAt: internal.NewDateTime(f.CreatedAt),
+		UpdatedAt: internal.NewDateTime(f.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, f.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (f *FeatureView) String() string {
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
+}
+
+var (
 	flagDetailResponseDataFieldCreatedAt     = big.NewInt(1 << 0)
 	flagDetailResponseDataFieldDefaultValue  = big.NewInt(1 << 1)
 	flagDetailResponseDataFieldDescription   = big.NewInt(1 << 2)
@@ -13405,6 +16219,301 @@ func (f *FlagDetailResponseData) String() string {
 }
 
 type FlagType = string
+
+var (
+	flagViewFieldAccountID     = big.NewInt(1 << 0)
+	flagViewFieldCreatedAt     = big.NewInt(1 << 1)
+	flagViewFieldDefaultValue  = big.NewInt(1 << 2)
+	flagViewFieldDescription   = big.NewInt(1 << 3)
+	flagViewFieldFeature       = big.NewInt(1 << 4)
+	flagViewFieldFeatureID     = big.NewInt(1 << 5)
+	flagViewFieldFlagType      = big.NewInt(1 << 6)
+	flagViewFieldID            = big.NewInt(1 << 7)
+	flagViewFieldKey           = big.NewInt(1 << 8)
+	flagViewFieldLastCheckedAt = big.NewInt(1 << 9)
+	flagViewFieldMaintainerID  = big.NewInt(1 << 10)
+	flagViewFieldName          = big.NewInt(1 << 11)
+	flagViewFieldRules         = big.NewInt(1 << 12)
+	flagViewFieldUpdatedAt     = big.NewInt(1 << 13)
+)
+
+type FlagView struct {
+	AccountID     string               `json:"account_id" url:"account_id"`
+	CreatedAt     time.Time            `json:"created_at" url:"created_at"`
+	DefaultValue  bool                 `json:"default_value" url:"default_value"`
+	Description   string               `json:"description" url:"description"`
+	Feature       *FeatureResponseData `json:"feature,omitempty" url:"feature,omitempty"`
+	FeatureID     *string              `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FlagType      FlagType             `json:"flag_type" url:"flag_type"`
+	ID            string               `json:"id" url:"id"`
+	Key           string               `json:"key" url:"key"`
+	LastCheckedAt *time.Time           `json:"last_checked_at,omitempty" url:"last_checked_at,omitempty"`
+	MaintainerID  *string              `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
+	Name          string               `json:"name" url:"name"`
+	Rules         []*RuleView          `json:"rules" url:"rules"`
+	UpdatedAt     time.Time            `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FlagView) GetAccountID() string {
+	if f == nil {
+		return ""
+	}
+	return f.AccountID
+}
+
+func (f *FlagView) GetCreatedAt() time.Time {
+	if f == nil {
+		return time.Time{}
+	}
+	return f.CreatedAt
+}
+
+func (f *FlagView) GetDefaultValue() bool {
+	if f == nil {
+		return false
+	}
+	return f.DefaultValue
+}
+
+func (f *FlagView) GetDescription() string {
+	if f == nil {
+		return ""
+	}
+	return f.Description
+}
+
+func (f *FlagView) GetFeature() *FeatureResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Feature
+}
+
+func (f *FlagView) GetFeatureID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.FeatureID
+}
+
+func (f *FlagView) GetID() string {
+	if f == nil {
+		return ""
+	}
+	return f.ID
+}
+
+func (f *FlagView) GetKey() string {
+	if f == nil {
+		return ""
+	}
+	return f.Key
+}
+
+func (f *FlagView) GetLastCheckedAt() *time.Time {
+	if f == nil {
+		return nil
+	}
+	return f.LastCheckedAt
+}
+
+func (f *FlagView) GetMaintainerID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.MaintainerID
+}
+
+func (f *FlagView) GetName() string {
+	if f == nil {
+		return ""
+	}
+	return f.Name
+}
+
+func (f *FlagView) GetRules() []*RuleView {
+	if f == nil {
+		return nil
+	}
+	return f.Rules
+}
+
+func (f *FlagView) GetUpdatedAt() time.Time {
+	if f == nil {
+		return time.Time{}
+	}
+	return f.UpdatedAt
+}
+
+func (f *FlagView) GetExtraProperties() map[string]interface{} {
+	return f.extraProperties
+}
+
+func (f *FlagView) require(field *big.Int) {
+	if f.explicitFields == nil {
+		f.explicitFields = big.NewInt(0)
+	}
+	f.explicitFields.Or(f.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetAccountID(accountID string) {
+	f.AccountID = accountID
+	f.require(flagViewFieldAccountID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetCreatedAt(createdAt time.Time) {
+	f.CreatedAt = createdAt
+	f.require(flagViewFieldCreatedAt)
+}
+
+// SetDefaultValue sets the DefaultValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetDefaultValue(defaultValue bool) {
+	f.DefaultValue = defaultValue
+	f.require(flagViewFieldDefaultValue)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetDescription(description string) {
+	f.Description = description
+	f.require(flagViewFieldDescription)
+}
+
+// SetFeature sets the Feature field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetFeature(feature *FeatureResponseData) {
+	f.Feature = feature
+	f.require(flagViewFieldFeature)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetFeatureID(featureID *string) {
+	f.FeatureID = featureID
+	f.require(flagViewFieldFeatureID)
+}
+
+// SetFlagType sets the FlagType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetFlagType(flagType FlagType) {
+	f.FlagType = flagType
+	f.require(flagViewFieldFlagType)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetID(id string) {
+	f.ID = id
+	f.require(flagViewFieldID)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetKey(key string) {
+	f.Key = key
+	f.require(flagViewFieldKey)
+}
+
+// SetLastCheckedAt sets the LastCheckedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetLastCheckedAt(lastCheckedAt *time.Time) {
+	f.LastCheckedAt = lastCheckedAt
+	f.require(flagViewFieldLastCheckedAt)
+}
+
+// SetMaintainerID sets the MaintainerID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetMaintainerID(maintainerID *string) {
+	f.MaintainerID = maintainerID
+	f.require(flagViewFieldMaintainerID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetName(name string) {
+	f.Name = name
+	f.require(flagViewFieldName)
+}
+
+// SetRules sets the Rules field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetRules(rules []*RuleView) {
+	f.Rules = rules
+	f.require(flagViewFieldRules)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagView) SetUpdatedAt(updatedAt time.Time) {
+	f.UpdatedAt = updatedAt
+	f.require(flagViewFieldUpdatedAt)
+}
+
+func (f *FlagView) UnmarshalJSON(data []byte) error {
+	type embed FlagView
+	var unmarshaler = struct {
+		embed
+		CreatedAt     *internal.DateTime `json:"created_at"`
+		LastCheckedAt *internal.DateTime `json:"last_checked_at,omitempty"`
+		UpdatedAt     *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*f),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*f = FlagView(unmarshaler.embed)
+	f.CreatedAt = unmarshaler.CreatedAt.Time()
+	f.LastCheckedAt = unmarshaler.LastCheckedAt.TimePtr()
+	f.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FlagView) MarshalJSON() ([]byte, error) {
+	type embed FlagView
+	var marshaler = struct {
+		embed
+		CreatedAt     *internal.DateTime `json:"created_at"`
+		LastCheckedAt *internal.DateTime `json:"last_checked_at,omitempty"`
+		UpdatedAt     *internal.DateTime `json:"updated_at"`
+	}{
+		embed:         embed(*f),
+		CreatedAt:     internal.NewDateTime(f.CreatedAt),
+		LastCheckedAt: internal.NewOptionalDateTime(f.LastCheckedAt),
+		UpdatedAt:     internal.NewDateTime(f.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, f.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (f *FlagView) String() string {
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
+}
 
 var (
 	genericPreviewObjectFieldDescription = big.NewInt(1 << 0)
@@ -19074,18 +22183,300 @@ func (r RuleRuleType) Ptr() *RuleRuleType {
 	return &r
 }
 
+var (
+	ruleViewFieldAccountID       = big.NewInt(1 << 0)
+	ruleViewFieldConditionGroups = big.NewInt(1 << 1)
+	ruleViewFieldConditions      = big.NewInt(1 << 2)
+	ruleViewFieldCreatedAt       = big.NewInt(1 << 3)
+	ruleViewFieldEnvironmentID   = big.NewInt(1 << 4)
+	ruleViewFieldFlagID          = big.NewInt(1 << 5)
+	ruleViewFieldID              = big.NewInt(1 << 6)
+	ruleViewFieldName            = big.NewInt(1 << 7)
+	ruleViewFieldPlanVersionID   = big.NewInt(1 << 8)
+	ruleViewFieldPriority        = big.NewInt(1 << 9)
+	ruleViewFieldRuleType        = big.NewInt(1 << 10)
+	ruleViewFieldUpdatedAt       = big.NewInt(1 << 11)
+	ruleViewFieldValue           = big.NewInt(1 << 12)
+)
+
+type RuleView struct {
+	AccountID       string                `json:"account_id" url:"account_id"`
+	ConditionGroups []*ConditionGroupView `json:"condition_groups" url:"condition_groups"`
+	Conditions      []*ConditionView      `json:"conditions" url:"conditions"`
+	CreatedAt       time.Time             `json:"created_at" url:"created_at"`
+	EnvironmentID   string                `json:"environment_id" url:"environment_id"`
+	FlagID          *string               `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	ID              string                `json:"id" url:"id"`
+	Name            string                `json:"name" url:"name"`
+	PlanVersionID   *string               `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	Priority        int                   `json:"priority" url:"priority"`
+	RuleType        string                `json:"rule_type" url:"rule_type"`
+	UpdatedAt       time.Time             `json:"updated_at" url:"updated_at"`
+	Value           bool                  `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RuleView) GetAccountID() string {
+	if r == nil {
+		return ""
+	}
+	return r.AccountID
+}
+
+func (r *RuleView) GetConditionGroups() []*ConditionGroupView {
+	if r == nil {
+		return nil
+	}
+	return r.ConditionGroups
+}
+
+func (r *RuleView) GetConditions() []*ConditionView {
+	if r == nil {
+		return nil
+	}
+	return r.Conditions
+}
+
+func (r *RuleView) GetCreatedAt() time.Time {
+	if r == nil {
+		return time.Time{}
+	}
+	return r.CreatedAt
+}
+
+func (r *RuleView) GetEnvironmentID() string {
+	if r == nil {
+		return ""
+	}
+	return r.EnvironmentID
+}
+
+func (r *RuleView) GetFlagID() *string {
+	if r == nil {
+		return nil
+	}
+	return r.FlagID
+}
+
+func (r *RuleView) GetID() string {
+	if r == nil {
+		return ""
+	}
+	return r.ID
+}
+
+func (r *RuleView) GetName() string {
+	if r == nil {
+		return ""
+	}
+	return r.Name
+}
+
+func (r *RuleView) GetPlanVersionID() *string {
+	if r == nil {
+		return nil
+	}
+	return r.PlanVersionID
+}
+
+func (r *RuleView) GetPriority() int {
+	if r == nil {
+		return 0
+	}
+	return r.Priority
+}
+
+func (r *RuleView) GetRuleType() string {
+	if r == nil {
+		return ""
+	}
+	return r.RuleType
+}
+
+func (r *RuleView) GetUpdatedAt() time.Time {
+	if r == nil {
+		return time.Time{}
+	}
+	return r.UpdatedAt
+}
+
+func (r *RuleView) GetValue() bool {
+	if r == nil {
+		return false
+	}
+	return r.Value
+}
+
+func (r *RuleView) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RuleView) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetAccountID(accountID string) {
+	r.AccountID = accountID
+	r.require(ruleViewFieldAccountID)
+}
+
+// SetConditionGroups sets the ConditionGroups field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetConditionGroups(conditionGroups []*ConditionGroupView) {
+	r.ConditionGroups = conditionGroups
+	r.require(ruleViewFieldConditionGroups)
+}
+
+// SetConditions sets the Conditions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetConditions(conditions []*ConditionView) {
+	r.Conditions = conditions
+	r.require(ruleViewFieldConditions)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetCreatedAt(createdAt time.Time) {
+	r.CreatedAt = createdAt
+	r.require(ruleViewFieldCreatedAt)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetEnvironmentID(environmentID string) {
+	r.EnvironmentID = environmentID
+	r.require(ruleViewFieldEnvironmentID)
+}
+
+// SetFlagID sets the FlagID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetFlagID(flagID *string) {
+	r.FlagID = flagID
+	r.require(ruleViewFieldFlagID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetID(id string) {
+	r.ID = id
+	r.require(ruleViewFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetName(name string) {
+	r.Name = name
+	r.require(ruleViewFieldName)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetPlanVersionID(planVersionID *string) {
+	r.PlanVersionID = planVersionID
+	r.require(ruleViewFieldPlanVersionID)
+}
+
+// SetPriority sets the Priority field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetPriority(priority int) {
+	r.Priority = priority
+	r.require(ruleViewFieldPriority)
+}
+
+// SetRuleType sets the RuleType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetRuleType(ruleType string) {
+	r.RuleType = ruleType
+	r.require(ruleViewFieldRuleType)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetUpdatedAt(updatedAt time.Time) {
+	r.UpdatedAt = updatedAt
+	r.require(ruleViewFieldUpdatedAt)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleView) SetValue(value bool) {
+	r.Value = value
+	r.require(ruleViewFieldValue)
+}
+
+func (r *RuleView) UnmarshalJSON(data []byte) error {
+	type embed RuleView
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*r),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*r = RuleView(unmarshaler.embed)
+	r.CreatedAt = unmarshaler.CreatedAt.Time()
+	r.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RuleView) MarshalJSON() ([]byte, error) {
+	type embed RuleView
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*r),
+		CreatedAt: internal.NewDateTime(r.CreatedAt),
+		UpdatedAt: internal.NewDateTime(r.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RuleView) String() string {
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
 // The current schema version hash for rules engine types. The first enum value is always the current version.
 type RulesEngineSchemaVersion string
 
 const (
-	RulesEngineSchemaVersionFiveHundredFortyNineE6Fea       RulesEngineSchemaVersion = "549e6fea"
+	RulesEngineSchemaVersionDb7512F5                        RulesEngineSchemaVersion = "db7512f5"
 	RulesEngineSchemaVersionPlaceholderForFernCompatibility RulesEngineSchemaVersion = "placeholder-for-fern-compatibility"
 )
 
 func NewRulesEngineSchemaVersionFromString(s string) (RulesEngineSchemaVersion, error) {
 	switch s {
-	case "549e6fea":
-		return RulesEngineSchemaVersionFiveHundredFortyNineE6Fea, nil
+	case "db7512f5":
+		return RulesEngineSchemaVersionDb7512F5, nil
 	case "placeholder-for-fern-compatibility":
 		return RulesEngineSchemaVersionPlaceholderForFernCompatibility, nil
 	}
@@ -19461,31 +22852,33 @@ var (
 	rulesengineCompanyFieldBasePlanID        = big.NewInt(1 << 1)
 	rulesengineCompanyFieldBillingProductIDs = big.NewInt(1 << 2)
 	rulesengineCompanyFieldCreditBalances    = big.NewInt(1 << 3)
-	rulesengineCompanyFieldCrmProductIDs     = big.NewInt(1 << 4)
+	rulesengineCompanyFieldEntitlements      = big.NewInt(1 << 4)
 	rulesengineCompanyFieldEnvironmentID     = big.NewInt(1 << 5)
 	rulesengineCompanyFieldID                = big.NewInt(1 << 6)
 	rulesengineCompanyFieldKeys              = big.NewInt(1 << 7)
 	rulesengineCompanyFieldMetrics           = big.NewInt(1 << 8)
 	rulesengineCompanyFieldPlanIDs           = big.NewInt(1 << 9)
-	rulesengineCompanyFieldRules             = big.NewInt(1 << 10)
-	rulesengineCompanyFieldSubscription      = big.NewInt(1 << 11)
-	rulesengineCompanyFieldTraits            = big.NewInt(1 << 12)
+	rulesengineCompanyFieldPlanVersionIDs    = big.NewInt(1 << 10)
+	rulesengineCompanyFieldRules             = big.NewInt(1 << 11)
+	rulesengineCompanyFieldSubscription      = big.NewInt(1 << 12)
+	rulesengineCompanyFieldTraits            = big.NewInt(1 << 13)
 )
 
 type RulesengineCompany struct {
-	AccountID         string                      `json:"account_id" url:"account_id"`
-	BasePlanID        *string                     `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
-	BillingProductIDs []string                    `json:"billing_product_ids" url:"billing_product_ids"`
-	CreditBalances    map[string]float64          `json:"credit_balances" url:"credit_balances"`
-	CrmProductIDs     []string                    `json:"crm_product_ids" url:"crm_product_ids"`
-	EnvironmentID     string                      `json:"environment_id" url:"environment_id"`
-	ID                string                      `json:"id" url:"id"`
-	Keys              map[string]string           `json:"keys" url:"keys"`
-	Metrics           []*RulesengineCompanyMetric `json:"metrics" url:"metrics"`
-	PlanIDs           []string                    `json:"plan_ids" url:"plan_ids"`
-	Rules             []*RulesengineRule          `json:"rules" url:"rules"`
-	Subscription      *RulesengineSubscription    `json:"subscription,omitempty" url:"subscription,omitempty"`
-	Traits            []*RulesengineTrait         `json:"traits" url:"traits"`
+	AccountID         string                           `json:"account_id" url:"account_id"`
+	BasePlanID        *string                          `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
+	BillingProductIDs []string                         `json:"billing_product_ids" url:"billing_product_ids"`
+	CreditBalances    map[string]float64               `json:"credit_balances" url:"credit_balances"`
+	Entitlements      []*RulesengineFeatureEntitlement `json:"entitlements,omitempty" url:"entitlements,omitempty"`
+	EnvironmentID     string                           `json:"environment_id" url:"environment_id"`
+	ID                string                           `json:"id" url:"id"`
+	Keys              map[string]string                `json:"keys" url:"keys"`
+	Metrics           []*RulesengineCompanyMetric      `json:"metrics" url:"metrics"`
+	PlanIDs           []string                         `json:"plan_ids" url:"plan_ids"`
+	PlanVersionIDs    []string                         `json:"plan_version_ids" url:"plan_version_ids"`
+	Rules             []*RulesengineRule               `json:"rules" url:"rules"`
+	Subscription      *RulesengineSubscription         `json:"subscription,omitempty" url:"subscription,omitempty"`
+	Traits            []*RulesengineTrait              `json:"traits" url:"traits"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -19522,11 +22915,11 @@ func (r *RulesengineCompany) GetCreditBalances() map[string]float64 {
 	return r.CreditBalances
 }
 
-func (r *RulesengineCompany) GetCrmProductIDs() []string {
+func (r *RulesengineCompany) GetEntitlements() []*RulesengineFeatureEntitlement {
 	if r == nil {
 		return nil
 	}
-	return r.CrmProductIDs
+	return r.Entitlements
 }
 
 func (r *RulesengineCompany) GetEnvironmentID() string {
@@ -19562,6 +22955,13 @@ func (r *RulesengineCompany) GetPlanIDs() []string {
 		return nil
 	}
 	return r.PlanIDs
+}
+
+func (r *RulesengineCompany) GetPlanVersionIDs() []string {
+	if r == nil {
+		return nil
+	}
+	return r.PlanVersionIDs
 }
 
 func (r *RulesengineCompany) GetRules() []*RulesengineRule {
@@ -19624,11 +23024,11 @@ func (r *RulesengineCompany) SetCreditBalances(creditBalances map[string]float64
 	r.require(rulesengineCompanyFieldCreditBalances)
 }
 
-// SetCrmProductIDs sets the CrmProductIDs field and marks it as non-optional;
+// SetEntitlements sets the Entitlements field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineCompany) SetCrmProductIDs(crmProductIDs []string) {
-	r.CrmProductIDs = crmProductIDs
-	r.require(rulesengineCompanyFieldCrmProductIDs)
+func (r *RulesengineCompany) SetEntitlements(entitlements []*RulesengineFeatureEntitlement) {
+	r.Entitlements = entitlements
+	r.require(rulesengineCompanyFieldEntitlements)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -19664,6 +23064,13 @@ func (r *RulesengineCompany) SetMetrics(metrics []*RulesengineCompanyMetric) {
 func (r *RulesengineCompany) SetPlanIDs(planIDs []string) {
 	r.PlanIDs = planIDs
 	r.require(rulesengineCompanyFieldPlanIDs)
+}
+
+// SetPlanVersionIDs sets the PlanVersionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCompany) SetPlanVersionIDs(planVersionIDs []string) {
+	r.PlanVersionIDs = planVersionIDs
+	r.require(rulesengineCompanyFieldPlanVersionIDs)
 }
 
 // SetRules sets the Rules field and marks it as non-optional;
@@ -20303,9 +23710,9 @@ const (
 	RulesengineConditionConditionTypeBillingProduct RulesengineConditionConditionType = "billing_product"
 	RulesengineConditionConditionTypeCompany        RulesengineConditionConditionType = "company"
 	RulesengineConditionConditionTypeCredit         RulesengineConditionConditionType = "credit"
-	RulesengineConditionConditionTypeCrmProduct     RulesengineConditionConditionType = "crm_product"
 	RulesengineConditionConditionTypeMetric         RulesengineConditionConditionType = "metric"
 	RulesengineConditionConditionTypePlan           RulesengineConditionConditionType = "plan"
+	RulesengineConditionConditionTypePlanVersion    RulesengineConditionConditionType = "plan_version"
 	RulesengineConditionConditionTypeTrait          RulesengineConditionConditionType = "trait"
 	RulesengineConditionConditionTypeUser           RulesengineConditionConditionType = "user"
 )
@@ -20320,12 +23727,12 @@ func NewRulesengineConditionConditionTypeFromString(s string) (RulesengineCondit
 		return RulesengineConditionConditionTypeCompany, nil
 	case "credit":
 		return RulesengineConditionConditionTypeCredit, nil
-	case "crm_product":
-		return RulesengineConditionConditionTypeCrmProduct, nil
 	case "metric":
 		return RulesengineConditionConditionTypeMetric, nil
 	case "plan":
 		return RulesengineConditionConditionTypePlan, nil
+	case "plan_version":
+		return RulesengineConditionConditionTypePlanVersion, nil
 	case "trait":
 		return RulesengineConditionConditionTypeTrait, nil
 	case "user":
@@ -20507,6 +23914,40 @@ func (r RulesengineConditionOperator) Ptr() *RulesengineConditionOperator {
 	return &r
 }
 
+type RulesengineEntitlementValueType string
+
+const (
+	RulesengineEntitlementValueTypeBoolean   RulesengineEntitlementValueType = "boolean"
+	RulesengineEntitlementValueTypeCredit    RulesengineEntitlementValueType = "credit"
+	RulesengineEntitlementValueTypeNumeric   RulesengineEntitlementValueType = "numeric"
+	RulesengineEntitlementValueTypeTrait     RulesengineEntitlementValueType = "trait"
+	RulesengineEntitlementValueTypeUnknown   RulesengineEntitlementValueType = "unknown"
+	RulesengineEntitlementValueTypeUnlimited RulesengineEntitlementValueType = "unlimited"
+)
+
+func NewRulesengineEntitlementValueTypeFromString(s string) (RulesengineEntitlementValueType, error) {
+	switch s {
+	case "boolean":
+		return RulesengineEntitlementValueTypeBoolean, nil
+	case "credit":
+		return RulesengineEntitlementValueTypeCredit, nil
+	case "numeric":
+		return RulesengineEntitlementValueTypeNumeric, nil
+	case "trait":
+		return RulesengineEntitlementValueTypeTrait, nil
+	case "unknown":
+		return RulesengineEntitlementValueTypeUnknown, nil
+	case "unlimited":
+		return RulesengineEntitlementValueTypeUnlimited, nil
+	}
+	var t RulesengineEntitlementValueType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RulesengineEntitlementValueType) Ptr() *RulesengineEntitlementValueType {
+	return &r
+}
+
 type RulesengineEntityType string
 
 const (
@@ -20526,6 +23967,348 @@ func NewRulesengineEntityTypeFromString(s string) (RulesengineEntityType, error)
 }
 
 func (r RulesengineEntityType) Ptr() *RulesengineEntityType {
+	return &r
+}
+
+var (
+	rulesengineFeatureEntitlementFieldAllocation      = big.NewInt(1 << 0)
+	rulesengineFeatureEntitlementFieldCreditID        = big.NewInt(1 << 1)
+	rulesengineFeatureEntitlementFieldCreditRemaining = big.NewInt(1 << 2)
+	rulesengineFeatureEntitlementFieldCreditTotal     = big.NewInt(1 << 3)
+	rulesengineFeatureEntitlementFieldCreditUsed      = big.NewInt(1 << 4)
+	rulesengineFeatureEntitlementFieldEventName       = big.NewInt(1 << 5)
+	rulesengineFeatureEntitlementFieldFeatureID       = big.NewInt(1 << 6)
+	rulesengineFeatureEntitlementFieldFeatureKey      = big.NewInt(1 << 7)
+	rulesengineFeatureEntitlementFieldMetricPeriod    = big.NewInt(1 << 8)
+	rulesengineFeatureEntitlementFieldMetricResetAt   = big.NewInt(1 << 9)
+	rulesengineFeatureEntitlementFieldMonthReset      = big.NewInt(1 << 10)
+	rulesengineFeatureEntitlementFieldUsage           = big.NewInt(1 << 11)
+	rulesengineFeatureEntitlementFieldValueType       = big.NewInt(1 << 12)
+)
+
+type RulesengineFeatureEntitlement struct {
+	// If a numeric feature entitlement rule was matched, its allocation
+	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	// If a credit-based feature entitlement rule was matched, the ID of the credit
+	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
+	// If a credit-based feature entitlement rule was matched, the remaining credit amount
+	CreditRemaining *float64 `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
+	// If a credit-based feature entitlement rule was matched, the total credit amount
+	CreditTotal *float64 `json:"credit_total,omitempty" url:"credit_total,omitempty"`
+	// If a credit-based feature entitlement rule was matched, the amount of credit used
+	CreditUsed *float64 `json:"credit_used,omitempty" url:"credit_used,omitempty"`
+	// For event-based feature entitlement rules, the name of the event being tracked
+	EventName *string `json:"event_name,omitempty" url:"event_name,omitempty"`
+	// The ID of the feature
+	FeatureID string `json:"feature_id" url:"feature_id"`
+	// The key of the feature
+	FeatureKey string `json:"feature_key" url:"feature_key"`
+	// For event-based feature entitlement rules, the period over which usage is tracked (current_month, current_day, current_week, all_time)
+	MetricPeriod *RulesengineFeatureEntitlementMetricPeriod `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	// For event-based feature entitlement rules, when the usage period will reset
+	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
+	// For event-based feature entitlement rules, when the usage period resets (first_of_month or billing_cycle)
+	MonthReset *RulesengineFeatureEntitlementMonthReset `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	// If a numeric feature entitlement rule was matched, the company's usage
+	Usage     *int                            `json:"usage,omitempty" url:"usage,omitempty"`
+	ValueType RulesengineEntitlementValueType `json:"value_type" url:"value_type"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RulesengineFeatureEntitlement) GetAllocation() *int {
+	if r == nil {
+		return nil
+	}
+	return r.Allocation
+}
+
+func (r *RulesengineFeatureEntitlement) GetCreditID() *string {
+	if r == nil {
+		return nil
+	}
+	return r.CreditID
+}
+
+func (r *RulesengineFeatureEntitlement) GetCreditRemaining() *float64 {
+	if r == nil {
+		return nil
+	}
+	return r.CreditRemaining
+}
+
+func (r *RulesengineFeatureEntitlement) GetCreditTotal() *float64 {
+	if r == nil {
+		return nil
+	}
+	return r.CreditTotal
+}
+
+func (r *RulesengineFeatureEntitlement) GetCreditUsed() *float64 {
+	if r == nil {
+		return nil
+	}
+	return r.CreditUsed
+}
+
+func (r *RulesengineFeatureEntitlement) GetEventName() *string {
+	if r == nil {
+		return nil
+	}
+	return r.EventName
+}
+
+func (r *RulesengineFeatureEntitlement) GetFeatureID() string {
+	if r == nil {
+		return ""
+	}
+	return r.FeatureID
+}
+
+func (r *RulesengineFeatureEntitlement) GetFeatureKey() string {
+	if r == nil {
+		return ""
+	}
+	return r.FeatureKey
+}
+
+func (r *RulesengineFeatureEntitlement) GetMetricPeriod() *RulesengineFeatureEntitlementMetricPeriod {
+	if r == nil {
+		return nil
+	}
+	return r.MetricPeriod
+}
+
+func (r *RulesengineFeatureEntitlement) GetMetricResetAt() *time.Time {
+	if r == nil {
+		return nil
+	}
+	return r.MetricResetAt
+}
+
+func (r *RulesengineFeatureEntitlement) GetMonthReset() *RulesengineFeatureEntitlementMonthReset {
+	if r == nil {
+		return nil
+	}
+	return r.MonthReset
+}
+
+func (r *RulesengineFeatureEntitlement) GetUsage() *int {
+	if r == nil {
+		return nil
+	}
+	return r.Usage
+}
+
+func (r *RulesengineFeatureEntitlement) GetValueType() RulesengineEntitlementValueType {
+	if r == nil {
+		return ""
+	}
+	return r.ValueType
+}
+
+func (r *RulesengineFeatureEntitlement) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RulesengineFeatureEntitlement) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetAllocation sets the Allocation field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetAllocation(allocation *int) {
+	r.Allocation = allocation
+	r.require(rulesengineFeatureEntitlementFieldAllocation)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetCreditID(creditID *string) {
+	r.CreditID = creditID
+	r.require(rulesengineFeatureEntitlementFieldCreditID)
+}
+
+// SetCreditRemaining sets the CreditRemaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetCreditRemaining(creditRemaining *float64) {
+	r.CreditRemaining = creditRemaining
+	r.require(rulesengineFeatureEntitlementFieldCreditRemaining)
+}
+
+// SetCreditTotal sets the CreditTotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetCreditTotal(creditTotal *float64) {
+	r.CreditTotal = creditTotal
+	r.require(rulesengineFeatureEntitlementFieldCreditTotal)
+}
+
+// SetCreditUsed sets the CreditUsed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetCreditUsed(creditUsed *float64) {
+	r.CreditUsed = creditUsed
+	r.require(rulesengineFeatureEntitlementFieldCreditUsed)
+}
+
+// SetEventName sets the EventName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetEventName(eventName *string) {
+	r.EventName = eventName
+	r.require(rulesengineFeatureEntitlementFieldEventName)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetFeatureID(featureID string) {
+	r.FeatureID = featureID
+	r.require(rulesengineFeatureEntitlementFieldFeatureID)
+}
+
+// SetFeatureKey sets the FeatureKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetFeatureKey(featureKey string) {
+	r.FeatureKey = featureKey
+	r.require(rulesengineFeatureEntitlementFieldFeatureKey)
+}
+
+// SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetMetricPeriod(metricPeriod *RulesengineFeatureEntitlementMetricPeriod) {
+	r.MetricPeriod = metricPeriod
+	r.require(rulesengineFeatureEntitlementFieldMetricPeriod)
+}
+
+// SetMetricResetAt sets the MetricResetAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetMetricResetAt(metricResetAt *time.Time) {
+	r.MetricResetAt = metricResetAt
+	r.require(rulesengineFeatureEntitlementFieldMetricResetAt)
+}
+
+// SetMonthReset sets the MonthReset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetMonthReset(monthReset *RulesengineFeatureEntitlementMonthReset) {
+	r.MonthReset = monthReset
+	r.require(rulesengineFeatureEntitlementFieldMonthReset)
+}
+
+// SetUsage sets the Usage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetUsage(usage *int) {
+	r.Usage = usage
+	r.require(rulesengineFeatureEntitlementFieldUsage)
+}
+
+// SetValueType sets the ValueType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetValueType(valueType RulesengineEntitlementValueType) {
+	r.ValueType = valueType
+	r.require(rulesengineFeatureEntitlementFieldValueType)
+}
+
+func (r *RulesengineFeatureEntitlement) UnmarshalJSON(data []byte) error {
+	type embed RulesengineFeatureEntitlement
+	var unmarshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed: embed(*r),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*r = RulesengineFeatureEntitlement(unmarshaler.embed)
+	r.MetricResetAt = unmarshaler.MetricResetAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RulesengineFeatureEntitlement) MarshalJSON() ([]byte, error) {
+	type embed RulesengineFeatureEntitlement
+	var marshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
+	}{
+		embed:         embed(*r),
+		MetricResetAt: internal.NewOptionalDateTime(r.MetricResetAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RulesengineFeatureEntitlement) String() string {
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+// For event-based feature entitlement rules, the period over which usage is tracked (current_month, current_day, current_week, all_time)
+type RulesengineFeatureEntitlementMetricPeriod string
+
+const (
+	RulesengineFeatureEntitlementMetricPeriodAllTime      RulesengineFeatureEntitlementMetricPeriod = "all_time"
+	RulesengineFeatureEntitlementMetricPeriodCurrentDay   RulesengineFeatureEntitlementMetricPeriod = "current_day"
+	RulesengineFeatureEntitlementMetricPeriodCurrentMonth RulesengineFeatureEntitlementMetricPeriod = "current_month"
+	RulesengineFeatureEntitlementMetricPeriodCurrentWeek  RulesengineFeatureEntitlementMetricPeriod = "current_week"
+)
+
+func NewRulesengineFeatureEntitlementMetricPeriodFromString(s string) (RulesengineFeatureEntitlementMetricPeriod, error) {
+	switch s {
+	case "all_time":
+		return RulesengineFeatureEntitlementMetricPeriodAllTime, nil
+	case "current_day":
+		return RulesengineFeatureEntitlementMetricPeriodCurrentDay, nil
+	case "current_month":
+		return RulesengineFeatureEntitlementMetricPeriodCurrentMonth, nil
+	case "current_week":
+		return RulesengineFeatureEntitlementMetricPeriodCurrentWeek, nil
+	}
+	var t RulesengineFeatureEntitlementMetricPeriod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RulesengineFeatureEntitlementMetricPeriod) Ptr() *RulesengineFeatureEntitlementMetricPeriod {
+	return &r
+}
+
+// For event-based feature entitlement rules, when the usage period resets (first_of_month or billing_cycle)
+type RulesengineFeatureEntitlementMonthReset string
+
+const (
+	RulesengineFeatureEntitlementMonthResetFirstOfMonth RulesengineFeatureEntitlementMonthReset = "first_of_month"
+	RulesengineFeatureEntitlementMonthResetBillingCycle RulesengineFeatureEntitlementMonthReset = "billing_cycle"
+)
+
+func NewRulesengineFeatureEntitlementMonthResetFromString(s string) (RulesengineFeatureEntitlementMonthReset, error) {
+	switch s {
+	case "first_of_month":
+		return RulesengineFeatureEntitlementMonthResetFirstOfMonth, nil
+	case "billing_cycle":
+		return RulesengineFeatureEntitlementMonthResetBillingCycle, nil
+	}
+	var t RulesengineFeatureEntitlementMonthReset
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RulesengineFeatureEntitlementMonthReset) Ptr() *RulesengineFeatureEntitlementMonthReset {
 	return &r
 }
 
@@ -23902,6 +27685,188 @@ func (u *UserResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	webFeatureUsageWebhookOutputFieldAllocation    = big.NewInt(1 << 0)
+	webFeatureUsageWebhookOutputFieldCreditUsage   = big.NewInt(1 << 1)
+	webFeatureUsageWebhookOutputFieldEntitlement   = big.NewInt(1 << 2)
+	webFeatureUsageWebhookOutputFieldFeature       = big.NewInt(1 << 3)
+	webFeatureUsageWebhookOutputFieldMetricResetAt = big.NewInt(1 << 4)
+	webFeatureUsageWebhookOutputFieldUsage         = big.NewInt(1 << 5)
+	webFeatureUsageWebhookOutputFieldCompany       = big.NewInt(1 << 6)
+)
+
+type WebFeatureUsageWebhookOutput struct {
+	Allocation    *int                       `json:"Allocation,omitempty" url:"Allocation,omitempty"`
+	CreditUsage   *CreditUsage               `json:"CreditUsage,omitempty" url:"CreditUsage,omitempty"`
+	Entitlement   string                     `json:"Entitlement" url:"Entitlement"`
+	Feature       *FeatureView               `json:"Feature,omitempty" url:"Feature,omitempty"`
+	MetricResetAt *time.Time                 `json:"MetricResetAt,omitempty" url:"MetricResetAt,omitempty"`
+	Usage         *int                       `json:"Usage,omitempty" url:"Usage,omitempty"`
+	Company       *CompanyDetailResponseData `json:"company,omitempty" url:"company,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebFeatureUsageWebhookOutput) GetAllocation() *int {
+	if w == nil {
+		return nil
+	}
+	return w.Allocation
+}
+
+func (w *WebFeatureUsageWebhookOutput) GetCreditUsage() *CreditUsage {
+	if w == nil {
+		return nil
+	}
+	return w.CreditUsage
+}
+
+func (w *WebFeatureUsageWebhookOutput) GetEntitlement() string {
+	if w == nil {
+		return ""
+	}
+	return w.Entitlement
+}
+
+func (w *WebFeatureUsageWebhookOutput) GetFeature() *FeatureView {
+	if w == nil {
+		return nil
+	}
+	return w.Feature
+}
+
+func (w *WebFeatureUsageWebhookOutput) GetMetricResetAt() *time.Time {
+	if w == nil {
+		return nil
+	}
+	return w.MetricResetAt
+}
+
+func (w *WebFeatureUsageWebhookOutput) GetUsage() *int {
+	if w == nil {
+		return nil
+	}
+	return w.Usage
+}
+
+func (w *WebFeatureUsageWebhookOutput) GetCompany() *CompanyDetailResponseData {
+	if w == nil {
+		return nil
+	}
+	return w.Company
+}
+
+func (w *WebFeatureUsageWebhookOutput) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebFeatureUsageWebhookOutput) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetAllocation sets the Allocation field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebFeatureUsageWebhookOutput) SetAllocation(allocation *int) {
+	w.Allocation = allocation
+	w.require(webFeatureUsageWebhookOutputFieldAllocation)
+}
+
+// SetCreditUsage sets the CreditUsage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebFeatureUsageWebhookOutput) SetCreditUsage(creditUsage *CreditUsage) {
+	w.CreditUsage = creditUsage
+	w.require(webFeatureUsageWebhookOutputFieldCreditUsage)
+}
+
+// SetEntitlement sets the Entitlement field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebFeatureUsageWebhookOutput) SetEntitlement(entitlement string) {
+	w.Entitlement = entitlement
+	w.require(webFeatureUsageWebhookOutputFieldEntitlement)
+}
+
+// SetFeature sets the Feature field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebFeatureUsageWebhookOutput) SetFeature(feature *FeatureView) {
+	w.Feature = feature
+	w.require(webFeatureUsageWebhookOutputFieldFeature)
+}
+
+// SetMetricResetAt sets the MetricResetAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebFeatureUsageWebhookOutput) SetMetricResetAt(metricResetAt *time.Time) {
+	w.MetricResetAt = metricResetAt
+	w.require(webFeatureUsageWebhookOutputFieldMetricResetAt)
+}
+
+// SetUsage sets the Usage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebFeatureUsageWebhookOutput) SetUsage(usage *int) {
+	w.Usage = usage
+	w.require(webFeatureUsageWebhookOutputFieldUsage)
+}
+
+// SetCompany sets the Company field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebFeatureUsageWebhookOutput) SetCompany(company *CompanyDetailResponseData) {
+	w.Company = company
+	w.require(webFeatureUsageWebhookOutputFieldCompany)
+}
+
+func (w *WebFeatureUsageWebhookOutput) UnmarshalJSON(data []byte) error {
+	type embed WebFeatureUsageWebhookOutput
+	var unmarshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"MetricResetAt,omitempty"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebFeatureUsageWebhookOutput(unmarshaler.embed)
+	w.MetricResetAt = unmarshaler.MetricResetAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebFeatureUsageWebhookOutput) MarshalJSON() ([]byte, error) {
+	type embed WebFeatureUsageWebhookOutput
+	var marshaler = struct {
+		embed
+		MetricResetAt *internal.DateTime `json:"MetricResetAt,omitempty"`
+	}{
+		embed:         embed(*w),
+		MetricResetAt: internal.NewOptionalDateTime(w.MetricResetAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WebFeatureUsageWebhookOutput) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
 }
 
 var (

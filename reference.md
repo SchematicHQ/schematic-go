@@ -9904,6 +9904,93 @@ client.Entitlements.ListFeatureUsage(
 </dl>
 </details>
 
+<details><summary><code>client.Entitlements.GetFeatureUsageTimeSeries() -> *schematichq.GetFeatureUsageTimeSeriesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetFeatureUsageTimeSeriesRequest{
+        CompanyID: "company_id",
+        EndTime: schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+        FeatureID: "feature_id",
+        Granularity: schematichq.TimeSeriesGranularityDaily.Ptr(),
+        StartTime: schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    }
+client.Entitlements.GetFeatureUsageTimeSeries(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endTime:** `time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**granularity:** `*schematichq.TimeSeriesGranularity` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `time.Time` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Entitlements.CountFeatureUsage() -> *schematichq.CountFeatureUsageResponse</code></summary>
 <dl>
 <dd>

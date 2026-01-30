@@ -880,6 +880,67 @@ func (g *GetFeatureUsageByCompanyRequest) SetKeys(keys map[string]string) {
 }
 
 var (
+	getFeatureUsageTimeSeriesRequestFieldCompanyID   = big.NewInt(1 << 0)
+	getFeatureUsageTimeSeriesRequestFieldEndTime     = big.NewInt(1 << 1)
+	getFeatureUsageTimeSeriesRequestFieldFeatureID   = big.NewInt(1 << 2)
+	getFeatureUsageTimeSeriesRequestFieldGranularity = big.NewInt(1 << 3)
+	getFeatureUsageTimeSeriesRequestFieldStartTime   = big.NewInt(1 << 4)
+)
+
+type GetFeatureUsageTimeSeriesRequest struct {
+	CompanyID   string                 `json:"-" url:"company_id"`
+	EndTime     time.Time              `json:"-" url:"end_time"`
+	FeatureID   string                 `json:"-" url:"feature_id"`
+	Granularity *TimeSeriesGranularity `json:"-" url:"granularity,omitempty"`
+	StartTime   time.Time              `json:"-" url:"start_time"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (g *GetFeatureUsageTimeSeriesRequest) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesRequest) SetCompanyID(companyID string) {
+	g.CompanyID = companyID
+	g.require(getFeatureUsageTimeSeriesRequestFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesRequest) SetEndTime(endTime time.Time) {
+	g.EndTime = endTime
+	g.require(getFeatureUsageTimeSeriesRequestFieldEndTime)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesRequest) SetFeatureID(featureID string) {
+	g.FeatureID = featureID
+	g.require(getFeatureUsageTimeSeriesRequestFieldFeatureID)
+}
+
+// SetGranularity sets the Granularity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesRequest) SetGranularity(granularity *TimeSeriesGranularity) {
+	g.Granularity = granularity
+	g.require(getFeatureUsageTimeSeriesRequestFieldGranularity)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesRequest) SetStartTime(startTime time.Time) {
+	g.StartTime = startTime
+	g.require(getFeatureUsageTimeSeriesRequestFieldStartTime)
+}
+
+var (
 	listCompanyOverridesRequestFieldCompanyID      = big.NewInt(1 << 0)
 	listCompanyOverridesRequestFieldCompanyIDs     = big.NewInt(1 << 1)
 	listCompanyOverridesRequestFieldFeatureID      = big.NewInt(1 << 2)
@@ -2542,6 +2603,314 @@ func (f *FeatureCompanyUserResponseData) String() string {
 }
 
 var (
+	featureUsageTimeSeriesResponseDataFieldFeatureID   = big.NewInt(1 << 0)
+	featureUsageTimeSeriesResponseDataFieldFeatureType = big.NewInt(1 << 1)
+	featureUsageTimeSeriesResponseDataFieldLimits      = big.NewInt(1 << 2)
+	featureUsageTimeSeriesResponseDataFieldPeriodType  = big.NewInt(1 << 3)
+	featureUsageTimeSeriesResponseDataFieldUsagePoints = big.NewInt(1 << 4)
+)
+
+type FeatureUsageTimeSeriesResponseData struct {
+	FeatureID   string                              `json:"feature_id" url:"feature_id"`
+	FeatureType FeatureType                         `json:"feature_type" url:"feature_type"`
+	Limits      []*LimitTimeSeriesPointResponseData `json:"limits" url:"limits"`
+	PeriodType  *string                             `json:"period_type,omitempty" url:"period_type,omitempty"`
+	UsagePoints []*UsageTimeSeriesPointResponseData `json:"usage_points" url:"usage_points"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) GetFeatureID() string {
+	if f == nil {
+		return ""
+	}
+	return f.FeatureID
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) GetFeatureType() FeatureType {
+	if f == nil {
+		return ""
+	}
+	return f.FeatureType
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) GetLimits() []*LimitTimeSeriesPointResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Limits
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) GetPeriodType() *string {
+	if f == nil {
+		return nil
+	}
+	return f.PeriodType
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) GetUsagePoints() []*UsageTimeSeriesPointResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.UsagePoints
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) GetExtraProperties() map[string]interface{} {
+	return f.extraProperties
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) require(field *big.Int) {
+	if f.explicitFields == nil {
+		f.explicitFields = big.NewInt(0)
+	}
+	f.explicitFields.Or(f.explicitFields, field)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageTimeSeriesResponseData) SetFeatureID(featureID string) {
+	f.FeatureID = featureID
+	f.require(featureUsageTimeSeriesResponseDataFieldFeatureID)
+}
+
+// SetFeatureType sets the FeatureType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageTimeSeriesResponseData) SetFeatureType(featureType FeatureType) {
+	f.FeatureType = featureType
+	f.require(featureUsageTimeSeriesResponseDataFieldFeatureType)
+}
+
+// SetLimits sets the Limits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageTimeSeriesResponseData) SetLimits(limits []*LimitTimeSeriesPointResponseData) {
+	f.Limits = limits
+	f.require(featureUsageTimeSeriesResponseDataFieldLimits)
+}
+
+// SetPeriodType sets the PeriodType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageTimeSeriesResponseData) SetPeriodType(periodType *string) {
+	f.PeriodType = periodType
+	f.require(featureUsageTimeSeriesResponseDataFieldPeriodType)
+}
+
+// SetUsagePoints sets the UsagePoints field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageTimeSeriesResponseData) SetUsagePoints(usagePoints []*UsageTimeSeriesPointResponseData) {
+	f.UsagePoints = usagePoints
+	f.require(featureUsageTimeSeriesResponseDataFieldUsagePoints)
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler FeatureUsageTimeSeriesResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*f = FeatureUsageTimeSeriesResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) MarshalJSON() ([]byte, error) {
+	type embed FeatureUsageTimeSeriesResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*f),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, f.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (f *FeatureUsageTimeSeriesResponseData) String() string {
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
+}
+
+var (
+	limitTimeSeriesPointResponseDataFieldEffectiveAt   = big.NewInt(1 << 0)
+	limitTimeSeriesPointResponseDataFieldIsSoftLimit   = big.NewInt(1 << 1)
+	limitTimeSeriesPointResponseDataFieldLimitSource   = big.NewInt(1 << 2)
+	limitTimeSeriesPointResponseDataFieldLimitValue    = big.NewInt(1 << 3)
+	limitTimeSeriesPointResponseDataFieldPlanID        = big.NewInt(1 << 4)
+	limitTimeSeriesPointResponseDataFieldPriceBehavior = big.NewInt(1 << 5)
+)
+
+type LimitTimeSeriesPointResponseData struct {
+	EffectiveAt   time.Time                 `json:"effective_at" url:"effective_at"`
+	IsSoftLimit   bool                      `json:"is_soft_limit" url:"is_soft_limit"`
+	LimitSource   EntitlementType           `json:"limit_source" url:"limit_source"`
+	LimitValue    *int                      `json:"limit_value,omitempty" url:"limit_value,omitempty"`
+	PlanID        *string                   `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PriceBehavior *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *LimitTimeSeriesPointResponseData) GetEffectiveAt() time.Time {
+	if l == nil {
+		return time.Time{}
+	}
+	return l.EffectiveAt
+}
+
+func (l *LimitTimeSeriesPointResponseData) GetIsSoftLimit() bool {
+	if l == nil {
+		return false
+	}
+	return l.IsSoftLimit
+}
+
+func (l *LimitTimeSeriesPointResponseData) GetLimitSource() EntitlementType {
+	if l == nil {
+		return ""
+	}
+	return l.LimitSource
+}
+
+func (l *LimitTimeSeriesPointResponseData) GetLimitValue() *int {
+	if l == nil {
+		return nil
+	}
+	return l.LimitValue
+}
+
+func (l *LimitTimeSeriesPointResponseData) GetPlanID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanID
+}
+
+func (l *LimitTimeSeriesPointResponseData) GetPriceBehavior() *EntitlementPriceBehavior {
+	if l == nil {
+		return nil
+	}
+	return l.PriceBehavior
+}
+
+func (l *LimitTimeSeriesPointResponseData) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *LimitTimeSeriesPointResponseData) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetEffectiveAt sets the EffectiveAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LimitTimeSeriesPointResponseData) SetEffectiveAt(effectiveAt time.Time) {
+	l.EffectiveAt = effectiveAt
+	l.require(limitTimeSeriesPointResponseDataFieldEffectiveAt)
+}
+
+// SetIsSoftLimit sets the IsSoftLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LimitTimeSeriesPointResponseData) SetIsSoftLimit(isSoftLimit bool) {
+	l.IsSoftLimit = isSoftLimit
+	l.require(limitTimeSeriesPointResponseDataFieldIsSoftLimit)
+}
+
+// SetLimitSource sets the LimitSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LimitTimeSeriesPointResponseData) SetLimitSource(limitSource EntitlementType) {
+	l.LimitSource = limitSource
+	l.require(limitTimeSeriesPointResponseDataFieldLimitSource)
+}
+
+// SetLimitValue sets the LimitValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LimitTimeSeriesPointResponseData) SetLimitValue(limitValue *int) {
+	l.LimitValue = limitValue
+	l.require(limitTimeSeriesPointResponseDataFieldLimitValue)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LimitTimeSeriesPointResponseData) SetPlanID(planID *string) {
+	l.PlanID = planID
+	l.require(limitTimeSeriesPointResponseDataFieldPlanID)
+}
+
+// SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LimitTimeSeriesPointResponseData) SetPriceBehavior(priceBehavior *EntitlementPriceBehavior) {
+	l.PriceBehavior = priceBehavior
+	l.require(limitTimeSeriesPointResponseDataFieldPriceBehavior)
+}
+
+func (l *LimitTimeSeriesPointResponseData) UnmarshalJSON(data []byte) error {
+	type embed LimitTimeSeriesPointResponseData
+	var unmarshaler = struct {
+		embed
+		EffectiveAt *internal.DateTime `json:"effective_at"`
+	}{
+		embed: embed(*l),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*l = LimitTimeSeriesPointResponseData(unmarshaler.embed)
+	l.EffectiveAt = unmarshaler.EffectiveAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *LimitTimeSeriesPointResponseData) MarshalJSON() ([]byte, error) {
+	type embed LimitTimeSeriesPointResponseData
+	var marshaler = struct {
+		embed
+		EffectiveAt *internal.DateTime `json:"effective_at"`
+	}{
+		embed:       embed(*l),
+		EffectiveAt: internal.NewDateTime(l.EffectiveAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *LimitTimeSeriesPointResponseData) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
 	skippedEntitlementErrorResponseDataFieldMessage = big.NewInt(1 << 0)
 )
 
@@ -2743,6 +3112,176 @@ func (s *SkippedEntitlementResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", s)
+}
+
+type TimeSeriesGranularity string
+
+const (
+	TimeSeriesGranularityDaily   TimeSeriesGranularity = "daily"
+	TimeSeriesGranularityHourly  TimeSeriesGranularity = "hourly"
+	TimeSeriesGranularityMonthly TimeSeriesGranularity = "monthly"
+	TimeSeriesGranularityWeekly  TimeSeriesGranularity = "weekly"
+)
+
+func NewTimeSeriesGranularityFromString(s string) (TimeSeriesGranularity, error) {
+	switch s {
+	case "daily":
+		return TimeSeriesGranularityDaily, nil
+	case "hourly":
+		return TimeSeriesGranularityHourly, nil
+	case "monthly":
+		return TimeSeriesGranularityMonthly, nil
+	case "weekly":
+		return TimeSeriesGranularityWeekly, nil
+	}
+	var t TimeSeriesGranularity
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TimeSeriesGranularity) Ptr() *TimeSeriesGranularity {
+	return &t
+}
+
+var (
+	usageTimeSeriesPointResponseDataFieldPeriodEnd   = big.NewInt(1 << 0)
+	usageTimeSeriesPointResponseDataFieldPeriodStart = big.NewInt(1 << 1)
+	usageTimeSeriesPointResponseDataFieldTimestamp   = big.NewInt(1 << 2)
+	usageTimeSeriesPointResponseDataFieldUsage       = big.NewInt(1 << 3)
+)
+
+type UsageTimeSeriesPointResponseData struct {
+	PeriodEnd   *time.Time `json:"period_end,omitempty" url:"period_end,omitempty"`
+	PeriodStart *time.Time `json:"period_start,omitempty" url:"period_start,omitempty"`
+	Timestamp   time.Time  `json:"timestamp" url:"timestamp"`
+	Usage       int        `json:"usage" url:"usage"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UsageTimeSeriesPointResponseData) GetPeriodEnd() *time.Time {
+	if u == nil {
+		return nil
+	}
+	return u.PeriodEnd
+}
+
+func (u *UsageTimeSeriesPointResponseData) GetPeriodStart() *time.Time {
+	if u == nil {
+		return nil
+	}
+	return u.PeriodStart
+}
+
+func (u *UsageTimeSeriesPointResponseData) GetTimestamp() time.Time {
+	if u == nil {
+		return time.Time{}
+	}
+	return u.Timestamp
+}
+
+func (u *UsageTimeSeriesPointResponseData) GetUsage() int {
+	if u == nil {
+		return 0
+	}
+	return u.Usage
+}
+
+func (u *UsageTimeSeriesPointResponseData) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UsageTimeSeriesPointResponseData) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageTimeSeriesPointResponseData) SetPeriodEnd(periodEnd *time.Time) {
+	u.PeriodEnd = periodEnd
+	u.require(usageTimeSeriesPointResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageTimeSeriesPointResponseData) SetPeriodStart(periodStart *time.Time) {
+	u.PeriodStart = periodStart
+	u.require(usageTimeSeriesPointResponseDataFieldPeriodStart)
+}
+
+// SetTimestamp sets the Timestamp field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageTimeSeriesPointResponseData) SetTimestamp(timestamp time.Time) {
+	u.Timestamp = timestamp
+	u.require(usageTimeSeriesPointResponseDataFieldTimestamp)
+}
+
+// SetUsage sets the Usage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageTimeSeriesPointResponseData) SetUsage(usage int) {
+	u.Usage = usage
+	u.require(usageTimeSeriesPointResponseDataFieldUsage)
+}
+
+func (u *UsageTimeSeriesPointResponseData) UnmarshalJSON(data []byte) error {
+	type embed UsageTimeSeriesPointResponseData
+	var unmarshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+		Timestamp   *internal.DateTime `json:"timestamp"`
+	}{
+		embed: embed(*u),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*u = UsageTimeSeriesPointResponseData(unmarshaler.embed)
+	u.PeriodEnd = unmarshaler.PeriodEnd.TimePtr()
+	u.PeriodStart = unmarshaler.PeriodStart.TimePtr()
+	u.Timestamp = unmarshaler.Timestamp.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UsageTimeSeriesPointResponseData) MarshalJSON() ([]byte, error) {
+	type embed UsageTimeSeriesPointResponseData
+	var marshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+		Timestamp   *internal.DateTime `json:"timestamp"`
+	}{
+		embed:       embed(*u),
+		PeriodEnd:   internal.NewOptionalDateTime(u.PeriodEnd),
+		PeriodStart: internal.NewOptionalDateTime(u.PeriodStart),
+		Timestamp:   internal.NewDateTime(u.Timestamp),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UsageTimeSeriesPointResponseData) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }
 
 // Input parameters
@@ -4937,6 +5476,256 @@ func (g *GetFeatureUsageByCompanyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetFeatureUsageByCompanyResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+var (
+	getFeatureUsageTimeSeriesParamsFieldCompanyID   = big.NewInt(1 << 0)
+	getFeatureUsageTimeSeriesParamsFieldEndTime     = big.NewInt(1 << 1)
+	getFeatureUsageTimeSeriesParamsFieldFeatureID   = big.NewInt(1 << 2)
+	getFeatureUsageTimeSeriesParamsFieldGranularity = big.NewInt(1 << 3)
+	getFeatureUsageTimeSeriesParamsFieldStartTime   = big.NewInt(1 << 4)
+)
+
+type GetFeatureUsageTimeSeriesParams struct {
+	CompanyID   *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EndTime     *time.Time             `json:"end_time,omitempty" url:"end_time,omitempty"`
+	FeatureID   *string                `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	Granularity *TimeSeriesGranularity `json:"granularity,omitempty" url:"granularity,omitempty"`
+	StartTime   *time.Time             `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) GetCompanyID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.CompanyID
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) GetEndTime() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.EndTime
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) GetFeatureID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.FeatureID
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) GetGranularity() *TimeSeriesGranularity {
+	if g == nil {
+		return nil
+	}
+	return g.Granularity
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) GetStartTime() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.StartTime
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesParams) SetCompanyID(companyID *string) {
+	g.CompanyID = companyID
+	g.require(getFeatureUsageTimeSeriesParamsFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesParams) SetEndTime(endTime *time.Time) {
+	g.EndTime = endTime
+	g.require(getFeatureUsageTimeSeriesParamsFieldEndTime)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesParams) SetFeatureID(featureID *string) {
+	g.FeatureID = featureID
+	g.require(getFeatureUsageTimeSeriesParamsFieldFeatureID)
+}
+
+// SetGranularity sets the Granularity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesParams) SetGranularity(granularity *TimeSeriesGranularity) {
+	g.Granularity = granularity
+	g.require(getFeatureUsageTimeSeriesParamsFieldGranularity)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesParams) SetStartTime(startTime *time.Time) {
+	g.StartTime = startTime
+	g.require(getFeatureUsageTimeSeriesParamsFieldStartTime)
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) UnmarshalJSON(data []byte) error {
+	type embed GetFeatureUsageTimeSeriesParams
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*g),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*g = GetFeatureUsageTimeSeriesParams(unmarshaler.embed)
+	g.EndTime = unmarshaler.EndTime.TimePtr()
+	g.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) MarshalJSON() ([]byte, error) {
+	type embed GetFeatureUsageTimeSeriesParams
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*g),
+		EndTime:   internal.NewOptionalDateTime(g.EndTime),
+		StartTime: internal.NewOptionalDateTime(g.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetFeatureUsageTimeSeriesParams) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getFeatureUsageTimeSeriesResponseFieldData   = big.NewInt(1 << 0)
+	getFeatureUsageTimeSeriesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetFeatureUsageTimeSeriesResponse struct {
+	Data *FeatureUsageTimeSeriesResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *GetFeatureUsageTimeSeriesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetFeatureUsageTimeSeriesResponse) GetData() *FeatureUsageTimeSeriesResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetFeatureUsageTimeSeriesResponse) GetParams() *GetFeatureUsageTimeSeriesParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetFeatureUsageTimeSeriesResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetFeatureUsageTimeSeriesResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesResponse) SetData(data *FeatureUsageTimeSeriesResponseData) {
+	g.Data = data
+	g.require(getFeatureUsageTimeSeriesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetFeatureUsageTimeSeriesResponse) SetParams(params *GetFeatureUsageTimeSeriesParams) {
+	g.Params = params
+	g.require(getFeatureUsageTimeSeriesResponseFieldParams)
+}
+
+func (g *GetFeatureUsageTimeSeriesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetFeatureUsageTimeSeriesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetFeatureUsageTimeSeriesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetFeatureUsageTimeSeriesResponse) MarshalJSON() ([]byte, error) {
+	type embed GetFeatureUsageTimeSeriesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetFeatureUsageTimeSeriesResponse) String() string {
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value

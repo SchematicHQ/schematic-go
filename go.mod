@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.3
 	github.com/redis/go-redis/v9 v9.17.3
-	github.com/schematichq/rulesengine v0.1.9
+	github.com/schematichq/rulesengine v0.1.12
 	github.com/schematichq/schematic-datastream-ws v0.2.6
 	github.com/stretchr/testify v1.11.1
 )

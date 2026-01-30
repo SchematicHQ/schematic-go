@@ -181,6 +181,22 @@ func (c *Client) ListFeatureUsage(
 	return response.Body, nil
 }
 
+func (c *Client) GetFeatureUsageTimeSeries(
+	ctx context.Context,
+	request *schematichq.GetFeatureUsageTimeSeriesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetFeatureUsageTimeSeriesResponse, error) {
+	response, err := c.WithRawResponse.GetFeatureUsageTimeSeries(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CountFeatureUsage(
 	ctx context.Context,
 	request *schematichq.CountFeatureUsageRequest,

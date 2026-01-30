@@ -1943,22 +1943,23 @@ var (
 	companyViewWithFeatureUsageResponseDataFieldBillingSubscriptions  = big.NewInt(1 << 3)
 	companyViewWithFeatureUsageResponseDataFieldCreatedAt             = big.NewInt(1 << 4)
 	companyViewWithFeatureUsageResponseDataFieldDefaultPaymentMethod  = big.NewInt(1 << 5)
-	companyViewWithFeatureUsageResponseDataFieldEntityTraits          = big.NewInt(1 << 6)
-	companyViewWithFeatureUsageResponseDataFieldEnvironmentID         = big.NewInt(1 << 7)
-	companyViewWithFeatureUsageResponseDataFieldFeatureUsage          = big.NewInt(1 << 8)
-	companyViewWithFeatureUsageResponseDataFieldID                    = big.NewInt(1 << 9)
-	companyViewWithFeatureUsageResponseDataFieldKeys                  = big.NewInt(1 << 10)
-	companyViewWithFeatureUsageResponseDataFieldLastSeenAt            = big.NewInt(1 << 11)
-	companyViewWithFeatureUsageResponseDataFieldLogoURL               = big.NewInt(1 << 12)
-	companyViewWithFeatureUsageResponseDataFieldMetrics               = big.NewInt(1 << 13)
-	companyViewWithFeatureUsageResponseDataFieldName                  = big.NewInt(1 << 14)
-	companyViewWithFeatureUsageResponseDataFieldPaymentMethods        = big.NewInt(1 << 15)
-	companyViewWithFeatureUsageResponseDataFieldPlan                  = big.NewInt(1 << 16)
-	companyViewWithFeatureUsageResponseDataFieldPlans                 = big.NewInt(1 << 17)
-	companyViewWithFeatureUsageResponseDataFieldRules                 = big.NewInt(1 << 18)
-	companyViewWithFeatureUsageResponseDataFieldTraits                = big.NewInt(1 << 19)
-	companyViewWithFeatureUsageResponseDataFieldUpdatedAt             = big.NewInt(1 << 20)
-	companyViewWithFeatureUsageResponseDataFieldUserCount             = big.NewInt(1 << 21)
+	companyViewWithFeatureUsageResponseDataFieldEntitlements          = big.NewInt(1 << 6)
+	companyViewWithFeatureUsageResponseDataFieldEntityTraits          = big.NewInt(1 << 7)
+	companyViewWithFeatureUsageResponseDataFieldEnvironmentID         = big.NewInt(1 << 8)
+	companyViewWithFeatureUsageResponseDataFieldFeatureUsage          = big.NewInt(1 << 9)
+	companyViewWithFeatureUsageResponseDataFieldID                    = big.NewInt(1 << 10)
+	companyViewWithFeatureUsageResponseDataFieldKeys                  = big.NewInt(1 << 11)
+	companyViewWithFeatureUsageResponseDataFieldLastSeenAt            = big.NewInt(1 << 12)
+	companyViewWithFeatureUsageResponseDataFieldLogoURL               = big.NewInt(1 << 13)
+	companyViewWithFeatureUsageResponseDataFieldMetrics               = big.NewInt(1 << 14)
+	companyViewWithFeatureUsageResponseDataFieldName                  = big.NewInt(1 << 15)
+	companyViewWithFeatureUsageResponseDataFieldPaymentMethods        = big.NewInt(1 << 16)
+	companyViewWithFeatureUsageResponseDataFieldPlan                  = big.NewInt(1 << 17)
+	companyViewWithFeatureUsageResponseDataFieldPlans                 = big.NewInt(1 << 18)
+	companyViewWithFeatureUsageResponseDataFieldRules                 = big.NewInt(1 << 19)
+	companyViewWithFeatureUsageResponseDataFieldTraits                = big.NewInt(1 << 20)
+	companyViewWithFeatureUsageResponseDataFieldUpdatedAt             = big.NewInt(1 << 21)
+	companyViewWithFeatureUsageResponseDataFieldUserCount             = big.NewInt(1 << 22)
 )
 
 type CompanyViewWithFeatureUsageResponseData struct {
@@ -1968,6 +1969,7 @@ type CompanyViewWithFeatureUsageResponseData struct {
 	BillingSubscriptions  []*BillingSubscriptionView               `json:"billing_subscriptions" url:"billing_subscriptions"`
 	CreatedAt             time.Time                                `json:"created_at" url:"created_at"`
 	DefaultPaymentMethod  *PaymentMethodResponseData               `json:"default_payment_method,omitempty" url:"default_payment_method,omitempty"`
+	Entitlements          []*FeatureEntitlement                    `json:"entitlements" url:"entitlements"`
 	EntityTraits          []*EntityTraitDetailResponseData         `json:"entity_traits" url:"entity_traits"`
 	EnvironmentID         string                                   `json:"environment_id" url:"environment_id"`
 	FeatureUsage          []*FeatureUsageDataResponseData          `json:"feature_usage" url:"feature_usage"`
@@ -2033,6 +2035,13 @@ func (c *CompanyViewWithFeatureUsageResponseData) GetDefaultPaymentMethod() *Pay
 		return nil
 	}
 	return c.DefaultPaymentMethod
+}
+
+func (c *CompanyViewWithFeatureUsageResponseData) GetEntitlements() []*FeatureEntitlement {
+	if c == nil {
+		return nil
+	}
+	return c.Entitlements
 }
 
 func (c *CompanyViewWithFeatureUsageResponseData) GetEntityTraits() []*EntityTraitDetailResponseData {
@@ -2198,6 +2207,13 @@ func (c *CompanyViewWithFeatureUsageResponseData) SetCreatedAt(createdAt time.Ti
 func (c *CompanyViewWithFeatureUsageResponseData) SetDefaultPaymentMethod(defaultPaymentMethod *PaymentMethodResponseData) {
 	c.DefaultPaymentMethod = defaultPaymentMethod
 	c.require(companyViewWithFeatureUsageResponseDataFieldDefaultPaymentMethod)
+}
+
+// SetEntitlements sets the Entitlements field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyViewWithFeatureUsageResponseData) SetEntitlements(entitlements []*FeatureEntitlement) {
+	c.Entitlements = entitlements
+	c.require(companyViewWithFeatureUsageResponseDataFieldEntitlements)
 }
 
 // SetEntityTraits sets the EntityTraits field and marks it as non-optional;

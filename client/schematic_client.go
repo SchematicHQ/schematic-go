@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 
 	schematicgo "github.com/schematichq/schematic-go"
@@ -11,7 +12,6 @@ import (
 	core "github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/datastream"
 	"github.com/schematichq/schematic-go/flags"
-	"github.com/schematichq/schematic-go/internal"
 	"github.com/schematichq/schematic-go/logger"
 	option "github.com/schematichq/schematic-go/option"
 )
@@ -301,17 +301,15 @@ func (c *SchematicClient) worker() {
 	}()
 
 	// Create a caller for the buffer to use with the same HTTP client and retry settings
-	caller := internal.NewCaller(
-		&internal.CallerParams{
-			Client:      c.options.HTTPClient,
-			MaxAttempts: c.options.MaxAttempts,
-		},
-	)
+	// Start buffered event worker
+	httpClient := c.options.HTTPClient
+	if httpClient == nil {
+		httpClient = http.DefaultClient
+	}
 
 	buffer := buffer.NewEventBuffer(
-		c.Events,
 		c.options,
-		caller,
+		httpClient,
 		c.errors,
 		c.logger,
 		c.eventBufferPeriod,

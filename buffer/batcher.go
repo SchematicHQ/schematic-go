@@ -1,0 +1,77 @@
+package buffer
+
+import (
+	"context"
+
+	schematicgo "github.com/schematichq/schematic-go"
+)
+
+// Batcher handles accumulating and preparing events for sending.
+// This type is NOT thread-safe; callers must provide external synchronization.
+type Batcher struct {
+	maxEvents int
+	events    []*schematicgo.CreateEventRequestBody
+}
+
+// NewBatcher creates a new batcher with the specified max events
+func NewBatcher(maxEvents int) *Batcher {
+	return &Batcher{
+		maxEvents: maxEvents,
+		events:    make([]*schematicgo.CreateEventRequestBody, 0, maxEvents),
+	}
+}
+
+// Add adds an event to the batch. Returns true if the batch is full after adding.
+func (b *Batcher) Add(event *schematicgo.CreateEventRequestBody) bool {
+	if event == nil {
+		return false
+	}
+
+	b.events = append(b.events, event)
+	return len(b.events) >= b.maxEvents
+}
+
+// Flush returns all events and clears the batch
+func (b *Batcher) Flush() []*schematicgo.CreateEventRequestBody {
+	if len(b.events) == 0 {
+		return nil
+	}
+
+	// Copy events and filter out nils
+	events := make([]*schematicgo.CreateEventRequestBody, 0, len(b.events))
+	for _, event := range b.events {
+		if event != nil {
+			events = append(events, event)
+		}
+	}
+
+	// Clear the batch
+	b.events = b.events[:0]
+
+	return events
+}
+
+// Len returns the current number of events in the batch
+func (b *Batcher) Len() int {
+	return len(b.events)
+}
+
+// EventSender is an interface for sending batched events
+type EventSender interface {
+	SendBatch(ctx context.Context, events []*schematicgo.CreateEventRequestBody) error
+}
+
+// TransformEventsToPayload transforms SDK events to the format expected by the capture service
+func TransformEventsToPayload(events []*schematicgo.CreateEventRequestBody, apiKey string) []map[string]interface{} {
+	eventPayloads := make([]map[string]interface{}, 0, len(events))
+	for _, event := range events {
+		payload := map[string]interface{}{
+			"api_key":    apiKey,
+			"body":       event.Body,
+			"event_type": event.EventType,
+			"sent_at":    event.SentAt,
+		}
+		eventPayloads = append(eventPayloads, payload)
+	}
+	return eventPayloads
+}

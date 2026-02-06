@@ -60,18 +60,3 @@ func (b *Batcher) Len() int {
 type EventSender interface {
 	SendBatch(ctx context.Context, events []*schematicgo.CreateEventRequestBody) error
 }
-
-// TransformEventsToPayload transforms SDK events to the format expected by the capture service
-func TransformEventsToPayload(events []*schematicgo.CreateEventRequestBody, apiKey string) []map[string]interface{} {
-	eventPayloads := make([]map[string]interface{}, 0, len(events))
-	for _, event := range events {
-		payload := map[string]interface{}{
-			"api_key":    apiKey,
-			"body":       event.Body,
-			"event_type": event.EventType,
-			"sent_at":    event.SentAt,
-		}
-		eventPayloads = append(eventPayloads, payload)
-	}
-	return eventPayloads
-}

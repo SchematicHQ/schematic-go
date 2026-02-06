@@ -300,7 +300,6 @@ func (c *SchematicClient) worker() {
 		}
 	}()
 
-	// Create a caller for the buffer to use with the same HTTP client and retry settings
 	// Start buffered event worker
 	httpClient := c.options.HTTPClient
 	if httpClient == nil {

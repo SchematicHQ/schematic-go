@@ -150,7 +150,10 @@ func (h *HTTPEventSender) sendBatch(ctx context.Context, events []*schematicgo.C
 	// Check response status
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		// Read response body for error details
-		respBody, _ := io.ReadAll(resp.Body)
+		respBody, readErr := io.ReadAll(resp.Body)
+		if readErr != nil {
+			return fmt.Errorf("HTTP %d: (failed to read response body: %v)", resp.StatusCode, readErr)
+		}
 		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, string(respBody))
 	}
 	

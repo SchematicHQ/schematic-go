@@ -9,6 +9,7 @@ import core "github.com/schematichq/schematic-go/core"
 var WithDefaultFlagValues = core.WithDefaultFlagValues
 var WithDisableFlagCheckCache = core.WithDisableFlagCheckCache
 var WithEventBufferPeriod = core.WithEventBufferPeriod
+var WithEventCaptureBaseURL = core.WithEventCaptureBaseURL
 var WithFlagCheckCacheProvider = core.WithFlagCheckCacheProvider
 var WithLocalFlagCheckCache = core.WithLocalFlagCheckCache
 var WithOfflineMode = core.WithOfflineMode

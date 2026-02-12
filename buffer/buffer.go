@@ -71,18 +71,18 @@ func NewEventBuffer(
 
 func (b *eventBuffer) flush() {
 	b.mutex.Lock()
-	defer b.mutex.Unlock()
+	events := b.batcher.Flush()
+	b.mutex.Unlock()
 
-	b.flushLocked()
+	b.sendEvents(events)
 }
 
-func (b *eventBuffer) flushLocked() {
-	events := b.batcher.Flush()
+// sendEvents sends events outside the lock so Push callers aren't blocked during HTTP retries.
+func (b *eventBuffer) sendEvents(events []*schematicgo.CreateEventRequestBody) {
 	if events == nil {
 		return
 	}
 
-	// Send with retry logic
 	err := b.sender.SendBatch(context.Background(), events)
 	if err != nil {
 		b.errors <- err
@@ -120,12 +120,14 @@ func (b *eventBuffer) Push(event *schematicgo.CreateEventRequestBody) {
 	}
 
 	b.mutex.Lock()
-	defer b.mutex.Unlock()
-
-	// Add returns true if batch is full
-	if b.batcher.Add(event) {
-		b.flushLocked()
+	full := b.batcher.Add(event)
+	var events []*schematicgo.CreateEventRequestBody
+	if full {
+		events = b.batcher.Flush()
 	}
+	b.mutex.Unlock()
+
+	b.sendEvents(events)
 }
 
 func (b *eventBuffer) Stop() {

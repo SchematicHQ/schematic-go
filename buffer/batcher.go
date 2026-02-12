@@ -51,11 +51,6 @@ func (b *Batcher) Flush() []*schematicgo.CreateEventRequestBody {
 	return events
 }
 
-// Len returns the current number of events in the batch
-func (b *Batcher) Len() int {
-	return len(b.events)
-}
-
 // EventSender is an interface for sending batched events
 type EventSender interface {
 	SendBatch(ctx context.Context, events []*schematicgo.CreateEventRequestBody) error

@@ -30,7 +30,9 @@ type BatchPayload struct {
 // HTTPEventSender sends events to the Schematic capture API with retry logic
 type HTTPEventSender struct {
 	client            core.HTTPClient
-	options           *core.RequestOptions
+	apiKey            string
+	baseURL           string
+	headers           http.Header
 	logger            core.Logger
 	maxRetries        int
 	initialRetryDelay time.Duration
@@ -38,9 +40,9 @@ type HTTPEventSender struct {
 
 // NewHTTPEventSender creates a new HTTP event sender with retry logic
 func NewHTTPEventSender(client core.HTTPClient, options *core.RequestOptions, logger core.Logger) *HTTPEventSender {
-	// Ensure EventCaptureBaseURL is set
-	if options.EventCaptureBaseURL == "" {
-		options.EventCaptureBaseURL = "https://c.schematichq.com"
+	baseURL := options.EventCaptureBaseURL
+	if baseURL == "" {
+		baseURL = "https://c.schematichq.com"
 	}
 
 	if client == nil {
@@ -49,7 +51,9 @@ func NewHTTPEventSender(client core.HTTPClient, options *core.RequestOptions, lo
 
 	return &HTTPEventSender{
 		client:            client,
-		options:           options,
+		apiKey:            options.APIKey,
+		baseURL:           baseURL,
+		headers:           options.ToHeader(),
 		logger:            logger,
 		maxRetries:        3,
 		initialRetryDelay: 1 * time.Second,
@@ -101,13 +105,13 @@ func (h *HTTPEventSender) SendBatch(ctx context.Context, events []*schematicgo.C
 
 // sendBatch performs a single send attempt
 func (h *HTTPEventSender) sendBatch(ctx context.Context, events []*schematicgo.CreateEventRequestBody) error {
-	endpoint := h.options.EventCaptureBaseURL + "/batch"
-	
+	endpoint := h.baseURL + "/batch"
+
 	// Transform events to EventPayload structs
 	eventPayloads := make([]EventPayload, len(events))
 	for i, event := range events {
 		eventPayloads[i] = EventPayload{
-			APIKey:    h.options.APIKey,
+			APIKey:    h.apiKey,
 			Body:      event.Body,
 			EventType: event.EventType,
 			SentAt:    event.SentAt,
@@ -132,8 +136,7 @@ func (h *HTTPEventSender) sendBatch(ctx context.Context, events []*schematicgo.C
 	}
 	
 	// Set headers
-	headers := h.options.ToHeader()
-	for key, values := range headers {
+	for key, values := range h.headers {
 		for _, value := range values {
 			req.Header.Add(key, value)
 		}

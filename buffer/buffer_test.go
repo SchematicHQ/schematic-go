@@ -18,7 +18,7 @@ func TestEventBuffer_Integration(t *testing.T) {
 		// Create a mock sender to capture calls
 		mockSender := &mockSender{}
 		logger := &mockLogger{}
-		
+
 		// Create buffer with small batch size for testing
 		errors := make(chan error, 10)
 		buffer := &eventBuffer{
@@ -29,59 +29,58 @@ func TestEventBuffer_Integration(t *testing.T) {
 			logger:   logger,
 			shutdown: make(chan struct{}),
 		}
-		
+
 		// Push events - should auto-flush when full
 		buffer.Push(&schematicgo.CreateEventRequestBody{EventType: "test1"})
 		buffer.Push(&schematicgo.CreateEventRequestBody{EventType: "test2"})
-		
+
 		// Give a moment for async operations
 		time.Sleep(10 * time.Millisecond)
-		
+
 		// Should have flushed
 		require.Len(t, mockSender.calls, 1)
 		assert.Len(t, mockSender.calls[0].events, 2)
 	})
-	
+
 	t.Run("periodic flush works", func(t *testing.T) {
 		mockSender := &mockSender{}
 		logger := &mockLogger{}
-		
-		options := &core.RequestOptions{
-			APIKey: "test-key",
-		}
-		
+
+		options := core.NewRequestOptions()
+		options.APIKey = "test-key"
+
 		// Create a real buffer with very short interval
 		errors := make(chan error, 10)
 		client := http.DefaultClient
-		
+
 		buffer := NewEventBuffer(options, client, errors, logger, func() *time.Duration {
 			d := 50 * time.Millisecond
 			return &d
 		}())
-		
+
 		// Replace the sender with our mock after creation
 		buffer.sender = mockSender
-		
+
 		// Push an event
 		buffer.Push(&schematicgo.CreateEventRequestBody{EventType: "test"})
-		
+
 		// Wait for periodic flush
 		time.Sleep(100 * time.Millisecond)
-		
+
 		// Should have been flushed
 		assert.GreaterOrEqual(t, len(mockSender.calls), 1)
-		
+
 		// Cleanup
 		buffer.Stop()
 	})
-	
+
 	t.Run("handles errors gracefully", func(t *testing.T) {
 		// Mock sender that always fails
 		mockSender := &mockSender{
 			responses: []error{assert.AnError, assert.AnError},
 		}
 		logger := &mockLogger{}
-		
+
 		errors := make(chan error, 10)
 		buffer := &eventBuffer{
 			batcher:  NewBatcher(10),
@@ -90,11 +89,11 @@ func TestEventBuffer_Integration(t *testing.T) {
 			logger:   logger,
 			shutdown: make(chan struct{}),
 		}
-		
+
 		// Push and flush
 		buffer.Push(&schematicgo.CreateEventRequestBody{EventType: "test"})
 		buffer.flush()
-		
+
 		// Should receive error
 		select {
 		case err := <-errors:
@@ -111,18 +110,18 @@ func TestComponentIntegration(t *testing.T) {
 		// Setup
 		batcher := NewBatcher(5)
 		sender := &mockSender{}
-		
+
 		// Add events
 		for i := 0; i < 3; i++ {
 			batcher.Add(&schematicgo.CreateEventRequestBody{
 				EventType: "test",
 			})
 		}
-		
+
 		// Flush and send
 		events := batcher.Flush()
 		err := sender.SendBatch(context.Background(), events)
-		
+
 		// Verify
 		assert.NoError(t, err)
 		assert.Len(t, sender.calls, 1)

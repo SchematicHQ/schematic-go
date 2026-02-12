@@ -76,38 +76,8 @@ func TestGetCompanyFromCache_NewFormat(t *testing.T) {
 	assert.Equal(t, "comp_abc123", result.ID)
 }
 
-func TestGetCompanyFromCache_OldFormat(t *testing.T) {
-	// Test backwards compatibility: lookup key -> full company directly
-	companyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
-	lookupCache := cache.NewLocalCache[string](100, time.Minute)
-
-	client := &DataStreamClient{
-		companyCacheProvider:       companyCache,
-		companyLookupCacheProvider: lookupCache,
-	}
-
-	company := &rulesengine.Company{
-		ID:            "comp_old_format",
-		AccountID:     "acct_001",
-		EnvironmentID: "env_001",
-		Keys: map[string]string{
-			"domain": "legacy.com",
-		},
-	}
-
-	// Populate cache in the OLD format (full company at lookup key, no ID key)
-	lookupKey := client.resourceKeyToCacheKey(cacheKeyPrefixCompany, "domain", "legacy.com")
-	companyCache.Set(nil, lookupKey, company, nil)
-	// Note: lookup cache is empty — no ID string stored there
-
-	// Should still resolve via the old format fallback
-	result := client.getCompanyFromCache(map[string]string{"domain": "legacy.com"})
-	assert.NotNil(t, result, "Should resolve company via old format fallback")
-	assert.Equal(t, "comp_old_format", result.ID)
-}
-
 func TestGetCompanyFromCache_NewFormatMissingIDKey(t *testing.T) {
-	// Test fallback when lookup cache has the ID but the ID key is missing
+	// Test that nil is returned when lookup cache has the ID but the ID key is missing
 	companyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
 	lookupCache := cache.NewLocalCache[string](100, time.Minute)
 
@@ -120,45 +90,9 @@ func TestGetCompanyFromCache_NewFormatMissingIDKey(t *testing.T) {
 	lookupKey := client.resourceKeyToCacheKey(cacheKeyPrefixCompany, "domain", "orphaned.com")
 	lookupCache.Set(nil, lookupKey, "comp_missing", nil)
 
-	// Should return nil since ID key doesn't exist and old format doesn't exist either
+	// Should return nil since ID key doesn't exist
 	result := client.getCompanyFromCache(map[string]string{"domain": "orphaned.com"})
-	assert.Nil(t, result, "Should return nil when ID key is missing and no old format fallback")
-}
-
-func TestGetCompanyFromCache_NewFormatPreferredOverOld(t *testing.T) {
-	// If both old and new format data exist, new format should be used
-	companyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
-	lookupCache := cache.NewLocalCache[string](100, time.Minute)
-
-	client := &DataStreamClient{
-		companyCacheProvider:       companyCache,
-		companyLookupCacheProvider: lookupCache,
-	}
-
-	oldCompany := &rulesengine.Company{
-		ID:            "comp_old",
-		EnvironmentID: "env_old",
-	}
-
-	newCompany := &rulesengine.Company{
-		ID:            "comp_new",
-		EnvironmentID: "env_new",
-	}
-
-	lookupKey := client.resourceKeyToCacheKey(cacheKeyPrefixCompany, "domain", "dual.com")
-
-	// Old format: full company at lookup key
-	companyCache.Set(nil, lookupKey, oldCompany, nil)
-
-	// New format: lookup key -> ID, ID key -> company
-	lookupCache.Set(nil, lookupKey, newCompany.ID, nil)
-	idKey := client.companyIDCacheKey(newCompany.ID)
-	companyCache.Set(nil, idKey, newCompany, nil)
-
-	// New format should win
-	result := client.getCompanyFromCache(map[string]string{"domain": "dual.com"})
-	assert.NotNil(t, result)
-	assert.Equal(t, "comp_new", result.ID, "New format should be preferred over old format")
+	assert.Nil(t, result, "Should return nil when ID key is missing")
 }
 
 func TestGetCompanyFromCache_NotFound(t *testing.T) {

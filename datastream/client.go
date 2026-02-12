@@ -281,11 +281,16 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 	}
 
 	if resp.MessageType == schematicdatastreamws.MessageTypeDelete {
-		// Remove the company from the cache
+		// Delete the ID-based primary key
+		idKey := c.companyIDCacheKey(company.ID)
+		if err := c.companyCacheProvider.Delete(ctx, idKey); err != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Failed to delete company ID key '%s': %v", idKey, err))
+		}
+		// Delete all lookup keys
 		for key, value := range company.Keys {
 			companyKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-			if err := c.companyCacheProvider.Delete(ctx, companyKey); err != nil {
-				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete company from cache '%s': %v", companyKey, err))
+			if err := c.companyLookupCacheProvider.Delete(ctx, companyKey); err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete company lookup key '%s': %v", companyKey, err))
 			}
 		}
 		return nil
@@ -659,17 +664,12 @@ func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *ruleseng
 	for key, value := range keys {
 		companyKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
 
-		// New format: lookup key -> company ID string -> company at ID key
+		// Two-step lookup: lookup key -> company ID string -> company at ID key
 		if companyID, found := c.companyLookupCacheProvider.Get(ctx, companyKey); found && companyID != "" {
 			idKey := c.companyIDCacheKey(companyID)
 			if company, exists := c.companyCacheProvider.Get(ctx, idKey); exists {
 				return company
 			}
-		}
-
-		// Old format: lookup key -> full company directly
-		if company, exists := c.companyCacheProvider.Get(ctx, companyKey); exists {
-			return company
 		}
 	}
 
@@ -759,25 +759,25 @@ func (c *DataStreamClient) cleanupPendingUserRequests(cacheKeys []string, waitCh
 }
 
 func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rulesengine.Company) (map[string]error, error) {
-	if len(company.Keys) == 0 {
-		return nil, errors.New("no keys provided for company lookup")
-	}
-
 	if company == nil {
 		return nil, errors.New("company cannot be nil")
 	}
 
-	// Map to track which cache keys were successfully cached and which ones failed
+	if len(company.Keys) == 0 {
+		return nil, errors.New("no keys provided for company lookup")
+	}
+
 	cacheResults := make(map[string]error)
 
-	// Try to cache the company for all keys
+	// Write full company to ID-based primary key
+	idKey := c.companyIDCacheKey(company.ID)
+	ttl := c.cacheTTL
+	cacheResults[idKey] = c.companyCacheProvider.Set(ctx, idKey, company, &ttl)
+
+	// Write company ID string to each versioned lookup key
 	for key, value := range company.Keys {
 		companyKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-		ttl := c.cacheTTL
-		err := c.companyCacheProvider.Set(ctx, companyKey, company, &ttl)
-
-		// Store the result for each cache key
-		cacheResults[companyKey] = err
+		cacheResults[companyKey] = c.companyLookupCacheProvider.Set(ctx, companyKey, company.ID, &ttl)
 	}
 
 	return cacheResults, nil

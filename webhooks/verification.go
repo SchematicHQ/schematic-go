@@ -88,4 +88,3 @@ func VerifyWebhookSignature(r *http.Request, secret string) error {
 	// Verify the signature
 	return VerifySignature(body, signature, timestamp, secret)
 }
-

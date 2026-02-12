@@ -121,7 +121,7 @@ func TestVerifyWebhookSignature(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			req := tt.setupReq()
-			
+
 			// Save the original body for verification
 			var originalBody []byte
 			if req.Body != nil {

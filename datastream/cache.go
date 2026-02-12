@@ -66,6 +66,40 @@ func buildFlagCacheProvider(configOpt *core.DatastreamOptions) cache.CacheProvid
 	return cache.NewLocalCache[*rulesengine.Flag](defaultCacheSize, flagTTL)
 }
 
+// buildCompanyLookupCacheProvider creates a string cache provider for company ID lookups.
+// Used in replicator mode to support the two-step lookup (lookup key -> company ID -> company).
+func buildCompanyLookupCacheProvider(configOpt *core.DatastreamOptions) CompanyLookupCacheProvider {
+	cacheTTL := defaultTTL
+	if configOpt != nil && configOpt.CacheTTL > 0 {
+		cacheTTL = configOpt.CacheTTL
+	}
+
+	if configOpt == nil || configOpt.CacheConfig == nil {
+		return cache.NewLocalCache[string](defaultCacheSize, cacheTTL)
+	}
+
+	switch configOpt.CacheConfig.(type) {
+	case *core.RedisCacheConfig:
+		config := configOpt.CacheConfig.(*core.RedisCacheConfig)
+		client := redis.NewClient(ToRedisOptions(config))
+		return cache.NewRedisCache[string](client, cacheTTL)
+	case core.RedisCacheConfig:
+		config := configOpt.CacheConfig.(core.RedisCacheConfig)
+		client := redis.NewClient(ToRedisOptions(&config))
+		return cache.NewRedisCache[string](client, cacheTTL)
+	case *core.RedisCacheClusterConfig:
+		config := configOpt.CacheConfig.(*core.RedisCacheClusterConfig)
+		client := redis.NewClusterClient(ToRedisClusterOptions(config))
+		return cache.NewRedisCache[string](client, cacheTTL)
+	case core.RedisCacheClusterConfig:
+		config := configOpt.CacheConfig.(core.RedisCacheClusterConfig)
+		client := redis.NewClusterClient(ToRedisClusterOptions(&config))
+		return cache.NewRedisCache[string](client, cacheTTL)
+	}
+
+	return cache.NewLocalCache[string](defaultCacheSize, cacheTTL)
+}
+
 // Helper function to build cache providers based on configuration options
 func buildCacheProvidersFromConfig(configOpt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {
 	if configOpt == nil || configOpt.CacheConfig == nil {

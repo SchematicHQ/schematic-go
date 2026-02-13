@@ -11,6 +11,7 @@ import (
 )
 
 type CompanyCacheProvider cache.CacheProvider[*rulesengine.Company]
+type CompanyLookupCacheProvider cache.CacheProvider[string]
 type FlagCacheProvider cache.CacheProvider[*rulesengine.Flag]
 type UserCacheProvider cache.CacheProvider[*rulesengine.User]
 
@@ -24,14 +25,15 @@ type DataStreamClientOptions struct {
 }
 
 type DataStreamClient struct {
-	cacheTTL             time.Duration
-	wsClient             *schematicdatastreamws.Client
-	logger               core.Logger
-	companyCacheProvider CompanyCacheProvider
-	flagsCacheProvider   FlagCacheProvider
-	userCacheProvider    UserCacheProvider
-	companyCache         map[string]*rulesengine.Company
-	apiKey               string
+	cacheTTL                   time.Duration
+	wsClient                   *schematicdatastreamws.Client
+	logger                     core.Logger
+	companyCacheProvider       CompanyCacheProvider
+	companyLookupCacheProvider CompanyLookupCacheProvider
+	flagsCacheProvider         FlagCacheProvider
+	userCacheProvider          UserCacheProvider
+	companyCache               map[string]*rulesengine.Company
+	apiKey                     string
 
 	pendingCompanyRequests map[string][]chan *rulesengine.Company
 	pendingUserRequests    map[string][]chan *rulesengine.User

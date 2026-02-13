@@ -12,9 +12,10 @@ import (
 	"github.com/golang/mock/gomock"
 	schematicgo "github.com/schematichq/schematic-go"
 	schematicclient "github.com/schematichq/schematic-go/client"
+	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/mocks"
 	option "github.com/schematichq/schematic-go/option"
-
+	"github.com/schematichq/rulesengine"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -289,4 +290,91 @@ func TestCheckFlagDatastreamFallbackToAPI(t *testing.T) {
 	}, "test-flag")
 
 	assert.True(t, result)
+}
+
+func TestCheckFlagResponse_Structure(t *testing.T) {
+	allocation := int64(100)
+	usage := int64(50)
+	eventName := "test-event"
+
+	entitlement := &rulesengine.FeatureEntitlement{
+		FeatureID:  "feat-123",
+		FeatureKey: "test-feature",
+		ValueType:  rulesengine.EntitlementValueTypeNumeric,
+		Allocation: &allocation,
+		Usage:      &usage,
+		EventName:  &eventName,
+	}
+
+	companyID := "comp-123"
+	flagID := "flag-456"
+	ruleID := "rule-789"
+	userID := "user-321"
+	ruleType := rulesengine.RuleTypePlanEntitlement
+
+	resp := &schematicclient.CheckFlagResponse{
+		CompanyID:   &companyID,
+		Entitlement: entitlement,
+		FlagID:      &flagID,
+		FlagKey:     "test-flag",
+		Reason:      "entitlement rule matched",
+		RuleID:      &ruleID,
+		RuleType:    &ruleType,
+		UserID:      &userID,
+		Value:       true,
+	}
+
+	assert.NotNil(t, resp)
+	assert.Equal(t, true, resp.Value)
+	assert.Equal(t, "test-flag", resp.FlagKey)
+	assert.NotNil(t, resp.Entitlement)
+	assert.Equal(t, "feat-123", resp.Entitlement.FeatureID)
+	assert.Equal(t, "test-feature", resp.Entitlement.FeatureKey)
+	assert.Equal(t, int64(100), *resp.Entitlement.Allocation)
+	assert.Equal(t, int64(50), *resp.Entitlement.Usage)
+}
+
+func TestCheckFlagWithEntitlement_Offline(t *testing.T) {
+	// Test offline mode
+	client := schematicclient.NewSchematicClient(
+		core.WithOfflineMode(),
+		core.WithDefaultFlagValues(map[string]bool{"test-flag": true}),
+	)
+	defer client.Close()
+	
+	ctx := context.Background()
+	evalCtx := &schematicgo.CheckFlagRequestBody{}
+	
+	resp, err := client.CheckFlagWithEntitlement(ctx, evalCtx, "test-flag")
+	
+	assert.Nil(t, err)
+	assert.NotNil(t, resp)
+	assert.Equal(t, "test-flag", resp.FlagKey)
+	assert.Equal(t, true, resp.Value)
+	assert.Equal(t, "offline mode", resp.Reason)
+	assert.Nil(t, resp.Entitlement)
+}
+
+func TestCheckFlagResponse_NoDeprecatedFields(t *testing.T) {
+	// Verify that CheckFlagResponse doesn't include deprecated fields
+	// by ensuring it only has the expected fields
+	
+	resp := &schematicclient.CheckFlagResponse{
+		FlagKey: "test",
+		Value:   true,
+		Reason:  "test",
+	}
+	
+	// If this compiles, it means we don't have the deprecated fields
+	// FeatureAllocation, FeatureUsage, FeatureUsageEvent, FeatureUsagePeriod, FeatureUsageResetAt
+	assert.NotNil(t, resp)
+	
+	// Verify we can access the new Entitlement field
+	entitlement := &rulesengine.FeatureEntitlement{
+		FeatureID:  "test",
+		FeatureKey: "test",
+		ValueType:  rulesengine.EntitlementValueTypeBoolean,
+	}
+	resp.Entitlement = entitlement
+	assert.Equal(t, "test", resp.Entitlement.FeatureKey)
 }

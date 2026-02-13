@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/buffer"
 	"github.com/schematichq/schematic-go/cache"
@@ -31,6 +32,21 @@ type SchematicClient struct {
 	options                 *core.RequestOptions
 	stopWorker              chan struct{}
 	workerInterval          time.Duration
+}
+
+// CheckFlagResponse contains the result of a flag check with entitlement information.
+// Note: FeatureAllocation and FeatureUsage* fields are deprecated and not included.
+// Use Entitlement field for allocation and usage information.
+type CheckFlagResponse struct {
+	CompanyID   *string                         `json:"company_id,omitempty"`
+	Entitlement *rulesengine.FeatureEntitlement `json:"entitlement,omitempty"`
+	FlagID      *string                         `json:"flag_id,omitempty"`
+	FlagKey     string                          `json:"flag_key"`
+	Reason      string                          `json:"reason"`
+	RuleID      *string                         `json:"rule_id,omitempty"`
+	RuleType    *rulesengine.RuleType           `json:"rule_type,omitempty"`
+	UserID      *string                         `json:"user_id,omitempty"`
+	Value       bool                            `json:"value"`
 }
 
 func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
@@ -105,7 +121,7 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 		// Fall back to API if datastream fails
 		if err != nil {
 			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed (%v), falling back to API", err))
-			return c.checkFlag(ctx, evalCtx, flagKey)
+			return c.checkFlag(ctx, evalCtx, flagKey).Value
 		}
 
 		body := schematicgo.EventBody{
@@ -126,10 +142,10 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 
 		return resp.Value
 	}
-	return c.checkFlag(ctx, evalCtx, flagKey)
+	return c.checkFlag(ctx, evalCtx, flagKey).Value
 }
 
-func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) *CheckFlagResponse {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
@@ -144,7 +160,11 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 	cacheKey := flags.FlagCheckCacheKey(evalCtx, flagKey)
 	for _, provider := range c.flagCheckCacheProviders {
 		if value, ok := provider.Get(ctx, cacheKey); ok {
-			return value
+			return &CheckFlagResponse{
+				FlagKey: flagKey,
+				Value:   value,
+				Reason:  "cache hit",
+			}
 		}
 	}
 
@@ -155,12 +175,20 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 			Err: err,
 		}
 
-		return c.getFlagDefault(flagKey)
+		return &CheckFlagResponse{
+			FlagKey: flagKey,
+			Value:   c.getFlagDefault(flagKey),
+			Reason:  "error",
+		}
 	}
 
 	if resp == nil {
 		// if the client was not initialized with an API key, we'll have a no-op here which returns an empty response
-		return c.getFlagDefault(flagKey)
+		return &CheckFlagResponse{
+			FlagKey: flagKey,
+			Value:   c.getFlagDefault(flagKey),
+			Reason:  "no response",
+		}
 	}
 
 	go func() {
@@ -174,7 +202,132 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 		}
 	}()
 
-	return resp.Data.Value
+	return &CheckFlagResponse{
+		CompanyID:   resp.Data.CompanyID,
+		Entitlement: toRulesEngineEntitlement(resp.Data.Entitlement),
+		FlagID:      resp.Data.FlagID,
+		FlagKey:     flagKey,
+		Reason:      resp.Data.Reason,
+		RuleID:      resp.Data.RuleID,
+		RuleType:    toRulesEngineRuleType(resp.Data.RuleType),
+		UserID:      resp.Data.UserID,
+		Value:       resp.Data.Value,
+	}
+}
+
+// CheckFlagWithEntitlement checks a flag and returns the full response including entitlement information.
+// This method returns the complete flag check result, including any matched entitlement.
+// Note: The deprecated FeatureAllocation and FeatureUsage* fields are not included in the response.
+func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*CheckFlagResponse, error) {
+	if c.isOffline {
+		return &CheckFlagResponse{
+			FlagKey: flagKey,
+			Value:   c.getFlagDefault(flagKey),
+			Reason:  "offline mode",
+		}, nil
+	}
+
+	if c.useDataStream() {
+		// Try datastream first - it will check cache and handle replicator mode appropriately
+		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
+		if err != nil {
+			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed (%v), falling back to API", err))
+			return c.checkFlag(ctx, evalCtx, flagKey), nil
+		}
+
+		checkFlagResp := toCheckFlagResponse(resp)
+
+		body := schematicgo.EventBody{
+			EventBodyFlagCheck: &schematicgo.EventBodyFlagCheck{
+				FlagKey:    flagKey,
+				Value:      checkFlagResp.Value,
+				CompanyID:  checkFlagResp.CompanyID,
+				UserID:     checkFlagResp.UserID,
+				FlagID:     checkFlagResp.FlagID,
+				ReqCompany: evalCtx.Company,
+				ReqUser:    evalCtx.User,
+				RuleID:     checkFlagResp.RuleID,
+				Reason:     checkFlagResp.Reason,
+			},
+		}
+
+		c.enqueueEvent("flag_check", body)
+
+		return checkFlagResp, nil
+	}
+
+	return c.checkFlag(ctx, evalCtx, flagKey), nil
+}
+
+// toCheckFlagResponse converts a rulesengine.CheckFlagResult to CheckFlagResponse,
+// excluding deprecated FeatureAllocation and FeatureUsage* fields.
+func toCheckFlagResponse(result *rulesengine.CheckFlagResult) *CheckFlagResponse {
+	if result == nil {
+		return nil
+	}
+
+	return &CheckFlagResponse{
+		CompanyID:   result.CompanyID,
+		Entitlement: result.Entitlement,
+		FlagID:      result.FlagID,
+		FlagKey:     result.FlagKey,
+		Reason:      result.Reason,
+		RuleID:      result.RuleID,
+		RuleType:    result.RuleType,
+		UserID:      result.UserID,
+		Value:       result.Value,
+	}
+}
+
+// toRulesEngineEntitlement converts a schematicgo.FeatureEntitlement to a rulesengine.FeatureEntitlement.
+func toRulesEngineEntitlement(e *schematicgo.FeatureEntitlement) *rulesengine.FeatureEntitlement {
+	if e == nil {
+		return nil
+	}
+
+	result := &rulesengine.FeatureEntitlement{
+		FeatureID:       e.FeatureID,
+		FeatureKey:      e.FeatureKey,
+		ValueType:       rulesengine.EntitlementValueType(e.ValueType),
+		EventName:       e.EventName,
+		MetricResetAt:   e.MetricResetAt,
+		CreditID:        e.CreditID,
+		CreditTotal:     e.CreditTotal,
+		CreditUsed:      e.CreditUsed,
+		CreditRemaining: e.CreditRemaining,
+	}
+
+	if e.Allocation != nil {
+		v := int64(*e.Allocation)
+		result.Allocation = &v
+	}
+	if e.SoftLimit != nil {
+		v := int64(*e.SoftLimit)
+		result.SoftLimit = &v
+	}
+	if e.Usage != nil {
+		v := int64(*e.Usage)
+		result.Usage = &v
+	}
+	if e.MetricPeriod != nil {
+		v := rulesengine.MetricPeriod(string(*e.MetricPeriod))
+		result.MetricPeriod = &v
+	}
+	if e.MonthReset != nil {
+		v := rulesengine.MetricPeriodMonthReset(string(*e.MonthReset))
+		result.MonthReset = &v
+	}
+
+	return result
+}
+
+// toRulesEngineRuleType converts a string pointer to a rulesengine.RuleType pointer.
+func toRulesEngineRuleType(s *string) *rulesengine.RuleType {
+	if s == nil {
+		return nil
+	}
+	v := rulesengine.RuleType(*s)
+	return &v
 }
 
 func (c *SchematicClient) Close() {

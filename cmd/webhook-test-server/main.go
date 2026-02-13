@@ -12,7 +12,7 @@
 //
 //  2. Expose to the internet:
 //     - Since Schematic can't access localhost directly, use a tunneling service like ngrok:
-//       ngrok http 8080
+//     ngrok http 8080
 //
 //  3. Configure in Schematic:
 //     - Use the ngrok URL (e.g., https://a1b2c3d4.ngrok.io/webhook) as your webhook endpoint
@@ -100,4 +100,3 @@ func main() {
 	log.Printf("Example: ngrok http %s", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
-

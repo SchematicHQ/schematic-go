@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 
 	schematicgo "github.com/schematichq/schematic-go"
@@ -27,6 +28,7 @@ type SchematicClient struct {
 	flagDefaults            map[string]bool
 	isOffline               bool
 	logger                  core.Logger
+	options                 *core.RequestOptions
 	stopWorker              chan struct{}
 	workerInterval          time.Duration
 }
@@ -64,6 +66,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		flagDefaults:            options.FlagDefaults,
 		isOffline:               options.OfflineMode,
 		logger:                  options.Logger,
+		options:                 options,
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
 	}
@@ -297,8 +300,15 @@ func (c *SchematicClient) worker() {
 		}
 	}()
 
+	// Start buffered event worker
+	httpClient := c.options.HTTPClient
+	if httpClient == nil {
+		httpClient = http.DefaultClient
+	}
+
 	buffer := buffer.NewEventBuffer(
-		c.Events,
+		c.options,
+		httpClient,
 		c.errors,
 		c.logger,
 		c.eventBufferPeriod,

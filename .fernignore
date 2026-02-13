@@ -9,7 +9,10 @@ LICENSE
 README.md
 go.mod
 go.sum
+buffer/batcher.go
 buffer/buffer.go
+buffer/buffer_test.go
+buffer/sender.go
 cache/cache.go
 cache/local.go
 cache/local_benchmark_test.go

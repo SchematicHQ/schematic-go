@@ -2,44 +2,31 @@ package buffer
 
 import (
 	"context"
-	"fmt"
-	"math"
-	"math/rand"
 	"sync"
 	"time"
 
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
-	"github.com/schematichq/schematic-go/events"
 )
 
 const defaultEventBufferPeriod = 5 * time.Second
 const maxEvents = 100
-const defaultMaxRetries = 3
-const defaultInitialRetryDelay = 1 * time.Second
 
 type eventBuffer struct {
 	// error logging channel
 	errors chan error
 
-	// buffer of events
-	events []*schematicgo.CreateEventRequestBody
+	// batcher handles accumulating events
+	batcher *Batcher
 
-	// API client
-	eventClient *events.Client
+	// sender handles sending events with retries
+	sender EventSender
 
 	// frequency to flush the buffer
 	interval time.Duration
 
 	// logger
 	logger core.Logger
-
-	// max number of events to store in buffer
-	maxEvents int
-
-	// retry configuration
-	maxRetries        int
-	initialRetryDelay time.Duration
 
 	// mutex for buffer operations
 	mutex sync.Mutex
@@ -52,7 +39,8 @@ type eventBuffer struct {
 }
 
 func NewEventBuffer(
-	client *events.Client,
+	options *core.RequestOptions,
+	client core.HTTPClient,
 	errors chan error,
 	logger core.Logger,
 	_period *time.Duration,
@@ -62,17 +50,17 @@ func NewEventBuffer(
 		period = *_period
 	}
 
+	// Create HTTP sender with built-in retry logic
+	sender := NewHTTPEventSender(client, options, logger)
+
 	buffer := &eventBuffer{
-		events:            []*schematicgo.CreateEventRequestBody{},
-		eventClient:       client,
-		errors:            errors,
-		interval:          period,
-		logger:            logger,
-		maxEvents:         maxEvents,
-		maxRetries:        defaultMaxRetries,
-		initialRetryDelay: defaultInitialRetryDelay,
-		mutex:             sync.Mutex{},
-		shutdown:          make(chan struct{}),
+		batcher:  NewBatcher(maxEvents),
+		sender:   sender,
+		errors:   errors,
+		interval: period,
+		logger:   logger,
+		mutex:    sync.Mutex{},
+		shutdown: make(chan struct{}),
 	}
 
 	// Start ticker to flush events periodically
@@ -83,83 +71,21 @@ func NewEventBuffer(
 
 func (b *eventBuffer) flush() {
 	b.mutex.Lock()
-	defer b.mutex.Unlock()
+	events := b.batcher.Flush()
+	b.mutex.Unlock()
 
-	b.flushLocked()
+	b.sendEvents(events)
 }
 
-func (b *eventBuffer) flushLocked() {
-	if len(b.events) == 0 {
+// sendEvents sends events outside the lock so Push callers aren't blocked during HTTP retries.
+func (b *eventBuffer) sendEvents(events []*schematicgo.CreateEventRequestBody) {
+	if events == nil {
 		return
 	}
 
-	eventsToProcess := make([]*schematicgo.CreateEventRequestBody, len(b.events))
-	copy(eventsToProcess, b.events)
-
-	b.events = b.events[:0]
-
-	events := make([]*schematicgo.CreateEventRequestBody, 0, len(eventsToProcess))
-	for _, event := range eventsToProcess {
-		if event != nil {
-			events = append(events, event)
-		}
-	}
-
-	if len(events) == 0 {
-		return
-	}
-
-	req := &schematicgo.CreateEventBatchRequestBody{
-		Events: events,
-	}
-
-	// Initialize retry counter and success flag
-	retryCount := 0
-	success := false
-	var lastErr error
-
-	// Try with retries and exponential backoff
-	for retryCount <= b.maxRetries && !success {
-		if retryCount > 0 {
-			// Log retry attempt
-			b.logger.Info(context.Background(), fmt.Sprintf("Retrying event batch submission (attempt %d of %d)", retryCount, b.maxRetries))
-		}
-
-		// Attempt to send events
-		_, err := b.eventClient.CreateEventBatch(context.Background(), req)
-		if err == nil {
-			success = true
-		} else {
-			lastErr = err
-			retryCount++
-
-			if retryCount <= b.maxRetries {
-				// Calculate backoff with jitter
-				delay := float64(b.initialRetryDelay.Nanoseconds()) * math.Pow(2, float64(retryCount-1))
-				jitter := rand.Float64() * 0.1 * delay // 10% jitter
-				waitTime := time.Duration(delay + jitter)
-
-				b.logger.Warn(
-					context.Background(),
-					fmt.Sprintf("Event batch submission failed: %v. Retrying in %.2f seconds...",
-						err, float64(waitTime)/float64(time.Second)),
-				)
-
-				// Wait before retry
-				time.Sleep(waitTime)
-			}
-		}
-	}
-
-	// After all retries, if still not successful, log the error
-	if !success {
-		b.logger.Error(
-			context.Background(),
-			fmt.Sprintf("Event batch submission failed after %d retries: %v", b.maxRetries, lastErr),
-		)
-		b.errors <- lastErr
-	} else if retryCount > 0 {
-		b.logger.Info(context.Background(), fmt.Sprintf("Event batch submission succeeded after %d retries", retryCount))
+	err := b.sender.SendBatch(context.Background(), events)
+	if err != nil {
+		b.errors <- err
 	}
 }
 
@@ -194,13 +120,14 @@ func (b *eventBuffer) Push(event *schematicgo.CreateEventRequestBody) {
 	}
 
 	b.mutex.Lock()
-	defer b.mutex.Unlock()
-
-	if len(b.events) >= b.maxEvents {
-		b.flushLocked()
+	full := b.batcher.Add(event)
+	var events []*schematicgo.CreateEventRequestBody
+	if full {
+		events = b.batcher.Flush()
 	}
+	b.mutex.Unlock()
 
-	b.events = append(b.events, event)
+	b.sendEvents(events)
 }
 
 func (b *eventBuffer) Stop() {

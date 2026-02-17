@@ -50,6 +50,22 @@ func WithEventBufferPeriod(period time.Duration) RequestOption {
 	}
 }
 
+// Event Capture Base URL
+
+type ClientOptEventCaptureBaseURL struct {
+	url string
+}
+
+func (c ClientOptEventCaptureBaseURL) applyRequestOptions(opts *RequestOptions) {
+	opts.EventCaptureBaseURL = c.url
+}
+
+func WithEventCaptureBaseURL(url string) RequestOption {
+	return ClientOptEventCaptureBaseURL{
+		url: url,
+	}
+}
+
 // Specify custom cache behavior
 
 type ClientOptFlagCheckCacheProvider struct {

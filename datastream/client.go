@@ -706,10 +706,10 @@ func (c *DataStreamClient) resourceKeyToCacheKey(resourceType string, key string
 	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, versionKey, strings.ToLower(key), strings.ToLower(value))
 }
 
-// companyIDCacheKey generates a cache key for a company by its ID (not version-scoped).
-// Format: schematic:company:{companyID}
+// companyIDCacheKey generates a cache key for a company by its ID.
+// Format: schematic:company:{version}:{companyID}
 func (c *DataStreamClient) companyIDCacheKey(id string) string {
-	return fmt.Sprintf("%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixCompany, id)
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixCompany, rulesengine.VersionKey, id)
 }
 
 // Helper function to clean up pending company requests

@@ -20,12 +20,12 @@ func TestCompanyIDCacheKeyFormat(t *testing.T) {
 		{
 			name:     "Standard ID",
 			id:       "comp_abc123",
-			expected: "schematic:company:comp_abc123",
+			expected: "schematic:company:" + rulesengine.VersionKey + ":comp_abc123",
 		},
 		{
 			name:     "UUID-style ID",
 			id:       "550e8400-e29b-41d4-a716-446655440000",
-			expected: "schematic:company:550e8400-e29b-41d4-a716-446655440000",
+			expected: "schematic:company:" + rulesengine.VersionKey + ":550e8400-e29b-41d4-a716-446655440000",
 		},
 	}
 

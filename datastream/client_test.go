@@ -513,11 +513,15 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 
 	logger := NewMockLogger()
 
+	// Create a local cache provider for companies so we can verify metric updates
+	localCompanyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
+
 	options := &core.DatastreamOptions{
 		CacheTTL: 5 * time.Minute,
 	}
 
 	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+	clientOptions.CompanyCache = localCompanyCache
 
 	client := datastream.NewDataStreamClient(clientOptions, options)
 	client.Start()
@@ -544,7 +548,7 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 				CompanyID:    companyID,
 				EventSubtype: eventType,
 				Value:        initialValue,
-				Period:       "lifetime",
+				Period:       rulesengine.MetricPeriodAllTime,
 			},
 		},
 	}
@@ -563,6 +567,12 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 
 	ctx := context.Background()
 
+	// Verify the company was cached via the ID key
+	idKey := fmt.Sprintf("schematic:company:%s:company-id", rulesengine.VersionKey)
+	cachedCompany, exists := localCompanyCache.Get(ctx, idKey)
+	assert.True(t, exists, "Company should exist in cache at ID key")
+	assert.NotNil(t, cachedCompany, "Cached company should not be nil")
+
 	// Now update metrics for this company
 	incrementValue := 5
 	event := &schematicgo.EventBodyTrack{
@@ -576,6 +586,23 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 
 	// Allow time for the update to complete
 	time.Sleep(100 * time.Millisecond)
+
+	// Verify the metric value was incremented
+	updatedCompany, exists := localCompanyCache.Get(ctx, idKey)
+	assert.True(t, exists, "Company should still exist in cache")
+	assert.NotNil(t, updatedCompany, "Updated company should not be nil")
+
+	var foundMetric *rulesengine.CompanyMetric
+	for _, metric := range updatedCompany.Metrics {
+		if metric != nil && metric.EventSubtype == eventType {
+			foundMetric = metric
+			break
+		}
+	}
+
+	assert.NotNil(t, foundMetric, "Metric should exist for event type %s", eventType)
+	expectedValue := initialValue + int64(incrementValue)
+	assert.Equal(t, expectedValue, foundMetric.Value, "Metric value should be incremented correctly")
 
 	// Send another metric update with a different increment
 	secondIncrementValue := 7
@@ -591,17 +618,24 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 	// Allow time for the update to complete
 	time.Sleep(100 * time.Millisecond)
 
-	// Verify by doing a third update - if it doesn't error, the company is still in cache
-	// and the previous updates were applied successfully
-	thirdIncrementValue := 1
-	thirdEvent := &schematicgo.EventBodyTrack{
-		Event:    eventType,
-		Company:  map[string]string{"company_id": companyID},
-		Quantity: &thirdIncrementValue,
+	// Verify the final metric value includes both increments
+	finalCompany, exists := localCompanyCache.Get(ctx, idKey)
+	assert.True(t, exists, "Company should still exist in cache after second update")
+	assert.NotNil(t, finalCompany, "Final company should not be nil")
+
+	var finalMetric *rulesengine.CompanyMetric
+	for _, metric := range finalCompany.Metrics {
+		if metric != nil && metric.EventSubtype == eventType {
+			finalMetric = metric
+			break
+		}
 	}
 
-	err = client.UpdateCompanyMetrics(ctx, thirdEvent)
-	assert.NoError(t, err, "Third update should succeed, confirming company persists in cache")
+	assert.NotNil(t, finalMetric, "Metric should exist after second update")
+	finalExpectedValue := initialValue + int64(incrementValue) + int64(secondIncrementValue)
+	assert.Equal(t, finalExpectedValue, finalMetric.Value,
+		"Metric value should include both increments (initial %d + first %d + second %d = %d)",
+		initialValue, incrementValue, secondIncrementValue, finalExpectedValue)
 }
 
 func TestConnectionStateTracking(t *testing.T) {

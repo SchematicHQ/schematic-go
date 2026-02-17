@@ -24,8 +24,11 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		}
 	}
 
+	// Build a shared Redis client (if configured) for all cache providers
+	redisClient := buildRedisClient(configurationOptions)
+
 	// Get or create cache providers based on options
-	companyCacheProvider, userCacheProvider := getCacheProviders(options, configurationOptions)
+	companyCacheProvider, userCacheProvider := getCacheProviders(options, configurationOptions, redisClient)
 
 	if companyCacheProvider == nil || userCacheProvider == nil {
 		panic("failed to create cache providers")
@@ -34,11 +37,11 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 	// Create flag cache based on configuration - use Redis if configured, otherwise local cache
 	flagCacheProvider := options.FlagCache
 	if flagCacheProvider == nil {
-		flagCacheProvider = buildFlagCacheProvider(configurationOptions)
+		flagCacheProvider = buildFlagCacheProvider(configurationOptions, redisClient)
 	}
 
 	// Build company lookup cache provider for two-step company ID resolution
-	companyLookupCacheProvider := buildCompanyLookupCacheProvider(configurationOptions)
+	companyLookupCacheProvider := buildCompanyLookupCacheProvider(configurationOptions, redisClient)
 
 	client := &DataStreamClient{
 		apiKey:                     options.ApiKey,

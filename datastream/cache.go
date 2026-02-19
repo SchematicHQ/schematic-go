@@ -7,7 +7,7 @@ import (
 	"github.com/schematichq/schematic-go/core"
 )
 
-func getCacheProviders(options DataStreamClientOptions, configOpt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {
+func getCacheProviders(options DataStreamClientOptions, configOpt *core.DatastreamOptions, redisClient redis.UniversalClient) (CompanyCacheProvider, UserCacheProvider) {
 	// If both cache providers are specified in options, use them
 	if options.CompanyCache != nil && options.UserCache != nil {
 		return CompanyCacheProvider(options.CompanyCache), UserCacheProvider(options.UserCache)
@@ -15,83 +15,83 @@ func getCacheProviders(options DataStreamClientOptions, configOpt *core.Datastre
 
 	// If only company cache provider is specified, create only user cache provider
 	if options.CompanyCache != nil {
-		_, userCacheProvider := buildCacheProvidersFromConfig(configOpt)
+		_, userCacheProvider := buildCacheProvidersFromConfig(configOpt, redisClient)
 		return CompanyCacheProvider(options.CompanyCache), userCacheProvider
 	}
 
 	// If only user cache provider is specified, create only company cache provider
 	if options.UserCache != nil {
-		companyCacheProvider, _ := buildCacheProvidersFromConfig(configOpt)
+		companyCacheProvider, _ := buildCacheProvidersFromConfig(configOpt, redisClient)
 		return companyCacheProvider, UserCacheProvider(options.UserCache)
 	}
 
 	// Otherwise build both cache providers based on configuration options
-	return buildCacheProvidersFromConfig(configOpt)
+	return buildCacheProvidersFromConfig(configOpt, redisClient)
 }
 
-// buildFlagCacheProvider creates a flag cache provider based on configuration options
-// Flags use the same cache provider type as company/user caches but with special TTL logic
-func buildFlagCacheProvider(configOpt *core.DatastreamOptions) cache.CacheProvider[*rulesengine.Flag] {
+// buildFlagCacheProvider creates a flag cache provider using a shared Redis client.
+// Flags use the same cache provider type as company/user caches but with special TTL logic.
+func buildFlagCacheProvider(configOpt *core.DatastreamOptions, redisClient redis.UniversalClient) cache.CacheProvider[*rulesengine.Flag] {
 	// Calculate flag TTL - use the greater value between configured TTL and max TTL
 	flagTTL := maxCacheTTL
 	if configOpt != nil && configOpt.CacheTTL > maxCacheTTL {
 		flagTTL = configOpt.CacheTTL
 	}
 
-	if configOpt == nil || configOpt.CacheConfig == nil {
-		// Use local cache with flag TTL
-		return cache.NewLocalCache[*rulesengine.Flag](defaultCacheSize, flagTTL)
+	if redisClient != nil {
+		return cache.NewRedisCache[*rulesengine.Flag](redisClient, flagTTL)
 	}
 
-	switch configOpt.CacheConfig.(type) {
-	case *core.RedisCacheConfig:
-		config := configOpt.CacheConfig.(*core.RedisCacheConfig)
-		client := redis.NewClient(ToRedisOptions(config))
-		return cache.NewRedisCache[*rulesengine.Flag](client, flagTTL)
-	case core.RedisCacheConfig:
-		config := configOpt.CacheConfig.(core.RedisCacheConfig)
-		client := redis.NewClient(ToRedisOptions(&config))
-		return cache.NewRedisCache[*rulesengine.Flag](client, flagTTL)
-	case *core.RedisCacheClusterConfig:
-		config := configOpt.CacheConfig.(*core.RedisCacheClusterConfig)
-		client := redis.NewClusterClient(ToRedisClusterOptions(config))
-		return cache.NewRedisCache[*rulesengine.Flag](client, flagTTL)
-	case core.RedisCacheClusterConfig:
-		config := configOpt.CacheConfig.(core.RedisCacheClusterConfig)
-		client := redis.NewClusterClient(ToRedisClusterOptions(&config))
-		return cache.NewRedisCache[*rulesengine.Flag](client, flagTTL)
-	}
-
-	// Fallback to local cache
 	return cache.NewLocalCache[*rulesengine.Flag](defaultCacheSize, flagTTL)
 }
 
-// Helper function to build cache providers based on configuration options
-func buildCacheProvidersFromConfig(configOpt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {
+// buildCompanyLookupCacheProvider creates a string cache provider for company ID lookups
+// using a shared Redis client to avoid creating additional connections.
+func buildCompanyLookupCacheProvider(configOpt *core.DatastreamOptions, redisClient redis.UniversalClient) CompanyLookupCacheProvider {
+	cacheTTL := defaultTTL
+	if configOpt != nil && configOpt.CacheTTL > 0 {
+		cacheTTL = configOpt.CacheTTL
+	}
+
+	if redisClient != nil {
+		return cache.NewRedisCache[string](redisClient, cacheTTL)
+	}
+
+	return cache.NewLocalCache[string](defaultCacheSize, cacheTTL)
+}
+
+// buildRedisClient creates a Redis client from the cache configuration, or returns nil
+// if no Redis config is provided. The returned client should be shared across all cache
+// providers to respect the user's connection pool settings.
+func buildRedisClient(configOpt *core.DatastreamOptions) redis.UniversalClient {
 	if configOpt == nil || configOpt.CacheConfig == nil {
-		return buildLocalCache(configOpt)
+		return nil
 	}
 
 	switch configOpt.CacheConfig.(type) {
 	case *core.RedisCacheConfig:
 		config := configOpt.CacheConfig.(*core.RedisCacheConfig)
-		client := redis.NewClient(ToRedisOptions(config))
-		return buildRedisCache(client, configOpt)
+		return redis.NewClient(ToRedisOptions(config))
 	case core.RedisCacheConfig:
 		config := configOpt.CacheConfig.(core.RedisCacheConfig)
-		client := redis.NewClient(ToRedisOptions(&config))
-		return buildRedisCache(client, configOpt)
+		return redis.NewClient(ToRedisOptions(&config))
 	case *core.RedisCacheClusterConfig:
 		config := configOpt.CacheConfig.(*core.RedisCacheClusterConfig)
-		client := redis.NewClusterClient(ToRedisClusterOptions(config))
-		return buildRedisCache(client, configOpt)
+		return redis.NewClusterClient(ToRedisClusterOptions(config))
 	case core.RedisCacheClusterConfig:
 		config := configOpt.CacheConfig.(core.RedisCacheClusterConfig)
-		client := redis.NewClusterClient(ToRedisClusterOptions(&config))
-		return buildRedisCache(client, configOpt)
+		return redis.NewClusterClient(ToRedisClusterOptions(&config))
 	}
 
-	return nil, nil
+	return nil
+}
+
+// Helper function to build cache providers based on configuration options
+func buildCacheProvidersFromConfig(configOpt *core.DatastreamOptions, redisClient redis.UniversalClient) (CompanyCacheProvider, UserCacheProvider) {
+	if redisClient != nil {
+		return buildRedisCache(redisClient, configOpt)
+	}
+	return buildLocalCache(configOpt)
 }
 
 func buildRedisCache(client redis.UniversalClient, opt *core.DatastreamOptions) (CompanyCacheProvider, UserCacheProvider) {

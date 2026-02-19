@@ -24,8 +24,11 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		}
 	}
 
+	// Build a shared Redis client (if configured) for all cache providers
+	redisClient := buildRedisClient(configurationOptions)
+
 	// Get or create cache providers based on options
-	companyCacheProvider, userCacheProvider := getCacheProviders(options, configurationOptions)
+	companyCacheProvider, userCacheProvider := getCacheProviders(options, configurationOptions, redisClient)
 
 	if companyCacheProvider == nil || userCacheProvider == nil {
 		panic("failed to create cache providers")
@@ -34,17 +37,21 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 	// Create flag cache based on configuration - use Redis if configured, otherwise local cache
 	flagCacheProvider := options.FlagCache
 	if flagCacheProvider == nil {
-		flagCacheProvider = buildFlagCacheProvider(configurationOptions)
+		flagCacheProvider = buildFlagCacheProvider(configurationOptions, redisClient)
 	}
 
+	// Build company lookup cache provider for two-step company ID resolution
+	companyLookupCacheProvider := buildCompanyLookupCacheProvider(configurationOptions, redisClient)
+
 	client := &DataStreamClient{
-		apiKey:               options.ApiKey,
-		cacheTTL:             configurationOptions.CacheTTL,
-		logger:               options.Logger,
-		flagsCacheProvider:   flagCacheProvider,
-		companyCacheProvider: companyCacheProvider,
-		companyCache:         make(map[string]*rulesengine.Company),
-		userCacheProvider:    userCacheProvider,
+		apiKey:                     options.ApiKey,
+		cacheTTL:                   configurationOptions.CacheTTL,
+		logger:                     options.Logger,
+		flagsCacheProvider:         flagCacheProvider,
+		companyCacheProvider:       companyCacheProvider,
+		companyLookupCacheProvider: companyLookupCacheProvider,
+		companyCache:               make(map[string]*rulesengine.Company),
+		userCacheProvider:          userCacheProvider,
 
 		pendingCompanyRequests: make(map[string][]chan *rulesengine.Company),
 		pendingUserRequests:    make(map[string][]chan *rulesengine.User),
@@ -277,11 +284,16 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 	}
 
 	if resp.MessageType == schematicdatastreamws.MessageTypeDelete {
-		// Remove the company from the cache
+		// Delete the ID-based primary key
+		idKey := c.companyIDCacheKey(company.ID)
+		if err := c.companyCacheProvider.Delete(ctx, idKey); err != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Failed to delete company ID key '%s': %v", idKey, err))
+		}
+		// Delete all lookup keys
 		for key, value := range company.Keys {
 			companyKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-			if err := c.companyCacheProvider.Delete(ctx, companyKey); err != nil {
-				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete company from cache '%s': %v", companyKey, err))
+			if err := c.companyLookupCacheProvider.Delete(ctx, companyKey); err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete company lookup key '%s': %v", companyKey, err))
 			}
 		}
 		return nil
@@ -650,11 +662,17 @@ func (c *DataStreamClient) packageMessage(req *schematicdatastreamws.DataStreamR
 func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *rulesengine.Company {
 	c.companyMu.RLock()
 	defer c.companyMu.RUnlock()
+	ctx := context.Background()
+
 	for key, value := range keys {
 		companyKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-		company, exists := c.companyCacheProvider.Get(context.Background(), companyKey)
-		if exists {
-			return company
+
+		// Two-step lookup: lookup key -> company ID string -> company at ID key
+		if companyID, found := c.companyLookupCacheProvider.Get(ctx, companyKey); found && companyID != "" {
+			idKey := c.companyIDCacheKey(companyID)
+			if company, exists := c.companyCacheProvider.Get(ctx, idKey); exists {
+				return company
+			}
 		}
 	}
 
@@ -689,6 +707,12 @@ func (c *DataStreamClient) resourceKeyToCacheKey(resourceType string, key string
 		versionKey = rulesengine.VersionKey
 	}
 	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, versionKey, strings.ToLower(key), strings.ToLower(value))
+}
+
+// companyIDCacheKey generates a cache key for a company by its ID.
+// Format: schematic:company:{version}:{companyID}
+func (c *DataStreamClient) companyIDCacheKey(id string) string {
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixCompany, rulesengine.VersionKey, id)
 }
 
 // Helper function to clean up pending company requests
@@ -738,25 +762,25 @@ func (c *DataStreamClient) cleanupPendingUserRequests(cacheKeys []string, waitCh
 }
 
 func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rulesengine.Company) (map[string]error, error) {
-	if len(company.Keys) == 0 {
-		return nil, errors.New("no keys provided for company lookup")
-	}
-
 	if company == nil {
 		return nil, errors.New("company cannot be nil")
 	}
 
-	// Map to track which cache keys were successfully cached and which ones failed
+	if len(company.Keys) == 0 {
+		return nil, errors.New("no keys provided for company lookup")
+	}
+
 	cacheResults := make(map[string]error)
 
-	// Try to cache the company for all keys
+	// Write full company to ID-based primary key
+	idKey := c.companyIDCacheKey(company.ID)
+	ttl := c.cacheTTL
+	cacheResults[idKey] = c.companyCacheProvider.Set(ctx, idKey, company, &ttl)
+
+	// Write company ID string to each versioned lookup key
 	for key, value := range company.Keys {
 		companyKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-		ttl := c.cacheTTL
-		err := c.companyCacheProvider.Set(ctx, companyKey, company, &ttl)
-
-		// Store the result for each cache key
-		cacheResults[companyKey] = err
+		cacheResults[companyKey] = c.companyLookupCacheProvider.Set(ctx, companyKey, company.ID, &ttl)
 	}
 
 	return cacheResults, nil

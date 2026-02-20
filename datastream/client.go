@@ -43,9 +43,6 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 	// Build company lookup cache provider for two-step company ID resolution
 	companyLookupCacheProvider := buildCompanyLookupCacheProvider(configurationOptions, redisClient)
 
-	// Build user lookup cache provider for two-step user ID resolution
-	userLookupCacheProvider := buildUserLookupCacheProvider(configurationOptions, redisClient)
-
 	client := &DataStreamClient{
 		apiKey:                     options.ApiKey,
 		cacheTTL:                   configurationOptions.CacheTTL,
@@ -55,7 +52,6 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		companyLookupCacheProvider: companyLookupCacheProvider,
 		companyCache:               make(map[string]*rulesengine.Company),
 		userCacheProvider:          userCacheProvider,
-		userLookupCacheProvider:    userLookupCacheProvider,
 
 		pendingCompanyRequests: make(map[string][]chan *rulesengine.Company),
 		pendingUserRequests:    make(map[string][]chan *rulesengine.User),
@@ -359,25 +355,28 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 	}
 
 	if resp.MessageType == schematicdatastreamws.MessageTypeDelete {
-		// Delete the ID-based primary key
-		idKey := c.userIDCacheKey(user.ID)
-		if err := c.userCacheProvider.Delete(ctx, idKey); err != nil {
-			c.logger.Warn(ctx, fmt.Sprintf("Failed to delete user ID key '%s': %v", idKey, err))
-		}
-		// Delete all lookup keys
+		// Remove the user from the cache
 		for key, value := range user.Keys {
 			userKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
-			if err := c.userLookupCacheProvider.Delete(ctx, userKey); err != nil {
-				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete user lookup key '%s': %v", userKey, err))
+			if err := c.userCacheProvider.Delete(ctx, userKey); err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Failed to delete user from cache '%s': %v", userKey, err))
 			}
 		}
 
 		return nil
 	}
 
-	c.userMu.Lock()
-	cacheResults := c.cacheUserForKeys(ctx, user)
-	c.userMu.Unlock()
+	// Map to track which cache keys were successfully cached
+	cacheResults := make(map[string]error)
+
+	for key, value := range user.Keys {
+		userKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
+		ttl := c.cacheTTL
+		err := c.userCacheProvider.Set(ctx, userKey, user, &ttl)
+
+		// Store the result for each cache key
+		cacheResults[userKey] = err
+	}
 
 	// Check for cache errors and log warnings
 	for cacheKey, cacheErr := range cacheResults {
@@ -683,17 +682,11 @@ func (c *DataStreamClient) getCompanyFromCache(keys map[string]string) *ruleseng
 func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine.User {
 	c.userMu.RLock()
 	defer c.userMu.RUnlock()
-	ctx := context.Background()
-
 	for key, value := range keys {
 		userKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
-
-		// Two-step lookup: lookup key -> user ID string -> user at ID key
-		if userID, found := c.userLookupCacheProvider.Get(ctx, userKey); found && userID != "" {
-			idKey := c.userIDCacheKey(userID)
-			if user, exists := c.userCacheProvider.Get(ctx, idKey); exists {
-				return user
-			}
+		user, exists := c.userCacheProvider.Get(context.Background(), userKey)
+		if exists {
+			return user
 		}
 	}
 
@@ -720,12 +713,6 @@ func (c *DataStreamClient) resourceKeyToCacheKey(resourceType string, key string
 // Format: schematic:company:{version}:{companyID}
 func (c *DataStreamClient) companyIDCacheKey(id string) string {
 	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixCompany, rulesengine.VersionKey, id)
-}
-
-// userIDCacheKey generates a cache key for a user by its ID.
-// Format: schematic:user:{version}:{userID}
-func (c *DataStreamClient) userIDCacheKey(id string) string {
-	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixUser, rulesengine.VersionKey, id)
 }
 
 // Helper function to clean up pending company requests
@@ -772,27 +759,6 @@ func (c *DataStreamClient) cleanupPendingUserRequests(cacheKeys []string, waitCh
 	}
 
 	close(waitCh) // Close the wait channel to signal that we're done with it
-}
-
-func (c *DataStreamClient) cacheUserForKeys(ctx context.Context, user *rulesengine.User) map[string]error {
-	if user == nil || len(user.Keys) == 0 {
-		return nil
-	}
-
-	cacheResults := make(map[string]error)
-
-	// Write full user to ID-based primary key
-	idKey := c.userIDCacheKey(user.ID)
-	ttl := c.cacheTTL
-	cacheResults[idKey] = c.userCacheProvider.Set(ctx, idKey, user, &ttl)
-
-	// Write user ID string to each versioned lookup key
-	for key, value := range user.Keys {
-		userKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
-		cacheResults[userKey] = c.userLookupCacheProvider.Set(ctx, userKey, user.ID, &ttl)
-	}
-
-	return cacheResults
 }
 
 func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rulesengine.Company) (map[string]error, error) {

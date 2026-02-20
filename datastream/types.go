@@ -14,7 +14,6 @@ type CompanyCacheProvider cache.CacheProvider[*rulesengine.Company]
 type CompanyLookupCacheProvider cache.CacheProvider[string]
 type FlagCacheProvider cache.CacheProvider[*rulesengine.Flag]
 type UserCacheProvider cache.CacheProvider[*rulesengine.User]
-type UserLookupCacheProvider cache.CacheProvider[string]
 
 type DataStreamClientOptions struct {
 	ApiKey       string
@@ -33,7 +32,6 @@ type DataStreamClient struct {
 	companyLookupCacheProvider CompanyLookupCacheProvider
 	flagsCacheProvider         FlagCacheProvider
 	userCacheProvider          UserCacheProvider
-	userLookupCacheProvider    UserLookupCacheProvider
 	companyCache               map[string]*rulesengine.Company
 	apiKey                     string
 

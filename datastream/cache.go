@@ -60,21 +60,6 @@ func buildCompanyLookupCacheProvider(configOpt *core.DatastreamOptions, redisCli
 	return cache.NewLocalCache[string](defaultCacheSize, cacheTTL)
 }
 
-// buildUserLookupCacheProvider creates a string cache provider for user ID lookups
-// using a shared Redis client to avoid creating additional connections.
-func buildUserLookupCacheProvider(configOpt *core.DatastreamOptions, redisClient redis.UniversalClient) UserLookupCacheProvider {
-	cacheTTL := defaultTTL
-	if configOpt != nil && configOpt.CacheTTL > 0 {
-		cacheTTL = configOpt.CacheTTL
-	}
-
-	if redisClient != nil {
-		return cache.NewRedisCache[string](redisClient, cacheTTL)
-	}
-
-	return cache.NewLocalCache[string](defaultCacheSize, cacheTTL)
-}
-
 // buildRedisClient creates a Redis client from the cache configuration, or returns nil
 // if no Redis config is provided. The returned client should be shared across all cache
 // providers to respect the user's connection pool settings.

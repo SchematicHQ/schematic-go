@@ -895,41 +895,44 @@ func (b *BillingProductPriceResponseData) String() string {
 }
 
 var (
-	companyPlanDetailResponseDataFieldAudienceType         = big.NewInt(1 << 0)
-	companyPlanDetailResponseDataFieldBillingProduct       = big.NewInt(1 << 1)
-	companyPlanDetailResponseDataFieldChargeType           = big.NewInt(1 << 2)
-	companyPlanDetailResponseDataFieldCompanyCanTrial      = big.NewInt(1 << 3)
-	companyPlanDetailResponseDataFieldCompanyCount         = big.NewInt(1 << 4)
-	companyPlanDetailResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 5)
-	companyPlanDetailResponseDataFieldControlledBy         = big.NewInt(1 << 6)
-	companyPlanDetailResponseDataFieldCreatedAt            = big.NewInt(1 << 7)
-	companyPlanDetailResponseDataFieldCurrent              = big.NewInt(1 << 8)
-	companyPlanDetailResponseDataFieldCustom               = big.NewInt(1 << 9)
-	companyPlanDetailResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 10)
-	companyPlanDetailResponseDataFieldDescription          = big.NewInt(1 << 11)
-	companyPlanDetailResponseDataFieldEntitlements         = big.NewInt(1 << 12)
-	companyPlanDetailResponseDataFieldFeatures             = big.NewInt(1 << 13)
-	companyPlanDetailResponseDataFieldIcon                 = big.NewInt(1 << 14)
-	companyPlanDetailResponseDataFieldID                   = big.NewInt(1 << 15)
-	companyPlanDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 16)
-	companyPlanDetailResponseDataFieldInvalidReason        = big.NewInt(1 << 17)
-	companyPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 18)
-	companyPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 19)
-	companyPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 20)
-	companyPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 21)
-	companyPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 22)
-	companyPlanDetailResponseDataFieldName                 = big.NewInt(1 << 23)
-	companyPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 24)
-	companyPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 25)
-	companyPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 26)
-	companyPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 27)
-	companyPlanDetailResponseDataFieldUsageViolations      = big.NewInt(1 << 28)
-	companyPlanDetailResponseDataFieldValid                = big.NewInt(1 << 29)
-	companyPlanDetailResponseDataFieldVersions             = big.NewInt(1 << 30)
-	companyPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 31)
+	companyPlanDetailResponseDataFieldActiveVersion        = big.NewInt(1 << 0)
+	companyPlanDetailResponseDataFieldAudienceType         = big.NewInt(1 << 1)
+	companyPlanDetailResponseDataFieldBillingProduct       = big.NewInt(1 << 2)
+	companyPlanDetailResponseDataFieldChargeType           = big.NewInt(1 << 3)
+	companyPlanDetailResponseDataFieldCompanyCanTrial      = big.NewInt(1 << 4)
+	companyPlanDetailResponseDataFieldCompanyCount         = big.NewInt(1 << 5)
+	companyPlanDetailResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 6)
+	companyPlanDetailResponseDataFieldControlledBy         = big.NewInt(1 << 7)
+	companyPlanDetailResponseDataFieldCreatedAt            = big.NewInt(1 << 8)
+	companyPlanDetailResponseDataFieldCurrent              = big.NewInt(1 << 9)
+	companyPlanDetailResponseDataFieldCustom               = big.NewInt(1 << 10)
+	companyPlanDetailResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 11)
+	companyPlanDetailResponseDataFieldDescription          = big.NewInt(1 << 12)
+	companyPlanDetailResponseDataFieldDraftVersion         = big.NewInt(1 << 13)
+	companyPlanDetailResponseDataFieldEntitlements         = big.NewInt(1 << 14)
+	companyPlanDetailResponseDataFieldFeatures             = big.NewInt(1 << 15)
+	companyPlanDetailResponseDataFieldIcon                 = big.NewInt(1 << 16)
+	companyPlanDetailResponseDataFieldID                   = big.NewInt(1 << 17)
+	companyPlanDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 18)
+	companyPlanDetailResponseDataFieldInvalidReason        = big.NewInt(1 << 19)
+	companyPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 20)
+	companyPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 21)
+	companyPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 22)
+	companyPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 23)
+	companyPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 24)
+	companyPlanDetailResponseDataFieldName                 = big.NewInt(1 << 25)
+	companyPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 26)
+	companyPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 27)
+	companyPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 28)
+	companyPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 29)
+	companyPlanDetailResponseDataFieldUsageViolations      = big.NewInt(1 << 30)
+	companyPlanDetailResponseDataFieldValid                = big.NewInt(1 << 31)
+	companyPlanDetailResponseDataFieldVersions             = big.NewInt(1 << 32)
+	companyPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 33)
 )
 
 type CompanyPlanDetailResponseData struct {
+	ActiveVersion        *PlanVersionResponseData          `json:"active_version,omitempty" url:"active_version,omitempty"`
 	AudienceType         *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	BillingProduct       *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	ChargeType           ChargeType                        `json:"charge_type" url:"charge_type"`
@@ -942,6 +945,7 @@ type CompanyPlanDetailResponseData struct {
 	Custom               bool                              `json:"custom" url:"custom"`
 	CustomPlanConfig     *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
 	Description          string                            `json:"description" url:"description"`
+	DraftVersion         *PlanVersionResponseData          `json:"draft_version,omitempty" url:"draft_version,omitempty"`
 	Entitlements         []*PlanEntitlementResponseData    `json:"entitlements" url:"entitlements"`
 	Features             []*FeatureDetailResponseData      `json:"features" url:"features"`
 	Icon                 string                            `json:"icon" url:"icon"`
@@ -968,6 +972,13 @@ type CompanyPlanDetailResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CompanyPlanDetailResponseData) GetActiveVersion() *PlanVersionResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.ActiveVersion
 }
 
 func (c *CompanyPlanDetailResponseData) GetAudienceType() *string {
@@ -1052,6 +1063,13 @@ func (c *CompanyPlanDetailResponseData) GetDescription() string {
 		return ""
 	}
 	return c.Description
+}
+
+func (c *CompanyPlanDetailResponseData) GetDraftVersion() *PlanVersionResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.DraftVersion
 }
 
 func (c *CompanyPlanDetailResponseData) GetEntitlements() []*PlanEntitlementResponseData {
@@ -1205,6 +1223,13 @@ func (c *CompanyPlanDetailResponseData) require(field *big.Int) {
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
+// SetActiveVersion sets the ActiveVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanDetailResponseData) SetActiveVersion(activeVersion *PlanVersionResponseData) {
+	c.ActiveVersion = activeVersion
+	c.require(companyPlanDetailResponseDataFieldActiveVersion)
+}
+
 // SetAudienceType sets the AudienceType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyPlanDetailResponseData) SetAudienceType(audienceType *string) {
@@ -1287,6 +1312,13 @@ func (c *CompanyPlanDetailResponseData) SetCustomPlanConfig(customPlanConfig *Cu
 func (c *CompanyPlanDetailResponseData) SetDescription(description string) {
 	c.Description = description
 	c.require(companyPlanDetailResponseDataFieldDescription)
+}
+
+// SetDraftVersion sets the DraftVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanDetailResponseData) SetDraftVersion(draftVersion *PlanVersionResponseData) {
+	c.DraftVersion = draftVersion
+	c.require(companyPlanDetailResponseDataFieldDraftVersion)
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;
@@ -1503,100 +1535,6 @@ func (c CompanyPlanInvalidReason) Ptr() *CompanyPlanInvalidReason {
 }
 
 var (
-	componentCapabilitiesFieldBadgeVisibility = big.NewInt(1 << 0)
-	componentCapabilitiesFieldCheckout        = big.NewInt(1 << 1)
-)
-
-type ComponentCapabilities struct {
-	BadgeVisibility bool `json:"badge_visibility" url:"badge_visibility"`
-	Checkout        bool `json:"checkout" url:"checkout"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *ComponentCapabilities) GetBadgeVisibility() bool {
-	if c == nil {
-		return false
-	}
-	return c.BadgeVisibility
-}
-
-func (c *ComponentCapabilities) GetCheckout() bool {
-	if c == nil {
-		return false
-	}
-	return c.Checkout
-}
-
-func (c *ComponentCapabilities) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *ComponentCapabilities) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetBadgeVisibility sets the BadgeVisibility field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentCapabilities) SetBadgeVisibility(badgeVisibility bool) {
-	c.BadgeVisibility = badgeVisibility
-	c.require(componentCapabilitiesFieldBadgeVisibility)
-}
-
-// SetCheckout sets the Checkout field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentCapabilities) SetCheckout(checkout bool) {
-	c.Checkout = checkout
-	c.require(componentCapabilitiesFieldCheckout)
-}
-
-func (c *ComponentCapabilities) UnmarshalJSON(data []byte) error {
-	type unmarshaler ComponentCapabilities
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = ComponentCapabilities(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *ComponentCapabilities) MarshalJSON() ([]byte, error) {
-	type embed ComponentCapabilities
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*c),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *ComponentCapabilities) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-var (
 	componentCheckoutSettingsFieldCollectAddress       = big.NewInt(1 << 0)
 	componentCheckoutSettingsFieldCollectEmail         = big.NewInt(1 << 1)
 	componentCheckoutSettingsFieldCollectPhone         = big.NewInt(1 << 2)
@@ -1722,132 +1660,6 @@ func (c *ComponentCheckoutSettings) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-var (
-	componentDisplaySettingsFieldShowAsMonthlyPrices = big.NewInt(1 << 0)
-	componentDisplaySettingsFieldShowCredits         = big.NewInt(1 << 1)
-	componentDisplaySettingsFieldShowPeriodToggle    = big.NewInt(1 << 2)
-	componentDisplaySettingsFieldShowZeroPriceAsFree = big.NewInt(1 << 3)
-)
-
-type ComponentDisplaySettings struct {
-	ShowAsMonthlyPrices bool `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
-	ShowCredits         bool `json:"show_credits" url:"show_credits"`
-	ShowPeriodToggle    bool `json:"show_period_toggle" url:"show_period_toggle"`
-	ShowZeroPriceAsFree bool `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *ComponentDisplaySettings) GetShowAsMonthlyPrices() bool {
-	if c == nil {
-		return false
-	}
-	return c.ShowAsMonthlyPrices
-}
-
-func (c *ComponentDisplaySettings) GetShowCredits() bool {
-	if c == nil {
-		return false
-	}
-	return c.ShowCredits
-}
-
-func (c *ComponentDisplaySettings) GetShowPeriodToggle() bool {
-	if c == nil {
-		return false
-	}
-	return c.ShowPeriodToggle
-}
-
-func (c *ComponentDisplaySettings) GetShowZeroPriceAsFree() bool {
-	if c == nil {
-		return false
-	}
-	return c.ShowZeroPriceAsFree
-}
-
-func (c *ComponentDisplaySettings) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *ComponentDisplaySettings) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetShowAsMonthlyPrices sets the ShowAsMonthlyPrices field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentDisplaySettings) SetShowAsMonthlyPrices(showAsMonthlyPrices bool) {
-	c.ShowAsMonthlyPrices = showAsMonthlyPrices
-	c.require(componentDisplaySettingsFieldShowAsMonthlyPrices)
-}
-
-// SetShowCredits sets the ShowCredits field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentDisplaySettings) SetShowCredits(showCredits bool) {
-	c.ShowCredits = showCredits
-	c.require(componentDisplaySettingsFieldShowCredits)
-}
-
-// SetShowPeriodToggle sets the ShowPeriodToggle field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentDisplaySettings) SetShowPeriodToggle(showPeriodToggle bool) {
-	c.ShowPeriodToggle = showPeriodToggle
-	c.require(componentDisplaySettingsFieldShowPeriodToggle)
-}
-
-// SetShowZeroPriceAsFree sets the ShowZeroPriceAsFree field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentDisplaySettings) SetShowZeroPriceAsFree(showZeroPriceAsFree bool) {
-	c.ShowZeroPriceAsFree = showZeroPriceAsFree
-	c.require(componentDisplaySettingsFieldShowZeroPriceAsFree)
-}
-
-func (c *ComponentDisplaySettings) UnmarshalJSON(data []byte) error {
-	type unmarshaler ComponentDisplaySettings
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = ComponentDisplaySettings(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *ComponentDisplaySettings) MarshalJSON() ([]byte, error) {
-	type embed ComponentDisplaySettings
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*c),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *ComponentDisplaySettings) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
 type ComponentEntityType string
 
 const (
@@ -1889,14 +1701,15 @@ var (
 	componentPreviewResponseDataFieldPreventSelfServiceDowngrade           = big.NewInt(1 << 15)
 	componentPreviewResponseDataFieldPreventSelfServiceDowngradeButtonText = big.NewInt(1 << 16)
 	componentPreviewResponseDataFieldPreventSelfServiceDowngradeURL        = big.NewInt(1 << 17)
-	componentPreviewResponseDataFieldShowAsMonthlyPrices                   = big.NewInt(1 << 18)
-	componentPreviewResponseDataFieldShowCredits                           = big.NewInt(1 << 19)
-	componentPreviewResponseDataFieldShowPeriodToggle                      = big.NewInt(1 << 20)
-	componentPreviewResponseDataFieldShowZeroPriceAsFree                   = big.NewInt(1 << 21)
-	componentPreviewResponseDataFieldStripeEmbed                           = big.NewInt(1 << 22)
-	componentPreviewResponseDataFieldSubscription                          = big.NewInt(1 << 23)
-	componentPreviewResponseDataFieldTrialPaymentMethodRequired            = big.NewInt(1 << 24)
-	componentPreviewResponseDataFieldUpcomingInvoice                       = big.NewInt(1 << 25)
+	componentPreviewResponseDataFieldScheduledDowngrade                    = big.NewInt(1 << 18)
+	componentPreviewResponseDataFieldShowAsMonthlyPrices                   = big.NewInt(1 << 19)
+	componentPreviewResponseDataFieldShowCredits                           = big.NewInt(1 << 20)
+	componentPreviewResponseDataFieldShowPeriodToggle                      = big.NewInt(1 << 21)
+	componentPreviewResponseDataFieldShowZeroPriceAsFree                   = big.NewInt(1 << 22)
+	componentPreviewResponseDataFieldStripeEmbed                           = big.NewInt(1 << 23)
+	componentPreviewResponseDataFieldSubscription                          = big.NewInt(1 << 24)
+	componentPreviewResponseDataFieldTrialPaymentMethodRequired            = big.NewInt(1 << 25)
+	componentPreviewResponseDataFieldUpcomingInvoice                       = big.NewInt(1 << 26)
 )
 
 type ComponentPreviewResponseData struct {
@@ -1918,6 +1731,7 @@ type ComponentPreviewResponseData struct {
 	PreventSelfServiceDowngrade           bool                                 `json:"prevent_self_service_downgrade" url:"prevent_self_service_downgrade"`
 	PreventSelfServiceDowngradeButtonText *string                              `json:"prevent_self_service_downgrade_button_text,omitempty" url:"prevent_self_service_downgrade_button_text,omitempty"`
 	PreventSelfServiceDowngradeURL        *string                              `json:"prevent_self_service_downgrade_url,omitempty" url:"prevent_self_service_downgrade_url,omitempty"`
+	ScheduledDowngrade                    *ScheduledDowngradeResponseData      `json:"scheduled_downgrade,omitempty" url:"scheduled_downgrade,omitempty"`
 	ShowAsMonthlyPrices                   bool                                 `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
 	ShowCredits                           bool                                 `json:"show_credits" url:"show_credits"`
 	ShowPeriodToggle                      bool                                 `json:"show_period_toggle" url:"show_period_toggle"`
@@ -2058,6 +1872,13 @@ func (c *ComponentPreviewResponseData) GetPreventSelfServiceDowngradeURL() *stri
 		return nil
 	}
 	return c.PreventSelfServiceDowngradeURL
+}
+
+func (c *ComponentPreviewResponseData) GetScheduledDowngrade() *ScheduledDowngradeResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.ScheduledDowngrade
 }
 
 func (c *ComponentPreviewResponseData) GetShowAsMonthlyPrices() bool {
@@ -2251,6 +2072,13 @@ func (c *ComponentPreviewResponseData) SetPreventSelfServiceDowngradeButtonText(
 func (c *ComponentPreviewResponseData) SetPreventSelfServiceDowngradeURL(preventSelfServiceDowngradeURL *string) {
 	c.PreventSelfServiceDowngradeURL = preventSelfServiceDowngradeURL
 	c.require(componentPreviewResponseDataFieldPreventSelfServiceDowngradeURL)
+}
+
+// SetScheduledDowngrade sets the ScheduledDowngrade field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentPreviewResponseData) SetScheduledDowngrade(scheduledDowngrade *ScheduledDowngradeResponseData) {
+	c.ScheduledDowngrade = scheduledDowngrade
+	c.require(componentPreviewResponseDataFieldScheduledDowngrade)
 }
 
 // SetShowAsMonthlyPrices sets the ShowAsMonthlyPrices field and marks it as non-optional;

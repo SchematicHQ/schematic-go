@@ -11,66 +11,72 @@ import (
 )
 
 var (
-	createPlanGroupRequestBodyFieldAddOnCompatibilities                  = big.NewInt(1 << 0)
-	createPlanGroupRequestBodyFieldAddOnIDs                              = big.NewInt(1 << 1)
-	createPlanGroupRequestBodyFieldCheckoutCollectAddress                = big.NewInt(1 << 2)
-	createPlanGroupRequestBodyFieldCheckoutCollectEmail                  = big.NewInt(1 << 3)
-	createPlanGroupRequestBodyFieldCheckoutCollectPhone                  = big.NewInt(1 << 4)
-	createPlanGroupRequestBodyFieldCustomPlanConfig                      = big.NewInt(1 << 5)
-	createPlanGroupRequestBodyFieldCustomPlanID                          = big.NewInt(1 << 6)
-	createPlanGroupRequestBodyFieldEnableTaxCollection                   = big.NewInt(1 << 7)
-	createPlanGroupRequestBodyFieldFallbackPlanID                        = big.NewInt(1 << 8)
-	createPlanGroupRequestBodyFieldInitialPlanID                         = big.NewInt(1 << 9)
-	createPlanGroupRequestBodyFieldInitialPlanPriceID                    = big.NewInt(1 << 10)
-	createPlanGroupRequestBodyFieldOrderedAddOns                         = big.NewInt(1 << 11)
-	createPlanGroupRequestBodyFieldOrderedBundleList                     = big.NewInt(1 << 12)
-	createPlanGroupRequestBodyFieldOrderedPlans                          = big.NewInt(1 << 13)
-	createPlanGroupRequestBodyFieldPreventDowngradesWhenOverLimit        = big.NewInt(1 << 14)
-	createPlanGroupRequestBodyFieldPreventSelfServiceDowngrade           = big.NewInt(1 << 15)
-	createPlanGroupRequestBodyFieldPreventSelfServiceDowngradeButtonText = big.NewInt(1 << 16)
-	createPlanGroupRequestBodyFieldPreventSelfServiceDowngradeURL        = big.NewInt(1 << 17)
-	createPlanGroupRequestBodyFieldProrationBehavior                     = big.NewInt(1 << 18)
-	createPlanGroupRequestBodyFieldShowAsMonthlyPrices                   = big.NewInt(1 << 19)
-	createPlanGroupRequestBodyFieldShowCredits                           = big.NewInt(1 << 20)
-	createPlanGroupRequestBodyFieldShowPeriodToggle                      = big.NewInt(1 << 21)
-	createPlanGroupRequestBodyFieldShowZeroPriceAsFree                   = big.NewInt(1 << 22)
-	createPlanGroupRequestBodyFieldSyncCustomerBillingDetails            = big.NewInt(1 << 23)
-	createPlanGroupRequestBodyFieldTrialDays                             = big.NewInt(1 << 24)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanID                     = big.NewInt(1 << 25)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                = big.NewInt(1 << 26)
-	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired            = big.NewInt(1 << 27)
+	createPlanGroupRequestBodyFieldAddOnCompatibilities                   = big.NewInt(1 << 0)
+	createPlanGroupRequestBodyFieldAddOnIDs                               = big.NewInt(1 << 1)
+	createPlanGroupRequestBodyFieldCheckoutCollectAddress                 = big.NewInt(1 << 2)
+	createPlanGroupRequestBodyFieldCheckoutCollectEmail                   = big.NewInt(1 << 3)
+	createPlanGroupRequestBodyFieldCheckoutCollectPhone                   = big.NewInt(1 << 4)
+	createPlanGroupRequestBodyFieldCustomPlanConfig                       = big.NewInt(1 << 5)
+	createPlanGroupRequestBodyFieldCustomPlanID                           = big.NewInt(1 << 6)
+	createPlanGroupRequestBodyFieldEnableTaxCollection                    = big.NewInt(1 << 7)
+	createPlanGroupRequestBodyFieldFallbackPlanID                         = big.NewInt(1 << 8)
+	createPlanGroupRequestBodyFieldInitialPlanID                          = big.NewInt(1 << 9)
+	createPlanGroupRequestBodyFieldInitialPlanPriceID                     = big.NewInt(1 << 10)
+	createPlanGroupRequestBodyFieldOrderedAddOns                          = big.NewInt(1 << 11)
+	createPlanGroupRequestBodyFieldOrderedBundleList                      = big.NewInt(1 << 12)
+	createPlanGroupRequestBodyFieldOrderedPlans                           = big.NewInt(1 << 13)
+	createPlanGroupRequestBodyFieldPreventDowngradesWhenOverLimit         = big.NewInt(1 << 14)
+	createPlanGroupRequestBodyFieldPreventSelfServiceDowngrade            = big.NewInt(1 << 15)
+	createPlanGroupRequestBodyFieldPreventSelfServiceDowngradeButtonText  = big.NewInt(1 << 16)
+	createPlanGroupRequestBodyFieldPreventSelfServiceDowngradeURL         = big.NewInt(1 << 17)
+	createPlanGroupRequestBodyFieldProrationBehavior                      = big.NewInt(1 << 18)
+	createPlanGroupRequestBodyFieldScheduledDowngradeBehavior             = big.NewInt(1 << 19)
+	createPlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 20)
+	createPlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 21)
+	createPlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 22)
+	createPlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 23)
+	createPlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 24)
+	createPlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 25)
+	createPlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 26)
+	createPlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 27)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 28)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 29)
+	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 30)
 )
 
 type CreatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
-	AddOnIDs                              []string                `json:"add_on_ids,omitempty" url:"-"`
-	CheckoutCollectAddress                bool                    `json:"checkout_collect_address" url:"-"`
-	CheckoutCollectEmail                  bool                    `json:"checkout_collect_email" url:"-"`
-	CheckoutCollectPhone                  bool                    `json:"checkout_collect_phone" url:"-"`
-	CustomPlanConfig                      *CustomPlanConfig       `json:"custom_plan_config,omitempty" url:"-"`
-	CustomPlanID                          *string                 `json:"custom_plan_id,omitempty" url:"-"`
-	EnableTaxCollection                   bool                    `json:"enable_tax_collection" url:"-"`
-	FallbackPlanID                        *string                 `json:"fallback_plan_id,omitempty" url:"-"`
-	InitialPlanID                         *string                 `json:"initial_plan_id,omitempty" url:"-"`
-	InitialPlanPriceID                    *string                 `json:"initial_plan_price_id,omitempty" url:"-"`
-	OrderedAddOns                         []*OrderedPlansInGroup  `json:"ordered_add_ons,omitempty" url:"-"`
-	OrderedBundleList                     []*PlanGroupBundleOrder `json:"ordered_bundle_list,omitempty" url:"-"`
-	OrderedPlans                          []*OrderedPlansInGroup  `json:"ordered_plans,omitempty" url:"-"`
-	PreventDowngradesWhenOverLimit        bool                    `json:"prevent_downgrades_when_over_limit" url:"-"`
-	PreventSelfServiceDowngrade           bool                    `json:"prevent_self_service_downgrade" url:"-"`
-	PreventSelfServiceDowngradeButtonText *string                 `json:"prevent_self_service_downgrade_button_text,omitempty" url:"-"`
-	PreventSelfServiceDowngradeURL        *string                 `json:"prevent_self_service_downgrade_url,omitempty" url:"-"`
-	ProrationBehavior                     ProrationBehavior       `json:"proration_behavior" url:"-"`
-	ShowAsMonthlyPrices                   bool                    `json:"show_as_monthly_prices" url:"-"`
-	ShowCredits                           bool                    `json:"show_credits" url:"-"`
-	ShowPeriodToggle                      bool                    `json:"show_period_toggle" url:"-"`
-	ShowZeroPriceAsFree                   bool                    `json:"show_zero_price_as_free" url:"-"`
-	SyncCustomerBillingDetails            bool                    `json:"sync_customer_billing_details" url:"-"`
-	TrialDays                             *int                    `json:"trial_days,omitempty" url:"-"`
-	TrialExpiryPlanID                     *string                 `json:"trial_expiry_plan_id,omitempty" url:"-"`
-	TrialExpiryPlanPriceID                *string                 `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
-	TrialPaymentMethodRequired            *bool                   `json:"trial_payment_method_required,omitempty" url:"-"`
+	AddOnIDs                               []string                          `json:"add_on_ids,omitempty" url:"-"`
+	CheckoutCollectAddress                 bool                              `json:"checkout_collect_address" url:"-"`
+	CheckoutCollectEmail                   bool                              `json:"checkout_collect_email" url:"-"`
+	CheckoutCollectPhone                   bool                              `json:"checkout_collect_phone" url:"-"`
+	CustomPlanConfig                       *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"-"`
+	CustomPlanID                           *string                           `json:"custom_plan_id,omitempty" url:"-"`
+	EnableTaxCollection                    bool                              `json:"enable_tax_collection" url:"-"`
+	FallbackPlanID                         *string                           `json:"fallback_plan_id,omitempty" url:"-"`
+	InitialPlanID                          *string                           `json:"initial_plan_id,omitempty" url:"-"`
+	InitialPlanPriceID                     *string                           `json:"initial_plan_price_id,omitempty" url:"-"`
+	OrderedAddOns                          []*OrderedPlansInGroup            `json:"ordered_add_ons,omitempty" url:"-"`
+	OrderedBundleList                      []*PlanGroupBundleOrder           `json:"ordered_bundle_list,omitempty" url:"-"`
+	OrderedPlans                           []*OrderedPlansInGroup            `json:"ordered_plans,omitempty" url:"-"`
+	PreventDowngradesWhenOverLimit         bool                              `json:"prevent_downgrades_when_over_limit" url:"-"`
+	PreventSelfServiceDowngrade            bool                              `json:"prevent_self_service_downgrade" url:"-"`
+	PreventSelfServiceDowngradeButtonText  *string                           `json:"prevent_self_service_downgrade_button_text,omitempty" url:"-"`
+	PreventSelfServiceDowngradeURL         *string                           `json:"prevent_self_service_downgrade_url,omitempty" url:"-"`
+	ProrationBehavior                      ProrationBehavior                 `json:"proration_behavior" url:"-"`
+	ScheduledDowngradeBehavior             *ScheduledDowngradeConfigBehavior `json:"scheduled_downgrade_behavior,omitempty" url:"-"`
+	ScheduledDowngradePreventWhenOverLimit *bool                             `json:"scheduled_downgrade_prevent_when_over_limit,omitempty" url:"-"`
+	ShowAsMonthlyPrices                    bool                              `json:"show_as_monthly_prices" url:"-"`
+	ShowCredits                            bool                              `json:"show_credits" url:"-"`
+	ShowFeatureDescription                 bool                              `json:"show_feature_description" url:"-"`
+	ShowPeriodToggle                       bool                              `json:"show_period_toggle" url:"-"`
+	ShowZeroPriceAsFree                    bool                              `json:"show_zero_price_as_free" url:"-"`
+	SyncCustomerBillingDetails             bool                              `json:"sync_customer_billing_details" url:"-"`
+	TrialDays                              *int                              `json:"trial_days,omitempty" url:"-"`
+	TrialExpiryPlanID                      *string                           `json:"trial_expiry_plan_id,omitempty" url:"-"`
+	TrialExpiryPlanPriceID                 *string                           `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
+	TrialPaymentMethodRequired             *bool                             `json:"trial_payment_method_required,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -216,6 +222,20 @@ func (c *CreatePlanGroupRequestBody) SetProrationBehavior(prorationBehavior Pror
 	c.require(createPlanGroupRequestBodyFieldProrationBehavior)
 }
 
+// SetScheduledDowngradeBehavior sets the ScheduledDowngradeBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanGroupRequestBody) SetScheduledDowngradeBehavior(scheduledDowngradeBehavior *ScheduledDowngradeConfigBehavior) {
+	c.ScheduledDowngradeBehavior = scheduledDowngradeBehavior
+	c.require(createPlanGroupRequestBodyFieldScheduledDowngradeBehavior)
+}
+
+// SetScheduledDowngradePreventWhenOverLimit sets the ScheduledDowngradePreventWhenOverLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanGroupRequestBody) SetScheduledDowngradePreventWhenOverLimit(scheduledDowngradePreventWhenOverLimit *bool) {
+	c.ScheduledDowngradePreventWhenOverLimit = scheduledDowngradePreventWhenOverLimit
+	c.require(createPlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit)
+}
+
 // SetShowAsMonthlyPrices sets the ShowAsMonthlyPrices field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreatePlanGroupRequestBody) SetShowAsMonthlyPrices(showAsMonthlyPrices bool) {
@@ -228,6 +248,13 @@ func (c *CreatePlanGroupRequestBody) SetShowAsMonthlyPrices(showAsMonthlyPrices 
 func (c *CreatePlanGroupRequestBody) SetShowCredits(showCredits bool) {
 	c.ShowCredits = showCredits
 	c.require(createPlanGroupRequestBodyFieldShowCredits)
+}
+
+// SetShowFeatureDescription sets the ShowFeatureDescription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanGroupRequestBody) SetShowFeatureDescription(showFeatureDescription bool) {
+	c.ShowFeatureDescription = showFeatureDescription
+	c.require(createPlanGroupRequestBodyFieldShowFeatureDescription)
 }
 
 // SetShowPeriodToggle sets the ShowPeriodToggle field and marks it as non-optional;
@@ -484,17 +511,19 @@ func (c *CompatiblePlansResponseData) String() string {
 }
 
 var (
-	componentSettingsResponseDataFieldShowAsMonthlyPrices = big.NewInt(1 << 0)
-	componentSettingsResponseDataFieldShowCredits         = big.NewInt(1 << 1)
-	componentSettingsResponseDataFieldShowPeriodToggle    = big.NewInt(1 << 2)
-	componentSettingsResponseDataFieldShowZeroPriceAsFree = big.NewInt(1 << 3)
+	componentSettingsResponseDataFieldShowAsMonthlyPrices    = big.NewInt(1 << 0)
+	componentSettingsResponseDataFieldShowCredits            = big.NewInt(1 << 1)
+	componentSettingsResponseDataFieldShowFeatureDescription = big.NewInt(1 << 2)
+	componentSettingsResponseDataFieldShowPeriodToggle       = big.NewInt(1 << 3)
+	componentSettingsResponseDataFieldShowZeroPriceAsFree    = big.NewInt(1 << 4)
 )
 
 type ComponentSettingsResponseData struct {
-	ShowAsMonthlyPrices bool `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
-	ShowCredits         bool `json:"show_credits" url:"show_credits"`
-	ShowPeriodToggle    bool `json:"show_period_toggle" url:"show_period_toggle"`
-	ShowZeroPriceAsFree bool `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
+	ShowAsMonthlyPrices    bool `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
+	ShowCredits            bool `json:"show_credits" url:"show_credits"`
+	ShowFeatureDescription bool `json:"show_feature_description" url:"show_feature_description"`
+	ShowPeriodToggle       bool `json:"show_period_toggle" url:"show_period_toggle"`
+	ShowZeroPriceAsFree    bool `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -515,6 +544,13 @@ func (c *ComponentSettingsResponseData) GetShowCredits() bool {
 		return false
 	}
 	return c.ShowCredits
+}
+
+func (c *ComponentSettingsResponseData) GetShowFeatureDescription() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowFeatureDescription
 }
 
 func (c *ComponentSettingsResponseData) GetShowPeriodToggle() bool {
@@ -554,6 +590,13 @@ func (c *ComponentSettingsResponseData) SetShowAsMonthlyPrices(showAsMonthlyPric
 func (c *ComponentSettingsResponseData) SetShowCredits(showCredits bool) {
 	c.ShowCredits = showCredits
 	c.require(componentSettingsResponseDataFieldShowCredits)
+}
+
+// SetShowFeatureDescription sets the ShowFeatureDescription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentSettingsResponseData) SetShowFeatureDescription(showFeatureDescription bool) {
+	c.ShowFeatureDescription = showFeatureDescription
+	c.require(componentSettingsResponseDataFieldShowFeatureDescription)
 }
 
 // SetShowPeriodToggle sets the ShowPeriodToggle field and marks it as non-optional;
@@ -1080,79 +1123,83 @@ func (p *PlanGroupBundleOrder) String() string {
 }
 
 var (
-	planGroupDetailResponseDataFieldAddOns                                = big.NewInt(1 << 0)
-	planGroupDetailResponseDataFieldCheckoutSettings                      = big.NewInt(1 << 1)
-	planGroupDetailResponseDataFieldComponentSettings                     = big.NewInt(1 << 2)
-	planGroupDetailResponseDataFieldCustomPlanConfig                      = big.NewInt(1 << 3)
-	planGroupDetailResponseDataFieldCustomPlanID                          = big.NewInt(1 << 4)
-	planGroupDetailResponseDataFieldDefaultPlan                           = big.NewInt(1 << 5)
-	planGroupDetailResponseDataFieldDefaultPlanID                         = big.NewInt(1 << 6)
-	planGroupDetailResponseDataFieldFallbackPlan                          = big.NewInt(1 << 7)
-	planGroupDetailResponseDataFieldFallbackPlanID                        = big.NewInt(1 << 8)
-	planGroupDetailResponseDataFieldID                                    = big.NewInt(1 << 9)
-	planGroupDetailResponseDataFieldInitialPlan                           = big.NewInt(1 << 10)
-	planGroupDetailResponseDataFieldInitialPlanID                         = big.NewInt(1 << 11)
-	planGroupDetailResponseDataFieldInitialPlanPrice                      = big.NewInt(1 << 12)
-	planGroupDetailResponseDataFieldInitialPlanPriceID                    = big.NewInt(1 << 13)
-	planGroupDetailResponseDataFieldOrderedAddOnList                      = big.NewInt(1 << 14)
-	planGroupDetailResponseDataFieldOrderedBundleList                     = big.NewInt(1 << 15)
-	planGroupDetailResponseDataFieldOrderedPlanList                       = big.NewInt(1 << 16)
-	planGroupDetailResponseDataFieldPlans                                 = big.NewInt(1 << 17)
-	planGroupDetailResponseDataFieldPreventDowngradesWhenOverLimit        = big.NewInt(1 << 18)
-	planGroupDetailResponseDataFieldPreventSelfServiceDowngrade           = big.NewInt(1 << 19)
-	planGroupDetailResponseDataFieldPreventSelfServiceDowngradeButtonText = big.NewInt(1 << 20)
-	planGroupDetailResponseDataFieldPreventSelfServiceDowngradeURL        = big.NewInt(1 << 21)
-	planGroupDetailResponseDataFieldProrationBehavior                     = big.NewInt(1 << 22)
-	planGroupDetailResponseDataFieldShowAsMonthlyPrices                   = big.NewInt(1 << 23)
-	planGroupDetailResponseDataFieldShowCredits                           = big.NewInt(1 << 24)
-	planGroupDetailResponseDataFieldShowPeriodToggle                      = big.NewInt(1 << 25)
-	planGroupDetailResponseDataFieldShowZeroPriceAsFree                   = big.NewInt(1 << 26)
-	planGroupDetailResponseDataFieldSyncCustomerBillingDetails            = big.NewInt(1 << 27)
-	planGroupDetailResponseDataFieldTaxCollectionEnabled                  = big.NewInt(1 << 28)
-	planGroupDetailResponseDataFieldTrialDays                             = big.NewInt(1 << 29)
-	planGroupDetailResponseDataFieldTrialExpiryPlan                       = big.NewInt(1 << 30)
-	planGroupDetailResponseDataFieldTrialExpiryPlanID                     = big.NewInt(1 << 31)
-	planGroupDetailResponseDataFieldTrialExpiryPlanPrice                  = big.NewInt(1 << 32)
-	planGroupDetailResponseDataFieldTrialExpiryPlanPriceID                = big.NewInt(1 << 33)
-	planGroupDetailResponseDataFieldTrialPaymentMethodRequired            = big.NewInt(1 << 34)
+	planGroupDetailResponseDataFieldAddOns                                 = big.NewInt(1 << 0)
+	planGroupDetailResponseDataFieldCheckoutSettings                       = big.NewInt(1 << 1)
+	planGroupDetailResponseDataFieldComponentSettings                      = big.NewInt(1 << 2)
+	planGroupDetailResponseDataFieldCustomPlanConfig                       = big.NewInt(1 << 3)
+	planGroupDetailResponseDataFieldCustomPlanID                           = big.NewInt(1 << 4)
+	planGroupDetailResponseDataFieldDefaultPlan                            = big.NewInt(1 << 5)
+	planGroupDetailResponseDataFieldDefaultPlanID                          = big.NewInt(1 << 6)
+	planGroupDetailResponseDataFieldFallbackPlan                           = big.NewInt(1 << 7)
+	planGroupDetailResponseDataFieldFallbackPlanID                         = big.NewInt(1 << 8)
+	planGroupDetailResponseDataFieldID                                     = big.NewInt(1 << 9)
+	planGroupDetailResponseDataFieldInitialPlan                            = big.NewInt(1 << 10)
+	planGroupDetailResponseDataFieldInitialPlanID                          = big.NewInt(1 << 11)
+	planGroupDetailResponseDataFieldInitialPlanPrice                       = big.NewInt(1 << 12)
+	planGroupDetailResponseDataFieldInitialPlanPriceID                     = big.NewInt(1 << 13)
+	planGroupDetailResponseDataFieldOrderedAddOnList                       = big.NewInt(1 << 14)
+	planGroupDetailResponseDataFieldOrderedBundleList                      = big.NewInt(1 << 15)
+	planGroupDetailResponseDataFieldOrderedPlanList                        = big.NewInt(1 << 16)
+	planGroupDetailResponseDataFieldPlans                                  = big.NewInt(1 << 17)
+	planGroupDetailResponseDataFieldPreventDowngradesWhenOverLimit         = big.NewInt(1 << 18)
+	planGroupDetailResponseDataFieldPreventSelfServiceDowngrade            = big.NewInt(1 << 19)
+	planGroupDetailResponseDataFieldPreventSelfServiceDowngradeButtonText  = big.NewInt(1 << 20)
+	planGroupDetailResponseDataFieldPreventSelfServiceDowngradeURL         = big.NewInt(1 << 21)
+	planGroupDetailResponseDataFieldProrationBehavior                      = big.NewInt(1 << 22)
+	planGroupDetailResponseDataFieldScheduledDowngradeBehavior             = big.NewInt(1 << 23)
+	planGroupDetailResponseDataFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 24)
+	planGroupDetailResponseDataFieldShowAsMonthlyPrices                    = big.NewInt(1 << 25)
+	planGroupDetailResponseDataFieldShowCredits                            = big.NewInt(1 << 26)
+	planGroupDetailResponseDataFieldShowPeriodToggle                       = big.NewInt(1 << 27)
+	planGroupDetailResponseDataFieldShowZeroPriceAsFree                    = big.NewInt(1 << 28)
+	planGroupDetailResponseDataFieldSyncCustomerBillingDetails             = big.NewInt(1 << 29)
+	planGroupDetailResponseDataFieldTaxCollectionEnabled                   = big.NewInt(1 << 30)
+	planGroupDetailResponseDataFieldTrialDays                              = big.NewInt(1 << 31)
+	planGroupDetailResponseDataFieldTrialExpiryPlan                        = big.NewInt(1 << 32)
+	planGroupDetailResponseDataFieldTrialExpiryPlanID                      = big.NewInt(1 << 33)
+	planGroupDetailResponseDataFieldTrialExpiryPlanPrice                   = big.NewInt(1 << 34)
+	planGroupDetailResponseDataFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 35)
+	planGroupDetailResponseDataFieldTrialPaymentMethodRequired             = big.NewInt(1 << 36)
 )
 
 type PlanGroupDetailResponseData struct {
-	AddOns                                []*PlanGroupPlanDetailResponseData `json:"add_ons" url:"add_ons"`
-	CheckoutSettings                      *CheckoutSettingsResponseData      `json:"checkout_settings" url:"checkout_settings"`
-	ComponentSettings                     *ComponentSettingsResponseData     `json:"component_settings" url:"component_settings"`
-	CustomPlanConfig                      *CustomPlanViewConfigResponseData  `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
-	CustomPlanID                          *string                            `json:"custom_plan_id,omitempty" url:"custom_plan_id,omitempty"`
-	DefaultPlan                           *PlanGroupPlanDetailResponseData   `json:"default_plan,omitempty" url:"default_plan,omitempty"`
-	DefaultPlanID                         *string                            `json:"default_plan_id,omitempty" url:"default_plan_id,omitempty"`
-	FallbackPlan                          *PlanGroupPlanDetailResponseData   `json:"fallback_plan,omitempty" url:"fallback_plan,omitempty"`
-	FallbackPlanID                        *string                            `json:"fallback_plan_id,omitempty" url:"fallback_plan_id,omitempty"`
-	ID                                    string                             `json:"id" url:"id"`
-	InitialPlan                           *PlanGroupPlanDetailResponseData   `json:"initial_plan,omitempty" url:"initial_plan,omitempty"`
-	InitialPlanID                         *string                            `json:"initial_plan_id,omitempty" url:"initial_plan_id,omitempty"`
-	InitialPlanPrice                      *BillingPriceView                  `json:"initial_plan_price,omitempty" url:"initial_plan_price,omitempty"`
-	InitialPlanPriceID                    *string                            `json:"initial_plan_price_id,omitempty" url:"initial_plan_price_id,omitempty"`
-	OrderedAddOnList                      []*PlanGroupPlanEntitlementsOrder  `json:"ordered_add_on_list" url:"ordered_add_on_list"`
-	OrderedBundleList                     []*PlanGroupBundleOrder            `json:"ordered_bundle_list" url:"ordered_bundle_list"`
-	OrderedPlanList                       []*PlanGroupPlanEntitlementsOrder  `json:"ordered_plan_list" url:"ordered_plan_list"`
-	Plans                                 []*PlanGroupPlanDetailResponseData `json:"plans" url:"plans"`
-	PreventDowngradesWhenOverLimit        bool                               `json:"prevent_downgrades_when_over_limit" url:"prevent_downgrades_when_over_limit"`
-	PreventSelfServiceDowngrade           bool                               `json:"prevent_self_service_downgrade" url:"prevent_self_service_downgrade"`
-	PreventSelfServiceDowngradeButtonText *string                            `json:"prevent_self_service_downgrade_button_text,omitempty" url:"prevent_self_service_downgrade_button_text,omitempty"`
-	PreventSelfServiceDowngradeURL        *string                            `json:"prevent_self_service_downgrade_url,omitempty" url:"prevent_self_service_downgrade_url,omitempty"`
-	ProrationBehavior                     string                             `json:"proration_behavior" url:"proration_behavior"`
-	ShowAsMonthlyPrices                   bool                               `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
-	ShowCredits                           bool                               `json:"show_credits" url:"show_credits"`
-	ShowPeriodToggle                      bool                               `json:"show_period_toggle" url:"show_period_toggle"`
-	ShowZeroPriceAsFree                   bool                               `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
-	SyncCustomerBillingDetails            bool                               `json:"sync_customer_billing_details" url:"sync_customer_billing_details"`
-	TaxCollectionEnabled                  bool                               `json:"tax_collection_enabled" url:"tax_collection_enabled"`
-	TrialDays                             *int                               `json:"trial_days,omitempty" url:"trial_days,omitempty"`
-	TrialExpiryPlan                       *PlanGroupPlanDetailResponseData   `json:"trial_expiry_plan,omitempty" url:"trial_expiry_plan,omitempty"`
-	TrialExpiryPlanID                     *string                            `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
-	TrialExpiryPlanPrice                  *BillingPriceView                  `json:"trial_expiry_plan_price,omitempty" url:"trial_expiry_plan_price,omitempty"`
-	TrialExpiryPlanPriceID                *string                            `json:"trial_expiry_plan_price_id,omitempty" url:"trial_expiry_plan_price_id,omitempty"`
-	TrialPaymentMethodRequired            *bool                              `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
+	AddOns                                 []*PlanGroupPlanDetailResponseData `json:"add_ons" url:"add_ons"`
+	CheckoutSettings                       *CheckoutSettingsResponseData      `json:"checkout_settings" url:"checkout_settings"`
+	ComponentSettings                      *ComponentSettingsResponseData     `json:"component_settings" url:"component_settings"`
+	CustomPlanConfig                       *CustomPlanViewConfigResponseData  `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
+	CustomPlanID                           *string                            `json:"custom_plan_id,omitempty" url:"custom_plan_id,omitempty"`
+	DefaultPlan                            *PlanGroupPlanDetailResponseData   `json:"default_plan,omitempty" url:"default_plan,omitempty"`
+	DefaultPlanID                          *string                            `json:"default_plan_id,omitempty" url:"default_plan_id,omitempty"`
+	FallbackPlan                           *PlanGroupPlanDetailResponseData   `json:"fallback_plan,omitempty" url:"fallback_plan,omitempty"`
+	FallbackPlanID                         *string                            `json:"fallback_plan_id,omitempty" url:"fallback_plan_id,omitempty"`
+	ID                                     string                             `json:"id" url:"id"`
+	InitialPlan                            *PlanGroupPlanDetailResponseData   `json:"initial_plan,omitempty" url:"initial_plan,omitempty"`
+	InitialPlanID                          *string                            `json:"initial_plan_id,omitempty" url:"initial_plan_id,omitempty"`
+	InitialPlanPrice                       *BillingPriceView                  `json:"initial_plan_price,omitempty" url:"initial_plan_price,omitempty"`
+	InitialPlanPriceID                     *string                            `json:"initial_plan_price_id,omitempty" url:"initial_plan_price_id,omitempty"`
+	OrderedAddOnList                       []*PlanGroupPlanEntitlementsOrder  `json:"ordered_add_on_list" url:"ordered_add_on_list"`
+	OrderedBundleList                      []*PlanGroupBundleOrder            `json:"ordered_bundle_list" url:"ordered_bundle_list"`
+	OrderedPlanList                        []*PlanGroupPlanEntitlementsOrder  `json:"ordered_plan_list" url:"ordered_plan_list"`
+	Plans                                  []*PlanGroupPlanDetailResponseData `json:"plans" url:"plans"`
+	PreventDowngradesWhenOverLimit         bool                               `json:"prevent_downgrades_when_over_limit" url:"prevent_downgrades_when_over_limit"`
+	PreventSelfServiceDowngrade            bool                               `json:"prevent_self_service_downgrade" url:"prevent_self_service_downgrade"`
+	PreventSelfServiceDowngradeButtonText  *string                            `json:"prevent_self_service_downgrade_button_text,omitempty" url:"prevent_self_service_downgrade_button_text,omitempty"`
+	PreventSelfServiceDowngradeURL         *string                            `json:"prevent_self_service_downgrade_url,omitempty" url:"prevent_self_service_downgrade_url,omitempty"`
+	ProrationBehavior                      string                             `json:"proration_behavior" url:"proration_behavior"`
+	ScheduledDowngradeBehavior             *string                            `json:"scheduled_downgrade_behavior,omitempty" url:"scheduled_downgrade_behavior,omitempty"`
+	ScheduledDowngradePreventWhenOverLimit *bool                              `json:"scheduled_downgrade_prevent_when_over_limit,omitempty" url:"scheduled_downgrade_prevent_when_over_limit,omitempty"`
+	ShowAsMonthlyPrices                    bool                               `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
+	ShowCredits                            bool                               `json:"show_credits" url:"show_credits"`
+	ShowPeriodToggle                       bool                               `json:"show_period_toggle" url:"show_period_toggle"`
+	ShowZeroPriceAsFree                    bool                               `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
+	SyncCustomerBillingDetails             bool                               `json:"sync_customer_billing_details" url:"sync_customer_billing_details"`
+	TaxCollectionEnabled                   bool                               `json:"tax_collection_enabled" url:"tax_collection_enabled"`
+	TrialDays                              *int                               `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialExpiryPlan                        *PlanGroupPlanDetailResponseData   `json:"trial_expiry_plan,omitempty" url:"trial_expiry_plan,omitempty"`
+	TrialExpiryPlanID                      *string                            `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
+	TrialExpiryPlanPrice                   *BillingPriceView                  `json:"trial_expiry_plan_price,omitempty" url:"trial_expiry_plan_price,omitempty"`
+	TrialExpiryPlanPriceID                 *string                            `json:"trial_expiry_plan_price_id,omitempty" url:"trial_expiry_plan_price_id,omitempty"`
+	TrialPaymentMethodRequired             *bool                              `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1320,6 +1367,20 @@ func (p *PlanGroupDetailResponseData) GetProrationBehavior() string {
 		return ""
 	}
 	return p.ProrationBehavior
+}
+
+func (p *PlanGroupDetailResponseData) GetScheduledDowngradeBehavior() *string {
+	if p == nil {
+		return nil
+	}
+	return p.ScheduledDowngradeBehavior
+}
+
+func (p *PlanGroupDetailResponseData) GetScheduledDowngradePreventWhenOverLimit() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.ScheduledDowngradePreventWhenOverLimit
 }
 
 func (p *PlanGroupDetailResponseData) GetShowAsMonthlyPrices() bool {
@@ -1578,6 +1639,20 @@ func (p *PlanGroupDetailResponseData) SetProrationBehavior(prorationBehavior str
 	p.require(planGroupDetailResponseDataFieldProrationBehavior)
 }
 
+// SetScheduledDowngradeBehavior sets the ScheduledDowngradeBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupDetailResponseData) SetScheduledDowngradeBehavior(scheduledDowngradeBehavior *string) {
+	p.ScheduledDowngradeBehavior = scheduledDowngradeBehavior
+	p.require(planGroupDetailResponseDataFieldScheduledDowngradeBehavior)
+}
+
+// SetScheduledDowngradePreventWhenOverLimit sets the ScheduledDowngradePreventWhenOverLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupDetailResponseData) SetScheduledDowngradePreventWhenOverLimit(scheduledDowngradePreventWhenOverLimit *bool) {
+	p.ScheduledDowngradePreventWhenOverLimit = scheduledDowngradePreventWhenOverLimit
+	p.require(planGroupDetailResponseDataFieldScheduledDowngradePreventWhenOverLimit)
+}
+
 // SetShowAsMonthlyPrices sets the ShowAsMonthlyPrices field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanGroupDetailResponseData) SetShowAsMonthlyPrices(showAsMonthlyPrices bool) {
@@ -1702,35 +1777,38 @@ func (p *PlanGroupDetailResponseData) String() string {
 }
 
 var (
-	planGroupPlanDetailResponseDataFieldAudienceType         = big.NewInt(1 << 0)
-	planGroupPlanDetailResponseDataFieldBillingProduct       = big.NewInt(1 << 1)
-	planGroupPlanDetailResponseDataFieldChargeType           = big.NewInt(1 << 2)
-	planGroupPlanDetailResponseDataFieldCompanyCount         = big.NewInt(1 << 3)
-	planGroupPlanDetailResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 4)
-	planGroupPlanDetailResponseDataFieldControlledBy         = big.NewInt(1 << 5)
-	planGroupPlanDetailResponseDataFieldCreatedAt            = big.NewInt(1 << 6)
-	planGroupPlanDetailResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 7)
-	planGroupPlanDetailResponseDataFieldDescription          = big.NewInt(1 << 8)
-	planGroupPlanDetailResponseDataFieldEntitlements         = big.NewInt(1 << 9)
-	planGroupPlanDetailResponseDataFieldFeatures             = big.NewInt(1 << 10)
-	planGroupPlanDetailResponseDataFieldIcon                 = big.NewInt(1 << 11)
-	planGroupPlanDetailResponseDataFieldID                   = big.NewInt(1 << 12)
-	planGroupPlanDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 13)
-	planGroupPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 14)
-	planGroupPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 15)
-	planGroupPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 16)
-	planGroupPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 17)
-	planGroupPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 18)
-	planGroupPlanDetailResponseDataFieldName                 = big.NewInt(1 << 19)
-	planGroupPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 20)
-	planGroupPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 21)
-	planGroupPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 22)
-	planGroupPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 23)
-	planGroupPlanDetailResponseDataFieldVersions             = big.NewInt(1 << 24)
-	planGroupPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 25)
+	planGroupPlanDetailResponseDataFieldActiveVersion        = big.NewInt(1 << 0)
+	planGroupPlanDetailResponseDataFieldAudienceType         = big.NewInt(1 << 1)
+	planGroupPlanDetailResponseDataFieldBillingProduct       = big.NewInt(1 << 2)
+	planGroupPlanDetailResponseDataFieldChargeType           = big.NewInt(1 << 3)
+	planGroupPlanDetailResponseDataFieldCompanyCount         = big.NewInt(1 << 4)
+	planGroupPlanDetailResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 5)
+	planGroupPlanDetailResponseDataFieldControlledBy         = big.NewInt(1 << 6)
+	planGroupPlanDetailResponseDataFieldCreatedAt            = big.NewInt(1 << 7)
+	planGroupPlanDetailResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 8)
+	planGroupPlanDetailResponseDataFieldDescription          = big.NewInt(1 << 9)
+	planGroupPlanDetailResponseDataFieldDraftVersion         = big.NewInt(1 << 10)
+	planGroupPlanDetailResponseDataFieldEntitlements         = big.NewInt(1 << 11)
+	planGroupPlanDetailResponseDataFieldFeatures             = big.NewInt(1 << 12)
+	planGroupPlanDetailResponseDataFieldIcon                 = big.NewInt(1 << 13)
+	planGroupPlanDetailResponseDataFieldID                   = big.NewInt(1 << 14)
+	planGroupPlanDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 15)
+	planGroupPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 16)
+	planGroupPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 17)
+	planGroupPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 18)
+	planGroupPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 19)
+	planGroupPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 20)
+	planGroupPlanDetailResponseDataFieldName                 = big.NewInt(1 << 21)
+	planGroupPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 22)
+	planGroupPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 23)
+	planGroupPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 24)
+	planGroupPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 25)
+	planGroupPlanDetailResponseDataFieldVersions             = big.NewInt(1 << 26)
+	planGroupPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 27)
 )
 
 type PlanGroupPlanDetailResponseData struct {
+	ActiveVersion        *PlanVersionResponseData              `json:"active_version,omitempty" url:"active_version,omitempty"`
 	AudienceType         *string                               `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	BillingProduct       *BillingProductDetailResponseData     `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	ChargeType           ChargeType                            `json:"charge_type" url:"charge_type"`
@@ -1740,6 +1818,7 @@ type PlanGroupPlanDetailResponseData struct {
 	CreatedAt            time.Time                             `json:"created_at" url:"created_at"`
 	CustomPlanConfig     *CustomPlanViewConfigResponseData     `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
 	Description          string                                `json:"description" url:"description"`
+	DraftVersion         *PlanVersionResponseData              `json:"draft_version,omitempty" url:"draft_version,omitempty"`
 	Entitlements         []*PlanEntitlementResponseData        `json:"entitlements" url:"entitlements"`
 	Features             []*FeatureDetailResponseData          `json:"features" url:"features"`
 	Icon                 string                                `json:"icon" url:"icon"`
@@ -1763,6 +1842,13 @@ type PlanGroupPlanDetailResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetActiveVersion() *PlanVersionResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.ActiveVersion
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetAudienceType() *string {
@@ -1826,6 +1912,13 @@ func (p *PlanGroupPlanDetailResponseData) GetDescription() string {
 		return ""
 	}
 	return p.Description
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetDraftVersion() *PlanVersionResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.DraftVersion
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetEntitlements() []*PlanEntitlementResponseData {
@@ -1958,6 +2051,13 @@ func (p *PlanGroupPlanDetailResponseData) require(field *big.Int) {
 	p.explicitFields.Or(p.explicitFields, field)
 }
 
+// SetActiveVersion sets the ActiveVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanDetailResponseData) SetActiveVersion(activeVersion *PlanVersionResponseData) {
+	p.ActiveVersion = activeVersion
+	p.require(planGroupPlanDetailResponseDataFieldActiveVersion)
+}
+
 // SetAudienceType sets the AudienceType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanGroupPlanDetailResponseData) SetAudienceType(audienceType *string) {
@@ -2019,6 +2119,13 @@ func (p *PlanGroupPlanDetailResponseData) SetCustomPlanConfig(customPlanConfig *
 func (p *PlanGroupPlanDetailResponseData) SetDescription(description string) {
 	p.Description = description
 	p.require(planGroupPlanDetailResponseDataFieldDescription)
+}
+
+// SetDraftVersion sets the DraftVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanDetailResponseData) SetDraftVersion(draftVersion *PlanVersionResponseData) {
+	p.DraftVersion = draftVersion
+	p.require(planGroupPlanDetailResponseDataFieldDraftVersion)
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;
@@ -2286,61 +2393,65 @@ func (p *PlanGroupPlanEntitlementsOrder) String() string {
 }
 
 var (
-	planGroupResponseDataFieldAddOnCompatibilities                  = big.NewInt(1 << 0)
-	planGroupResponseDataFieldAddOnIDs                              = big.NewInt(1 << 1)
-	planGroupResponseDataFieldCheckoutSettings                      = big.NewInt(1 << 2)
-	planGroupResponseDataFieldComponentSettings                     = big.NewInt(1 << 3)
-	planGroupResponseDataFieldDefaultPlanID                         = big.NewInt(1 << 4)
-	planGroupResponseDataFieldFallbackPlanID                        = big.NewInt(1 << 5)
-	planGroupResponseDataFieldID                                    = big.NewInt(1 << 6)
-	planGroupResponseDataFieldInitialPlanID                         = big.NewInt(1 << 7)
-	planGroupResponseDataFieldInitialPlanPriceID                    = big.NewInt(1 << 8)
-	planGroupResponseDataFieldOrderedAddOnIDs                       = big.NewInt(1 << 9)
-	planGroupResponseDataFieldPlanIDs                               = big.NewInt(1 << 10)
-	planGroupResponseDataFieldPreventDowngradesWhenOverLimit        = big.NewInt(1 << 11)
-	planGroupResponseDataFieldPreventSelfServiceDowngrade           = big.NewInt(1 << 12)
-	planGroupResponseDataFieldPreventSelfServiceDowngradeButtonText = big.NewInt(1 << 13)
-	planGroupResponseDataFieldPreventSelfServiceDowngradeURL        = big.NewInt(1 << 14)
-	planGroupResponseDataFieldProrationBehavior                     = big.NewInt(1 << 15)
-	planGroupResponseDataFieldShowAsMonthlyPrices                   = big.NewInt(1 << 16)
-	planGroupResponseDataFieldShowCredits                           = big.NewInt(1 << 17)
-	planGroupResponseDataFieldShowPeriodToggle                      = big.NewInt(1 << 18)
-	planGroupResponseDataFieldShowZeroPriceAsFree                   = big.NewInt(1 << 19)
-	planGroupResponseDataFieldSyncCustomerBillingDetails            = big.NewInt(1 << 20)
-	planGroupResponseDataFieldTaxCollectionEnabled                  = big.NewInt(1 << 21)
-	planGroupResponseDataFieldTrialDays                             = big.NewInt(1 << 22)
-	planGroupResponseDataFieldTrialExpiryPlanID                     = big.NewInt(1 << 23)
-	planGroupResponseDataFieldTrialExpiryPlanPriceID                = big.NewInt(1 << 24)
-	planGroupResponseDataFieldTrialPaymentMethodRequired            = big.NewInt(1 << 25)
+	planGroupResponseDataFieldAddOnCompatibilities                   = big.NewInt(1 << 0)
+	planGroupResponseDataFieldAddOnIDs                               = big.NewInt(1 << 1)
+	planGroupResponseDataFieldCheckoutSettings                       = big.NewInt(1 << 2)
+	planGroupResponseDataFieldComponentSettings                      = big.NewInt(1 << 3)
+	planGroupResponseDataFieldDefaultPlanID                          = big.NewInt(1 << 4)
+	planGroupResponseDataFieldFallbackPlanID                         = big.NewInt(1 << 5)
+	planGroupResponseDataFieldID                                     = big.NewInt(1 << 6)
+	planGroupResponseDataFieldInitialPlanID                          = big.NewInt(1 << 7)
+	planGroupResponseDataFieldInitialPlanPriceID                     = big.NewInt(1 << 8)
+	planGroupResponseDataFieldOrderedAddOnIDs                        = big.NewInt(1 << 9)
+	planGroupResponseDataFieldPlanIDs                                = big.NewInt(1 << 10)
+	planGroupResponseDataFieldPreventDowngradesWhenOverLimit         = big.NewInt(1 << 11)
+	planGroupResponseDataFieldPreventSelfServiceDowngrade            = big.NewInt(1 << 12)
+	planGroupResponseDataFieldPreventSelfServiceDowngradeButtonText  = big.NewInt(1 << 13)
+	planGroupResponseDataFieldPreventSelfServiceDowngradeURL         = big.NewInt(1 << 14)
+	planGroupResponseDataFieldProrationBehavior                      = big.NewInt(1 << 15)
+	planGroupResponseDataFieldScheduledDowngradeBehavior             = big.NewInt(1 << 16)
+	planGroupResponseDataFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 17)
+	planGroupResponseDataFieldShowAsMonthlyPrices                    = big.NewInt(1 << 18)
+	planGroupResponseDataFieldShowCredits                            = big.NewInt(1 << 19)
+	planGroupResponseDataFieldShowPeriodToggle                       = big.NewInt(1 << 20)
+	planGroupResponseDataFieldShowZeroPriceAsFree                    = big.NewInt(1 << 21)
+	planGroupResponseDataFieldSyncCustomerBillingDetails             = big.NewInt(1 << 22)
+	planGroupResponseDataFieldTaxCollectionEnabled                   = big.NewInt(1 << 23)
+	planGroupResponseDataFieldTrialDays                              = big.NewInt(1 << 24)
+	planGroupResponseDataFieldTrialExpiryPlanID                      = big.NewInt(1 << 25)
+	planGroupResponseDataFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 26)
+	planGroupResponseDataFieldTrialPaymentMethodRequired             = big.NewInt(1 << 27)
 )
 
 type PlanGroupResponseData struct {
-	AddOnCompatibilities                  []*CompatiblePlansResponseData `json:"add_on_compatibilities" url:"add_on_compatibilities"`
-	AddOnIDs                              []string                       `json:"add_on_ids" url:"add_on_ids"`
-	CheckoutSettings                      *CheckoutSettingsResponseData  `json:"checkout_settings" url:"checkout_settings"`
-	ComponentSettings                     *ComponentSettingsResponseData `json:"component_settings" url:"component_settings"`
-	DefaultPlanID                         *string                        `json:"default_plan_id,omitempty" url:"default_plan_id,omitempty"`
-	FallbackPlanID                        *string                        `json:"fallback_plan_id,omitempty" url:"fallback_plan_id,omitempty"`
-	ID                                    string                         `json:"id" url:"id"`
-	InitialPlanID                         *string                        `json:"initial_plan_id,omitempty" url:"initial_plan_id,omitempty"`
-	InitialPlanPriceID                    *string                        `json:"initial_plan_price_id,omitempty" url:"initial_plan_price_id,omitempty"`
-	OrderedAddOnIDs                       []*OrderedPlansInGroup         `json:"ordered_add_on_ids" url:"ordered_add_on_ids"`
-	PlanIDs                               []*OrderedPlansInGroup         `json:"plan_ids" url:"plan_ids"`
-	PreventDowngradesWhenOverLimit        bool                           `json:"prevent_downgrades_when_over_limit" url:"prevent_downgrades_when_over_limit"`
-	PreventSelfServiceDowngrade           bool                           `json:"prevent_self_service_downgrade" url:"prevent_self_service_downgrade"`
-	PreventSelfServiceDowngradeButtonText *string                        `json:"prevent_self_service_downgrade_button_text,omitempty" url:"prevent_self_service_downgrade_button_text,omitempty"`
-	PreventSelfServiceDowngradeURL        *string                        `json:"prevent_self_service_downgrade_url,omitempty" url:"prevent_self_service_downgrade_url,omitempty"`
-	ProrationBehavior                     string                         `json:"proration_behavior" url:"proration_behavior"`
-	ShowAsMonthlyPrices                   bool                           `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
-	ShowCredits                           bool                           `json:"show_credits" url:"show_credits"`
-	ShowPeriodToggle                      bool                           `json:"show_period_toggle" url:"show_period_toggle"`
-	ShowZeroPriceAsFree                   bool                           `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
-	SyncCustomerBillingDetails            bool                           `json:"sync_customer_billing_details" url:"sync_customer_billing_details"`
-	TaxCollectionEnabled                  bool                           `json:"tax_collection_enabled" url:"tax_collection_enabled"`
-	TrialDays                             *int                           `json:"trial_days,omitempty" url:"trial_days,omitempty"`
-	TrialExpiryPlanID                     *string                        `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
-	TrialExpiryPlanPriceID                *string                        `json:"trial_expiry_plan_price_id,omitempty" url:"trial_expiry_plan_price_id,omitempty"`
-	TrialPaymentMethodRequired            *bool                          `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
+	AddOnCompatibilities                   []*CompatiblePlansResponseData `json:"add_on_compatibilities" url:"add_on_compatibilities"`
+	AddOnIDs                               []string                       `json:"add_on_ids" url:"add_on_ids"`
+	CheckoutSettings                       *CheckoutSettingsResponseData  `json:"checkout_settings" url:"checkout_settings"`
+	ComponentSettings                      *ComponentSettingsResponseData `json:"component_settings" url:"component_settings"`
+	DefaultPlanID                          *string                        `json:"default_plan_id,omitempty" url:"default_plan_id,omitempty"`
+	FallbackPlanID                         *string                        `json:"fallback_plan_id,omitempty" url:"fallback_plan_id,omitempty"`
+	ID                                     string                         `json:"id" url:"id"`
+	InitialPlanID                          *string                        `json:"initial_plan_id,omitempty" url:"initial_plan_id,omitempty"`
+	InitialPlanPriceID                     *string                        `json:"initial_plan_price_id,omitempty" url:"initial_plan_price_id,omitempty"`
+	OrderedAddOnIDs                        []*OrderedPlansInGroup         `json:"ordered_add_on_ids" url:"ordered_add_on_ids"`
+	PlanIDs                                []*OrderedPlansInGroup         `json:"plan_ids" url:"plan_ids"`
+	PreventDowngradesWhenOverLimit         bool                           `json:"prevent_downgrades_when_over_limit" url:"prevent_downgrades_when_over_limit"`
+	PreventSelfServiceDowngrade            bool                           `json:"prevent_self_service_downgrade" url:"prevent_self_service_downgrade"`
+	PreventSelfServiceDowngradeButtonText  *string                        `json:"prevent_self_service_downgrade_button_text,omitempty" url:"prevent_self_service_downgrade_button_text,omitempty"`
+	PreventSelfServiceDowngradeURL         *string                        `json:"prevent_self_service_downgrade_url,omitempty" url:"prevent_self_service_downgrade_url,omitempty"`
+	ProrationBehavior                      string                         `json:"proration_behavior" url:"proration_behavior"`
+	ScheduledDowngradeBehavior             *string                        `json:"scheduled_downgrade_behavior,omitempty" url:"scheduled_downgrade_behavior,omitempty"`
+	ScheduledDowngradePreventWhenOverLimit *bool                          `json:"scheduled_downgrade_prevent_when_over_limit,omitempty" url:"scheduled_downgrade_prevent_when_over_limit,omitempty"`
+	ShowAsMonthlyPrices                    bool                           `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
+	ShowCredits                            bool                           `json:"show_credits" url:"show_credits"`
+	ShowPeriodToggle                       bool                           `json:"show_period_toggle" url:"show_period_toggle"`
+	ShowZeroPriceAsFree                    bool                           `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
+	SyncCustomerBillingDetails             bool                           `json:"sync_customer_billing_details" url:"sync_customer_billing_details"`
+	TaxCollectionEnabled                   bool                           `json:"tax_collection_enabled" url:"tax_collection_enabled"`
+	TrialDays                              *int                           `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialExpiryPlanID                      *string                        `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
+	TrialExpiryPlanPriceID                 *string                        `json:"trial_expiry_plan_price_id,omitempty" url:"trial_expiry_plan_price_id,omitempty"`
+	TrialPaymentMethodRequired             *bool                          `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2459,6 +2570,20 @@ func (p *PlanGroupResponseData) GetProrationBehavior() string {
 		return ""
 	}
 	return p.ProrationBehavior
+}
+
+func (p *PlanGroupResponseData) GetScheduledDowngradeBehavior() *string {
+	if p == nil {
+		return nil
+	}
+	return p.ScheduledDowngradeBehavior
+}
+
+func (p *PlanGroupResponseData) GetScheduledDowngradePreventWhenOverLimit() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.ScheduledDowngradePreventWhenOverLimit
 }
 
 func (p *PlanGroupResponseData) GetShowAsMonthlyPrices() bool {
@@ -2654,6 +2779,20 @@ func (p *PlanGroupResponseData) SetProrationBehavior(prorationBehavior string) {
 	p.require(planGroupResponseDataFieldProrationBehavior)
 }
 
+// SetScheduledDowngradeBehavior sets the ScheduledDowngradeBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupResponseData) SetScheduledDowngradeBehavior(scheduledDowngradeBehavior *string) {
+	p.ScheduledDowngradeBehavior = scheduledDowngradeBehavior
+	p.require(planGroupResponseDataFieldScheduledDowngradeBehavior)
+}
+
+// SetScheduledDowngradePreventWhenOverLimit sets the ScheduledDowngradePreventWhenOverLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupResponseData) SetScheduledDowngradePreventWhenOverLimit(scheduledDowngradePreventWhenOverLimit *bool) {
+	p.ScheduledDowngradePreventWhenOverLimit = scheduledDowngradePreventWhenOverLimit
+	p.require(planGroupResponseDataFieldScheduledDowngradePreventWhenOverLimit)
+}
+
 // SetShowAsMonthlyPrices sets the ShowAsMonthlyPrices field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanGroupResponseData) SetShowAsMonthlyPrices(showAsMonthlyPrices bool) {
@@ -2783,6 +2922,28 @@ func NewProrationBehaviorFromString(s string) (ProrationBehavior, error) {
 
 func (p ProrationBehavior) Ptr() *ProrationBehavior {
 	return &p
+}
+
+type ScheduledDowngradeConfigBehavior string
+
+const (
+	ScheduledDowngradeConfigBehaviorEndOfBillingPeriod ScheduledDowngradeConfigBehavior = "end_of_billing_period"
+	ScheduledDowngradeConfigBehaviorNone               ScheduledDowngradeConfigBehavior = "none"
+)
+
+func NewScheduledDowngradeConfigBehaviorFromString(s string) (ScheduledDowngradeConfigBehavior, error) {
+	switch s {
+	case "end_of_billing_period":
+		return ScheduledDowngradeConfigBehaviorEndOfBillingPeriod, nil
+	case "none":
+		return ScheduledDowngradeConfigBehaviorNone, nil
+	}
+	var t ScheduledDowngradeConfigBehavior
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s ScheduledDowngradeConfigBehavior) Ptr() *ScheduledDowngradeConfigBehavior {
+	return &s
 }
 
 var (
@@ -3071,66 +3232,72 @@ func (u *UpdatePlanGroupResponse) String() string {
 }
 
 var (
-	updatePlanGroupRequestBodyFieldAddOnCompatibilities                  = big.NewInt(1 << 0)
-	updatePlanGroupRequestBodyFieldAddOnIDs                              = big.NewInt(1 << 1)
-	updatePlanGroupRequestBodyFieldCheckoutCollectAddress                = big.NewInt(1 << 2)
-	updatePlanGroupRequestBodyFieldCheckoutCollectEmail                  = big.NewInt(1 << 3)
-	updatePlanGroupRequestBodyFieldCheckoutCollectPhone                  = big.NewInt(1 << 4)
-	updatePlanGroupRequestBodyFieldCustomPlanConfig                      = big.NewInt(1 << 5)
-	updatePlanGroupRequestBodyFieldCustomPlanID                          = big.NewInt(1 << 6)
-	updatePlanGroupRequestBodyFieldEnableTaxCollection                   = big.NewInt(1 << 7)
-	updatePlanGroupRequestBodyFieldFallbackPlanID                        = big.NewInt(1 << 8)
-	updatePlanGroupRequestBodyFieldInitialPlanID                         = big.NewInt(1 << 9)
-	updatePlanGroupRequestBodyFieldInitialPlanPriceID                    = big.NewInt(1 << 10)
-	updatePlanGroupRequestBodyFieldOrderedAddOns                         = big.NewInt(1 << 11)
-	updatePlanGroupRequestBodyFieldOrderedBundleList                     = big.NewInt(1 << 12)
-	updatePlanGroupRequestBodyFieldOrderedPlans                          = big.NewInt(1 << 13)
-	updatePlanGroupRequestBodyFieldPreventDowngradesWhenOverLimit        = big.NewInt(1 << 14)
-	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngrade           = big.NewInt(1 << 15)
-	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngradeButtonText = big.NewInt(1 << 16)
-	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngradeURL        = big.NewInt(1 << 17)
-	updatePlanGroupRequestBodyFieldProrationBehavior                     = big.NewInt(1 << 18)
-	updatePlanGroupRequestBodyFieldShowAsMonthlyPrices                   = big.NewInt(1 << 19)
-	updatePlanGroupRequestBodyFieldShowCredits                           = big.NewInt(1 << 20)
-	updatePlanGroupRequestBodyFieldShowPeriodToggle                      = big.NewInt(1 << 21)
-	updatePlanGroupRequestBodyFieldShowZeroPriceAsFree                   = big.NewInt(1 << 22)
-	updatePlanGroupRequestBodyFieldSyncCustomerBillingDetails            = big.NewInt(1 << 23)
-	updatePlanGroupRequestBodyFieldTrialDays                             = big.NewInt(1 << 24)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                     = big.NewInt(1 << 25)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                = big.NewInt(1 << 26)
-	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired            = big.NewInt(1 << 27)
+	updatePlanGroupRequestBodyFieldAddOnCompatibilities                   = big.NewInt(1 << 0)
+	updatePlanGroupRequestBodyFieldAddOnIDs                               = big.NewInt(1 << 1)
+	updatePlanGroupRequestBodyFieldCheckoutCollectAddress                 = big.NewInt(1 << 2)
+	updatePlanGroupRequestBodyFieldCheckoutCollectEmail                   = big.NewInt(1 << 3)
+	updatePlanGroupRequestBodyFieldCheckoutCollectPhone                   = big.NewInt(1 << 4)
+	updatePlanGroupRequestBodyFieldCustomPlanConfig                       = big.NewInt(1 << 5)
+	updatePlanGroupRequestBodyFieldCustomPlanID                           = big.NewInt(1 << 6)
+	updatePlanGroupRequestBodyFieldEnableTaxCollection                    = big.NewInt(1 << 7)
+	updatePlanGroupRequestBodyFieldFallbackPlanID                         = big.NewInt(1 << 8)
+	updatePlanGroupRequestBodyFieldInitialPlanID                          = big.NewInt(1 << 9)
+	updatePlanGroupRequestBodyFieldInitialPlanPriceID                     = big.NewInt(1 << 10)
+	updatePlanGroupRequestBodyFieldOrderedAddOns                          = big.NewInt(1 << 11)
+	updatePlanGroupRequestBodyFieldOrderedBundleList                      = big.NewInt(1 << 12)
+	updatePlanGroupRequestBodyFieldOrderedPlans                           = big.NewInt(1 << 13)
+	updatePlanGroupRequestBodyFieldPreventDowngradesWhenOverLimit         = big.NewInt(1 << 14)
+	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngrade            = big.NewInt(1 << 15)
+	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngradeButtonText  = big.NewInt(1 << 16)
+	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngradeURL         = big.NewInt(1 << 17)
+	updatePlanGroupRequestBodyFieldProrationBehavior                      = big.NewInt(1 << 18)
+	updatePlanGroupRequestBodyFieldScheduledDowngradeBehavior             = big.NewInt(1 << 19)
+	updatePlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 20)
+	updatePlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 21)
+	updatePlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 22)
+	updatePlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 23)
+	updatePlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 24)
+	updatePlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 25)
+	updatePlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 26)
+	updatePlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 27)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 28)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 29)
+	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 30)
 )
 
 type UpdatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
-	AddOnIDs                              []string                `json:"add_on_ids,omitempty" url:"-"`
-	CheckoutCollectAddress                bool                    `json:"checkout_collect_address" url:"-"`
-	CheckoutCollectEmail                  bool                    `json:"checkout_collect_email" url:"-"`
-	CheckoutCollectPhone                  bool                    `json:"checkout_collect_phone" url:"-"`
-	CustomPlanConfig                      *CustomPlanConfig       `json:"custom_plan_config,omitempty" url:"-"`
-	CustomPlanID                          *string                 `json:"custom_plan_id,omitempty" url:"-"`
-	EnableTaxCollection                   bool                    `json:"enable_tax_collection" url:"-"`
-	FallbackPlanID                        *string                 `json:"fallback_plan_id,omitempty" url:"-"`
-	InitialPlanID                         *string                 `json:"initial_plan_id,omitempty" url:"-"`
-	InitialPlanPriceID                    *string                 `json:"initial_plan_price_id,omitempty" url:"-"`
-	OrderedAddOns                         []*OrderedPlansInGroup  `json:"ordered_add_ons,omitempty" url:"-"`
-	OrderedBundleList                     []*PlanGroupBundleOrder `json:"ordered_bundle_list,omitempty" url:"-"`
-	OrderedPlans                          []*OrderedPlansInGroup  `json:"ordered_plans,omitempty" url:"-"`
-	PreventDowngradesWhenOverLimit        bool                    `json:"prevent_downgrades_when_over_limit" url:"-"`
-	PreventSelfServiceDowngrade           bool                    `json:"prevent_self_service_downgrade" url:"-"`
-	PreventSelfServiceDowngradeButtonText *string                 `json:"prevent_self_service_downgrade_button_text,omitempty" url:"-"`
-	PreventSelfServiceDowngradeURL        *string                 `json:"prevent_self_service_downgrade_url,omitempty" url:"-"`
-	ProrationBehavior                     ProrationBehavior       `json:"proration_behavior" url:"-"`
-	ShowAsMonthlyPrices                   bool                    `json:"show_as_monthly_prices" url:"-"`
-	ShowCredits                           bool                    `json:"show_credits" url:"-"`
-	ShowPeriodToggle                      bool                    `json:"show_period_toggle" url:"-"`
-	ShowZeroPriceAsFree                   bool                    `json:"show_zero_price_as_free" url:"-"`
-	SyncCustomerBillingDetails            bool                    `json:"sync_customer_billing_details" url:"-"`
-	TrialDays                             *int                    `json:"trial_days,omitempty" url:"-"`
-	TrialExpiryPlanID                     *string                 `json:"trial_expiry_plan_id,omitempty" url:"-"`
-	TrialExpiryPlanPriceID                *string                 `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
-	TrialPaymentMethodRequired            *bool                   `json:"trial_payment_method_required,omitempty" url:"-"`
+	AddOnIDs                               []string                          `json:"add_on_ids,omitempty" url:"-"`
+	CheckoutCollectAddress                 bool                              `json:"checkout_collect_address" url:"-"`
+	CheckoutCollectEmail                   bool                              `json:"checkout_collect_email" url:"-"`
+	CheckoutCollectPhone                   bool                              `json:"checkout_collect_phone" url:"-"`
+	CustomPlanConfig                       *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"-"`
+	CustomPlanID                           *string                           `json:"custom_plan_id,omitempty" url:"-"`
+	EnableTaxCollection                    bool                              `json:"enable_tax_collection" url:"-"`
+	FallbackPlanID                         *string                           `json:"fallback_plan_id,omitempty" url:"-"`
+	InitialPlanID                          *string                           `json:"initial_plan_id,omitempty" url:"-"`
+	InitialPlanPriceID                     *string                           `json:"initial_plan_price_id,omitempty" url:"-"`
+	OrderedAddOns                          []*OrderedPlansInGroup            `json:"ordered_add_ons,omitempty" url:"-"`
+	OrderedBundleList                      []*PlanGroupBundleOrder           `json:"ordered_bundle_list,omitempty" url:"-"`
+	OrderedPlans                           []*OrderedPlansInGroup            `json:"ordered_plans,omitempty" url:"-"`
+	PreventDowngradesWhenOverLimit         bool                              `json:"prevent_downgrades_when_over_limit" url:"-"`
+	PreventSelfServiceDowngrade            bool                              `json:"prevent_self_service_downgrade" url:"-"`
+	PreventSelfServiceDowngradeButtonText  *string                           `json:"prevent_self_service_downgrade_button_text,omitempty" url:"-"`
+	PreventSelfServiceDowngradeURL         *string                           `json:"prevent_self_service_downgrade_url,omitempty" url:"-"`
+	ProrationBehavior                      ProrationBehavior                 `json:"proration_behavior" url:"-"`
+	ScheduledDowngradeBehavior             *ScheduledDowngradeConfigBehavior `json:"scheduled_downgrade_behavior,omitempty" url:"-"`
+	ScheduledDowngradePreventWhenOverLimit *bool                             `json:"scheduled_downgrade_prevent_when_over_limit,omitempty" url:"-"`
+	ShowAsMonthlyPrices                    bool                              `json:"show_as_monthly_prices" url:"-"`
+	ShowCredits                            bool                              `json:"show_credits" url:"-"`
+	ShowFeatureDescription                 bool                              `json:"show_feature_description" url:"-"`
+	ShowPeriodToggle                       bool                              `json:"show_period_toggle" url:"-"`
+	ShowZeroPriceAsFree                    bool                              `json:"show_zero_price_as_free" url:"-"`
+	SyncCustomerBillingDetails             bool                              `json:"sync_customer_billing_details" url:"-"`
+	TrialDays                              *int                              `json:"trial_days,omitempty" url:"-"`
+	TrialExpiryPlanID                      *string                           `json:"trial_expiry_plan_id,omitempty" url:"-"`
+	TrialExpiryPlanPriceID                 *string                           `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
+	TrialPaymentMethodRequired             *bool                             `json:"trial_payment_method_required,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3276,6 +3443,20 @@ func (u *UpdatePlanGroupRequestBody) SetProrationBehavior(prorationBehavior Pror
 	u.require(updatePlanGroupRequestBodyFieldProrationBehavior)
 }
 
+// SetScheduledDowngradeBehavior sets the ScheduledDowngradeBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanGroupRequestBody) SetScheduledDowngradeBehavior(scheduledDowngradeBehavior *ScheduledDowngradeConfigBehavior) {
+	u.ScheduledDowngradeBehavior = scheduledDowngradeBehavior
+	u.require(updatePlanGroupRequestBodyFieldScheduledDowngradeBehavior)
+}
+
+// SetScheduledDowngradePreventWhenOverLimit sets the ScheduledDowngradePreventWhenOverLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanGroupRequestBody) SetScheduledDowngradePreventWhenOverLimit(scheduledDowngradePreventWhenOverLimit *bool) {
+	u.ScheduledDowngradePreventWhenOverLimit = scheduledDowngradePreventWhenOverLimit
+	u.require(updatePlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit)
+}
+
 // SetShowAsMonthlyPrices sets the ShowAsMonthlyPrices field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdatePlanGroupRequestBody) SetShowAsMonthlyPrices(showAsMonthlyPrices bool) {
@@ -3288,6 +3469,13 @@ func (u *UpdatePlanGroupRequestBody) SetShowAsMonthlyPrices(showAsMonthlyPrices 
 func (u *UpdatePlanGroupRequestBody) SetShowCredits(showCredits bool) {
 	u.ShowCredits = showCredits
 	u.require(updatePlanGroupRequestBodyFieldShowCredits)
+}
+
+// SetShowFeatureDescription sets the ShowFeatureDescription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanGroupRequestBody) SetShowFeatureDescription(showFeatureDescription bool) {
+	u.ShowFeatureDescription = showFeatureDescription
+	u.require(updatePlanGroupRequestBodyFieldShowFeatureDescription)
 }
 
 // SetShowPeriodToggle sets the ShowPeriodToggle field and marks it as non-optional;

@@ -39,11 +39,12 @@ var (
 	countFeaturesRequestFieldIDs                       = big.NewInt(1 << 0)
 	countFeaturesRequestFieldQ                         = big.NewInt(1 << 1)
 	countFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 2)
-	countFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 3)
-	countFeaturesRequestFieldFeatureType               = big.NewInt(1 << 4)
-	countFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 5)
-	countFeaturesRequestFieldLimit                     = big.NewInt(1 << 6)
-	countFeaturesRequestFieldOffset                    = big.NewInt(1 << 7)
+	countFeaturesRequestFieldPlanVersionID             = big.NewInt(1 << 3)
+	countFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 4)
+	countFeaturesRequestFieldFeatureType               = big.NewInt(1 << 5)
+	countFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 6)
+	countFeaturesRequestFieldLimit                     = big.NewInt(1 << 7)
+	countFeaturesRequestFieldOffset                    = big.NewInt(1 << 8)
 )
 
 type CountFeaturesRequest struct {
@@ -52,6 +53,8 @@ type CountFeaturesRequest struct {
 	Q *string `json:"-" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
+	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
 	// Filter by one or more feature types (boolean, event, trait)
@@ -93,6 +96,13 @@ func (c *CountFeaturesRequest) SetQ(q *string) {
 func (c *CountFeaturesRequest) SetWithoutCompanyOverrideFor(withoutCompanyOverrideFor *string) {
 	c.WithoutCompanyOverrideFor = withoutCompanyOverrideFor
 	c.require(countFeaturesRequestFieldWithoutCompanyOverrideFor)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountFeaturesRequest) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(countFeaturesRequestFieldPlanVersionID)
 }
 
 // SetWithoutPlanEntitlementFor sets the WithoutPlanEntitlementFor field and marks it as non-optional;
@@ -313,11 +323,12 @@ var (
 	listFeaturesRequestFieldIDs                       = big.NewInt(1 << 0)
 	listFeaturesRequestFieldQ                         = big.NewInt(1 << 1)
 	listFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 2)
-	listFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 3)
-	listFeaturesRequestFieldFeatureType               = big.NewInt(1 << 4)
-	listFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 5)
-	listFeaturesRequestFieldLimit                     = big.NewInt(1 << 6)
-	listFeaturesRequestFieldOffset                    = big.NewInt(1 << 7)
+	listFeaturesRequestFieldPlanVersionID             = big.NewInt(1 << 3)
+	listFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 4)
+	listFeaturesRequestFieldFeatureType               = big.NewInt(1 << 5)
+	listFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 6)
+	listFeaturesRequestFieldLimit                     = big.NewInt(1 << 7)
+	listFeaturesRequestFieldOffset                    = big.NewInt(1 << 8)
 )
 
 type ListFeaturesRequest struct {
@@ -326,6 +337,8 @@ type ListFeaturesRequest struct {
 	Q *string `json:"-" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
+	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
 	// Filter by one or more feature types (boolean, event, trait)
@@ -367,6 +380,13 @@ func (l *ListFeaturesRequest) SetQ(q *string) {
 func (l *ListFeaturesRequest) SetWithoutCompanyOverrideFor(withoutCompanyOverrideFor *string) {
 	l.WithoutCompanyOverrideFor = withoutCompanyOverrideFor
 	l.require(listFeaturesRequestFieldWithoutCompanyOverrideFor)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeaturesRequest) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listFeaturesRequestFieldPlanVersionID)
 }
 
 // SetWithoutPlanEntitlementFor sets the WithoutPlanEntitlementFor field and marks it as non-optional;
@@ -564,35 +584,37 @@ func (c *CheckFlagRequestBody) String() string {
 
 var (
 	checkFlagResponseDataFieldCompanyID           = big.NewInt(1 << 0)
-	checkFlagResponseDataFieldError               = big.NewInt(1 << 1)
-	checkFlagResponseDataFieldFeatureAllocation   = big.NewInt(1 << 2)
-	checkFlagResponseDataFieldFeatureUsage        = big.NewInt(1 << 3)
-	checkFlagResponseDataFieldFeatureUsageEvent   = big.NewInt(1 << 4)
-	checkFlagResponseDataFieldFeatureUsagePeriod  = big.NewInt(1 << 5)
-	checkFlagResponseDataFieldFeatureUsageResetAt = big.NewInt(1 << 6)
-	checkFlagResponseDataFieldFlag                = big.NewInt(1 << 7)
-	checkFlagResponseDataFieldFlagID              = big.NewInt(1 << 8)
-	checkFlagResponseDataFieldReason              = big.NewInt(1 << 9)
-	checkFlagResponseDataFieldRuleID              = big.NewInt(1 << 10)
-	checkFlagResponseDataFieldRuleType            = big.NewInt(1 << 11)
-	checkFlagResponseDataFieldUserID              = big.NewInt(1 << 12)
-	checkFlagResponseDataFieldValue               = big.NewInt(1 << 13)
+	checkFlagResponseDataFieldEntitlement         = big.NewInt(1 << 1)
+	checkFlagResponseDataFieldError               = big.NewInt(1 << 2)
+	checkFlagResponseDataFieldFeatureAllocation   = big.NewInt(1 << 3)
+	checkFlagResponseDataFieldFeatureUsage        = big.NewInt(1 << 4)
+	checkFlagResponseDataFieldFeatureUsageEvent   = big.NewInt(1 << 5)
+	checkFlagResponseDataFieldFeatureUsagePeriod  = big.NewInt(1 << 6)
+	checkFlagResponseDataFieldFeatureUsageResetAt = big.NewInt(1 << 7)
+	checkFlagResponseDataFieldFlag                = big.NewInt(1 << 8)
+	checkFlagResponseDataFieldFlagID              = big.NewInt(1 << 9)
+	checkFlagResponseDataFieldReason              = big.NewInt(1 << 10)
+	checkFlagResponseDataFieldRuleID              = big.NewInt(1 << 11)
+	checkFlagResponseDataFieldRuleType            = big.NewInt(1 << 12)
+	checkFlagResponseDataFieldUserID              = big.NewInt(1 << 13)
+	checkFlagResponseDataFieldValue               = big.NewInt(1 << 14)
 )
 
 type CheckFlagResponseData struct {
 	// If company keys were provided and matched a company, its ID
-	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyID   *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
+	Entitlement *FeatureEntitlement `json:"entitlement,omitempty" url:"entitlement,omitempty"`
 	// If an error occurred while checking the flag, the error message
 	Error *string `json:"error,omitempty" url:"error,omitempty"`
-	// If a numeric feature entitlement rule was matched, its allocation
+	// Deprecated: Use Entitlement.Allocation instead.
 	FeatureAllocation *int `json:"feature_allocation,omitempty" url:"feature_allocation,omitempty"`
-	// If a numeric feature entitlement rule was matched, the company's usage
+	// Deprecated: Use Entitlement.Usage instead.
 	FeatureUsage *int `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
-	// If an event-based numeric feature entitlement rule was matched, the event used to track its usage
+	// Deprecated: Use Entitlement.EventName instead.
 	FeatureUsageEvent *string `json:"feature_usage_event,omitempty" url:"feature_usage_event,omitempty"`
-	// For event-based feature entitlement rules, the period over which usage is tracked (current_month, current_day, current_week, all_time)
+	// Deprecated: Use Entitlement.MetricPeriod instead.
 	FeatureUsagePeriod *string `json:"feature_usage_period,omitempty" url:"feature_usage_period,omitempty"`
-	// For event-based feature entitlement rules, when the usage period will reset
+	// Deprecated: Use Entitlement.MetricResetAt instead.
 	FeatureUsageResetAt *time.Time `json:"feature_usage_reset_at,omitempty" url:"feature_usage_reset_at,omitempty"`
 	// The key used to check the flag
 	Flag string `json:"flag" url:"flag"`
@@ -621,6 +643,13 @@ func (c *CheckFlagResponseData) GetCompanyID() *string {
 		return nil
 	}
 	return c.CompanyID
+}
+
+func (c *CheckFlagResponseData) GetEntitlement() *FeatureEntitlement {
+	if c == nil {
+		return nil
+	}
+	return c.Entitlement
 }
 
 func (c *CheckFlagResponseData) GetError() *string {
@@ -730,6 +759,13 @@ func (c *CheckFlagResponseData) require(field *big.Int) {
 func (c *CheckFlagResponseData) SetCompanyID(companyID *string) {
 	c.CompanyID = companyID
 	c.require(checkFlagResponseDataFieldCompanyID)
+}
+
+// SetEntitlement sets the Entitlement field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckFlagResponseData) SetEntitlement(entitlement *FeatureEntitlement) {
+	c.Entitlement = entitlement
+	c.require(checkFlagResponseDataFieldEntitlement)
 }
 
 // SetError sets the Error field and marks it as non-optional;
@@ -2713,9 +2749,10 @@ var (
 	countFeaturesParamsFieldIDs                       = big.NewInt(1 << 2)
 	countFeaturesParamsFieldLimit                     = big.NewInt(1 << 3)
 	countFeaturesParamsFieldOffset                    = big.NewInt(1 << 4)
-	countFeaturesParamsFieldQ                         = big.NewInt(1 << 5)
-	countFeaturesParamsFieldWithoutCompanyOverrideFor = big.NewInt(1 << 6)
-	countFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 7)
+	countFeaturesParamsFieldPlanVersionID             = big.NewInt(1 << 5)
+	countFeaturesParamsFieldQ                         = big.NewInt(1 << 6)
+	countFeaturesParamsFieldWithoutCompanyOverrideFor = big.NewInt(1 << 7)
+	countFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 8)
 )
 
 type CountFeaturesParams struct {
@@ -2728,6 +2765,8 @@ type CountFeaturesParams struct {
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
@@ -2775,6 +2814,13 @@ func (c *CountFeaturesParams) GetOffset() *int {
 		return nil
 	}
 	return c.Offset
+}
+
+func (c *CountFeaturesParams) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
 }
 
 func (c *CountFeaturesParams) GetQ() *string {
@@ -2842,6 +2888,13 @@ func (c *CountFeaturesParams) SetLimit(limit *int) {
 func (c *CountFeaturesParams) SetOffset(offset *int) {
 	c.Offset = offset
 	c.require(countFeaturesParamsFieldOffset)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountFeaturesParams) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(countFeaturesParamsFieldPlanVersionID)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -3817,9 +3870,10 @@ var (
 	listFeaturesParamsFieldIDs                       = big.NewInt(1 << 2)
 	listFeaturesParamsFieldLimit                     = big.NewInt(1 << 3)
 	listFeaturesParamsFieldOffset                    = big.NewInt(1 << 4)
-	listFeaturesParamsFieldQ                         = big.NewInt(1 << 5)
-	listFeaturesParamsFieldWithoutCompanyOverrideFor = big.NewInt(1 << 6)
-	listFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 7)
+	listFeaturesParamsFieldPlanVersionID             = big.NewInt(1 << 5)
+	listFeaturesParamsFieldQ                         = big.NewInt(1 << 6)
+	listFeaturesParamsFieldWithoutCompanyOverrideFor = big.NewInt(1 << 7)
+	listFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 8)
 )
 
 type ListFeaturesParams struct {
@@ -3832,6 +3886,8 @@ type ListFeaturesParams struct {
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
@@ -3879,6 +3935,13 @@ func (l *ListFeaturesParams) GetOffset() *int {
 		return nil
 	}
 	return l.Offset
+}
+
+func (l *ListFeaturesParams) GetPlanVersionID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionID
 }
 
 func (l *ListFeaturesParams) GetQ() *string {
@@ -3946,6 +4009,13 @@ func (l *ListFeaturesParams) SetLimit(limit *int) {
 func (l *ListFeaturesParams) SetOffset(offset *int) {
 	l.Offset = offset
 	l.require(listFeaturesParamsFieldOffset)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeaturesParams) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listFeaturesParamsFieldPlanVersionID)
 }
 
 // SetQ sets the Q field and marks it as non-optional;

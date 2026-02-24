@@ -10,6 +10,7 @@ import (
 	checkout "github.com/schematichq/schematic-go/checkout"
 	companies "github.com/schematichq/schematic-go/companies"
 	components "github.com/schematichq/schematic-go/components"
+	componentspublic "github.com/schematichq/schematic-go/componentspublic"
 	core "github.com/schematichq/schematic-go/core"
 	credits "github.com/schematichq/schematic-go/credits"
 	dataexports "github.com/schematichq/schematic-go/dataexports"
@@ -20,27 +21,32 @@ import (
 	option "github.com/schematichq/schematic-go/option"
 	planbundle "github.com/schematichq/schematic-go/planbundle"
 	plangroups "github.com/schematichq/schematic-go/plangroups"
+	planmigrations "github.com/schematichq/schematic-go/planmigrations"
 	plans "github.com/schematichq/schematic-go/plans"
+	scheduledcheckout "github.com/schematichq/schematic-go/scheduledcheckout"
 	webhooks "github.com/schematichq/schematic-go/webhooks"
 )
 
 type Client struct {
-	WithRawResponse *RawClient
-	Accounts        *accounts.Client
-	Billing         *billing.Client
-	Credits         *credits.Client
-	Checkout        *checkout.Client
-	Companies       *companies.Client
-	Entitlements    *entitlements.Client
-	Plans           *plans.Client
-	Components      *components.Client
-	Dataexports     *dataexports.Client
-	Events          *events.Client
-	Features        *features.Client
-	Planbundle      *planbundle.Client
-	Plangroups      *plangroups.Client
-	Accesstokens    *accesstokens.Client
-	Webhooks        *webhooks.Client
+	WithRawResponse   *RawClient
+	Accounts          *accounts.Client
+	Billing           *billing.Client
+	Credits           *credits.Client
+	Checkout          *checkout.Client
+	Companies         *companies.Client
+	Entitlements      *entitlements.Client
+	Plans             *plans.Client
+	Components        *components.Client
+	Dataexports       *dataexports.Client
+	Events            *events.Client
+	Features          *features.Client
+	Planbundle        *planbundle.Client
+	Plangroups        *plangroups.Client
+	Planmigrations    *planmigrations.Client
+	Componentspublic  *componentspublic.Client
+	Scheduledcheckout *scheduledcheckout.Client
+	Accesstokens      *accesstokens.Client
+	Webhooks          *webhooks.Client
 
 	options *core.RequestOptions
 	baseURL string
@@ -50,24 +56,27 @@ type Client struct {
 func NewClient(opts ...option.RequestOption) *Client {
 	options := core.NewRequestOptions(opts...)
 	return &Client{
-		Accounts:        accounts.NewClient(options),
-		Billing:         billing.NewClient(options),
-		Credits:         credits.NewClient(options),
-		Checkout:        checkout.NewClient(options),
-		Companies:       companies.NewClient(options),
-		Entitlements:    entitlements.NewClient(options),
-		Plans:           plans.NewClient(options),
-		Components:      components.NewClient(options),
-		Dataexports:     dataexports.NewClient(options),
-		Events:          events.NewClient(options),
-		Features:        features.NewClient(options),
-		Planbundle:      planbundle.NewClient(options),
-		Plangroups:      plangroups.NewClient(options),
-		Accesstokens:    accesstokens.NewClient(options),
-		Webhooks:        webhooks.NewClient(options),
-		WithRawResponse: NewRawClient(options),
-		options:         options,
-		baseURL:         options.BaseURL,
+		Accounts:          accounts.NewClient(options),
+		Billing:           billing.NewClient(options),
+		Credits:           credits.NewClient(options),
+		Checkout:          checkout.NewClient(options),
+		Companies:         companies.NewClient(options),
+		Entitlements:      entitlements.NewClient(options),
+		Plans:             plans.NewClient(options),
+		Components:        components.NewClient(options),
+		Dataexports:       dataexports.NewClient(options),
+		Events:            events.NewClient(options),
+		Features:          features.NewClient(options),
+		Planbundle:        planbundle.NewClient(options),
+		Plangroups:        plangroups.NewClient(options),
+		Planmigrations:    planmigrations.NewClient(options),
+		Componentspublic:  componentspublic.NewClient(options),
+		Scheduledcheckout: scheduledcheckout.NewClient(options),
+		Accesstokens:      accesstokens.NewClient(options),
+		Webhooks:          webhooks.NewClient(options),
+		WithRawResponse:   NewRawClient(options),
+		options:           options,
+		baseURL:           options.BaseURL,
 		caller: internal.NewCaller(
 			&internal.CallerParams{
 				Client:      options.HTTPClient,

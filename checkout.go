@@ -1603,26 +1603,30 @@ var (
 	previewSubscriptionChangeResponseDataFieldAmountOff             = big.NewInt(1 << 0)
 	previewSubscriptionChangeResponseDataFieldDueNow                = big.NewInt(1 << 1)
 	previewSubscriptionChangeResponseDataFieldFinance               = big.NewInt(1 << 2)
-	previewSubscriptionChangeResponseDataFieldNewCharges            = big.NewInt(1 << 3)
-	previewSubscriptionChangeResponseDataFieldPaymentMethodRequired = big.NewInt(1 << 4)
-	previewSubscriptionChangeResponseDataFieldPercentOff            = big.NewInt(1 << 5)
-	previewSubscriptionChangeResponseDataFieldPeriodStart           = big.NewInt(1 << 6)
-	previewSubscriptionChangeResponseDataFieldPromoCodeApplied      = big.NewInt(1 << 7)
-	previewSubscriptionChangeResponseDataFieldProration             = big.NewInt(1 << 8)
-	previewSubscriptionChangeResponseDataFieldTrialEnd              = big.NewInt(1 << 9)
-	previewSubscriptionChangeResponseDataFieldUsageViolations       = big.NewInt(1 << 10)
+	previewSubscriptionChangeResponseDataFieldIsScheduledDowngrade  = big.NewInt(1 << 3)
+	previewSubscriptionChangeResponseDataFieldNewCharges            = big.NewInt(1 << 4)
+	previewSubscriptionChangeResponseDataFieldPaymentMethodRequired = big.NewInt(1 << 5)
+	previewSubscriptionChangeResponseDataFieldPercentOff            = big.NewInt(1 << 6)
+	previewSubscriptionChangeResponseDataFieldPeriodStart           = big.NewInt(1 << 7)
+	previewSubscriptionChangeResponseDataFieldPromoCodeApplied      = big.NewInt(1 << 8)
+	previewSubscriptionChangeResponseDataFieldProration             = big.NewInt(1 << 9)
+	previewSubscriptionChangeResponseDataFieldScheduledChangeTime   = big.NewInt(1 << 10)
+	previewSubscriptionChangeResponseDataFieldTrialEnd              = big.NewInt(1 << 11)
+	previewSubscriptionChangeResponseDataFieldUsageViolations       = big.NewInt(1 << 12)
 )
 
 type PreviewSubscriptionChangeResponseData struct {
 	AmountOff             int                                     `json:"amount_off" url:"amount_off"`
 	DueNow                int                                     `json:"due_now" url:"due_now"`
 	Finance               *PreviewSubscriptionFinanceResponseData `json:"finance,omitempty" url:"finance,omitempty"`
+	IsScheduledDowngrade  bool                                    `json:"is_scheduled_downgrade" url:"is_scheduled_downgrade"`
 	NewCharges            int                                     `json:"new_charges" url:"new_charges"`
 	PaymentMethodRequired bool                                    `json:"payment_method_required" url:"payment_method_required"`
 	PercentOff            float64                                 `json:"percent_off" url:"percent_off"`
 	PeriodStart           time.Time                               `json:"period_start" url:"period_start"`
 	PromoCodeApplied      bool                                    `json:"promo_code_applied" url:"promo_code_applied"`
 	Proration             int                                     `json:"proration" url:"proration"`
+	ScheduledChangeTime   *time.Time                              `json:"scheduled_change_time,omitempty" url:"scheduled_change_time,omitempty"`
 	TrialEnd              *time.Time                              `json:"trial_end,omitempty" url:"trial_end,omitempty"`
 	UsageViolations       []*FeatureUsageResponseData             `json:"usage_violations" url:"usage_violations"`
 
@@ -1652,6 +1656,13 @@ func (p *PreviewSubscriptionChangeResponseData) GetFinance() *PreviewSubscriptio
 		return nil
 	}
 	return p.Finance
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetIsScheduledDowngrade() bool {
+	if p == nil {
+		return false
+	}
+	return p.IsScheduledDowngrade
 }
 
 func (p *PreviewSubscriptionChangeResponseData) GetNewCharges() int {
@@ -1694,6 +1705,13 @@ func (p *PreviewSubscriptionChangeResponseData) GetProration() int {
 		return 0
 	}
 	return p.Proration
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetScheduledChangeTime() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.ScheduledChangeTime
 }
 
 func (p *PreviewSubscriptionChangeResponseData) GetTrialEnd() *time.Time {
@@ -1742,6 +1760,13 @@ func (p *PreviewSubscriptionChangeResponseData) SetFinance(finance *PreviewSubsc
 	p.require(previewSubscriptionChangeResponseDataFieldFinance)
 }
 
+// SetIsScheduledDowngrade sets the IsScheduledDowngrade field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionChangeResponseData) SetIsScheduledDowngrade(isScheduledDowngrade bool) {
+	p.IsScheduledDowngrade = isScheduledDowngrade
+	p.require(previewSubscriptionChangeResponseDataFieldIsScheduledDowngrade)
+}
+
 // SetNewCharges sets the NewCharges field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PreviewSubscriptionChangeResponseData) SetNewCharges(newCharges int) {
@@ -1784,6 +1809,13 @@ func (p *PreviewSubscriptionChangeResponseData) SetProration(proration int) {
 	p.require(previewSubscriptionChangeResponseDataFieldProration)
 }
 
+// SetScheduledChangeTime sets the ScheduledChangeTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionChangeResponseData) SetScheduledChangeTime(scheduledChangeTime *time.Time) {
+	p.ScheduledChangeTime = scheduledChangeTime
+	p.require(previewSubscriptionChangeResponseDataFieldScheduledChangeTime)
+}
+
 // SetTrialEnd sets the TrialEnd field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PreviewSubscriptionChangeResponseData) SetTrialEnd(trialEnd *time.Time) {
@@ -1802,8 +1834,9 @@ func (p *PreviewSubscriptionChangeResponseData) UnmarshalJSON(data []byte) error
 	type embed PreviewSubscriptionChangeResponseData
 	var unmarshaler = struct {
 		embed
-		PeriodStart *internal.DateTime `json:"period_start"`
-		TrialEnd    *internal.DateTime `json:"trial_end,omitempty"`
+		PeriodStart         *internal.DateTime `json:"period_start"`
+		ScheduledChangeTime *internal.DateTime `json:"scheduled_change_time,omitempty"`
+		TrialEnd            *internal.DateTime `json:"trial_end,omitempty"`
 	}{
 		embed: embed(*p),
 	}
@@ -1812,6 +1845,7 @@ func (p *PreviewSubscriptionChangeResponseData) UnmarshalJSON(data []byte) error
 	}
 	*p = PreviewSubscriptionChangeResponseData(unmarshaler.embed)
 	p.PeriodStart = unmarshaler.PeriodStart.Time()
+	p.ScheduledChangeTime = unmarshaler.ScheduledChangeTime.TimePtr()
 	p.TrialEnd = unmarshaler.TrialEnd.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
 	if err != nil {
@@ -1826,12 +1860,14 @@ func (p *PreviewSubscriptionChangeResponseData) MarshalJSON() ([]byte, error) {
 	type embed PreviewSubscriptionChangeResponseData
 	var marshaler = struct {
 		embed
-		PeriodStart *internal.DateTime `json:"period_start"`
-		TrialEnd    *internal.DateTime `json:"trial_end,omitempty"`
+		PeriodStart         *internal.DateTime `json:"period_start"`
+		ScheduledChangeTime *internal.DateTime `json:"scheduled_change_time,omitempty"`
+		TrialEnd            *internal.DateTime `json:"trial_end,omitempty"`
 	}{
-		embed:       embed(*p),
-		PeriodStart: internal.NewDateTime(p.PeriodStart),
-		TrialEnd:    internal.NewOptionalDateTime(p.TrialEnd),
+		embed:               embed(*p),
+		PeriodStart:         internal.NewDateTime(p.PeriodStart),
+		ScheduledChangeTime: internal.NewOptionalDateTime(p.ScheduledChangeTime),
+		TrialEnd:            internal.NewOptionalDateTime(p.TrialEnd),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
 	return json.Marshal(explicitMarshaler)

@@ -739,6 +739,7 @@ const (
 	WebhookRequestTypePlanEntitlementDeleted      WebhookRequestType = "plan.entitlement.deleted"
 	WebhookRequestTypePlanEntitlementUpdated      WebhookRequestType = "plan.entitlement.updated"
 	WebhookRequestTypePlanUpdated                 WebhookRequestType = "plan.updated"
+	WebhookRequestTypePlanVersionDeleted          WebhookRequestType = "plan_version.deleted"
 	WebhookRequestTypeRuleDeleted                 WebhookRequestType = "rule.deleted"
 	WebhookRequestTypeTestSend                    WebhookRequestType = "test.send"
 	WebhookRequestTypeUserCreated                 WebhookRequestType = "user.created"
@@ -810,6 +811,8 @@ func NewWebhookRequestTypeFromString(s string) (WebhookRequestType, error) {
 		return WebhookRequestTypePlanEntitlementUpdated, nil
 	case "plan.updated":
 		return WebhookRequestTypePlanUpdated, nil
+	case "plan_version.deleted":
+		return WebhookRequestTypePlanVersionDeleted, nil
 	case "rule.deleted":
 		return WebhookRequestTypeRuleDeleted, nil
 	case "test.send":

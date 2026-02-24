@@ -87,11 +87,13 @@ func (c *Client) GetPlan(
 	ctx context.Context,
 	// plan_id
 	planID string,
+	request *schematichq.GetPlanRequest,
 	opts ...option.RequestOption,
 ) (*schematichq.GetPlanResponse, error) {
 	response, err := c.WithRawResponse.GetPlan(
 		ctx,
 		planID,
+		request,
 		opts...,
 	)
 	if err != nil {
@@ -178,6 +180,42 @@ func (c *Client) ListPlanIssues(
 ) (*schematichq.ListPlanIssuesResponse, error) {
 	response, err := c.WithRawResponse.ListPlanIssues(
 		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) DeletePlanVersion(
+	ctx context.Context,
+	// plan_id
+	planID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeletePlanVersionResponse, error) {
+	response, err := c.WithRawResponse.DeletePlanVersion(
+		ctx,
+		planID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) PublishPlanVersion(
+	ctx context.Context,
+	// plan_id
+	planID string,
+	request *schematichq.PublishPlanVersionRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.PublishPlanVersionResponse, error) {
+	response, err := c.WithRawResponse.PublishPlanVersion(
+		ctx,
+		planID,
 		request,
 		opts...,
 	)

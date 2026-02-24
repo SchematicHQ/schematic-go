@@ -133,12 +133,12 @@ func (c *Client) CountAPIKeys(
 	return response.Body, nil
 }
 
-func (c *Client) ListAPIRequests(
+func (c *Client) ListAuditLogs(
 	ctx context.Context,
-	request *schematichq.ListAPIRequestsRequest,
+	request *schematichq.ListAuditLogsRequest,
 	opts ...option.RequestOption,
-) (*schematichq.ListAPIRequestsResponse, error) {
-	response, err := c.WithRawResponse.ListAPIRequests(
+) (*schematichq.ListAuditLogsResponse, error) {
+	response, err := c.WithRawResponse.ListAuditLogs(
 		ctx,
 		request,
 		opts...,
@@ -149,15 +149,15 @@ func (c *Client) ListAPIRequests(
 	return response.Body, nil
 }
 
-func (c *Client) GetAPIRequest(
+func (c *Client) GetAuditLog(
 	ctx context.Context,
-	// api_request_id
-	apiRequestID string,
+	// audit_log_id
+	auditLogID string,
 	opts ...option.RequestOption,
-) (*schematichq.GetAPIRequestResponse, error) {
-	response, err := c.WithRawResponse.GetAPIRequest(
+) (*schematichq.GetAuditLogResponse, error) {
+	response, err := c.WithRawResponse.GetAuditLog(
 		ctx,
-		apiRequestID,
+		auditLogID,
 		opts...,
 	)
 	if err != nil {
@@ -166,12 +166,12 @@ func (c *Client) GetAPIRequest(
 	return response.Body, nil
 }
 
-func (c *Client) CountAPIRequests(
+func (c *Client) CountAuditLogs(
 	ctx context.Context,
-	request *schematichq.CountAPIRequestsRequest,
+	request *schematichq.CountAuditLogsRequest,
 	opts ...option.RequestOption,
-) (*schematichq.CountAPIRequestsResponse, error) {
-	response, err := c.WithRawResponse.CountAPIRequests(
+) (*schematichq.CountAuditLogsResponse, error) {
+	response, err := c.WithRawResponse.CountAuditLogs(
 		ctx,
 		request,
 		opts...,
@@ -272,6 +272,20 @@ func (c *Client) Quickstart(
 	opts ...option.RequestOption,
 ) (*schematichq.QuickstartResponse, error) {
 	response, err := c.WithRawResponse.Quickstart(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) GetWhoAmI(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.GetWhoAmIResponse, error) {
+	response, err := c.WithRawResponse.GetWhoAmI(
 		ctx,
 		opts...,
 	)

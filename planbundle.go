@@ -83,19 +83,21 @@ var (
 	createEntitlementInBundleRequestBodyFieldMonthlyUnitPrice        = big.NewInt(1 << 9)
 	createEntitlementInBundleRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 10)
 	createEntitlementInBundleRequestBodyFieldOverageBillingProductID = big.NewInt(1 << 11)
-	createEntitlementInBundleRequestBodyFieldPriceBehavior           = big.NewInt(1 << 12)
-	createEntitlementInBundleRequestBodyFieldPriceTiers              = big.NewInt(1 << 13)
-	createEntitlementInBundleRequestBodyFieldSoftLimit               = big.NewInt(1 << 14)
-	createEntitlementInBundleRequestBodyFieldTierMode                = big.NewInt(1 << 15)
-	createEntitlementInBundleRequestBodyFieldValueBool               = big.NewInt(1 << 16)
-	createEntitlementInBundleRequestBodyFieldValueCreditID           = big.NewInt(1 << 17)
-	createEntitlementInBundleRequestBodyFieldValueNumeric            = big.NewInt(1 << 18)
-	createEntitlementInBundleRequestBodyFieldValueTraitID            = big.NewInt(1 << 19)
-	createEntitlementInBundleRequestBodyFieldValueType               = big.NewInt(1 << 20)
-	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 21)
-	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 22)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 23)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 24)
+	createEntitlementInBundleRequestBodyFieldPlanID                  = big.NewInt(1 << 12)
+	createEntitlementInBundleRequestBodyFieldPlanVersionID           = big.NewInt(1 << 13)
+	createEntitlementInBundleRequestBodyFieldPriceBehavior           = big.NewInt(1 << 14)
+	createEntitlementInBundleRequestBodyFieldPriceTiers              = big.NewInt(1 << 15)
+	createEntitlementInBundleRequestBodyFieldSoftLimit               = big.NewInt(1 << 16)
+	createEntitlementInBundleRequestBodyFieldTierMode                = big.NewInt(1 << 17)
+	createEntitlementInBundleRequestBodyFieldValueBool               = big.NewInt(1 << 18)
+	createEntitlementInBundleRequestBodyFieldValueCreditID           = big.NewInt(1 << 19)
+	createEntitlementInBundleRequestBodyFieldValueNumeric            = big.NewInt(1 << 20)
+	createEntitlementInBundleRequestBodyFieldValueTraitID            = big.NewInt(1 << 21)
+	createEntitlementInBundleRequestBodyFieldValueType               = big.NewInt(1 << 22)
+	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 23)
+	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 24)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 25)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 26)
 )
 
 type CreateEntitlementInBundleRequestBody struct {
@@ -111,6 +113,8 @@ type CreateEntitlementInBundleRequestBody struct {
 	MonthlyUnitPrice        *int                                                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
 	MonthlyUnitPriceDecimal *string                                                     `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
 	OverageBillingProductID *string                                                     `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
+	PlanID                  string                                                      `json:"plan_id" url:"plan_id"`
+	PlanVersionID           *string                                                     `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	PriceBehavior           *EntitlementPriceBehavior                                   `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
@@ -215,6 +219,20 @@ func (c *CreateEntitlementInBundleRequestBody) GetOverageBillingProductID() *str
 		return nil
 	}
 	return c.OverageBillingProductID
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetPlanID() string {
+	if c == nil {
+		return ""
+	}
+	return c.PlanID
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
 }
 
 func (c *CreateEntitlementInBundleRequestBody) GetPriceBehavior() *EntitlementPriceBehavior {
@@ -401,6 +419,20 @@ func (c *CreateEntitlementInBundleRequestBody) SetMonthlyUnitPriceDecimal(monthl
 func (c *CreateEntitlementInBundleRequestBody) SetOverageBillingProductID(overageBillingProductID *string) {
 	c.OverageBillingProductID = overageBillingProductID
 	c.require(createEntitlementInBundleRequestBodyFieldOverageBillingProductID)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetPlanID(planID string) {
+	c.PlanID = planID
+	c.require(createEntitlementInBundleRequestBodyFieldPlanID)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(createEntitlementInBundleRequestBodyFieldPlanVersionID)
 }
 
 // SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
@@ -1275,7 +1307,8 @@ var (
 	updatePlanBundleRequestBodyFieldCreditGrants   = big.NewInt(1 << 1)
 	updatePlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
 	updatePlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 3)
-	updatePlanBundleRequestBodyFieldTraits         = big.NewInt(1 << 4)
+	updatePlanBundleRequestBodyFieldPlanVersionID  = big.NewInt(1 << 4)
+	updatePlanBundleRequestBodyFieldTraits         = big.NewInt(1 << 5)
 )
 
 type UpdatePlanBundleRequestBody struct {
@@ -1283,6 +1316,7 @@ type UpdatePlanBundleRequestBody struct {
 	CreditGrants   []*PlanBundleCreditGrantRequestBody `json:"credit_grants,omitempty" url:"-"`
 	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements,omitempty" url:"-"`
 	Plan           *UpdatePlanRequestBody              `json:"plan,omitempty" url:"-"`
+	PlanVersionID  *string                             `json:"plan_version_id,omitempty" url:"-"`
 	Traits         []*UpdatePlanTraitTraitRequestBody  `json:"traits,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -1322,6 +1356,13 @@ func (u *UpdatePlanBundleRequestBody) SetEntitlements(entitlements []*PlanBundle
 func (u *UpdatePlanBundleRequestBody) SetPlan(plan *UpdatePlanRequestBody) {
 	u.Plan = plan
 	u.require(updatePlanBundleRequestBodyFieldPlan)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanBundleRequestBody) SetPlanVersionID(planVersionID *string) {
+	u.PlanVersionID = planVersionID
+	u.require(updatePlanBundleRequestBodyFieldPlanVersionID)
 }
 
 // SetTraits sets the Traits field and marks it as non-optional;

@@ -143,11 +143,39 @@ func (c *CountPlansRequest) SetOffset(offset *int) {
 }
 
 var (
-	listPlanIssuesRequestFieldPlanID = big.NewInt(1 << 0)
+	getPlanRequestFieldPlanVersionID = big.NewInt(1 << 0)
+)
+
+type GetPlanRequest struct {
+	// Fetch billing settings for a specific plan version
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (g *GetPlanRequest) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetPlanRequest) SetPlanVersionID(planVersionID *string) {
+	g.PlanVersionID = planVersionID
+	g.require(getPlanRequestFieldPlanVersionID)
+}
+
+var (
+	listPlanIssuesRequestFieldPlanID        = big.NewInt(1 << 0)
+	listPlanIssuesRequestFieldPlanVersionID = big.NewInt(1 << 1)
 )
 
 type ListPlanIssuesRequest struct {
-	PlanID string `json:"-" url:"plan_id"`
+	PlanID        string  `json:"-" url:"plan_id"`
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -165,6 +193,13 @@ func (l *ListPlanIssuesRequest) require(field *big.Int) {
 func (l *ListPlanIssuesRequest) SetPlanID(planID string) {
 	l.PlanID = planID
 	l.require(listPlanIssuesRequestFieldPlanID)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlanIssuesRequest) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listPlanIssuesRequestFieldPlanVersionID)
 }
 
 var (
@@ -298,6 +333,40 @@ func (l *ListPlansRequest) SetLimit(limit *int) {
 func (l *ListPlansRequest) SetOffset(offset *int) {
 	l.Offset = offset
 	l.require(listPlansRequestFieldOffset)
+}
+
+var (
+	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 0)
+	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 1)
+)
+
+type PublishPlanVersionRequestBody struct {
+	ExcludedCompanyIDs []string                     `json:"excluded_company_ids,omitempty" url:"-"`
+	MigrationStrategy  PlanVersionMigrationStrategy `json:"migration_strategy" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (p *PublishPlanVersionRequestBody) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetExcludedCompanyIDs sets the ExcludedCompanyIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetExcludedCompanyIDs(excludedCompanyIDs []string) {
+	p.ExcludedCompanyIDs = excludedCompanyIDs
+	p.require(publishPlanVersionRequestBodyFieldExcludedCompanyIDs)
+}
+
+// SetMigrationStrategy sets the MigrationStrategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetMigrationStrategy(migrationStrategy PlanVersionMigrationStrategy) {
+	p.MigrationStrategy = migrationStrategy
+	p.require(publishPlanVersionRequestBodyFieldMigrationStrategy)
 }
 
 var (
@@ -975,6 +1044,181 @@ func (d *DeletePlanResponse) String() string {
 }
 
 var (
+	deletePlanVersionResponseFieldData   = big.NewInt(1 << 0)
+	deletePlanVersionResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type DeletePlanVersionResponse struct {
+	Data *DeleteResponse `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]interface{} `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletePlanVersionResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeletePlanVersionResponse) GetParams() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.Params
+}
+
+func (d *DeletePlanVersionResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeletePlanVersionResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeletePlanVersionResponse) SetData(data *DeleteResponse) {
+	d.Data = data
+	d.require(deletePlanVersionResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeletePlanVersionResponse) SetParams(params map[string]interface{}) {
+	d.Params = params
+	d.require(deletePlanVersionResponseFieldParams)
+}
+
+func (d *DeletePlanVersionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeletePlanVersionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeletePlanVersionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeletePlanVersionResponse) MarshalJSON() ([]byte, error) {
+	type embed DeletePlanVersionResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeletePlanVersionResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// Input parameters
+var (
+	getPlanParamsFieldPlanVersionID = big.NewInt(1 << 0)
+)
+
+type GetPlanParams struct {
+	// Fetch billing settings for a specific plan version
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetPlanParams) GetPlanVersionID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.PlanVersionID
+}
+
+func (g *GetPlanParams) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetPlanParams) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetPlanParams) SetPlanVersionID(planVersionID *string) {
+	g.PlanVersionID = planVersionID
+	g.require(getPlanParamsFieldPlanVersionID)
+}
+
+func (g *GetPlanParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetPlanParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetPlanParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetPlanParams) MarshalJSON() ([]byte, error) {
+	type embed GetPlanParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetPlanParams) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
 	getPlanResponseFieldData   = big.NewInt(1 << 0)
 	getPlanResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -982,7 +1226,7 @@ var (
 type GetPlanResponse struct {
 	Data *PlanDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params *GetPlanParams `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -998,7 +1242,7 @@ func (g *GetPlanResponse) GetData() *PlanDetailResponseData {
 	return g.Data
 }
 
-func (g *GetPlanResponse) GetParams() map[string]interface{} {
+func (g *GetPlanResponse) GetParams() *GetPlanParams {
 	if g == nil {
 		return nil
 	}
@@ -1025,7 +1269,7 @@ func (g *GetPlanResponse) SetData(data *PlanDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetPlanResponse) SetParams(params map[string]interface{}) {
+func (g *GetPlanResponse) SetParams(params *GetPlanParams) {
 	g.Params = params
 	g.require(getPlanResponseFieldParams)
 }
@@ -1071,11 +1315,13 @@ func (g *GetPlanResponse) String() string {
 
 // Input parameters
 var (
-	listPlanIssuesParamsFieldPlanID = big.NewInt(1 << 0)
+	listPlanIssuesParamsFieldPlanID        = big.NewInt(1 << 0)
+	listPlanIssuesParamsFieldPlanVersionID = big.NewInt(1 << 1)
 )
 
 type ListPlanIssuesParams struct {
-	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanID        *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1089,6 +1335,13 @@ func (l *ListPlanIssuesParams) GetPlanID() *string {
 		return nil
 	}
 	return l.PlanID
+}
+
+func (l *ListPlanIssuesParams) GetPlanVersionID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionID
 }
 
 func (l *ListPlanIssuesParams) GetExtraProperties() map[string]interface{} {
@@ -1107,6 +1360,13 @@ func (l *ListPlanIssuesParams) require(field *big.Int) {
 func (l *ListPlanIssuesParams) SetPlanID(planID *string) {
 	l.PlanID = planID
 	l.require(listPlanIssuesParamsFieldPlanID)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlanIssuesParams) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listPlanIssuesParamsFieldPlanVersionID)
 }
 
 func (l *ListPlanIssuesParams) UnmarshalJSON(data []byte) error {
@@ -1599,6 +1859,101 @@ func (l *ListPlansResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	publishPlanVersionResponseFieldData   = big.NewInt(1 << 0)
+	publishPlanVersionResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type PublishPlanVersionResponse struct {
+	Data *PlanVersionResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]interface{} `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PublishPlanVersionResponse) GetData() *PlanVersionResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Data
+}
+
+func (p *PublishPlanVersionResponse) GetParams() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.Params
+}
+
+func (p *PublishPlanVersionResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PublishPlanVersionResponse) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionResponse) SetData(data *PlanVersionResponseData) {
+	p.Data = data
+	p.require(publishPlanVersionResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionResponse) SetParams(params map[string]interface{}) {
+	p.Params = params
+	p.require(publishPlanVersionResponseFieldParams)
+}
+
+func (p *PublishPlanVersionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PublishPlanVersionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PublishPlanVersionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PublishPlanVersionResponse) MarshalJSON() ([]byte, error) {
+	type embed PublishPlanVersionResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PublishPlanVersionResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 var (

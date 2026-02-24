@@ -700,32 +700,28 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 	return nil
 }
 
-func (c *DataStreamClient) flagCacheKey(key string) string {
+func (c *DataStreamClient) cacheVersion() string {
 	versionKey := c.GetCacheVersion()
 	if versionKey == "" {
 		versionKey = rulesengine.VersionKey
 	}
-	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, versionKey, strings.ToLower(key))
+	return versionKey
+}
+
+func (c *DataStreamClient) flagCacheKey(key string) string {
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, c.cacheVersion(), strings.ToLower(key))
 }
 
 func (c *DataStreamClient) resourceKeyToCacheKey(resourceType string, key string, value string) string {
-	versionKey := c.GetCacheVersion()
-	if versionKey == "" {
-		versionKey = rulesengine.VersionKey
-	}
-	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, versionKey, strings.ToLower(key), strings.ToLower(value))
+	return fmt.Sprintf("%s:%s:%s:%s:%s", cacheKeyPrefix, resourceType, c.cacheVersion(), strings.ToLower(key), strings.ToLower(value))
 }
 
-// companyIDCacheKey generates a cache key for a company by its ID.
-// Format: schematic:company:{version}:{companyID}
 func (c *DataStreamClient) companyIDCacheKey(id string) string {
-	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixCompany, rulesengine.VersionKey, id)
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixCompany, c.cacheVersion(), id)
 }
 
-// userIDCacheKey generates a cache key for a user by its ID.
-// Format: schematic:user:{version}:{userID}
 func (c *DataStreamClient) userIDCacheKey(id string) string {
-	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixUser, rulesengine.VersionKey, id)
+	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixUser, c.cacheVersion(), id)
 }
 
 // Helper function to clean up pending company requests

@@ -11,27 +11,57 @@ import (
 )
 
 var (
-	countCompaniesRequestFieldIDs                       = big.NewInt(1 << 0)
-	countCompaniesRequestFieldPlanID                    = big.NewInt(1 << 1)
-	countCompaniesRequestFieldQ                         = big.NewInt(1 << 2)
-	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 3)
-	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 4)
-	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 5)
-	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 6)
-	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 7)
+	countCompaniesRequestFieldCreditTypeIDs             = big.NewInt(1 << 0)
+	countCompaniesRequestFieldIDs                       = big.NewInt(1 << 1)
+	countCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 2)
+	countCompaniesRequestFieldPlanID                    = big.NewInt(1 << 3)
+	countCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 4)
+	countCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 5)
+	countCompaniesRequestFieldQ                         = big.NewInt(1 << 6)
+	countCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 7)
+	countCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 8)
+	countCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 9)
+	countCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 10)
+	countCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 11)
+	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 12)
+	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 13)
+	countCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 14)
+	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 15)
+	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 16)
+	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 17)
 )
 
 type CountCompaniesRequest struct {
+	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
+	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter companies that have monetized subscriptions
+	MonetizedSubscriptions *bool `json:"-" url:"monetized_subscriptions,omitempty"`
 	// Filter companies by plan ID (starts with plan_)
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
+	// Filter companies by one or more plan IDs (each ID starts with plan_)
+	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
+	// Filter companies by plan version ID (starts with plvr_)
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
+	// Column to sort by (e.g. name, created_at, last_seen_at)
+	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
+	SortOrderDirection *SortDirection `json:"-" url:"sort_order_direction,omitempty"`
+	// Filter companies by one or more subscription statuses
+	SubscriptionStatuses []*SubscriptionStatus `json:"-" url:"subscription_statuses,omitempty"`
+	// Filter companies by one or more subscription types
+	SubscriptionTypes []*SubscriptionType `json:"-" url:"subscription_types,omitempty"`
+	// Filter companies that have an entitlement (plan entitlement or company override) for the specified feature ID
+	WithEntitlementFor *string `json:"-" url:"with_entitlement_for,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"-" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
+	// Filter out companies that have a subscription
+	WithoutSubscription *bool `json:"-" url:"without_subscription,omitempty"`
 	// Filter companies that have a subscription
 	WithSubscription *bool `json:"-" url:"with_subscription,omitempty"`
 	// Page limit (default 100)
@@ -50,11 +80,25 @@ func (c *CountCompaniesRequest) require(field *big.Int) {
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
+// SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetCreditTypeIDs(creditTypeIDs []*string) {
+	c.CreditTypeIDs = creditTypeIDs
+	c.require(countCompaniesRequestFieldCreditTypeIDs)
+}
+
 // SetIDs sets the IDs field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountCompaniesRequest) SetIDs(ids []*string) {
 	c.IDs = ids
 	c.require(countCompaniesRequestFieldIDs)
+}
+
+// SetMonetizedSubscriptions sets the MonetizedSubscriptions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetMonetizedSubscriptions(monetizedSubscriptions *bool) {
+	c.MonetizedSubscriptions = monetizedSubscriptions
+	c.require(countCompaniesRequestFieldMonetizedSubscriptions)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -64,11 +108,60 @@ func (c *CountCompaniesRequest) SetPlanID(planID *string) {
 	c.require(countCompaniesRequestFieldPlanID)
 }
 
+// SetPlanIDs sets the PlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetPlanIDs(planIDs []*string) {
+	c.PlanIDs = planIDs
+	c.require(countCompaniesRequestFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(countCompaniesRequestFieldPlanVersionID)
+}
+
 // SetQ sets the Q field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountCompaniesRequest) SetQ(q *string) {
 	c.Q = q
 	c.require(countCompaniesRequestFieldQ)
+}
+
+// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetSortOrderColumn(sortOrderColumn *string) {
+	c.SortOrderColumn = sortOrderColumn
+	c.require(countCompaniesRequestFieldSortOrderColumn)
+}
+
+// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetSortOrderDirection(sortOrderDirection *SortDirection) {
+	c.SortOrderDirection = sortOrderDirection
+	c.require(countCompaniesRequestFieldSortOrderDirection)
+}
+
+// SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetSubscriptionStatuses(subscriptionStatuses []*SubscriptionStatus) {
+	c.SubscriptionStatuses = subscriptionStatuses
+	c.require(countCompaniesRequestFieldSubscriptionStatuses)
+}
+
+// SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetSubscriptionTypes(subscriptionTypes []*SubscriptionType) {
+	c.SubscriptionTypes = subscriptionTypes
+	c.require(countCompaniesRequestFieldSubscriptionTypes)
+}
+
+// SetWithEntitlementFor sets the WithEntitlementFor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetWithEntitlementFor(withEntitlementFor *string) {
+	c.WithEntitlementFor = withEntitlementFor
+	c.require(countCompaniesRequestFieldWithEntitlementFor)
 }
 
 // SetWithoutFeatureOverrideFor sets the WithoutFeatureOverrideFor field and marks it as non-optional;
@@ -83,6 +176,13 @@ func (c *CountCompaniesRequest) SetWithoutFeatureOverrideFor(withoutFeatureOverr
 func (c *CountCompaniesRequest) SetWithoutPlan(withoutPlan *bool) {
 	c.WithoutPlan = withoutPlan
 	c.require(countCompaniesRequestFieldWithoutPlan)
+}
+
+// SetWithoutSubscription sets the WithoutSubscription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetWithoutSubscription(withoutSubscription *bool) {
+	c.WithoutSubscription = withoutSubscription
+	c.require(countCompaniesRequestFieldWithoutSubscription)
 }
 
 // SetWithSubscription sets the WithSubscription field and marks it as non-optional;
@@ -104,172 +204,6 @@ func (c *CountCompaniesRequest) SetLimit(limit *int) {
 func (c *CountCompaniesRequest) SetOffset(offset *int) {
 	c.Offset = offset
 	c.require(countCompaniesRequestFieldOffset)
-}
-
-var (
-	countCompaniesForAdvancedFilterRequestFieldIDs                    = big.NewInt(1 << 0)
-	countCompaniesForAdvancedFilterRequestFieldPlanIDs                = big.NewInt(1 << 1)
-	countCompaniesForAdvancedFilterRequestFieldFeatureIDs             = big.NewInt(1 << 2)
-	countCompaniesForAdvancedFilterRequestFieldCreditTypeIDs          = big.NewInt(1 << 3)
-	countCompaniesForAdvancedFilterRequestFieldSubscriptionStatuses   = big.NewInt(1 << 4)
-	countCompaniesForAdvancedFilterRequestFieldSubscriptionTypes      = big.NewInt(1 << 5)
-	countCompaniesForAdvancedFilterRequestFieldMonetizedSubscriptions = big.NewInt(1 << 6)
-	countCompaniesForAdvancedFilterRequestFieldQ                      = big.NewInt(1 << 7)
-	countCompaniesForAdvancedFilterRequestFieldWithoutPlan            = big.NewInt(1 << 8)
-	countCompaniesForAdvancedFilterRequestFieldWithoutSubscription    = big.NewInt(1 << 9)
-	countCompaniesForAdvancedFilterRequestFieldSortOrderColumn        = big.NewInt(1 << 10)
-	countCompaniesForAdvancedFilterRequestFieldSortOrderDirection     = big.NewInt(1 << 11)
-	countCompaniesForAdvancedFilterRequestFieldDisplayProperties      = big.NewInt(1 << 12)
-	countCompaniesForAdvancedFilterRequestFieldLimit                  = big.NewInt(1 << 13)
-	countCompaniesForAdvancedFilterRequestFieldOffset                 = big.NewInt(1 << 14)
-)
-
-type CountCompaniesForAdvancedFilterRequest struct {
-	// Filter companies by multiple company IDs (starts with comp_)
-	IDs []*string `json:"-" url:"ids,omitempty"`
-	// Filter companies by one or more plan IDs (each ID starts with plan_)
-	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
-	// Filter companies by one or more feature IDs (each ID starts with feat_)
-	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
-	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
-	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
-	SubscriptionStatuses []*SubscriptionStatus `json:"-" url:"subscription_statuses,omitempty"`
-	// Filter companies by one or more subscription types (paid, free, trial)
-	SubscriptionTypes []*SubscriptionType `json:"-" url:"subscription_types,omitempty"`
-	// Filter companies that have monetized subscriptions
-	MonetizedSubscriptions *bool `json:"-" url:"monetized_subscriptions,omitempty"`
-	// Search for companies by name, keys or string traits
-	Q *string `json:"-" url:"q,omitempty"`
-	// Filter out companies that have a plan
-	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
-	// Filter out companies that have a subscription
-	WithoutSubscription *bool `json:"-" url:"without_subscription,omitempty"`
-	// Column to sort by (e.g. name, created_at, last_seen_at)
-	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
-	// Direction to sort by (asc or desc)
-	SortOrderDirection *SortDirection `json:"-" url:"sort_order_direction,omitempty"`
-	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
-	DisplayProperties []*string `json:"-" url:"display_properties,omitempty"`
-	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
-	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-}
-
-func (c *CountCompaniesForAdvancedFilterRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetIDs sets the IDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetIDs(ids []*string) {
-	c.IDs = ids
-	c.require(countCompaniesForAdvancedFilterRequestFieldIDs)
-}
-
-// SetPlanIDs sets the PlanIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetPlanIDs(planIDs []*string) {
-	c.PlanIDs = planIDs
-	c.require(countCompaniesForAdvancedFilterRequestFieldPlanIDs)
-}
-
-// SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetFeatureIDs(featureIDs []*string) {
-	c.FeatureIDs = featureIDs
-	c.require(countCompaniesForAdvancedFilterRequestFieldFeatureIDs)
-}
-
-// SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetCreditTypeIDs(creditTypeIDs []*string) {
-	c.CreditTypeIDs = creditTypeIDs
-	c.require(countCompaniesForAdvancedFilterRequestFieldCreditTypeIDs)
-}
-
-// SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetSubscriptionStatuses(subscriptionStatuses []*SubscriptionStatus) {
-	c.SubscriptionStatuses = subscriptionStatuses
-	c.require(countCompaniesForAdvancedFilterRequestFieldSubscriptionStatuses)
-}
-
-// SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetSubscriptionTypes(subscriptionTypes []*SubscriptionType) {
-	c.SubscriptionTypes = subscriptionTypes
-	c.require(countCompaniesForAdvancedFilterRequestFieldSubscriptionTypes)
-}
-
-// SetMonetizedSubscriptions sets the MonetizedSubscriptions field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetMonetizedSubscriptions(monetizedSubscriptions *bool) {
-	c.MonetizedSubscriptions = monetizedSubscriptions
-	c.require(countCompaniesForAdvancedFilterRequestFieldMonetizedSubscriptions)
-}
-
-// SetQ sets the Q field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetQ(q *string) {
-	c.Q = q
-	c.require(countCompaniesForAdvancedFilterRequestFieldQ)
-}
-
-// SetWithoutPlan sets the WithoutPlan field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetWithoutPlan(withoutPlan *bool) {
-	c.WithoutPlan = withoutPlan
-	c.require(countCompaniesForAdvancedFilterRequestFieldWithoutPlan)
-}
-
-// SetWithoutSubscription sets the WithoutSubscription field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetWithoutSubscription(withoutSubscription *bool) {
-	c.WithoutSubscription = withoutSubscription
-	c.require(countCompaniesForAdvancedFilterRequestFieldWithoutSubscription)
-}
-
-// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetSortOrderColumn(sortOrderColumn *string) {
-	c.SortOrderColumn = sortOrderColumn
-	c.require(countCompaniesForAdvancedFilterRequestFieldSortOrderColumn)
-}
-
-// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetSortOrderDirection(sortOrderDirection *SortDirection) {
-	c.SortOrderDirection = sortOrderDirection
-	c.require(countCompaniesForAdvancedFilterRequestFieldSortOrderDirection)
-}
-
-// SetDisplayProperties sets the DisplayProperties field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetDisplayProperties(displayProperties []*string) {
-	c.DisplayProperties = displayProperties
-	c.require(countCompaniesForAdvancedFilterRequestFieldDisplayProperties)
-}
-
-// SetLimit sets the Limit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetLimit(limit *int) {
-	c.Limit = limit
-	c.require(countCompaniesForAdvancedFilterRequestFieldLimit)
-}
-
-// SetOffset sets the Offset field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterRequest) SetOffset(offset *int) {
-	c.Offset = offset
-	c.require(countCompaniesForAdvancedFilterRequestFieldOffset)
 }
 
 var (
@@ -836,27 +770,57 @@ func (c *CreateEntityTraitDefinitionRequestBody) SetTraitType(traitType TraitTyp
 }
 
 var (
-	listCompaniesRequestFieldIDs                       = big.NewInt(1 << 0)
-	listCompaniesRequestFieldPlanID                    = big.NewInt(1 << 1)
-	listCompaniesRequestFieldQ                         = big.NewInt(1 << 2)
-	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 3)
-	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 4)
-	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 5)
-	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 6)
-	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 7)
+	listCompaniesRequestFieldCreditTypeIDs             = big.NewInt(1 << 0)
+	listCompaniesRequestFieldIDs                       = big.NewInt(1 << 1)
+	listCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 2)
+	listCompaniesRequestFieldPlanID                    = big.NewInt(1 << 3)
+	listCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 4)
+	listCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 5)
+	listCompaniesRequestFieldQ                         = big.NewInt(1 << 6)
+	listCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 7)
+	listCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 8)
+	listCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 9)
+	listCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 10)
+	listCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 11)
+	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 12)
+	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 13)
+	listCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 14)
+	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 15)
+	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 16)
+	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 17)
 )
 
 type ListCompaniesRequest struct {
+	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
+	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Filter companies that have monetized subscriptions
+	MonetizedSubscriptions *bool `json:"-" url:"monetized_subscriptions,omitempty"`
 	// Filter companies by plan ID (starts with plan_)
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
+	// Filter companies by one or more plan IDs (each ID starts with plan_)
+	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
+	// Filter companies by plan version ID (starts with plvr_)
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
+	// Column to sort by (e.g. name, created_at, last_seen_at)
+	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
+	SortOrderDirection *SortDirection `json:"-" url:"sort_order_direction,omitempty"`
+	// Filter companies by one or more subscription statuses
+	SubscriptionStatuses []*SubscriptionStatus `json:"-" url:"subscription_statuses,omitempty"`
+	// Filter companies by one or more subscription types
+	SubscriptionTypes []*SubscriptionType `json:"-" url:"subscription_types,omitempty"`
+	// Filter companies that have an entitlement (plan entitlement or company override) for the specified feature ID
+	WithEntitlementFor *string `json:"-" url:"with_entitlement_for,omitempty"`
 	// Filter out companies that already have a company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"-" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
+	// Filter out companies that have a subscription
+	WithoutSubscription *bool `json:"-" url:"without_subscription,omitempty"`
 	// Filter companies that have a subscription
 	WithSubscription *bool `json:"-" url:"with_subscription,omitempty"`
 	// Page limit (default 100)
@@ -875,11 +839,25 @@ func (l *ListCompaniesRequest) require(field *big.Int) {
 	l.explicitFields.Or(l.explicitFields, field)
 }
 
+// SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetCreditTypeIDs(creditTypeIDs []*string) {
+	l.CreditTypeIDs = creditTypeIDs
+	l.require(listCompaniesRequestFieldCreditTypeIDs)
+}
+
 // SetIDs sets the IDs field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListCompaniesRequest) SetIDs(ids []*string) {
 	l.IDs = ids
 	l.require(listCompaniesRequestFieldIDs)
+}
+
+// SetMonetizedSubscriptions sets the MonetizedSubscriptions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetMonetizedSubscriptions(monetizedSubscriptions *bool) {
+	l.MonetizedSubscriptions = monetizedSubscriptions
+	l.require(listCompaniesRequestFieldMonetizedSubscriptions)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -889,11 +867,60 @@ func (l *ListCompaniesRequest) SetPlanID(planID *string) {
 	l.require(listCompaniesRequestFieldPlanID)
 }
 
+// SetPlanIDs sets the PlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetPlanIDs(planIDs []*string) {
+	l.PlanIDs = planIDs
+	l.require(listCompaniesRequestFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listCompaniesRequestFieldPlanVersionID)
+}
+
 // SetQ sets the Q field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListCompaniesRequest) SetQ(q *string) {
 	l.Q = q
 	l.require(listCompaniesRequestFieldQ)
+}
+
+// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetSortOrderColumn(sortOrderColumn *string) {
+	l.SortOrderColumn = sortOrderColumn
+	l.require(listCompaniesRequestFieldSortOrderColumn)
+}
+
+// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetSortOrderDirection(sortOrderDirection *SortDirection) {
+	l.SortOrderDirection = sortOrderDirection
+	l.require(listCompaniesRequestFieldSortOrderDirection)
+}
+
+// SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetSubscriptionStatuses(subscriptionStatuses []*SubscriptionStatus) {
+	l.SubscriptionStatuses = subscriptionStatuses
+	l.require(listCompaniesRequestFieldSubscriptionStatuses)
+}
+
+// SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetSubscriptionTypes(subscriptionTypes []*SubscriptionType) {
+	l.SubscriptionTypes = subscriptionTypes
+	l.require(listCompaniesRequestFieldSubscriptionTypes)
+}
+
+// SetWithEntitlementFor sets the WithEntitlementFor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetWithEntitlementFor(withEntitlementFor *string) {
+	l.WithEntitlementFor = withEntitlementFor
+	l.require(listCompaniesRequestFieldWithEntitlementFor)
 }
 
 // SetWithoutFeatureOverrideFor sets the WithoutFeatureOverrideFor field and marks it as non-optional;
@@ -908,6 +935,13 @@ func (l *ListCompaniesRequest) SetWithoutFeatureOverrideFor(withoutFeatureOverri
 func (l *ListCompaniesRequest) SetWithoutPlan(withoutPlan *bool) {
 	l.WithoutPlan = withoutPlan
 	l.require(listCompaniesRequestFieldWithoutPlan)
+}
+
+// SetWithoutSubscription sets the WithoutSubscription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetWithoutSubscription(withoutSubscription *bool) {
+	l.WithoutSubscription = withoutSubscription
+	l.require(listCompaniesRequestFieldWithoutSubscription)
 }
 
 // SetWithSubscription sets the WithSubscription field and marks it as non-optional;
@@ -929,172 +963,6 @@ func (l *ListCompaniesRequest) SetLimit(limit *int) {
 func (l *ListCompaniesRequest) SetOffset(offset *int) {
 	l.Offset = offset
 	l.require(listCompaniesRequestFieldOffset)
-}
-
-var (
-	listCompaniesForAdvancedFilterRequestFieldIDs                    = big.NewInt(1 << 0)
-	listCompaniesForAdvancedFilterRequestFieldPlanIDs                = big.NewInt(1 << 1)
-	listCompaniesForAdvancedFilterRequestFieldFeatureIDs             = big.NewInt(1 << 2)
-	listCompaniesForAdvancedFilterRequestFieldCreditTypeIDs          = big.NewInt(1 << 3)
-	listCompaniesForAdvancedFilterRequestFieldSubscriptionStatuses   = big.NewInt(1 << 4)
-	listCompaniesForAdvancedFilterRequestFieldSubscriptionTypes      = big.NewInt(1 << 5)
-	listCompaniesForAdvancedFilterRequestFieldMonetizedSubscriptions = big.NewInt(1 << 6)
-	listCompaniesForAdvancedFilterRequestFieldQ                      = big.NewInt(1 << 7)
-	listCompaniesForAdvancedFilterRequestFieldWithoutPlan            = big.NewInt(1 << 8)
-	listCompaniesForAdvancedFilterRequestFieldWithoutSubscription    = big.NewInt(1 << 9)
-	listCompaniesForAdvancedFilterRequestFieldSortOrderColumn        = big.NewInt(1 << 10)
-	listCompaniesForAdvancedFilterRequestFieldSortOrderDirection     = big.NewInt(1 << 11)
-	listCompaniesForAdvancedFilterRequestFieldDisplayProperties      = big.NewInt(1 << 12)
-	listCompaniesForAdvancedFilterRequestFieldLimit                  = big.NewInt(1 << 13)
-	listCompaniesForAdvancedFilterRequestFieldOffset                 = big.NewInt(1 << 14)
-)
-
-type ListCompaniesForAdvancedFilterRequest struct {
-	// Filter companies by multiple company IDs (starts with comp_)
-	IDs []*string `json:"-" url:"ids,omitempty"`
-	// Filter companies by one or more plan IDs (each ID starts with plan_)
-	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
-	// Filter companies by one or more feature IDs (each ID starts with feat_)
-	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
-	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
-	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
-	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
-	SubscriptionStatuses []*SubscriptionStatus `json:"-" url:"subscription_statuses,omitempty"`
-	// Filter companies by one or more subscription types (paid, free, trial)
-	SubscriptionTypes []*SubscriptionType `json:"-" url:"subscription_types,omitempty"`
-	// Filter companies that have monetized subscriptions
-	MonetizedSubscriptions *bool `json:"-" url:"monetized_subscriptions,omitempty"`
-	// Search for companies by name, keys or string traits
-	Q *string `json:"-" url:"q,omitempty"`
-	// Filter out companies that have a plan
-	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
-	// Filter out companies that have a subscription
-	WithoutSubscription *bool `json:"-" url:"without_subscription,omitempty"`
-	// Column to sort by (e.g. name, created_at, last_seen_at)
-	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
-	// Direction to sort by (asc or desc)
-	SortOrderDirection *SortDirection `json:"-" url:"sort_order_direction,omitempty"`
-	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
-	DisplayProperties []*string `json:"-" url:"display_properties,omitempty"`
-	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
-	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-}
-
-func (l *ListCompaniesForAdvancedFilterRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
-	}
-	l.explicitFields.Or(l.explicitFields, field)
-}
-
-// SetIDs sets the IDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetIDs(ids []*string) {
-	l.IDs = ids
-	l.require(listCompaniesForAdvancedFilterRequestFieldIDs)
-}
-
-// SetPlanIDs sets the PlanIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetPlanIDs(planIDs []*string) {
-	l.PlanIDs = planIDs
-	l.require(listCompaniesForAdvancedFilterRequestFieldPlanIDs)
-}
-
-// SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetFeatureIDs(featureIDs []*string) {
-	l.FeatureIDs = featureIDs
-	l.require(listCompaniesForAdvancedFilterRequestFieldFeatureIDs)
-}
-
-// SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetCreditTypeIDs(creditTypeIDs []*string) {
-	l.CreditTypeIDs = creditTypeIDs
-	l.require(listCompaniesForAdvancedFilterRequestFieldCreditTypeIDs)
-}
-
-// SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetSubscriptionStatuses(subscriptionStatuses []*SubscriptionStatus) {
-	l.SubscriptionStatuses = subscriptionStatuses
-	l.require(listCompaniesForAdvancedFilterRequestFieldSubscriptionStatuses)
-}
-
-// SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetSubscriptionTypes(subscriptionTypes []*SubscriptionType) {
-	l.SubscriptionTypes = subscriptionTypes
-	l.require(listCompaniesForAdvancedFilterRequestFieldSubscriptionTypes)
-}
-
-// SetMonetizedSubscriptions sets the MonetizedSubscriptions field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetMonetizedSubscriptions(monetizedSubscriptions *bool) {
-	l.MonetizedSubscriptions = monetizedSubscriptions
-	l.require(listCompaniesForAdvancedFilterRequestFieldMonetizedSubscriptions)
-}
-
-// SetQ sets the Q field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetQ(q *string) {
-	l.Q = q
-	l.require(listCompaniesForAdvancedFilterRequestFieldQ)
-}
-
-// SetWithoutPlan sets the WithoutPlan field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetWithoutPlan(withoutPlan *bool) {
-	l.WithoutPlan = withoutPlan
-	l.require(listCompaniesForAdvancedFilterRequestFieldWithoutPlan)
-}
-
-// SetWithoutSubscription sets the WithoutSubscription field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetWithoutSubscription(withoutSubscription *bool) {
-	l.WithoutSubscription = withoutSubscription
-	l.require(listCompaniesForAdvancedFilterRequestFieldWithoutSubscription)
-}
-
-// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetSortOrderColumn(sortOrderColumn *string) {
-	l.SortOrderColumn = sortOrderColumn
-	l.require(listCompaniesForAdvancedFilterRequestFieldSortOrderColumn)
-}
-
-// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetSortOrderDirection(sortOrderDirection *SortDirection) {
-	l.SortOrderDirection = sortOrderDirection
-	l.require(listCompaniesForAdvancedFilterRequestFieldSortOrderDirection)
-}
-
-// SetDisplayProperties sets the DisplayProperties field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetDisplayProperties(displayProperties []*string) {
-	l.DisplayProperties = displayProperties
-	l.require(listCompaniesForAdvancedFilterRequestFieldDisplayProperties)
-}
-
-// SetLimit sets the Limit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetLimit(limit *int) {
-	l.Limit = limit
-	l.require(listCompaniesForAdvancedFilterRequestFieldLimit)
-}
-
-// SetOffset sets the Offset field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterRequest) SetOffset(offset *int) {
-	l.Offset = offset
-	l.require(listCompaniesForAdvancedFilterRequestFieldOffset)
 }
 
 var (
@@ -1937,644 +1805,6 @@ func (c *CompanyResponseData) String() string {
 }
 
 var (
-	companyViewWithFeatureUsageResponseDataFieldAddOns                = big.NewInt(1 << 0)
-	companyViewWithFeatureUsageResponseDataFieldBillingCreditBalances = big.NewInt(1 << 1)
-	companyViewWithFeatureUsageResponseDataFieldBillingSubscription   = big.NewInt(1 << 2)
-	companyViewWithFeatureUsageResponseDataFieldBillingSubscriptions  = big.NewInt(1 << 3)
-	companyViewWithFeatureUsageResponseDataFieldCreatedAt             = big.NewInt(1 << 4)
-	companyViewWithFeatureUsageResponseDataFieldDefaultPaymentMethod  = big.NewInt(1 << 5)
-	companyViewWithFeatureUsageResponseDataFieldEntitlements          = big.NewInt(1 << 6)
-	companyViewWithFeatureUsageResponseDataFieldEntityTraits          = big.NewInt(1 << 7)
-	companyViewWithFeatureUsageResponseDataFieldEnvironmentID         = big.NewInt(1 << 8)
-	companyViewWithFeatureUsageResponseDataFieldFeatureUsage          = big.NewInt(1 << 9)
-	companyViewWithFeatureUsageResponseDataFieldID                    = big.NewInt(1 << 10)
-	companyViewWithFeatureUsageResponseDataFieldKeys                  = big.NewInt(1 << 11)
-	companyViewWithFeatureUsageResponseDataFieldLastSeenAt            = big.NewInt(1 << 12)
-	companyViewWithFeatureUsageResponseDataFieldLogoURL               = big.NewInt(1 << 13)
-	companyViewWithFeatureUsageResponseDataFieldMetrics               = big.NewInt(1 << 14)
-	companyViewWithFeatureUsageResponseDataFieldName                  = big.NewInt(1 << 15)
-	companyViewWithFeatureUsageResponseDataFieldPaymentMethods        = big.NewInt(1 << 16)
-	companyViewWithFeatureUsageResponseDataFieldPlan                  = big.NewInt(1 << 17)
-	companyViewWithFeatureUsageResponseDataFieldPlans                 = big.NewInt(1 << 18)
-	companyViewWithFeatureUsageResponseDataFieldRules                 = big.NewInt(1 << 19)
-	companyViewWithFeatureUsageResponseDataFieldTraits                = big.NewInt(1 << 20)
-	companyViewWithFeatureUsageResponseDataFieldUpdatedAt             = big.NewInt(1 << 21)
-	companyViewWithFeatureUsageResponseDataFieldUserCount             = big.NewInt(1 << 22)
-)
-
-type CompanyViewWithFeatureUsageResponseData struct {
-	AddOns                []*CompanyPlanWithBillingSubView         `json:"add_ons" url:"add_ons"`
-	BillingCreditBalances map[string]float64                       `json:"billing_credit_balances,omitempty" url:"billing_credit_balances,omitempty"`
-	BillingSubscription   *BillingSubscriptionView                 `json:"billing_subscription,omitempty" url:"billing_subscription,omitempty"`
-	BillingSubscriptions  []*BillingSubscriptionView               `json:"billing_subscriptions" url:"billing_subscriptions"`
-	CreatedAt             time.Time                                `json:"created_at" url:"created_at"`
-	DefaultPaymentMethod  *PaymentMethodResponseData               `json:"default_payment_method,omitempty" url:"default_payment_method,omitempty"`
-	Entitlements          []*FeatureEntitlement                    `json:"entitlements" url:"entitlements"`
-	EntityTraits          []*EntityTraitDetailResponseData         `json:"entity_traits" url:"entity_traits"`
-	EnvironmentID         string                                   `json:"environment_id" url:"environment_id"`
-	FeatureUsage          []*FeatureUsageDataResponseData          `json:"feature_usage" url:"feature_usage"`
-	ID                    string                                   `json:"id" url:"id"`
-	Keys                  []*EntityKeyDetailResponseData           `json:"keys" url:"keys"`
-	LastSeenAt            *time.Time                               `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	LogoURL               *string                                  `json:"logo_url,omitempty" url:"logo_url,omitempty"`
-	Metrics               []*CompanyEventPeriodMetricsResponseData `json:"metrics" url:"metrics"`
-	Name                  string                                   `json:"name" url:"name"`
-	PaymentMethods        []*PaymentMethodResponseData             `json:"payment_methods" url:"payment_methods"`
-	Plan                  *CompanyPlanWithBillingSubView           `json:"plan,omitempty" url:"plan,omitempty"`
-	Plans                 []*GenericPreviewObject                  `json:"plans" url:"plans"`
-	Rules                 []*Rule                                  `json:"rules" url:"rules"`
-	// A map of trait names to trait values
-	Traits    map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
-	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
-	UserCount int                    `json:"user_count" url:"user_count"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetAddOns() []*CompanyPlanWithBillingSubView {
-	if c == nil {
-		return nil
-	}
-	return c.AddOns
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetBillingCreditBalances() map[string]float64 {
-	if c == nil {
-		return nil
-	}
-	return c.BillingCreditBalances
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetBillingSubscription() *BillingSubscriptionView {
-	if c == nil {
-		return nil
-	}
-	return c.BillingSubscription
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetBillingSubscriptions() []*BillingSubscriptionView {
-	if c == nil {
-		return nil
-	}
-	return c.BillingSubscriptions
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetCreatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.CreatedAt
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetDefaultPaymentMethod() *PaymentMethodResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.DefaultPaymentMethod
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetEntitlements() []*FeatureEntitlement {
-	if c == nil {
-		return nil
-	}
-	return c.Entitlements
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetEntityTraits() []*EntityTraitDetailResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.EntityTraits
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetEnvironmentID() string {
-	if c == nil {
-		return ""
-	}
-	return c.EnvironmentID
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetFeatureUsage() []*FeatureUsageDataResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.FeatureUsage
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetID() string {
-	if c == nil {
-		return ""
-	}
-	return c.ID
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetKeys() []*EntityKeyDetailResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.Keys
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetLastSeenAt() *time.Time {
-	if c == nil {
-		return nil
-	}
-	return c.LastSeenAt
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetLogoURL() *string {
-	if c == nil {
-		return nil
-	}
-	return c.LogoURL
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetMetrics() []*CompanyEventPeriodMetricsResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.Metrics
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetName() string {
-	if c == nil {
-		return ""
-	}
-	return c.Name
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetPaymentMethods() []*PaymentMethodResponseData {
-	if c == nil {
-		return nil
-	}
-	return c.PaymentMethods
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetPlan() *CompanyPlanWithBillingSubView {
-	if c == nil {
-		return nil
-	}
-	return c.Plan
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetPlans() []*GenericPreviewObject {
-	if c == nil {
-		return nil
-	}
-	return c.Plans
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetRules() []*Rule {
-	if c == nil {
-		return nil
-	}
-	return c.Rules
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetTraits() map[string]interface{} {
-	if c == nil {
-		return nil
-	}
-	return c.Traits
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetUpdatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.UpdatedAt
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetUserCount() int {
-	if c == nil {
-		return 0
-	}
-	return c.UserCount
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetAddOns sets the AddOns field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetAddOns(addOns []*CompanyPlanWithBillingSubView) {
-	c.AddOns = addOns
-	c.require(companyViewWithFeatureUsageResponseDataFieldAddOns)
-}
-
-// SetBillingCreditBalances sets the BillingCreditBalances field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetBillingCreditBalances(billingCreditBalances map[string]float64) {
-	c.BillingCreditBalances = billingCreditBalances
-	c.require(companyViewWithFeatureUsageResponseDataFieldBillingCreditBalances)
-}
-
-// SetBillingSubscription sets the BillingSubscription field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetBillingSubscription(billingSubscription *BillingSubscriptionView) {
-	c.BillingSubscription = billingSubscription
-	c.require(companyViewWithFeatureUsageResponseDataFieldBillingSubscription)
-}
-
-// SetBillingSubscriptions sets the BillingSubscriptions field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetBillingSubscriptions(billingSubscriptions []*BillingSubscriptionView) {
-	c.BillingSubscriptions = billingSubscriptions
-	c.require(companyViewWithFeatureUsageResponseDataFieldBillingSubscriptions)
-}
-
-// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetCreatedAt(createdAt time.Time) {
-	c.CreatedAt = createdAt
-	c.require(companyViewWithFeatureUsageResponseDataFieldCreatedAt)
-}
-
-// SetDefaultPaymentMethod sets the DefaultPaymentMethod field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetDefaultPaymentMethod(defaultPaymentMethod *PaymentMethodResponseData) {
-	c.DefaultPaymentMethod = defaultPaymentMethod
-	c.require(companyViewWithFeatureUsageResponseDataFieldDefaultPaymentMethod)
-}
-
-// SetEntitlements sets the Entitlements field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetEntitlements(entitlements []*FeatureEntitlement) {
-	c.Entitlements = entitlements
-	c.require(companyViewWithFeatureUsageResponseDataFieldEntitlements)
-}
-
-// SetEntityTraits sets the EntityTraits field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetEntityTraits(entityTraits []*EntityTraitDetailResponseData) {
-	c.EntityTraits = entityTraits
-	c.require(companyViewWithFeatureUsageResponseDataFieldEntityTraits)
-}
-
-// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetEnvironmentID(environmentID string) {
-	c.EnvironmentID = environmentID
-	c.require(companyViewWithFeatureUsageResponseDataFieldEnvironmentID)
-}
-
-// SetFeatureUsage sets the FeatureUsage field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetFeatureUsage(featureUsage []*FeatureUsageDataResponseData) {
-	c.FeatureUsage = featureUsage
-	c.require(companyViewWithFeatureUsageResponseDataFieldFeatureUsage)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetID(id string) {
-	c.ID = id
-	c.require(companyViewWithFeatureUsageResponseDataFieldID)
-}
-
-// SetKeys sets the Keys field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetKeys(keys []*EntityKeyDetailResponseData) {
-	c.Keys = keys
-	c.require(companyViewWithFeatureUsageResponseDataFieldKeys)
-}
-
-// SetLastSeenAt sets the LastSeenAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetLastSeenAt(lastSeenAt *time.Time) {
-	c.LastSeenAt = lastSeenAt
-	c.require(companyViewWithFeatureUsageResponseDataFieldLastSeenAt)
-}
-
-// SetLogoURL sets the LogoURL field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetLogoURL(logoURL *string) {
-	c.LogoURL = logoURL
-	c.require(companyViewWithFeatureUsageResponseDataFieldLogoURL)
-}
-
-// SetMetrics sets the Metrics field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetMetrics(metrics []*CompanyEventPeriodMetricsResponseData) {
-	c.Metrics = metrics
-	c.require(companyViewWithFeatureUsageResponseDataFieldMetrics)
-}
-
-// SetName sets the Name field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetName(name string) {
-	c.Name = name
-	c.require(companyViewWithFeatureUsageResponseDataFieldName)
-}
-
-// SetPaymentMethods sets the PaymentMethods field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetPaymentMethods(paymentMethods []*PaymentMethodResponseData) {
-	c.PaymentMethods = paymentMethods
-	c.require(companyViewWithFeatureUsageResponseDataFieldPaymentMethods)
-}
-
-// SetPlan sets the Plan field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetPlan(plan *CompanyPlanWithBillingSubView) {
-	c.Plan = plan
-	c.require(companyViewWithFeatureUsageResponseDataFieldPlan)
-}
-
-// SetPlans sets the Plans field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetPlans(plans []*GenericPreviewObject) {
-	c.Plans = plans
-	c.require(companyViewWithFeatureUsageResponseDataFieldPlans)
-}
-
-// SetRules sets the Rules field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetRules(rules []*Rule) {
-	c.Rules = rules
-	c.require(companyViewWithFeatureUsageResponseDataFieldRules)
-}
-
-// SetTraits sets the Traits field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetTraits(traits map[string]interface{}) {
-	c.Traits = traits
-	c.require(companyViewWithFeatureUsageResponseDataFieldTraits)
-}
-
-// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetUpdatedAt(updatedAt time.Time) {
-	c.UpdatedAt = updatedAt
-	c.require(companyViewWithFeatureUsageResponseDataFieldUpdatedAt)
-}
-
-// SetUserCount sets the UserCount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyViewWithFeatureUsageResponseData) SetUserCount(userCount int) {
-	c.UserCount = userCount
-	c.require(companyViewWithFeatureUsageResponseDataFieldUserCount)
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) UnmarshalJSON(data []byte) error {
-	type embed CompanyViewWithFeatureUsageResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt  *internal.DateTime `json:"created_at"`
-		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
-		UpdatedAt  *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*c),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*c = CompanyViewWithFeatureUsageResponseData(unmarshaler.embed)
-	c.CreatedAt = unmarshaler.CreatedAt.Time()
-	c.LastSeenAt = unmarshaler.LastSeenAt.TimePtr()
-	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) MarshalJSON() ([]byte, error) {
-	type embed CompanyViewWithFeatureUsageResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt  *internal.DateTime `json:"created_at"`
-		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
-		UpdatedAt  *internal.DateTime `json:"updated_at"`
-	}{
-		embed:      embed(*c),
-		CreatedAt:  internal.NewDateTime(c.CreatedAt),
-		LastSeenAt: internal.NewOptionalDateTime(c.LastSeenAt),
-		UpdatedAt:  internal.NewDateTime(c.UpdatedAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *CompanyViewWithFeatureUsageResponseData) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-var (
-	creditUsageResponseDataFieldCreditConsumptionRate = big.NewInt(1 << 0)
-	creditUsageResponseDataFieldCreditGrantCounts     = big.NewInt(1 << 1)
-	creditUsageResponseDataFieldCreditGrantDetails    = big.NewInt(1 << 2)
-	creditUsageResponseDataFieldCreditRemaining       = big.NewInt(1 << 3)
-	creditUsageResponseDataFieldCreditTotal           = big.NewInt(1 << 4)
-	creditUsageResponseDataFieldCreditTypeIcon        = big.NewInt(1 << 5)
-	creditUsageResponseDataFieldCreditTypeName        = big.NewInt(1 << 6)
-	creditUsageResponseDataFieldCreditUsed            = big.NewInt(1 << 7)
-)
-
-type CreditUsageResponseData struct {
-	CreditConsumptionRate *float64             `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
-	CreditGrantCounts     map[string]float64   `json:"credit_grant_counts,omitempty" url:"credit_grant_counts,omitempty"`
-	CreditGrantDetails    []*CreditGrantDetail `json:"credit_grant_details" url:"credit_grant_details"`
-	CreditRemaining       *float64             `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
-	// Deprecated: Use credit_remaining instead.
-	CreditTotal    *float64 `json:"credit_total,omitempty" url:"credit_total,omitempty"`
-	CreditTypeIcon *string  `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
-	CreditTypeName *string  `json:"credit_type_name,omitempty" url:"credit_type_name,omitempty"`
-	CreditUsed     *float64 `json:"credit_used,omitempty" url:"credit_used,omitempty"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CreditUsageResponseData) GetCreditConsumptionRate() *float64 {
-	if c == nil {
-		return nil
-	}
-	return c.CreditConsumptionRate
-}
-
-func (c *CreditUsageResponseData) GetCreditGrantCounts() map[string]float64 {
-	if c == nil {
-		return nil
-	}
-	return c.CreditGrantCounts
-}
-
-func (c *CreditUsageResponseData) GetCreditGrantDetails() []*CreditGrantDetail {
-	if c == nil {
-		return nil
-	}
-	return c.CreditGrantDetails
-}
-
-func (c *CreditUsageResponseData) GetCreditRemaining() *float64 {
-	if c == nil {
-		return nil
-	}
-	return c.CreditRemaining
-}
-
-func (c *CreditUsageResponseData) GetCreditTotal() *float64 {
-	if c == nil {
-		return nil
-	}
-	return c.CreditTotal
-}
-
-func (c *CreditUsageResponseData) GetCreditTypeIcon() *string {
-	if c == nil {
-		return nil
-	}
-	return c.CreditTypeIcon
-}
-
-func (c *CreditUsageResponseData) GetCreditTypeName() *string {
-	if c == nil {
-		return nil
-	}
-	return c.CreditTypeName
-}
-
-func (c *CreditUsageResponseData) GetCreditUsed() *float64 {
-	if c == nil {
-		return nil
-	}
-	return c.CreditUsed
-}
-
-func (c *CreditUsageResponseData) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CreditUsageResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetCreditConsumptionRate sets the CreditConsumptionRate field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditUsageResponseData) SetCreditConsumptionRate(creditConsumptionRate *float64) {
-	c.CreditConsumptionRate = creditConsumptionRate
-	c.require(creditUsageResponseDataFieldCreditConsumptionRate)
-}
-
-// SetCreditGrantCounts sets the CreditGrantCounts field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditUsageResponseData) SetCreditGrantCounts(creditGrantCounts map[string]float64) {
-	c.CreditGrantCounts = creditGrantCounts
-	c.require(creditUsageResponseDataFieldCreditGrantCounts)
-}
-
-// SetCreditGrantDetails sets the CreditGrantDetails field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditUsageResponseData) SetCreditGrantDetails(creditGrantDetails []*CreditGrantDetail) {
-	c.CreditGrantDetails = creditGrantDetails
-	c.require(creditUsageResponseDataFieldCreditGrantDetails)
-}
-
-// SetCreditRemaining sets the CreditRemaining field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditUsageResponseData) SetCreditRemaining(creditRemaining *float64) {
-	c.CreditRemaining = creditRemaining
-	c.require(creditUsageResponseDataFieldCreditRemaining)
-}
-
-// SetCreditTotal sets the CreditTotal field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditUsageResponseData) SetCreditTotal(creditTotal *float64) {
-	c.CreditTotal = creditTotal
-	c.require(creditUsageResponseDataFieldCreditTotal)
-}
-
-// SetCreditTypeIcon sets the CreditTypeIcon field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditUsageResponseData) SetCreditTypeIcon(creditTypeIcon *string) {
-	c.CreditTypeIcon = creditTypeIcon
-	c.require(creditUsageResponseDataFieldCreditTypeIcon)
-}
-
-// SetCreditTypeName sets the CreditTypeName field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditUsageResponseData) SetCreditTypeName(creditTypeName *string) {
-	c.CreditTypeName = creditTypeName
-	c.require(creditUsageResponseDataFieldCreditTypeName)
-}
-
-// SetCreditUsed sets the CreditUsed field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditUsageResponseData) SetCreditUsed(creditUsed *float64) {
-	c.CreditUsed = creditUsed
-	c.require(creditUsageResponseDataFieldCreditUsed)
-}
-
-func (c *CreditUsageResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreditUsageResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CreditUsageResponseData(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CreditUsageResponseData) MarshalJSON() ([]byte, error) {
-	type embed CreditUsageResponseData
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*c),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *CreditUsageResponseData) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-var (
 	entityTraitValueFieldDefinitionID = big.NewInt(1 << 0)
 	entityTraitValueFieldValue        = big.NewInt(1 << 1)
 )
@@ -2669,332 +1899,6 @@ func (e *EntityTraitValue) String() string {
 }
 
 var (
-	featureUsageDataResponseDataFieldCreditTypeID           = big.NewInt(1 << 0)
-	featureUsageDataResponseDataFieldCreditUsage            = big.NewInt(1 << 1)
-	featureUsageDataResponseDataFieldEntitlementSource      = big.NewInt(1 << 2)
-	featureUsageDataResponseDataFieldEntitlementValueType   = big.NewInt(1 << 3)
-	featureUsageDataResponseDataFieldFeatureID              = big.NewInt(1 << 4)
-	featureUsageDataResponseDataFieldFeatureName            = big.NewInt(1 << 5)
-	featureUsageDataResponseDataFieldFeatureType            = big.NewInt(1 << 6)
-	featureUsageDataResponseDataFieldHardLimit              = big.NewInt(1 << 7)
-	featureUsageDataResponseDataFieldHasAccess              = big.NewInt(1 << 8)
-	featureUsageDataResponseDataFieldMetricResetAt          = big.NewInt(1 << 9)
-	featureUsageDataResponseDataFieldMonthlyUsageBasedPrice = big.NewInt(1 << 10)
-	featureUsageDataResponseDataFieldPriceBehavior          = big.NewInt(1 << 11)
-	featureUsageDataResponseDataFieldSoftLimit              = big.NewInt(1 << 12)
-	featureUsageDataResponseDataFieldUsage                  = big.NewInt(1 << 13)
-	featureUsageDataResponseDataFieldValueNumeric           = big.NewInt(1 << 14)
-	featureUsageDataResponseDataFieldYearlyUsageBasedPrice  = big.NewInt(1 << 15)
-)
-
-type FeatureUsageDataResponseData struct {
-	CreditTypeID           *string                  `json:"credit_type_id,omitempty" url:"credit_type_id,omitempty"`
-	CreditUsage            *CreditUsageResponseData `json:"credit_usage,omitempty" url:"credit_usage,omitempty"`
-	EntitlementSource      string                   `json:"entitlement_source" url:"entitlement_source"`
-	EntitlementValueType   string                   `json:"entitlement_value_type" url:"entitlement_value_type"`
-	FeatureID              string                   `json:"feature_id" url:"feature_id"`
-	FeatureName            string                   `json:"feature_name" url:"feature_name"`
-	FeatureType            FeatureType              `json:"feature_type" url:"feature_type"`
-	HardLimit              string                   `json:"hard_limit" url:"hard_limit"`
-	HasAccess              bool                     `json:"has_access" url:"has_access"`
-	MetricResetAt          *time.Time               `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
-	MonthlyUsageBasedPrice *BillingPriceView        `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
-	PriceBehavior          *string                  `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
-	SoftLimit              string                   `json:"soft_limit" url:"soft_limit"`
-	Usage                  string                   `json:"usage" url:"usage"`
-	ValueNumeric           *int                     `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	YearlyUsageBasedPrice  *BillingPriceView        `json:"yearly_usage_based_price,omitempty" url:"yearly_usage_based_price,omitempty"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (f *FeatureUsageDataResponseData) GetCreditTypeID() *string {
-	if f == nil {
-		return nil
-	}
-	return f.CreditTypeID
-}
-
-func (f *FeatureUsageDataResponseData) GetCreditUsage() *CreditUsageResponseData {
-	if f == nil {
-		return nil
-	}
-	return f.CreditUsage
-}
-
-func (f *FeatureUsageDataResponseData) GetEntitlementSource() string {
-	if f == nil {
-		return ""
-	}
-	return f.EntitlementSource
-}
-
-func (f *FeatureUsageDataResponseData) GetEntitlementValueType() string {
-	if f == nil {
-		return ""
-	}
-	return f.EntitlementValueType
-}
-
-func (f *FeatureUsageDataResponseData) GetFeatureID() string {
-	if f == nil {
-		return ""
-	}
-	return f.FeatureID
-}
-
-func (f *FeatureUsageDataResponseData) GetFeatureName() string {
-	if f == nil {
-		return ""
-	}
-	return f.FeatureName
-}
-
-func (f *FeatureUsageDataResponseData) GetFeatureType() FeatureType {
-	if f == nil {
-		return ""
-	}
-	return f.FeatureType
-}
-
-func (f *FeatureUsageDataResponseData) GetHardLimit() string {
-	if f == nil {
-		return ""
-	}
-	return f.HardLimit
-}
-
-func (f *FeatureUsageDataResponseData) GetHasAccess() bool {
-	if f == nil {
-		return false
-	}
-	return f.HasAccess
-}
-
-func (f *FeatureUsageDataResponseData) GetMetricResetAt() *time.Time {
-	if f == nil {
-		return nil
-	}
-	return f.MetricResetAt
-}
-
-func (f *FeatureUsageDataResponseData) GetMonthlyUsageBasedPrice() *BillingPriceView {
-	if f == nil {
-		return nil
-	}
-	return f.MonthlyUsageBasedPrice
-}
-
-func (f *FeatureUsageDataResponseData) GetPriceBehavior() *string {
-	if f == nil {
-		return nil
-	}
-	return f.PriceBehavior
-}
-
-func (f *FeatureUsageDataResponseData) GetSoftLimit() string {
-	if f == nil {
-		return ""
-	}
-	return f.SoftLimit
-}
-
-func (f *FeatureUsageDataResponseData) GetUsage() string {
-	if f == nil {
-		return ""
-	}
-	return f.Usage
-}
-
-func (f *FeatureUsageDataResponseData) GetValueNumeric() *int {
-	if f == nil {
-		return nil
-	}
-	return f.ValueNumeric
-}
-
-func (f *FeatureUsageDataResponseData) GetYearlyUsageBasedPrice() *BillingPriceView {
-	if f == nil {
-		return nil
-	}
-	return f.YearlyUsageBasedPrice
-}
-
-func (f *FeatureUsageDataResponseData) GetExtraProperties() map[string]interface{} {
-	return f.extraProperties
-}
-
-func (f *FeatureUsageDataResponseData) require(field *big.Int) {
-	if f.explicitFields == nil {
-		f.explicitFields = big.NewInt(0)
-	}
-	f.explicitFields.Or(f.explicitFields, field)
-}
-
-// SetCreditTypeID sets the CreditTypeID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetCreditTypeID(creditTypeID *string) {
-	f.CreditTypeID = creditTypeID
-	f.require(featureUsageDataResponseDataFieldCreditTypeID)
-}
-
-// SetCreditUsage sets the CreditUsage field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetCreditUsage(creditUsage *CreditUsageResponseData) {
-	f.CreditUsage = creditUsage
-	f.require(featureUsageDataResponseDataFieldCreditUsage)
-}
-
-// SetEntitlementSource sets the EntitlementSource field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetEntitlementSource(entitlementSource string) {
-	f.EntitlementSource = entitlementSource
-	f.require(featureUsageDataResponseDataFieldEntitlementSource)
-}
-
-// SetEntitlementValueType sets the EntitlementValueType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetEntitlementValueType(entitlementValueType string) {
-	f.EntitlementValueType = entitlementValueType
-	f.require(featureUsageDataResponseDataFieldEntitlementValueType)
-}
-
-// SetFeatureID sets the FeatureID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetFeatureID(featureID string) {
-	f.FeatureID = featureID
-	f.require(featureUsageDataResponseDataFieldFeatureID)
-}
-
-// SetFeatureName sets the FeatureName field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetFeatureName(featureName string) {
-	f.FeatureName = featureName
-	f.require(featureUsageDataResponseDataFieldFeatureName)
-}
-
-// SetFeatureType sets the FeatureType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetFeatureType(featureType FeatureType) {
-	f.FeatureType = featureType
-	f.require(featureUsageDataResponseDataFieldFeatureType)
-}
-
-// SetHardLimit sets the HardLimit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetHardLimit(hardLimit string) {
-	f.HardLimit = hardLimit
-	f.require(featureUsageDataResponseDataFieldHardLimit)
-}
-
-// SetHasAccess sets the HasAccess field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetHasAccess(hasAccess bool) {
-	f.HasAccess = hasAccess
-	f.require(featureUsageDataResponseDataFieldHasAccess)
-}
-
-// SetMetricResetAt sets the MetricResetAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetMetricResetAt(metricResetAt *time.Time) {
-	f.MetricResetAt = metricResetAt
-	f.require(featureUsageDataResponseDataFieldMetricResetAt)
-}
-
-// SetMonthlyUsageBasedPrice sets the MonthlyUsageBasedPrice field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetMonthlyUsageBasedPrice(monthlyUsageBasedPrice *BillingPriceView) {
-	f.MonthlyUsageBasedPrice = monthlyUsageBasedPrice
-	f.require(featureUsageDataResponseDataFieldMonthlyUsageBasedPrice)
-}
-
-// SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetPriceBehavior(priceBehavior *string) {
-	f.PriceBehavior = priceBehavior
-	f.require(featureUsageDataResponseDataFieldPriceBehavior)
-}
-
-// SetSoftLimit sets the SoftLimit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetSoftLimit(softLimit string) {
-	f.SoftLimit = softLimit
-	f.require(featureUsageDataResponseDataFieldSoftLimit)
-}
-
-// SetUsage sets the Usage field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetUsage(usage string) {
-	f.Usage = usage
-	f.require(featureUsageDataResponseDataFieldUsage)
-}
-
-// SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetValueNumeric(valueNumeric *int) {
-	f.ValueNumeric = valueNumeric
-	f.require(featureUsageDataResponseDataFieldValueNumeric)
-}
-
-// SetYearlyUsageBasedPrice sets the YearlyUsageBasedPrice field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageDataResponseData) SetYearlyUsageBasedPrice(yearlyUsageBasedPrice *BillingPriceView) {
-	f.YearlyUsageBasedPrice = yearlyUsageBasedPrice
-	f.require(featureUsageDataResponseDataFieldYearlyUsageBasedPrice)
-}
-
-func (f *FeatureUsageDataResponseData) UnmarshalJSON(data []byte) error {
-	type embed FeatureUsageDataResponseData
-	var unmarshaler = struct {
-		embed
-		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
-	}{
-		embed: embed(*f),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*f = FeatureUsageDataResponseData(unmarshaler.embed)
-	f.MetricResetAt = unmarshaler.MetricResetAt.TimePtr()
-	extraProperties, err := internal.ExtractExtraProperties(data, *f)
-	if err != nil {
-		return err
-	}
-	f.extraProperties = extraProperties
-	f.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (f *FeatureUsageDataResponseData) MarshalJSON() ([]byte, error) {
-	type embed FeatureUsageDataResponseData
-	var marshaler = struct {
-		embed
-		MetricResetAt *internal.DateTime `json:"metric_reset_at,omitempty"`
-	}{
-		embed:         embed(*f),
-		MetricResetAt: internal.NewOptionalDateTime(f.MetricResetAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, f.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (f *FeatureUsageDataResponseData) String() string {
-	if len(f.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(f); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", f)
-}
-
-var (
 	keysRequestBodyFieldKeys = big.NewInt(1 << 0)
 )
 
@@ -3083,6 +1987,7 @@ const (
 	PlanChangeActionPlanBillingProductChanged PlanChangeAction = "plan_billing_product_changed"
 	PlanChangeActionPlanDeleted               PlanChangeAction = "plan_deleted"
 	PlanChangeActionPlanTraitChange           PlanChangeAction = "plan_trait_change"
+	PlanChangeActionPlanVersionMigration      PlanChangeAction = "plan_version_migration"
 	PlanChangeActionQuickstart                PlanChangeAction = "quickstart"
 	PlanChangeActionSubscriptionChange        PlanChangeAction = "subscription_change"
 )
@@ -3105,6 +2010,8 @@ func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
 		return PlanChangeActionPlanDeleted, nil
 	case "plan_trait_change":
 		return PlanChangeActionPlanTraitChange, nil
+	case "plan_version_migration":
+		return PlanChangeActionPlanVersionMigration, nil
 	case "quickstart":
 		return PlanChangeActionQuickstart, nil
 	case "subscription_change":
@@ -3115,34 +2022,6 @@ func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
 }
 
 func (p PlanChangeAction) Ptr() *PlanChangeAction {
-	return &p
-}
-
-type PlanChangeActorType string
-
-const (
-	PlanChangeActorTypeAPIKey               PlanChangeActorType = "api_key"
-	PlanChangeActorTypeAppUser              PlanChangeActorType = "app_user"
-	PlanChangeActorTypeSystem               PlanChangeActorType = "system"
-	PlanChangeActorTypeTemporaryAccessToken PlanChangeActorType = "temporary_access_token"
-)
-
-func NewPlanChangeActorTypeFromString(s string) (PlanChangeActorType, error) {
-	switch s {
-	case "api_key":
-		return PlanChangeActorTypeAPIKey, nil
-	case "app_user":
-		return PlanChangeActorTypeAppUser, nil
-	case "system":
-		return PlanChangeActorTypeSystem, nil
-	case "temporary_access_token":
-		return PlanChangeActorTypeTemporaryAccessToken, nil
-	}
-	var t PlanChangeActorType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (p PlanChangeActorType) Ptr() *PlanChangeActorType {
 	return &p
 }
 
@@ -3180,7 +2059,7 @@ var (
 	planChangeResponseDataFieldAddOnsAdded              = big.NewInt(1 << 2)
 	planChangeResponseDataFieldAddOnsRemoved            = big.NewInt(1 << 3)
 	planChangeResponseDataFieldAPIKey                   = big.NewInt(1 << 4)
-	planChangeResponseDataFieldAPIKeyRequest            = big.NewInt(1 << 5)
+	planChangeResponseDataFieldAuditLog                 = big.NewInt(1 << 5)
 	planChangeResponseDataFieldBasePlan                 = big.NewInt(1 << 6)
 	planChangeResponseDataFieldBasePlanAction           = big.NewInt(1 << 7)
 	planChangeResponseDataFieldCompany                  = big.NewInt(1 << 8)
@@ -3198,22 +2077,22 @@ var (
 )
 
 type PlanChangeResponseData struct {
-	Action                   PlanChangeAction               `json:"action" url:"action"`
-	ActorType                PlanChangeActorType            `json:"actor_type" url:"actor_type"`
-	AddOnsAdded              []*PlanSnapshotView            `json:"add_ons_added" url:"add_ons_added"`
-	AddOnsRemoved            []*PlanSnapshotView            `json:"add_ons_removed" url:"add_ons_removed"`
-	APIKey                   *APIKeyResponseData            `json:"api_key,omitempty" url:"api_key,omitempty"`
-	APIKeyRequest            *APIKeyRequestListResponseData `json:"api_key_request,omitempty" url:"api_key_request,omitempty"`
-	BasePlan                 *PlanSnapshotView              `json:"base_plan,omitempty" url:"base_plan,omitempty"`
-	BasePlanAction           *PlanChangeBasePlanAction      `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
-	Company                  *CompanyResponseData           `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID                string                         `json:"company_id" url:"company_id"`
-	CreatedAt                time.Time                      `json:"created_at" url:"created_at"`
-	EnvironmentID            string                         `json:"environment_id" url:"environment_id"`
-	ID                       string                         `json:"id" url:"id"`
-	PreviousBasePlan         *PlanSnapshotView              `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
-	RequestID                *string                        `json:"request_id,omitempty" url:"request_id,omitempty"`
-	SubscriptionChangeAction *PlanChangeSubscriptionAction  `json:"subscription_change_action,omitempty" url:"subscription_change_action,omitempty"`
+	Action                   PlanChangeAction              `json:"action" url:"action"`
+	ActorType                ActorType                     `json:"actor_type" url:"actor_type"`
+	AddOnsAdded              []*PlanSnapshotView           `json:"add_ons_added" url:"add_ons_added"`
+	AddOnsRemoved            []*PlanSnapshotView           `json:"add_ons_removed" url:"add_ons_removed"`
+	APIKey                   *APIKeyResponseData           `json:"api_key,omitempty" url:"api_key,omitempty"`
+	AuditLog                 *AuditLogListResponseData     `json:"audit_log,omitempty" url:"audit_log,omitempty"`
+	BasePlan                 *PlanSnapshotView             `json:"base_plan,omitempty" url:"base_plan,omitempty"`
+	BasePlanAction           *PlanChangeBasePlanAction     `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
+	Company                  *CompanyResponseData          `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID                string                        `json:"company_id" url:"company_id"`
+	CreatedAt                time.Time                     `json:"created_at" url:"created_at"`
+	EnvironmentID            string                        `json:"environment_id" url:"environment_id"`
+	ID                       string                        `json:"id" url:"id"`
+	PreviousBasePlan         *PlanSnapshotView             `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
+	RequestID                *string                       `json:"request_id,omitempty" url:"request_id,omitempty"`
+	SubscriptionChangeAction *PlanChangeSubscriptionAction `json:"subscription_change_action,omitempty" url:"subscription_change_action,omitempty"`
 	// Any traits were updated as part of this plan change (via pay-in-advance entitlements).
 	TraitsUpdated []*SubscriptionTraitUpdate `json:"traits_updated" url:"traits_updated"`
 	UpdatedAt     time.Time                  `json:"updated_at" url:"updated_at"`
@@ -3234,7 +2113,7 @@ func (p *PlanChangeResponseData) GetAction() PlanChangeAction {
 	return p.Action
 }
 
-func (p *PlanChangeResponseData) GetActorType() PlanChangeActorType {
+func (p *PlanChangeResponseData) GetActorType() ActorType {
 	if p == nil {
 		return ""
 	}
@@ -3262,11 +2141,11 @@ func (p *PlanChangeResponseData) GetAPIKey() *APIKeyResponseData {
 	return p.APIKey
 }
 
-func (p *PlanChangeResponseData) GetAPIKeyRequest() *APIKeyRequestListResponseData {
+func (p *PlanChangeResponseData) GetAuditLog() *AuditLogListResponseData {
 	if p == nil {
 		return nil
 	}
-	return p.APIKeyRequest
+	return p.AuditLog
 }
 
 func (p *PlanChangeResponseData) GetBasePlan() *PlanSnapshotView {
@@ -3387,7 +2266,7 @@ func (p *PlanChangeResponseData) SetAction(action PlanChangeAction) {
 
 // SetActorType sets the ActorType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanChangeResponseData) SetActorType(actorType PlanChangeActorType) {
+func (p *PlanChangeResponseData) SetActorType(actorType ActorType) {
 	p.ActorType = actorType
 	p.require(planChangeResponseDataFieldActorType)
 }
@@ -3413,11 +2292,11 @@ func (p *PlanChangeResponseData) SetAPIKey(apiKey *APIKeyResponseData) {
 	p.require(planChangeResponseDataFieldAPIKey)
 }
 
-// SetAPIKeyRequest sets the APIKeyRequest field and marks it as non-optional;
+// SetAuditLog sets the AuditLog field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanChangeResponseData) SetAPIKeyRequest(apiKeyRequest *APIKeyRequestListResponseData) {
-	p.APIKeyRequest = apiKeyRequest
-	p.require(planChangeResponseDataFieldAPIKeyRequest)
+func (p *PlanChangeResponseData) SetAuditLog(auditLog *AuditLogListResponseData) {
+	p.AuditLog = auditLog
+	p.require(planChangeResponseDataFieldAuditLog)
 }
 
 // SetBasePlan sets the BasePlan field and marks it as non-optional;
@@ -3994,21 +2873,23 @@ func (s SubscriptionType) Ptr() *SubscriptionType {
 }
 
 var (
-	upsertCompanyRequestBodyFieldID         = big.NewInt(1 << 0)
-	upsertCompanyRequestBodyFieldKeys       = big.NewInt(1 << 1)
-	upsertCompanyRequestBodyFieldLastSeenAt = big.NewInt(1 << 2)
-	upsertCompanyRequestBodyFieldName       = big.NewInt(1 << 3)
-	upsertCompanyRequestBodyFieldTraits     = big.NewInt(1 << 4)
-	upsertCompanyRequestBodyFieldUpdateOnly = big.NewInt(1 << 5)
+	upsertCompanyRequestBodyFieldID              = big.NewInt(1 << 0)
+	upsertCompanyRequestBodyFieldKeys            = big.NewInt(1 << 1)
+	upsertCompanyRequestBodyFieldLastSeenAt      = big.NewInt(1 << 2)
+	upsertCompanyRequestBodyFieldName            = big.NewInt(1 << 3)
+	upsertCompanyRequestBodyFieldPreventKeyRemap = big.NewInt(1 << 4)
+	upsertCompanyRequestBodyFieldTraits          = big.NewInt(1 << 5)
+	upsertCompanyRequestBodyFieldUpdateOnly      = big.NewInt(1 << 6)
 )
 
 type UpsertCompanyRequestBody struct {
 	// If you know the Schematic ID, you can use that here instead of keys
 	ID *string `json:"id,omitempty" url:"id,omitempty"`
 	// See [Key Management](https://docs.schematichq.com/developer_resources/key_management) for more information
-	Keys       map[string]string `json:"keys" url:"keys"`
-	LastSeenAt *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	Name       *string           `json:"name,omitempty" url:"name,omitempty"`
+	Keys            map[string]string `json:"keys" url:"keys"`
+	LastSeenAt      *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
+	Name            *string           `json:"name,omitempty" url:"name,omitempty"`
+	PreventKeyRemap *bool             `json:"prevent_key_remap,omitempty" url:"prevent_key_remap,omitempty"`
 	// A map of trait names to trait values
 	Traits     map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
 	UpdateOnly *bool                  `json:"update_only,omitempty" url:"update_only,omitempty"`
@@ -4046,6 +2927,13 @@ func (u *UpsertCompanyRequestBody) GetName() *string {
 		return nil
 	}
 	return u.Name
+}
+
+func (u *UpsertCompanyRequestBody) GetPreventKeyRemap() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.PreventKeyRemap
 }
 
 func (u *UpsertCompanyRequestBody) GetTraits() map[string]interface{} {
@@ -4099,6 +2987,13 @@ func (u *UpsertCompanyRequestBody) SetLastSeenAt(lastSeenAt *time.Time) {
 func (u *UpsertCompanyRequestBody) SetName(name *string) {
 	u.Name = name
 	u.require(upsertCompanyRequestBodyFieldName)
+}
+
+// SetPreventKeyRemap sets the PreventKeyRemap field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertCompanyRequestBody) SetPreventKeyRemap(preventKeyRemap *bool) {
+	u.PreventKeyRemap = preventKeyRemap
+	u.require(upsertCompanyRequestBodyFieldPreventKeyRemap)
 }
 
 // SetTraits sets the Traits field and marks it as non-optional;
@@ -4787,30 +3682,29 @@ func (u *UserDetailResponseData) String() string {
 
 // Input parameters
 var (
-	countCompaniesForAdvancedFilterParamsFieldCreditTypeIDs          = big.NewInt(1 << 0)
-	countCompaniesForAdvancedFilterParamsFieldDisplayProperties      = big.NewInt(1 << 1)
-	countCompaniesForAdvancedFilterParamsFieldFeatureIDs             = big.NewInt(1 << 2)
-	countCompaniesForAdvancedFilterParamsFieldIDs                    = big.NewInt(1 << 3)
-	countCompaniesForAdvancedFilterParamsFieldLimit                  = big.NewInt(1 << 4)
-	countCompaniesForAdvancedFilterParamsFieldMonetizedSubscriptions = big.NewInt(1 << 5)
-	countCompaniesForAdvancedFilterParamsFieldOffset                 = big.NewInt(1 << 6)
-	countCompaniesForAdvancedFilterParamsFieldPlanIDs                = big.NewInt(1 << 7)
-	countCompaniesForAdvancedFilterParamsFieldQ                      = big.NewInt(1 << 8)
-	countCompaniesForAdvancedFilterParamsFieldSortOrderColumn        = big.NewInt(1 << 9)
-	countCompaniesForAdvancedFilterParamsFieldSortOrderDirection     = big.NewInt(1 << 10)
-	countCompaniesForAdvancedFilterParamsFieldSubscriptionStatuses   = big.NewInt(1 << 11)
-	countCompaniesForAdvancedFilterParamsFieldSubscriptionTypes      = big.NewInt(1 << 12)
-	countCompaniesForAdvancedFilterParamsFieldWithoutPlan            = big.NewInt(1 << 13)
-	countCompaniesForAdvancedFilterParamsFieldWithoutSubscription    = big.NewInt(1 << 14)
+	countCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 0)
+	countCompaniesParamsFieldIDs                       = big.NewInt(1 << 1)
+	countCompaniesParamsFieldLimit                     = big.NewInt(1 << 2)
+	countCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 3)
+	countCompaniesParamsFieldOffset                    = big.NewInt(1 << 4)
+	countCompaniesParamsFieldPlanID                    = big.NewInt(1 << 5)
+	countCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 6)
+	countCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 7)
+	countCompaniesParamsFieldQ                         = big.NewInt(1 << 8)
+	countCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 9)
+	countCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 10)
+	countCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 11)
+	countCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 12)
+	countCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 13)
+	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 14)
+	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 15)
+	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 16)
+	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 17)
 )
 
-type CountCompaniesForAdvancedFilterParams struct {
+type CountCompaniesParams struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
-	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
-	DisplayProperties []string `json:"display_properties,omitempty" url:"display_properties,omitempty"`
-	// Filter companies by one or more feature IDs (each ID starts with feat_)
-	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -4819,17 +3713,27 @@ type CountCompaniesForAdvancedFilterParams struct {
 	MonetizedSubscriptions *bool `json:"monetized_subscriptions,omitempty" url:"monetized_subscriptions,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter companies by plan ID (starts with plan_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Filter companies by one or more plan IDs (each ID starts with plan_)
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	// Filter companies by plan version ID (starts with plvr_)
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
 	SortOrderColumn    *string        `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
 	SortOrderDirection *SortDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
-	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
+	// Filter companies by one or more subscription statuses
 	SubscriptionStatuses []SubscriptionStatus `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
-	// Filter companies by one or more subscription types (paid, free, trial)
+	// Filter companies by one or more subscription types
 	SubscriptionTypes []SubscriptionType `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
+	// Filter companies that have an entitlement (plan entitlement or company override) for the specified feature ID
+	WithEntitlementFor *string `json:"with_entitlement_for,omitempty" url:"with_entitlement_for,omitempty"`
+	// Filter companies that have a subscription
+	WithSubscription *bool `json:"with_subscription,omitempty" url:"with_subscription,omitempty"`
+	// Filter out companies that already have a company override for the specified feature ID
+	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
 	// Filter out companies that have a subscription
@@ -4842,396 +3746,11 @@ type CountCompaniesForAdvancedFilterParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountCompaniesForAdvancedFilterParams) GetCreditTypeIDs() []string {
+func (c *CountCompaniesParams) GetCreditTypeIDs() []string {
 	if c == nil {
 		return nil
 	}
 	return c.CreditTypeIDs
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetDisplayProperties() []string {
-	if c == nil {
-		return nil
-	}
-	return c.DisplayProperties
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetFeatureIDs() []string {
-	if c == nil {
-		return nil
-	}
-	return c.FeatureIDs
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetIDs() []string {
-	if c == nil {
-		return nil
-	}
-	return c.IDs
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetLimit() *int {
-	if c == nil {
-		return nil
-	}
-	return c.Limit
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetMonetizedSubscriptions() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.MonetizedSubscriptions
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetOffset() *int {
-	if c == nil {
-		return nil
-	}
-	return c.Offset
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetPlanIDs() []string {
-	if c == nil {
-		return nil
-	}
-	return c.PlanIDs
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetQ() *string {
-	if c == nil {
-		return nil
-	}
-	return c.Q
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetSortOrderColumn() *string {
-	if c == nil {
-		return nil
-	}
-	return c.SortOrderColumn
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetSortOrderDirection() *SortDirection {
-	if c == nil {
-		return nil
-	}
-	return c.SortOrderDirection
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetSubscriptionStatuses() []SubscriptionStatus {
-	if c == nil {
-		return nil
-	}
-	return c.SubscriptionStatuses
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetSubscriptionTypes() []SubscriptionType {
-	if c == nil {
-		return nil
-	}
-	return c.SubscriptionTypes
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetWithoutPlan() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.WithoutPlan
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetWithoutSubscription() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.WithoutSubscription
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetCreditTypeIDs(creditTypeIDs []string) {
-	c.CreditTypeIDs = creditTypeIDs
-	c.require(countCompaniesForAdvancedFilterParamsFieldCreditTypeIDs)
-}
-
-// SetDisplayProperties sets the DisplayProperties field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetDisplayProperties(displayProperties []string) {
-	c.DisplayProperties = displayProperties
-	c.require(countCompaniesForAdvancedFilterParamsFieldDisplayProperties)
-}
-
-// SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetFeatureIDs(featureIDs []string) {
-	c.FeatureIDs = featureIDs
-	c.require(countCompaniesForAdvancedFilterParamsFieldFeatureIDs)
-}
-
-// SetIDs sets the IDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetIDs(ids []string) {
-	c.IDs = ids
-	c.require(countCompaniesForAdvancedFilterParamsFieldIDs)
-}
-
-// SetLimit sets the Limit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetLimit(limit *int) {
-	c.Limit = limit
-	c.require(countCompaniesForAdvancedFilterParamsFieldLimit)
-}
-
-// SetMonetizedSubscriptions sets the MonetizedSubscriptions field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetMonetizedSubscriptions(monetizedSubscriptions *bool) {
-	c.MonetizedSubscriptions = monetizedSubscriptions
-	c.require(countCompaniesForAdvancedFilterParamsFieldMonetizedSubscriptions)
-}
-
-// SetOffset sets the Offset field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetOffset(offset *int) {
-	c.Offset = offset
-	c.require(countCompaniesForAdvancedFilterParamsFieldOffset)
-}
-
-// SetPlanIDs sets the PlanIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetPlanIDs(planIDs []string) {
-	c.PlanIDs = planIDs
-	c.require(countCompaniesForAdvancedFilterParamsFieldPlanIDs)
-}
-
-// SetQ sets the Q field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetQ(q *string) {
-	c.Q = q
-	c.require(countCompaniesForAdvancedFilterParamsFieldQ)
-}
-
-// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetSortOrderColumn(sortOrderColumn *string) {
-	c.SortOrderColumn = sortOrderColumn
-	c.require(countCompaniesForAdvancedFilterParamsFieldSortOrderColumn)
-}
-
-// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetSortOrderDirection(sortOrderDirection *SortDirection) {
-	c.SortOrderDirection = sortOrderDirection
-	c.require(countCompaniesForAdvancedFilterParamsFieldSortOrderDirection)
-}
-
-// SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetSubscriptionStatuses(subscriptionStatuses []SubscriptionStatus) {
-	c.SubscriptionStatuses = subscriptionStatuses
-	c.require(countCompaniesForAdvancedFilterParamsFieldSubscriptionStatuses)
-}
-
-// SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetSubscriptionTypes(subscriptionTypes []SubscriptionType) {
-	c.SubscriptionTypes = subscriptionTypes
-	c.require(countCompaniesForAdvancedFilterParamsFieldSubscriptionTypes)
-}
-
-// SetWithoutPlan sets the WithoutPlan field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetWithoutPlan(withoutPlan *bool) {
-	c.WithoutPlan = withoutPlan
-	c.require(countCompaniesForAdvancedFilterParamsFieldWithoutPlan)
-}
-
-// SetWithoutSubscription sets the WithoutSubscription field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterParams) SetWithoutSubscription(withoutSubscription *bool) {
-	c.WithoutSubscription = withoutSubscription
-	c.require(countCompaniesForAdvancedFilterParamsFieldWithoutSubscription)
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) UnmarshalJSON(data []byte) error {
-	type unmarshaler CountCompaniesForAdvancedFilterParams
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CountCompaniesForAdvancedFilterParams(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) MarshalJSON() ([]byte, error) {
-	type embed CountCompaniesForAdvancedFilterParams
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*c),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *CountCompaniesForAdvancedFilterParams) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-var (
-	countCompaniesForAdvancedFilterResponseFieldData   = big.NewInt(1 << 0)
-	countCompaniesForAdvancedFilterResponseFieldParams = big.NewInt(1 << 1)
-)
-
-type CountCompaniesForAdvancedFilterResponse struct {
-	Data *CountResponse `json:"data" url:"data"`
-	// Input parameters
-	Params *CountCompaniesForAdvancedFilterParams `json:"params" url:"params"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CountCompaniesForAdvancedFilterResponse) GetData() *CountResponse {
-	if c == nil {
-		return nil
-	}
-	return c.Data
-}
-
-func (c *CountCompaniesForAdvancedFilterResponse) GetParams() *CountCompaniesForAdvancedFilterParams {
-	if c == nil {
-		return nil
-	}
-	return c.Params
-}
-
-func (c *CountCompaniesForAdvancedFilterResponse) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CountCompaniesForAdvancedFilterResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetData sets the Data field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterResponse) SetData(data *CountResponse) {
-	c.Data = data
-	c.require(countCompaniesForAdvancedFilterResponseFieldData)
-}
-
-// SetParams sets the Params field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesForAdvancedFilterResponse) SetParams(params *CountCompaniesForAdvancedFilterParams) {
-	c.Params = params
-	c.require(countCompaniesForAdvancedFilterResponseFieldParams)
-}
-
-func (c *CountCompaniesForAdvancedFilterResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler CountCompaniesForAdvancedFilterResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CountCompaniesForAdvancedFilterResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CountCompaniesForAdvancedFilterResponse) MarshalJSON() ([]byte, error) {
-	type embed CountCompaniesForAdvancedFilterResponse
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*c),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *CountCompaniesForAdvancedFilterResponse) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-// Input parameters
-var (
-	countCompaniesParamsFieldIDs                       = big.NewInt(1 << 0)
-	countCompaniesParamsFieldLimit                     = big.NewInt(1 << 1)
-	countCompaniesParamsFieldOffset                    = big.NewInt(1 << 2)
-	countCompaniesParamsFieldPlanID                    = big.NewInt(1 << 3)
-	countCompaniesParamsFieldQ                         = big.NewInt(1 << 4)
-	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 5)
-	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 6)
-	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 7)
-)
-
-type CountCompaniesParams struct {
-	// Filter companies by multiple company IDs (starts with comp_)
-	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
-	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
-	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter companies by plan ID (starts with plan_)
-	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	// Search for companies by name, keys or string traits
-	Q *string `json:"q,omitempty" url:"q,omitempty"`
-	// Filter companies that have a subscription
-	WithSubscription *bool `json:"with_subscription,omitempty" url:"with_subscription,omitempty"`
-	// Filter out companies that already have a company override for the specified feature ID
-	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
-	// Filter out companies that have a plan
-	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
 }
 
 func (c *CountCompaniesParams) GetIDs() []string {
@@ -5248,6 +3767,13 @@ func (c *CountCompaniesParams) GetLimit() *int {
 	return c.Limit
 }
 
+func (c *CountCompaniesParams) GetMonetizedSubscriptions() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.MonetizedSubscriptions
+}
+
 func (c *CountCompaniesParams) GetOffset() *int {
 	if c == nil {
 		return nil
@@ -5262,11 +3788,60 @@ func (c *CountCompaniesParams) GetPlanID() *string {
 	return c.PlanID
 }
 
+func (c *CountCompaniesParams) GetPlanIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanIDs
+}
+
+func (c *CountCompaniesParams) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
+}
+
 func (c *CountCompaniesParams) GetQ() *string {
 	if c == nil {
 		return nil
 	}
 	return c.Q
+}
+
+func (c *CountCompaniesParams) GetSortOrderColumn() *string {
+	if c == nil {
+		return nil
+	}
+	return c.SortOrderColumn
+}
+
+func (c *CountCompaniesParams) GetSortOrderDirection() *SortDirection {
+	if c == nil {
+		return nil
+	}
+	return c.SortOrderDirection
+}
+
+func (c *CountCompaniesParams) GetSubscriptionStatuses() []SubscriptionStatus {
+	if c == nil {
+		return nil
+	}
+	return c.SubscriptionStatuses
+}
+
+func (c *CountCompaniesParams) GetSubscriptionTypes() []SubscriptionType {
+	if c == nil {
+		return nil
+	}
+	return c.SubscriptionTypes
+}
+
+func (c *CountCompaniesParams) GetWithEntitlementFor() *string {
+	if c == nil {
+		return nil
+	}
+	return c.WithEntitlementFor
 }
 
 func (c *CountCompaniesParams) GetWithSubscription() *bool {
@@ -5290,6 +3865,13 @@ func (c *CountCompaniesParams) GetWithoutPlan() *bool {
 	return c.WithoutPlan
 }
 
+func (c *CountCompaniesParams) GetWithoutSubscription() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutSubscription
+}
+
 func (c *CountCompaniesParams) GetExtraProperties() map[string]interface{} {
 	return c.extraProperties
 }
@@ -5299,6 +3881,13 @@ func (c *CountCompaniesParams) require(field *big.Int) {
 		c.explicitFields = big.NewInt(0)
 	}
 	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetCreditTypeIDs(creditTypeIDs []string) {
+	c.CreditTypeIDs = creditTypeIDs
+	c.require(countCompaniesParamsFieldCreditTypeIDs)
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -5315,6 +3904,13 @@ func (c *CountCompaniesParams) SetLimit(limit *int) {
 	c.require(countCompaniesParamsFieldLimit)
 }
 
+// SetMonetizedSubscriptions sets the MonetizedSubscriptions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetMonetizedSubscriptions(monetizedSubscriptions *bool) {
+	c.MonetizedSubscriptions = monetizedSubscriptions
+	c.require(countCompaniesParamsFieldMonetizedSubscriptions)
+}
+
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountCompaniesParams) SetOffset(offset *int) {
@@ -5329,11 +3925,60 @@ func (c *CountCompaniesParams) SetPlanID(planID *string) {
 	c.require(countCompaniesParamsFieldPlanID)
 }
 
+// SetPlanIDs sets the PlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetPlanIDs(planIDs []string) {
+	c.PlanIDs = planIDs
+	c.require(countCompaniesParamsFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(countCompaniesParamsFieldPlanVersionID)
+}
+
 // SetQ sets the Q field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountCompaniesParams) SetQ(q *string) {
 	c.Q = q
 	c.require(countCompaniesParamsFieldQ)
+}
+
+// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetSortOrderColumn(sortOrderColumn *string) {
+	c.SortOrderColumn = sortOrderColumn
+	c.require(countCompaniesParamsFieldSortOrderColumn)
+}
+
+// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetSortOrderDirection(sortOrderDirection *SortDirection) {
+	c.SortOrderDirection = sortOrderDirection
+	c.require(countCompaniesParamsFieldSortOrderDirection)
+}
+
+// SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetSubscriptionStatuses(subscriptionStatuses []SubscriptionStatus) {
+	c.SubscriptionStatuses = subscriptionStatuses
+	c.require(countCompaniesParamsFieldSubscriptionStatuses)
+}
+
+// SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetSubscriptionTypes(subscriptionTypes []SubscriptionType) {
+	c.SubscriptionTypes = subscriptionTypes
+	c.require(countCompaniesParamsFieldSubscriptionTypes)
+}
+
+// SetWithEntitlementFor sets the WithEntitlementFor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetWithEntitlementFor(withEntitlementFor *string) {
+	c.WithEntitlementFor = withEntitlementFor
+	c.require(countCompaniesParamsFieldWithEntitlementFor)
 }
 
 // SetWithSubscription sets the WithSubscription field and marks it as non-optional;
@@ -5355,6 +4000,13 @@ func (c *CountCompaniesParams) SetWithoutFeatureOverrideFor(withoutFeatureOverri
 func (c *CountCompaniesParams) SetWithoutPlan(withoutPlan *bool) {
 	c.WithoutPlan = withoutPlan
 	c.require(countCompaniesParamsFieldWithoutPlan)
+}
+
+// SetWithoutSubscription sets the WithoutSubscription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetWithoutSubscription(withoutSubscription *bool) {
+	c.WithoutSubscription = withoutSubscription
+	c.require(countCompaniesParamsFieldWithoutSubscription)
 }
 
 func (c *CountCompaniesParams) UnmarshalJSON(data []byte) error {
@@ -8584,30 +7236,29 @@ func (g *GetUserResponse) String() string {
 
 // Input parameters
 var (
-	listCompaniesForAdvancedFilterParamsFieldCreditTypeIDs          = big.NewInt(1 << 0)
-	listCompaniesForAdvancedFilterParamsFieldDisplayProperties      = big.NewInt(1 << 1)
-	listCompaniesForAdvancedFilterParamsFieldFeatureIDs             = big.NewInt(1 << 2)
-	listCompaniesForAdvancedFilterParamsFieldIDs                    = big.NewInt(1 << 3)
-	listCompaniesForAdvancedFilterParamsFieldLimit                  = big.NewInt(1 << 4)
-	listCompaniesForAdvancedFilterParamsFieldMonetizedSubscriptions = big.NewInt(1 << 5)
-	listCompaniesForAdvancedFilterParamsFieldOffset                 = big.NewInt(1 << 6)
-	listCompaniesForAdvancedFilterParamsFieldPlanIDs                = big.NewInt(1 << 7)
-	listCompaniesForAdvancedFilterParamsFieldQ                      = big.NewInt(1 << 8)
-	listCompaniesForAdvancedFilterParamsFieldSortOrderColumn        = big.NewInt(1 << 9)
-	listCompaniesForAdvancedFilterParamsFieldSortOrderDirection     = big.NewInt(1 << 10)
-	listCompaniesForAdvancedFilterParamsFieldSubscriptionStatuses   = big.NewInt(1 << 11)
-	listCompaniesForAdvancedFilterParamsFieldSubscriptionTypes      = big.NewInt(1 << 12)
-	listCompaniesForAdvancedFilterParamsFieldWithoutPlan            = big.NewInt(1 << 13)
-	listCompaniesForAdvancedFilterParamsFieldWithoutSubscription    = big.NewInt(1 << 14)
+	listCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 0)
+	listCompaniesParamsFieldIDs                       = big.NewInt(1 << 1)
+	listCompaniesParamsFieldLimit                     = big.NewInt(1 << 2)
+	listCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 3)
+	listCompaniesParamsFieldOffset                    = big.NewInt(1 << 4)
+	listCompaniesParamsFieldPlanID                    = big.NewInt(1 << 5)
+	listCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 6)
+	listCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 7)
+	listCompaniesParamsFieldQ                         = big.NewInt(1 << 8)
+	listCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 9)
+	listCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 10)
+	listCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 11)
+	listCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 12)
+	listCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 13)
+	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 14)
+	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 15)
+	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 16)
+	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 17)
 )
 
-type ListCompaniesForAdvancedFilterParams struct {
+type ListCompaniesParams struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
-	// Select the display columns to return (e.g. plan, subscription, users, last_seen_at)
-	DisplayProperties []string `json:"display_properties,omitempty" url:"display_properties,omitempty"`
-	// Filter companies by one or more feature IDs (each ID starts with feat_)
-	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -8616,17 +7267,27 @@ type ListCompaniesForAdvancedFilterParams struct {
 	MonetizedSubscriptions *bool `json:"monetized_subscriptions,omitempty" url:"monetized_subscriptions,omitempty"`
 	// Page offset (default 0)
 	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter companies by plan ID (starts with plan_)
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Filter companies by one or more plan IDs (each ID starts with plan_)
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	// Filter companies by plan version ID (starts with plvr_)
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
 	SortOrderColumn    *string        `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
 	SortOrderDirection *SortDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
-	// Filter companies by one or more subscription statuses (active, canceled, expired, incomplete, incomplete_expired, past_due, paused, trialing, unpaid)
+	// Filter companies by one or more subscription statuses
 	SubscriptionStatuses []SubscriptionStatus `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
-	// Filter companies by one or more subscription types (paid, free, trial)
+	// Filter companies by one or more subscription types
 	SubscriptionTypes []SubscriptionType `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
+	// Filter companies that have an entitlement (plan entitlement or company override) for the specified feature ID
+	WithEntitlementFor *string `json:"with_entitlement_for,omitempty" url:"with_entitlement_for,omitempty"`
+	// Filter companies that have a subscription
+	WithSubscription *bool `json:"with_subscription,omitempty" url:"with_subscription,omitempty"`
+	// Filter out companies that already have a company override for the specified feature ID
+	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
 	// Filter out companies that have a subscription
@@ -8639,396 +7300,11 @@ type ListCompaniesForAdvancedFilterParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListCompaniesForAdvancedFilterParams) GetCreditTypeIDs() []string {
+func (l *ListCompaniesParams) GetCreditTypeIDs() []string {
 	if l == nil {
 		return nil
 	}
 	return l.CreditTypeIDs
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetDisplayProperties() []string {
-	if l == nil {
-		return nil
-	}
-	return l.DisplayProperties
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetFeatureIDs() []string {
-	if l == nil {
-		return nil
-	}
-	return l.FeatureIDs
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetIDs() []string {
-	if l == nil {
-		return nil
-	}
-	return l.IDs
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetLimit() *int {
-	if l == nil {
-		return nil
-	}
-	return l.Limit
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetMonetizedSubscriptions() *bool {
-	if l == nil {
-		return nil
-	}
-	return l.MonetizedSubscriptions
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetOffset() *int {
-	if l == nil {
-		return nil
-	}
-	return l.Offset
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetPlanIDs() []string {
-	if l == nil {
-		return nil
-	}
-	return l.PlanIDs
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetQ() *string {
-	if l == nil {
-		return nil
-	}
-	return l.Q
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetSortOrderColumn() *string {
-	if l == nil {
-		return nil
-	}
-	return l.SortOrderColumn
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetSortOrderDirection() *SortDirection {
-	if l == nil {
-		return nil
-	}
-	return l.SortOrderDirection
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetSubscriptionStatuses() []SubscriptionStatus {
-	if l == nil {
-		return nil
-	}
-	return l.SubscriptionStatuses
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetSubscriptionTypes() []SubscriptionType {
-	if l == nil {
-		return nil
-	}
-	return l.SubscriptionTypes
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetWithoutPlan() *bool {
-	if l == nil {
-		return nil
-	}
-	return l.WithoutPlan
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetWithoutSubscription() *bool {
-	if l == nil {
-		return nil
-	}
-	return l.WithoutSubscription
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) GetExtraProperties() map[string]interface{} {
-	return l.extraProperties
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
-	}
-	l.explicitFields.Or(l.explicitFields, field)
-}
-
-// SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetCreditTypeIDs(creditTypeIDs []string) {
-	l.CreditTypeIDs = creditTypeIDs
-	l.require(listCompaniesForAdvancedFilterParamsFieldCreditTypeIDs)
-}
-
-// SetDisplayProperties sets the DisplayProperties field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetDisplayProperties(displayProperties []string) {
-	l.DisplayProperties = displayProperties
-	l.require(listCompaniesForAdvancedFilterParamsFieldDisplayProperties)
-}
-
-// SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetFeatureIDs(featureIDs []string) {
-	l.FeatureIDs = featureIDs
-	l.require(listCompaniesForAdvancedFilterParamsFieldFeatureIDs)
-}
-
-// SetIDs sets the IDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetIDs(ids []string) {
-	l.IDs = ids
-	l.require(listCompaniesForAdvancedFilterParamsFieldIDs)
-}
-
-// SetLimit sets the Limit field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetLimit(limit *int) {
-	l.Limit = limit
-	l.require(listCompaniesForAdvancedFilterParamsFieldLimit)
-}
-
-// SetMonetizedSubscriptions sets the MonetizedSubscriptions field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetMonetizedSubscriptions(monetizedSubscriptions *bool) {
-	l.MonetizedSubscriptions = monetizedSubscriptions
-	l.require(listCompaniesForAdvancedFilterParamsFieldMonetizedSubscriptions)
-}
-
-// SetOffset sets the Offset field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetOffset(offset *int) {
-	l.Offset = offset
-	l.require(listCompaniesForAdvancedFilterParamsFieldOffset)
-}
-
-// SetPlanIDs sets the PlanIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetPlanIDs(planIDs []string) {
-	l.PlanIDs = planIDs
-	l.require(listCompaniesForAdvancedFilterParamsFieldPlanIDs)
-}
-
-// SetQ sets the Q field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetQ(q *string) {
-	l.Q = q
-	l.require(listCompaniesForAdvancedFilterParamsFieldQ)
-}
-
-// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetSortOrderColumn(sortOrderColumn *string) {
-	l.SortOrderColumn = sortOrderColumn
-	l.require(listCompaniesForAdvancedFilterParamsFieldSortOrderColumn)
-}
-
-// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetSortOrderDirection(sortOrderDirection *SortDirection) {
-	l.SortOrderDirection = sortOrderDirection
-	l.require(listCompaniesForAdvancedFilterParamsFieldSortOrderDirection)
-}
-
-// SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetSubscriptionStatuses(subscriptionStatuses []SubscriptionStatus) {
-	l.SubscriptionStatuses = subscriptionStatuses
-	l.require(listCompaniesForAdvancedFilterParamsFieldSubscriptionStatuses)
-}
-
-// SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetSubscriptionTypes(subscriptionTypes []SubscriptionType) {
-	l.SubscriptionTypes = subscriptionTypes
-	l.require(listCompaniesForAdvancedFilterParamsFieldSubscriptionTypes)
-}
-
-// SetWithoutPlan sets the WithoutPlan field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetWithoutPlan(withoutPlan *bool) {
-	l.WithoutPlan = withoutPlan
-	l.require(listCompaniesForAdvancedFilterParamsFieldWithoutPlan)
-}
-
-// SetWithoutSubscription sets the WithoutSubscription field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterParams) SetWithoutSubscription(withoutSubscription *bool) {
-	l.WithoutSubscription = withoutSubscription
-	l.require(listCompaniesForAdvancedFilterParamsFieldWithoutSubscription)
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) UnmarshalJSON(data []byte) error {
-	type unmarshaler ListCompaniesForAdvancedFilterParams
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*l = ListCompaniesForAdvancedFilterParams(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *l)
-	if err != nil {
-		return err
-	}
-	l.extraProperties = extraProperties
-	l.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) MarshalJSON() ([]byte, error) {
-	type embed ListCompaniesForAdvancedFilterParams
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*l),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (l *ListCompaniesForAdvancedFilterParams) String() string {
-	if len(l.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(l); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", l)
-}
-
-var (
-	listCompaniesForAdvancedFilterResponseFieldData   = big.NewInt(1 << 0)
-	listCompaniesForAdvancedFilterResponseFieldParams = big.NewInt(1 << 1)
-)
-
-type ListCompaniesForAdvancedFilterResponse struct {
-	Data []*CompanyViewWithFeatureUsageResponseData `json:"data" url:"data"`
-	// Input parameters
-	Params *ListCompaniesForAdvancedFilterParams `json:"params" url:"params"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (l *ListCompaniesForAdvancedFilterResponse) GetData() []*CompanyViewWithFeatureUsageResponseData {
-	if l == nil {
-		return nil
-	}
-	return l.Data
-}
-
-func (l *ListCompaniesForAdvancedFilterResponse) GetParams() *ListCompaniesForAdvancedFilterParams {
-	if l == nil {
-		return nil
-	}
-	return l.Params
-}
-
-func (l *ListCompaniesForAdvancedFilterResponse) GetExtraProperties() map[string]interface{} {
-	return l.extraProperties
-}
-
-func (l *ListCompaniesForAdvancedFilterResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
-	}
-	l.explicitFields.Or(l.explicitFields, field)
-}
-
-// SetData sets the Data field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterResponse) SetData(data []*CompanyViewWithFeatureUsageResponseData) {
-	l.Data = data
-	l.require(listCompaniesForAdvancedFilterResponseFieldData)
-}
-
-// SetParams sets the Params field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesForAdvancedFilterResponse) SetParams(params *ListCompaniesForAdvancedFilterParams) {
-	l.Params = params
-	l.require(listCompaniesForAdvancedFilterResponseFieldParams)
-}
-
-func (l *ListCompaniesForAdvancedFilterResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler ListCompaniesForAdvancedFilterResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*l = ListCompaniesForAdvancedFilterResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *l)
-	if err != nil {
-		return err
-	}
-	l.extraProperties = extraProperties
-	l.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (l *ListCompaniesForAdvancedFilterResponse) MarshalJSON() ([]byte, error) {
-	type embed ListCompaniesForAdvancedFilterResponse
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*l),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (l *ListCompaniesForAdvancedFilterResponse) String() string {
-	if len(l.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(l); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", l)
-}
-
-// Input parameters
-var (
-	listCompaniesParamsFieldIDs                       = big.NewInt(1 << 0)
-	listCompaniesParamsFieldLimit                     = big.NewInt(1 << 1)
-	listCompaniesParamsFieldOffset                    = big.NewInt(1 << 2)
-	listCompaniesParamsFieldPlanID                    = big.NewInt(1 << 3)
-	listCompaniesParamsFieldQ                         = big.NewInt(1 << 4)
-	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 5)
-	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 6)
-	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 7)
-)
-
-type ListCompaniesParams struct {
-	// Filter companies by multiple company IDs (starts with comp_)
-	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
-	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
-	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter companies by plan ID (starts with plan_)
-	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	// Search for companies by name, keys or string traits
-	Q *string `json:"q,omitempty" url:"q,omitempty"`
-	// Filter companies that have a subscription
-	WithSubscription *bool `json:"with_subscription,omitempty" url:"with_subscription,omitempty"`
-	// Filter out companies that already have a company override for the specified feature ID
-	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
-	// Filter out companies that have a plan
-	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
 }
 
 func (l *ListCompaniesParams) GetIDs() []string {
@@ -9045,6 +7321,13 @@ func (l *ListCompaniesParams) GetLimit() *int {
 	return l.Limit
 }
 
+func (l *ListCompaniesParams) GetMonetizedSubscriptions() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.MonetizedSubscriptions
+}
+
 func (l *ListCompaniesParams) GetOffset() *int {
 	if l == nil {
 		return nil
@@ -9059,11 +7342,60 @@ func (l *ListCompaniesParams) GetPlanID() *string {
 	return l.PlanID
 }
 
+func (l *ListCompaniesParams) GetPlanIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanIDs
+}
+
+func (l *ListCompaniesParams) GetPlanVersionID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionID
+}
+
 func (l *ListCompaniesParams) GetQ() *string {
 	if l == nil {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListCompaniesParams) GetSortOrderColumn() *string {
+	if l == nil {
+		return nil
+	}
+	return l.SortOrderColumn
+}
+
+func (l *ListCompaniesParams) GetSortOrderDirection() *SortDirection {
+	if l == nil {
+		return nil
+	}
+	return l.SortOrderDirection
+}
+
+func (l *ListCompaniesParams) GetSubscriptionStatuses() []SubscriptionStatus {
+	if l == nil {
+		return nil
+	}
+	return l.SubscriptionStatuses
+}
+
+func (l *ListCompaniesParams) GetSubscriptionTypes() []SubscriptionType {
+	if l == nil {
+		return nil
+	}
+	return l.SubscriptionTypes
+}
+
+func (l *ListCompaniesParams) GetWithEntitlementFor() *string {
+	if l == nil {
+		return nil
+	}
+	return l.WithEntitlementFor
 }
 
 func (l *ListCompaniesParams) GetWithSubscription() *bool {
@@ -9087,6 +7419,13 @@ func (l *ListCompaniesParams) GetWithoutPlan() *bool {
 	return l.WithoutPlan
 }
 
+func (l *ListCompaniesParams) GetWithoutSubscription() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutSubscription
+}
+
 func (l *ListCompaniesParams) GetExtraProperties() map[string]interface{} {
 	return l.extraProperties
 }
@@ -9096,6 +7435,13 @@ func (l *ListCompaniesParams) require(field *big.Int) {
 		l.explicitFields = big.NewInt(0)
 	}
 	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetCreditTypeIDs(creditTypeIDs []string) {
+	l.CreditTypeIDs = creditTypeIDs
+	l.require(listCompaniesParamsFieldCreditTypeIDs)
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -9112,6 +7458,13 @@ func (l *ListCompaniesParams) SetLimit(limit *int) {
 	l.require(listCompaniesParamsFieldLimit)
 }
 
+// SetMonetizedSubscriptions sets the MonetizedSubscriptions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetMonetizedSubscriptions(monetizedSubscriptions *bool) {
+	l.MonetizedSubscriptions = monetizedSubscriptions
+	l.require(listCompaniesParamsFieldMonetizedSubscriptions)
+}
+
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListCompaniesParams) SetOffset(offset *int) {
@@ -9126,11 +7479,60 @@ func (l *ListCompaniesParams) SetPlanID(planID *string) {
 	l.require(listCompaniesParamsFieldPlanID)
 }
 
+// SetPlanIDs sets the PlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetPlanIDs(planIDs []string) {
+	l.PlanIDs = planIDs
+	l.require(listCompaniesParamsFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listCompaniesParamsFieldPlanVersionID)
+}
+
 // SetQ sets the Q field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListCompaniesParams) SetQ(q *string) {
 	l.Q = q
 	l.require(listCompaniesParamsFieldQ)
+}
+
+// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetSortOrderColumn(sortOrderColumn *string) {
+	l.SortOrderColumn = sortOrderColumn
+	l.require(listCompaniesParamsFieldSortOrderColumn)
+}
+
+// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetSortOrderDirection(sortOrderDirection *SortDirection) {
+	l.SortOrderDirection = sortOrderDirection
+	l.require(listCompaniesParamsFieldSortOrderDirection)
+}
+
+// SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetSubscriptionStatuses(subscriptionStatuses []SubscriptionStatus) {
+	l.SubscriptionStatuses = subscriptionStatuses
+	l.require(listCompaniesParamsFieldSubscriptionStatuses)
+}
+
+// SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetSubscriptionTypes(subscriptionTypes []SubscriptionType) {
+	l.SubscriptionTypes = subscriptionTypes
+	l.require(listCompaniesParamsFieldSubscriptionTypes)
+}
+
+// SetWithEntitlementFor sets the WithEntitlementFor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetWithEntitlementFor(withEntitlementFor *string) {
+	l.WithEntitlementFor = withEntitlementFor
+	l.require(listCompaniesParamsFieldWithEntitlementFor)
 }
 
 // SetWithSubscription sets the WithSubscription field and marks it as non-optional;
@@ -9152,6 +7554,13 @@ func (l *ListCompaniesParams) SetWithoutFeatureOverrideFor(withoutFeatureOverrid
 func (l *ListCompaniesParams) SetWithoutPlan(withoutPlan *bool) {
 	l.WithoutPlan = withoutPlan
 	l.require(listCompaniesParamsFieldWithoutPlan)
+}
+
+// SetWithoutSubscription sets the WithoutSubscription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetWithoutSubscription(withoutSubscription *bool) {
+	l.WithoutSubscription = withoutSubscription
+	l.require(listCompaniesParamsFieldWithoutSubscription)
 }
 
 func (l *ListCompaniesParams) UnmarshalJSON(data []byte) error {

@@ -119,19 +119,21 @@ func (c *CountBillingCreditsGrantsRequest) SetOffset(offset *int) {
 }
 
 var (
-	countBillingPlanCreditGrantsRequestFieldCreditID = big.NewInt(1 << 0)
-	countBillingPlanCreditGrantsRequestFieldPlanID   = big.NewInt(1 << 1)
-	countBillingPlanCreditGrantsRequestFieldPlanIDs  = big.NewInt(1 << 2)
-	countBillingPlanCreditGrantsRequestFieldIDs      = big.NewInt(1 << 3)
-	countBillingPlanCreditGrantsRequestFieldLimit    = big.NewInt(1 << 4)
-	countBillingPlanCreditGrantsRequestFieldOffset   = big.NewInt(1 << 5)
+	countBillingPlanCreditGrantsRequestFieldCreditID      = big.NewInt(1 << 0)
+	countBillingPlanCreditGrantsRequestFieldIDs           = big.NewInt(1 << 1)
+	countBillingPlanCreditGrantsRequestFieldPlanID        = big.NewInt(1 << 2)
+	countBillingPlanCreditGrantsRequestFieldPlanIDs       = big.NewInt(1 << 3)
+	countBillingPlanCreditGrantsRequestFieldPlanVersionID = big.NewInt(1 << 4)
+	countBillingPlanCreditGrantsRequestFieldLimit         = big.NewInt(1 << 5)
+	countBillingPlanCreditGrantsRequestFieldOffset        = big.NewInt(1 << 6)
 )
 
 type CountBillingPlanCreditGrantsRequest struct {
-	CreditID *string   `json:"-" url:"credit_id,omitempty"`
-	PlanID   *string   `json:"-" url:"plan_id,omitempty"`
-	PlanIDs  []*string `json:"-" url:"plan_ids,omitempty"`
-	IDs      []*string `json:"-" url:"ids,omitempty"`
+	CreditID      *string   `json:"-" url:"credit_id,omitempty"`
+	IDs           []*string `json:"-" url:"ids,omitempty"`
+	PlanID        *string   `json:"-" url:"plan_id,omitempty"`
+	PlanIDs       []*string `json:"-" url:"plan_ids,omitempty"`
+	PlanVersionID *string   `json:"-" url:"plan_version_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -155,6 +157,13 @@ func (c *CountBillingPlanCreditGrantsRequest) SetCreditID(creditID *string) {
 	c.require(countBillingPlanCreditGrantsRequestFieldCreditID)
 }
 
+// SetIDs sets the IDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingPlanCreditGrantsRequest) SetIDs(ids []*string) {
+	c.IDs = ids
+	c.require(countBillingPlanCreditGrantsRequestFieldIDs)
+}
+
 // SetPlanID sets the PlanID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountBillingPlanCreditGrantsRequest) SetPlanID(planID *string) {
@@ -169,11 +178,11 @@ func (c *CountBillingPlanCreditGrantsRequest) SetPlanIDs(planIDs []*string) {
 	c.require(countBillingPlanCreditGrantsRequestFieldPlanIDs)
 }
 
-// SetIDs sets the IDs field and marks it as non-optional;
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingPlanCreditGrantsRequest) SetIDs(ids []*string) {
-	c.IDs = ids
-	c.require(countBillingPlanCreditGrantsRequestFieldIDs)
+func (c *CountBillingPlanCreditGrantsRequest) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(countBillingPlanCreditGrantsRequestFieldPlanVersionID)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -962,19 +971,21 @@ func (l *ListBillingCreditsRequest) SetOffset(offset *int) {
 }
 
 var (
-	listBillingPlanCreditGrantsRequestFieldCreditID = big.NewInt(1 << 0)
-	listBillingPlanCreditGrantsRequestFieldPlanID   = big.NewInt(1 << 1)
-	listBillingPlanCreditGrantsRequestFieldPlanIDs  = big.NewInt(1 << 2)
-	listBillingPlanCreditGrantsRequestFieldIDs      = big.NewInt(1 << 3)
-	listBillingPlanCreditGrantsRequestFieldLimit    = big.NewInt(1 << 4)
-	listBillingPlanCreditGrantsRequestFieldOffset   = big.NewInt(1 << 5)
+	listBillingPlanCreditGrantsRequestFieldCreditID      = big.NewInt(1 << 0)
+	listBillingPlanCreditGrantsRequestFieldIDs           = big.NewInt(1 << 1)
+	listBillingPlanCreditGrantsRequestFieldPlanID        = big.NewInt(1 << 2)
+	listBillingPlanCreditGrantsRequestFieldPlanIDs       = big.NewInt(1 << 3)
+	listBillingPlanCreditGrantsRequestFieldPlanVersionID = big.NewInt(1 << 4)
+	listBillingPlanCreditGrantsRequestFieldLimit         = big.NewInt(1 << 5)
+	listBillingPlanCreditGrantsRequestFieldOffset        = big.NewInt(1 << 6)
 )
 
 type ListBillingPlanCreditGrantsRequest struct {
-	CreditID *string   `json:"-" url:"credit_id,omitempty"`
-	PlanID   *string   `json:"-" url:"plan_id,omitempty"`
-	PlanIDs  []*string `json:"-" url:"plan_ids,omitempty"`
-	IDs      []*string `json:"-" url:"ids,omitempty"`
+	CreditID      *string   `json:"-" url:"credit_id,omitempty"`
+	IDs           []*string `json:"-" url:"ids,omitempty"`
+	PlanID        *string   `json:"-" url:"plan_id,omitempty"`
+	PlanIDs       []*string `json:"-" url:"plan_ids,omitempty"`
+	PlanVersionID *string   `json:"-" url:"plan_version_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -998,6 +1009,13 @@ func (l *ListBillingPlanCreditGrantsRequest) SetCreditID(creditID *string) {
 	l.require(listBillingPlanCreditGrantsRequestFieldCreditID)
 }
 
+// SetIDs sets the IDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingPlanCreditGrantsRequest) SetIDs(ids []*string) {
+	l.IDs = ids
+	l.require(listBillingPlanCreditGrantsRequestFieldIDs)
+}
+
 // SetPlanID sets the PlanID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListBillingPlanCreditGrantsRequest) SetPlanID(planID *string) {
@@ -1012,11 +1030,11 @@ func (l *ListBillingPlanCreditGrantsRequest) SetPlanIDs(planIDs []*string) {
 	l.require(listBillingPlanCreditGrantsRequestFieldPlanIDs)
 }
 
-// SetIDs sets the IDs field and marks it as non-optional;
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPlanCreditGrantsRequest) SetIDs(ids []*string) {
-	l.IDs = ids
-	l.require(listBillingPlanCreditGrantsRequestFieldIDs)
+func (l *ListBillingPlanCreditGrantsRequest) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listBillingPlanCreditGrantsRequestFieldPlanVersionID)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -3172,12 +3190,13 @@ func (c *CountBillingCreditsResponse) String() string {
 
 // Input parameters
 var (
-	countBillingPlanCreditGrantsParamsFieldCreditID = big.NewInt(1 << 0)
-	countBillingPlanCreditGrantsParamsFieldIDs      = big.NewInt(1 << 1)
-	countBillingPlanCreditGrantsParamsFieldLimit    = big.NewInt(1 << 2)
-	countBillingPlanCreditGrantsParamsFieldOffset   = big.NewInt(1 << 3)
-	countBillingPlanCreditGrantsParamsFieldPlanID   = big.NewInt(1 << 4)
-	countBillingPlanCreditGrantsParamsFieldPlanIDs  = big.NewInt(1 << 5)
+	countBillingPlanCreditGrantsParamsFieldCreditID      = big.NewInt(1 << 0)
+	countBillingPlanCreditGrantsParamsFieldIDs           = big.NewInt(1 << 1)
+	countBillingPlanCreditGrantsParamsFieldLimit         = big.NewInt(1 << 2)
+	countBillingPlanCreditGrantsParamsFieldOffset        = big.NewInt(1 << 3)
+	countBillingPlanCreditGrantsParamsFieldPlanID        = big.NewInt(1 << 4)
+	countBillingPlanCreditGrantsParamsFieldPlanIDs       = big.NewInt(1 << 5)
+	countBillingPlanCreditGrantsParamsFieldPlanVersionID = big.NewInt(1 << 6)
 )
 
 type CountBillingPlanCreditGrantsParams struct {
@@ -3186,9 +3205,10 @@ type CountBillingPlanCreditGrantsParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset  *int     `json:"offset,omitempty" url:"offset,omitempty"`
-	PlanID  *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	Offset        *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	PlanID        *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanIDs       []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	PlanVersionID *string  `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3237,6 +3257,13 @@ func (c *CountBillingPlanCreditGrantsParams) GetPlanIDs() []string {
 		return nil
 	}
 	return c.PlanIDs
+}
+
+func (c *CountBillingPlanCreditGrantsParams) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
 }
 
 func (c *CountBillingPlanCreditGrantsParams) GetExtraProperties() map[string]interface{} {
@@ -3290,6 +3317,13 @@ func (c *CountBillingPlanCreditGrantsParams) SetPlanID(planID *string) {
 func (c *CountBillingPlanCreditGrantsParams) SetPlanIDs(planIDs []string) {
 	c.PlanIDs = planIDs
 	c.require(countBillingPlanCreditGrantsParamsFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingPlanCreditGrantsParams) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(countBillingPlanCreditGrantsParamsFieldPlanVersionID)
 }
 
 func (c *CountBillingPlanCreditGrantsParams) UnmarshalJSON(data []byte) error {
@@ -5556,12 +5590,13 @@ func (l *ListBillingCreditsResponse) String() string {
 
 // Input parameters
 var (
-	listBillingPlanCreditGrantsParamsFieldCreditID = big.NewInt(1 << 0)
-	listBillingPlanCreditGrantsParamsFieldIDs      = big.NewInt(1 << 1)
-	listBillingPlanCreditGrantsParamsFieldLimit    = big.NewInt(1 << 2)
-	listBillingPlanCreditGrantsParamsFieldOffset   = big.NewInt(1 << 3)
-	listBillingPlanCreditGrantsParamsFieldPlanID   = big.NewInt(1 << 4)
-	listBillingPlanCreditGrantsParamsFieldPlanIDs  = big.NewInt(1 << 5)
+	listBillingPlanCreditGrantsParamsFieldCreditID      = big.NewInt(1 << 0)
+	listBillingPlanCreditGrantsParamsFieldIDs           = big.NewInt(1 << 1)
+	listBillingPlanCreditGrantsParamsFieldLimit         = big.NewInt(1 << 2)
+	listBillingPlanCreditGrantsParamsFieldOffset        = big.NewInt(1 << 3)
+	listBillingPlanCreditGrantsParamsFieldPlanID        = big.NewInt(1 << 4)
+	listBillingPlanCreditGrantsParamsFieldPlanIDs       = big.NewInt(1 << 5)
+	listBillingPlanCreditGrantsParamsFieldPlanVersionID = big.NewInt(1 << 6)
 )
 
 type ListBillingPlanCreditGrantsParams struct {
@@ -5570,9 +5605,10 @@ type ListBillingPlanCreditGrantsParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset  *int     `json:"offset,omitempty" url:"offset,omitempty"`
-	PlanID  *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	Offset        *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	PlanID        *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanIDs       []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	PlanVersionID *string  `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5621,6 +5657,13 @@ func (l *ListBillingPlanCreditGrantsParams) GetPlanIDs() []string {
 		return nil
 	}
 	return l.PlanIDs
+}
+
+func (l *ListBillingPlanCreditGrantsParams) GetPlanVersionID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionID
 }
 
 func (l *ListBillingPlanCreditGrantsParams) GetExtraProperties() map[string]interface{} {
@@ -5674,6 +5717,13 @@ func (l *ListBillingPlanCreditGrantsParams) SetPlanID(planID *string) {
 func (l *ListBillingPlanCreditGrantsParams) SetPlanIDs(planIDs []string) {
 	l.PlanIDs = planIDs
 	l.require(listBillingPlanCreditGrantsParamsFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingPlanCreditGrantsParams) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listBillingPlanCreditGrantsParamsFieldPlanVersionID)
 }
 
 func (l *ListBillingPlanCreditGrantsParams) UnmarshalJSON(data []byte) error {

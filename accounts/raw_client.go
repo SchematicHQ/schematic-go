@@ -307,18 +307,18 @@ func (r *RawClient) CountAPIKeys(
 	}, nil
 }
 
-func (r *RawClient) ListAPIRequests(
+func (r *RawClient) ListAuditLogs(
 	ctx context.Context,
-	request *schematichq.ListAPIRequestsRequest,
+	request *schematichq.ListAuditLogsRequest,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.ListAPIRequestsResponse], error) {
+) (*core.Response[*schematichq.ListAuditLogsResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		r.baseURL,
 		"https://api.schematichq.com",
 	)
-	endpointURL := baseURL + "/api-requests"
+	endpointURL := baseURL + "/audit-log"
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {
 		return nil, err
@@ -330,7 +330,7 @@ func (r *RawClient) ListAPIRequests(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	var response *schematichq.ListAPIRequestsResponse
+	var response *schematichq.ListAuditLogsResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -348,19 +348,19 @@ func (r *RawClient) ListAPIRequests(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.ListAPIRequestsResponse]{
+	return &core.Response[*schematichq.ListAuditLogsResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,
 	}, nil
 }
 
-func (r *RawClient) GetAPIRequest(
+func (r *RawClient) GetAuditLog(
 	ctx context.Context,
-	// api_request_id
-	apiRequestID string,
+	// audit_log_id
+	auditLogID string,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.GetAPIRequestResponse], error) {
+) (*core.Response[*schematichq.GetAuditLogResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -368,14 +368,14 @@ func (r *RawClient) GetAPIRequest(
 		"https://api.schematichq.com",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/api-requests/%v",
-		apiRequestID,
+		baseURL+"/audit-log/%v",
+		auditLogID,
 	)
 	headers := internal.MergeHeaders(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	var response *schematichq.GetAPIRequestResponse
+	var response *schematichq.GetAuditLogResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -393,25 +393,25 @@ func (r *RawClient) GetAPIRequest(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.GetAPIRequestResponse]{
+	return &core.Response[*schematichq.GetAuditLogResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,
 	}, nil
 }
 
-func (r *RawClient) CountAPIRequests(
+func (r *RawClient) CountAuditLogs(
 	ctx context.Context,
-	request *schematichq.CountAPIRequestsRequest,
+	request *schematichq.CountAuditLogsRequest,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.CountAPIRequestsResponse], error) {
+) (*core.Response[*schematichq.CountAuditLogsResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		r.baseURL,
 		"https://api.schematichq.com",
 	)
-	endpointURL := baseURL + "/api-requests/count"
+	endpointURL := baseURL + "/audit-log/count"
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {
 		return nil, err
@@ -423,7 +423,7 @@ func (r *RawClient) CountAPIRequests(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	var response *schematichq.CountAPIRequestsResponse
+	var response *schematichq.CountAuditLogsResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -441,7 +441,7 @@ func (r *RawClient) CountAPIRequests(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.CountAPIRequestsResponse]{
+	return &core.Response[*schematichq.CountAuditLogsResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,
@@ -711,6 +711,46 @@ func (r *RawClient) Quickstart(
 		return nil, err
 	}
 	return &core.Response[*schematichq.QuickstartResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
+func (r *RawClient) GetWhoAmI(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.GetWhoAmIResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := baseURL + "/whoami"
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	var response *schematichq.GetWhoAmIResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.GetWhoAmIResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,

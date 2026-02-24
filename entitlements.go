@@ -321,10 +321,12 @@ var (
 	countPlanEntitlementsRequestFieldIDs                 = big.NewInt(1 << 2)
 	countPlanEntitlementsRequestFieldPlanID              = big.NewInt(1 << 3)
 	countPlanEntitlementsRequestFieldPlanIDs             = big.NewInt(1 << 4)
-	countPlanEntitlementsRequestFieldQ                   = big.NewInt(1 << 5)
-	countPlanEntitlementsRequestFieldWithMeteredProducts = big.NewInt(1 << 6)
-	countPlanEntitlementsRequestFieldLimit               = big.NewInt(1 << 7)
-	countPlanEntitlementsRequestFieldOffset              = big.NewInt(1 << 8)
+	countPlanEntitlementsRequestFieldPlanVersionID       = big.NewInt(1 << 5)
+	countPlanEntitlementsRequestFieldPlanVersionIDs      = big.NewInt(1 << 6)
+	countPlanEntitlementsRequestFieldQ                   = big.NewInt(1 << 7)
+	countPlanEntitlementsRequestFieldWithMeteredProducts = big.NewInt(1 << 8)
+	countPlanEntitlementsRequestFieldLimit               = big.NewInt(1 << 9)
+	countPlanEntitlementsRequestFieldOffset              = big.NewInt(1 << 10)
 )
 
 type CountPlanEntitlementsRequest struct {
@@ -338,6 +340,10 @@ type CountPlanEntitlementsRequest struct {
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
 	// Filter plan entitlements by multiple plan IDs (starting with plan_)
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
+	// Filter plan entitlements by a single plan version ID (starting with plvr_)
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
+	// Filter plan entitlements by multiple plan version IDs (starting with plvr_)
+	PlanVersionIDs []*string `json:"-" url:"plan_version_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
 	// Filter plan entitlements only with metered products
@@ -391,6 +397,20 @@ func (c *CountPlanEntitlementsRequest) SetPlanID(planID *string) {
 func (c *CountPlanEntitlementsRequest) SetPlanIDs(planIDs []*string) {
 	c.PlanIDs = planIDs
 	c.require(countPlanEntitlementsRequestFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlanEntitlementsRequest) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(countPlanEntitlementsRequestFieldPlanVersionID)
+}
+
+// SetPlanVersionIDs sets the PlanVersionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlanEntitlementsRequest) SetPlanVersionIDs(planVersionIDs []*string) {
+	c.PlanVersionIDs = planVersionIDs
+	c.require(countPlanEntitlementsRequestFieldPlanVersionIDs)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -582,19 +602,20 @@ var (
 	createPlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 10)
 	createPlanEntitlementRequestBodyFieldOverageBillingProductID = big.NewInt(1 << 11)
 	createPlanEntitlementRequestBodyFieldPlanID                  = big.NewInt(1 << 12)
-	createPlanEntitlementRequestBodyFieldPriceBehavior           = big.NewInt(1 << 13)
-	createPlanEntitlementRequestBodyFieldPriceTiers              = big.NewInt(1 << 14)
-	createPlanEntitlementRequestBodyFieldSoftLimit               = big.NewInt(1 << 15)
-	createPlanEntitlementRequestBodyFieldTierMode                = big.NewInt(1 << 16)
-	createPlanEntitlementRequestBodyFieldValueBool               = big.NewInt(1 << 17)
-	createPlanEntitlementRequestBodyFieldValueCreditID           = big.NewInt(1 << 18)
-	createPlanEntitlementRequestBodyFieldValueNumeric            = big.NewInt(1 << 19)
-	createPlanEntitlementRequestBodyFieldValueTraitID            = big.NewInt(1 << 20)
-	createPlanEntitlementRequestBodyFieldValueType               = big.NewInt(1 << 21)
-	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 22)
-	createPlanEntitlementRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 23)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 24)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 25)
+	createPlanEntitlementRequestBodyFieldPlanVersionID           = big.NewInt(1 << 13)
+	createPlanEntitlementRequestBodyFieldPriceBehavior           = big.NewInt(1 << 14)
+	createPlanEntitlementRequestBodyFieldPriceTiers              = big.NewInt(1 << 15)
+	createPlanEntitlementRequestBodyFieldSoftLimit               = big.NewInt(1 << 16)
+	createPlanEntitlementRequestBodyFieldTierMode                = big.NewInt(1 << 17)
+	createPlanEntitlementRequestBodyFieldValueBool               = big.NewInt(1 << 18)
+	createPlanEntitlementRequestBodyFieldValueCreditID           = big.NewInt(1 << 19)
+	createPlanEntitlementRequestBodyFieldValueNumeric            = big.NewInt(1 << 20)
+	createPlanEntitlementRequestBodyFieldValueTraitID            = big.NewInt(1 << 21)
+	createPlanEntitlementRequestBodyFieldValueType               = big.NewInt(1 << 22)
+	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 23)
+	createPlanEntitlementRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 24)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 25)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 26)
 )
 
 type CreatePlanEntitlementRequestBody struct {
@@ -611,6 +632,7 @@ type CreatePlanEntitlementRequestBody struct {
 	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
 	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
 	PlanID                  string                                                  `json:"plan_id" url:"-"`
+	PlanVersionID           *string                                                 `json:"plan_version_id,omitempty" url:"-"`
 	PriceBehavior           *EntitlementPriceBehavior                               `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
@@ -726,6 +748,13 @@ func (c *CreatePlanEntitlementRequestBody) SetOverageBillingProductID(overageBil
 func (c *CreatePlanEntitlementRequestBody) SetPlanID(planID string) {
 	c.PlanID = planID
 	c.require(createPlanEntitlementRequestBodyFieldPlanID)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanEntitlementRequestBody) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(createPlanEntitlementRequestBodyFieldPlanVersionID)
 }
 
 // SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
@@ -1251,10 +1280,12 @@ var (
 	listPlanEntitlementsRequestFieldIDs                 = big.NewInt(1 << 2)
 	listPlanEntitlementsRequestFieldPlanID              = big.NewInt(1 << 3)
 	listPlanEntitlementsRequestFieldPlanIDs             = big.NewInt(1 << 4)
-	listPlanEntitlementsRequestFieldQ                   = big.NewInt(1 << 5)
-	listPlanEntitlementsRequestFieldWithMeteredProducts = big.NewInt(1 << 6)
-	listPlanEntitlementsRequestFieldLimit               = big.NewInt(1 << 7)
-	listPlanEntitlementsRequestFieldOffset              = big.NewInt(1 << 8)
+	listPlanEntitlementsRequestFieldPlanVersionID       = big.NewInt(1 << 5)
+	listPlanEntitlementsRequestFieldPlanVersionIDs      = big.NewInt(1 << 6)
+	listPlanEntitlementsRequestFieldQ                   = big.NewInt(1 << 7)
+	listPlanEntitlementsRequestFieldWithMeteredProducts = big.NewInt(1 << 8)
+	listPlanEntitlementsRequestFieldLimit               = big.NewInt(1 << 9)
+	listPlanEntitlementsRequestFieldOffset              = big.NewInt(1 << 10)
 )
 
 type ListPlanEntitlementsRequest struct {
@@ -1268,6 +1299,10 @@ type ListPlanEntitlementsRequest struct {
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
 	// Filter plan entitlements by multiple plan IDs (starting with plan_)
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
+	// Filter plan entitlements by a single plan version ID (starting with plvr_)
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
+	// Filter plan entitlements by multiple plan version IDs (starting with plvr_)
+	PlanVersionIDs []*string `json:"-" url:"plan_version_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
 	// Filter plan entitlements only with metered products
@@ -1321,6 +1356,20 @@ func (l *ListPlanEntitlementsRequest) SetPlanID(planID *string) {
 func (l *ListPlanEntitlementsRequest) SetPlanIDs(planIDs []*string) {
 	l.PlanIDs = planIDs
 	l.require(listPlanEntitlementsRequestFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlanEntitlementsRequest) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listPlanEntitlementsRequestFieldPlanVersionID)
+}
+
+// SetPlanVersionIDs sets the PlanVersionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlanEntitlementsRequest) SetPlanVersionIDs(planVersionIDs []*string) {
+	l.PlanVersionIDs = planVersionIDs
+	l.require(listPlanEntitlementsRequestFieldPlanVersionIDs)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -4341,8 +4390,10 @@ var (
 	countPlanEntitlementsParamsFieldOffset              = big.NewInt(1 << 4)
 	countPlanEntitlementsParamsFieldPlanID              = big.NewInt(1 << 5)
 	countPlanEntitlementsParamsFieldPlanIDs             = big.NewInt(1 << 6)
-	countPlanEntitlementsParamsFieldQ                   = big.NewInt(1 << 7)
-	countPlanEntitlementsParamsFieldWithMeteredProducts = big.NewInt(1 << 8)
+	countPlanEntitlementsParamsFieldPlanVersionID       = big.NewInt(1 << 7)
+	countPlanEntitlementsParamsFieldPlanVersionIDs      = big.NewInt(1 << 8)
+	countPlanEntitlementsParamsFieldQ                   = big.NewInt(1 << 9)
+	countPlanEntitlementsParamsFieldWithMeteredProducts = big.NewInt(1 << 10)
 )
 
 type CountPlanEntitlementsParams struct {
@@ -4360,6 +4411,10 @@ type CountPlanEntitlementsParams struct {
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Filter plan entitlements by multiple plan IDs (starting with plan_)
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	// Filter plan entitlements by a single plan version ID (starting with plvr_)
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	// Filter plan entitlements by multiple plan version IDs (starting with plvr_)
+	PlanVersionIDs []string `json:"plan_version_ids,omitempty" url:"plan_version_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter plan entitlements only with metered products
@@ -4419,6 +4474,20 @@ func (c *CountPlanEntitlementsParams) GetPlanIDs() []string {
 		return nil
 	}
 	return c.PlanIDs
+}
+
+func (c *CountPlanEntitlementsParams) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
+}
+
+func (c *CountPlanEntitlementsParams) GetPlanVersionIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionIDs
 }
 
 func (c *CountPlanEntitlementsParams) GetQ() *string {
@@ -4493,6 +4562,20 @@ func (c *CountPlanEntitlementsParams) SetPlanID(planID *string) {
 func (c *CountPlanEntitlementsParams) SetPlanIDs(planIDs []string) {
 	c.PlanIDs = planIDs
 	c.require(countPlanEntitlementsParamsFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlanEntitlementsParams) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(countPlanEntitlementsParamsFieldPlanVersionID)
+}
+
+// SetPlanVersionIDs sets the PlanVersionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlanEntitlementsParams) SetPlanVersionIDs(planVersionIDs []string) {
+	c.PlanVersionIDs = planVersionIDs
+	c.require(countPlanEntitlementsParamsFieldPlanVersionIDs)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -6889,8 +6972,10 @@ var (
 	listPlanEntitlementsParamsFieldOffset              = big.NewInt(1 << 4)
 	listPlanEntitlementsParamsFieldPlanID              = big.NewInt(1 << 5)
 	listPlanEntitlementsParamsFieldPlanIDs             = big.NewInt(1 << 6)
-	listPlanEntitlementsParamsFieldQ                   = big.NewInt(1 << 7)
-	listPlanEntitlementsParamsFieldWithMeteredProducts = big.NewInt(1 << 8)
+	listPlanEntitlementsParamsFieldPlanVersionID       = big.NewInt(1 << 7)
+	listPlanEntitlementsParamsFieldPlanVersionIDs      = big.NewInt(1 << 8)
+	listPlanEntitlementsParamsFieldQ                   = big.NewInt(1 << 9)
+	listPlanEntitlementsParamsFieldWithMeteredProducts = big.NewInt(1 << 10)
 )
 
 type ListPlanEntitlementsParams struct {
@@ -6908,6 +6993,10 @@ type ListPlanEntitlementsParams struct {
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Filter plan entitlements by multiple plan IDs (starting with plan_)
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	// Filter plan entitlements by a single plan version ID (starting with plvr_)
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	// Filter plan entitlements by multiple plan version IDs (starting with plvr_)
+	PlanVersionIDs []string `json:"plan_version_ids,omitempty" url:"plan_version_ids,omitempty"`
 	// Search for plan entitlements by feature or company name
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter plan entitlements only with metered products
@@ -6967,6 +7056,20 @@ func (l *ListPlanEntitlementsParams) GetPlanIDs() []string {
 		return nil
 	}
 	return l.PlanIDs
+}
+
+func (l *ListPlanEntitlementsParams) GetPlanVersionID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionID
+}
+
+func (l *ListPlanEntitlementsParams) GetPlanVersionIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionIDs
 }
 
 func (l *ListPlanEntitlementsParams) GetQ() *string {
@@ -7041,6 +7144,20 @@ func (l *ListPlanEntitlementsParams) SetPlanID(planID *string) {
 func (l *ListPlanEntitlementsParams) SetPlanIDs(planIDs []string) {
 	l.PlanIDs = planIDs
 	l.require(listPlanEntitlementsParamsFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlanEntitlementsParams) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listPlanEntitlementsParamsFieldPlanVersionID)
+}
+
+// SetPlanVersionIDs sets the PlanVersionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlanEntitlementsParams) SetPlanVersionIDs(planVersionIDs []string) {
+	l.PlanVersionIDs = planVersionIDs
+	l.require(listPlanEntitlementsParamsFieldPlanVersionIDs)
 }
 
 // SetQ sets the Q field and marks it as non-optional;

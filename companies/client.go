@@ -116,22 +116,6 @@ func (c *Client) CountCompanies(
 	return response.Body, nil
 }
 
-func (c *Client) CountCompaniesForAdvancedFilter(
-	ctx context.Context,
-	request *schematichq.CountCompaniesForAdvancedFilterRequest,
-	opts ...option.RequestOption,
-) (*schematichq.CountCompaniesForAdvancedFilterResponse, error) {
-	response, err := c.WithRawResponse.CountCompaniesForAdvancedFilter(
-		ctx,
-		request,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
 func (c *Client) CreateCompany(
 	ctx context.Context,
 	request *schematichq.UpsertCompanyRequestBody,
@@ -154,22 +138,6 @@ func (c *Client) DeleteCompanyByKeys(
 	opts ...option.RequestOption,
 ) (*schematichq.DeleteCompanyByKeysResponse, error) {
 	response, err := c.WithRawResponse.DeleteCompanyByKeys(
-		ctx,
-		request,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
-func (c *Client) ListCompaniesForAdvancedFilter(
-	ctx context.Context,
-	request *schematichq.ListCompaniesForAdvancedFilterRequest,
-	opts ...option.RequestOption,
-) (*schematichq.ListCompaniesForAdvancedFilterResponse, error) {
-	response, err := c.WithRawResponse.ListCompaniesForAdvancedFilter(
 		ctx,
 		request,
 		opts...,

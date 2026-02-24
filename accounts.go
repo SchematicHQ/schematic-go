@@ -65,17 +65,21 @@ func (c *CountAPIKeysRequest) SetOffset(offset *int) {
 }
 
 var (
-	countAPIRequestsRequestFieldQ             = big.NewInt(1 << 0)
-	countAPIRequestsRequestFieldRequestType   = big.NewInt(1 << 1)
-	countAPIRequestsRequestFieldEnvironmentID = big.NewInt(1 << 2)
-	countAPIRequestsRequestFieldLimit         = big.NewInt(1 << 3)
-	countAPIRequestsRequestFieldOffset        = big.NewInt(1 << 4)
+	countAuditLogsRequestFieldActorType     = big.NewInt(1 << 0)
+	countAuditLogsRequestFieldEndTime       = big.NewInt(1 << 1)
+	countAuditLogsRequestFieldEnvironmentID = big.NewInt(1 << 2)
+	countAuditLogsRequestFieldQ             = big.NewInt(1 << 3)
+	countAuditLogsRequestFieldStartTime     = big.NewInt(1 << 4)
+	countAuditLogsRequestFieldLimit         = big.NewInt(1 << 5)
+	countAuditLogsRequestFieldOffset        = big.NewInt(1 << 6)
 )
 
-type CountAPIRequestsRequest struct {
-	Q             *string `json:"-" url:"q,omitempty"`
-	RequestType   *string `json:"-" url:"request_type,omitempty"`
-	EnvironmentID *string `json:"-" url:"environment_id,omitempty"`
+type CountAuditLogsRequest struct {
+	ActorType     *ActorType `json:"-" url:"actor_type,omitempty"`
+	EndTime       *time.Time `json:"-" url:"end_time,omitempty"`
+	EnvironmentID *string    `json:"-" url:"environment_id,omitempty"`
+	Q             *string    `json:"-" url:"q,omitempty"`
+	StartTime     *time.Time `json:"-" url:"start_time,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -85,58 +89,74 @@ type CountAPIRequestsRequest struct {
 	explicitFields *big.Int `json:"-" url:"-"`
 }
 
-func (c *CountAPIRequestsRequest) require(field *big.Int) {
+func (c *CountAuditLogsRequest) require(field *big.Int) {
 	if c.explicitFields == nil {
 		c.explicitFields = big.NewInt(0)
 	}
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
-// SetQ sets the Q field and marks it as non-optional;
+// SetActorType sets the ActorType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsRequest) SetQ(q *string) {
-	c.Q = q
-	c.require(countAPIRequestsRequestFieldQ)
+func (c *CountAuditLogsRequest) SetActorType(actorType *ActorType) {
+	c.ActorType = actorType
+	c.require(countAuditLogsRequestFieldActorType)
 }
 
-// SetRequestType sets the RequestType field and marks it as non-optional;
+// SetEndTime sets the EndTime field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsRequest) SetRequestType(requestType *string) {
-	c.RequestType = requestType
-	c.require(countAPIRequestsRequestFieldRequestType)
+func (c *CountAuditLogsRequest) SetEndTime(endTime *time.Time) {
+	c.EndTime = endTime
+	c.require(countAuditLogsRequestFieldEndTime)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsRequest) SetEnvironmentID(environmentID *string) {
+func (c *CountAuditLogsRequest) SetEnvironmentID(environmentID *string) {
 	c.EnvironmentID = environmentID
-	c.require(countAPIRequestsRequestFieldEnvironmentID)
+	c.require(countAuditLogsRequestFieldEnvironmentID)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAuditLogsRequest) SetQ(q *string) {
+	c.Q = q
+	c.require(countAuditLogsRequestFieldQ)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAuditLogsRequest) SetStartTime(startTime *time.Time) {
+	c.StartTime = startTime
+	c.require(countAuditLogsRequestFieldStartTime)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsRequest) SetLimit(limit *int) {
+func (c *CountAuditLogsRequest) SetLimit(limit *int) {
 	c.Limit = limit
-	c.require(countAPIRequestsRequestFieldLimit)
+	c.require(countAuditLogsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsRequest) SetOffset(offset *int) {
+func (c *CountAuditLogsRequest) SetOffset(offset *int) {
 	c.Offset = offset
-	c.require(countAPIRequestsRequestFieldOffset)
+	c.require(countAuditLogsRequestFieldOffset)
 }
 
 var (
 	createAPIKeyRequestBodyFieldDescription   = big.NewInt(1 << 0)
 	createAPIKeyRequestBodyFieldEnvironmentID = big.NewInt(1 << 1)
 	createAPIKeyRequestBodyFieldName          = big.NewInt(1 << 2)
+	createAPIKeyRequestBodyFieldReadonly      = big.NewInt(1 << 3)
 )
 
 type CreateAPIKeyRequestBody struct {
 	Description   *string `json:"description,omitempty" url:"-"`
 	EnvironmentID *string `json:"environment_id,omitempty" url:"-"`
 	Name          string  `json:"name" url:"-"`
+	Readonly      *bool   `json:"readonly,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -168,6 +188,13 @@ func (c *CreateAPIKeyRequestBody) SetEnvironmentID(environmentID *string) {
 func (c *CreateAPIKeyRequestBody) SetName(name string) {
 	c.Name = name
 	c.require(createAPIKeyRequestBodyFieldName)
+}
+
+// SetReadonly sets the Readonly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAPIKeyRequestBody) SetReadonly(readonly *bool) {
+	c.Readonly = readonly
+	c.require(createAPIKeyRequestBodyFieldReadonly)
 }
 
 var (
@@ -259,17 +286,21 @@ func (l *ListAPIKeysRequest) SetOffset(offset *int) {
 }
 
 var (
-	listAPIRequestsRequestFieldQ             = big.NewInt(1 << 0)
-	listAPIRequestsRequestFieldRequestType   = big.NewInt(1 << 1)
-	listAPIRequestsRequestFieldEnvironmentID = big.NewInt(1 << 2)
-	listAPIRequestsRequestFieldLimit         = big.NewInt(1 << 3)
-	listAPIRequestsRequestFieldOffset        = big.NewInt(1 << 4)
+	listAuditLogsRequestFieldActorType     = big.NewInt(1 << 0)
+	listAuditLogsRequestFieldEndTime       = big.NewInt(1 << 1)
+	listAuditLogsRequestFieldEnvironmentID = big.NewInt(1 << 2)
+	listAuditLogsRequestFieldQ             = big.NewInt(1 << 3)
+	listAuditLogsRequestFieldStartTime     = big.NewInt(1 << 4)
+	listAuditLogsRequestFieldLimit         = big.NewInt(1 << 5)
+	listAuditLogsRequestFieldOffset        = big.NewInt(1 << 6)
 )
 
-type ListAPIRequestsRequest struct {
-	Q             *string `json:"-" url:"q,omitempty"`
-	RequestType   *string `json:"-" url:"request_type,omitempty"`
-	EnvironmentID *string `json:"-" url:"environment_id,omitempty"`
+type ListAuditLogsRequest struct {
+	ActorType     *ActorType `json:"-" url:"actor_type,omitempty"`
+	EndTime       *time.Time `json:"-" url:"end_time,omitempty"`
+	EnvironmentID *string    `json:"-" url:"environment_id,omitempty"`
+	Q             *string    `json:"-" url:"q,omitempty"`
+	StartTime     *time.Time `json:"-" url:"start_time,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -279,46 +310,60 @@ type ListAPIRequestsRequest struct {
 	explicitFields *big.Int `json:"-" url:"-"`
 }
 
-func (l *ListAPIRequestsRequest) require(field *big.Int) {
+func (l *ListAuditLogsRequest) require(field *big.Int) {
 	if l.explicitFields == nil {
 		l.explicitFields = big.NewInt(0)
 	}
 	l.explicitFields.Or(l.explicitFields, field)
 }
 
-// SetQ sets the Q field and marks it as non-optional;
+// SetActorType sets the ActorType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsRequest) SetQ(q *string) {
-	l.Q = q
-	l.require(listAPIRequestsRequestFieldQ)
+func (l *ListAuditLogsRequest) SetActorType(actorType *ActorType) {
+	l.ActorType = actorType
+	l.require(listAuditLogsRequestFieldActorType)
 }
 
-// SetRequestType sets the RequestType field and marks it as non-optional;
+// SetEndTime sets the EndTime field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsRequest) SetRequestType(requestType *string) {
-	l.RequestType = requestType
-	l.require(listAPIRequestsRequestFieldRequestType)
+func (l *ListAuditLogsRequest) SetEndTime(endTime *time.Time) {
+	l.EndTime = endTime
+	l.require(listAuditLogsRequestFieldEndTime)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsRequest) SetEnvironmentID(environmentID *string) {
+func (l *ListAuditLogsRequest) SetEnvironmentID(environmentID *string) {
 	l.EnvironmentID = environmentID
-	l.require(listAPIRequestsRequestFieldEnvironmentID)
+	l.require(listAuditLogsRequestFieldEnvironmentID)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAuditLogsRequest) SetQ(q *string) {
+	l.Q = q
+	l.require(listAuditLogsRequestFieldQ)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAuditLogsRequest) SetStartTime(startTime *time.Time) {
+	l.StartTime = startTime
+	l.require(listAuditLogsRequestFieldStartTime)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsRequest) SetLimit(limit *int) {
+func (l *ListAuditLogsRequest) SetLimit(limit *int) {
 	l.Limit = limit
-	l.require(listAPIRequestsRequestFieldLimit)
+	l.require(listAuditLogsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsRequest) SetOffset(offset *int) {
+func (l *ListAuditLogsRequest) SetOffset(offset *int) {
 	l.Offset = offset
-	l.require(listAPIRequestsRequestFieldOffset)
+	l.require(listAuditLogsRequestFieldOffset)
 }
 
 var (
@@ -373,9 +418,10 @@ var (
 	aPIKeyCreateResponseDataFieldID            = big.NewInt(1 << 3)
 	aPIKeyCreateResponseDataFieldLastUsedAt    = big.NewInt(1 << 4)
 	aPIKeyCreateResponseDataFieldName          = big.NewInt(1 << 5)
-	aPIKeyCreateResponseDataFieldScopes        = big.NewInt(1 << 6)
-	aPIKeyCreateResponseDataFieldSecret        = big.NewInt(1 << 7)
-	aPIKeyCreateResponseDataFieldUpdatedAt     = big.NewInt(1 << 8)
+	aPIKeyCreateResponseDataFieldReadonly      = big.NewInt(1 << 6)
+	aPIKeyCreateResponseDataFieldScopes        = big.NewInt(1 << 7)
+	aPIKeyCreateResponseDataFieldSecret        = big.NewInt(1 << 8)
+	aPIKeyCreateResponseDataFieldUpdatedAt     = big.NewInt(1 << 9)
 )
 
 type APIKeyCreateResponseData struct {
@@ -385,6 +431,7 @@ type APIKeyCreateResponseData struct {
 	ID            string        `json:"id" url:"id"`
 	LastUsedAt    *time.Time    `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
 	Name          string        `json:"name" url:"name"`
+	Readonly      bool          `json:"readonly" url:"readonly"`
 	Scopes        []APIKeyScope `json:"scopes" url:"scopes"`
 	Secret        string        `json:"secret" url:"secret"`
 	UpdatedAt     time.Time     `json:"updated_at" url:"updated_at"`
@@ -436,6 +483,13 @@ func (a *APIKeyCreateResponseData) GetName() string {
 		return ""
 	}
 	return a.Name
+}
+
+func (a *APIKeyCreateResponseData) GetReadonly() bool {
+	if a == nil {
+		return false
+	}
+	return a.Readonly
 }
 
 func (a *APIKeyCreateResponseData) GetScopes() []APIKeyScope {
@@ -510,6 +564,13 @@ func (a *APIKeyCreateResponseData) SetLastUsedAt(lastUsedAt *time.Time) {
 func (a *APIKeyCreateResponseData) SetName(name string) {
 	a.Name = name
 	a.require(aPIKeyCreateResponseDataFieldName)
+}
+
+// SetReadonly sets the Readonly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *APIKeyCreateResponseData) SetReadonly(readonly bool) {
+	a.Readonly = readonly
+	a.require(aPIKeyCreateResponseDataFieldReadonly)
 }
 
 // SetScopes sets the Scopes field and marks it as non-optional;
@@ -589,49 +650,45 @@ func (a *APIKeyCreateResponseData) String() string {
 }
 
 var (
-	aPIKeyRequestResponseDataFieldAPIKey            = big.NewInt(1 << 0)
-	aPIKeyRequestResponseDataFieldAPIKeyID          = big.NewInt(1 << 1)
-	aPIKeyRequestResponseDataFieldEndedAt           = big.NewInt(1 << 2)
-	aPIKeyRequestResponseDataFieldEnvironmentID     = big.NewInt(1 << 3)
-	aPIKeyRequestResponseDataFieldID                = big.NewInt(1 << 4)
-	aPIKeyRequestResponseDataFieldMethod            = big.NewInt(1 << 5)
-	aPIKeyRequestResponseDataFieldReqBody           = big.NewInt(1 << 6)
-	aPIKeyRequestResponseDataFieldRequestType       = big.NewInt(1 << 7)
-	aPIKeyRequestResponseDataFieldResourceID        = big.NewInt(1 << 8)
-	aPIKeyRequestResponseDataFieldResourceIDString  = big.NewInt(1 << 9)
-	aPIKeyRequestResponseDataFieldResourceName      = big.NewInt(1 << 10)
-	aPIKeyRequestResponseDataFieldResourceType      = big.NewInt(1 << 11)
-	aPIKeyRequestResponseDataFieldRespBody          = big.NewInt(1 << 12)
-	aPIKeyRequestResponseDataFieldRespCode          = big.NewInt(1 << 13)
-	aPIKeyRequestResponseDataFieldSecondaryResource = big.NewInt(1 << 14)
-	aPIKeyRequestResponseDataFieldStartedAt         = big.NewInt(1 << 15)
-	aPIKeyRequestResponseDataFieldURL               = big.NewInt(1 << 16)
-	aPIKeyRequestResponseDataFieldUserAgent         = big.NewInt(1 << 17)
-	aPIKeyRequestResponseDataFieldUserID            = big.NewInt(1 << 18)
-	aPIKeyRequestResponseDataFieldUserName          = big.NewInt(1 << 19)
+	auditLogResponseDataFieldActorType         = big.NewInt(1 << 0)
+	auditLogResponseDataFieldAPIKeyID          = big.NewInt(1 << 1)
+	auditLogResponseDataFieldEndedAt           = big.NewInt(1 << 2)
+	auditLogResponseDataFieldEnvironmentID     = big.NewInt(1 << 3)
+	auditLogResponseDataFieldID                = big.NewInt(1 << 4)
+	auditLogResponseDataFieldMethod            = big.NewInt(1 << 5)
+	auditLogResponseDataFieldReqBody           = big.NewInt(1 << 6)
+	auditLogResponseDataFieldResourceID        = big.NewInt(1 << 7)
+	auditLogResponseDataFieldResourceIDString  = big.NewInt(1 << 8)
+	auditLogResponseDataFieldResourceName      = big.NewInt(1 << 9)
+	auditLogResponseDataFieldResourceType      = big.NewInt(1 << 10)
+	auditLogResponseDataFieldRespBody          = big.NewInt(1 << 11)
+	auditLogResponseDataFieldRespCode          = big.NewInt(1 << 12)
+	auditLogResponseDataFieldSecondaryResource = big.NewInt(1 << 13)
+	auditLogResponseDataFieldStartedAt         = big.NewInt(1 << 14)
+	auditLogResponseDataFieldURL               = big.NewInt(1 << 15)
+	auditLogResponseDataFieldUserID            = big.NewInt(1 << 16)
+	auditLogResponseDataFieldUserName          = big.NewInt(1 << 17)
 )
 
-type APIKeyRequestResponseData struct {
-	APIKey            *APIKeyResponseData `json:"api_key,omitempty" url:"api_key,omitempty"`
-	APIKeyID          string              `json:"api_key_id" url:"api_key_id"`
-	EndedAt           *time.Time          `json:"ended_at,omitempty" url:"ended_at,omitempty"`
-	EnvironmentID     *string             `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID                string              `json:"id" url:"id"`
-	Method            string              `json:"method" url:"method"`
-	ReqBody           *string             `json:"req_body,omitempty" url:"req_body,omitempty"`
-	RequestType       *string             `json:"request_type,omitempty" url:"request_type,omitempty"`
-	ResourceID        *int                `json:"resource_id,omitempty" url:"resource_id,omitempty"`
-	ResourceIDString  *string             `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
-	ResourceName      *string             `json:"resource_name,omitempty" url:"resource_name,omitempty"`
-	ResourceType      *string             `json:"resource_type,omitempty" url:"resource_type,omitempty"`
-	RespBody          *string             `json:"resp_body,omitempty" url:"resp_body,omitempty"`
-	RespCode          *int                `json:"resp_code,omitempty" url:"resp_code,omitempty"`
-	SecondaryResource *string             `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
-	StartedAt         time.Time           `json:"started_at" url:"started_at"`
-	URL               string              `json:"url" url:"url"`
-	UserAgent         *string             `json:"user_agent,omitempty" url:"user_agent,omitempty"`
-	UserID            *string             `json:"user_id,omitempty" url:"user_id,omitempty"`
-	UserName          *string             `json:"user_name,omitempty" url:"user_name,omitempty"`
+type AuditLogResponseData struct {
+	ActorType         ActorType  `json:"actor_type" url:"actor_type"`
+	APIKeyID          *string    `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
+	EndedAt           *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	EnvironmentID     *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID                string     `json:"id" url:"id"`
+	Method            string     `json:"method" url:"method"`
+	ReqBody           *string    `json:"req_body,omitempty" url:"req_body,omitempty"`
+	ResourceID        *int       `json:"resource_id,omitempty" url:"resource_id,omitempty"`
+	ResourceIDString  *string    `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
+	ResourceName      *string    `json:"resource_name,omitempty" url:"resource_name,omitempty"`
+	ResourceType      *string    `json:"resource_type,omitempty" url:"resource_type,omitempty"`
+	RespBody          *string    `json:"resp_body,omitempty" url:"resp_body,omitempty"`
+	RespCode          *int       `json:"resp_code,omitempty" url:"resp_code,omitempty"`
+	SecondaryResource *string    `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
+	StartedAt         time.Time  `json:"started_at" url:"started_at"`
+	URL               string     `json:"url" url:"url"`
+	UserID            *string    `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserName          *string    `json:"user_name,omitempty" url:"user_name,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -640,299 +697,271 @@ type APIKeyRequestResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (a *APIKeyRequestResponseData) GetAPIKey() *APIKeyResponseData {
-	if a == nil {
-		return nil
-	}
-	return a.APIKey
-}
-
-func (a *APIKeyRequestResponseData) GetAPIKeyID() string {
+func (a *AuditLogResponseData) GetActorType() ActorType {
 	if a == nil {
 		return ""
+	}
+	return a.ActorType
+}
+
+func (a *AuditLogResponseData) GetAPIKeyID() *string {
+	if a == nil {
+		return nil
 	}
 	return a.APIKeyID
 }
 
-func (a *APIKeyRequestResponseData) GetEndedAt() *time.Time {
+func (a *AuditLogResponseData) GetEndedAt() *time.Time {
 	if a == nil {
 		return nil
 	}
 	return a.EndedAt
 }
 
-func (a *APIKeyRequestResponseData) GetEnvironmentID() *string {
+func (a *AuditLogResponseData) GetEnvironmentID() *string {
 	if a == nil {
 		return nil
 	}
 	return a.EnvironmentID
 }
 
-func (a *APIKeyRequestResponseData) GetID() string {
+func (a *AuditLogResponseData) GetID() string {
 	if a == nil {
 		return ""
 	}
 	return a.ID
 }
 
-func (a *APIKeyRequestResponseData) GetMethod() string {
+func (a *AuditLogResponseData) GetMethod() string {
 	if a == nil {
 		return ""
 	}
 	return a.Method
 }
 
-func (a *APIKeyRequestResponseData) GetReqBody() *string {
+func (a *AuditLogResponseData) GetReqBody() *string {
 	if a == nil {
 		return nil
 	}
 	return a.ReqBody
 }
 
-func (a *APIKeyRequestResponseData) GetRequestType() *string {
-	if a == nil {
-		return nil
-	}
-	return a.RequestType
-}
-
-func (a *APIKeyRequestResponseData) GetResourceID() *int {
+func (a *AuditLogResponseData) GetResourceID() *int {
 	if a == nil {
 		return nil
 	}
 	return a.ResourceID
 }
 
-func (a *APIKeyRequestResponseData) GetResourceIDString() *string {
+func (a *AuditLogResponseData) GetResourceIDString() *string {
 	if a == nil {
 		return nil
 	}
 	return a.ResourceIDString
 }
 
-func (a *APIKeyRequestResponseData) GetResourceName() *string {
+func (a *AuditLogResponseData) GetResourceName() *string {
 	if a == nil {
 		return nil
 	}
 	return a.ResourceName
 }
 
-func (a *APIKeyRequestResponseData) GetResourceType() *string {
+func (a *AuditLogResponseData) GetResourceType() *string {
 	if a == nil {
 		return nil
 	}
 	return a.ResourceType
 }
 
-func (a *APIKeyRequestResponseData) GetRespBody() *string {
+func (a *AuditLogResponseData) GetRespBody() *string {
 	if a == nil {
 		return nil
 	}
 	return a.RespBody
 }
 
-func (a *APIKeyRequestResponseData) GetRespCode() *int {
+func (a *AuditLogResponseData) GetRespCode() *int {
 	if a == nil {
 		return nil
 	}
 	return a.RespCode
 }
 
-func (a *APIKeyRequestResponseData) GetSecondaryResource() *string {
+func (a *AuditLogResponseData) GetSecondaryResource() *string {
 	if a == nil {
 		return nil
 	}
 	return a.SecondaryResource
 }
 
-func (a *APIKeyRequestResponseData) GetStartedAt() time.Time {
+func (a *AuditLogResponseData) GetStartedAt() time.Time {
 	if a == nil {
 		return time.Time{}
 	}
 	return a.StartedAt
 }
 
-func (a *APIKeyRequestResponseData) GetURL() string {
+func (a *AuditLogResponseData) GetURL() string {
 	if a == nil {
 		return ""
 	}
 	return a.URL
 }
 
-func (a *APIKeyRequestResponseData) GetUserAgent() *string {
-	if a == nil {
-		return nil
-	}
-	return a.UserAgent
-}
-
-func (a *APIKeyRequestResponseData) GetUserID() *string {
+func (a *AuditLogResponseData) GetUserID() *string {
 	if a == nil {
 		return nil
 	}
 	return a.UserID
 }
 
-func (a *APIKeyRequestResponseData) GetUserName() *string {
+func (a *AuditLogResponseData) GetUserName() *string {
 	if a == nil {
 		return nil
 	}
 	return a.UserName
 }
 
-func (a *APIKeyRequestResponseData) GetExtraProperties() map[string]interface{} {
+func (a *AuditLogResponseData) GetExtraProperties() map[string]interface{} {
 	return a.extraProperties
 }
 
-func (a *APIKeyRequestResponseData) require(field *big.Int) {
+func (a *AuditLogResponseData) require(field *big.Int) {
 	if a.explicitFields == nil {
 		a.explicitFields = big.NewInt(0)
 	}
 	a.explicitFields.Or(a.explicitFields, field)
 }
 
-// SetAPIKey sets the APIKey field and marks it as non-optional;
+// SetActorType sets the ActorType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetAPIKey(apiKey *APIKeyResponseData) {
-	a.APIKey = apiKey
-	a.require(aPIKeyRequestResponseDataFieldAPIKey)
+func (a *AuditLogResponseData) SetActorType(actorType ActorType) {
+	a.ActorType = actorType
+	a.require(auditLogResponseDataFieldActorType)
 }
 
 // SetAPIKeyID sets the APIKeyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetAPIKeyID(apiKeyID string) {
+func (a *AuditLogResponseData) SetAPIKeyID(apiKeyID *string) {
 	a.APIKeyID = apiKeyID
-	a.require(aPIKeyRequestResponseDataFieldAPIKeyID)
+	a.require(auditLogResponseDataFieldAPIKeyID)
 }
 
 // SetEndedAt sets the EndedAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetEndedAt(endedAt *time.Time) {
+func (a *AuditLogResponseData) SetEndedAt(endedAt *time.Time) {
 	a.EndedAt = endedAt
-	a.require(aPIKeyRequestResponseDataFieldEndedAt)
+	a.require(auditLogResponseDataFieldEndedAt)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetEnvironmentID(environmentID *string) {
+func (a *AuditLogResponseData) SetEnvironmentID(environmentID *string) {
 	a.EnvironmentID = environmentID
-	a.require(aPIKeyRequestResponseDataFieldEnvironmentID)
+	a.require(auditLogResponseDataFieldEnvironmentID)
 }
 
 // SetID sets the ID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetID(id string) {
+func (a *AuditLogResponseData) SetID(id string) {
 	a.ID = id
-	a.require(aPIKeyRequestResponseDataFieldID)
+	a.require(auditLogResponseDataFieldID)
 }
 
 // SetMethod sets the Method field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetMethod(method string) {
+func (a *AuditLogResponseData) SetMethod(method string) {
 	a.Method = method
-	a.require(aPIKeyRequestResponseDataFieldMethod)
+	a.require(auditLogResponseDataFieldMethod)
 }
 
 // SetReqBody sets the ReqBody field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetReqBody(reqBody *string) {
+func (a *AuditLogResponseData) SetReqBody(reqBody *string) {
 	a.ReqBody = reqBody
-	a.require(aPIKeyRequestResponseDataFieldReqBody)
-}
-
-// SetRequestType sets the RequestType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetRequestType(requestType *string) {
-	a.RequestType = requestType
-	a.require(aPIKeyRequestResponseDataFieldRequestType)
+	a.require(auditLogResponseDataFieldReqBody)
 }
 
 // SetResourceID sets the ResourceID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetResourceID(resourceID *int) {
+func (a *AuditLogResponseData) SetResourceID(resourceID *int) {
 	a.ResourceID = resourceID
-	a.require(aPIKeyRequestResponseDataFieldResourceID)
+	a.require(auditLogResponseDataFieldResourceID)
 }
 
 // SetResourceIDString sets the ResourceIDString field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetResourceIDString(resourceIDString *string) {
+func (a *AuditLogResponseData) SetResourceIDString(resourceIDString *string) {
 	a.ResourceIDString = resourceIDString
-	a.require(aPIKeyRequestResponseDataFieldResourceIDString)
+	a.require(auditLogResponseDataFieldResourceIDString)
 }
 
 // SetResourceName sets the ResourceName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetResourceName(resourceName *string) {
+func (a *AuditLogResponseData) SetResourceName(resourceName *string) {
 	a.ResourceName = resourceName
-	a.require(aPIKeyRequestResponseDataFieldResourceName)
+	a.require(auditLogResponseDataFieldResourceName)
 }
 
 // SetResourceType sets the ResourceType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetResourceType(resourceType *string) {
+func (a *AuditLogResponseData) SetResourceType(resourceType *string) {
 	a.ResourceType = resourceType
-	a.require(aPIKeyRequestResponseDataFieldResourceType)
+	a.require(auditLogResponseDataFieldResourceType)
 }
 
 // SetRespBody sets the RespBody field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetRespBody(respBody *string) {
+func (a *AuditLogResponseData) SetRespBody(respBody *string) {
 	a.RespBody = respBody
-	a.require(aPIKeyRequestResponseDataFieldRespBody)
+	a.require(auditLogResponseDataFieldRespBody)
 }
 
 // SetRespCode sets the RespCode field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetRespCode(respCode *int) {
+func (a *AuditLogResponseData) SetRespCode(respCode *int) {
 	a.RespCode = respCode
-	a.require(aPIKeyRequestResponseDataFieldRespCode)
+	a.require(auditLogResponseDataFieldRespCode)
 }
 
 // SetSecondaryResource sets the SecondaryResource field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetSecondaryResource(secondaryResource *string) {
+func (a *AuditLogResponseData) SetSecondaryResource(secondaryResource *string) {
 	a.SecondaryResource = secondaryResource
-	a.require(aPIKeyRequestResponseDataFieldSecondaryResource)
+	a.require(auditLogResponseDataFieldSecondaryResource)
 }
 
 // SetStartedAt sets the StartedAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetStartedAt(startedAt time.Time) {
+func (a *AuditLogResponseData) SetStartedAt(startedAt time.Time) {
 	a.StartedAt = startedAt
-	a.require(aPIKeyRequestResponseDataFieldStartedAt)
+	a.require(auditLogResponseDataFieldStartedAt)
 }
 
 // SetURL sets the URL field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetURL(url string) {
+func (a *AuditLogResponseData) SetURL(url string) {
 	a.URL = url
-	a.require(aPIKeyRequestResponseDataFieldURL)
-}
-
-// SetUserAgent sets the UserAgent field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetUserAgent(userAgent *string) {
-	a.UserAgent = userAgent
-	a.require(aPIKeyRequestResponseDataFieldUserAgent)
+	a.require(auditLogResponseDataFieldURL)
 }
 
 // SetUserID sets the UserID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetUserID(userID *string) {
+func (a *AuditLogResponseData) SetUserID(userID *string) {
 	a.UserID = userID
-	a.require(aPIKeyRequestResponseDataFieldUserID)
+	a.require(auditLogResponseDataFieldUserID)
 }
 
 // SetUserName sets the UserName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *APIKeyRequestResponseData) SetUserName(userName *string) {
+func (a *AuditLogResponseData) SetUserName(userName *string) {
 	a.UserName = userName
-	a.require(aPIKeyRequestResponseDataFieldUserName)
+	a.require(auditLogResponseDataFieldUserName)
 }
 
-func (a *APIKeyRequestResponseData) UnmarshalJSON(data []byte) error {
-	type embed APIKeyRequestResponseData
+func (a *AuditLogResponseData) UnmarshalJSON(data []byte) error {
+	type embed AuditLogResponseData
 	var unmarshaler = struct {
 		embed
 		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
@@ -943,7 +972,7 @@ func (a *APIKeyRequestResponseData) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*a = APIKeyRequestResponseData(unmarshaler.embed)
+	*a = AuditLogResponseData(unmarshaler.embed)
 	a.EndedAt = unmarshaler.EndedAt.TimePtr()
 	a.StartedAt = unmarshaler.StartedAt.Time()
 	extraProperties, err := internal.ExtractExtraProperties(data, *a)
@@ -955,8 +984,8 @@ func (a *APIKeyRequestResponseData) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (a *APIKeyRequestResponseData) MarshalJSON() ([]byte, error) {
-	type embed APIKeyRequestResponseData
+func (a *AuditLogResponseData) MarshalJSON() ([]byte, error) {
+	type embed AuditLogResponseData
 	var marshaler = struct {
 		embed
 		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
@@ -970,7 +999,7 @@ func (a *APIKeyRequestResponseData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-func (a *APIKeyRequestResponseData) String() string {
+func (a *AuditLogResponseData) String() string {
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value
@@ -1409,6 +1438,212 @@ func (q *QuickstartResp) String() string {
 	return fmt.Sprintf("%#v", q)
 }
 
+var (
+	whoAmIResponseDataFieldAccountID     = big.NewInt(1 << 0)
+	whoAmIResponseDataFieldAccountName   = big.NewInt(1 << 1)
+	whoAmIResponseDataFieldActorType     = big.NewInt(1 << 2)
+	whoAmIResponseDataFieldAPIKeyID      = big.NewInt(1 << 3)
+	whoAmIResponseDataFieldEnvironmentID = big.NewInt(1 << 4)
+	whoAmIResponseDataFieldEnvironments  = big.NewInt(1 << 5)
+	whoAmIResponseDataFieldStripeUserID  = big.NewInt(1 << 6)
+	whoAmIResponseDataFieldUserID        = big.NewInt(1 << 7)
+	whoAmIResponseDataFieldUserName      = big.NewInt(1 << 8)
+)
+
+type WhoAmIResponseData struct {
+	AccountID     string                     `json:"account_id" url:"account_id"`
+	AccountName   string                     `json:"account_name" url:"account_name"`
+	ActorType     string                     `json:"actor_type" url:"actor_type"`
+	APIKeyID      *string                    `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
+	EnvironmentID *string                    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	Environments  []*EnvironmentResponseData `json:"environments" url:"environments"`
+	StripeUserID  *string                    `json:"stripe_user_id,omitempty" url:"stripe_user_id,omitempty"`
+	UserID        *string                    `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserName      *string                    `json:"user_name,omitempty" url:"user_name,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WhoAmIResponseData) GetAccountID() string {
+	if w == nil {
+		return ""
+	}
+	return w.AccountID
+}
+
+func (w *WhoAmIResponseData) GetAccountName() string {
+	if w == nil {
+		return ""
+	}
+	return w.AccountName
+}
+
+func (w *WhoAmIResponseData) GetActorType() string {
+	if w == nil {
+		return ""
+	}
+	return w.ActorType
+}
+
+func (w *WhoAmIResponseData) GetAPIKeyID() *string {
+	if w == nil {
+		return nil
+	}
+	return w.APIKeyID
+}
+
+func (w *WhoAmIResponseData) GetEnvironmentID() *string {
+	if w == nil {
+		return nil
+	}
+	return w.EnvironmentID
+}
+
+func (w *WhoAmIResponseData) GetEnvironments() []*EnvironmentResponseData {
+	if w == nil {
+		return nil
+	}
+	return w.Environments
+}
+
+func (w *WhoAmIResponseData) GetStripeUserID() *string {
+	if w == nil {
+		return nil
+	}
+	return w.StripeUserID
+}
+
+func (w *WhoAmIResponseData) GetUserID() *string {
+	if w == nil {
+		return nil
+	}
+	return w.UserID
+}
+
+func (w *WhoAmIResponseData) GetUserName() *string {
+	if w == nil {
+		return nil
+	}
+	return w.UserName
+}
+
+func (w *WhoAmIResponseData) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WhoAmIResponseData) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetAccountID(accountID string) {
+	w.AccountID = accountID
+	w.require(whoAmIResponseDataFieldAccountID)
+}
+
+// SetAccountName sets the AccountName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetAccountName(accountName string) {
+	w.AccountName = accountName
+	w.require(whoAmIResponseDataFieldAccountName)
+}
+
+// SetActorType sets the ActorType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetActorType(actorType string) {
+	w.ActorType = actorType
+	w.require(whoAmIResponseDataFieldActorType)
+}
+
+// SetAPIKeyID sets the APIKeyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetAPIKeyID(apiKeyID *string) {
+	w.APIKeyID = apiKeyID
+	w.require(whoAmIResponseDataFieldAPIKeyID)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetEnvironmentID(environmentID *string) {
+	w.EnvironmentID = environmentID
+	w.require(whoAmIResponseDataFieldEnvironmentID)
+}
+
+// SetEnvironments sets the Environments field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetEnvironments(environments []*EnvironmentResponseData) {
+	w.Environments = environments
+	w.require(whoAmIResponseDataFieldEnvironments)
+}
+
+// SetStripeUserID sets the StripeUserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetStripeUserID(stripeUserID *string) {
+	w.StripeUserID = stripeUserID
+	w.require(whoAmIResponseDataFieldStripeUserID)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetUserID(userID *string) {
+	w.UserID = userID
+	w.require(whoAmIResponseDataFieldUserID)
+}
+
+// SetUserName sets the UserName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetUserName(userName *string) {
+	w.UserName = userName
+	w.require(whoAmIResponseDataFieldUserName)
+}
+
+func (w *WhoAmIResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler WhoAmIResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WhoAmIResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WhoAmIResponseData) MarshalJSON() ([]byte, error) {
+	type embed WhoAmIResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*w),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WhoAmIResponseData) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
 // Input parameters
 var (
 	countAPIKeysParamsFieldEnvironmentID      = big.NewInt(1 << 0)
@@ -1635,21 +1870,25 @@ func (c *CountAPIKeysResponse) String() string {
 
 // Input parameters
 var (
-	countAPIRequestsParamsFieldEnvironmentID = big.NewInt(1 << 0)
-	countAPIRequestsParamsFieldLimit         = big.NewInt(1 << 1)
-	countAPIRequestsParamsFieldOffset        = big.NewInt(1 << 2)
-	countAPIRequestsParamsFieldQ             = big.NewInt(1 << 3)
-	countAPIRequestsParamsFieldRequestType   = big.NewInt(1 << 4)
+	countAuditLogsParamsFieldActorType     = big.NewInt(1 << 0)
+	countAuditLogsParamsFieldEndTime       = big.NewInt(1 << 1)
+	countAuditLogsParamsFieldEnvironmentID = big.NewInt(1 << 2)
+	countAuditLogsParamsFieldLimit         = big.NewInt(1 << 3)
+	countAuditLogsParamsFieldOffset        = big.NewInt(1 << 4)
+	countAuditLogsParamsFieldQ             = big.NewInt(1 << 5)
+	countAuditLogsParamsFieldStartTime     = big.NewInt(1 << 6)
 )
 
-type CountAPIRequestsParams struct {
-	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+type CountAuditLogsParams struct {
+	ActorType     *ActorType `json:"actor_type,omitempty" url:"actor_type,omitempty"`
+	EndTime       *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset      *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q           *string `json:"q,omitempty" url:"q,omitempty"`
-	RequestType *string `json:"request_type,omitempty" url:"request_type,omitempty"`
+	Offset    *int       `json:"offset,omitempty" url:"offset,omitempty"`
+	Q         *string    `json:"q,omitempty" url:"q,omitempty"`
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1658,94 +1897,130 @@ type CountAPIRequestsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountAPIRequestsParams) GetEnvironmentID() *string {
+func (c *CountAuditLogsParams) GetActorType() *ActorType {
+	if c == nil {
+		return nil
+	}
+	return c.ActorType
+}
+
+func (c *CountAuditLogsParams) GetEndTime() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.EndTime
+}
+
+func (c *CountAuditLogsParams) GetEnvironmentID() *string {
 	if c == nil {
 		return nil
 	}
 	return c.EnvironmentID
 }
 
-func (c *CountAPIRequestsParams) GetLimit() *int {
+func (c *CountAuditLogsParams) GetLimit() *int {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountAPIRequestsParams) GetOffset() *int {
+func (c *CountAuditLogsParams) GetOffset() *int {
 	if c == nil {
 		return nil
 	}
 	return c.Offset
 }
 
-func (c *CountAPIRequestsParams) GetQ() *string {
+func (c *CountAuditLogsParams) GetQ() *string {
 	if c == nil {
 		return nil
 	}
 	return c.Q
 }
 
-func (c *CountAPIRequestsParams) GetRequestType() *string {
+func (c *CountAuditLogsParams) GetStartTime() *time.Time {
 	if c == nil {
 		return nil
 	}
-	return c.RequestType
+	return c.StartTime
 }
 
-func (c *CountAPIRequestsParams) GetExtraProperties() map[string]interface{} {
+func (c *CountAuditLogsParams) GetExtraProperties() map[string]interface{} {
 	return c.extraProperties
 }
 
-func (c *CountAPIRequestsParams) require(field *big.Int) {
+func (c *CountAuditLogsParams) require(field *big.Int) {
 	if c.explicitFields == nil {
 		c.explicitFields = big.NewInt(0)
 	}
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
+// SetActorType sets the ActorType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAuditLogsParams) SetActorType(actorType *ActorType) {
+	c.ActorType = actorType
+	c.require(countAuditLogsParamsFieldActorType)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAuditLogsParams) SetEndTime(endTime *time.Time) {
+	c.EndTime = endTime
+	c.require(countAuditLogsParamsFieldEndTime)
+}
+
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsParams) SetEnvironmentID(environmentID *string) {
+func (c *CountAuditLogsParams) SetEnvironmentID(environmentID *string) {
 	c.EnvironmentID = environmentID
-	c.require(countAPIRequestsParamsFieldEnvironmentID)
+	c.require(countAuditLogsParamsFieldEnvironmentID)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsParams) SetLimit(limit *int) {
+func (c *CountAuditLogsParams) SetLimit(limit *int) {
 	c.Limit = limit
-	c.require(countAPIRequestsParamsFieldLimit)
+	c.require(countAuditLogsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsParams) SetOffset(offset *int) {
+func (c *CountAuditLogsParams) SetOffset(offset *int) {
 	c.Offset = offset
-	c.require(countAPIRequestsParamsFieldOffset)
+	c.require(countAuditLogsParamsFieldOffset)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsParams) SetQ(q *string) {
+func (c *CountAuditLogsParams) SetQ(q *string) {
 	c.Q = q
-	c.require(countAPIRequestsParamsFieldQ)
+	c.require(countAuditLogsParamsFieldQ)
 }
 
-// SetRequestType sets the RequestType field and marks it as non-optional;
+// SetStartTime sets the StartTime field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsParams) SetRequestType(requestType *string) {
-	c.RequestType = requestType
-	c.require(countAPIRequestsParamsFieldRequestType)
+func (c *CountAuditLogsParams) SetStartTime(startTime *time.Time) {
+	c.StartTime = startTime
+	c.require(countAuditLogsParamsFieldStartTime)
 }
 
-func (c *CountAPIRequestsParams) UnmarshalJSON(data []byte) error {
-	type unmarshaler CountAPIRequestsParams
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+func (c *CountAuditLogsParams) UnmarshalJSON(data []byte) error {
+	type embed CountAuditLogsParams
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*c = CountAPIRequestsParams(value)
+	*c = CountAuditLogsParams(unmarshaler.embed)
+	c.EndTime = unmarshaler.EndTime.TimePtr()
+	c.StartTime = unmarshaler.StartTime.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
@@ -1755,18 +2030,22 @@ func (c *CountAPIRequestsParams) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (c *CountAPIRequestsParams) MarshalJSON() ([]byte, error) {
-	type embed CountAPIRequestsParams
+func (c *CountAuditLogsParams) MarshalJSON() ([]byte, error) {
+	type embed CountAuditLogsParams
 	var marshaler = struct {
 		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
 	}{
-		embed: embed(*c),
+		embed:     embed(*c),
+		EndTime:   internal.NewOptionalDateTime(c.EndTime),
+		StartTime: internal.NewOptionalDateTime(c.StartTime),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)
 }
 
-func (c *CountAPIRequestsParams) String() string {
+func (c *CountAuditLogsParams) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1779,14 +2058,14 @@ func (c *CountAPIRequestsParams) String() string {
 }
 
 var (
-	countAPIRequestsResponseFieldData   = big.NewInt(1 << 0)
-	countAPIRequestsResponseFieldParams = big.NewInt(1 << 1)
+	countAuditLogsResponseFieldData   = big.NewInt(1 << 0)
+	countAuditLogsResponseFieldParams = big.NewInt(1 << 1)
 )
 
-type CountAPIRequestsResponse struct {
+type CountAuditLogsResponse struct {
 	Data *CountResponse `json:"data" url:"data"`
 	// Input parameters
-	Params *CountAPIRequestsParams `json:"params" url:"params"`
+	Params *CountAuditLogsParams `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1795,25 +2074,25 @@ type CountAPIRequestsResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountAPIRequestsResponse) GetData() *CountResponse {
+func (c *CountAuditLogsResponse) GetData() *CountResponse {
 	if c == nil {
 		return nil
 	}
 	return c.Data
 }
 
-func (c *CountAPIRequestsResponse) GetParams() *CountAPIRequestsParams {
+func (c *CountAuditLogsResponse) GetParams() *CountAuditLogsParams {
 	if c == nil {
 		return nil
 	}
 	return c.Params
 }
 
-func (c *CountAPIRequestsResponse) GetExtraProperties() map[string]interface{} {
+func (c *CountAuditLogsResponse) GetExtraProperties() map[string]interface{} {
 	return c.extraProperties
 }
 
-func (c *CountAPIRequestsResponse) require(field *big.Int) {
+func (c *CountAuditLogsResponse) require(field *big.Int) {
 	if c.explicitFields == nil {
 		c.explicitFields = big.NewInt(0)
 	}
@@ -1822,25 +2101,25 @@ func (c *CountAPIRequestsResponse) require(field *big.Int) {
 
 // SetData sets the Data field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsResponse) SetData(data *CountResponse) {
+func (c *CountAuditLogsResponse) SetData(data *CountResponse) {
 	c.Data = data
-	c.require(countAPIRequestsResponseFieldData)
+	c.require(countAuditLogsResponseFieldData)
 }
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIRequestsResponse) SetParams(params *CountAPIRequestsParams) {
+func (c *CountAuditLogsResponse) SetParams(params *CountAuditLogsParams) {
 	c.Params = params
-	c.require(countAPIRequestsResponseFieldParams)
+	c.require(countAuditLogsResponseFieldParams)
 }
 
-func (c *CountAPIRequestsResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler CountAPIRequestsResponse
+func (c *CountAuditLogsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountAuditLogsResponse
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*c = CountAPIRequestsResponse(value)
+	*c = CountAuditLogsResponse(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
@@ -1850,8 +2129,8 @@ func (c *CountAPIRequestsResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (c *CountAPIRequestsResponse) MarshalJSON() ([]byte, error) {
-	type embed CountAPIRequestsResponse
+func (c *CountAuditLogsResponse) MarshalJSON() ([]byte, error) {
+	type embed CountAuditLogsResponse
 	var marshaler = struct {
 		embed
 	}{
@@ -1861,7 +2140,7 @@ func (c *CountAPIRequestsResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-func (c *CountAPIRequestsResponse) String() string {
+func (c *CountAuditLogsResponse) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2349,12 +2628,12 @@ func (g *GetAPIKeyResponse) String() string {
 }
 
 var (
-	getAPIRequestResponseFieldData   = big.NewInt(1 << 0)
-	getAPIRequestResponseFieldParams = big.NewInt(1 << 1)
+	getAuditLogResponseFieldData   = big.NewInt(1 << 0)
+	getAuditLogResponseFieldParams = big.NewInt(1 << 1)
 )
 
-type GetAPIRequestResponse struct {
-	Data *APIKeyRequestResponseData `json:"data" url:"data"`
+type GetAuditLogResponse struct {
+	Data *AuditLogResponseData `json:"data" url:"data"`
 	// Input parameters
 	Params map[string]interface{} `json:"params" url:"params"`
 
@@ -2365,25 +2644,25 @@ type GetAPIRequestResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (g *GetAPIRequestResponse) GetData() *APIKeyRequestResponseData {
+func (g *GetAuditLogResponse) GetData() *AuditLogResponseData {
 	if g == nil {
 		return nil
 	}
 	return g.Data
 }
 
-func (g *GetAPIRequestResponse) GetParams() map[string]interface{} {
+func (g *GetAuditLogResponse) GetParams() map[string]interface{} {
 	if g == nil {
 		return nil
 	}
 	return g.Params
 }
 
-func (g *GetAPIRequestResponse) GetExtraProperties() map[string]interface{} {
+func (g *GetAuditLogResponse) GetExtraProperties() map[string]interface{} {
 	return g.extraProperties
 }
 
-func (g *GetAPIRequestResponse) require(field *big.Int) {
+func (g *GetAuditLogResponse) require(field *big.Int) {
 	if g.explicitFields == nil {
 		g.explicitFields = big.NewInt(0)
 	}
@@ -2392,25 +2671,25 @@ func (g *GetAPIRequestResponse) require(field *big.Int) {
 
 // SetData sets the Data field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetAPIRequestResponse) SetData(data *APIKeyRequestResponseData) {
+func (g *GetAuditLogResponse) SetData(data *AuditLogResponseData) {
 	g.Data = data
-	g.require(getAPIRequestResponseFieldData)
+	g.require(getAuditLogResponseFieldData)
 }
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetAPIRequestResponse) SetParams(params map[string]interface{}) {
+func (g *GetAuditLogResponse) SetParams(params map[string]interface{}) {
 	g.Params = params
-	g.require(getAPIRequestResponseFieldParams)
+	g.require(getAuditLogResponseFieldParams)
 }
 
-func (g *GetAPIRequestResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler GetAPIRequestResponse
+func (g *GetAuditLogResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetAuditLogResponse
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*g = GetAPIRequestResponse(value)
+	*g = GetAuditLogResponse(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
@@ -2420,8 +2699,8 @@ func (g *GetAPIRequestResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (g *GetAPIRequestResponse) MarshalJSON() ([]byte, error) {
-	type embed GetAPIRequestResponse
+func (g *GetAuditLogResponse) MarshalJSON() ([]byte, error) {
+	type embed GetAuditLogResponse
 	var marshaler = struct {
 		embed
 	}{
@@ -2431,7 +2710,7 @@ func (g *GetAPIRequestResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-func (g *GetAPIRequestResponse) String() string {
+func (g *GetAuditLogResponse) String() string {
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2527,6 +2806,101 @@ func (g *GetEnvironmentResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEnvironmentResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getWhoAmIResponseFieldData   = big.NewInt(1 << 0)
+	getWhoAmIResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetWhoAmIResponse struct {
+	Data *WhoAmIResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]interface{} `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetWhoAmIResponse) GetData() *WhoAmIResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetWhoAmIResponse) GetParams() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetWhoAmIResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetWhoAmIResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetWhoAmIResponse) SetData(data *WhoAmIResponseData) {
+	g.Data = data
+	g.require(getWhoAmIResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetWhoAmIResponse) SetParams(params map[string]interface{}) {
+	g.Params = params
+	g.require(getWhoAmIResponseFieldParams)
+}
+
+func (g *GetWhoAmIResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetWhoAmIResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetWhoAmIResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetWhoAmIResponse) MarshalJSON() ([]byte, error) {
+	type embed GetWhoAmIResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetWhoAmIResponse) String() string {
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2764,21 +3138,25 @@ func (l *ListAPIKeysResponse) String() string {
 
 // Input parameters
 var (
-	listAPIRequestsParamsFieldEnvironmentID = big.NewInt(1 << 0)
-	listAPIRequestsParamsFieldLimit         = big.NewInt(1 << 1)
-	listAPIRequestsParamsFieldOffset        = big.NewInt(1 << 2)
-	listAPIRequestsParamsFieldQ             = big.NewInt(1 << 3)
-	listAPIRequestsParamsFieldRequestType   = big.NewInt(1 << 4)
+	listAuditLogsParamsFieldActorType     = big.NewInt(1 << 0)
+	listAuditLogsParamsFieldEndTime       = big.NewInt(1 << 1)
+	listAuditLogsParamsFieldEnvironmentID = big.NewInt(1 << 2)
+	listAuditLogsParamsFieldLimit         = big.NewInt(1 << 3)
+	listAuditLogsParamsFieldOffset        = big.NewInt(1 << 4)
+	listAuditLogsParamsFieldQ             = big.NewInt(1 << 5)
+	listAuditLogsParamsFieldStartTime     = big.NewInt(1 << 6)
 )
 
-type ListAPIRequestsParams struct {
-	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+type ListAuditLogsParams struct {
+	ActorType     *ActorType `json:"actor_type,omitempty" url:"actor_type,omitempty"`
+	EndTime       *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset      *int    `json:"offset,omitempty" url:"offset,omitempty"`
-	Q           *string `json:"q,omitempty" url:"q,omitempty"`
-	RequestType *string `json:"request_type,omitempty" url:"request_type,omitempty"`
+	Offset    *int       `json:"offset,omitempty" url:"offset,omitempty"`
+	Q         *string    `json:"q,omitempty" url:"q,omitempty"`
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2787,94 +3165,130 @@ type ListAPIRequestsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListAPIRequestsParams) GetEnvironmentID() *string {
+func (l *ListAuditLogsParams) GetActorType() *ActorType {
+	if l == nil {
+		return nil
+	}
+	return l.ActorType
+}
+
+func (l *ListAuditLogsParams) GetEndTime() *time.Time {
+	if l == nil {
+		return nil
+	}
+	return l.EndTime
+}
+
+func (l *ListAuditLogsParams) GetEnvironmentID() *string {
 	if l == nil {
 		return nil
 	}
 	return l.EnvironmentID
 }
 
-func (l *ListAPIRequestsParams) GetLimit() *int {
+func (l *ListAuditLogsParams) GetLimit() *int {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListAPIRequestsParams) GetOffset() *int {
+func (l *ListAuditLogsParams) GetOffset() *int {
 	if l == nil {
 		return nil
 	}
 	return l.Offset
 }
 
-func (l *ListAPIRequestsParams) GetQ() *string {
+func (l *ListAuditLogsParams) GetQ() *string {
 	if l == nil {
 		return nil
 	}
 	return l.Q
 }
 
-func (l *ListAPIRequestsParams) GetRequestType() *string {
+func (l *ListAuditLogsParams) GetStartTime() *time.Time {
 	if l == nil {
 		return nil
 	}
-	return l.RequestType
+	return l.StartTime
 }
 
-func (l *ListAPIRequestsParams) GetExtraProperties() map[string]interface{} {
+func (l *ListAuditLogsParams) GetExtraProperties() map[string]interface{} {
 	return l.extraProperties
 }
 
-func (l *ListAPIRequestsParams) require(field *big.Int) {
+func (l *ListAuditLogsParams) require(field *big.Int) {
 	if l.explicitFields == nil {
 		l.explicitFields = big.NewInt(0)
 	}
 	l.explicitFields.Or(l.explicitFields, field)
 }
 
+// SetActorType sets the ActorType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAuditLogsParams) SetActorType(actorType *ActorType) {
+	l.ActorType = actorType
+	l.require(listAuditLogsParamsFieldActorType)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAuditLogsParams) SetEndTime(endTime *time.Time) {
+	l.EndTime = endTime
+	l.require(listAuditLogsParamsFieldEndTime)
+}
+
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsParams) SetEnvironmentID(environmentID *string) {
+func (l *ListAuditLogsParams) SetEnvironmentID(environmentID *string) {
 	l.EnvironmentID = environmentID
-	l.require(listAPIRequestsParamsFieldEnvironmentID)
+	l.require(listAuditLogsParamsFieldEnvironmentID)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsParams) SetLimit(limit *int) {
+func (l *ListAuditLogsParams) SetLimit(limit *int) {
 	l.Limit = limit
-	l.require(listAPIRequestsParamsFieldLimit)
+	l.require(listAuditLogsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsParams) SetOffset(offset *int) {
+func (l *ListAuditLogsParams) SetOffset(offset *int) {
 	l.Offset = offset
-	l.require(listAPIRequestsParamsFieldOffset)
+	l.require(listAuditLogsParamsFieldOffset)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsParams) SetQ(q *string) {
+func (l *ListAuditLogsParams) SetQ(q *string) {
 	l.Q = q
-	l.require(listAPIRequestsParamsFieldQ)
+	l.require(listAuditLogsParamsFieldQ)
 }
 
-// SetRequestType sets the RequestType field and marks it as non-optional;
+// SetStartTime sets the StartTime field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsParams) SetRequestType(requestType *string) {
-	l.RequestType = requestType
-	l.require(listAPIRequestsParamsFieldRequestType)
+func (l *ListAuditLogsParams) SetStartTime(startTime *time.Time) {
+	l.StartTime = startTime
+	l.require(listAuditLogsParamsFieldStartTime)
 }
 
-func (l *ListAPIRequestsParams) UnmarshalJSON(data []byte) error {
-	type unmarshaler ListAPIRequestsParams
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+func (l *ListAuditLogsParams) UnmarshalJSON(data []byte) error {
+	type embed ListAuditLogsParams
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*l),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*l = ListAPIRequestsParams(value)
+	*l = ListAuditLogsParams(unmarshaler.embed)
+	l.EndTime = unmarshaler.EndTime.TimePtr()
+	l.StartTime = unmarshaler.StartTime.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
@@ -2884,18 +3298,22 @@ func (l *ListAPIRequestsParams) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (l *ListAPIRequestsParams) MarshalJSON() ([]byte, error) {
-	type embed ListAPIRequestsParams
+func (l *ListAuditLogsParams) MarshalJSON() ([]byte, error) {
+	type embed ListAuditLogsParams
 	var marshaler = struct {
 		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
 	}{
-		embed: embed(*l),
+		embed:     embed(*l),
+		EndTime:   internal.NewOptionalDateTime(l.EndTime),
+		StartTime: internal.NewOptionalDateTime(l.StartTime),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
 	return json.Marshal(explicitMarshaler)
 }
 
-func (l *ListAPIRequestsParams) String() string {
+func (l *ListAuditLogsParams) String() string {
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2908,14 +3326,14 @@ func (l *ListAPIRequestsParams) String() string {
 }
 
 var (
-	listAPIRequestsResponseFieldData   = big.NewInt(1 << 0)
-	listAPIRequestsResponseFieldParams = big.NewInt(1 << 1)
+	listAuditLogsResponseFieldData   = big.NewInt(1 << 0)
+	listAuditLogsResponseFieldParams = big.NewInt(1 << 1)
 )
 
-type ListAPIRequestsResponse struct {
-	Data []*APIKeyRequestListResponseData `json:"data" url:"data"`
+type ListAuditLogsResponse struct {
+	Data []*AuditLogListResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params *ListAPIRequestsParams `json:"params" url:"params"`
+	Params *ListAuditLogsParams `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2924,25 +3342,25 @@ type ListAPIRequestsResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListAPIRequestsResponse) GetData() []*APIKeyRequestListResponseData {
+func (l *ListAuditLogsResponse) GetData() []*AuditLogListResponseData {
 	if l == nil {
 		return nil
 	}
 	return l.Data
 }
 
-func (l *ListAPIRequestsResponse) GetParams() *ListAPIRequestsParams {
+func (l *ListAuditLogsResponse) GetParams() *ListAuditLogsParams {
 	if l == nil {
 		return nil
 	}
 	return l.Params
 }
 
-func (l *ListAPIRequestsResponse) GetExtraProperties() map[string]interface{} {
+func (l *ListAuditLogsResponse) GetExtraProperties() map[string]interface{} {
 	return l.extraProperties
 }
 
-func (l *ListAPIRequestsResponse) require(field *big.Int) {
+func (l *ListAuditLogsResponse) require(field *big.Int) {
 	if l.explicitFields == nil {
 		l.explicitFields = big.NewInt(0)
 	}
@@ -2951,25 +3369,25 @@ func (l *ListAPIRequestsResponse) require(field *big.Int) {
 
 // SetData sets the Data field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsResponse) SetData(data []*APIKeyRequestListResponseData) {
+func (l *ListAuditLogsResponse) SetData(data []*AuditLogListResponseData) {
 	l.Data = data
-	l.require(listAPIRequestsResponseFieldData)
+	l.require(listAuditLogsResponseFieldData)
 }
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIRequestsResponse) SetParams(params *ListAPIRequestsParams) {
+func (l *ListAuditLogsResponse) SetParams(params *ListAuditLogsParams) {
 	l.Params = params
-	l.require(listAPIRequestsResponseFieldParams)
+	l.require(listAuditLogsResponseFieldParams)
 }
 
-func (l *ListAPIRequestsResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler ListAPIRequestsResponse
+func (l *ListAuditLogsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListAuditLogsResponse
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*l = ListAPIRequestsResponse(value)
+	*l = ListAuditLogsResponse(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
@@ -2979,8 +3397,8 @@ func (l *ListAPIRequestsResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (l *ListAPIRequestsResponse) MarshalJSON() ([]byte, error) {
-	type embed ListAPIRequestsResponse
+func (l *ListAuditLogsResponse) MarshalJSON() ([]byte, error) {
+	type embed ListAuditLogsResponse
 	var marshaler = struct {
 		embed
 	}{
@@ -2990,7 +3408,7 @@ func (l *ListAPIRequestsResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-func (l *ListAPIRequestsResponse) String() string {
+func (l *ListAuditLogsResponse) String() string {
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value

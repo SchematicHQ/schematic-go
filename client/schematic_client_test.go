@@ -292,89 +292,143 @@ func TestCheckFlagDatastreamFallbackToAPI(t *testing.T) {
 	assert.True(t, result)
 }
 
-func TestCheckFlagResponse_Structure(t *testing.T) {
-	allocation := int64(100)
-	usage := int64(50)
-	eventName := "test-event"
-
-	entitlement := &rulesengine.FeatureEntitlement{
-		FeatureID:  "feat-123",
-		FeatureKey: "test-feature",
-		ValueType:  rulesengine.EntitlementValueTypeNumeric,
-		Allocation: &allocation,
-		Usage:      &usage,
-		EventName:  &eventName,
-	}
-
-	companyID := "comp-123"
-	flagID := "flag-456"
-	ruleID := "rule-789"
-	userID := "user-321"
-	ruleType := rulesengine.RuleTypePlanEntitlement
-
-	resp := &schematicclient.CheckFlagResponse{
-		CompanyID:   &companyID,
-		Entitlement: entitlement,
-		FlagID:      &flagID,
-		FlagKey:     "test-flag",
-		Reason:      "entitlement rule matched",
-		RuleID:      &ruleID,
-		RuleType:    &ruleType,
-		UserID:      &userID,
-		Value:       true,
-	}
-
-	assert.NotNil(t, resp)
-	assert.Equal(t, true, resp.Value)
-	assert.Equal(t, "test-flag", resp.FlagKey)
-	assert.NotNil(t, resp.Entitlement)
-	assert.Equal(t, "feat-123", resp.Entitlement.FeatureID)
-	assert.Equal(t, "test-feature", resp.Entitlement.FeatureKey)
-	assert.Equal(t, int64(100), *resp.Entitlement.Allocation)
-	assert.Equal(t, int64(50), *resp.Entitlement.Usage)
-}
-
 func TestCheckFlagWithEntitlement_Offline(t *testing.T) {
-	// Test offline mode
 	client := schematicclient.NewSchematicClient(
 		core.WithOfflineMode(),
 		core.WithDefaultFlagValues(map[string]bool{"test-flag": true}),
 	)
 	defer client.Close()
-	
-	ctx := context.Background()
-	evalCtx := &schematicgo.CheckFlagRequestBody{}
-	
-	resp, err := client.CheckFlagWithEntitlement(ctx, evalCtx, "test-flag")
-	
+
+	resp, err := client.CheckFlagWithEntitlement(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag")
+
 	assert.Nil(t, err)
 	assert.NotNil(t, resp)
 	assert.Equal(t, "test-flag", resp.FlagKey)
-	assert.Equal(t, true, resp.Value)
+	assert.True(t, resp.Value)
 	assert.Equal(t, "offline mode", resp.Reason)
 	assert.Nil(t, resp.Entitlement)
 }
 
-func TestCheckFlagResponse_NoDeprecatedFields(t *testing.T) {
-	// Verify that CheckFlagResponse doesn't include deprecated fields
-	// by ensuring it only has the expected fields
-	
-	resp := &schematicclient.CheckFlagResponse{
-		FlagKey: "test",
-		Value:   true,
-		Reason:  "test",
+func TestCheckFlagWithEntitlement_APIResponse(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithDisableFlagCheckCache(),
+	)
+	defer client.Close()
+
+	allocation := 100
+	usage := 50
+	softLimit := 200
+	eventName := "api-calls"
+	metricPeriod := schematicgo.FeatureEntitlementMetricPeriodCurrentMonth
+	monthReset := schematicgo.FeatureEntitlementMonthResetBillingCycle
+	creditID := "cred-123"
+	creditTotal := 1000.0
+	creditUsed := 250.0
+	creditRemaining := 750.0
+	companyID := "comp-123"
+	flagID := "flag-456"
+	ruleID := "rule-789"
+	userID := "user-321"
+	ruleType := "plan_entitlement"
+
+	responseBody := &schematicgo.CheckFlagResponse{
+		Data: &schematicgo.CheckFlagResponseData{
+			Value:     true,
+			Reason:    "entitlement matched",
+			CompanyID: &companyID,
+			FlagID:    &flagID,
+			RuleID:    &ruleID,
+			RuleType:  &ruleType,
+			UserID:    &userID,
+			Entitlement: &schematicgo.FeatureEntitlement{
+				FeatureID:       "feat-123",
+				FeatureKey:      "test-feature",
+				ValueType:       schematicgo.EntitlementValueTypeNumeric,
+				Allocation:      &allocation,
+				Usage:           &usage,
+				SoftLimit:       &softLimit,
+				EventName:       &eventName,
+				MetricPeriod:    &metricPeriod,
+				MonthReset:      &monthReset,
+				CreditID:        &creditID,
+				CreditTotal:     &creditTotal,
+				CreditUsed:      &creditUsed,
+				CreditRemaining: &creditRemaining,
+			},
+		},
 	}
-	
-	// If this compiles, it means we don't have the deprecated fields
-	// FeatureAllocation, FeatureUsage, FeatureUsageEvent, FeatureUsagePeriod, FeatureUsageResetAt
+
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil)
+
+	resp, err := client.CheckFlagWithEntitlement(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag")
+
+	assert.Nil(t, err)
 	assert.NotNil(t, resp)
-	
-	// Verify we can access the new Entitlement field
-	entitlement := &rulesengine.FeatureEntitlement{
-		FeatureID:  "test",
-		FeatureKey: "test",
-		ValueType:  rulesengine.EntitlementValueTypeBoolean,
+	assert.True(t, resp.Value)
+	assert.Equal(t, "entitlement matched", resp.Reason)
+	assert.Equal(t, "comp-123", *resp.CompanyID)
+	assert.Equal(t, "flag-456", *resp.FlagID)
+	assert.Equal(t, "rule-789", *resp.RuleID)
+	assert.Equal(t, rulesengine.RuleType("plan_entitlement"), *resp.RuleType)
+	assert.Equal(t, "user-321", *resp.UserID)
+
+	assert.NotNil(t, resp.Entitlement)
+	e := resp.Entitlement
+	assert.Equal(t, "feat-123", e.FeatureID)
+	assert.Equal(t, "test-feature", e.FeatureKey)
+	assert.Equal(t, rulesengine.EntitlementValueType("numeric"), e.ValueType)
+	assert.EqualValues(t, 100, *e.Allocation)
+	assert.EqualValues(t, 50, *e.Usage)
+	assert.EqualValues(t, 200, *e.SoftLimit)
+	assert.Equal(t, "api-calls", *e.EventName)
+	assert.Equal(t, rulesengine.MetricPeriod("current_month"), *e.MetricPeriod)
+	assert.Equal(t, rulesengine.MetricPeriodMonthReset("billing_cycle"), *e.MonthReset)
+	assert.Equal(t, "cred-123", *e.CreditID)
+	assert.Equal(t, 1000.0, *e.CreditTotal)
+	assert.Equal(t, 250.0, *e.CreditUsed)
+	assert.Equal(t, 750.0, *e.CreditRemaining)
+}
+
+func TestCheckFlagWithEntitlement_NilEntitlement(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithDisableFlagCheckCache(),
+	)
+	defer client.Close()
+
+	responseBody := &schematicgo.CheckFlagResponse{
+		Data: &schematicgo.CheckFlagResponseData{
+			Value:  false,
+			Reason: "no matching rules",
+		},
 	}
-	resp.Entitlement = entitlement
-	assert.Equal(t, "test", resp.Entitlement.FeatureKey)
+
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil)
+
+	resp, err := client.CheckFlagWithEntitlement(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag")
+
+	assert.Nil(t, err)
+	assert.NotNil(t, resp)
+	assert.False(t, resp.Value)
+	assert.Nil(t, resp.Entitlement)
+	assert.Nil(t, resp.RuleType)
 }

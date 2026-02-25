@@ -19,6 +19,7 @@ cache/local_benchmark_test.go
 cache/local_test.go
 cache/redis.go
 cmd/webhook-test-server/main.go
+core/check_flag_response.go
 core/request_option.go
 core/custom_options.go
 core/logger.go

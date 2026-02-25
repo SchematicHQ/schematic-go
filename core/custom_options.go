@@ -27,7 +27,7 @@ type ClientOptDisableFlagCheckCache struct {
 }
 
 func (c ClientOptDisableFlagCheckCache) applyRequestOptions(opts *RequestOptions) {
-	opts.FlagCheckCacheProviders = append(opts.FlagCheckCacheProviders, cache.NewLocalCache[bool](0, 0))
+	opts.FlagCheckCacheProviders = append(opts.FlagCheckCacheProviders, cache.NewLocalCache[*CheckFlagResponse](0, 0))
 }
 
 func WithDisableFlagCheckCache() RequestOption {
@@ -69,14 +69,14 @@ func WithEventCaptureBaseURL(url string) RequestOption {
 // Specify custom cache behavior
 
 type ClientOptFlagCheckCacheProvider struct {
-	provider cache.CacheProvider[bool]
+	provider cache.CacheProvider[*CheckFlagResponse]
 }
 
 func (c ClientOptFlagCheckCacheProvider) applyRequestOptions(opts *RequestOptions) {
 	opts.FlagCheckCacheProviders = append(opts.FlagCheckCacheProviders, c.provider)
 }
 
-func WithFlagCheckCacheProvider(provider cache.CacheProvider[bool]) RequestOption {
+func WithFlagCheckCacheProvider(provider cache.CacheProvider[*CheckFlagResponse]) RequestOption {
 	return ClientOptFlagCheckCacheProvider{provider: provider}
 }
 
@@ -88,7 +88,7 @@ type ClientOptLocalFlagCheckCache struct {
 }
 
 func (c ClientOptLocalFlagCheckCache) applyRequestOptions(opts *RequestOptions) {
-	opts.FlagCheckCacheProviders = append(opts.FlagCheckCacheProviders, cache.NewLocalCache[bool](c.maxSize, c.ttl))
+	opts.FlagCheckCacheProviders = append(opts.FlagCheckCacheProviders, cache.NewLocalCache[*CheckFlagResponse](c.maxSize, c.ttl))
 }
 
 func WithLocalFlagCheckCache(maxSize int, ttl time.Duration) RequestOption {

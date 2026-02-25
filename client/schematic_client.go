@@ -25,7 +25,7 @@ type SchematicClient struct {
 	ctxErrors               chan *core.CtxError
 	eventBufferPeriod       *time.Duration
 	events                  chan *schematicgo.CreateEventRequestBody
-	flagCheckCacheProviders []schematicgo.BoolCacheProvider
+	flagCheckCacheProviders []cache.CacheProvider[*core.CheckFlagResponse]
 	flagDefaults            map[string]bool
 	isOffline               bool
 	logger                  core.Logger
@@ -34,20 +34,8 @@ type SchematicClient struct {
 	workerInterval          time.Duration
 }
 
-// CheckFlagResponse contains the result of a flag check with entitlement information.
-// Note: FeatureAllocation and FeatureUsage* fields are deprecated and not included.
-// Use Entitlement field for allocation and usage information.
-type CheckFlagResponse struct {
-	CompanyID   *string                         `json:"company_id,omitempty"`
-	Entitlement *rulesengine.FeatureEntitlement `json:"entitlement,omitempty"`
-	FlagID      *string                         `json:"flag_id,omitempty"`
-	FlagKey     string                          `json:"flag_key"`
-	Reason      string                          `json:"reason"`
-	RuleID      *string                         `json:"rule_id,omitempty"`
-	RuleType    *rulesengine.RuleType           `json:"rule_type,omitempty"`
-	UserID      *string                         `json:"user_id,omitempty"`
-	Value       bool                            `json:"value"`
-}
+// CheckFlagResponse is an alias for core.CheckFlagResponse to preserve the public API.
+type CheckFlagResponse = core.CheckFlagResponse
 
 func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	options := core.NewRequestOptions(opts...)
@@ -58,7 +46,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 
 	// If no caching behavior is specified, assume a default behavior
 	if len(options.FlagCheckCacheProviders) == 0 {
-		opts = append(opts, core.WithFlagCheckCacheProvider(cache.NewDefaultCache[bool]()))
+		opts = append(opts, core.WithFlagCheckCacheProvider(cache.NewDefaultCache[*core.CheckFlagResponse]()))
 	}
 
 	if options.Logger == nil {
@@ -182,12 +170,8 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 
 	cacheKey := flags.FlagCheckCacheKey(evalCtx, flagKey)
 	for _, provider := range c.flagCheckCacheProviders {
-		if value, ok := provider.Get(ctx, cacheKey); ok {
-			return &CheckFlagResponse{
-				FlagKey: flagKey,
-				Value:   value,
-				Reason:  "cache hit",
-			}
+		if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
+			return cached
 		}
 	}
 
@@ -214,18 +198,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 		}
 	}
 
-	go func() {
-		for _, provider := range c.flagCheckCacheProviders {
-			if err := provider.Set(ctx, cacheKey, resp.Data.Value, nil); err != nil {
-				c.ctxErrors <- &core.CtxError{
-					Ctx: ctx,
-					Err: err,
-				}
-			}
-		}
-	}()
-
-	return &CheckFlagResponse{
+	checkFlagResp := &CheckFlagResponse{
 		CompanyID:   resp.Data.CompanyID,
 		Entitlement: toRulesEngineEntitlement(resp.Data.Entitlement),
 		FlagID:      resp.Data.FlagID,
@@ -236,6 +209,19 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 		UserID:      resp.Data.UserID,
 		Value:       resp.Data.Value,
 	}
+
+	go func() {
+		for _, provider := range c.flagCheckCacheProviders {
+			if err := provider.Set(ctx, cacheKey, checkFlagResp, nil); err != nil {
+				c.ctxErrors <- &core.CtxError{
+					Ctx: ctx,
+					Err: err,
+				}
+			}
+		}
+	}()
+
+	return checkFlagResp
 }
 
 // toCheckFlagResponse converts a rulesengine.CheckFlagResult to CheckFlagResponse,

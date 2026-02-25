@@ -432,3 +432,76 @@ func TestCheckFlagWithEntitlement_NilEntitlement(t *testing.T) {
 	assert.Nil(t, resp.Entitlement)
 	assert.Nil(t, resp.RuleType)
 }
+
+func TestCheckFlagWithEntitlement_CacheHitPreservesEntitlement(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+	)
+	defer client.Close()
+
+	companyID := "comp-123"
+	flagID := "flag-456"
+	ruleID := "rule-789"
+	userID := "user-321"
+	ruleType := "plan_entitlement"
+	allocation := 100
+
+	responseBody := &schematicgo.CheckFlagResponse{
+		Data: &schematicgo.CheckFlagResponseData{
+			Value:     true,
+			Reason:    "entitlement matched",
+			CompanyID: &companyID,
+			FlagID:    &flagID,
+			RuleID:    &ruleID,
+			RuleType:  &ruleType,
+			UserID:    &userID,
+			Entitlement: &schematicgo.FeatureEntitlement{
+				FeatureID:  "feat-123",
+				FeatureKey: "test-feature",
+				ValueType:  schematicgo.EntitlementValueTypeNumeric,
+				Allocation: &allocation,
+			},
+		},
+	}
+
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	// Expect exactly one API call — the second call should hit the cache
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil).Times(1)
+
+	// First call hits the API
+	resp1, err := client.CheckFlagWithEntitlement(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag")
+	assert.Nil(t, err)
+	assert.NotNil(t, resp1)
+	assert.True(t, resp1.Value)
+	assert.Equal(t, "entitlement matched", resp1.Reason)
+	assert.NotNil(t, resp1.Entitlement)
+	assert.Equal(t, "feat-123", resp1.Entitlement.FeatureID)
+
+	// Wait for the cache-set goroutine to complete
+	time.Sleep(10 * time.Millisecond)
+
+	// Second call should hit the cache and preserve all entitlement data
+	resp2, err := client.CheckFlagWithEntitlement(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag")
+	assert.Nil(t, err)
+	assert.NotNil(t, resp2)
+	assert.True(t, resp2.Value)
+	assert.Equal(t, "entitlement matched", resp2.Reason)
+	assert.Equal(t, "comp-123", *resp2.CompanyID)
+	assert.Equal(t, "flag-456", *resp2.FlagID)
+	assert.Equal(t, "rule-789", *resp2.RuleID)
+	assert.Equal(t, rulesengine.RuleType("plan_entitlement"), *resp2.RuleType)
+	assert.Equal(t, "user-321", *resp2.UserID)
+	assert.NotNil(t, resp2.Entitlement)
+	assert.Equal(t, "feat-123", resp2.Entitlement.FeatureID)
+	assert.Equal(t, "test-feature", resp2.Entitlement.FeatureKey)
+	assert.EqualValues(t, 100, *resp2.Entitlement.Allocation)
+}

@@ -153,7 +153,9 @@ func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx 
 			},
 		}
 
-		c.enqueueEvent("flag_check", body)
+		if err := c.enqueueEvent("flag_check", body); err != nil {
+			c.logger.Error(ctx, fmt.Sprintf("Failed to enqueue flag_check event: %v", err))
+		}
 
 		return checkFlagResp, nil
 	}

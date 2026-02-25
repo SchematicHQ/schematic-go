@@ -110,6 +110,9 @@ func (c *SchematicClient) useDataStream() bool {
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	resp, _ := c.CheckFlagWithEntitlement(ctx, evalCtx, flagKey)
+	if resp == nil {
+		return c.getFlagDefault(flagKey)
+	}
 	return resp.Value
 }
 
@@ -132,6 +135,9 @@ func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx 
 		}
 
 		checkFlagResp := toCheckFlagResponse(resp)
+		if checkFlagResp == nil {
+			return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
+		}
 
 		body := schematicgo.EventBody{
 			EventBodyFlagCheck: &schematicgo.EventBodyFlagCheck{
@@ -155,10 +161,15 @@ func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx 
 	return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
 }
 
-func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) *CheckFlagResponse {
+func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (result *CheckFlagResponse) {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
+			result = &CheckFlagResponse{
+				FlagKey: flagKey,
+				Value:   c.getFlagDefault(flagKey),
+				Reason:  "error",
+			}
 		}
 	}()
 

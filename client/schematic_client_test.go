@@ -10,12 +10,12 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
+	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
 	schematicclient "github.com/schematichq/schematic-go/client"
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/mocks"
 	option "github.com/schematichq/schematic-go/option"
-	"github.com/schematichq/rulesengine"
 	"github.com/stretchr/testify/assert"
 )
 

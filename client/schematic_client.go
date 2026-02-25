@@ -109,43 +109,53 @@ func (c *SchematicClient) useDataStream() bool {
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+	resp, _ := c.CheckFlagWithEntitlement(ctx, evalCtx, flagKey)
+	return resp.Value
+}
+
+// CheckFlagWithEntitlement checks a flag and returns the full response including entitlement information.
+// Note: The deprecated FeatureAllocation and FeatureUsage* fields are not included in the response.
+func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*CheckFlagResponse, error) {
 	if c.isOffline {
-		return c.getFlagDefault(flagKey)
+		return &CheckFlagResponse{
+			FlagKey: flagKey,
+			Value:   c.getFlagDefault(flagKey),
+			Reason:  "offline mode",
+		}, nil
 	}
 
 	if c.useDataStream() {
-		// Try datastream first - it will check cache and handle replicator mode appropriately
-		// If replicator mode is enabled, datastream will use cached data even if replicator is not ready
 		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
-
-		// Fall back to API if datastream fails
 		if err != nil {
 			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed (%v), falling back to API", err))
-			return c.checkFlag(ctx, evalCtx, flagKey).Value
+			return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
 		}
+
+		checkFlagResp := toCheckFlagResponse(resp)
 
 		body := schematicgo.EventBody{
 			EventBodyFlagCheck: &schematicgo.EventBodyFlagCheck{
 				FlagKey:    flagKey,
-				Value:      resp.Value,
-				CompanyID:  resp.CompanyID,
-				UserID:     resp.UserID,
-				FlagID:     resp.FlagID,
+				Value:      checkFlagResp.Value,
+				CompanyID:  checkFlagResp.CompanyID,
+				UserID:     checkFlagResp.UserID,
+				FlagID:     checkFlagResp.FlagID,
 				ReqCompany: evalCtx.Company,
 				ReqUser:    evalCtx.User,
-				RuleID:     resp.RuleID,
-				Reason:     resp.Reason,
+				RuleID:     checkFlagResp.RuleID,
+				Reason:     checkFlagResp.Reason,
 			},
 		}
 
 		c.enqueueEvent("flag_check", body)
 
-		return resp.Value
+		return checkFlagResp, nil
 	}
-	return c.checkFlag(ctx, evalCtx, flagKey).Value
+
+	return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
 }
 
-func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) *CheckFlagResponse {
+func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) *CheckFlagResponse {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
@@ -213,50 +223,6 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 		UserID:      resp.Data.UserID,
 		Value:       resp.Data.Value,
 	}
-}
-
-// CheckFlagWithEntitlement checks a flag and returns the full response including entitlement information.
-// This method returns the complete flag check result, including any matched entitlement.
-// Note: The deprecated FeatureAllocation and FeatureUsage* fields are not included in the response.
-func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*CheckFlagResponse, error) {
-	if c.isOffline {
-		return &CheckFlagResponse{
-			FlagKey: flagKey,
-			Value:   c.getFlagDefault(flagKey),
-			Reason:  "offline mode",
-		}, nil
-	}
-
-	if c.useDataStream() {
-		// Try datastream first - it will check cache and handle replicator mode appropriately
-		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
-		if err != nil {
-			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed (%v), falling back to API", err))
-			return c.checkFlag(ctx, evalCtx, flagKey), nil
-		}
-
-		checkFlagResp := toCheckFlagResponse(resp)
-
-		body := schematicgo.EventBody{
-			EventBodyFlagCheck: &schematicgo.EventBodyFlagCheck{
-				FlagKey:    flagKey,
-				Value:      checkFlagResp.Value,
-				CompanyID:  checkFlagResp.CompanyID,
-				UserID:     checkFlagResp.UserID,
-				FlagID:     checkFlagResp.FlagID,
-				ReqCompany: evalCtx.Company,
-				ReqUser:    evalCtx.User,
-				RuleID:     checkFlagResp.RuleID,
-				Reason:     checkFlagResp.Reason,
-			},
-		}
-
-		c.enqueueEvent("flag_check", body)
-
-		return checkFlagResp, nil
-	}
-
-	return c.checkFlag(ctx, evalCtx, flagKey), nil
 }
 
 // toCheckFlagResponse converts a rulesengine.CheckFlagResult to CheckFlagResponse,

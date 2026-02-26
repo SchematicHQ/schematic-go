@@ -171,7 +171,8 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 	cacheKey := flags.FlagCheckCacheKey(evalCtx, flagKey)
 	for _, provider := range c.flagCheckCacheProviders {
 		if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
-			return cached
+			result := *cached
+			return &result
 		}
 	}
 
@@ -210,9 +211,10 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 		Value:       resp.Data.Value,
 	}
 
+	cachedCopy := *checkFlagResp
 	go func() {
 		for _, provider := range c.flagCheckCacheProviders {
-			if err := provider.Set(ctx, cacheKey, checkFlagResp, nil); err != nil {
+			if err := provider.Set(ctx, cacheKey, &cachedCopy, nil); err != nil {
 				c.ctxErrors <- &core.CtxError{
 					Ctx: ctx,
 					Err: err,

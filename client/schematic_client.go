@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/buffer"
 	"github.com/schematichq/schematic-go/cache"
@@ -24,7 +25,7 @@ type SchematicClient struct {
 	ctxErrors               chan *core.CtxError
 	eventBufferPeriod       *time.Duration
 	events                  chan *schematicgo.CreateEventRequestBody
-	flagCheckCacheProviders []schematicgo.BoolCacheProvider
+	flagCheckCacheProviders []cache.CacheProvider[*core.CheckFlagResponse]
 	flagDefaults            map[string]bool
 	isOffline               bool
 	logger                  core.Logger
@@ -32,6 +33,9 @@ type SchematicClient struct {
 	stopWorker              chan struct{}
 	workerInterval          time.Duration
 }
+
+// CheckFlagResponse is an alias for core.CheckFlagResponse to preserve the public API.
+type CheckFlagResponse = core.CheckFlagResponse
 
 func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	options := core.NewRequestOptions(opts...)
@@ -42,7 +46,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 
 	// If no caching behavior is specified, assume a default behavior
 	if len(options.FlagCheckCacheProviders) == 0 {
-		opts = append(opts, core.WithFlagCheckCacheProvider(cache.NewDefaultCache[bool]()))
+		opts = append(opts, core.WithFlagCheckCacheProvider(cache.NewDefaultCache[*core.CheckFlagResponse]()))
 	}
 
 	if options.Logger == nil {
@@ -93,46 +97,69 @@ func (c *SchematicClient) useDataStream() bool {
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
-	if c.isOffline {
+	resp, _ := c.CheckFlagWithEntitlement(ctx, evalCtx, flagKey)
+	if resp == nil {
 		return c.getFlagDefault(flagKey)
+	}
+	return resp.Value
+}
+
+// CheckFlagWithEntitlement checks a flag and returns the full response including entitlement information.
+// Note: The deprecated FeatureAllocation and FeatureUsage* fields are not included in the response.
+func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*CheckFlagResponse, error) {
+	if c.isOffline {
+		return &CheckFlagResponse{
+			FlagKey: flagKey,
+			Value:   c.getFlagDefault(flagKey),
+			Reason:  "offline mode",
+		}, nil
 	}
 
 	if c.useDataStream() {
-		// Try datastream first - it will check cache and handle replicator mode appropriately
-		// If replicator mode is enabled, datastream will use cached data even if replicator is not ready
 		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
-
-		// Fall back to API if datastream fails
 		if err != nil {
 			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed (%v), falling back to API", err))
-			return c.checkFlag(ctx, evalCtx, flagKey)
+			return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
+		}
+
+		checkFlagResp := toCheckFlagResponse(resp)
+		if checkFlagResp == nil {
+			return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
 		}
 
 		body := schematicgo.EventBody{
 			EventBodyFlagCheck: &schematicgo.EventBodyFlagCheck{
 				FlagKey:    flagKey,
-				Value:      resp.Value,
-				CompanyID:  resp.CompanyID,
-				UserID:     resp.UserID,
-				FlagID:     resp.FlagID,
+				Value:      checkFlagResp.Value,
+				CompanyID:  checkFlagResp.CompanyID,
+				UserID:     checkFlagResp.UserID,
+				FlagID:     checkFlagResp.FlagID,
 				ReqCompany: evalCtx.Company,
 				ReqUser:    evalCtx.User,
-				RuleID:     resp.RuleID,
-				Reason:     resp.Reason,
+				RuleID:     checkFlagResp.RuleID,
+				Reason:     checkFlagResp.Reason,
 			},
 		}
 
-		c.enqueueEvent("flag_check", body)
+		if err := c.enqueueEvent("flag_check", body); err != nil {
+			c.logger.Error(ctx, fmt.Sprintf("Failed to enqueue flag_check event: %v", err))
+		}
 
-		return resp.Value
+		return checkFlagResp, nil
 	}
-	return c.checkFlag(ctx, evalCtx, flagKey)
+
+	return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
 }
 
-func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
+func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (result *CheckFlagResponse) {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
+			result = &CheckFlagResponse{
+				FlagKey: flagKey,
+				Value:   c.getFlagDefault(flagKey),
+				Reason:  "error",
+			}
 		}
 	}()
 
@@ -143,8 +170,9 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 
 	cacheKey := flags.FlagCheckCacheKey(evalCtx, flagKey)
 	for _, provider := range c.flagCheckCacheProviders {
-		if value, ok := provider.Get(ctx, cacheKey); ok {
-			return value
+		if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
+			result := *cached
+			return &result
 		}
 	}
 
@@ -155,17 +183,38 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 			Err: err,
 		}
 
-		return c.getFlagDefault(flagKey)
+		return &CheckFlagResponse{
+			FlagKey: flagKey,
+			Value:   c.getFlagDefault(flagKey),
+			Reason:  "error",
+		}
 	}
 
 	if resp == nil {
 		// if the client was not initialized with an API key, we'll have a no-op here which returns an empty response
-		return c.getFlagDefault(flagKey)
+		return &CheckFlagResponse{
+			FlagKey: flagKey,
+			Value:   c.getFlagDefault(flagKey),
+			Reason:  "no response",
+		}
 	}
 
+	checkFlagResp := &CheckFlagResponse{
+		CompanyID:   resp.Data.CompanyID,
+		Entitlement: toRulesEngineEntitlement(resp.Data.Entitlement),
+		FlagID:      resp.Data.FlagID,
+		FlagKey:     flagKey,
+		Reason:      resp.Data.Reason,
+		RuleID:      resp.Data.RuleID,
+		RuleType:    toRulesEngineRuleType(resp.Data.RuleType),
+		UserID:      resp.Data.UserID,
+		Value:       resp.Data.Value,
+	}
+
+	cachedCopy := *checkFlagResp
 	go func() {
 		for _, provider := range c.flagCheckCacheProviders {
-			if err := provider.Set(ctx, cacheKey, resp.Data.Value, nil); err != nil {
+			if err := provider.Set(ctx, cacheKey, &cachedCopy, nil); err != nil {
 				c.ctxErrors <- &core.CtxError{
 					Ctx: ctx,
 					Err: err,
@@ -174,7 +223,78 @@ func (c *SchematicClient) checkFlag(ctx context.Context, evalCtx *schematicgo.Ch
 		}
 	}()
 
-	return resp.Data.Value
+	return checkFlagResp
+}
+
+// toCheckFlagResponse converts a rulesengine.CheckFlagResult to CheckFlagResponse,
+// excluding deprecated FeatureAllocation and FeatureUsage* fields.
+func toCheckFlagResponse(result *rulesengine.CheckFlagResult) *CheckFlagResponse {
+	if result == nil {
+		return nil
+	}
+
+	return &CheckFlagResponse{
+		CompanyID:   result.CompanyID,
+		Entitlement: result.Entitlement,
+		FlagID:      result.FlagID,
+		FlagKey:     result.FlagKey,
+		Reason:      result.Reason,
+		RuleID:      result.RuleID,
+		RuleType:    result.RuleType,
+		UserID:      result.UserID,
+		Value:       result.Value,
+	}
+}
+
+// toRulesEngineEntitlement converts a schematicgo.FeatureEntitlement to a rulesengine.FeatureEntitlement.
+func toRulesEngineEntitlement(e *schematicgo.FeatureEntitlement) *rulesengine.FeatureEntitlement {
+	if e == nil {
+		return nil
+	}
+
+	result := &rulesengine.FeatureEntitlement{
+		FeatureID:       e.FeatureID,
+		FeatureKey:      e.FeatureKey,
+		ValueType:       rulesengine.EntitlementValueType(e.ValueType),
+		EventName:       e.EventName,
+		MetricResetAt:   e.MetricResetAt,
+		CreditID:        e.CreditID,
+		CreditTotal:     e.CreditTotal,
+		CreditUsed:      e.CreditUsed,
+		CreditRemaining: e.CreditRemaining,
+	}
+
+	if e.Allocation != nil {
+		v := int64(*e.Allocation)
+		result.Allocation = &v
+	}
+	if e.SoftLimit != nil {
+		v := int64(*e.SoftLimit)
+		result.SoftLimit = &v
+	}
+	if e.Usage != nil {
+		v := int64(*e.Usage)
+		result.Usage = &v
+	}
+	if e.MetricPeriod != nil {
+		v := rulesengine.MetricPeriod(string(*e.MetricPeriod))
+		result.MetricPeriod = &v
+	}
+	if e.MonthReset != nil {
+		v := rulesengine.MetricPeriodMonthReset(string(*e.MonthReset))
+		result.MonthReset = &v
+	}
+
+	return result
+}
+
+// toRulesEngineRuleType converts a string pointer to a rulesengine.RuleType pointer.
+func toRulesEngineRuleType(s *string) *rulesengine.RuleType {
+	if s == nil {
+		return nil
+	}
+	v := rulesengine.RuleType(*s)
+	return &v
 }
 
 func (c *SchematicClient) Close() {

@@ -177,8 +177,9 @@ var (
 )
 
 type CreateEventRequestBody struct {
-	Body      *EventBody `json:"body,omitempty" url:"body,omitempty"`
-	EventType EventType  `json:"event_type" url:"event_type"`
+	Body *EventBody `json:"body,omitempty" url:"body,omitempty"`
+	// Either 'identify' or 'track'
+	EventType EventType `json:"event_type" url:"event_type"`
 	// Optionally provide a timestamp at which the event was sent to Schematic
 	SentAt *time.Time `json:"sent_at,omitempty" url:"sent_at,omitempty"`
 

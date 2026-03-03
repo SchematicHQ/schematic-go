@@ -35,13 +35,14 @@ var (
 	createPlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 21)
 	createPlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 22)
 	createPlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 23)
-	createPlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 24)
-	createPlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 25)
-	createPlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 26)
-	createPlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 27)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 28)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 29)
-	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 30)
+	createPlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 24)
+	createPlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 25)
+	createPlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 26)
+	createPlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 27)
+	createPlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 28)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 29)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 30)
+	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 31)
 )
 
 type CreatePlanGroupRequestBody struct {
@@ -70,6 +71,7 @@ type CreatePlanGroupRequestBody struct {
 	ShowAsMonthlyPrices                    bool                              `json:"show_as_monthly_prices" url:"-"`
 	ShowCredits                            bool                              `json:"show_credits" url:"-"`
 	ShowFeatureDescription                 bool                              `json:"show_feature_description" url:"-"`
+	ShowHardLimit                          bool                              `json:"show_hard_limit" url:"-"`
 	ShowPeriodToggle                       bool                              `json:"show_period_toggle" url:"-"`
 	ShowZeroPriceAsFree                    bool                              `json:"show_zero_price_as_free" url:"-"`
 	SyncCustomerBillingDetails             bool                              `json:"sync_customer_billing_details" url:"-"`
@@ -255,6 +257,13 @@ func (c *CreatePlanGroupRequestBody) SetShowCredits(showCredits bool) {
 func (c *CreatePlanGroupRequestBody) SetShowFeatureDescription(showFeatureDescription bool) {
 	c.ShowFeatureDescription = showFeatureDescription
 	c.require(createPlanGroupRequestBodyFieldShowFeatureDescription)
+}
+
+// SetShowHardLimit sets the ShowHardLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanGroupRequestBody) SetShowHardLimit(showHardLimit bool) {
+	c.ShowHardLimit = showHardLimit
+	c.require(createPlanGroupRequestBodyFieldShowHardLimit)
 }
 
 // SetShowPeriodToggle sets the ShowPeriodToggle field and marks it as non-optional;
@@ -514,14 +523,16 @@ var (
 	componentSettingsResponseDataFieldShowAsMonthlyPrices    = big.NewInt(1 << 0)
 	componentSettingsResponseDataFieldShowCredits            = big.NewInt(1 << 1)
 	componentSettingsResponseDataFieldShowFeatureDescription = big.NewInt(1 << 2)
-	componentSettingsResponseDataFieldShowPeriodToggle       = big.NewInt(1 << 3)
-	componentSettingsResponseDataFieldShowZeroPriceAsFree    = big.NewInt(1 << 4)
+	componentSettingsResponseDataFieldShowHardLimit          = big.NewInt(1 << 3)
+	componentSettingsResponseDataFieldShowPeriodToggle       = big.NewInt(1 << 4)
+	componentSettingsResponseDataFieldShowZeroPriceAsFree    = big.NewInt(1 << 5)
 )
 
 type ComponentSettingsResponseData struct {
 	ShowAsMonthlyPrices    bool `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
 	ShowCredits            bool `json:"show_credits" url:"show_credits"`
 	ShowFeatureDescription bool `json:"show_feature_description" url:"show_feature_description"`
+	ShowHardLimit          bool `json:"show_hard_limit" url:"show_hard_limit"`
 	ShowPeriodToggle       bool `json:"show_period_toggle" url:"show_period_toggle"`
 	ShowZeroPriceAsFree    bool `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
 
@@ -551,6 +562,13 @@ func (c *ComponentSettingsResponseData) GetShowFeatureDescription() bool {
 		return false
 	}
 	return c.ShowFeatureDescription
+}
+
+func (c *ComponentSettingsResponseData) GetShowHardLimit() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowHardLimit
 }
 
 func (c *ComponentSettingsResponseData) GetShowPeriodToggle() bool {
@@ -597,6 +615,13 @@ func (c *ComponentSettingsResponseData) SetShowCredits(showCredits bool) {
 func (c *ComponentSettingsResponseData) SetShowFeatureDescription(showFeatureDescription bool) {
 	c.ShowFeatureDescription = showFeatureDescription
 	c.require(componentSettingsResponseDataFieldShowFeatureDescription)
+}
+
+// SetShowHardLimit sets the ShowHardLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentSettingsResponseData) SetShowHardLimit(showHardLimit bool) {
+	c.ShowHardLimit = showHardLimit
+	c.require(componentSettingsResponseDataFieldShowHardLimit)
 }
 
 // SetShowPeriodToggle sets the ShowPeriodToggle field and marks it as non-optional;
@@ -3256,13 +3281,14 @@ var (
 	updatePlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 21)
 	updatePlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 22)
 	updatePlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 23)
-	updatePlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 24)
-	updatePlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 25)
-	updatePlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 26)
-	updatePlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 27)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 28)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 29)
-	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 30)
+	updatePlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 24)
+	updatePlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 25)
+	updatePlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 26)
+	updatePlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 27)
+	updatePlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 28)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 29)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 30)
+	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 31)
 )
 
 type UpdatePlanGroupRequestBody struct {
@@ -3291,6 +3317,7 @@ type UpdatePlanGroupRequestBody struct {
 	ShowAsMonthlyPrices                    bool                              `json:"show_as_monthly_prices" url:"-"`
 	ShowCredits                            bool                              `json:"show_credits" url:"-"`
 	ShowFeatureDescription                 bool                              `json:"show_feature_description" url:"-"`
+	ShowHardLimit                          bool                              `json:"show_hard_limit" url:"-"`
 	ShowPeriodToggle                       bool                              `json:"show_period_toggle" url:"-"`
 	ShowZeroPriceAsFree                    bool                              `json:"show_zero_price_as_free" url:"-"`
 	SyncCustomerBillingDetails             bool                              `json:"sync_customer_billing_details" url:"-"`
@@ -3476,6 +3503,13 @@ func (u *UpdatePlanGroupRequestBody) SetShowCredits(showCredits bool) {
 func (u *UpdatePlanGroupRequestBody) SetShowFeatureDescription(showFeatureDescription bool) {
 	u.ShowFeatureDescription = showFeatureDescription
 	u.require(updatePlanGroupRequestBodyFieldShowFeatureDescription)
+}
+
+// SetShowHardLimit sets the ShowHardLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanGroupRequestBody) SetShowHardLimit(showHardLimit bool) {
+	u.ShowHardLimit = showHardLimit
+	u.require(updatePlanGroupRequestBodyFieldShowHardLimit)
 }
 
 // SetShowPeriodToggle sets the ShowPeriodToggle field and marks it as non-optional;

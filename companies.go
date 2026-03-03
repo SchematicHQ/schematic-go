@@ -2077,21 +2077,23 @@ var (
 )
 
 type PlanChangeResponseData struct {
-	Action                   PlanChangeAction              `json:"action" url:"action"`
-	ActorType                ActorType                     `json:"actor_type" url:"actor_type"`
-	AddOnsAdded              []*PlanSnapshotView           `json:"add_ons_added" url:"add_ons_added"`
-	AddOnsRemoved            []*PlanSnapshotView           `json:"add_ons_removed" url:"add_ons_removed"`
-	APIKey                   *APIKeyResponseData           `json:"api_key,omitempty" url:"api_key,omitempty"`
-	AuditLog                 *AuditLogListResponseData     `json:"audit_log,omitempty" url:"audit_log,omitempty"`
-	BasePlan                 *PlanSnapshotView             `json:"base_plan,omitempty" url:"base_plan,omitempty"`
-	BasePlanAction           *PlanChangeBasePlanAction     `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
-	Company                  *CompanyResponseData          `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID                string                        `json:"company_id" url:"company_id"`
-	CreatedAt                time.Time                     `json:"created_at" url:"created_at"`
-	EnvironmentID            string                        `json:"environment_id" url:"environment_id"`
-	ID                       string                        `json:"id" url:"id"`
-	PreviousBasePlan         *PlanSnapshotView             `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
-	RequestID                *string                       `json:"request_id,omitempty" url:"request_id,omitempty"`
+	Action        PlanChangeAction          `json:"action" url:"action"`
+	ActorType     ActorType                 `json:"actor_type" url:"actor_type"`
+	AddOnsAdded   []*PlanSnapshotView       `json:"add_ons_added" url:"add_ons_added"`
+	AddOnsRemoved []*PlanSnapshotView       `json:"add_ons_removed" url:"add_ons_removed"`
+	APIKey        *APIKeyResponseData       `json:"api_key,omitempty" url:"api_key,omitempty"`
+	AuditLog      *AuditLogListResponseData `json:"audit_log,omitempty" url:"audit_log,omitempty"`
+	BasePlan      *PlanSnapshotView         `json:"base_plan,omitempty" url:"base_plan,omitempty"`
+	// Any special behavior that affected the assignment of the base plan during this change.
+	BasePlanAction   *PlanChangeBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
+	Company          *CompanyResponseData      `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID        string                    `json:"company_id" url:"company_id"`
+	CreatedAt        time.Time                 `json:"created_at" url:"created_at"`
+	EnvironmentID    string                    `json:"environment_id" url:"environment_id"`
+	ID               string                    `json:"id" url:"id"`
+	PreviousBasePlan *PlanSnapshotView         `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
+	RequestID        *string                   `json:"request_id,omitempty" url:"request_id,omitempty"`
+	// If a subscription was changed as a part of this plan change, indicates the type of change that was made.
 	SubscriptionChangeAction *PlanChangeSubscriptionAction `json:"subscription_change_action,omitempty" url:"subscription_change_action,omitempty"`
 	// Any traits were updated as part of this plan change (via pay-in-advance entitlements).
 	TraitsUpdated []*SubscriptionTraitUpdate `json:"traits_updated" url:"traits_updated"`
@@ -3722,7 +3724,8 @@ type CountCompaniesParams struct {
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
-	SortOrderColumn    *string        `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	SortOrderColumn *string `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
 	SortOrderDirection *SortDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
 	// Filter companies by one or more subscription statuses
 	SubscriptionStatuses []SubscriptionStatus `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
@@ -7276,7 +7279,8 @@ type ListCompaniesParams struct {
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
-	SortOrderColumn    *string        `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	SortOrderColumn *string `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
 	SortOrderDirection *SortDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
 	// Filter companies by one or more subscription statuses
 	SubscriptionStatuses []SubscriptionStatus `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`

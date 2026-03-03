@@ -450,3 +450,35 @@ func (c *Client) CountBillingPlanCreditGrants(
 	}
 	return response.Body, nil
 }
+
+func (c *Client) ListCreditEventLedger(
+	ctx context.Context,
+	request *schematichq.ListCreditEventLedgerRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListCreditEventLedgerResponse, error) {
+	response, err := c.WithRawResponse.ListCreditEventLedger(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) CountCreditEventLedger(
+	ctx context.Context,
+	request *schematichq.CountCreditEventLedgerRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CountCreditEventLedgerResponse, error) {
+	response, err := c.WithRawResponse.CountCreditEventLedger(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}

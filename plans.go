@@ -525,7 +525,8 @@ type CountPlansParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset   *int      `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter by plan type
 	PlanType *PlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
 	Q        *string   `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
@@ -1533,7 +1534,8 @@ type ListPlansParams struct {
 	// Page limit (default 100)
 	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset   *int      `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter by plan type
 	PlanType *PlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
 	Q        *string   `json:"q,omitempty" url:"q,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID

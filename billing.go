@@ -7298,7 +7298,7 @@ var (
 type CreateBillingProductRequestBody struct {
 	ExternalID   string               `json:"external_id" url:"-"`
 	IsActive     *bool                `json:"is_active,omitempty" url:"-"`
-	Name         string               `json:"name" url:"-"`
+	Name         *string              `json:"name,omitempty" url:"-"`
 	Price        float64              `json:"price" url:"-"`
 	ProviderType *BillingProviderType `json:"provider_type,omitempty" url:"-"`
 
@@ -7329,7 +7329,7 @@ func (c *CreateBillingProductRequestBody) SetIsActive(isActive *bool) {
 
 // SetName sets the Name field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingProductRequestBody) SetName(name string) {
+func (c *CreateBillingProductRequestBody) SetName(name *string) {
 	c.Name = name
 	c.require(createBillingProductRequestBodyFieldName)
 }
@@ -7568,24 +7568,26 @@ var (
 	createInvoiceRequestBodyFieldDueDate                 = big.NewInt(1 << 6)
 	createInvoiceRequestBodyFieldExternalID              = big.NewInt(1 << 7)
 	createInvoiceRequestBodyFieldPaymentMethodExternalID = big.NewInt(1 << 8)
-	createInvoiceRequestBodyFieldSubscriptionExternalID  = big.NewInt(1 << 9)
-	createInvoiceRequestBodyFieldSubtotal                = big.NewInt(1 << 10)
-	createInvoiceRequestBodyFieldURL                     = big.NewInt(1 << 11)
+	createInvoiceRequestBodyFieldStatus                  = big.NewInt(1 << 9)
+	createInvoiceRequestBodyFieldSubscriptionExternalID  = big.NewInt(1 << 10)
+	createInvoiceRequestBodyFieldSubtotal                = big.NewInt(1 << 11)
+	createInvoiceRequestBodyFieldURL                     = big.NewInt(1 << 12)
 )
 
 type CreateInvoiceRequestBody struct {
-	AmountDue               int        `json:"amount_due" url:"-"`
-	AmountPaid              int        `json:"amount_paid" url:"-"`
-	AmountRemaining         int        `json:"amount_remaining" url:"-"`
-	CollectionMethod        string     `json:"collection_method" url:"-"`
-	Currency                string     `json:"currency" url:"-"`
-	CustomerExternalID      string     `json:"customer_external_id" url:"-"`
-	DueDate                 *time.Time `json:"due_date,omitempty" url:"-"`
-	ExternalID              *string    `json:"external_id,omitempty" url:"-"`
-	PaymentMethodExternalID *string    `json:"payment_method_external_id,omitempty" url:"-"`
-	SubscriptionExternalID  *string    `json:"subscription_external_id,omitempty" url:"-"`
-	Subtotal                int        `json:"subtotal" url:"-"`
-	URL                     *string    `json:"url,omitempty" url:"-"`
+	AmountDue               int            `json:"amount_due" url:"-"`
+	AmountPaid              int            `json:"amount_paid" url:"-"`
+	AmountRemaining         int            `json:"amount_remaining" url:"-"`
+	CollectionMethod        string         `json:"collection_method" url:"-"`
+	Currency                string         `json:"currency" url:"-"`
+	CustomerExternalID      string         `json:"customer_external_id" url:"-"`
+	DueDate                 *time.Time     `json:"due_date,omitempty" url:"-"`
+	ExternalID              *string        `json:"external_id,omitempty" url:"-"`
+	PaymentMethodExternalID *string        `json:"payment_method_external_id,omitempty" url:"-"`
+	Status                  *InvoiceStatus `json:"status,omitempty" url:"-"`
+	SubscriptionExternalID  *string        `json:"subscription_external_id,omitempty" url:"-"`
+	Subtotal                int            `json:"subtotal" url:"-"`
+	URL                     *string        `json:"url,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7659,6 +7661,13 @@ func (c *CreateInvoiceRequestBody) SetExternalID(externalID *string) {
 func (c *CreateInvoiceRequestBody) SetPaymentMethodExternalID(paymentMethodExternalID *string) {
 	c.PaymentMethodExternalID = paymentMethodExternalID
 	c.require(createInvoiceRequestBodyFieldPaymentMethodExternalID)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateInvoiceRequestBody) SetStatus(status *InvoiceStatus) {
+	c.Status = status
+	c.require(createInvoiceRequestBodyFieldStatus)
 }
 
 // SetSubscriptionExternalID sets the SubscriptionExternalID field and marks it as non-optional;

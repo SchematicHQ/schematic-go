@@ -335,6 +335,96 @@ func (c *CountCreditBundlesRequest) SetOffset(offset *int) {
 }
 
 var (
+	countCreditEventLedgerRequestFieldBillingCreditID = big.NewInt(1 << 0)
+	countCreditEventLedgerRequestFieldCompanyID       = big.NewInt(1 << 1)
+	countCreditEventLedgerRequestFieldEndTime         = big.NewInt(1 << 2)
+	countCreditEventLedgerRequestFieldEventType       = big.NewInt(1 << 3)
+	countCreditEventLedgerRequestFieldFeatureID       = big.NewInt(1 << 4)
+	countCreditEventLedgerRequestFieldStartTime       = big.NewInt(1 << 5)
+	countCreditEventLedgerRequestFieldLimit           = big.NewInt(1 << 6)
+	countCreditEventLedgerRequestFieldOffset          = big.NewInt(1 << 7)
+)
+
+type CountCreditEventLedgerRequest struct {
+	BillingCreditID *string          `json:"-" url:"billing_credit_id,omitempty"`
+	CompanyID       string           `json:"-" url:"company_id"`
+	EndTime         *string          `json:"-" url:"end_time,omitempty"`
+	EventType       *CreditEventType `json:"-" url:"event_type,omitempty"`
+	FeatureID       *string          `json:"-" url:"feature_id,omitempty"`
+	StartTime       *string          `json:"-" url:"start_time,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CountCreditEventLedgerRequest) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerRequest) SetBillingCreditID(billingCreditID *string) {
+	c.BillingCreditID = billingCreditID
+	c.require(countCreditEventLedgerRequestFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerRequest) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(countCreditEventLedgerRequestFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerRequest) SetEndTime(endTime *string) {
+	c.EndTime = endTime
+	c.require(countCreditEventLedgerRequestFieldEndTime)
+}
+
+// SetEventType sets the EventType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerRequest) SetEventType(eventType *CreditEventType) {
+	c.EventType = eventType
+	c.require(countCreditEventLedgerRequestFieldEventType)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerRequest) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(countCreditEventLedgerRequestFieldFeatureID)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerRequest) SetStartTime(startTime *string) {
+	c.StartTime = startTime
+	c.require(countCreditEventLedgerRequestFieldStartTime)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerRequest) SetLimit(limit *int) {
+	c.Limit = limit
+	c.require(countCreditEventLedgerRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerRequest) SetOffset(offset *int) {
+	c.Offset = offset
+	c.require(countCreditEventLedgerRequestFieldOffset)
+}
+
+var (
 	countCreditLedgerRequestFieldCompanyID       = big.NewInt(1 << 0)
 	countCreditLedgerRequestFieldBillingCreditID = big.NewInt(1 << 1)
 	countCreditLedgerRequestFieldFeatureID       = big.NewInt(1 << 2)
@@ -1187,6 +1277,96 @@ func (l *ListCreditBundlesRequest) SetOffset(offset *int) {
 }
 
 var (
+	listCreditEventLedgerRequestFieldBillingCreditID = big.NewInt(1 << 0)
+	listCreditEventLedgerRequestFieldCompanyID       = big.NewInt(1 << 1)
+	listCreditEventLedgerRequestFieldEndTime         = big.NewInt(1 << 2)
+	listCreditEventLedgerRequestFieldEventType       = big.NewInt(1 << 3)
+	listCreditEventLedgerRequestFieldFeatureID       = big.NewInt(1 << 4)
+	listCreditEventLedgerRequestFieldStartTime       = big.NewInt(1 << 5)
+	listCreditEventLedgerRequestFieldLimit           = big.NewInt(1 << 6)
+	listCreditEventLedgerRequestFieldOffset          = big.NewInt(1 << 7)
+)
+
+type ListCreditEventLedgerRequest struct {
+	BillingCreditID *string          `json:"-" url:"billing_credit_id,omitempty"`
+	CompanyID       string           `json:"-" url:"company_id"`
+	EndTime         *string          `json:"-" url:"end_time,omitempty"`
+	EventType       *CreditEventType `json:"-" url:"event_type,omitempty"`
+	FeatureID       *string          `json:"-" url:"feature_id,omitempty"`
+	StartTime       *string          `json:"-" url:"start_time,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListCreditEventLedgerRequest) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerRequest) SetBillingCreditID(billingCreditID *string) {
+	l.BillingCreditID = billingCreditID
+	l.require(listCreditEventLedgerRequestFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerRequest) SetCompanyID(companyID string) {
+	l.CompanyID = companyID
+	l.require(listCreditEventLedgerRequestFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerRequest) SetEndTime(endTime *string) {
+	l.EndTime = endTime
+	l.require(listCreditEventLedgerRequestFieldEndTime)
+}
+
+// SetEventType sets the EventType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerRequest) SetEventType(eventType *CreditEventType) {
+	l.EventType = eventType
+	l.require(listCreditEventLedgerRequestFieldEventType)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerRequest) SetFeatureID(featureID *string) {
+	l.FeatureID = featureID
+	l.require(listCreditEventLedgerRequestFieldFeatureID)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerRequest) SetStartTime(startTime *string) {
+	l.StartTime = startTime
+	l.require(listCreditEventLedgerRequestFieldStartTime)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerRequest) SetLimit(limit *int) {
+	l.Limit = limit
+	l.require(listCreditEventLedgerRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerRequest) SetOffset(offset *int) {
+	l.Offset = offset
+	l.require(listCreditEventLedgerRequestFieldOffset)
+}
+
+var (
 	listGrantsForCreditRequestFieldCreditID = big.NewInt(1 << 0)
 	listGrantsForCreditRequestFieldIDs      = big.NewInt(1 << 1)
 	listGrantsForCreditRequestFieldLimit    = big.NewInt(1 << 2)
@@ -1960,6 +2140,608 @@ func (c *CompanyLedgerResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditEventLedgerResponseDataFieldAmount                     = big.NewInt(1 << 0)
+	creditEventLedgerResponseDataFieldAutoTopupLogID             = big.NewInt(1 << 1)
+	creditEventLedgerResponseDataFieldBillingCreditBundleID      = big.NewInt(1 << 2)
+	creditEventLedgerResponseDataFieldBillingCreditID            = big.NewInt(1 << 3)
+	creditEventLedgerResponseDataFieldCompany                    = big.NewInt(1 << 4)
+	creditEventLedgerResponseDataFieldCompanyID                  = big.NewInt(1 << 5)
+	creditEventLedgerResponseDataFieldCredit                     = big.NewInt(1 << 6)
+	creditEventLedgerResponseDataFieldCreditName                 = big.NewInt(1 << 7)
+	creditEventLedgerResponseDataFieldEnvironmentID              = big.NewInt(1 << 8)
+	creditEventLedgerResponseDataFieldEventAt                    = big.NewInt(1 << 9)
+	creditEventLedgerResponseDataFieldEventID                    = big.NewInt(1 << 10)
+	creditEventLedgerResponseDataFieldEventType                  = big.NewInt(1 << 11)
+	creditEventLedgerResponseDataFieldExpiryType                 = big.NewInt(1 << 12)
+	creditEventLedgerResponseDataFieldExpiryUnit                 = big.NewInt(1 << 13)
+	creditEventLedgerResponseDataFieldExpiryUnitCount            = big.NewInt(1 << 14)
+	creditEventLedgerResponseDataFieldFeature                    = big.NewInt(1 << 15)
+	creditEventLedgerResponseDataFieldFeatureID                  = big.NewInt(1 << 16)
+	creditEventLedgerResponseDataFieldFromGrantID                = big.NewInt(1 << 17)
+	creditEventLedgerResponseDataFieldGrantExpiresAt             = big.NewInt(1 << 18)
+	creditEventLedgerResponseDataFieldGrantID                    = big.NewInt(1 << 19)
+	creditEventLedgerResponseDataFieldGrantQuantity              = big.NewInt(1 << 20)
+	creditEventLedgerResponseDataFieldGrantQuantityRemaining     = big.NewInt(1 << 21)
+	creditEventLedgerResponseDataFieldGrantReason                = big.NewInt(1 << 22)
+	creditEventLedgerResponseDataFieldGrantValidFrom             = big.NewInt(1 << 23)
+	creditEventLedgerResponseDataFieldPlanID                     = big.NewInt(1 << 24)
+	creditEventLedgerResponseDataFieldQuantityConsumed           = big.NewInt(1 << 25)
+	creditEventLedgerResponseDataFieldQuantityRemainingAtZeroOut = big.NewInt(1 << 26)
+	creditEventLedgerResponseDataFieldSourceID                   = big.NewInt(1 << 27)
+	creditEventLedgerResponseDataFieldToGrantID                  = big.NewInt(1 << 28)
+	creditEventLedgerResponseDataFieldUsageEventID               = big.NewInt(1 << 29)
+	creditEventLedgerResponseDataFieldZeroedOutReason            = big.NewInt(1 << 30)
+)
+
+type CreditEventLedgerResponseData struct {
+	Amount                     float64                            `json:"amount" url:"amount"`
+	AutoTopupLogID             *string                            `json:"auto_topup_log_id,omitempty" url:"auto_topup_log_id,omitempty"`
+	BillingCreditBundleID      *string                            `json:"billing_credit_bundle_id,omitempty" url:"billing_credit_bundle_id,omitempty"`
+	BillingCreditID            string                             `json:"billing_credit_id" url:"billing_credit_id"`
+	Company                    *CompanyLedgerResponseData         `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID                  string                             `json:"company_id" url:"company_id"`
+	Credit                     *BillingCreditLedgerResponseData   `json:"credit,omitempty" url:"credit,omitempty"`
+	CreditName                 string                             `json:"credit_name" url:"credit_name"`
+	EnvironmentID              string                             `json:"environment_id" url:"environment_id"`
+	EventAt                    time.Time                          `json:"event_at" url:"event_at"`
+	EventID                    string                             `json:"event_id" url:"event_id"`
+	EventType                  CreditEventType                    `json:"event_type" url:"event_type"`
+	ExpiryType                 *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
+	ExpiryUnit                 *BillingCreditExpiryUnit           `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
+	ExpiryUnitCount            *int                               `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	Feature                    *FeatureLedgerResponseData         `json:"feature,omitempty" url:"feature,omitempty"`
+	FeatureID                  *string                            `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FromGrantID                *string                            `json:"from_grant_id,omitempty" url:"from_grant_id,omitempty"`
+	GrantExpiresAt             *time.Time                         `json:"grant_expires_at,omitempty" url:"grant_expires_at,omitempty"`
+	GrantID                    *string                            `json:"grant_id,omitempty" url:"grant_id,omitempty"`
+	GrantQuantity              *int                               `json:"grant_quantity,omitempty" url:"grant_quantity,omitempty"`
+	GrantQuantityRemaining     *float64                           `json:"grant_quantity_remaining,omitempty" url:"grant_quantity_remaining,omitempty"`
+	GrantReason                *BillingCreditGrantReason          `json:"grant_reason,omitempty" url:"grant_reason,omitempty"`
+	GrantValidFrom             *time.Time                         `json:"grant_valid_from,omitempty" url:"grant_valid_from,omitempty"`
+	PlanID                     *string                            `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	QuantityConsumed           *float64                           `json:"quantity_consumed,omitempty" url:"quantity_consumed,omitempty"`
+	QuantityRemainingAtZeroOut *float64                           `json:"quantity_remaining_at_zero_out,omitempty" url:"quantity_remaining_at_zero_out,omitempty"`
+	SourceID                   int                                `json:"source_id" url:"source_id"`
+	ToGrantID                  *string                            `json:"to_grant_id,omitempty" url:"to_grant_id,omitempty"`
+	UsageEventID               *string                            `json:"usage_event_id,omitempty" url:"usage_event_id,omitempty"`
+	ZeroedOutReason            *BillingCreditGrantZeroedOutReason `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditEventLedgerResponseData) GetAmount() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Amount
+}
+
+func (c *CreditEventLedgerResponseData) GetAutoTopupLogID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.AutoTopupLogID
+}
+
+func (c *CreditEventLedgerResponseData) GetBillingCreditBundleID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCreditBundleID
+}
+
+func (c *CreditEventLedgerResponseData) GetBillingCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.BillingCreditID
+}
+
+func (c *CreditEventLedgerResponseData) GetCompany() *CompanyLedgerResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Company
+}
+
+func (c *CreditEventLedgerResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CreditEventLedgerResponseData) GetCredit() *BillingCreditLedgerResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Credit
+}
+
+func (c *CreditEventLedgerResponseData) GetCreditName() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditName
+}
+
+func (c *CreditEventLedgerResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *CreditEventLedgerResponseData) GetEventAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.EventAt
+}
+
+func (c *CreditEventLedgerResponseData) GetEventID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EventID
+}
+
+func (c *CreditEventLedgerResponseData) GetEventType() CreditEventType {
+	if c == nil {
+		return ""
+	}
+	return c.EventType
+}
+
+func (c *CreditEventLedgerResponseData) GetExpiryType() *BillingCreditExpiryType {
+	if c == nil {
+		return nil
+	}
+	return c.ExpiryType
+}
+
+func (c *CreditEventLedgerResponseData) GetExpiryUnit() *BillingCreditExpiryUnit {
+	if c == nil {
+		return nil
+	}
+	return c.ExpiryUnit
+}
+
+func (c *CreditEventLedgerResponseData) GetExpiryUnitCount() *int {
+	if c == nil {
+		return nil
+	}
+	return c.ExpiryUnitCount
+}
+
+func (c *CreditEventLedgerResponseData) GetFeature() *FeatureLedgerResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Feature
+}
+
+func (c *CreditEventLedgerResponseData) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CreditEventLedgerResponseData) GetFromGrantID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FromGrantID
+}
+
+func (c *CreditEventLedgerResponseData) GetGrantExpiresAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.GrantExpiresAt
+}
+
+func (c *CreditEventLedgerResponseData) GetGrantID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.GrantID
+}
+
+func (c *CreditEventLedgerResponseData) GetGrantQuantity() *int {
+	if c == nil {
+		return nil
+	}
+	return c.GrantQuantity
+}
+
+func (c *CreditEventLedgerResponseData) GetGrantQuantityRemaining() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.GrantQuantityRemaining
+}
+
+func (c *CreditEventLedgerResponseData) GetGrantReason() *BillingCreditGrantReason {
+	if c == nil {
+		return nil
+	}
+	return c.GrantReason
+}
+
+func (c *CreditEventLedgerResponseData) GetGrantValidFrom() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.GrantValidFrom
+}
+
+func (c *CreditEventLedgerResponseData) GetPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanID
+}
+
+func (c *CreditEventLedgerResponseData) GetQuantityConsumed() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuantityConsumed
+}
+
+func (c *CreditEventLedgerResponseData) GetQuantityRemainingAtZeroOut() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuantityRemainingAtZeroOut
+}
+
+func (c *CreditEventLedgerResponseData) GetSourceID() int {
+	if c == nil {
+		return 0
+	}
+	return c.SourceID
+}
+
+func (c *CreditEventLedgerResponseData) GetToGrantID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ToGrantID
+}
+
+func (c *CreditEventLedgerResponseData) GetUsageEventID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.UsageEventID
+}
+
+func (c *CreditEventLedgerResponseData) GetZeroedOutReason() *BillingCreditGrantZeroedOutReason {
+	if c == nil {
+		return nil
+	}
+	return c.ZeroedOutReason
+}
+
+func (c *CreditEventLedgerResponseData) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreditEventLedgerResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetAmount(amount float64) {
+	c.Amount = amount
+	c.require(creditEventLedgerResponseDataFieldAmount)
+}
+
+// SetAutoTopupLogID sets the AutoTopupLogID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetAutoTopupLogID(autoTopupLogID *string) {
+	c.AutoTopupLogID = autoTopupLogID
+	c.require(creditEventLedgerResponseDataFieldAutoTopupLogID)
+}
+
+// SetBillingCreditBundleID sets the BillingCreditBundleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetBillingCreditBundleID(billingCreditBundleID *string) {
+	c.BillingCreditBundleID = billingCreditBundleID
+	c.require(creditEventLedgerResponseDataFieldBillingCreditBundleID)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetBillingCreditID(billingCreditID string) {
+	c.BillingCreditID = billingCreditID
+	c.require(creditEventLedgerResponseDataFieldBillingCreditID)
+}
+
+// SetCompany sets the Company field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetCompany(company *CompanyLedgerResponseData) {
+	c.Company = company
+	c.require(creditEventLedgerResponseDataFieldCompany)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(creditEventLedgerResponseDataFieldCompanyID)
+}
+
+// SetCredit sets the Credit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetCredit(credit *BillingCreditLedgerResponseData) {
+	c.Credit = credit
+	c.require(creditEventLedgerResponseDataFieldCredit)
+}
+
+// SetCreditName sets the CreditName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetCreditName(creditName string) {
+	c.CreditName = creditName
+	c.require(creditEventLedgerResponseDataFieldCreditName)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetEnvironmentID(environmentID string) {
+	c.EnvironmentID = environmentID
+	c.require(creditEventLedgerResponseDataFieldEnvironmentID)
+}
+
+// SetEventAt sets the EventAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetEventAt(eventAt time.Time) {
+	c.EventAt = eventAt
+	c.require(creditEventLedgerResponseDataFieldEventAt)
+}
+
+// SetEventID sets the EventID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetEventID(eventID string) {
+	c.EventID = eventID
+	c.require(creditEventLedgerResponseDataFieldEventID)
+}
+
+// SetEventType sets the EventType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetEventType(eventType CreditEventType) {
+	c.EventType = eventType
+	c.require(creditEventLedgerResponseDataFieldEventType)
+}
+
+// SetExpiryType sets the ExpiryType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetExpiryType(expiryType *BillingCreditExpiryType) {
+	c.ExpiryType = expiryType
+	c.require(creditEventLedgerResponseDataFieldExpiryType)
+}
+
+// SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetExpiryUnit(expiryUnit *BillingCreditExpiryUnit) {
+	c.ExpiryUnit = expiryUnit
+	c.require(creditEventLedgerResponseDataFieldExpiryUnit)
+}
+
+// SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetExpiryUnitCount(expiryUnitCount *int) {
+	c.ExpiryUnitCount = expiryUnitCount
+	c.require(creditEventLedgerResponseDataFieldExpiryUnitCount)
+}
+
+// SetFeature sets the Feature field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetFeature(feature *FeatureLedgerResponseData) {
+	c.Feature = feature
+	c.require(creditEventLedgerResponseDataFieldFeature)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(creditEventLedgerResponseDataFieldFeatureID)
+}
+
+// SetFromGrantID sets the FromGrantID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetFromGrantID(fromGrantID *string) {
+	c.FromGrantID = fromGrantID
+	c.require(creditEventLedgerResponseDataFieldFromGrantID)
+}
+
+// SetGrantExpiresAt sets the GrantExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetGrantExpiresAt(grantExpiresAt *time.Time) {
+	c.GrantExpiresAt = grantExpiresAt
+	c.require(creditEventLedgerResponseDataFieldGrantExpiresAt)
+}
+
+// SetGrantID sets the GrantID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetGrantID(grantID *string) {
+	c.GrantID = grantID
+	c.require(creditEventLedgerResponseDataFieldGrantID)
+}
+
+// SetGrantQuantity sets the GrantQuantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetGrantQuantity(grantQuantity *int) {
+	c.GrantQuantity = grantQuantity
+	c.require(creditEventLedgerResponseDataFieldGrantQuantity)
+}
+
+// SetGrantQuantityRemaining sets the GrantQuantityRemaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetGrantQuantityRemaining(grantQuantityRemaining *float64) {
+	c.GrantQuantityRemaining = grantQuantityRemaining
+	c.require(creditEventLedgerResponseDataFieldGrantQuantityRemaining)
+}
+
+// SetGrantReason sets the GrantReason field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetGrantReason(grantReason *BillingCreditGrantReason) {
+	c.GrantReason = grantReason
+	c.require(creditEventLedgerResponseDataFieldGrantReason)
+}
+
+// SetGrantValidFrom sets the GrantValidFrom field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetGrantValidFrom(grantValidFrom *time.Time) {
+	c.GrantValidFrom = grantValidFrom
+	c.require(creditEventLedgerResponseDataFieldGrantValidFrom)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetPlanID(planID *string) {
+	c.PlanID = planID
+	c.require(creditEventLedgerResponseDataFieldPlanID)
+}
+
+// SetQuantityConsumed sets the QuantityConsumed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetQuantityConsumed(quantityConsumed *float64) {
+	c.QuantityConsumed = quantityConsumed
+	c.require(creditEventLedgerResponseDataFieldQuantityConsumed)
+}
+
+// SetQuantityRemainingAtZeroOut sets the QuantityRemainingAtZeroOut field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetQuantityRemainingAtZeroOut(quantityRemainingAtZeroOut *float64) {
+	c.QuantityRemainingAtZeroOut = quantityRemainingAtZeroOut
+	c.require(creditEventLedgerResponseDataFieldQuantityRemainingAtZeroOut)
+}
+
+// SetSourceID sets the SourceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetSourceID(sourceID int) {
+	c.SourceID = sourceID
+	c.require(creditEventLedgerResponseDataFieldSourceID)
+}
+
+// SetToGrantID sets the ToGrantID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetToGrantID(toGrantID *string) {
+	c.ToGrantID = toGrantID
+	c.require(creditEventLedgerResponseDataFieldToGrantID)
+}
+
+// SetUsageEventID sets the UsageEventID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetUsageEventID(usageEventID *string) {
+	c.UsageEventID = usageEventID
+	c.require(creditEventLedgerResponseDataFieldUsageEventID)
+}
+
+// SetZeroedOutReason sets the ZeroedOutReason field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetZeroedOutReason(zeroedOutReason *BillingCreditGrantZeroedOutReason) {
+	c.ZeroedOutReason = zeroedOutReason
+	c.require(creditEventLedgerResponseDataFieldZeroedOutReason)
+}
+
+func (c *CreditEventLedgerResponseData) UnmarshalJSON(data []byte) error {
+	type embed CreditEventLedgerResponseData
+	var unmarshaler = struct {
+		embed
+		EventAt        *internal.DateTime `json:"event_at"`
+		GrantExpiresAt *internal.DateTime `json:"grant_expires_at,omitempty"`
+		GrantValidFrom *internal.DateTime `json:"grant_valid_from,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CreditEventLedgerResponseData(unmarshaler.embed)
+	c.EventAt = unmarshaler.EventAt.Time()
+	c.GrantExpiresAt = unmarshaler.GrantExpiresAt.TimePtr()
+	c.GrantValidFrom = unmarshaler.GrantValidFrom.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditEventLedgerResponseData) MarshalJSON() ([]byte, error) {
+	type embed CreditEventLedgerResponseData
+	var marshaler = struct {
+		embed
+		EventAt        *internal.DateTime `json:"event_at"`
+		GrantExpiresAt *internal.DateTime `json:"grant_expires_at,omitempty"`
+		GrantValidFrom *internal.DateTime `json:"grant_valid_from,omitempty"`
+	}{
+		embed:          embed(*c),
+		EventAt:        internal.NewDateTime(c.EventAt),
+		GrantExpiresAt: internal.NewOptionalDateTime(c.GrantExpiresAt),
+		GrantValidFrom: internal.NewOptionalDateTime(c.GrantValidFrom),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditEventLedgerResponseData) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CreditEventType string
+
+const (
+	CreditEventTypeGrant    CreditEventType = "grant"
+	CreditEventTypeTransfer CreditEventType = "transfer"
+	CreditEventTypeUsage    CreditEventType = "usage"
+	CreditEventTypeZeroOut  CreditEventType = "zero_out"
+)
+
+func NewCreditEventTypeFromString(s string) (CreditEventType, error) {
+	switch s {
+	case "grant":
+		return CreditEventTypeGrant, nil
+	case "transfer":
+		return CreditEventTypeTransfer, nil
+	case "usage":
+		return CreditEventTypeUsage, nil
+	case "zero_out":
+		return CreditEventTypeZeroOut, nil
+	}
+	var t CreditEventType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreditEventType) Ptr() *CreditEventType {
+	return &c
 }
 
 type CreditGrantSortOrder string
@@ -3938,6 +4720,294 @@ func (c *CountCreditBundlesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCreditBundlesResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+var (
+	countCreditEventLedgerParamsFieldBillingCreditID = big.NewInt(1 << 0)
+	countCreditEventLedgerParamsFieldCompanyID       = big.NewInt(1 << 1)
+	countCreditEventLedgerParamsFieldEndTime         = big.NewInt(1 << 2)
+	countCreditEventLedgerParamsFieldEventType       = big.NewInt(1 << 3)
+	countCreditEventLedgerParamsFieldFeatureID       = big.NewInt(1 << 4)
+	countCreditEventLedgerParamsFieldLimit           = big.NewInt(1 << 5)
+	countCreditEventLedgerParamsFieldOffset          = big.NewInt(1 << 6)
+	countCreditEventLedgerParamsFieldStartTime       = big.NewInt(1 << 7)
+)
+
+type CountCreditEventLedgerParams struct {
+	BillingCreditID *string          `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
+	CompanyID       *string          `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EndTime         *string          `json:"end_time,omitempty" url:"end_time,omitempty"`
+	EventType       *CreditEventType `json:"event_type,omitempty" url:"event_type,omitempty"`
+	FeatureID       *string          `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	StartTime *string `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCreditEventLedgerParams) GetBillingCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCreditID
+}
+
+func (c *CountCreditEventLedgerParams) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CountCreditEventLedgerParams) GetEndTime() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EndTime
+}
+
+func (c *CountCreditEventLedgerParams) GetEventType() *CreditEventType {
+	if c == nil {
+		return nil
+	}
+	return c.EventType
+}
+
+func (c *CountCreditEventLedgerParams) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CountCreditEventLedgerParams) GetLimit() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountCreditEventLedgerParams) GetOffset() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountCreditEventLedgerParams) GetStartTime() *string {
+	if c == nil {
+		return nil
+	}
+	return c.StartTime
+}
+
+func (c *CountCreditEventLedgerParams) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCreditEventLedgerParams) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerParams) SetBillingCreditID(billingCreditID *string) {
+	c.BillingCreditID = billingCreditID
+	c.require(countCreditEventLedgerParamsFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerParams) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(countCreditEventLedgerParamsFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerParams) SetEndTime(endTime *string) {
+	c.EndTime = endTime
+	c.require(countCreditEventLedgerParamsFieldEndTime)
+}
+
+// SetEventType sets the EventType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerParams) SetEventType(eventType *CreditEventType) {
+	c.EventType = eventType
+	c.require(countCreditEventLedgerParamsFieldEventType)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerParams) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(countCreditEventLedgerParamsFieldFeatureID)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerParams) SetLimit(limit *int) {
+	c.Limit = limit
+	c.require(countCreditEventLedgerParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerParams) SetOffset(offset *int) {
+	c.Offset = offset
+	c.require(countCreditEventLedgerParamsFieldOffset)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerParams) SetStartTime(startTime *string) {
+	c.StartTime = startTime
+	c.require(countCreditEventLedgerParamsFieldStartTime)
+}
+
+func (c *CountCreditEventLedgerParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCreditEventLedgerParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCreditEventLedgerParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCreditEventLedgerParams) MarshalJSON() ([]byte, error) {
+	type embed CountCreditEventLedgerParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountCreditEventLedgerParams) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	countCreditEventLedgerResponseFieldData   = big.NewInt(1 << 0)
+	countCreditEventLedgerResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CountCreditEventLedgerResponse struct {
+	Data *CountResponse `json:"data" url:"data"`
+	// Input parameters
+	Params *CountCreditEventLedgerParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCreditEventLedgerResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountCreditEventLedgerResponse) GetParams() *CountCreditEventLedgerParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountCreditEventLedgerResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CountCreditEventLedgerResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerResponse) SetData(data *CountResponse) {
+	c.Data = data
+	c.require(countCreditEventLedgerResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerResponse) SetParams(params *CountCreditEventLedgerParams) {
+	c.Params = params
+	c.require(countCreditEventLedgerResponseFieldParams)
+}
+
+func (c *CountCreditEventLedgerResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCreditEventLedgerResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCreditEventLedgerResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCreditEventLedgerResponse) MarshalJSON() ([]byte, error) {
+	type embed CountCreditEventLedgerResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountCreditEventLedgerResponse) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -6338,6 +7408,294 @@ func (l *ListCreditBundlesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCreditBundlesResponse) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+var (
+	listCreditEventLedgerParamsFieldBillingCreditID = big.NewInt(1 << 0)
+	listCreditEventLedgerParamsFieldCompanyID       = big.NewInt(1 << 1)
+	listCreditEventLedgerParamsFieldEndTime         = big.NewInt(1 << 2)
+	listCreditEventLedgerParamsFieldEventType       = big.NewInt(1 << 3)
+	listCreditEventLedgerParamsFieldFeatureID       = big.NewInt(1 << 4)
+	listCreditEventLedgerParamsFieldLimit           = big.NewInt(1 << 5)
+	listCreditEventLedgerParamsFieldOffset          = big.NewInt(1 << 6)
+	listCreditEventLedgerParamsFieldStartTime       = big.NewInt(1 << 7)
+)
+
+type ListCreditEventLedgerParams struct {
+	BillingCreditID *string          `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
+	CompanyID       *string          `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EndTime         *string          `json:"end_time,omitempty" url:"end_time,omitempty"`
+	EventType       *CreditEventType `json:"event_type,omitempty" url:"event_type,omitempty"`
+	FeatureID       *string          `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	StartTime *string `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCreditEventLedgerParams) GetBillingCreditID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.BillingCreditID
+}
+
+func (l *ListCreditEventLedgerParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListCreditEventLedgerParams) GetEndTime() *string {
+	if l == nil {
+		return nil
+	}
+	return l.EndTime
+}
+
+func (l *ListCreditEventLedgerParams) GetEventType() *CreditEventType {
+	if l == nil {
+		return nil
+	}
+	return l.EventType
+}
+
+func (l *ListCreditEventLedgerParams) GetFeatureID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureID
+}
+
+func (l *ListCreditEventLedgerParams) GetLimit() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCreditEventLedgerParams) GetOffset() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCreditEventLedgerParams) GetStartTime() *string {
+	if l == nil {
+		return nil
+	}
+	return l.StartTime
+}
+
+func (l *ListCreditEventLedgerParams) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCreditEventLedgerParams) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerParams) SetBillingCreditID(billingCreditID *string) {
+	l.BillingCreditID = billingCreditID
+	l.require(listCreditEventLedgerParamsFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerParams) SetCompanyID(companyID *string) {
+	l.CompanyID = companyID
+	l.require(listCreditEventLedgerParamsFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerParams) SetEndTime(endTime *string) {
+	l.EndTime = endTime
+	l.require(listCreditEventLedgerParamsFieldEndTime)
+}
+
+// SetEventType sets the EventType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerParams) SetEventType(eventType *CreditEventType) {
+	l.EventType = eventType
+	l.require(listCreditEventLedgerParamsFieldEventType)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerParams) SetFeatureID(featureID *string) {
+	l.FeatureID = featureID
+	l.require(listCreditEventLedgerParamsFieldFeatureID)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerParams) SetLimit(limit *int) {
+	l.Limit = limit
+	l.require(listCreditEventLedgerParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerParams) SetOffset(offset *int) {
+	l.Offset = offset
+	l.require(listCreditEventLedgerParamsFieldOffset)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerParams) SetStartTime(startTime *string) {
+	l.StartTime = startTime
+	l.require(listCreditEventLedgerParamsFieldStartTime)
+}
+
+func (l *ListCreditEventLedgerParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCreditEventLedgerParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCreditEventLedgerParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCreditEventLedgerParams) MarshalJSON() ([]byte, error) {
+	type embed ListCreditEventLedgerParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCreditEventLedgerParams) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listCreditEventLedgerResponseFieldData   = big.NewInt(1 << 0)
+	listCreditEventLedgerResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListCreditEventLedgerResponse struct {
+	Data []*CreditEventLedgerResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListCreditEventLedgerParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCreditEventLedgerResponse) GetData() []*CreditEventLedgerResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCreditEventLedgerResponse) GetParams() *ListCreditEventLedgerParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListCreditEventLedgerResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListCreditEventLedgerResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerResponse) SetData(data []*CreditEventLedgerResponseData) {
+	l.Data = data
+	l.require(listCreditEventLedgerResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerResponse) SetParams(params *ListCreditEventLedgerParams) {
+	l.Params = params
+	l.require(listCreditEventLedgerResponseFieldParams)
+}
+
+func (l *ListCreditEventLedgerResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCreditEventLedgerResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCreditEventLedgerResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCreditEventLedgerResponse) MarshalJSON() ([]byte, error) {
+	type embed ListCreditEventLedgerResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCreditEventLedgerResponse) String() string {
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value

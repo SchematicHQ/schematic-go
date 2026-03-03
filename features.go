@@ -602,7 +602,8 @@ var (
 
 type CheckFlagResponseData struct {
 	// If company keys were provided and matched a company, its ID
-	CompanyID   *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// If a feature entitlement rule was matched, its entitlement details
 	Entitlement *FeatureEntitlement `json:"entitlement,omitempty" url:"entitlement,omitempty"`
 	// If an error occurred while checking the flag, the error message
 	Error *string `json:"error,omitempty" url:"error,omitempty"`

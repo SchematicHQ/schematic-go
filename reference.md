@@ -1778,6 +1778,14 @@ client.Billing.UpsertInvoice(
 <dl>
 <dd>
 
+**status:** `*schematichq.InvoiceStatus` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **subscriptionExternalID:** `*string` 
     
 </dd>
@@ -2825,7 +2833,6 @@ client.Billing.DeleteProductPrice(
 ```go
 request := &schematichq.CreateBillingProductRequestBody{
         ExternalID: "external_id",
-        Name: "name",
         Price: 1.1,
     }
 client.Billing.UpsertBillingProduct(
@@ -2863,7 +2870,7 @@ client.Billing.UpsertBillingProduct(
 <dl>
 <dd>
 
-**name:** `string` 
+**name:** `*string` 
     
 </dd>
 </dl>
@@ -5607,6 +5614,250 @@ client.Credits.CountBillingPlanCreditGrants(
 <dd>
 
 **planVersionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.ListCreditEventLedger() -> *schematichq.ListCreditEventLedgerResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListCreditEventLedgerRequest{
+        BillingCreditID: schematichq.String(
+            "billing_credit_id",
+        ),
+        CompanyID: "company_id",
+        EndTime: schematichq.String(
+            "end_time",
+        ),
+        EventType: schematichq.CreditEventTypeGrant.Ptr(),
+        FeatureID: schematichq.String(
+            "feature_id",
+        ),
+        StartTime: schematichq.String(
+            "start_time",
+        ),
+        Limit: schematichq.Int(
+            1,
+        ),
+        Offset: schematichq.Int(
+            1,
+        ),
+    }
+client.Credits.ListCreditEventLedger(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingCreditID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endTime:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**eventType:** `*schematichq.CreditEventType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.CountCreditEventLedger() -> *schematichq.CountCreditEventLedgerResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountCreditEventLedgerRequest{
+        BillingCreditID: schematichq.String(
+            "billing_credit_id",
+        ),
+        CompanyID: "company_id",
+        EndTime: schematichq.String(
+            "end_time",
+        ),
+        EventType: schematichq.CreditEventTypeGrant.Ptr(),
+        FeatureID: schematichq.String(
+            "feature_id",
+        ),
+        StartTime: schematichq.String(
+            "start_time",
+        ),
+        Limit: schematichq.Int(
+            1,
+        ),
+        Offset: schematichq.Int(
+            1,
+        ),
+    }
+client.Credits.CountCreditEventLedger(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingCreditID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endTime:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**eventType:** `*schematichq.CreditEventType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `*string` 
     
 </dd>
 </dl>
@@ -14416,6 +14667,7 @@ request := &schematichq.CreatePlanGroupRequestBody{
         ShowAsMonthlyPrices: true,
         ShowCredits: true,
         ShowFeatureDescription: true,
+        ShowHardLimit: true,
         ShowPeriodToggle: true,
         ShowZeroPriceAsFree: true,
         SyncCustomerBillingDetails: true,
@@ -14631,6 +14883,14 @@ client.Plangroups.CreatePlanGroup(
 <dl>
 <dd>
 
+**showHardLimit:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **showPeriodToggle:** `bool` 
     
 </dd>
@@ -14733,6 +14993,7 @@ request := &schematichq.UpdatePlanGroupRequestBody{
         ShowAsMonthlyPrices: true,
         ShowCredits: true,
         ShowFeatureDescription: true,
+        ShowHardLimit: true,
         ShowPeriodToggle: true,
         ShowZeroPriceAsFree: true,
         SyncCustomerBillingDetails: true,
@@ -14950,6 +15211,14 @@ client.Plangroups.UpdatePlanGroup(
 <dd>
 
 **showFeatureDescription:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**showHardLimit:** `bool` 
     
 </dd>
 </dl>

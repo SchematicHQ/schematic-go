@@ -1743,21 +1743,24 @@ type FeatureCompanyResponseData struct {
 	// Whether further usage is permitted.
 	Access bool `json:"access" url:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted or that this is a credit-based entitlement (use credit_remaining instead).
-	Allocation      *int                         `json:"allocation,omitempty" url:"allocation,omitempty"`
+	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	// The type of allocation that is being used.
 	AllocationType  EntitlementValueType         `json:"allocation_type" url:"allocation_type"`
 	Company         *CompanyDetailResponseData   `json:"company,omitempty" url:"company,omitempty"`
 	CompanyOverride *CompanyOverrideResponseData `json:"company_override,omitempty" url:"company_override,omitempty"`
 	// The rate at which credits are consumed per unit of usage
-	CreditConsumptionRate *float64                  `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
-	CreditGrantCounts     map[string]float64        `json:"credit_grant_counts,omitempty" url:"credit_grant_counts,omitempty"`
-	CreditGrantDetails    []*CreditGrantDetail      `json:"credit_grant_details,omitempty" url:"credit_grant_details,omitempty"`
-	CreditGrantReason     *BillingCreditGrantReason `json:"credit_grant_reason,omitempty" url:"credit_grant_reason,omitempty"`
-	CreditRemaining       *float64                  `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
+	CreditConsumptionRate *float64             `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
+	CreditGrantCounts     map[string]float64   `json:"credit_grant_counts,omitempty" url:"credit_grant_counts,omitempty"`
+	CreditGrantDetails    []*CreditGrantDetail `json:"credit_grant_details,omitempty" url:"credit_grant_details,omitempty"`
+	// Reason for the credit grant
+	CreditGrantReason *BillingCreditGrantReason `json:"credit_grant_reason,omitempty" url:"credit_grant_reason,omitempty"`
+	CreditRemaining   *float64                  `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
 	// Deprecated: Use credit_remaining instead.
 	CreditTotal *float64 `json:"credit_total,omitempty" url:"credit_total,omitempty"`
 	// Icon identifier for the credit type
-	CreditTypeIcon         *string                 `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
-	CreditUsage            *CreditUsage            `json:"credit_usage,omitempty" url:"credit_usage,omitempty"`
+	CreditTypeIcon *string      `json:"credit_type_icon,omitempty" url:"credit_type_icon,omitempty"`
+	CreditUsage    *CreditUsage `json:"credit_usage,omitempty" url:"credit_usage,omitempty"`
+	// Aggregated credit usage by time period (day, week, month, billing period)
 	CreditUsageAggregation *CreditUsageAggregation `json:"credit_usage_aggregation,omitempty" url:"credit_usage_aggregation,omitempty"`
 	CreditUsed             *float64                `json:"credit_used,omitempty" url:"credit_used,omitempty"`
 	// Effective limit for usage calculations. For overage pricing, this is the soft limit where overage charges begin. For tiered pricing, this is the first tier boundary. For other pricing models, this is the base allocation. Used to calculate usage percentages and determine access thresholds.
@@ -2387,7 +2390,8 @@ type FeatureCompanyUserResponseData struct {
 	// Whether further usage is permitted.
 	Access bool `json:"access" url:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
-	Allocation      *int                       `json:"allocation,omitempty" url:"allocation,omitempty"`
+	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	// The type of allocation that is being used.
 	AllocationType  EntitlementValueType       `json:"allocation_type" url:"allocation_type"`
 	Company         *CompanyDetailResponseData `json:"company,omitempty" url:"company,omitempty"`
 	EntitlementID   string                     `json:"entitlement_id" url:"entitlement_id"`

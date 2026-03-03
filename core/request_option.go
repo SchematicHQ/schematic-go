@@ -34,7 +34,7 @@ type RequestOptions struct {
 	// Schematic custom request option fields
 	EventCaptureBaseURL     string
 	EventBufferPeriod       *time.Duration
-	FlagCheckCacheProviders []cache.CacheProvider[bool]
+	FlagCheckCacheProviders []cache.CacheProvider[*CheckFlagResponse]
 	FlagDefaults            map[string]bool
 	OfflineMode             bool
 }

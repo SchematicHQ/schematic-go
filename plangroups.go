@@ -316,6 +316,31 @@ func (c *CreatePlanGroupRequestBody) SetTrialPaymentMethodRequired(trialPaymentM
 }
 
 var (
+	getPlanGroupRequestFieldIncludeCompanyCounts = big.NewInt(1 << 0)
+)
+
+type GetPlanGroupRequest struct {
+	IncludeCompanyCounts *bool `json:"-" url:"include_company_counts,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (g *GetPlanGroupRequest) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetIncludeCompanyCounts sets the IncludeCompanyCounts field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetPlanGroupRequest) SetIncludeCompanyCounts(includeCompanyCounts *bool) {
+	g.IncludeCompanyCounts = includeCompanyCounts
+	g.require(getPlanGroupRequestFieldIncludeCompanyCounts)
+}
+
+var (
 	checkoutSettingsResponseDataFieldCollectAddress = big.NewInt(1 << 0)
 	checkoutSettingsResponseDataFieldCollectEmail   = big.NewInt(1 << 1)
 	checkoutSettingsResponseDataFieldCollectPhone   = big.NewInt(1 << 2)
@@ -3066,6 +3091,85 @@ func (c *CreatePlanGroupResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+// Input parameters
+var (
+	getPlanGroupParamsFieldIncludeCompanyCounts = big.NewInt(1 << 0)
+)
+
+type GetPlanGroupParams struct {
+	IncludeCompanyCounts *bool `json:"include_company_counts,omitempty" url:"include_company_counts,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetPlanGroupParams) GetIncludeCompanyCounts() *bool {
+	if g == nil {
+		return nil
+	}
+	return g.IncludeCompanyCounts
+}
+
+func (g *GetPlanGroupParams) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetPlanGroupParams) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetIncludeCompanyCounts sets the IncludeCompanyCounts field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetPlanGroupParams) SetIncludeCompanyCounts(includeCompanyCounts *bool) {
+	g.IncludeCompanyCounts = includeCompanyCounts
+	g.require(getPlanGroupParamsFieldIncludeCompanyCounts)
+}
+
+func (g *GetPlanGroupParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetPlanGroupParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetPlanGroupParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetPlanGroupParams) MarshalJSON() ([]byte, error) {
+	type embed GetPlanGroupParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetPlanGroupParams) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 var (
 	getPlanGroupResponseFieldData   = big.NewInt(1 << 0)
 	getPlanGroupResponseFieldParams = big.NewInt(1 << 1)
@@ -3074,7 +3178,7 @@ var (
 type GetPlanGroupResponse struct {
 	Data *PlanGroupDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params *GetPlanGroupParams `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3090,7 +3194,7 @@ func (g *GetPlanGroupResponse) GetData() *PlanGroupDetailResponseData {
 	return g.Data
 }
 
-func (g *GetPlanGroupResponse) GetParams() map[string]interface{} {
+func (g *GetPlanGroupResponse) GetParams() *GetPlanGroupParams {
 	if g == nil {
 		return nil
 	}
@@ -3117,7 +3221,7 @@ func (g *GetPlanGroupResponse) SetData(data *PlanGroupDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetPlanGroupResponse) SetParams(params map[string]interface{}) {
+func (g *GetPlanGroupResponse) SetParams(params *GetPlanGroupParams) {
 	g.Params = params
 	g.require(getPlanGroupResponseFieldParams)
 }

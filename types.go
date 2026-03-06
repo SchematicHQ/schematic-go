@@ -685,30 +685,28 @@ func (a *AuditLogListResponseData) String() string {
 }
 
 var (
-	billingCreditBundleResponseDataFieldBillingInvoiceID  = big.NewInt(1 << 0)
-	billingCreditBundleResponseDataFieldBundleType        = big.NewInt(1 << 1)
-	billingCreditBundleResponseDataFieldCreatedAt         = big.NewInt(1 << 2)
-	billingCreditBundleResponseDataFieldCreditDescription = big.NewInt(1 << 3)
-	billingCreditBundleResponseDataFieldCreditIcon        = big.NewInt(1 << 4)
-	billingCreditBundleResponseDataFieldCreditID          = big.NewInt(1 << 5)
-	billingCreditBundleResponseDataFieldCreditName        = big.NewInt(1 << 6)
-	billingCreditBundleResponseDataFieldExpiryType        = big.NewInt(1 << 7)
-	billingCreditBundleResponseDataFieldExpiryUnit        = big.NewInt(1 << 8)
-	billingCreditBundleResponseDataFieldExpiryUnitCount   = big.NewInt(1 << 9)
-	billingCreditBundleResponseDataFieldHasGrants         = big.NewInt(1 << 10)
-	billingCreditBundleResponseDataFieldID                = big.NewInt(1 << 11)
-	billingCreditBundleResponseDataFieldName              = big.NewInt(1 << 12)
-	billingCreditBundleResponseDataFieldPluralName        = big.NewInt(1 << 13)
-	billingCreditBundleResponseDataFieldPrice             = big.NewInt(1 << 14)
-	billingCreditBundleResponseDataFieldQuantity          = big.NewInt(1 << 15)
-	billingCreditBundleResponseDataFieldSingularName      = big.NewInt(1 << 16)
-	billingCreditBundleResponseDataFieldStatus            = big.NewInt(1 << 17)
-	billingCreditBundleResponseDataFieldUnitPrice         = big.NewInt(1 << 18)
-	billingCreditBundleResponseDataFieldUpdatedAt         = big.NewInt(1 << 19)
+	billingCreditBundleResponseDataFieldBundleType        = big.NewInt(1 << 0)
+	billingCreditBundleResponseDataFieldCreatedAt         = big.NewInt(1 << 1)
+	billingCreditBundleResponseDataFieldCreditDescription = big.NewInt(1 << 2)
+	billingCreditBundleResponseDataFieldCreditIcon        = big.NewInt(1 << 3)
+	billingCreditBundleResponseDataFieldCreditID          = big.NewInt(1 << 4)
+	billingCreditBundleResponseDataFieldCreditName        = big.NewInt(1 << 5)
+	billingCreditBundleResponseDataFieldExpiryType        = big.NewInt(1 << 6)
+	billingCreditBundleResponseDataFieldExpiryUnit        = big.NewInt(1 << 7)
+	billingCreditBundleResponseDataFieldExpiryUnitCount   = big.NewInt(1 << 8)
+	billingCreditBundleResponseDataFieldHasGrants         = big.NewInt(1 << 9)
+	billingCreditBundleResponseDataFieldID                = big.NewInt(1 << 10)
+	billingCreditBundleResponseDataFieldName              = big.NewInt(1 << 11)
+	billingCreditBundleResponseDataFieldPluralName        = big.NewInt(1 << 12)
+	billingCreditBundleResponseDataFieldPrice             = big.NewInt(1 << 13)
+	billingCreditBundleResponseDataFieldQuantity          = big.NewInt(1 << 14)
+	billingCreditBundleResponseDataFieldSingularName      = big.NewInt(1 << 15)
+	billingCreditBundleResponseDataFieldStatus            = big.NewInt(1 << 16)
+	billingCreditBundleResponseDataFieldUnitPrice         = big.NewInt(1 << 17)
+	billingCreditBundleResponseDataFieldUpdatedAt         = big.NewInt(1 << 18)
 )
 
 type BillingCreditBundleResponseData struct {
-	BillingInvoiceID  *string                   `json:"billing_invoice_id,omitempty" url:"billing_invoice_id,omitempty"`
 	BundleType        BillingCreditBundleType   `json:"bundle_type" url:"bundle_type"`
 	CreatedAt         time.Time                 `json:"created_at" url:"created_at"`
 	CreditDescription *string                   `json:"credit_description,omitempty" url:"credit_description,omitempty"`
@@ -734,13 +732,6 @@ type BillingCreditBundleResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
-}
-
-func (b *BillingCreditBundleResponseData) GetBillingInvoiceID() *string {
-	if b == nil {
-		return nil
-	}
-	return b.BillingInvoiceID
 }
 
 func (b *BillingCreditBundleResponseData) GetCreatedAt() time.Time {
@@ -878,13 +869,6 @@ func (b *BillingCreditBundleResponseData) require(field *big.Int) {
 		b.explicitFields = big.NewInt(0)
 	}
 	b.explicitFields.Or(b.explicitFields, field)
-}
-
-// SetBillingInvoiceID sets the BillingInvoiceID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleResponseData) SetBillingInvoiceID(billingInvoiceID *string) {
-	b.BillingInvoiceID = billingInvoiceID
-	b.require(billingCreditBundleResponseDataFieldBillingInvoiceID)
 }
 
 // SetBundleType sets the BundleType field and marks it as non-optional;

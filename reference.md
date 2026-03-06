@@ -14610,11 +14610,32 @@ client.Planbundle.UpdatePlanBundle(
 <dd>
 
 ```go
+request := &schematichq.GetPlanGroupRequest{
+        IncludeCompanyCounts: schematichq.Bool(
+            true,
+        ),
+    }
 client.Plangroups.GetPlanGroup(
         context.TODO(),
+        request,
     )
 }
 ```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**includeCompanyCounts:** `*bool` 
+    
 </dd>
 </dl>
 </dd>

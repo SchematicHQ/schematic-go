@@ -178,30 +178,28 @@ func (p *PreviewComponentDataRequest) SetComponentID(componentID *string) {
 }
 
 var (
-	billingCreditBundleViewFieldBillingInvoiceID  = big.NewInt(1 << 0)
-	billingCreditBundleViewFieldBundleType        = big.NewInt(1 << 1)
-	billingCreditBundleViewFieldCreatedAt         = big.NewInt(1 << 2)
-	billingCreditBundleViewFieldCreditDescription = big.NewInt(1 << 3)
-	billingCreditBundleViewFieldCreditIcon        = big.NewInt(1 << 4)
-	billingCreditBundleViewFieldCreditID          = big.NewInt(1 << 5)
-	billingCreditBundleViewFieldCreditName        = big.NewInt(1 << 6)
-	billingCreditBundleViewFieldExpiryType        = big.NewInt(1 << 7)
-	billingCreditBundleViewFieldExpiryUnit        = big.NewInt(1 << 8)
-	billingCreditBundleViewFieldExpiryUnitCount   = big.NewInt(1 << 9)
-	billingCreditBundleViewFieldHasGrants         = big.NewInt(1 << 10)
-	billingCreditBundleViewFieldID                = big.NewInt(1 << 11)
-	billingCreditBundleViewFieldName              = big.NewInt(1 << 12)
-	billingCreditBundleViewFieldPluralName        = big.NewInt(1 << 13)
-	billingCreditBundleViewFieldPrice             = big.NewInt(1 << 14)
-	billingCreditBundleViewFieldQuantity          = big.NewInt(1 << 15)
-	billingCreditBundleViewFieldSingularName      = big.NewInt(1 << 16)
-	billingCreditBundleViewFieldStatus            = big.NewInt(1 << 17)
-	billingCreditBundleViewFieldUnitPrice         = big.NewInt(1 << 18)
-	billingCreditBundleViewFieldUpdatedAt         = big.NewInt(1 << 19)
+	billingCreditBundleViewFieldBundleType        = big.NewInt(1 << 0)
+	billingCreditBundleViewFieldCreatedAt         = big.NewInt(1 << 1)
+	billingCreditBundleViewFieldCreditDescription = big.NewInt(1 << 2)
+	billingCreditBundleViewFieldCreditIcon        = big.NewInt(1 << 3)
+	billingCreditBundleViewFieldCreditID          = big.NewInt(1 << 4)
+	billingCreditBundleViewFieldCreditName        = big.NewInt(1 << 5)
+	billingCreditBundleViewFieldExpiryType        = big.NewInt(1 << 6)
+	billingCreditBundleViewFieldExpiryUnit        = big.NewInt(1 << 7)
+	billingCreditBundleViewFieldExpiryUnitCount   = big.NewInt(1 << 8)
+	billingCreditBundleViewFieldHasGrants         = big.NewInt(1 << 9)
+	billingCreditBundleViewFieldID                = big.NewInt(1 << 10)
+	billingCreditBundleViewFieldName              = big.NewInt(1 << 11)
+	billingCreditBundleViewFieldPluralName        = big.NewInt(1 << 12)
+	billingCreditBundleViewFieldPrice             = big.NewInt(1 << 13)
+	billingCreditBundleViewFieldQuantity          = big.NewInt(1 << 14)
+	billingCreditBundleViewFieldSingularName      = big.NewInt(1 << 15)
+	billingCreditBundleViewFieldStatus            = big.NewInt(1 << 16)
+	billingCreditBundleViewFieldUnitPrice         = big.NewInt(1 << 17)
+	billingCreditBundleViewFieldUpdatedAt         = big.NewInt(1 << 18)
 )
 
 type BillingCreditBundleView struct {
-	BillingInvoiceID  *string                          `json:"billing_invoice_id,omitempty" url:"billing_invoice_id,omitempty"`
 	BundleType        BillingCreditBundleType          `json:"bundle_type" url:"bundle_type"`
 	CreatedAt         time.Time                        `json:"created_at" url:"created_at"`
 	CreditDescription *string                          `json:"credit_description,omitempty" url:"credit_description,omitempty"`
@@ -227,13 +225,6 @@ type BillingCreditBundleView struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
-}
-
-func (b *BillingCreditBundleView) GetBillingInvoiceID() *string {
-	if b == nil {
-		return nil
-	}
-	return b.BillingInvoiceID
 }
 
 func (b *BillingCreditBundleView) GetCreatedAt() time.Time {
@@ -371,13 +362,6 @@ func (b *BillingCreditBundleView) require(field *big.Int) {
 		b.explicitFields = big.NewInt(0)
 	}
 	b.explicitFields.Or(b.explicitFields, field)
-}
-
-// SetBillingInvoiceID sets the BillingInvoiceID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleView) SetBillingInvoiceID(billingInvoiceID *string) {
-	b.BillingInvoiceID = billingInvoiceID
-	b.require(billingCreditBundleViewFieldBillingInvoiceID)
 }
 
 // SetBundleType sets the BundleType field and marks it as non-optional;

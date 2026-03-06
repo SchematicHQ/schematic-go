@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
 )
@@ -18,7 +19,7 @@ import (
 type EventPayload struct {
 	APIKey    string                 `json:"api_key"`
 	Body      *schematicgo.EventBody `json:"body"`
-	EventType schematicgo.EventType  `json:"event_type"`
+	EventType schematicgo.EventType  `json:"type"`
 	SentAt    *time.Time             `json:"sent_at,omitempty"`
 }
 
@@ -116,6 +117,8 @@ func (h *HTTPEventSender) sendBatch(ctx context.Context, events []*schematicgo.C
 			EventType: event.EventType,
 			SentAt:    event.SentAt,
 		}
+
+		spew.Dump("Event payload", eventPayloads[i])
 	}
 
 	// Create batch payload

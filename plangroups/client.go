@@ -34,10 +34,12 @@ func NewClient(options *core.RequestOptions) *Client {
 
 func (c *Client) GetPlanGroup(
 	ctx context.Context,
+	request *schematichq.GetPlanGroupRequest,
 	opts ...option.RequestOption,
 ) (*schematichq.GetPlanGroupResponse, error) {
 	response, err := c.WithRawResponse.GetPlanGroup(
 		ctx,
+		request,
 		opts...,
 	)
 	if err != nil {

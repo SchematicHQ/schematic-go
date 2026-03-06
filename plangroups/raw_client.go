@@ -32,6 +32,7 @@ func NewRawClient(options *core.RequestOptions) *RawClient {
 
 func (r *RawClient) GetPlanGroup(
 	ctx context.Context,
+	request *schematichq.GetPlanGroupRequest,
 	opts ...option.RequestOption,
 ) (*core.Response[*schematichq.GetPlanGroupResponse], error) {
 	options := core.NewRequestOptions(opts...)
@@ -41,6 +42,13 @@ func (r *RawClient) GetPlanGroup(
 		"https://api.schematichq.com",
 	)
 	endpointURL := baseURL + "/plan-groups"
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		r.options.ToHeader(),
 		options.ToHeader(),

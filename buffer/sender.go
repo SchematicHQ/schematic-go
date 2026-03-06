@@ -18,7 +18,7 @@ import (
 type EventPayload struct {
 	APIKey    string                 `json:"api_key"`
 	Body      *schematicgo.EventBody `json:"body"`
-	EventType schematicgo.EventType  `json:"event_type"`
+	EventType schematicgo.EventType  `json:"type"`
 	SentAt    *time.Time             `json:"sent_at,omitempty"`
 }
 

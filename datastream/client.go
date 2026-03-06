@@ -877,10 +877,21 @@ func deepCopyCompany(company *rulesengine.Company) *rulesengine.Company {
 		BasePlanID:        company.BasePlanID,
 		BillingProductIDs: append([]string{}, company.BillingProductIDs...),
 		PlanIDs:           append([]string{}, company.PlanIDs...),
+		PlanVersionIDs:    append([]string{}, company.PlanVersionIDs...),
 		Subscription:      company.Subscription, // Note: this is a shallow copy, as Subscription isn't modified in our case
 		Keys:              make(map[string]string),
 		Metrics:           make([]*rulesengine.CompanyMetric, 0, len(company.Metrics)),
 		Traits:            make([]*rulesengine.Trait, 0, len(company.Traits)),
+		Entitlements:      company.Entitlements,
+		Rules:             company.Rules,
+	}
+
+	// Copy credit balances
+	if company.CreditBalances != nil {
+		companyCopy.CreditBalances = make(map[string]float64, len(company.CreditBalances))
+		for k, v := range company.CreditBalances {
+			companyCopy.CreditBalances[k] = v
+		}
 	}
 
 	// Copy the keys map

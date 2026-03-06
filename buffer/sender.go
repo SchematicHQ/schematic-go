@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
 )
@@ -117,8 +116,6 @@ func (h *HTTPEventSender) sendBatch(ctx context.Context, events []*schematicgo.C
 			EventType: event.EventType,
 			SentAt:    event.SentAt,
 		}
-
-		spew.Dump("Event payload", eventPayloads[i])
 	}
 
 	// Create batch payload

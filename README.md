@@ -596,6 +596,24 @@ func main() {
 }
 ```
 
+#### Cache TTL Configuration
+
+**Important:** When using Replicator Mode, you must set the SDK's cache TTL to match the replicator's cache TTL. The replicator defaults to an unlimited cache TTL (`0`). If the SDK uses a shorter TTL (the default is 24 hours), locally updated cache entries (e.g. after track events) will be written back with the shorter TTL and eventually evicted from the shared Redis cache, even though the replicator originally set them with no expiration.
+
+To match the replicator's default unlimited TTL:
+
+```go
+client := schematicclient.NewSchematicClient(
+	core.WithAPIKey(apiKey),
+	core.WithDatastream(
+		core.WithReplicatorMode(),
+		core.WithCacheTTL(0), // Unlimited, matching the replicator default
+	),
+)
+```
+
+If you have configured a custom cache TTL on the replicator, use the same value here.
+
 #### Advanced Configuration (Optional)
 
 The client automatically configures sensible defaults for replicator mode, but you can customize the configuration if needed:
@@ -605,6 +623,7 @@ client := schematicclient.NewSchematicClient(
 	core.WithAPIKey(apiKey),
 	core.WithDatastream(
 		core.WithReplicatorMode(),
+		core.WithCacheTTL(0), // Match the replicator's cache TTL
 		core.WithReplicatorHealthURL("http://my-replicator:8090/ready"),
 		core.WithReplicatorHealthInterval(60*time.Second),
 	),
@@ -615,7 +634,7 @@ client := schematicclient.NewSchematicClient(
 
 - **Replicator Health URL**: `http://localhost:8090/ready`
 - **Health Check Interval**: 30 seconds
-- **Cache TTL**: 24 hours (handled automatically by the replicator)
+- **Cache TTL**: 24 hours (SDK default; should be set to match the replicator's TTL, which defaults to unlimited)
 
 When running in Replicator Mode, the client will:
 - Skip establishing WebSocket connections

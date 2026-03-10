@@ -14,6 +14,7 @@ import (
 	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
+	"github.com/schematichq/schematic-go/merge"
 )
 
 func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *core.DatastreamOptions) *DataStreamClient {
@@ -303,6 +304,39 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 		return nil
 	}
 
+	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
+		id, err := merge.ExtractIDFromJSON(resp.Data)
+		if err != nil {
+			return fmt.Errorf("Failed to extract company ID from partial message: %v", err)
+		}
+
+		c.companyMu.Lock()
+		existing, found := c.companyCacheProvider.Get(ctx, c.companyIDCacheKey(id))
+		if found && existing != nil {
+			merged, mergeErr := merge.PartialCompany(existing, resp.Data)
+			if mergeErr != nil {
+				c.companyMu.Unlock()
+				return fmt.Errorf("Failed to merge partial company: %v", mergeErr)
+			}
+			company = merged
+		} else {
+			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial company '%s', writing as-is", id))
+		}
+		cacheResults, cacheErr := c.cacheCompanyForKeys(ctx, company)
+		c.companyMu.Unlock()
+
+		if cacheErr != nil {
+			return cacheErr
+		}
+		for cacheKey, err := range cacheResults {
+			if err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Cache error for company key '%s': %v", cacheKey, err))
+			}
+		}
+		c.notifyPendingCompanyRequests(ctx, company.Keys, company)
+		return nil
+	}
+
 	c.companyMu.Lock()
 	cacheResults, err := c.cacheCompanyForKeys(ctx, company)
 	c.companyMu.Unlock()
@@ -372,6 +406,36 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 			}
 		}
 
+		return nil
+	}
+
+	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
+		id, err := merge.ExtractIDFromJSON(resp.Data)
+		if err != nil {
+			return fmt.Errorf("Failed to extract user ID from partial message: %v", err)
+		}
+
+		c.userMu.Lock()
+		existing, found := c.userCacheProvider.Get(ctx, c.userIDCacheKey(id))
+		if found && existing != nil {
+			merged, mergeErr := merge.PartialUser(existing, resp.Data)
+			if mergeErr != nil {
+				c.userMu.Unlock()
+				return fmt.Errorf("Failed to merge partial user: %v", mergeErr)
+			}
+			user = merged
+		} else {
+			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial user '%s', writing as-is", id))
+		}
+		cacheResults := c.cacheUserForKeys(ctx, user)
+		c.userMu.Unlock()
+
+		for cacheKey, err := range cacheResults {
+			if err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Cache error for user key '%s': %v", cacheKey, err))
+			}
+		}
+		c.notifyPendingUserRequests(ctx, user.Keys, user)
 		return nil
 	}
 

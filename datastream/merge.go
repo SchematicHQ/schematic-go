@@ -1,16 +1,17 @@
-package merge
+package datastream
 
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
 
 	"github.com/schematichq/rulesengine"
 )
 
-// PartialCompany merges a partial JSON update into an existing Company.
+// partialCompany merges a partial JSON update into an existing Company.
 // It copies the existing company by value, then applies only the fields
 // present in partialJSON. The "id" field must be present.
-func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) (*rulesengine.Company, error) {
+func partialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) (*rulesengine.Company, error) {
 	var fields map[string]json.RawMessage
 	if err := json.Unmarshal(partialJSON, &fields); err != nil {
 		return nil, fmt.Errorf("unmarshal partial company fields: %w", err)
@@ -88,6 +89,7 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 			if err := json.Unmarshal(raw, &rules); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
+			merged.Rules = rules
 		case "subscription":
 			if err := json.Unmarshal(raw, &merged.Subscription); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
@@ -104,10 +106,10 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 	return merged, nil
 }
 
-// PartialUser merges a partial JSON update into an existing User.
+// partialUser merges a partial JSON update into an existing User.
 // It copies the existing user by value, then applies only the fields
 // present in partialJSON. The "id" field must be present.
-func PartialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rulesengine.User, error) {
+func partialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rulesengine.User, error) {
 	var fields map[string]json.RawMessage
 	if err := json.Unmarshal(partialJSON, &fields); err != nil {
 		return nil, fmt.Errorf("unmarshal partial user fields: %w", err)
@@ -158,8 +160,8 @@ func PartialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rule
 	return merged, nil
 }
 
-// ExtractIDFromJSON extracts the "id" field from a raw JSON message.
-func ExtractIDFromJSON(data json.RawMessage) (string, error) {
+// extractIDFromJSON extracts the "id" field from a raw JSON message.
+func extractIDFromJSON(data json.RawMessage) (string, error) {
 	var partial struct {
 		ID string `json:"id"`
 	}
@@ -172,11 +174,25 @@ func ExtractIDFromJSON(data json.RawMessage) (string, error) {
 	return partial.ID, nil
 }
 
+// deepCopyCompany creates a complete deep copy of a Company struct and all its nested fields.
+// This ensures that modifying the returned company won't affect the original object.
 func deepCopyCompany(c *rulesengine.Company) *rulesengine.Company {
+	if c == nil {
+		return nil
+	}
+
 	cp := &rulesengine.Company{
-		ID:            c.ID,
-		AccountID:     c.AccountID,
-		EnvironmentID: c.EnvironmentID,
+		ID:                c.ID,
+		AccountID:         c.AccountID,
+		EnvironmentID:     c.EnvironmentID,
+		BillingProductIDs: append([]string{}, c.BillingProductIDs...),
+		PlanIDs:           append([]string{}, c.PlanIDs...),
+		PlanVersionIDs:    append([]string{}, c.PlanVersionIDs...),
+		Entitlements:      c.Entitlements,
+		Rules:             c.Rules,
+		Keys:              make(map[string]string),
+		Metrics:           make([]*rulesengine.CompanyMetric, 0, len(c.Metrics)),
+		Traits:            make([]*rulesengine.Trait, 0, len(c.Traits)),
 	}
 
 	if c.BasePlanID != nil {
@@ -184,63 +200,53 @@ func deepCopyCompany(c *rulesengine.Company) *rulesengine.Company {
 		cp.BasePlanID = &v
 	}
 
-	if c.BillingProductIDs != nil {
-		cp.BillingProductIDs = make([]string, len(c.BillingProductIDs))
-		copy(cp.BillingProductIDs, c.BillingProductIDs)
-	}
-
 	if c.CreditBalances != nil {
 		cp.CreditBalances = make(map[string]float64, len(c.CreditBalances))
-		for k, v := range c.CreditBalances {
-			cp.CreditBalances[k] = v
-		}
+		maps.Copy(cp.CreditBalances, c.CreditBalances)
 	}
 
-	if c.Entitlements != nil {
-		cp.Entitlements = make([]*rulesengine.FeatureEntitlement, len(c.Entitlements))
-		copy(cp.Entitlements, c.Entitlements)
-	}
-
-	if c.Keys != nil {
-		cp.Keys = make(map[string]string, len(c.Keys))
-		for k, v := range c.Keys {
-			cp.Keys[k] = v
-		}
-	}
-
-	if c.Metrics != nil {
-		cp.Metrics = make(rulesengine.CompanyMetricCollection, len(c.Metrics))
-		copy(cp.Metrics, c.Metrics)
-	}
-
-	if c.PlanIDs != nil {
-		cp.PlanIDs = make([]string, len(c.PlanIDs))
-		copy(cp.PlanIDs, c.PlanIDs)
-	}
-
-	if c.PlanVersionIDs != nil {
-		cp.PlanVersionIDs = make([]string, len(c.PlanVersionIDs))
-		copy(cp.PlanVersionIDs, c.PlanVersionIDs)
-	}
-
-	if c.Rules != nil {
-		cp.Rules = make([]*rulesengine.Rule, len(c.Rules))
-		copy(cp.Rules, c.Rules)
-	}
+	maps.Copy(cp.Keys, c.Keys)
 
 	if c.Subscription != nil {
 		sub := *c.Subscription
 		cp.Subscription = &sub
 	}
 
-	if c.Traits != nil {
-		cp.Traits = make([]*rulesengine.Trait, len(c.Traits))
-		copy(cp.Traits, c.Traits)
+	for _, metric := range c.Metrics {
+		if metric == nil {
+			cp.Metrics = append(cp.Metrics, nil)
+			continue
+		}
+		metricCopy := &rulesengine.CompanyMetric{
+			AccountID:     metric.AccountID,
+			EnvironmentID: metric.EnvironmentID,
+			CompanyID:     metric.CompanyID,
+			EventSubtype:  metric.EventSubtype,
+			Period:        metric.Period,
+			MonthReset:    metric.MonthReset,
+			Value:         metric.Value,
+			CreatedAt:     metric.CreatedAt,
+		}
+		if metric.ValidUntil != nil {
+			validUntil := *metric.ValidUntil
+			metricCopy.ValidUntil = &validUntil
+		}
+		cp.Metrics = append(cp.Metrics, metricCopy)
+	}
+
+	for _, trait := range c.Traits {
+		if trait != nil {
+			traitCopy := *trait
+			cp.Traits = append(cp.Traits, &traitCopy)
+		} else {
+			cp.Traits = append(cp.Traits, nil)
+		}
 	}
 
 	return cp
 }
 
+// deepCopyUser creates a complete deep copy of a User struct and all its nested fields.
 func deepCopyUser(u *rulesengine.User) *rulesengine.User {
 	cp := &rulesengine.User{
 		ID:            u.ID,
@@ -250,9 +256,7 @@ func deepCopyUser(u *rulesengine.User) *rulesengine.User {
 
 	if u.Keys != nil {
 		cp.Keys = make(map[string]string, len(u.Keys))
-		for k, v := range u.Keys {
-			cp.Keys[k] = v
-		}
+		maps.Copy(cp.Keys, u.Keys)
 	}
 
 	if u.Traits != nil {

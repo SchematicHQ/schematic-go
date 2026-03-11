@@ -8,10 +8,10 @@ import (
 	"github.com/schematichq/rulesengine"
 )
 
-// partialCompany merges a partial JSON update into an existing Company.
+// PartialCompany merges a partial JSON update into an existing Company.
 // It copies the existing company by value, then applies only the fields
 // present in partialJSON. The "id" field must be present.
-func partialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) (*rulesengine.Company, error) {
+func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) (*rulesengine.Company, error) {
 	var fields map[string]json.RawMessage
 	if err := json.Unmarshal(partialJSON, &fields); err != nil {
 		return nil, fmt.Errorf("unmarshal partial company fields: %w", err)
@@ -21,8 +21,7 @@ func partialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 		return nil, fmt.Errorf("partial company message missing required field: id")
 	}
 
-	// Deep copy existing
-	merged := deepCopyCompany(existing)
+	merged := DeepCopyCompany(existing)
 
 	for key, raw := range fields {
 		switch key {
@@ -106,10 +105,10 @@ func partialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 	return merged, nil
 }
 
-// partialUser merges a partial JSON update into an existing User.
+// PartialUser merges a partial JSON update into an existing User.
 // It copies the existing user by value, then applies only the fields
 // present in partialJSON. The "id" field must be present.
-func partialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rulesengine.User, error) {
+func PartialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rulesengine.User, error) {
 	var fields map[string]json.RawMessage
 	if err := json.Unmarshal(partialJSON, &fields); err != nil {
 		return nil, fmt.Errorf("unmarshal partial user fields: %w", err)
@@ -119,8 +118,7 @@ func partialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rule
 		return nil, fmt.Errorf("partial user message missing required field: id")
 	}
 
-	// Deep copy existing
-	merged := deepCopyUser(existing)
+	merged := DeepCopyUser(existing)
 
 	for key, raw := range fields {
 		switch key {
@@ -160,8 +158,8 @@ func partialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rule
 	return merged, nil
 }
 
-// extractIDFromJSON extracts the "id" field from a raw JSON message.
-func extractIDFromJSON(data json.RawMessage) (string, error) {
+// ExtractIDFromJSON extracts the "id" field from a raw JSON message.
+func ExtractIDFromJSON(data json.RawMessage) (string, error) {
 	var partial struct {
 		ID string `json:"id"`
 	}
@@ -174,9 +172,8 @@ func extractIDFromJSON(data json.RawMessage) (string, error) {
 	return partial.ID, nil
 }
 
-// deepCopyCompany creates a complete deep copy of a Company struct and all its nested fields.
-// This ensures that modifying the returned company won't affect the original object.
-func deepCopyCompany(c *rulesengine.Company) *rulesengine.Company {
+// DeepCopyCompany creates a complete deep copy of a Company struct and all its nested fields.
+func DeepCopyCompany(c *rulesengine.Company) *rulesengine.Company {
 	if c == nil {
 		return nil
 	}
@@ -246,8 +243,8 @@ func deepCopyCompany(c *rulesengine.Company) *rulesengine.Company {
 	return cp
 }
 
-// deepCopyUser creates a complete deep copy of a User struct and all its nested fields.
-func deepCopyUser(u *rulesengine.User) *rulesengine.User {
+// DeepCopyUser creates a complete deep copy of a User struct and all its nested fields.
+func DeepCopyUser(u *rulesengine.User) *rulesengine.User {
 	cp := &rulesengine.User{
 		ID:            u.ID,
 		AccountID:     u.AccountID,

@@ -304,7 +304,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 	}
 
 	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
-		id, err := extractIDFromJSON(resp.Data)
+		id, err := ExtractIDFromJSON(resp.Data)
 		if err != nil {
 			return fmt.Errorf("Failed to extract company ID from partial message: %v", err)
 		}
@@ -316,7 +316,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial company '%s', skipping", id))
 			return nil
 		}
-		merged, mergeErr := partialCompany(existing, resp.Data)
+		merged, mergeErr := PartialCompany(existing, resp.Data)
 		if mergeErr != nil {
 			c.companyMu.Unlock()
 			return fmt.Errorf("Failed to merge partial company: %v", mergeErr)
@@ -410,7 +410,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 	}
 
 	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
-		id, err := extractIDFromJSON(resp.Data)
+		id, err := ExtractIDFromJSON(resp.Data)
 		if err != nil {
 			return fmt.Errorf("Failed to extract user ID from partial message: %v", err)
 		}
@@ -422,7 +422,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial user '%s', skipping", id))
 			return nil
 		}
-		merged, mergeErr := partialUser(existing, resp.Data)
+		merged, mergeErr := PartialUser(existing, resp.Data)
 		if mergeErr != nil {
 			c.userMu.Unlock()
 			return fmt.Errorf("Failed to merge partial user: %v", mergeErr)
@@ -897,7 +897,7 @@ func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *sche
 	}
 
 	// Create a deep copy of the company to avoid modifying the cached object directly
-	companyCopy := deepCopyCompany(company)
+	companyCopy := DeepCopyCompany(company)
 
 	// Update the metric value if it matches the event
 	for _, metric := range companyCopy.Metrics {

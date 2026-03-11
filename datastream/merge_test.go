@@ -47,14 +47,12 @@ func TestPartialCompany_OnlyTraits(t *testing.T) {
 	existing := baseCompany()
 	partial := json.RawMessage(`{"id":"co-1","traits":[{"value":"Startup","trait_definition":{"id":"plan"}}]}`)
 
-	merged, err := partialCompany(existing, partial)
+	merged, err := PartialCompany(existing, partial)
 	require.NoError(t, err)
 
-	// Traits updated
 	assert.Len(t, merged.Traits, 1)
 	assert.Equal(t, "Startup", merged.Traits[0].Value)
 
-	// Other fields unchanged
 	assert.Equal(t, "acc-1", merged.AccountID)
 	assert.Equal(t, "env-1", merged.EnvironmentID)
 	assert.Equal(t, map[string]string{"domain": "example.com"}, merged.Keys)
@@ -67,11 +65,10 @@ func TestPartialCompany_ReplacesKeys(t *testing.T) {
 	existing := baseCompany()
 	partial := json.RawMessage(`{"id":"co-1","keys":{"slug":"new-slug"}}`)
 
-	merged, err := partialCompany(existing, partial)
+	merged, err := PartialCompany(existing, partial)
 	require.NoError(t, err)
 
 	assert.Equal(t, map[string]string{"slug": "new-slug"}, merged.Keys)
-	// Original traits still present
 	assert.Len(t, merged.Traits, 1)
 }
 
@@ -79,11 +76,10 @@ func TestPartialCompany_EmptyEntitlements(t *testing.T) {
 	existing := baseCompany()
 	partial := json.RawMessage(`{"id":"co-1","entitlements":[]}`)
 
-	merged, err := partialCompany(existing, partial)
+	merged, err := PartialCompany(existing, partial)
 	require.NoError(t, err)
 
 	assert.Empty(t, merged.Entitlements)
-	// Other fields unchanged
 	assert.Equal(t, "acc-1", merged.AccountID)
 }
 
@@ -91,11 +87,10 @@ func TestPartialCompany_NullBasePlanID(t *testing.T) {
 	existing := baseCompany()
 	partial := json.RawMessage(`{"id":"co-1","base_plan_id":null}`)
 
-	merged, err := partialCompany(existing, partial)
+	merged, err := PartialCompany(existing, partial)
 	require.NoError(t, err)
 
 	assert.Nil(t, merged.BasePlanID)
-	// Other fields unchanged
 	assert.Equal(t, []string{"bp-1"}, merged.BillingProductIDs)
 }
 
@@ -103,7 +98,7 @@ func TestPartialCompany_MissingID(t *testing.T) {
 	existing := baseCompany()
 	partial := json.RawMessage(`{"traits":[]}`)
 
-	_, err := partialCompany(existing, partial)
+	_, err := PartialCompany(existing, partial)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "missing required field: id")
 }
@@ -117,23 +112,34 @@ func TestPartialCompany_DoesNotMutateOriginal(t *testing.T) {
 
 	partial := json.RawMessage(`{"id":"co-1","keys":{"slug":"new-slug"},"traits":[]}`)
 
-	merged, err := partialCompany(existing, partial)
+	merged, err := PartialCompany(existing, partial)
 	require.NoError(t, err)
 
-	// Original not mutated
 	assert.Equal(t, origKeys, existing.Keys)
 	assert.Len(t, existing.Traits, 1)
 
-	// Merged is different
 	assert.Equal(t, map[string]string{"slug": "new-slug"}, merged.Keys)
 	assert.Empty(t, merged.Traits)
+}
+
+func TestPartialCompany_Rules(t *testing.T) {
+	existing := baseCompany()
+	existing.Rules = []*rulesengine.Rule{{ID: "rule-old"}}
+	partial := json.RawMessage(`{"id":"co-1","rules":[{"id":"rule-new"}]}`)
+
+	merged, err := PartialCompany(existing, partial)
+	require.NoError(t, err)
+
+	require.Len(t, merged.Rules, 1)
+	assert.Equal(t, "rule-new", merged.Rules[0].ID)
+	assert.Equal(t, "rule-old", existing.Rules[0].ID)
 }
 
 func TestPartialUser_OnlyTraits(t *testing.T) {
 	existing := baseUser()
 	partial := json.RawMessage(`{"id":"user-1","traits":[{"value":"Free","trait_definition":{"id":"tier"}}]}`)
 
-	merged, err := partialUser(existing, partial)
+	merged, err := PartialUser(existing, partial)
 	require.NoError(t, err)
 
 	assert.Len(t, merged.Traits, 1)
@@ -145,7 +151,7 @@ func TestPartialUser_ReplacesKeys(t *testing.T) {
 	existing := baseUser()
 	partial := json.RawMessage(`{"id":"user-1","keys":{"email":"new@example.com"}}`)
 
-	merged, err := partialUser(existing, partial)
+	merged, err := PartialUser(existing, partial)
 	require.NoError(t, err)
 
 	assert.Equal(t, map[string]string{"email": "new@example.com"}, merged.Keys)
@@ -156,7 +162,7 @@ func TestPartialUser_MissingID(t *testing.T) {
 	existing := baseUser()
 	partial := json.RawMessage(`{"keys":{"email":"new@example.com"}}`)
 
-	_, err := partialUser(existing, partial)
+	_, err := PartialUser(existing, partial)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "missing required field: id")
 }
@@ -170,7 +176,7 @@ func TestPartialUser_DoesNotMutateOriginal(t *testing.T) {
 
 	partial := json.RawMessage(`{"id":"user-1","keys":{"slug":"new"},"traits":[]}`)
 
-	merged, err := partialUser(existing, partial)
+	merged, err := PartialUser(existing, partial)
 	require.NoError(t, err)
 
 	assert.Equal(t, origKeys, existing.Keys)
@@ -181,32 +187,18 @@ func TestPartialUser_DoesNotMutateOriginal(t *testing.T) {
 }
 
 func TestExtractIDFromJSON(t *testing.T) {
-	id, err := extractIDFromJSON(json.RawMessage(`{"id":"co-1","traits":[]}`))
+	id, err := ExtractIDFromJSON(json.RawMessage(`{"id":"co-1","traits":[]}`))
 	require.NoError(t, err)
 	assert.Equal(t, "co-1", id)
 }
 
 func TestExtractIDFromJSON_Missing(t *testing.T) {
-	_, err := extractIDFromJSON(json.RawMessage(`{"traits":[]}`))
+	_, err := ExtractIDFromJSON(json.RawMessage(`{"traits":[]}`))
 	assert.Error(t, err)
 }
 
-func TestPartialCompany_Rules(t *testing.T) {
-	existing := baseCompany()
-	existing.Rules = []*rulesengine.Rule{{ID: "rule-old"}}
-	partial := json.RawMessage(`{"id":"co-1","rules":[{"id":"rule-new"}]}`)
-
-	merged, err := partialCompany(existing, partial)
-	require.NoError(t, err)
-
-	require.Len(t, merged.Rules, 1)
-	assert.Equal(t, "rule-new", merged.Rules[0].ID)
-	// Original unchanged
-	assert.Equal(t, "rule-old", existing.Rules[0].ID)
-}
-
 func TestDeepCopyCompany_Nil(t *testing.T) {
-	assert.Nil(t, deepCopyCompany(nil))
+	assert.Nil(t, DeepCopyCompany(nil))
 }
 
 func TestDeepCopyCompany_FullCopy(t *testing.T) {
@@ -240,9 +232,8 @@ func TestDeepCopyCompany_FullCopy(t *testing.T) {
 		},
 	}
 
-	cp := deepCopyCompany(orig)
+	cp := DeepCopyCompany(orig)
 
-	// Scalar fields match
 	assert.Equal(t, orig.ID, cp.ID)
 	assert.Equal(t, orig.AccountID, cp.AccountID)
 	assert.Equal(t, orig.EnvironmentID, cp.EnvironmentID)
@@ -283,11 +274,9 @@ func TestDeepCopyCompany_FullCopy(t *testing.T) {
 	assert.Equal(t, int64(42), cp.Metrics[0].Value)
 	require.NotNil(t, cp.Metrics[0].ValidUntil)
 	assert.Equal(t, validUntil, *cp.Metrics[0].ValidUntil)
-	// Mutate copy's ValidUntil
 	newTime := time.Date(2099, 1, 1, 0, 0, 0, 0, time.UTC)
 	cp.Metrics[0].ValidUntil = &newTime
 	assert.Equal(t, validUntil, *orig.Metrics[0].ValidUntil)
-	// Nil metric preserved
 	assert.Nil(t, cp.Metrics[1])
 
 	// Traits deep copied
@@ -296,12 +285,11 @@ func TestDeepCopyCompany_FullCopy(t *testing.T) {
 	assert.Equal(t, "Enterprise", cp.Traits[0].Value)
 	cp.Traits[0].Value = "changed"
 	assert.Equal(t, "Enterprise", orig.Traits[0].Value)
-	// Nil trait preserved
 	assert.Nil(t, cp.Traits[1])
 }
 
 func TestDeepCopyUser_EmptyFields(t *testing.T) {
-	cp := deepCopyUser(&rulesengine.User{ID: "u1"})
+	cp := DeepCopyUser(&rulesengine.User{ID: "u1"})
 	assert.Equal(t, "u1", cp.ID)
 	assert.Nil(t, cp.Keys)
 	assert.Nil(t, cp.Traits)
@@ -318,20 +306,17 @@ func TestDeepCopyUser_FullCopy(t *testing.T) {
 		Rules:         []*rulesengine.Rule{{ID: "r1"}},
 	}
 
-	cp := deepCopyUser(orig)
+	cp := DeepCopyUser(orig)
 
 	assert.Equal(t, orig.ID, cp.ID)
 	assert.Equal(t, orig.AccountID, cp.AccountID)
 
-	// Keys independent
 	cp.Keys["email"] = "changed"
 	assert.Equal(t, "a@b.com", orig.Keys["email"])
 
-	// Traits independent (shallow copy of slice elements)
 	cp.Traits[0] = &rulesengine.Trait{Value: "Free"}
 	assert.Equal(t, "Premium", orig.Traits[0].Value)
 
-	// Rules independent
 	cp.Rules[0] = &rulesengine.Rule{ID: "r2"}
 	assert.Equal(t, "r1", orig.Rules[0].ID)
 }

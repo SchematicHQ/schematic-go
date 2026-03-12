@@ -52,7 +52,10 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 			if err := json.Unmarshal(raw, &cb); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
-			merged.CreditBalances = cb
+			if merged.CreditBalances == nil {
+				merged.CreditBalances = make(map[string]float64)
+			}
+			maps.Copy(merged.CreditBalances, cb)
 		case "entitlements":
 			var ents []*rulesengine.FeatureEntitlement
 			if err := json.Unmarshal(raw, &ents); err != nil {
@@ -64,7 +67,10 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 			if err := json.Unmarshal(raw, &keys); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
-			merged.Keys = keys
+			if merged.Keys == nil {
+				merged.Keys = make(map[string]string)
+			}
+			maps.Copy(merged.Keys, keys)
 		case "metrics":
 			var metrics rulesengine.CompanyMetricCollection
 			if err := json.Unmarshal(raw, &metrics); err != nil {
@@ -139,7 +145,10 @@ func PartialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rule
 			if err := json.Unmarshal(raw, &keys); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
-			merged.Keys = keys
+			if merged.Keys == nil {
+				merged.Keys = make(map[string]string)
+			}
+			maps.Copy(merged.Keys, keys)
 		case "traits":
 			var traits []*rulesengine.Trait
 			if err := json.Unmarshal(raw, &traits); err != nil {

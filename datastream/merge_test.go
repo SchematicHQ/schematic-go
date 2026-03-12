@@ -61,15 +61,38 @@ func TestPartialCompany_OnlyTraits(t *testing.T) {
 	assert.Equal(t, "plan-1", *merged.BasePlanID)
 }
 
-func TestPartialCompany_ReplacesKeys(t *testing.T) {
+func TestPartialCompany_MergesKeys(t *testing.T) {
 	existing := baseCompany()
 	partial := json.RawMessage(`{"id":"co-1","keys":{"slug":"new-slug"}}`)
 
 	merged, err := PartialCompany(existing, partial)
 	require.NoError(t, err)
 
-	assert.Equal(t, map[string]string{"slug": "new-slug"}, merged.Keys)
+	// New key added, existing key preserved
+	assert.Equal(t, map[string]string{"domain": "example.com", "slug": "new-slug"}, merged.Keys)
 	assert.Len(t, merged.Traits, 1)
+}
+
+func TestPartialCompany_MergesCreditBalances(t *testing.T) {
+	existing := baseCompany()
+	partial := json.RawMessage(`{"id":"co-1","credit_balances":{"credit-2":200.0}}`)
+
+	merged, err := PartialCompany(existing, partial)
+	require.NoError(t, err)
+
+	// New balance added, existing balance preserved
+	assert.Equal(t, map[string]float64{"credit-1": 100.0, "credit-2": 200.0}, merged.CreditBalances)
+}
+
+func TestPartialCompany_OverwritesCreditBalance(t *testing.T) {
+	existing := baseCompany()
+	partial := json.RawMessage(`{"id":"co-1","credit_balances":{"credit-1":50.0}}`)
+
+	merged, err := PartialCompany(existing, partial)
+	require.NoError(t, err)
+
+	// Existing balance updated
+	assert.Equal(t, map[string]float64{"credit-1": 50.0}, merged.CreditBalances)
 }
 
 func TestPartialCompany_EmptyEntitlements(t *testing.T) {
@@ -118,7 +141,7 @@ func TestPartialCompany_DoesNotMutateOriginal(t *testing.T) {
 	assert.Equal(t, origKeys, existing.Keys)
 	assert.Len(t, existing.Traits, 1)
 
-	assert.Equal(t, map[string]string{"slug": "new-slug"}, merged.Keys)
+	assert.Equal(t, map[string]string{"domain": "example.com", "slug": "new-slug"}, merged.Keys)
 	assert.Empty(t, merged.Traits)
 }
 
@@ -147,14 +170,15 @@ func TestPartialUser_OnlyTraits(t *testing.T) {
 	assert.Equal(t, map[string]string{"email": "user@example.com"}, merged.Keys)
 }
 
-func TestPartialUser_ReplacesKeys(t *testing.T) {
+func TestPartialUser_MergesKeys(t *testing.T) {
 	existing := baseUser()
-	partial := json.RawMessage(`{"id":"user-1","keys":{"email":"new@example.com"}}`)
+	partial := json.RawMessage(`{"id":"user-1","keys":{"slack_id":"U123"}}`)
 
 	merged, err := PartialUser(existing, partial)
 	require.NoError(t, err)
 
-	assert.Equal(t, map[string]string{"email": "new@example.com"}, merged.Keys)
+	// New key added, existing key preserved
+	assert.Equal(t, map[string]string{"email": "user@example.com", "slack_id": "U123"}, merged.Keys)
 	assert.Len(t, merged.Traits, 1)
 }
 
@@ -182,7 +206,7 @@ func TestPartialUser_DoesNotMutateOriginal(t *testing.T) {
 	assert.Equal(t, origKeys, existing.Keys)
 	assert.Len(t, existing.Traits, 1)
 
-	assert.Equal(t, map[string]string{"slug": "new"}, merged.Keys)
+	assert.Equal(t, map[string]string{"email": "user@example.com", "slug": "new"}, merged.Keys)
 	assert.Empty(t, merged.Traits)
 }
 

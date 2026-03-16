@@ -95,6 +95,36 @@ func TestPartialCompany_OverwritesCreditBalance(t *testing.T) {
 	assert.Equal(t, map[string]float64{"credit-1": 50.0}, merged.CreditBalances)
 }
 
+func TestPartialCompany_UpsertsMetrics(t *testing.T) {
+	existing := baseCompany()
+	existing.Metrics = rulesengine.CompanyMetricCollection{
+		{EventSubtype: "event-a", Period: "all_time", MonthReset: "first_of_month", Value: 10},
+		{EventSubtype: "event-b", Period: "current_month", MonthReset: "first_of_month", Value: 5},
+	}
+	// Update event-a, add event-c
+	partial := json.RawMessage(`{"id":"co-1","metrics":[
+		{"event_subtype":"event-a","period":"all_time","month_reset":"first_of_month","value":42},
+		{"event_subtype":"event-c","period":"current_day","month_reset":"billing_cycle","value":1}
+	]}`)
+
+	merged, err := PartialCompany(existing, partial)
+	require.NoError(t, err)
+
+	require.Len(t, merged.Metrics, 3)
+	// event-a updated in place
+	assert.Equal(t, "event-a", merged.Metrics[0].EventSubtype)
+	assert.Equal(t, int64(42), merged.Metrics[0].Value)
+	// event-b unchanged
+	assert.Equal(t, "event-b", merged.Metrics[1].EventSubtype)
+	assert.Equal(t, int64(5), merged.Metrics[1].Value)
+	// event-c appended
+	assert.Equal(t, "event-c", merged.Metrics[2].EventSubtype)
+	assert.Equal(t, int64(1), merged.Metrics[2].Value)
+
+	// Original not mutated
+	assert.Equal(t, int64(10), existing.Metrics[0].Value)
+}
+
 func TestPartialCompany_EmptyEntitlements(t *testing.T) {
 	existing := baseCompany()
 	partial := json.RawMessage(`{"id":"co-1","entitlements":[]}`)

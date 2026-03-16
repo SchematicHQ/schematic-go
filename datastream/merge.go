@@ -72,11 +72,11 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 			}
 			maps.Copy(merged.Keys, keys)
 		case "metrics":
-			var metrics rulesengine.CompanyMetricCollection
-			if err := json.Unmarshal(raw, &metrics); err != nil {
+			var incoming rulesengine.CompanyMetricCollection
+			if err := json.Unmarshal(raw, &incoming); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
-			merged.Metrics = metrics
+			merged.Metrics = upsertMetrics(merged.Metrics, incoming)
 		case "plan_ids":
 			var planIDs []string
 			if err := json.Unmarshal(raw, &planIDs); err != nil {
@@ -276,4 +276,39 @@ func DeepCopyUser(u *rulesengine.User) *rulesengine.User {
 	}
 
 	return cp
+}
+
+type metricKey struct {
+	EventSubtype string
+	Period       rulesengine.MetricPeriod
+	MonthReset   rulesengine.MetricPeriodMonthReset
+}
+
+// upsertMetrics merges incoming metrics into existing ones. Metrics are
+// matched by (EventSubtype, Period, MonthReset); matches are replaced,
+// new metrics are appended.
+func upsertMetrics(existing, incoming rulesengine.CompanyMetricCollection) rulesengine.CompanyMetricCollection {
+	index := make(map[metricKey]int, len(existing))
+	result := make(rulesengine.CompanyMetricCollection, len(existing))
+	copy(result, existing)
+
+	for i, m := range result {
+		if m != nil {
+			index[metricKey{m.EventSubtype, m.Period, m.MonthReset}] = i
+		}
+	}
+
+	for _, m := range incoming {
+		if m == nil {
+			continue
+		}
+		k := metricKey{m.EventSubtype, m.Period, m.MonthReset}
+		if idx, ok := index[k]; ok {
+			result[idx] = m
+		} else {
+			result = append(result, m)
+		}
+	}
+
+	return result
 }

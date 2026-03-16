@@ -303,6 +303,40 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 		return nil
 	}
 
+	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
+		id, err := ExtractIDFromJSON(resp.Data)
+		if err != nil {
+			return fmt.Errorf("Failed to extract company ID from partial message: %v", err)
+		}
+
+		c.companyMu.Lock()
+		existing, found := c.companyCacheProvider.Get(ctx, c.companyIDCacheKey(id))
+		if !found || existing == nil {
+			c.companyMu.Unlock()
+			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial company '%s', skipping", id))
+			return nil
+		}
+		merged, mergeErr := PartialCompany(existing, resp.Data)
+		if mergeErr != nil {
+			c.companyMu.Unlock()
+			return fmt.Errorf("Failed to merge partial company: %v", mergeErr)
+		}
+		company = merged
+		cacheResults, cacheErr := c.cacheCompanyForKeys(ctx, company)
+		c.companyMu.Unlock()
+
+		if cacheErr != nil {
+			return cacheErr
+		}
+		for cacheKey, err := range cacheResults {
+			if err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Cache error for company key '%s': %v", cacheKey, err))
+			}
+		}
+		c.notifyPendingCompanyRequests(ctx, company.Keys, company)
+		return nil
+	}
+
 	c.companyMu.Lock()
 	cacheResults, err := c.cacheCompanyForKeys(ctx, company)
 	c.companyMu.Unlock()
@@ -372,6 +406,37 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 			}
 		}
 
+		return nil
+	}
+
+	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
+		id, err := ExtractIDFromJSON(resp.Data)
+		if err != nil {
+			return fmt.Errorf("Failed to extract user ID from partial message: %v", err)
+		}
+
+		c.userMu.Lock()
+		existing, found := c.userCacheProvider.Get(ctx, c.userIDCacheKey(id))
+		if !found || existing == nil {
+			c.userMu.Unlock()
+			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial user '%s', skipping", id))
+			return nil
+		}
+		merged, mergeErr := PartialUser(existing, resp.Data)
+		if mergeErr != nil {
+			c.userMu.Unlock()
+			return fmt.Errorf("Failed to merge partial user: %v", mergeErr)
+		}
+		user = merged
+		cacheResults := c.cacheUserForKeys(ctx, user)
+		c.userMu.Unlock()
+
+		for cacheKey, err := range cacheResults {
+			if err != nil {
+				c.logger.Warn(ctx, fmt.Sprintf("Cache error for user key '%s': %v", cacheKey, err))
+			}
+		}
+		c.notifyPendingUserRequests(ctx, user.Keys, user)
 		return nil
 	}
 
@@ -832,7 +897,7 @@ func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *sche
 	}
 
 	// Create a deep copy of the company to avoid modifying the cached object directly
-	companyCopy := deepCopyCompany(company)
+	companyCopy := DeepCopyCompany(company)
 
 	// Update the metric value if it matches the event
 	for _, metric := range companyCopy.Metrics {
@@ -859,83 +924,6 @@ func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *sche
 		}
 	}
 	return nil
-}
-
-// deepCopyCompany creates a complete deep copy of a Company struct and all its nested fields.
-// This ensures that modifying the returned company won't affect the original object.
-// Use this function when you need to make changes to a company object without affecting the cached version.
-func deepCopyCompany(company *rulesengine.Company) *rulesengine.Company {
-	if company == nil {
-		return nil
-	}
-
-	// Create a deep copy of the company
-	companyCopy := &rulesengine.Company{
-		ID:                company.ID,
-		AccountID:         company.AccountID,
-		EnvironmentID:     company.EnvironmentID,
-		BasePlanID:        company.BasePlanID,
-		BillingProductIDs: append([]string{}, company.BillingProductIDs...),
-		PlanIDs:           append([]string{}, company.PlanIDs...),
-		PlanVersionIDs:    append([]string{}, company.PlanVersionIDs...),
-		Subscription:      company.Subscription, // Note: this is a shallow copy, as Subscription isn't modified in our case
-		Keys:              make(map[string]string),
-		Metrics:           make([]*rulesengine.CompanyMetric, 0, len(company.Metrics)),
-		Traits:            make([]*rulesengine.Trait, 0, len(company.Traits)),
-		Entitlements:      company.Entitlements,
-		Rules:             company.Rules,
-	}
-
-	// Copy credit balances
-	if company.CreditBalances != nil {
-		companyCopy.CreditBalances = make(map[string]float64, len(company.CreditBalances))
-		for k, v := range company.CreditBalances {
-			companyCopy.CreditBalances[k] = v
-		}
-	}
-
-	// Copy the keys map
-	for k, v := range company.Keys {
-		companyCopy.Keys[k] = v
-	}
-
-	// Copy the metrics slice and each metric inside it
-	for _, metric := range company.Metrics {
-		if metric == nil {
-			companyCopy.Metrics = append(companyCopy.Metrics, nil)
-			continue
-		}
-
-		metricCopy := &rulesengine.CompanyMetric{
-			AccountID:     metric.AccountID,
-			EnvironmentID: metric.EnvironmentID,
-			CompanyID:     metric.CompanyID,
-			EventSubtype:  metric.EventSubtype,
-			Period:        metric.Period,
-			MonthReset:    metric.MonthReset,
-			Value:         metric.Value,
-			CreatedAt:     metric.CreatedAt,
-		}
-
-		if metric.ValidUntil != nil {
-			validUntil := *metric.ValidUntil
-			metricCopy.ValidUntil = &validUntil
-		}
-
-		companyCopy.Metrics = append(companyCopy.Metrics, metricCopy)
-	}
-
-	// Copy traits if needed
-	for _, trait := range company.Traits {
-		if trait != nil {
-			traitCopy := *trait // shallow copy is sufficient for traits since we don't modify them deeply
-			companyCopy.Traits = append(companyCopy.Traits, &traitCopy)
-		} else {
-			companyCopy.Traits = append(companyCopy.Traits, nil)
-		}
-	}
-
-	return companyCopy
 }
 
 // startReplicatorHealthCheck starts a background goroutine that periodically checks

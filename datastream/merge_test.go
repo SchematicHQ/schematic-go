@@ -113,16 +113,16 @@ func TestPartialCompany_UpsertsMetrics(t *testing.T) {
 	require.Len(t, merged.Metrics, 3)
 	// event-a updated in place
 	assert.Equal(t, "event-a", merged.Metrics[0].EventSubtype)
-	assert.Equal(t, int64(42), merged.Metrics[0].Value)
+	assert.EqualValues(t, 42, merged.Metrics[0].Value)
 	// event-b unchanged
 	assert.Equal(t, "event-b", merged.Metrics[1].EventSubtype)
-	assert.Equal(t, int64(5), merged.Metrics[1].Value)
+	assert.EqualValues(t, 5, merged.Metrics[1].Value)
 	// event-c appended
 	assert.Equal(t, "event-c", merged.Metrics[2].EventSubtype)
-	assert.Equal(t, int64(1), merged.Metrics[2].Value)
+	assert.EqualValues(t, 1, merged.Metrics[2].Value)
 
 	// Original not mutated
-	assert.Equal(t, int64(10), existing.Metrics[0].Value)
+	assert.EqualValues(t, 10, existing.Metrics[0].Value)
 }
 
 func TestPartialCompany_EmptyEntitlements(t *testing.T) {
@@ -240,6 +240,135 @@ func TestPartialUser_DoesNotMutateOriginal(t *testing.T) {
 	assert.Empty(t, merged.Traits)
 }
 
+func TestPartialCompany_FullEntityPartialMessage(t *testing.T) {
+	existing := baseCompany()
+	existing.Metrics = rulesengine.CompanyMetricCollection{
+		{EventSubtype: "event-a", Period: "all_time", MonthReset: "first_of_month", Value: 10},
+	}
+	existing.Rules = []*rulesengine.Rule{{ID: "rule-1"}}
+
+	// Partial message that happens to contain every field (full entity replacement)
+	partial := json.RawMessage(`{
+		"id": "co-1",
+		"account_id": "acc-2",
+		"environment_id": "env-2",
+		"base_plan_id": "plan-99",
+		"billing_product_ids": ["bp-10", "bp-20"],
+		"credit_balances": {"credit-1": 999.0, "credit-new": 50.0},
+		"entitlements": [
+			{"feature_id": "feat-new", "feature_key": "feature-new"},
+			{"feature_id": "feat-2", "feature_key": "feature-two"}
+		],
+		"keys": {"domain": "new.com", "slug": "new-slug"},
+		"metrics": [
+			{"event_subtype": "event-a", "period": "all_time", "month_reset": "first_of_month", "value": 42},
+			{"event_subtype": "event-new", "period": "current_day", "month_reset": "billing_cycle", "value": 7}
+		],
+		"plan_ids": ["plan-99", "plan-100"],
+		"plan_version_ids": ["pv-99"],
+		"rules": [{"id": "rule-new-1"}, {"id": "rule-new-2"}],
+		"subscription": {"id": "sub-new"},
+		"traits": [
+			{"value": "Startup", "trait_definition": {"id": "tier"}},
+			{"value": "Annual", "trait_definition": {"id": "billing"}}
+		]
+	}`)
+
+	merged, err := PartialCompany(existing, partial)
+	require.NoError(t, err)
+
+	// Every field from the partial message should be present
+	assert.Equal(t, "co-1", merged.ID)
+	assert.Equal(t, "acc-2", merged.AccountID)
+	assert.Equal(t, "env-2", merged.EnvironmentID)
+
+	require.NotNil(t, merged.BasePlanID)
+	assert.Equal(t, "plan-99", *merged.BasePlanID)
+
+	assert.Equal(t, []string{"bp-10", "bp-20"}, merged.BillingProductIDs)
+
+	// Credit balances merge: existing credit-1 overwritten, credit-new added
+	assert.Equal(t, map[string]float64{"credit-1": 999.0, "credit-new": 50.0}, merged.CreditBalances)
+
+	require.Len(t, merged.Entitlements, 2)
+	assert.Equal(t, "feat-new", merged.Entitlements[0].FeatureID)
+	assert.Equal(t, "feature-new", merged.Entitlements[0].FeatureKey)
+	assert.Equal(t, "feat-2", merged.Entitlements[1].FeatureID)
+	assert.Equal(t, "feature-two", merged.Entitlements[1].FeatureKey)
+
+	// Keys merge: domain overwritten, slug added
+	assert.Equal(t, map[string]string{"domain": "new.com", "slug": "new-slug"}, merged.Keys)
+
+	// Metrics upsert: event-a updated, event-new appended
+	require.Len(t, merged.Metrics, 2)
+	assert.Equal(t, "event-a", merged.Metrics[0].EventSubtype)
+	assert.EqualValues(t, 42, merged.Metrics[0].Value)
+	assert.Equal(t, "event-new", merged.Metrics[1].EventSubtype)
+	assert.EqualValues(t, 7, merged.Metrics[1].Value)
+
+	assert.Equal(t, []string{"plan-99", "plan-100"}, merged.PlanIDs)
+	assert.Equal(t, []string{"pv-99"}, merged.PlanVersionIDs)
+
+	require.Len(t, merged.Rules, 2)
+	assert.Equal(t, "rule-new-1", merged.Rules[0].ID)
+	assert.Equal(t, "rule-new-2", merged.Rules[1].ID)
+
+	require.NotNil(t, merged.Subscription)
+	assert.Equal(t, "sub-new", merged.Subscription.ID)
+
+	require.Len(t, merged.Traits, 2)
+	assert.Equal(t, "Startup", merged.Traits[0].Value)
+	assert.Equal(t, "Annual", merged.Traits[1].Value)
+
+	// Original not mutated
+	assert.Equal(t, "acc-1", existing.AccountID)
+	assert.Equal(t, "plan-1", *existing.BasePlanID)
+	assert.Equal(t, map[string]string{"domain": "example.com"}, existing.Keys)
+	assert.EqualValues(t, 10, existing.Metrics[0].Value)
+}
+
+func TestPartialUser_FullEntityPartialMessage(t *testing.T) {
+	existing := baseUser()
+	existing.Rules = []*rulesengine.Rule{{ID: "rule-1"}}
+
+	// Partial message that contains every user field
+	partial := json.RawMessage(`{
+		"id": "user-1",
+		"account_id": "acc-2",
+		"environment_id": "env-2",
+		"keys": {"email": "new@example.com", "slack_id": "U999"},
+		"traits": [
+			{"value": "Free", "trait_definition": {"id": "tier"}},
+			{"value": "Monthly", "trait_definition": {"id": "billing"}}
+		],
+		"rules": [{"id": "rule-new-1"}, {"id": "rule-new-2"}]
+	}`)
+
+	merged, err := PartialUser(existing, partial)
+	require.NoError(t, err)
+
+	assert.Equal(t, "user-1", merged.ID)
+	assert.Equal(t, "acc-2", merged.AccountID)
+	assert.Equal(t, "env-2", merged.EnvironmentID)
+
+	// Keys merge: email overwritten, slack_id added
+	assert.Equal(t, map[string]string{"email": "new@example.com", "slack_id": "U999"}, merged.Keys)
+
+	require.Len(t, merged.Traits, 2)
+	assert.Equal(t, "Free", merged.Traits[0].Value)
+	assert.Equal(t, "Monthly", merged.Traits[1].Value)
+
+	require.Len(t, merged.Rules, 2)
+	assert.Equal(t, "rule-new-1", merged.Rules[0].ID)
+	assert.Equal(t, "rule-new-2", merged.Rules[1].ID)
+
+	// Original not mutated
+	assert.Equal(t, "acc-1", existing.AccountID)
+	assert.Equal(t, map[string]string{"email": "user@example.com"}, existing.Keys)
+	assert.Len(t, existing.Traits, 1)
+	assert.Equal(t, "rule-1", existing.Rules[0].ID)
+}
+
 func TestExtractIDFromJSON(t *testing.T) {
 	id, err := ExtractIDFromJSON(json.RawMessage(`{"id":"co-1","traits":[]}`))
 	require.NoError(t, err)
@@ -325,7 +454,7 @@ func TestDeepCopyCompany_FullCopy(t *testing.T) {
 	// Metrics deep copied (including ValidUntil pointer)
 	require.Len(t, cp.Metrics, 2)
 	require.NotNil(t, cp.Metrics[0])
-	assert.Equal(t, int64(42), cp.Metrics[0].Value)
+	assert.EqualValues(t, 42, cp.Metrics[0].Value)
 	require.NotNil(t, cp.Metrics[0].ValidUntil)
 	assert.Equal(t, validUntil, *cp.Metrics[0].ValidUntil)
 	newTime := time.Date(2099, 1, 1, 0, 0, 0, 0, time.UTC)

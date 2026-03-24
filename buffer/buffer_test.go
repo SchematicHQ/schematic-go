@@ -2,7 +2,9 @@ package buffer
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"sync"
 	"testing"
 	"time"
 
@@ -173,4 +175,125 @@ func (m *mockLogger) Warn(ctx context.Context, message string, args ...interface
 
 func (m *mockLogger) Error(ctx context.Context, message string, args ...interface{}) {
 	m.errors = append(m.errors, message)
+}
+
+func TestEventBuffer_ShutdownFlushesRemaining(t *testing.T) {
+	mockSender := &mockSender{}
+	logger := &mockLogger{}
+
+	errors := make(chan error, 10)
+	buffer := &eventBuffer{
+		batcher:  NewBatcher(100), // Large batch so it won't auto-flush
+		sender:   mockSender,
+		errors:   errors,
+		interval: 10 * time.Second, // Long interval so periodic flush won't trigger
+		logger:   logger,
+		shutdown: make(chan struct{}),
+	}
+
+	// Start the periodic flush goroutine (mirrors NewEventBuffer behavior)
+	go buffer.periodicFlush()
+
+	// Push several events (fewer than batch size so no auto-flush)
+	for i := 0; i < 5; i++ {
+		buffer.Push(&schematicgo.CreateEventRequestBody{
+			EventType: schematicgo.EventType(fmt.Sprintf("shutdown-test-%d", i)),
+		})
+	}
+
+	// No flush should have happened yet
+	require.Len(t, mockSender.calls, 0)
+
+	// Stop the buffer, which should flush remaining events
+	buffer.Stop()
+
+	// Give a moment for the shutdown goroutine to complete
+	time.Sleep(50 * time.Millisecond)
+
+	// Verify all 5 events were flushed
+	totalEvents := 0
+	for _, call := range mockSender.calls {
+		totalEvents += len(call.events)
+	}
+	assert.Equal(t, 5, totalEvents)
+}
+
+// syncMockSender is a thread-safe mock sender for concurrent tests
+type syncMockSender struct {
+	mu        sync.Mutex
+	calls     []mockCall
+	responses []error
+	callIndex int
+}
+
+func (m *syncMockSender) SendBatch(ctx context.Context, events []*schematicgo.CreateEventRequestBody) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.calls = append(m.calls, mockCall{ctx: ctx, events: events})
+	if m.callIndex < len(m.responses) {
+		err := m.responses[m.callIndex]
+		m.callIndex++
+		return err
+	}
+	return nil
+}
+
+func (m *syncMockSender) totalEvents() int {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	total := 0
+	for _, call := range m.calls {
+		total += len(call.events)
+	}
+	return total
+}
+
+func TestEventBuffer_ConcurrentPush(t *testing.T) {
+	sender := &syncMockSender{}
+	logger := &mockLogger{}
+
+	options := core.NewRequestOptions()
+	options.APIKey = "test-key"
+
+	errors := make(chan error, 100)
+	client := http.DefaultClient
+
+	buffer := NewEventBuffer(options, client, errors, logger, func() *time.Duration {
+		d := 50 * time.Millisecond
+		return &d
+	}())
+
+	// Replace the sender with our thread-safe mock
+	buffer.sender = sender
+
+	numGoroutines := 10
+	eventsPerGoroutine := 20
+	totalExpected := numGoroutines * eventsPerGoroutine
+
+	var wg sync.WaitGroup
+	wg.Add(numGoroutines)
+
+	// Launch multiple goroutines pushing events concurrently
+	for g := 0; g < numGoroutines; g++ {
+		go func(goroutineID int) {
+			defer wg.Done()
+			for i := 0; i < eventsPerGoroutine; i++ {
+				buffer.Push(&schematicgo.CreateEventRequestBody{
+					EventType: schematicgo.EventType(fmt.Sprintf("concurrent-%d-%d", goroutineID, i)),
+				})
+			}
+		}(g)
+	}
+
+	// Wait for all goroutines to finish pushing
+	wg.Wait()
+
+	// Stop the buffer to flush any remaining events
+	buffer.Stop()
+
+	// Give time for the shutdown flush to complete
+	time.Sleep(100 * time.Millisecond)
+
+	// Verify all events were eventually sent
+	assert.Equal(t, totalExpected, sender.totalEvents())
 }

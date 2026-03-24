@@ -144,3 +144,19 @@ func TestVerifyWebhookSignature(t *testing.T) {
 		})
 	}
 }
+
+func TestVerifySignatureWrongSecret(t *testing.T) {
+	payload := []byte(`{"event":"test"}`)
+	timestamp := "1609459200"
+	correctSecret := "correct-secret"
+	wrongSecret := "wrong-secret"
+
+	// Compute a valid signature with the correct secret
+	signature := webhooks.ComputeHexSignature(payload, timestamp, correctSecret)
+
+	// Verify with a different secret should return ErrInvalidSignature
+	err := webhooks.VerifySignature(payload, signature, timestamp, wrongSecret)
+	if err != webhooks.ErrInvalidSignature {
+		t.Errorf("VerifySignature() error = %v, want %v", err, webhooks.ErrInvalidSignature)
+	}
+}

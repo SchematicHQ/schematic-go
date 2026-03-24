@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	http "net/http"
 	"testing"
@@ -504,4 +505,227 @@ func TestCheckFlagWithEntitlement_CacheHitPreservesEntitlement(t *testing.T) {
 	assert.Equal(t, "feat-123", resp2.Entitlement.FeatureID)
 	assert.Equal(t, "test-feature", resp2.Entitlement.FeatureKey)
 	assert.EqualValues(t, 100, *resp2.Entitlement.Allocation)
+}
+
+func TestCheckFlagWithCompanyContextOnly(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithDisableFlagCheckCache(),
+	)
+	defer client.Close()
+
+	assert.NotNil(t, client)
+
+	responseBody := &schematicgo.CheckFlagResponse{
+		Data: &schematicgo.CheckFlagResponseData{
+			Value: true,
+		},
+	}
+
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(func(req *http.Request) (*http.Response, error) {
+		bodyBytes, err := io.ReadAll(req.Body)
+		assert.Nil(t, err)
+		var reqBody map[string]interface{}
+		err = json.Unmarshal(bodyBytes, &reqBody)
+		assert.Nil(t, err)
+		assert.NotNil(t, reqBody["company"])
+		assert.Nil(t, reqBody["user"])
+		return &http.Response{
+			Status:     "200",
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(data)),
+		}, nil
+	})
+
+	resp := client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{
+		Company: map[string]string{"company-id": "comp-123"},
+	}, "test-flag")
+	assert.True(t, resp)
+}
+
+func TestCheckFlagWithUserContextOnly(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithDisableFlagCheckCache(),
+	)
+	defer client.Close()
+
+	assert.NotNil(t, client)
+
+	responseBody := &schematicgo.CheckFlagResponse{
+		Data: &schematicgo.CheckFlagResponseData{
+			Value: true,
+		},
+	}
+
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(func(req *http.Request) (*http.Response, error) {
+		bodyBytes, err := io.ReadAll(req.Body)
+		assert.Nil(t, err)
+		var reqBody map[string]interface{}
+		err = json.Unmarshal(bodyBytes, &reqBody)
+		assert.Nil(t, err)
+		assert.Nil(t, reqBody["company"])
+		assert.NotNil(t, reqBody["user"])
+		return &http.Response{
+			Status:     "200",
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(data)),
+		}, nil
+	})
+
+	resp := client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{
+		User: map[string]string{"user-id": "user-123"},
+	}, "test-flag")
+	assert.True(t, resp)
+}
+
+func TestCheckFlagWithBothContexts(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithDisableFlagCheckCache(),
+	)
+	defer client.Close()
+
+	assert.NotNil(t, client)
+
+	responseBody := &schematicgo.CheckFlagResponse{
+		Data: &schematicgo.CheckFlagResponseData{
+			Value: true,
+		},
+	}
+
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(func(req *http.Request) (*http.Response, error) {
+		bodyBytes, err := io.ReadAll(req.Body)
+		assert.Nil(t, err)
+		var reqBody map[string]interface{}
+		err = json.Unmarshal(bodyBytes, &reqBody)
+		assert.Nil(t, err)
+		assert.NotNil(t, reqBody["company"])
+		assert.NotNil(t, reqBody["user"])
+		return &http.Response{
+			Status:     "200",
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(data)),
+		}, nil
+	})
+
+	resp := client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{
+		Company: map[string]string{"company-id": "comp-123"},
+		User:    map[string]string{"user-id": "user-123"},
+	}, "test-flag")
+	assert.True(t, resp)
+}
+
+func TestCheckFlagReturnsDefaultOnAPIError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithDisableFlagCheckCache(),
+	)
+	defer client.Close()
+
+	client.SetFlagDefault("test-flag", true)
+
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(nil, fmt.Errorf("api error"))
+
+	resp := client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag")
+	assert.True(t, resp)
+}
+
+func TestCheckFlagReturnsFalseOnErrorNoDefault(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithDisableFlagCheckCache(),
+	)
+	defer client.Close()
+
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(nil, fmt.Errorf("connection refused"))
+
+	resp := client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag")
+	assert.False(t, resp)
+}
+
+func TestCheckFlagOfflineModeNoDefault(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithOfflineMode(),
+		option.WithHTTPClient(mockHTTPClient),
+	)
+	defer client.Close()
+
+	resp := client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "test-flag")
+	assert.False(t, resp)
+}
+
+func TestCheckFlagWithEntitlement_ReasonStrings(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithDisableFlagCheckCache(),
+	)
+	defer client.Close()
+
+	companyID := "comp-123"
+	flagID := "flag-456"
+	ruleID := "rule-789"
+	ruleType := "override"
+
+	responseBody := &schematicgo.CheckFlagResponse{
+		Data: &schematicgo.CheckFlagResponseData{
+			Value:     true,
+			Reason:    "match",
+			CompanyID: &companyID,
+			FlagID:    &flagID,
+			RuleID:    &ruleID,
+			RuleType:  &ruleType,
+		},
+	}
+
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil)
+
+	resp, err := client.CheckFlagWithEntitlement(context.Background(), &schematicgo.CheckFlagRequestBody{
+		Company: map[string]string{"company-id": "comp-123"},
+	}, "test-flag")
+
+	assert.Nil(t, err)
+	assert.NotNil(t, resp)
+	assert.True(t, resp.Value)
+	assert.Equal(t, "match", resp.Reason)
+	assert.Equal(t, "comp-123", *resp.CompanyID)
+	assert.Equal(t, "flag-456", *resp.FlagID)
+	assert.Equal(t, "rule-789", *resp.RuleID)
+	assert.Equal(t, rulesengine.RuleType("override"), *resp.RuleType)
+	assert.Nil(t, resp.Entitlement)
 }

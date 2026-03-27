@@ -29,6 +29,7 @@ client/schematic_client.go
 client/schematic_client_test.go
 datastream/cache.go
 datastream/client.go
+datastream/resource_cache.go
 datastream/client_test.go
 datastream/consts.go
 datastream/types.go

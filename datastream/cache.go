@@ -45,24 +45,9 @@ func buildFlagCacheProvider(configOpt *core.DatastreamOptions, redisClient redis
 	return cache.NewLocalCache[*rulesengine.Flag](defaultCacheSize, flagTTL)
 }
 
-// buildCompanyLookupCacheProvider creates a string cache provider for company ID lookups
+// buildLookupCacheProvider creates a string cache provider for resource ID lookups
 // using a shared Redis client to avoid creating additional connections.
-func buildCompanyLookupCacheProvider(configOpt *core.DatastreamOptions, redisClient redis.UniversalClient) CompanyLookupCacheProvider {
-	cacheTTL := defaultTTL
-	if configOpt != nil && configOpt.CacheTTL > 0 {
-		cacheTTL = configOpt.CacheTTL
-	}
-
-	if redisClient != nil {
-		return cache.NewRedisCache[string](redisClient, cacheTTL)
-	}
-
-	return cache.NewLocalCache[string](defaultCacheSize, cacheTTL)
-}
-
-// buildUserLookupCacheProvider creates a string cache provider for user ID lookups
-// using a shared Redis client to avoid creating additional connections.
-func buildUserLookupCacheProvider(configOpt *core.DatastreamOptions, redisClient redis.UniversalClient) UserLookupCacheProvider {
+func buildLookupCacheProvider(configOpt *core.DatastreamOptions, redisClient redis.UniversalClient) cache.CacheProvider[string] {
 	cacheTTL := defaultTTL
 	if configOpt != nil && configOpt.CacheTTL > 0 {
 		cacheTTL = configOpt.CacheTTL

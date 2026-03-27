@@ -750,3 +750,182 @@ func TestNewDataStreamClientFlagCache(t *testing.T) {
 func createTestCacheKey(resourceType string, key string, value string) string {
 	return fmt.Sprintf("schematic:%s:%s:%s:%s", resourceType, rulesengine.VersionKey, strings.ToLower(key), strings.ToLower(value))
 }
+
+// Helper to create a company message with specific ID and keys
+func createCompanyMessageWithIDAndKeys(id string, keys map[string]string, messageType schematicdatastreamws.MessageType) string {
+	company := &rulesengine.Company{
+		ID:   id,
+		Keys: keys,
+	}
+	companyData, _ := json.Marshal(company)
+	resp := schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeCompany),
+		Data:        companyData,
+		MessageType: messageType,
+	}
+	respData, _ := json.Marshal(resp)
+	return string(respData)
+}
+
+// Helper to create a user message with specific ID and keys
+func createUserMessageWithIDAndKeys(id string, keys map[string]string, messageType schematicdatastreamws.MessageType) string {
+	user := &rulesengine.User{
+		ID:   id,
+		Keys: keys,
+	}
+	userData, _ := json.Marshal(user)
+	resp := schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeUser),
+		Data:        userData,
+		MessageType: messageType,
+	}
+	respData, _ := json.Marshal(resp)
+	return string(respData)
+}
+
+func TestCompanyKeyChangeDeletesOldLookupKey(t *testing.T) {
+	server, _, outgoingMessages := setupMockWebSocketServer()
+	defer server.Close()
+	defer close(outgoingMessages)
+
+	logger := NewMockLogger()
+
+	localCompanyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
+
+	configOptions := &core.DatastreamOptions{
+		CacheTTL: 5 * time.Minute,
+	}
+
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+	clientOptions.CompanyCache = localCompanyCache
+
+	client := datastream.NewDataStreamClient(clientOptions, configOptions)
+	client.Start()
+	defer client.Close()
+
+	// Wait for connection and initial flags
+	time.Sleep(300 * time.Millisecond)
+
+	companyID := "company-abc"
+
+	// Cache a company with old key
+	outgoingMessages <- createCompanyMessageWithIDAndKeys(companyID, map[string]string{"domain": "old.com"}, schematicdatastreamws.MessageTypeFull)
+	time.Sleep(200 * time.Millisecond)
+
+	// Verify company is cached at the ID key
+	ctx := context.Background()
+	idKey := fmt.Sprintf("schematic:company:%s:%s", rulesengine.VersionKey, companyID)
+	cachedCompany, exists := localCompanyCache.Get(ctx, idKey)
+	assert.True(t, exists, "Company should exist in cache at ID key")
+	assert.Equal(t, "old.com", cachedCompany.Keys["domain"])
+
+	// Now update the company with a new key value
+	outgoingMessages <- createCompanyMessageWithIDAndKeys(companyID, map[string]string{"domain": "new.com"}, schematicdatastreamws.MessageTypeFull)
+	time.Sleep(200 * time.Millisecond)
+
+	// Verify company now has the new key
+	cachedCompany, exists = localCompanyCache.Get(ctx, idKey)
+	assert.True(t, exists, "Company should still exist in cache at ID key")
+	assert.Equal(t, "new.com", cachedCompany.Keys["domain"])
+
+	// Verify the cached company has the updated keys
+	assert.Equal(t, "new.com", cachedCompany.Keys["domain"], "Company should have updated domain key")
+}
+
+func TestUserKeyChangeDeletesOldLookupKey(t *testing.T) {
+	server, _, outgoingMessages := setupMockWebSocketServer()
+	defer server.Close()
+	defer close(outgoingMessages)
+
+	logger := NewMockLogger()
+
+	localUserCache := cache.NewLocalCache[*rulesengine.User](100, time.Minute)
+
+	configOptions := &core.DatastreamOptions{
+		CacheTTL: 5 * time.Minute,
+	}
+
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+	clientOptions.UserCache = localUserCache
+
+	client := datastream.NewDataStreamClient(clientOptions, configOptions)
+	client.Start()
+	defer client.Close()
+
+	// Wait for connection and initial flags
+	time.Sleep(300 * time.Millisecond)
+
+	userID := "user-abc"
+
+	// Cache a user with old key
+	outgoingMessages <- createUserMessageWithIDAndKeys(userID, map[string]string{"email": "old@example.com"}, schematicdatastreamws.MessageTypeFull)
+	time.Sleep(200 * time.Millisecond)
+
+	// Verify user is cached at the ID key
+	ctx := context.Background()
+	idKey := fmt.Sprintf("schematic:user:%s:%s", rulesengine.VersionKey, userID)
+	cachedUser, exists := localUserCache.Get(ctx, idKey)
+	assert.True(t, exists, "User should exist in cache at ID key")
+	assert.Equal(t, "old@example.com", cachedUser.Keys["email"])
+
+	// Now update the user with a new key value
+	outgoingMessages <- createUserMessageWithIDAndKeys(userID, map[string]string{"email": "new@example.com"}, schematicdatastreamws.MessageTypeFull)
+	time.Sleep(200 * time.Millisecond)
+
+	// Verify user now has the new key
+	cachedUser, exists = localUserCache.Get(ctx, idKey)
+	assert.True(t, exists, "User should still exist in cache at ID key")
+	assert.Equal(t, "new@example.com", cachedUser.Keys["email"])
+}
+
+func TestCompanyDeleteCleansUpAllLookupKeys(t *testing.T) {
+	server, _, outgoingMessages := setupMockWebSocketServer()
+	defer server.Close()
+	defer close(outgoingMessages)
+
+	logger := NewMockLogger()
+
+	localCompanyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
+
+	configOptions := &core.DatastreamOptions{
+		CacheTTL: 5 * time.Minute,
+	}
+
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+	clientOptions.CompanyCache = localCompanyCache
+
+	client := datastream.NewDataStreamClient(clientOptions, configOptions)
+	client.Start()
+	defer client.Close()
+
+	// Wait for connection and initial flags
+	time.Sleep(300 * time.Millisecond)
+
+	companyID := "company-del"
+	ctx := context.Background()
+	idKey := fmt.Sprintf("schematic:company:%s:%s", rulesengine.VersionKey, companyID)
+
+	// Step 1: Cache company with initial keys (orphaning happens when keys change)
+	outgoingMessages <- createCompanyMessageWithIDAndKeys(companyID, map[string]string{"domain": "first.com"}, schematicdatastreamws.MessageTypeFull)
+	time.Sleep(200 * time.Millisecond)
+
+	cachedCompany, exists := localCompanyCache.Get(ctx, idKey)
+	assert.True(t, exists, "Company should exist after first cache")
+	assert.Equal(t, "first.com", cachedCompany.Keys["domain"])
+
+	// Step 2: Update company with different keys — this should clean up old lookup keys via cacheCompanyForKeys
+	outgoingMessages <- createCompanyMessageWithIDAndKeys(companyID, map[string]string{"domain": "second.com"}, schematicdatastreamws.MessageTypeFull)
+	time.Sleep(200 * time.Millisecond)
+
+	cachedCompany, exists = localCompanyCache.Get(ctx, idKey)
+	assert.True(t, exists, "Company should exist after key change")
+	assert.Equal(t, "second.com", cachedCompany.Keys["domain"])
+
+	// Step 3: Delete the company — should clean up all lookup keys (both current and any from cached state)
+	outgoingMessages <- createCompanyMessageWithIDAndKeys(companyID, map[string]string{"domain": "second.com"}, schematicdatastreamws.MessageTypeDelete)
+	time.Sleep(200 * time.Millisecond)
+
+	// Verify company ID key is gone
+	_, exists = localCompanyCache.Get(ctx, idKey)
+	assert.False(t, exists, "Company should be deleted from cache after delete message")
+}

@@ -1,0 +1,19 @@
+name: e2e
+
+on:
+  workflow_dispatch:
+    inputs:
+      api-base-url:
+        description: "Schematic API base URL"
+        required: false
+        default: "https://api.schematichq.dev"
+
+jobs:
+  e2e:
+    uses: SchematicHQ/actions/.github/workflows/sdk-e2e.yml@main
+    with:
+      setup: go build -o testapp-bin ./testapp
+      start: ./testapp-bin
+      api-base-url: ${{ inputs.api-base-url || 'https://api.schematichq.dev' }}
+    secrets:
+      SCHEMATIC_E2E_API_KEY: ${{ secrets.SCHEMATIC_E2E_API_KEY }}

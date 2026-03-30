@@ -24,6 +24,8 @@ import (
 	"time"
 
 	schematic "github.com/schematichq/schematic-go"
+	"github.com/redis/go-redis/v9"
+	"github.com/schematichq/schematic-go/cache"
 	schematicclient "github.com/schematichq/schematic-go/client"
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/option"
@@ -125,22 +127,23 @@ func handleConfigure(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Cache configuration
+	redisAddr := strings.TrimPrefix(getConfigString("redisUrl"), "redis://")
 	if getConfigBool("noCache") {
 		opts = append(opts, core.WithDisableFlagCheckCache())
-	} else if getConfigString("redisUrl") == "" {
-		// Use default local cache (SDK default) — don't set anything explicit
+	} else if redisAddr != "" && !getConfigBool("useDataStream") {
+		// Redis cache without DataStream — create a Redis cache provider directly
+		redisClient := redis.NewClient(&redis.Options{Addr: redisAddr})
+		redisCache := cache.NewRedisCache[*core.CheckFlagResponse](redisClient, cacheTTL)
+		opts = append(opts, core.WithFlagCheckCacheProvider(redisCache))
 	}
-	// Redis cache is configured via DataStream options below
 
 	// DataStream / Replicator
 	if getConfigBool("useDataStream") {
 		var dsOpts []core.DatastreamOption
 
-		if redisURL := getConfigString("redisUrl"); redisURL != "" {
-			// go-redis expects host:port, not redis:// URL
-			addr := strings.TrimPrefix(redisURL, "redis://")
+		if redisAddr != "" {
 			dsOpts = append(dsOpts, core.WithRedisCache(core.RedisCacheConfig{
-				Addr: addr,
+				Addr: redisAddr,
 			}))
 		}
 

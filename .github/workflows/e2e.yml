@@ -7,13 +7,32 @@ on:
         description: "Schematic API base URL"
         required: false
         default: "https://api.schematichq.dev"
+      sdk-source:
+        description: "SDK source: local (build from source) or published (specific version from Go module proxy)"
+        required: false
+        type: choice
+        options:
+          - local
+          - published
+        default: "local"
+      sdk-version:
+        description: "SDK version to test (only used when sdk-source=published, e.g. v1.4.3)"
+        required: false
+        default: ""
 
 jobs:
   e2e:
     uses: SchematicHQ/actions/.github/workflows/sdk-e2e.yml@main
     with:
-      setup: go build -o testapp-bin ./testapp
+      setup: |
+        if [ "$SDK_SOURCE" = "published" ] && [ -n "$SDK_VERSION" ]; then
+          go get "github.com/schematichq/schematic-go@${SDK_VERSION}"
+          go mod tidy
+        fi
+        go build -o testapp-bin ./testapp
       start: ./testapp-bin
       api-base-url: ${{ inputs.api-base-url || 'https://api.schematichq.dev' }}
+      sdk-source: ${{ inputs.sdk-source || 'local' }}
+      sdk-version: ${{ inputs.sdk-version || '' }}
     secrets:
       SCHEMATIC_E2E_API_KEY: ${{ secrets.SCHEMATIC_E2E_API_KEY }}

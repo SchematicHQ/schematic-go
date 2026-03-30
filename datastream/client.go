@@ -49,7 +49,6 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		cacheTTL:           configurationOptions.CacheTTL,
 		logger:             options.Logger,
 		flagsCacheProvider: flagCacheProvider,
-		companyLocalCache:  make(map[string]*rulesengine.Company),
 
 		pendingCompanyRequests: make(map[string][]chan *rulesengine.Company),
 		pendingUserRequests:    make(map[string][]chan *rulesengine.User),

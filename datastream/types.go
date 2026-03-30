@@ -30,7 +30,6 @@ type DataStreamClient struct {
 	companyCache       *resourceCache[*rulesengine.Company]
 	userCache          *resourceCache[*rulesengine.User]
 	flagsCacheProvider FlagCacheProvider
-	companyLocalCache  map[string]*rulesengine.Company
 	apiKey             string
 
 	pendingCompanyRequests map[string][]chan *rulesengine.Company

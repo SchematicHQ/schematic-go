@@ -312,7 +312,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 		}
 
 		c.companyMu.Lock()
-		existing, found := c.companyCacheProvider.Get(ctx, c.companyIDCacheKey(id))
+		existing, found := c.companyCache.primaryCache.Get(ctx, c.companyCache.idCacheKey(id))
 		if !found || existing == nil {
 			c.companyMu.Unlock()
 			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial company '%s', skipping", id))
@@ -408,7 +408,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 		}
 
 		c.userMu.Lock()
-		existing, found := c.userCacheProvider.Get(ctx, c.userIDCacheKey(id))
+		existing, found := c.userCache.primaryCache.Get(ctx, c.userCache.idCacheKey(id))
 		if !found || existing == nil {
 			c.userMu.Unlock()
 			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial user '%s', skipping", id))

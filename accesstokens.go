@@ -16,8 +16,8 @@ var (
 )
 
 type IssueTemporaryAccessTokenRequestBody struct {
-	Lookup       map[string]string                `json:"lookup,omitempty" url:"-"`
-	ResourceType TemporaryAccessTokenResourceType `json:"resource_type,omitempty" url:"-"`
+	Lookup       map[string]string                `json:"lookup" url:"-"`
+	ResourceType TemporaryAccessTokenResourceType `json:"resource_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -42,6 +42,27 @@ func (i *IssueTemporaryAccessTokenRequestBody) SetLookup(lookup map[string]strin
 func (i *IssueTemporaryAccessTokenRequestBody) SetResourceType(resourceType TemporaryAccessTokenResourceType) {
 	i.ResourceType = resourceType
 	i.require(issueTemporaryAccessTokenRequestBodyFieldResourceType)
+}
+
+func (i *IssueTemporaryAccessTokenRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler IssueTemporaryAccessTokenRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*i = IssueTemporaryAccessTokenRequestBody(body)
+	return nil
+}
+
+func (i *IssueTemporaryAccessTokenRequestBody) MarshalJSON() ([]byte, error) {
+	type embed IssueTemporaryAccessTokenRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -122,6 +143,9 @@ func (i *IssueTemporaryAccessTokenResponseData) GetUpdatedAt() time.Time {
 }
 
 func (i *IssueTemporaryAccessTokenResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
 	return i.extraProperties
 }
 
@@ -232,6 +256,9 @@ func (i *IssueTemporaryAccessTokenResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (i *IssueTemporaryAccessTokenResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
 	if len(i.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
 			return value
@@ -253,7 +280,7 @@ var (
 type IssueTemporaryAccessTokenResponse struct {
 	Data *IssueTemporaryAccessTokenResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -269,7 +296,7 @@ func (i *IssueTemporaryAccessTokenResponse) GetData() *IssueTemporaryAccessToken
 	return i.Data
 }
 
-func (i *IssueTemporaryAccessTokenResponse) GetParams() map[string]interface{} {
+func (i *IssueTemporaryAccessTokenResponse) GetParams() map[string]any {
 	if i == nil {
 		return nil
 	}
@@ -277,6 +304,9 @@ func (i *IssueTemporaryAccessTokenResponse) GetParams() map[string]interface{} {
 }
 
 func (i *IssueTemporaryAccessTokenResponse) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
 	return i.extraProperties
 }
 
@@ -296,7 +326,7 @@ func (i *IssueTemporaryAccessTokenResponse) SetData(data *IssueTemporaryAccessTo
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *IssueTemporaryAccessTokenResponse) SetParams(params map[string]interface{}) {
+func (i *IssueTemporaryAccessTokenResponse) SetParams(params map[string]any) {
 	i.Params = params
 	i.require(issueTemporaryAccessTokenResponseFieldParams)
 }
@@ -329,6 +359,9 @@ func (i *IssueTemporaryAccessTokenResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (i *IssueTemporaryAccessTokenResponse) String() string {
+	if i == nil {
+		return "<nil>"
+	}
 	if len(i.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
 			return value

@@ -128,7 +128,7 @@ func (c *DataStreamClient) Start() {
 
 func (c *DataStreamClient) sendWebSocketMessage(ctx context.Context, req *schematicdatastreamws.DataStreamReq) error {
 	if c.wsClient == nil {
-		return fmt.Errorf("WebSocket client is not initialized")
+		return fmt.Errorf("webSocket client is not initialized")
 	}
 
 	message := c.packageMessage(req)
@@ -192,7 +192,7 @@ func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *s
 	case string(schematicdatastreamws.EntityTypeUser):
 		return c.handleUserMessage(ctx, message)
 	default:
-		return fmt.Errorf("Received unknown entity type: %s", message.EntityType)
+		return fmt.Errorf("received unknown entity type: %s", message.EntityType)
 	}
 }
 
@@ -202,7 +202,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 	var flagsData []*rulesengine.Flag
 	err := json.Unmarshal(flags, &flagsData)
 	if err != nil {
-		return fmt.Errorf("Failed to unmarshal flags data: %v", err)
+		return fmt.Errorf("failed to unmarshal flags data: %v", err)
 	}
 
 	c.flagsMu.Lock()
@@ -230,7 +230,7 @@ func (c *DataStreamClient) handleFlagMessage(ctx context.Context, resp *schemati
 
 	var flag *rulesengine.Flag
 	if err := json.Unmarshal(flags, &flag); err != nil {
-		return fmt.Errorf("Failed to unmarshal flags data: %v", err)
+		return fmt.Errorf("failed to unmarshal flags data: %v", err)
 	}
 
 	c.flagsMu.Lock()
@@ -291,7 +291,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 	var company *rulesengine.Company
 	err := json.Unmarshal(resp.Data, &company)
 	if err != nil {
-		return fmt.Errorf("Failed to unmarshal company data: %v", err)
+		return fmt.Errorf("failed to unmarshal company data: %v", err)
 	}
 
 	if company == nil {
@@ -308,11 +308,11 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
 		id, err := ExtractIDFromJSON(resp.Data)
 		if err != nil {
-			return fmt.Errorf("Failed to extract company ID from partial message: %v", err)
+			return fmt.Errorf("failed to extract company ID from partial message: %v", err)
 		}
 
 		c.companyMu.Lock()
-		existing, found := c.companyCacheProvider.Get(ctx, c.companyIDCacheKey(id))
+		existing, found := c.companyCache.primaryCache.Get(ctx, c.companyCache.idCacheKey(id))
 		if !found || existing == nil {
 			c.companyMu.Unlock()
 			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial company '%s', skipping", id))
@@ -321,7 +321,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 		merged, mergeErr := PartialCompany(existing, resp.Data)
 		if mergeErr != nil {
 			c.companyMu.Unlock()
-			return fmt.Errorf("Failed to merge partial company: %v", mergeErr)
+			return fmt.Errorf("failed to merge partial company: %v", mergeErr)
 		}
 		company = merged
 		cacheResults, cacheErr := c.cacheCompanyForKeys(ctx, company)
@@ -387,7 +387,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 	var user *rulesengine.User
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
-		return fmt.Errorf("Failed to unmarshal user data: %v", err)
+		return fmt.Errorf("failed to unmarshal user data: %v", err)
 	}
 
 	if user == nil {
@@ -404,11 +404,11 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
 		id, err := ExtractIDFromJSON(resp.Data)
 		if err != nil {
-			return fmt.Errorf("Failed to extract user ID from partial message: %v", err)
+			return fmt.Errorf("failed to extract user ID from partial message: %v", err)
 		}
 
 		c.userMu.Lock()
-		existing, found := c.userCacheProvider.Get(ctx, c.userIDCacheKey(id))
+		existing, found := c.userCache.primaryCache.Get(ctx, c.userCache.idCacheKey(id))
 		if !found || existing == nil {
 			c.userMu.Unlock()
 			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial user '%s', skipping", id))
@@ -417,7 +417,7 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 		merged, mergeErr := PartialUser(existing, resp.Data)
 		if mergeErr != nil {
 			c.userMu.Unlock()
-			return fmt.Errorf("Failed to merge partial user: %v", mergeErr)
+			return fmt.Errorf("failed to merge partial user: %v", mergeErr)
 		}
 		user = merged
 		cacheResults := c.cacheUserForKeys(ctx, user)
@@ -453,7 +453,7 @@ func (c *DataStreamClient) handleErrorMessage(ctx context.Context, resp *schemat
 	var respError schematicdatastreamws.DataStreamError
 	err := json.Unmarshal(resp.Data, &respError)
 	if err != nil {
-		return fmt.Errorf("Failed to unmarshal error message: %v", err)
+		return fmt.Errorf("failed to unmarshal error message: %v", err)
 	}
 
 	// Check if we have both keys and entity type in the error response
@@ -894,7 +894,7 @@ func (c *DataStreamClient) checkReplicatorHealth(ctx context.Context) {
 		c.logger.Debug(ctx, fmt.Sprintf("Replicator health check failed: %v", err))
 		return
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)

@@ -21,9 +21,9 @@ type CountAPIKeysRequest struct {
 	EnvironmentID      *string `json:"-" url:"environment_id,omitempty"`
 	RequireEnvironment bool    `json:"-" url:"require_environment"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -52,14 +52,14 @@ func (c *CountAPIKeysRequest) SetRequireEnvironment(requireEnvironment bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIKeysRequest) SetLimit(limit *int) {
+func (c *CountAPIKeysRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countAPIKeysRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIKeysRequest) SetOffset(offset *int) {
+func (c *CountAPIKeysRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countAPIKeysRequestFieldOffset)
 }
@@ -81,9 +81,9 @@ type CountAuditLogsRequest struct {
 	Q             *string    `json:"-" url:"q,omitempty"`
 	StartTime     *time.Time `json:"-" url:"start_time,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -133,14 +133,14 @@ func (c *CountAuditLogsRequest) SetStartTime(startTime *time.Time) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAuditLogsRequest) SetLimit(limit *int) {
+func (c *CountAuditLogsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countAuditLogsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAuditLogsRequest) SetOffset(offset *int) {
+func (c *CountAuditLogsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countAuditLogsRequestFieldOffset)
 }
@@ -197,6 +197,27 @@ func (c *CreateAPIKeyRequestBody) SetReadonly(readonly *bool) {
 	c.require(createAPIKeyRequestBodyFieldReadonly)
 }
 
+func (c *CreateAPIKeyRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateAPIKeyRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateAPIKeyRequestBody(body)
+	return nil
+}
+
+func (c *CreateAPIKeyRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateAPIKeyRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	createEnvironmentRequestBodyFieldEnvironmentType = big.NewInt(1 << 0)
 	createEnvironmentRequestBodyFieldName            = big.NewInt(1 << 1)
@@ -231,6 +252,27 @@ func (c *CreateEnvironmentRequestBody) SetName(name string) {
 	c.require(createEnvironmentRequestBodyFieldName)
 }
 
+func (c *CreateEnvironmentRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateEnvironmentRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateEnvironmentRequestBody(body)
+	return nil
+}
+
+func (c *CreateEnvironmentRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateEnvironmentRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	listAPIKeysRequestFieldEnvironmentID      = big.NewInt(1 << 0)
 	listAPIKeysRequestFieldRequireEnvironment = big.NewInt(1 << 1)
@@ -242,9 +284,9 @@ type ListAPIKeysRequest struct {
 	EnvironmentID      *string `json:"-" url:"environment_id,omitempty"`
 	RequireEnvironment bool    `json:"-" url:"require_environment"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -273,14 +315,14 @@ func (l *ListAPIKeysRequest) SetRequireEnvironment(requireEnvironment bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIKeysRequest) SetLimit(limit *int) {
+func (l *ListAPIKeysRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listAPIKeysRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIKeysRequest) SetOffset(offset *int) {
+func (l *ListAPIKeysRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listAPIKeysRequestFieldOffset)
 }
@@ -302,9 +344,9 @@ type ListAuditLogsRequest struct {
 	Q             *string    `json:"-" url:"q,omitempty"`
 	StartTime     *time.Time `json:"-" url:"start_time,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -354,14 +396,14 @@ func (l *ListAuditLogsRequest) SetStartTime(startTime *time.Time) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAuditLogsRequest) SetLimit(limit *int) {
+func (l *ListAuditLogsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listAuditLogsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAuditLogsRequest) SetOffset(offset *int) {
+func (l *ListAuditLogsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listAuditLogsRequestFieldOffset)
 }
@@ -375,9 +417,9 @@ var (
 type ListEnvironmentsRequest struct {
 	IDs []*string `json:"-" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -399,14 +441,14 @@ func (l *ListEnvironmentsRequest) SetIDs(ids []*string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEnvironmentsRequest) SetLimit(limit *int) {
+func (l *ListEnvironmentsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listEnvironmentsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEnvironmentsRequest) SetOffset(offset *int) {
+func (l *ListEnvironmentsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEnvironmentsRequestFieldOffset)
 }
@@ -514,6 +556,9 @@ func (a *APIKeyCreateResponseData) GetUpdatedAt() time.Time {
 }
 
 func (a *APIKeyCreateResponseData) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
 	return a.extraProperties
 }
 
@@ -638,6 +683,9 @@ func (a *APIKeyCreateResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (a *APIKeyCreateResponseData) String() string {
+	if a == nil {
+		return "<nil>"
+	}
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value
@@ -678,12 +726,12 @@ type AuditLogResponseData struct {
 	ID                string     `json:"id" url:"id"`
 	Method            string     `json:"method" url:"method"`
 	ReqBody           *string    `json:"req_body,omitempty" url:"req_body,omitempty"`
-	ResourceID        *int       `json:"resource_id,omitempty" url:"resource_id,omitempty"`
+	ResourceID        *int64     `json:"resource_id,omitempty" url:"resource_id,omitempty"`
 	ResourceIDString  *string    `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
 	ResourceName      *string    `json:"resource_name,omitempty" url:"resource_name,omitempty"`
 	ResourceType      *string    `json:"resource_type,omitempty" url:"resource_type,omitempty"`
 	RespBody          *string    `json:"resp_body,omitempty" url:"resp_body,omitempty"`
-	RespCode          *int       `json:"resp_code,omitempty" url:"resp_code,omitempty"`
+	RespCode          *int64     `json:"resp_code,omitempty" url:"resp_code,omitempty"`
 	SecondaryResource *string    `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
 	StartedAt         time.Time  `json:"started_at" url:"started_at"`
 	URL               string     `json:"url" url:"url"`
@@ -746,7 +794,7 @@ func (a *AuditLogResponseData) GetReqBody() *string {
 	return a.ReqBody
 }
 
-func (a *AuditLogResponseData) GetResourceID() *int {
+func (a *AuditLogResponseData) GetResourceID() *int64 {
 	if a == nil {
 		return nil
 	}
@@ -781,7 +829,7 @@ func (a *AuditLogResponseData) GetRespBody() *string {
 	return a.RespBody
 }
 
-func (a *AuditLogResponseData) GetRespCode() *int {
+func (a *AuditLogResponseData) GetRespCode() *int64 {
 	if a == nil {
 		return nil
 	}
@@ -824,6 +872,9 @@ func (a *AuditLogResponseData) GetUserName() *string {
 }
 
 func (a *AuditLogResponseData) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
 	return a.extraProperties
 }
 
@@ -885,7 +936,7 @@ func (a *AuditLogResponseData) SetReqBody(reqBody *string) {
 
 // SetResourceID sets the ResourceID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AuditLogResponseData) SetResourceID(resourceID *int) {
+func (a *AuditLogResponseData) SetResourceID(resourceID *int64) {
 	a.ResourceID = resourceID
 	a.require(auditLogResponseDataFieldResourceID)
 }
@@ -920,7 +971,7 @@ func (a *AuditLogResponseData) SetRespBody(respBody *string) {
 
 // SetRespCode sets the RespCode field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AuditLogResponseData) SetRespCode(respCode *int) {
+func (a *AuditLogResponseData) SetRespCode(respCode *int64) {
 	a.RespCode = respCode
 	a.require(auditLogResponseDataFieldRespCode)
 }
@@ -1000,6 +1051,9 @@ func (a *AuditLogResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (a *AuditLogResponseData) String() string {
+	if a == nil {
+		return "<nil>"
+	}
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value
@@ -1078,6 +1132,9 @@ func (e *EnvironmentDetailResponseData) GetUpdatedAt() time.Time {
 }
 
 func (e *EnvironmentDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -1170,6 +1227,9 @@ func (e *EnvironmentDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EnvironmentDetailResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -1239,6 +1299,9 @@ func (e *EnvironmentResponseData) GetUpdatedAt() time.Time {
 }
 
 func (e *EnvironmentResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -1324,6 +1387,9 @@ func (e *EnvironmentResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EnvironmentResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -1382,6 +1448,9 @@ func (q *QuickstartResp) GetOk() bool {
 }
 
 func (q *QuickstartResp) GetExtraProperties() map[string]interface{} {
+	if q == nil {
+		return nil
+	}
 	return q.extraProperties
 }
 
@@ -1427,6 +1496,9 @@ func (q *QuickstartResp) MarshalJSON() ([]byte, error) {
 }
 
 func (q *QuickstartResp) String() string {
+	if q == nil {
+		return "<nil>"
+	}
 	if len(q.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(q.rawJSON); err == nil {
 			return value
@@ -1453,7 +1525,7 @@ var (
 type WhoAmIResponseData struct {
 	AccountID     string                     `json:"account_id" url:"account_id"`
 	AccountName   string                     `json:"account_name" url:"account_name"`
-	ActorType     string                     `json:"actor_type" url:"actor_type"`
+	ActorType     ActorType                  `json:"actor_type" url:"actor_type"`
 	APIKeyID      *string                    `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
 	EnvironmentID *string                    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	Environments  []*EnvironmentResponseData `json:"environments" url:"environments"`
@@ -1482,7 +1554,7 @@ func (w *WhoAmIResponseData) GetAccountName() string {
 	return w.AccountName
 }
 
-func (w *WhoAmIResponseData) GetActorType() string {
+func (w *WhoAmIResponseData) GetActorType() ActorType {
 	if w == nil {
 		return ""
 	}
@@ -1532,6 +1604,9 @@ func (w *WhoAmIResponseData) GetUserName() *string {
 }
 
 func (w *WhoAmIResponseData) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
 	return w.extraProperties
 }
 
@@ -1558,7 +1633,7 @@ func (w *WhoAmIResponseData) SetAccountName(accountName string) {
 
 // SetActorType sets the ActorType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetActorType(actorType string) {
+func (w *WhoAmIResponseData) SetActorType(actorType ActorType) {
 	w.ActorType = actorType
 	w.require(whoAmIResponseDataFieldActorType)
 }
@@ -1633,6 +1708,9 @@ func (w *WhoAmIResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (w *WhoAmIResponseData) String() string {
+	if w == nil {
+		return "<nil>"
+	}
 	if len(w.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
 			return value
@@ -1655,10 +1733,10 @@ var (
 type CountAPIKeysParams struct {
 	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset             *int  `json:"offset,omitempty" url:"offset,omitempty"`
-	RequireEnvironment *bool `json:"require_environment,omitempty" url:"require_environment,omitempty"`
+	Offset             *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	RequireEnvironment *bool  `json:"require_environment,omitempty" url:"require_environment,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1674,14 +1752,14 @@ func (c *CountAPIKeysParams) GetEnvironmentID() *string {
 	return c.EnvironmentID
 }
 
-func (c *CountAPIKeysParams) GetLimit() *int {
+func (c *CountAPIKeysParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountAPIKeysParams) GetOffset() *int {
+func (c *CountAPIKeysParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -1696,6 +1774,9 @@ func (c *CountAPIKeysParams) GetRequireEnvironment() *bool {
 }
 
 func (c *CountAPIKeysParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1715,14 +1796,14 @@ func (c *CountAPIKeysParams) SetEnvironmentID(environmentID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIKeysParams) SetLimit(limit *int) {
+func (c *CountAPIKeysParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countAPIKeysParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAPIKeysParams) SetOffset(offset *int) {
+func (c *CountAPIKeysParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countAPIKeysParamsFieldOffset)
 }
@@ -1762,6 +1843,9 @@ func (c *CountAPIKeysParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountAPIKeysParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1805,6 +1889,9 @@ func (c *CountAPIKeysResponse) GetParams() *CountAPIKeysParams {
 }
 
 func (c *CountAPIKeysResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1857,6 +1944,9 @@ func (c *CountAPIKeysResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountAPIKeysResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1884,9 +1974,9 @@ type CountAuditLogsParams struct {
 	EndTime       *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
 	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int       `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset    *int64     `json:"offset,omitempty" url:"offset,omitempty"`
 	Q         *string    `json:"q,omitempty" url:"q,omitempty"`
 	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
 
@@ -1918,14 +2008,14 @@ func (c *CountAuditLogsParams) GetEnvironmentID() *string {
 	return c.EnvironmentID
 }
 
-func (c *CountAuditLogsParams) GetLimit() *int {
+func (c *CountAuditLogsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountAuditLogsParams) GetOffset() *int {
+func (c *CountAuditLogsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -1947,6 +2037,9 @@ func (c *CountAuditLogsParams) GetStartTime() *time.Time {
 }
 
 func (c *CountAuditLogsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1980,14 +2073,14 @@ func (c *CountAuditLogsParams) SetEnvironmentID(environmentID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAuditLogsParams) SetLimit(limit *int) {
+func (c *CountAuditLogsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countAuditLogsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountAuditLogsParams) SetOffset(offset *int) {
+func (c *CountAuditLogsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countAuditLogsParamsFieldOffset)
 }
@@ -2046,6 +2139,9 @@ func (c *CountAuditLogsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountAuditLogsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2089,6 +2185,9 @@ func (c *CountAuditLogsResponse) GetParams() *CountAuditLogsParams {
 }
 
 func (c *CountAuditLogsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2141,6 +2240,9 @@ func (c *CountAuditLogsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountAuditLogsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2160,7 +2262,7 @@ var (
 type CreateAPIKeyResponse struct {
 	Data *APIKeyCreateResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2176,7 +2278,7 @@ func (c *CreateAPIKeyResponse) GetData() *APIKeyCreateResponseData {
 	return c.Data
 }
 
-func (c *CreateAPIKeyResponse) GetParams() map[string]interface{} {
+func (c *CreateAPIKeyResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -2184,6 +2286,9 @@ func (c *CreateAPIKeyResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateAPIKeyResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2203,7 +2308,7 @@ func (c *CreateAPIKeyResponse) SetData(data *APIKeyCreateResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateAPIKeyResponse) SetParams(params map[string]interface{}) {
+func (c *CreateAPIKeyResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createAPIKeyResponseFieldParams)
 }
@@ -2236,6 +2341,9 @@ func (c *CreateAPIKeyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateAPIKeyResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2255,7 +2363,7 @@ var (
 type CreateEnvironmentResponse struct {
 	Data *EnvironmentDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2271,7 +2379,7 @@ func (c *CreateEnvironmentResponse) GetData() *EnvironmentDetailResponseData {
 	return c.Data
 }
 
-func (c *CreateEnvironmentResponse) GetParams() map[string]interface{} {
+func (c *CreateEnvironmentResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -2279,6 +2387,9 @@ func (c *CreateEnvironmentResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateEnvironmentResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2298,7 +2409,7 @@ func (c *CreateEnvironmentResponse) SetData(data *EnvironmentDetailResponseData)
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEnvironmentResponse) SetParams(params map[string]interface{}) {
+func (c *CreateEnvironmentResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createEnvironmentResponseFieldParams)
 }
@@ -2331,6 +2442,9 @@ func (c *CreateEnvironmentResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateEnvironmentResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2350,7 +2464,7 @@ var (
 type DeleteAPIKeyResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2366,7 +2480,7 @@ func (d *DeleteAPIKeyResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteAPIKeyResponse) GetParams() map[string]interface{} {
+func (d *DeleteAPIKeyResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -2374,6 +2488,9 @@ func (d *DeleteAPIKeyResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteAPIKeyResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -2393,7 +2510,7 @@ func (d *DeleteAPIKeyResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteAPIKeyResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteAPIKeyResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteAPIKeyResponseFieldParams)
 }
@@ -2426,6 +2543,9 @@ func (d *DeleteAPIKeyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteAPIKeyResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -2445,7 +2565,7 @@ var (
 type DeleteEnvironmentResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2461,7 +2581,7 @@ func (d *DeleteEnvironmentResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteEnvironmentResponse) GetParams() map[string]interface{} {
+func (d *DeleteEnvironmentResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -2469,6 +2589,9 @@ func (d *DeleteEnvironmentResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteEnvironmentResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -2488,7 +2611,7 @@ func (d *DeleteEnvironmentResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteEnvironmentResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteEnvironmentResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteEnvironmentResponseFieldParams)
 }
@@ -2521,6 +2644,9 @@ func (d *DeleteEnvironmentResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteEnvironmentResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -2540,7 +2666,7 @@ var (
 type GetAPIKeyResponse struct {
 	Data *APIKeyResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2556,7 +2682,7 @@ func (g *GetAPIKeyResponse) GetData() *APIKeyResponseData {
 	return g.Data
 }
 
-func (g *GetAPIKeyResponse) GetParams() map[string]interface{} {
+func (g *GetAPIKeyResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -2564,6 +2690,9 @@ func (g *GetAPIKeyResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetAPIKeyResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -2583,7 +2712,7 @@ func (g *GetAPIKeyResponse) SetData(data *APIKeyResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetAPIKeyResponse) SetParams(params map[string]interface{}) {
+func (g *GetAPIKeyResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getAPIKeyResponseFieldParams)
 }
@@ -2616,6 +2745,9 @@ func (g *GetAPIKeyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetAPIKeyResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2635,7 +2767,7 @@ var (
 type GetAuditLogResponse struct {
 	Data *AuditLogResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2651,7 +2783,7 @@ func (g *GetAuditLogResponse) GetData() *AuditLogResponseData {
 	return g.Data
 }
 
-func (g *GetAuditLogResponse) GetParams() map[string]interface{} {
+func (g *GetAuditLogResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -2659,6 +2791,9 @@ func (g *GetAuditLogResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetAuditLogResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -2678,7 +2813,7 @@ func (g *GetAuditLogResponse) SetData(data *AuditLogResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetAuditLogResponse) SetParams(params map[string]interface{}) {
+func (g *GetAuditLogResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getAuditLogResponseFieldParams)
 }
@@ -2711,6 +2846,9 @@ func (g *GetAuditLogResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetAuditLogResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2730,7 +2868,7 @@ var (
 type GetEnvironmentResponse struct {
 	Data *EnvironmentResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2746,7 +2884,7 @@ func (g *GetEnvironmentResponse) GetData() *EnvironmentResponseData {
 	return g.Data
 }
 
-func (g *GetEnvironmentResponse) GetParams() map[string]interface{} {
+func (g *GetEnvironmentResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -2754,6 +2892,9 @@ func (g *GetEnvironmentResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetEnvironmentResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -2773,7 +2914,7 @@ func (g *GetEnvironmentResponse) SetData(data *EnvironmentResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEnvironmentResponse) SetParams(params map[string]interface{}) {
+func (g *GetEnvironmentResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getEnvironmentResponseFieldParams)
 }
@@ -2806,6 +2947,9 @@ func (g *GetEnvironmentResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEnvironmentResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2825,7 +2969,7 @@ var (
 type GetWhoAmIResponse struct {
 	Data *WhoAmIResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2841,7 +2985,7 @@ func (g *GetWhoAmIResponse) GetData() *WhoAmIResponseData {
 	return g.Data
 }
 
-func (g *GetWhoAmIResponse) GetParams() map[string]interface{} {
+func (g *GetWhoAmIResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -2849,6 +2993,9 @@ func (g *GetWhoAmIResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetWhoAmIResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -2868,7 +3015,7 @@ func (g *GetWhoAmIResponse) SetData(data *WhoAmIResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetWhoAmIResponse) SetParams(params map[string]interface{}) {
+func (g *GetWhoAmIResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getWhoAmIResponseFieldParams)
 }
@@ -2901,6 +3048,9 @@ func (g *GetWhoAmIResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetWhoAmIResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2923,10 +3073,10 @@ var (
 type ListAPIKeysParams struct {
 	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset             *int  `json:"offset,omitempty" url:"offset,omitempty"`
-	RequireEnvironment *bool `json:"require_environment,omitempty" url:"require_environment,omitempty"`
+	Offset             *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	RequireEnvironment *bool  `json:"require_environment,omitempty" url:"require_environment,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2942,14 +3092,14 @@ func (l *ListAPIKeysParams) GetEnvironmentID() *string {
 	return l.EnvironmentID
 }
 
-func (l *ListAPIKeysParams) GetLimit() *int {
+func (l *ListAPIKeysParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListAPIKeysParams) GetOffset() *int {
+func (l *ListAPIKeysParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -2964,6 +3114,9 @@ func (l *ListAPIKeysParams) GetRequireEnvironment() *bool {
 }
 
 func (l *ListAPIKeysParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -2983,14 +3136,14 @@ func (l *ListAPIKeysParams) SetEnvironmentID(environmentID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIKeysParams) SetLimit(limit *int) {
+func (l *ListAPIKeysParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listAPIKeysParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAPIKeysParams) SetOffset(offset *int) {
+func (l *ListAPIKeysParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listAPIKeysParamsFieldOffset)
 }
@@ -3030,6 +3183,9 @@ func (l *ListAPIKeysParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListAPIKeysParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -3073,6 +3229,9 @@ func (l *ListAPIKeysResponse) GetParams() *ListAPIKeysParams {
 }
 
 func (l *ListAPIKeysResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -3125,6 +3284,9 @@ func (l *ListAPIKeysResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListAPIKeysResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -3152,9 +3314,9 @@ type ListAuditLogsParams struct {
 	EndTime       *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
 	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int       `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset    *int64     `json:"offset,omitempty" url:"offset,omitempty"`
 	Q         *string    `json:"q,omitempty" url:"q,omitempty"`
 	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
 
@@ -3186,14 +3348,14 @@ func (l *ListAuditLogsParams) GetEnvironmentID() *string {
 	return l.EnvironmentID
 }
 
-func (l *ListAuditLogsParams) GetLimit() *int {
+func (l *ListAuditLogsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListAuditLogsParams) GetOffset() *int {
+func (l *ListAuditLogsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -3215,6 +3377,9 @@ func (l *ListAuditLogsParams) GetStartTime() *time.Time {
 }
 
 func (l *ListAuditLogsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -3248,14 +3413,14 @@ func (l *ListAuditLogsParams) SetEnvironmentID(environmentID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAuditLogsParams) SetLimit(limit *int) {
+func (l *ListAuditLogsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listAuditLogsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListAuditLogsParams) SetOffset(offset *int) {
+func (l *ListAuditLogsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listAuditLogsParamsFieldOffset)
 }
@@ -3314,6 +3479,9 @@ func (l *ListAuditLogsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListAuditLogsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -3357,6 +3525,9 @@ func (l *ListAuditLogsResponse) GetParams() *ListAuditLogsParams {
 }
 
 func (l *ListAuditLogsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -3409,6 +3580,9 @@ func (l *ListAuditLogsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListAuditLogsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -3430,9 +3604,9 @@ var (
 type ListEnvironmentsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3448,14 +3622,14 @@ func (l *ListEnvironmentsParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListEnvironmentsParams) GetLimit() *int {
+func (l *ListEnvironmentsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListEnvironmentsParams) GetOffset() *int {
+func (l *ListEnvironmentsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -3463,6 +3637,9 @@ func (l *ListEnvironmentsParams) GetOffset() *int {
 }
 
 func (l *ListEnvironmentsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -3482,14 +3659,14 @@ func (l *ListEnvironmentsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEnvironmentsParams) SetLimit(limit *int) {
+func (l *ListEnvironmentsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listEnvironmentsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEnvironmentsParams) SetOffset(offset *int) {
+func (l *ListEnvironmentsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEnvironmentsParamsFieldOffset)
 }
@@ -3522,6 +3699,9 @@ func (l *ListEnvironmentsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListEnvironmentsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -3565,6 +3745,9 @@ func (l *ListEnvironmentsResponse) GetParams() *ListEnvironmentsParams {
 }
 
 func (l *ListEnvironmentsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -3617,6 +3800,9 @@ func (l *ListEnvironmentsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListEnvironmentsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -3636,7 +3822,7 @@ var (
 type QuickstartResponse struct {
 	Data *QuickstartResp `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3652,7 +3838,7 @@ func (q *QuickstartResponse) GetData() *QuickstartResp {
 	return q.Data
 }
 
-func (q *QuickstartResponse) GetParams() map[string]interface{} {
+func (q *QuickstartResponse) GetParams() map[string]any {
 	if q == nil {
 		return nil
 	}
@@ -3660,6 +3846,9 @@ func (q *QuickstartResponse) GetParams() map[string]interface{} {
 }
 
 func (q *QuickstartResponse) GetExtraProperties() map[string]interface{} {
+	if q == nil {
+		return nil
+	}
 	return q.extraProperties
 }
 
@@ -3679,7 +3868,7 @@ func (q *QuickstartResponse) SetData(data *QuickstartResp) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (q *QuickstartResponse) SetParams(params map[string]interface{}) {
+func (q *QuickstartResponse) SetParams(params map[string]any) {
 	q.Params = params
 	q.require(quickstartResponseFieldParams)
 }
@@ -3712,6 +3901,9 @@ func (q *QuickstartResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (q *QuickstartResponse) String() string {
+	if q == nil {
+		return "<nil>"
+	}
 	if len(q.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(q.rawJSON); err == nil {
 			return value
@@ -3731,7 +3923,7 @@ var (
 type UpdateAPIKeyResponse struct {
 	Data *APIKeyResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3747,7 +3939,7 @@ func (u *UpdateAPIKeyResponse) GetData() *APIKeyResponseData {
 	return u.Data
 }
 
-func (u *UpdateAPIKeyResponse) GetParams() map[string]interface{} {
+func (u *UpdateAPIKeyResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -3755,6 +3947,9 @@ func (u *UpdateAPIKeyResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdateAPIKeyResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -3774,7 +3969,7 @@ func (u *UpdateAPIKeyResponse) SetData(data *APIKeyResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateAPIKeyResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateAPIKeyResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateAPIKeyResponseFieldParams)
 }
@@ -3807,6 +4002,9 @@ func (u *UpdateAPIKeyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateAPIKeyResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -3826,7 +4024,7 @@ var (
 type UpdateEnvironmentResponse struct {
 	Data *EnvironmentResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3842,7 +4040,7 @@ func (u *UpdateEnvironmentResponse) GetData() *EnvironmentResponseData {
 	return u.Data
 }
 
-func (u *UpdateEnvironmentResponse) GetParams() map[string]interface{} {
+func (u *UpdateEnvironmentResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -3850,6 +4048,9 @@ func (u *UpdateEnvironmentResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdateEnvironmentResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -3869,7 +4070,7 @@ func (u *UpdateEnvironmentResponse) SetData(data *EnvironmentResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateEnvironmentResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateEnvironmentResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateEnvironmentResponseFieldParams)
 }
@@ -3902,6 +4103,9 @@ func (u *UpdateEnvironmentResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateEnvironmentResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -3947,6 +4151,27 @@ func (u *UpdateAPIKeyRequestBody) SetName(name *string) {
 	u.require(updateAPIKeyRequestBodyFieldName)
 }
 
+func (u *UpdateAPIKeyRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAPIKeyRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateAPIKeyRequestBody(body)
+	return nil
+}
+
+func (u *UpdateAPIKeyRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateAPIKeyRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	updateEnvironmentRequestBodyFieldEnvironmentType = big.NewInt(1 << 0)
 	updateEnvironmentRequestBodyFieldName            = big.NewInt(1 << 1)
@@ -3979,4 +4204,25 @@ func (u *UpdateEnvironmentRequestBody) SetEnvironmentType(environmentType *Envir
 func (u *UpdateEnvironmentRequestBody) SetName(name *string) {
 	u.Name = name
 	u.require(updateEnvironmentRequestBodyFieldName)
+}
+
+func (u *UpdateEnvironmentRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateEnvironmentRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateEnvironmentRequestBody(body)
+	return nil
+}
+
+func (u *UpdateEnvironmentRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateEnvironmentRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

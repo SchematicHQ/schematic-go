@@ -8,6 +8,8 @@ import (
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewLocalCacheSimple(t *testing.T) {
@@ -15,9 +17,7 @@ func TestNewLocalCacheSimple(t *testing.T) {
 
 	// Test with standard parameters
 	cache := NewLocalCache[string](100, 0) // No TTL to avoid cleanup goroutine
-	if cache == nil {
-		t.Fatalf("expected non-nil cache, got nil")
-	}
+	require.NotNil(t, cache)
 
 	if cache.maxSize != 100 {
 		t.Errorf("expected maxSize 100, got %v", cache.maxSize)
@@ -109,8 +109,8 @@ func TestLocalCache_Delete(t *testing.T) {
 	defer cache.Stop()
 
 	// Set up some keys
-	cache.Set(ctx, "key1", "value1", nil)
-	cache.Set(ctx, "key2", "value2", nil)
+	_ = cache.Set(ctx, "key1", "value1", nil)
+	_ = cache.Set(ctx, "key2", "value2", nil)
 
 	// Test deleting a key
 	t.Run("delete existing key", func(t *testing.T) {
@@ -169,9 +169,9 @@ func TestLocalCache_DeleteMissing(t *testing.T) {
 	defer cache.Stop()
 
 	// Set up some keys
-	cache.Set(ctx, "key1", "value1", nil)
-	cache.Set(ctx, "key2", "value2", nil)
-	cache.Set(ctx, "key3", "value3", nil)
+	_ = cache.Set(ctx, "key1", "value1", nil)
+	_ = cache.Set(ctx, "key2", "value2", nil)
+	_ = cache.Set(ctx, "key3", "value3", nil)
 
 	// Test DeleteMissing with a list that includes key1 but not others
 	t.Run("delete missing keys", func(t *testing.T) {
@@ -203,8 +203,8 @@ func TestLocalCache_DeleteMissing(t *testing.T) {
 		// Reset cache
 		cache = NewLocalCache[string](10, 5*time.Second)
 		defer cache.Stop()
-		cache.Set(ctx, "key1", "value1", nil)
-		cache.Set(ctx, "key2", "value2", nil)
+		_ = cache.Set(ctx, "key1", "value1", nil)
+		_ = cache.Set(ctx, "key2", "value2", nil)
 
 		cache.DeleteMissing(ctx, []string{})
 
@@ -247,9 +247,9 @@ func TestLocalCache_LRU(t *testing.T) {
 	defer cache.Stop()
 
 	// Fill the cache
-	cache.Set(ctx, "key1", "value1", nil)
-	cache.Set(ctx, "key2", "value2", nil)
-	cache.Set(ctx, "key3", "value3", nil)
+	_ = cache.Set(ctx, "key1", "value1", nil)
+	_ = cache.Set(ctx, "key2", "value2", nil)
+	_ = cache.Set(ctx, "key3", "value3", nil)
 
 	// Verify all keys are present
 	for i := 1; i <= 3; i++ {
@@ -269,7 +269,7 @@ func TestLocalCache_LRU(t *testing.T) {
 	cache.Get(ctx, "key1")
 
 	// Add a 4th key which should evict the least recently used key (key2)
-	cache.Set(ctx, "key4", "value4", nil)
+	_ = cache.Set(ctx, "key4", "value4", nil)
 
 	// key2 should be evicted
 	_, found := cache.Get(ctx, "key2")
@@ -311,7 +311,7 @@ func TestLocalCache_Expiration(t *testing.T) {
 	defer cache.Stop()
 
 	// Set a key
-	cache.Set(ctx, "key1", "value1", nil)
+	_ = cache.Set(ctx, "key1", "value1", nil)
 
 	// It should be immediately available
 	val, found := cache.Get(ctx, "key1")
@@ -341,7 +341,7 @@ func TestLocalCache_CleanupRoutine(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		key := "key" + strconv.Itoa(i)
 		value := "value" + strconv.Itoa(i)
-		cache.Set(ctx, key, value, nil)
+		_ = cache.Set(ctx, key, value, nil)
 	}
 
 	// Wait for cleanup (more than TTL)
@@ -357,7 +357,7 @@ func TestLocalCache_CleanupRoutine(t *testing.T) {
 	}
 
 	// Set a new key to verify cache is still working
-	cache.Set(ctx, "newkey", "newvalue", nil)
+	_ = cache.Set(ctx, "newkey", "newvalue", nil)
 	val, found := cache.Get(ctx, "newkey")
 	if !found {
 		t.Errorf("expected to find newkey, but didn't")
@@ -460,7 +460,7 @@ func TestLocalCache_Concurrency(t *testing.T) {
 				case 2, 3: // Get (40% probability)
 					cache.Get(ctx, key)
 				case 4: // Delete (20% probability)
-					cache.Delete(ctx, key)
+					_ = cache.Delete(ctx, key)
 				}
 			}
 		}()
@@ -476,9 +476,7 @@ func TestLocalCache_DefaultCache(t *testing.T) {
 	cache := NewDefaultCache[string]()
 	defer cache.Stop()
 
-	if cache == nil {
-		t.Fatal("expected non-nil default cache")
-	}
+	require.NotNil(t, cache)
 
 	// Verify default size
 	if cache.maxSize != defaultCacheSize {
@@ -514,7 +512,7 @@ func TestLocalCache_DifferentTypes(t *testing.T) {
 		defer cache.Stop()
 
 		ctx := context.Background()
-		cache.Set(ctx, "key", "value", nil)
+		_ = cache.Set(ctx, "key", "value", nil)
 
 		val, found := cache.Get(ctx, "key")
 		if !found {
@@ -530,7 +528,7 @@ func TestLocalCache_DifferentTypes(t *testing.T) {
 		defer cache.Stop()
 
 		ctx := context.Background()
-		cache.Set(ctx, "key", 42, nil)
+		_ = cache.Set(ctx, "key", 42, nil)
 
 		val, found := cache.Get(ctx, "key")
 		if !found {
@@ -560,7 +558,7 @@ func TestLocalCache_DifferentTypes(t *testing.T) {
 			},
 		}
 
-		cache.Set(ctx, "key", expected, nil)
+		_ = cache.Set(ctx, "key", expected, nil)
 
 		val, found := cache.Get(ctx, "key")
 		if !found {
@@ -595,11 +593,11 @@ func TestLocalCache_ConcurrentSafe(t *testing.T) {
 				op := rand.Intn(3)
 				switch op {
 				case 0: // Set
-					cache.Set(ctx, key, value, nil)
+					_ = cache.Set(ctx, key, value, nil)
 				case 1: // Get
 					cache.Get(ctx, key)
 				case 2: // Delete
-					cache.Delete(ctx, key)
+					_ = cache.Delete(ctx, key)
 				}
 			}
 		}(w)
@@ -615,9 +613,9 @@ func TestLocalCache_DeleteMissingSimple(t *testing.T) {
 	cache := NewLocalCache[string](10, 0) // No TTL to avoid cleanup goroutine
 
 	// Set up some keys
-	cache.Set(ctx, "key1", "value1", nil)
-	cache.Set(ctx, "key2", "value2", nil)
-	cache.Set(ctx, "key3", "value3", nil)
+	_ = cache.Set(ctx, "key1", "value1", nil)
+	_ = cache.Set(ctx, "key2", "value2", nil)
+	_ = cache.Set(ctx, "key3", "value3", nil)
 
 	// Delete keys not in the provided list
 	cache.DeleteMissing(ctx, []string{"key1"})
@@ -650,7 +648,7 @@ func TestLocalCache_WithExpirationSimple(t *testing.T) {
 	defer cache.Stop() // Important to stop the cleanup goroutine
 
 	// Set a key
-	cache.Set(ctx, "key1", "value1", nil)
+	_ = cache.Set(ctx, "key1", "value1", nil)
 
 	// Verify it exists immediately
 	_, found := cache.Get(ctx, "key1")
@@ -677,7 +675,7 @@ func TestLocalCache_EdgeCases(t *testing.T) {
 		defer cache.Stop()
 
 		// Set a key
-		cache.Set(ctx, "key", "value", nil)
+		_ = cache.Set(ctx, "key", "value", nil)
 
 		// Wait briefly to allow TTL to expire
 		time.Sleep(5 * time.Millisecond)
@@ -696,7 +694,7 @@ func TestLocalCache_EdgeCases(t *testing.T) {
 		defer cache.Stop()
 
 		// Set a key
-		cache.Set(ctx, "key", "value", nil)
+		_ = cache.Set(ctx, "key", "value", nil)
 
 		// Key should be present
 		val, found := cache.Get(ctx, "key")
@@ -714,7 +712,7 @@ func TestLocalCache_EdgeCases(t *testing.T) {
 		cache := NewLocalCache[string](10, 0)
 
 		// Set a key
-		cache.Set(ctx, "key", "value", nil)
+		_ = cache.Set(ctx, "key", "value", nil)
 
 		// Wait a bit
 		time.Sleep(10 * time.Millisecond)
@@ -737,10 +735,10 @@ func TestLocalCache_EdgeCases(t *testing.T) {
 
 		// Set a key with short custom TTL
 		shortTTL := 10 * time.Millisecond
-		cache.Set(ctx, "short-lived", "value", &shortTTL)
+		_ = cache.Set(ctx, "short-lived", "value", &shortTTL)
 
 		// Set another key with default TTL
-		cache.Set(ctx, "long-lived", "value", nil)
+		_ = cache.Set(ctx, "long-lived", "value", nil)
 
 		// Wait for short TTL to expire
 		time.Sleep(20 * time.Millisecond)
@@ -766,7 +764,7 @@ func TestLocalCache_EdgeCases(t *testing.T) {
 		// Add maxSize+5 items
 		for i := 0; i < maxSize+5; i++ {
 			key := "key" + string(rune('a'+i))
-			cache.Set(ctx, key, "value", nil)
+			_ = cache.Set(ctx, key, "value", nil)
 		}
 
 		// Cache should only contain maxSize items
@@ -796,7 +794,7 @@ func TestLocalCache_EdgeCases(t *testing.T) {
 		cache := NewLocalCache[string](10, -1*time.Hour)
 
 		// Set a key
-		cache.Set(ctx, "key", "value", nil)
+		_ = cache.Set(ctx, "key", "value", nil)
 
 		// Wait a bit
 		time.Sleep(10 * time.Millisecond)

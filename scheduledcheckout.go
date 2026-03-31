@@ -96,9 +96,9 @@ type ListScheduledCheckoutsRequest struct {
 	CompanyID *string                  `json:"-" url:"company_id,omitempty"`
 	Status    *ScheduledCheckoutStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -127,14 +127,14 @@ func (l *ListScheduledCheckoutsRequest) SetStatus(status *ScheduledCheckoutStatu
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListScheduledCheckoutsRequest) SetLimit(limit *int) {
+func (l *ListScheduledCheckoutsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listScheduledCheckoutsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListScheduledCheckoutsRequest) SetOffset(offset *int) {
+func (l *ListScheduledCheckoutsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listScheduledCheckoutsRequestFieldOffset)
 }
@@ -166,7 +166,7 @@ type ScheduledCheckoutResponseData struct {
 	FromPlanID        string                  `json:"from_plan_id" url:"from_plan_id"`
 	ID                string                  `json:"id" url:"id"`
 	ScheduledInterval *string                 `json:"scheduled_interval,omitempty" url:"scheduled_interval,omitempty"`
-	ScheduledPrice    *int                    `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
+	ScheduledPrice    *int64                  `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
 	StartedAt         *time.Time              `json:"started_at,omitempty" url:"started_at,omitempty"`
 	Status            ScheduledCheckoutStatus `json:"status" url:"status"`
 	ToPlanID          string                  `json:"to_plan_id" url:"to_plan_id"`
@@ -242,7 +242,7 @@ func (s *ScheduledCheckoutResponseData) GetScheduledInterval() *string {
 	return s.ScheduledInterval
 }
 
-func (s *ScheduledCheckoutResponseData) GetScheduledPrice() *int {
+func (s *ScheduledCheckoutResponseData) GetScheduledPrice() *int64 {
 	if s == nil {
 		return nil
 	}
@@ -278,6 +278,9 @@ func (s *ScheduledCheckoutResponseData) GetUpdatedAt() time.Time {
 }
 
 func (s *ScheduledCheckoutResponseData) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
 	return s.extraProperties
 }
 
@@ -353,7 +356,7 @@ func (s *ScheduledCheckoutResponseData) SetScheduledInterval(scheduledInterval *
 
 // SetScheduledPrice sets the ScheduledPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (s *ScheduledCheckoutResponseData) SetScheduledPrice(scheduledPrice *int) {
+func (s *ScheduledCheckoutResponseData) SetScheduledPrice(scheduledPrice *int64) {
 	s.ScheduledPrice = scheduledPrice
 	s.require(scheduledCheckoutResponseDataFieldScheduledPrice)
 }
@@ -438,6 +441,9 @@ func (s *ScheduledCheckoutResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (s *ScheduledCheckoutResponseData) String() string {
+	if s == nil {
+		return "<nil>"
+	}
 	if len(s.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
@@ -488,7 +494,7 @@ var (
 type CreateScheduledCheckoutResponse struct {
 	Data *ScheduledCheckoutResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -504,7 +510,7 @@ func (c *CreateScheduledCheckoutResponse) GetData() *ScheduledCheckoutResponseDa
 	return c.Data
 }
 
-func (c *CreateScheduledCheckoutResponse) GetParams() map[string]interface{} {
+func (c *CreateScheduledCheckoutResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -512,6 +518,9 @@ func (c *CreateScheduledCheckoutResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateScheduledCheckoutResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -531,7 +540,7 @@ func (c *CreateScheduledCheckoutResponse) SetData(data *ScheduledCheckoutRespons
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateScheduledCheckoutResponse) SetParams(params map[string]interface{}) {
+func (c *CreateScheduledCheckoutResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createScheduledCheckoutResponseFieldParams)
 }
@@ -564,6 +573,9 @@ func (c *CreateScheduledCheckoutResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateScheduledCheckoutResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -583,7 +595,7 @@ var (
 type GetScheduledCheckoutResponse struct {
 	Data *ScheduledCheckoutResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -599,7 +611,7 @@ func (g *GetScheduledCheckoutResponse) GetData() *ScheduledCheckoutResponseData 
 	return g.Data
 }
 
-func (g *GetScheduledCheckoutResponse) GetParams() map[string]interface{} {
+func (g *GetScheduledCheckoutResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -607,6 +619,9 @@ func (g *GetScheduledCheckoutResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetScheduledCheckoutResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -626,7 +641,7 @@ func (g *GetScheduledCheckoutResponse) SetData(data *ScheduledCheckoutResponseDa
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetScheduledCheckoutResponse) SetParams(params map[string]interface{}) {
+func (g *GetScheduledCheckoutResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getScheduledCheckoutResponseFieldParams)
 }
@@ -659,6 +674,9 @@ func (g *GetScheduledCheckoutResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetScheduledCheckoutResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -681,9 +699,9 @@ var (
 type ListScheduledCheckoutsParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int                     `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64                   `json:"offset,omitempty" url:"offset,omitempty"`
 	Status *ScheduledCheckoutStatus `json:"status,omitempty" url:"status,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -700,14 +718,14 @@ func (l *ListScheduledCheckoutsParams) GetCompanyID() *string {
 	return l.CompanyID
 }
 
-func (l *ListScheduledCheckoutsParams) GetLimit() *int {
+func (l *ListScheduledCheckoutsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListScheduledCheckoutsParams) GetOffset() *int {
+func (l *ListScheduledCheckoutsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -722,6 +740,9 @@ func (l *ListScheduledCheckoutsParams) GetStatus() *ScheduledCheckoutStatus {
 }
 
 func (l *ListScheduledCheckoutsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -741,14 +762,14 @@ func (l *ListScheduledCheckoutsParams) SetCompanyID(companyID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListScheduledCheckoutsParams) SetLimit(limit *int) {
+func (l *ListScheduledCheckoutsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listScheduledCheckoutsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListScheduledCheckoutsParams) SetOffset(offset *int) {
+func (l *ListScheduledCheckoutsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listScheduledCheckoutsParamsFieldOffset)
 }
@@ -788,6 +809,9 @@ func (l *ListScheduledCheckoutsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListScheduledCheckoutsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -831,6 +855,9 @@ func (l *ListScheduledCheckoutsResponse) GetParams() *ListScheduledCheckoutsPara
 }
 
 func (l *ListScheduledCheckoutsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -883,6 +910,9 @@ func (l *ListScheduledCheckoutsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListScheduledCheckoutsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -902,7 +932,7 @@ var (
 type UpdateScheduledCheckoutResponse struct {
 	Data *ScheduledCheckoutResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -918,7 +948,7 @@ func (u *UpdateScheduledCheckoutResponse) GetData() *ScheduledCheckoutResponseDa
 	return u.Data
 }
 
-func (u *UpdateScheduledCheckoutResponse) GetParams() map[string]interface{} {
+func (u *UpdateScheduledCheckoutResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -926,6 +956,9 @@ func (u *UpdateScheduledCheckoutResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdateScheduledCheckoutResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -945,7 +978,7 @@ func (u *UpdateScheduledCheckoutResponse) SetData(data *ScheduledCheckoutRespons
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateScheduledCheckoutResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateScheduledCheckoutResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateScheduledCheckoutResponseFieldParams)
 }
@@ -978,6 +1011,9 @@ func (u *UpdateScheduledCheckoutResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateScheduledCheckoutResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value

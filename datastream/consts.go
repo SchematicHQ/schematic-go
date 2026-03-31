@@ -2,19 +2,8 @@ package datastream
 
 import "time"
 
-const defaultBaseURL = "https://api.schematichq.com"
-
 // Time constants for the WebSocket connection
 const (
-	maxReconnectAttempts = 5
-	minReconnectDelay    = 1 * time.Second
-	maxReconnectDelay    = 60 * time.Second
-	pongWait             = 30 * time.Second
-	// Send pings to peer with this period. Must be less than pongWait.
-	pingPeriod = (pongWait * 9) / 10
-	// Time allowed to write a message to the peer.
-	writeWait = 10 * time.Second
-
 	resourceTimeout = 2 * time.Second
 )
 

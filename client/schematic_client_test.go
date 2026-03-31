@@ -320,9 +320,9 @@ func TestCheckFlagWithEntitlement_APIResponse(t *testing.T) {
 	)
 	defer client.Close()
 
-	allocation := 100
-	usage := 50
-	softLimit := 200
+	allocation := int64(100)
+	usage := int64(50)
+	softLimit := int64(200)
 	eventName := "api-calls"
 	metricPeriod := schematicgo.FeatureEntitlementMetricPeriodCurrentMonth
 	monthReset := schematicgo.FeatureEntitlementMonthResetBillingCycle
@@ -448,7 +448,7 @@ func TestCheckFlagWithEntitlement_CacheHitPreservesEntitlement(t *testing.T) {
 	ruleID := "rule-789"
 	userID := "user-321"
 	ruleType := "plan_entitlement"
-	allocation := 100
+	allocation := int64(100)
 
 	responseBody := &schematicgo.CheckFlagResponse{
 		Data: &schematicgo.CheckFlagResponseData{

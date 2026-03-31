@@ -1,0 +1,16 @@
+{
+  "cliVersion": "4.43.1",
+  "generatorName": "fernapi/fern-go-sdk",
+  "generatorVersion": "1.31.5",
+  "generatorConfig": {
+    "enableWireTests": false,
+    "exportedClientName": "SchematicClient",
+    "module": {
+      "path": "github.com/schematichq/schematic-go",
+      "version": "1.18"
+    },
+    "packageName": "schematichq"
+  },
+  "originGitCommit": "68601f1a4e5104cf15766ed0d642088fbef4cec4",
+  "sdkVersion": "v1.4.4"
+}

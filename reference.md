@@ -106,11 +106,11 @@ request := &schematichq.ListAPIKeysRequest{
             "environment_id",
         ),
         RequireEnvironment: true,
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Accounts.ListAPIKeys(
@@ -148,7 +148,7 @@ client.Accounts.ListAPIKeys(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -156,7 +156,7 @@ client.Accounts.ListAPIKeys(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -407,11 +407,11 @@ request := &schematichq.CountAPIKeysRequest{
             "environment_id",
         ),
         RequireEnvironment: true,
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Accounts.CountAPIKeys(
@@ -449,7 +449,7 @@ client.Accounts.CountAPIKeys(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -457,7 +457,7 @@ client.Accounts.CountAPIKeys(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -500,11 +500,11 @@ request := &schematichq.ListAuditLogsRequest{
                 "2024-01-15T09:30:00Z",
             ),
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Accounts.ListAuditLogs(
@@ -566,7 +566,7 @@ client.Accounts.ListAuditLogs(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -574,7 +574,7 @@ client.Accounts.ListAuditLogs(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -661,11 +661,11 @@ request := &schematichq.CountAuditLogsRequest{
                 "2024-01-15T09:30:00Z",
             ),
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Accounts.CountAuditLogs(
@@ -727,7 +727,7 @@ client.Accounts.CountAuditLogs(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -735,7 +735,7 @@ client.Accounts.CountAuditLogs(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -761,11 +761,11 @@ client.Accounts.CountAuditLogs(
 
 ```go
 request := &schematichq.ListEnvironmentsRequest{
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Accounts.ListEnvironments(
@@ -795,7 +795,7 @@ client.Accounts.ListEnvironments(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -803,7 +803,7 @@ client.Accounts.ListEnvironments(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -1098,11 +1098,11 @@ request := &schematichq.ListCouponsRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.ListCoupons(
@@ -1140,7 +1140,7 @@ client.Billing.ListCoupons(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -1148,7 +1148,7 @@ client.Billing.ListCoupons(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -1174,14 +1174,14 @@ client.Billing.ListCoupons(
 
 ```go
 request := &schematichq.CreateCouponRequestBody{
-        AmountOff: 1,
+        AmountOff: int64(1000000),
         Duration: "duration",
-        DurationInMonths: 1,
+        DurationInMonths: int64(1000000),
         ExternalID: "external_id",
-        MaxRedemptions: 1,
+        MaxRedemptions: int64(1000000),
         Name: "name",
         PercentOff: 1.1,
-        TimesRedeemed: 1,
+        TimesRedeemed: int64(1000000),
     }
 client.Billing.UpsertBillingCoupon(
         context.TODO(),
@@ -1202,7 +1202,7 @@ client.Billing.UpsertBillingCoupon(
 <dl>
 <dd>
 
-**amountOff:** `int` 
+**amountOff:** `int64` 
     
 </dd>
 </dl>
@@ -1226,7 +1226,7 @@ client.Billing.UpsertBillingCoupon(
 <dl>
 <dd>
 
-**durationInMonths:** `int` 
+**durationInMonths:** `int64` 
     
 </dd>
 </dl>
@@ -1242,7 +1242,7 @@ client.Billing.UpsertBillingCoupon(
 <dl>
 <dd>
 
-**maxRedemptions:** `int` 
+**maxRedemptions:** `int64` 
     
 </dd>
 </dl>
@@ -1266,7 +1266,7 @@ client.Billing.UpsertBillingCoupon(
 <dl>
 <dd>
 
-**timesRedeemed:** `int` 
+**timesRedeemed:** `int64` 
     
 </dd>
 </dl>
@@ -1399,11 +1399,11 @@ request := &schematichq.ListCustomersWithSubscriptionsRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.ListCustomersWithSubscriptions(
@@ -1457,7 +1457,7 @@ client.Billing.ListCustomersWithSubscriptions(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -1465,7 +1465,7 @@ client.Billing.ListCustomersWithSubscriptions(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -1498,11 +1498,11 @@ request := &schematichq.CountCustomersRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.CountCustomers(
@@ -1556,7 +1556,7 @@ client.Billing.CountCustomers(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -1564,7 +1564,7 @@ client.Billing.CountCustomers(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -1595,11 +1595,11 @@ request := &schematichq.ListInvoicesRequest{
         ),
         CustomerExternalID: "customer_external_id",
         SubscriptionExternalID: "subscription_external_id",
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.ListInvoices(
@@ -1645,7 +1645,7 @@ client.Billing.ListInvoices(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -1653,7 +1653,7 @@ client.Billing.ListInvoices(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -1679,13 +1679,13 @@ client.Billing.ListInvoices(
 
 ```go
 request := &schematichq.CreateInvoiceRequestBody{
-        AmountDue: 1,
-        AmountPaid: 1,
-        AmountRemaining: 1,
+        AmountDue: int64(1000000),
+        AmountPaid: int64(1000000),
+        AmountRemaining: int64(1000000),
         CollectionMethod: "collection_method",
         Currency: "currency",
         CustomerExternalID: "customer_external_id",
-        Subtotal: 1,
+        Subtotal: int64(1000000),
     }
 client.Billing.UpsertInvoice(
         context.TODO(),
@@ -1706,7 +1706,7 @@ client.Billing.UpsertInvoice(
 <dl>
 <dd>
 
-**amountDue:** `int` 
+**amountDue:** `int64` 
     
 </dd>
 </dl>
@@ -1714,7 +1714,7 @@ client.Billing.UpsertInvoice(
 <dl>
 <dd>
 
-**amountPaid:** `int` 
+**amountPaid:** `int64` 
     
 </dd>
 </dl>
@@ -1722,7 +1722,7 @@ client.Billing.UpsertInvoice(
 <dl>
 <dd>
 
-**amountRemaining:** `int` 
+**amountRemaining:** `int64` 
     
 </dd>
 </dl>
@@ -1794,7 +1794,7 @@ client.Billing.UpsertInvoice(
 <dl>
 <dd>
 
-**subtotal:** `int` 
+**subtotal:** `int64` 
     
 </dd>
 </dl>
@@ -1831,11 +1831,11 @@ request := &schematichq.ListMetersRequest{
         DisplayName: schematichq.String(
             "display_name",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.ListMeters(
@@ -1865,7 +1865,7 @@ client.Billing.ListMeters(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -1873,7 +1873,7 @@ client.Billing.ListMeters(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -1977,11 +1977,11 @@ request := &schematichq.ListPaymentMethodsRequest{
             "company_id",
         ),
         CustomerExternalID: "customer_external_id",
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.ListPaymentMethods(
@@ -2019,7 +2019,7 @@ client.Billing.ListPaymentMethods(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -2027,7 +2027,7 @@ client.Billing.ListPaymentMethods(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -2124,7 +2124,7 @@ client.Billing.UpsertPaymentMethod(
 <dl>
 <dd>
 
-**cardExpMonth:** `*int` 
+**cardExpMonth:** `*int64` 
     
 </dd>
 </dl>
@@ -2132,7 +2132,7 @@ client.Billing.UpsertPaymentMethod(
 <dl>
 <dd>
 
-**cardExpYear:** `*int` 
+**cardExpYear:** `*int64` 
     
 </dd>
 </dl>
@@ -2190,6 +2190,9 @@ client.Billing.UpsertPaymentMethod(
 
 ```go
 request := &schematichq.ListBillingPricesRequest{
+        Currency: schematichq.String(
+            "currency",
+        ),
         ForInitialPlan: schematichq.Bool(
             true,
         ),
@@ -2202,8 +2205,8 @@ request := &schematichq.ListBillingPricesRequest{
         IsActive: schematichq.Bool(
             true,
         ),
-        Price: schematichq.Int(
-            1,
+        Price: schematichq.Int64(
+            int64(1000000),
         ),
         ProductID: schematichq.String(
             "product_id",
@@ -2217,11 +2220,11 @@ request := &schematichq.ListBillingPricesRequest{
         WithMeter: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.ListBillingPrices(
@@ -2239,6 +2242,14 @@ client.Billing.ListBillingPrices(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**currency:** `*string` — Filter for prices in a specific currency (e.g. usd, eur)
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -2283,7 +2294,7 @@ client.Billing.ListBillingPrices(
 <dl>
 <dd>
 
-**price:** `*int` 
+**price:** `*int64` 
     
 </dd>
 </dl>
@@ -2347,7 +2358,7 @@ client.Billing.ListBillingPrices(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -2355,7 +2366,7 @@ client.Billing.ListBillingPrices(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -2386,7 +2397,7 @@ request := &schematichq.CreateBillingPriceRequestBody{
         ExternalAccountID: "external_account_id",
         Interval: "interval",
         IsActive: true,
-        Price: 1,
+        Price: int64(1000000),
         PriceExternalID: "price_external_id",
         PriceTiers: []*schematichq.CreateBillingPriceTierRequestBody{
             &schematichq.CreateBillingPriceTierRequestBody{
@@ -2463,7 +2474,7 @@ client.Billing.UpsertBillingPrice(
 <dl>
 <dd>
 
-**packageSize:** `*int` 
+**packageSize:** `*int64` 
     
 </dd>
 </dl>
@@ -2471,7 +2482,7 @@ client.Billing.UpsertBillingPrice(
 <dl>
 <dd>
 
-**price:** `int` 
+**price:** `int64` 
     
 </dd>
 </dl>
@@ -2597,6 +2608,9 @@ client.Billing.DeleteBillingProduct(
 
 ```go
 request := &schematichq.ListBillingProductPricesRequest{
+        Currency: schematichq.String(
+            "currency",
+        ),
         ForInitialPlan: schematichq.Bool(
             true,
         ),
@@ -2609,8 +2623,8 @@ request := &schematichq.ListBillingProductPricesRequest{
         IsActive: schematichq.Bool(
             true,
         ),
-        Price: schematichq.Int(
-            1,
+        Price: schematichq.Int64(
+            int64(1000000),
         ),
         ProductID: schematichq.String(
             "product_id",
@@ -2624,11 +2638,11 @@ request := &schematichq.ListBillingProductPricesRequest{
         WithMeter: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.ListBillingProductPrices(
@@ -2646,6 +2660,14 @@ client.Billing.ListBillingProductPrices(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**currency:** `*string` — Filter for prices in a specific currency (e.g. usd, eur)
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -2690,7 +2712,7 @@ client.Billing.ListBillingProductPrices(
 <dl>
 <dd>
 
-**price:** `*int` 
+**price:** `*int64` 
     
 </dd>
 </dl>
@@ -2754,7 +2776,7 @@ client.Billing.ListBillingProductPrices(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -2762,7 +2784,7 @@ client.Billing.ListBillingProductPrices(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -2935,11 +2957,11 @@ request := &schematichq.ListBillingProductsRequest{
         WithoutLinkedToPlan: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.ListBillingProducts(
@@ -3041,7 +3063,7 @@ client.Billing.ListBillingProducts(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -3049,7 +3071,7 @@ client.Billing.ListBillingProducts(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -3098,11 +3120,11 @@ request := &schematichq.CountBillingProductsRequest{
         WithoutLinkedToPlan: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Billing.CountBillingProducts(
@@ -3204,7 +3226,7 @@ client.Billing.CountBillingProducts(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -3212,7 +3234,7 @@ client.Billing.CountBillingProducts(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -3258,15 +3280,15 @@ request := &schematichq.CreateBillingSubscriptionRequestBody{
             &schematichq.BillingProductPricing{
                 Currency: "currency",
                 Interval: "interval",
-                Price: 1,
+                Price: int64(1000000),
                 PriceExternalID: "price_external_id",
                 ProductExternalID: "product_external_id",
-                Quantity: 1,
+                Quantity: int64(1000000),
                 UsageType: schematichq.BillingPriceUsageTypeLicensed,
             },
         },
         SubscriptionExternalID: "subscription_external_id",
-        TotalPrice: 1,
+        TotalPrice: int64(1000000),
     }
 client.Billing.UpsertBillingSubscription(
         context.TODO(),
@@ -3295,7 +3317,7 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
-**cancelAt:** `*int` 
+**cancelAt:** `*int64` 
     
 </dd>
 </dl>
@@ -3375,7 +3397,7 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
-**periodEnd:** `*int` 
+**periodEnd:** `*int64` 
     
 </dd>
 </dl>
@@ -3383,7 +3405,7 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
-**periodStart:** `*int` 
+**periodStart:** `*int64` 
     
 </dd>
 </dl>
@@ -3415,7 +3437,7 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
-**totalPrice:** `int` 
+**totalPrice:** `int64` 
     
 </dd>
 </dl>
@@ -3423,7 +3445,7 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
-**trialEnd:** `*int` 
+**trialEnd:** `*int64` 
     
 </dd>
 </dl>
@@ -3461,11 +3483,11 @@ request := &schematichq.ListBillingCreditsRequest{
         Name: schematichq.String(
             "name",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.ListBillingCredits(
@@ -3503,7 +3525,7 @@ client.Credits.ListBillingCredits(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -3511,7 +3533,7 @@ client.Credits.ListBillingCredits(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -3576,6 +3598,14 @@ client.Credits.CreateBillingCredit(
 <dl>
 <dd>
 
+**currencyPrices:** `[]*schematichq.CreditCurrencyPriceRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **defaultExpiryUnit:** `*schematichq.BillingCreditExpiryUnit` 
     
 </dd>
@@ -3584,7 +3614,7 @@ client.Credits.CreateBillingCredit(
 <dl>
 <dd>
 
-**defaultExpiryUnitCount:** `*int` 
+**defaultExpiryUnitCount:** `*int64` 
     
 </dd>
 </dl>
@@ -3624,7 +3654,7 @@ client.Credits.CreateBillingCredit(
 <dl>
 <dd>
 
-**perUnitPrice:** `*int` 
+**perUnitPrice:** `*int64` 
     
 </dd>
 </dl>
@@ -3757,6 +3787,14 @@ client.Credits.UpdateBillingCredit(
 <dl>
 <dd>
 
+**currencyPrices:** `[]*schematichq.CreditCurrencyPriceRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **defaultExpiryUnit:** `*schematichq.BillingCreditExpiryUnit` 
     
 </dd>
@@ -3765,7 +3803,7 @@ client.Credits.UpdateBillingCredit(
 <dl>
 <dd>
 
-**defaultExpiryUnitCount:** `*int` 
+**defaultExpiryUnitCount:** `*int64` 
     
 </dd>
 </dl>
@@ -3805,7 +3843,7 @@ client.Credits.UpdateBillingCredit(
 <dl>
 <dd>
 
-**perUnitPrice:** `*int` 
+**perUnitPrice:** `*int64` 
     
 </dd>
 </dl>
@@ -3903,14 +3941,14 @@ request := &schematichq.ListCreditBundlesRequest{
             "credit_id",
         ),
         Status: schematichq.BillingCreditBundleStatusActive.Ptr(),
-        BundleType: &schematichq.BillingCreditBundleType(
+        BundleType: schematichq.String(
             "fixed",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.ListCreditBundles(
@@ -3964,7 +4002,7 @@ client.Credits.ListCreditBundles(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -3972,7 +4010,7 @@ client.Credits.ListCreditBundles(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -4001,7 +4039,7 @@ request := &schematichq.CreateCreditBundleRequestBody{
         BundleName: "bundle_name",
         CreditID: "credit_id",
         Currency: "currency",
-        PricePerUnit: 1,
+        PricePerUnit: int64(1000000),
     }
 client.Credits.CreateCreditBundle(
         context.TODO(),
@@ -4054,6 +4092,14 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
+**currencyPrices:** `[]*schematichq.CreditBundleCurrencyPriceRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **expiryType:** `*schematichq.BillingCreditExpiryType` 
     
 </dd>
@@ -4070,7 +4116,7 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
-**expiryUnitCount:** `*int` 
+**expiryUnitCount:** `*int64` 
     
 </dd>
 </dl>
@@ -4078,7 +4124,7 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
-**pricePerUnit:** `int` 
+**pricePerUnit:** `int64` 
     
 </dd>
 </dl>
@@ -4094,7 +4140,7 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
-**quantity:** `*int` 
+**quantity:** `*int64` 
     
 </dd>
 </dl>
@@ -4173,7 +4219,7 @@ client.Credits.GetCreditBundle(
 ```go
 request := &schematichq.UpdateCreditBundleDetailsRequestBody{
         BundleName: "bundle_name",
-        PricePerUnit: 1,
+        PricePerUnit: int64(1000000),
     }
 client.Credits.UpdateCreditBundleDetails(
         context.TODO(),
@@ -4211,6 +4257,14 @@ client.Credits.UpdateCreditBundleDetails(
 <dl>
 <dd>
 
+**currencyPrices:** `[]*schematichq.CreditBundleCurrencyPriceRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **expiryType:** `*schematichq.BillingCreditExpiryType` 
     
 </dd>
@@ -4227,7 +4281,7 @@ client.Credits.UpdateCreditBundleDetails(
 <dl>
 <dd>
 
-**expiryUnitCount:** `*int` 
+**expiryUnitCount:** `*int64` 
     
 </dd>
 </dl>
@@ -4235,7 +4289,7 @@ client.Credits.UpdateCreditBundleDetails(
 <dl>
 <dd>
 
-**pricePerUnit:** `int` 
+**pricePerUnit:** `int64` 
     
 </dd>
 </dl>
@@ -4251,7 +4305,7 @@ client.Credits.UpdateCreditBundleDetails(
 <dl>
 <dd>
 
-**quantity:** `*int` 
+**quantity:** `*int64` 
     
 </dd>
 </dl>
@@ -4333,14 +4387,14 @@ request := &schematichq.CountCreditBundlesRequest{
             "credit_id",
         ),
         Status: schematichq.BillingCreditBundleStatusActive.Ptr(),
-        BundleType: &schematichq.BillingCreditBundleType(
+        BundleType: schematichq.String(
             "fixed",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.CountCreditBundles(
@@ -4394,7 +4448,7 @@ client.Credits.CountCreditBundles(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -4402,7 +4456,7 @@ client.Credits.CountCreditBundles(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -4431,11 +4485,11 @@ request := &schematichq.CountBillingCreditsRequest{
         Name: schematichq.String(
             "name",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.CountBillingCredits(
@@ -4473,7 +4527,7 @@ client.Credits.CountBillingCredits(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -4481,7 +4535,7 @@ client.Credits.CountBillingCredits(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -4563,7 +4617,7 @@ client.Credits.ZeroOutGrant(
 request := &schematichq.CreateCompanyCreditGrant{
         CompanyID: "company_id",
         CreditID: "credit_id",
-        Quantity: 1,
+        Quantity: int64(1000000),
         Reason: schematichq.BillingCreditGrantReasonBillingCreditAutoTopup,
     }
 client.Credits.GrantBillingCreditsToCompany(
@@ -4585,7 +4639,7 @@ client.Credits.GrantBillingCreditsToCompany(
 <dl>
 <dd>
 
-**billingPeriodsCount:** `*int` 
+**billingPeriodsCount:** `*int64` 
     
 </dd>
 </dl>
@@ -4602,6 +4656,14 @@ client.Credits.GrantBillingCreditsToCompany(
 <dd>
 
 **creditID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**currency:** `*string` 
     
 </dd>
 </dl>
@@ -4633,7 +4695,7 @@ client.Credits.GrantBillingCreditsToCompany(
 <dl>
 <dd>
 
-**expiryUnitCount:** `*int` 
+**expiryUnitCount:** `*int64` 
     
 </dd>
 </dl>
@@ -4641,7 +4703,7 @@ client.Credits.GrantBillingCreditsToCompany(
 <dl>
 <dd>
 
-**quantity:** `int` 
+**quantity:** `int64` 
     
 </dd>
 </dl>
@@ -4696,11 +4758,11 @@ request := &schematichq.CountCompanyGrantsRequest{
         ),
         Order: schematichq.CreditGrantSortOrderCreatedAt.Ptr(),
         Dir: schematichq.SortDirectionAsc.Ptr(),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.CountCompanyGrants(
@@ -4746,7 +4808,7 @@ client.Credits.CountCompanyGrants(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -4754,7 +4816,7 @@ client.Credits.CountCompanyGrants(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -4785,11 +4847,11 @@ request := &schematichq.ListCompanyGrantsRequest{
         ),
         Order: schematichq.CreditGrantSortOrderCreatedAt.Ptr(),
         Dir: schematichq.SortDirectionAsc.Ptr(),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.ListCompanyGrants(
@@ -4835,7 +4897,7 @@ client.Credits.ListCompanyGrants(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -4843,7 +4905,7 @@ client.Credits.ListCompanyGrants(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -4872,11 +4934,11 @@ request := &schematichq.CountBillingCreditsGrantsRequest{
         CreditID: schematichq.String(
             "credit_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.CountBillingCreditsGrants(
@@ -4914,7 +4976,7 @@ client.Credits.CountBillingCreditsGrants(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -4922,7 +4984,7 @@ client.Credits.CountBillingCreditsGrants(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -4951,11 +5013,11 @@ request := &schematichq.ListGrantsForCreditRequest{
         CreditID: schematichq.String(
             "credit_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.ListGrantsForCredit(
@@ -4993,7 +5055,7 @@ client.Credits.ListGrantsForCredit(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -5001,7 +5063,7 @@ client.Credits.ListGrantsForCredit(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -5041,11 +5103,11 @@ request := &schematichq.GetEnrichedCreditLedgerRequest{
         EndTime: schematichq.String(
             "end_time",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.GetEnrichedCreditLedger(
@@ -5115,7 +5177,7 @@ client.Credits.GetEnrichedCreditLedger(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -5123,7 +5185,7 @@ client.Credits.GetEnrichedCreditLedger(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -5163,11 +5225,11 @@ request := &schematichq.CountCreditLedgerRequest{
         EndTime: schematichq.String(
             "end_time",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.CountCreditLedger(
@@ -5237,7 +5299,7 @@ client.Credits.CountCreditLedger(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -5245,7 +5307,7 @@ client.Credits.CountCreditLedger(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -5280,11 +5342,11 @@ request := &schematichq.ListBillingPlanCreditGrantsRequest{
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.ListBillingPlanCreditGrants(
@@ -5346,7 +5408,7 @@ client.Credits.ListBillingPlanCreditGrants(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -5354,7 +5416,7 @@ client.Credits.ListBillingPlanCreditGrants(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -5380,7 +5442,7 @@ client.Credits.ListBillingPlanCreditGrants(
 
 ```go
 request := &schematichq.CreateBillingPlanCreditGrantRequestBody{
-        CreditAmount: 1,
+        CreditAmount: int64(1000000),
         CreditID: "credit_id",
         PlanID: "plan_id",
         ResetCadence: schematichq.BillingPlanCreditGrantResetCadenceDaily,
@@ -5555,11 +5617,11 @@ request := &schematichq.CountBillingPlanCreditGrantsRequest{
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.CountBillingPlanCreditGrants(
@@ -5621,7 +5683,7 @@ client.Credits.CountBillingPlanCreditGrants(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -5629,7 +5691,7 @@ client.Credits.CountBillingPlanCreditGrants(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -5669,11 +5731,11 @@ request := &schematichq.ListCreditEventLedgerRequest{
         StartTime: schematichq.String(
             "start_time",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.ListCreditEventLedger(
@@ -5743,7 +5805,7 @@ client.Credits.ListCreditEventLedger(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -5751,7 +5813,7 @@ client.Credits.ListCreditEventLedger(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -5791,11 +5853,11 @@ request := &schematichq.CountCreditEventLedgerRequest{
         StartTime: schematichq.String(
             "start_time",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Credits.CountCreditEventLedger(
@@ -5865,7 +5927,7 @@ client.Credits.CountCreditEventLedger(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -5873,7 +5935,7 @@ client.Credits.CountCreditEventLedger(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -5910,7 +5972,7 @@ request := &schematichq.ChangeSubscriptionInternalRequestBody{
         CreditBundles: []*schematichq.UpdateCreditBundleRequestBody{
             &schematichq.UpdateCreditBundleRequestBody{
                 BundleID: "bundle_id",
-                Quantity: 1,
+                Quantity: int64(1000000),
             },
         },
         NewPlanID: "new_plan_id",
@@ -5918,7 +5980,7 @@ request := &schematichq.ChangeSubscriptionInternalRequestBody{
         PayInAdvance: []*schematichq.UpdatePayInAdvanceRequestBody{
             &schematichq.UpdatePayInAdvanceRequestBody{
                 PriceID: "price_id",
-                Quantity: 1,
+                Quantity: int64(1000000),
             },
         },
         SkipTrial: true,
@@ -6033,7 +6095,7 @@ request := &schematichq.ChangeSubscriptionInternalRequestBody{
         CreditBundles: []*schematichq.UpdateCreditBundleRequestBody{
             &schematichq.UpdateCreditBundleRequestBody{
                 BundleID: "bundle_id",
-                Quantity: 1,
+                Quantity: int64(1000000),
             },
         },
         NewPlanID: "new_plan_id",
@@ -6041,7 +6103,7 @@ request := &schematichq.ChangeSubscriptionInternalRequestBody{
         PayInAdvance: []*schematichq.UpdatePayInAdvanceRequestBody{
             &schematichq.UpdatePayInAdvanceRequestBody{
                 PriceID: "price_id",
-                Quantity: 1,
+                Quantity: int64(1000000),
             },
         },
         SkipTrial: true,
@@ -6100,13 +6162,13 @@ request := &schematichq.ManagePlanRequest{
         CreditBundles: []*schematichq.UpdateCreditBundleRequestBody{
             &schematichq.UpdateCreditBundleRequestBody{
                 BundleID: "bundle_id",
-                Quantity: 1,
+                Quantity: int64(1000000),
             },
         },
         PayInAdvanceEntitlements: []*schematichq.UpdatePayInAdvanceRequestBody{
             &schematichq.UpdatePayInAdvanceRequestBody{
                 PriceID: "price_id",
-                Quantity: 1,
+                Quantity: int64(1000000),
             },
         },
     }
@@ -6164,13 +6226,13 @@ request := &schematichq.ManagePlanRequest{
         CreditBundles: []*schematichq.UpdateCreditBundleRequestBody{
             &schematichq.UpdateCreditBundleRequestBody{
                 BundleID: "bundle_id",
-                Quantity: 1,
+                Quantity: int64(1000000),
             },
         },
         PayInAdvanceEntitlements: []*schematichq.UpdatePayInAdvanceRequestBody{
             &schematichq.UpdatePayInAdvanceRequestBody{
                 PriceID: "price_id",
-                Quantity: 1,
+                Quantity: int64(1000000),
             },
         },
     }
@@ -6368,11 +6430,11 @@ request := &schematichq.ListCompaniesRequest{
         WithSubscription: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.ListCompanies(
@@ -6522,7 +6584,7 @@ client.Companies.ListCompanies(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -6530,7 +6592,7 @@ client.Companies.ListCompanies(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -6749,11 +6811,11 @@ request := &schematichq.CountCompaniesRequest{
         WithSubscription: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.CountCompanies(
@@ -6903,7 +6965,7 @@ client.Companies.CountCompanies(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -6911,7 +6973,7 @@ client.Companies.CountCompanies(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -7025,6 +7087,24 @@ client.Companies.DeleteCompanyByKeys(
 <dl>
 <dd>
 
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Company lookup is determined to resolve a company from its keys, similar to how many of our other apis work. 
+The following approaches will all work to resolve a company and any of them are appropriate:
+1. `/companies/lookup?keys={"foo": "bar", "fizz": "buzz"}`
+2. `/companies/lookup?keys[foo]=bar&keys[fizz]=buzz`
+2. `/companies/lookup?foo=bar&fizz=buzz`
+</dd>
+</dl>
+</dd>
+</dl>
+
 #### 🔌 Usage
 
 <dl>
@@ -7090,11 +7170,11 @@ request := &schematichq.ListCompanyMembershipsRequest{
         UserID: schematichq.String(
             "user_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.ListCompanyMemberships(
@@ -7132,7 +7212,7 @@ client.Companies.ListCompanyMemberships(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -7140,7 +7220,7 @@ client.Companies.ListCompanyMemberships(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -7269,11 +7349,11 @@ request := &schematichq.GetActiveCompanySubscriptionRequest{
         CompanyID: schematichq.String(
             "company_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.GetActiveCompanySubscription(
@@ -7311,7 +7391,7 @@ client.Companies.GetActiveCompanySubscription(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -7319,7 +7399,7 @@ client.Companies.GetActiveCompanySubscription(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -7399,11 +7479,11 @@ request := &schematichq.ListEntityKeyDefinitionsRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.ListEntityKeyDefinitions(
@@ -7449,7 +7529,7 @@ client.Companies.ListEntityKeyDefinitions(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -7457,7 +7537,7 @@ client.Companies.ListEntityKeyDefinitions(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -7487,11 +7567,11 @@ request := &schematichq.CountEntityKeyDefinitionsRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.CountEntityKeyDefinitions(
@@ -7537,7 +7617,7 @@ client.Companies.CountEntityKeyDefinitions(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -7545,7 +7625,7 @@ client.Companies.CountEntityKeyDefinitions(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -7576,11 +7656,11 @@ request := &schematichq.ListEntityTraitDefinitionsRequest{
             "q",
         ),
         TraitType: schematichq.TraitTypeBoolean.Ptr(),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.ListEntityTraitDefinitions(
@@ -7642,7 +7722,7 @@ client.Companies.ListEntityTraitDefinitions(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -7650,7 +7730,7 @@ client.Companies.ListEntityTraitDefinitions(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -7864,11 +7944,11 @@ request := &schematichq.CountEntityTraitDefinitionsRequest{
             "q",
         ),
         TraitType: schematichq.TraitTypeBoolean.Ptr(),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.CountEntityTraitDefinitions(
@@ -7930,7 +8010,7 @@ client.Companies.CountEntityTraitDefinitions(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -7938,7 +8018,7 @@ client.Companies.CountEntityTraitDefinitions(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -7968,11 +8048,11 @@ request := &schematichq.GetEntityTraitValuesRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.GetEntityTraitValues(
@@ -8010,7 +8090,7 @@ client.Companies.GetEntityTraitValues(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -8018,7 +8098,7 @@ client.Companies.GetEntityTraitValues(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -8053,11 +8133,11 @@ request := &schematichq.ListPlanChangesRequest{
         CompanyID: schematichq.String(
             "company_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.ListPlanChanges(
@@ -8119,7 +8199,7 @@ client.Companies.ListPlanChanges(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -8127,7 +8207,7 @@ client.Companies.ListPlanChanges(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -8203,11 +8283,11 @@ request := &schematichq.ListPlanTraitsRequest{
         TraitID: schematichq.String(
             "trait_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.ListPlanTraits(
@@ -8261,7 +8341,7 @@ client.Companies.ListPlanTraits(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -8269,7 +8349,7 @@ client.Companies.ListPlanTraits(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -8589,11 +8669,11 @@ request := &schematichq.CountPlanTraitsRequest{
         TraitID: schematichq.String(
             "trait_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.CountPlanTraits(
@@ -8647,7 +8727,7 @@ client.Companies.CountPlanTraits(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -8655,7 +8735,7 @@ client.Companies.CountPlanTraits(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -8740,11 +8820,11 @@ request := &schematichq.ListUsersRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.ListUsers(
@@ -8798,7 +8878,7 @@ client.Companies.ListUsers(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -8806,7 +8886,7 @@ client.Companies.ListUsers(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -8978,11 +9058,11 @@ request := &schematichq.CountUsersRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Companies.CountUsers(
@@ -9036,7 +9116,7 @@ client.Companies.CountUsers(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -9044,7 +9124,7 @@ client.Companies.CountUsers(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -9230,11 +9310,11 @@ request := &schematichq.ListCompanyOverridesRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.ListCompanyOverrides(
@@ -9312,7 +9392,7 @@ client.Entitlements.ListCompanyOverrides(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -9320,7 +9400,7 @@ client.Entitlements.ListCompanyOverrides(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -9441,7 +9521,7 @@ client.Entitlements.CreateCompanyOverride(
 <dl>
 <dd>
 
-**valueNumeric:** `*int` 
+**valueNumeric:** `*int64` 
     
 </dd>
 </dl>
@@ -9613,7 +9693,7 @@ client.Entitlements.UpdateCompanyOverride(
 <dl>
 <dd>
 
-**valueNumeric:** `*int` 
+**valueNumeric:** `*int64` 
     
 </dd>
 </dl>
@@ -9711,11 +9791,11 @@ request := &schematichq.CountCompanyOverridesRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.CountCompanyOverrides(
@@ -9793,7 +9873,7 @@ client.Entitlements.CountCompanyOverrides(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -9801,7 +9881,7 @@ client.Entitlements.CountCompanyOverrides(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -9831,11 +9911,11 @@ request := &schematichq.ListFeatureCompaniesRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.ListFeatureCompanies(
@@ -9873,7 +9953,7 @@ client.Entitlements.ListFeatureCompanies(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -9881,7 +9961,7 @@ client.Entitlements.ListFeatureCompanies(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -9911,11 +9991,11 @@ request := &schematichq.CountFeatureCompaniesRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.CountFeatureCompanies(
@@ -9953,7 +10033,7 @@ client.Entitlements.CountFeatureCompanies(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -9961,7 +10041,7 @@ client.Entitlements.CountFeatureCompanies(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -9999,11 +10079,11 @@ request := &schematichq.ListFeatureUsageRequest{
         WithoutNegativeEntitlements: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.ListFeatureUsage(
@@ -10073,7 +10153,7 @@ client.Entitlements.ListFeatureUsage(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -10081,7 +10161,7 @@ client.Entitlements.ListFeatureUsage(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -10206,11 +10286,11 @@ request := &schematichq.CountFeatureUsageRequest{
         WithoutNegativeEntitlements: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.CountFeatureUsage(
@@ -10280,7 +10360,7 @@ client.Entitlements.CountFeatureUsage(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -10288,7 +10368,7 @@ client.Entitlements.CountFeatureUsage(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -10318,11 +10398,11 @@ request := &schematichq.ListFeatureUsersRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.ListFeatureUsers(
@@ -10360,7 +10440,7 @@ client.Entitlements.ListFeatureUsers(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -10368,7 +10448,7 @@ client.Entitlements.ListFeatureUsers(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -10398,11 +10478,11 @@ request := &schematichq.CountFeatureUsersRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.CountFeatureUsers(
@@ -10440,7 +10520,7 @@ client.Entitlements.CountFeatureUsers(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -10448,7 +10528,7 @@ client.Entitlements.CountFeatureUsers(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -10489,11 +10569,11 @@ request := &schematichq.ListPlanEntitlementsRequest{
         WithMeteredProducts: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.ListPlanEntitlements(
@@ -10587,7 +10667,7 @@ client.Entitlements.ListPlanEntitlements(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -10595,7 +10675,7 @@ client.Entitlements.ListPlanEntitlements(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -10652,7 +10732,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**billingThreshold:** `*int` 
+**billingThreshold:** `*int64` 
     
 </dd>
 </dl>
@@ -10716,7 +10796,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**monthlyUnitPrice:** `*int` 
+**monthlyUnitPrice:** `*int64` 
     
 </dd>
 </dl>
@@ -10772,7 +10852,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**softLimit:** `*int` 
+**softLimit:** `*int64` 
     
 </dd>
 </dl>
@@ -10804,7 +10884,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**valueNumeric:** `*int` 
+**valueNumeric:** `*int64` 
     
 </dd>
 </dl>
@@ -10844,7 +10924,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**yearlyUnitPrice:** `*int` 
+**yearlyUnitPrice:** `*int64` 
     
 </dd>
 </dl>
@@ -10960,7 +11040,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**billingThreshold:** `*int` 
+**billingThreshold:** `*int64` 
     
 </dd>
 </dl>
@@ -11016,7 +11096,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**monthlyUnitPrice:** `*int` 
+**monthlyUnitPrice:** `*int64` 
     
 </dd>
 </dl>
@@ -11056,7 +11136,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**softLimit:** `*int` 
+**softLimit:** `*int64` 
     
 </dd>
 </dl>
@@ -11088,7 +11168,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**valueNumeric:** `*int` 
+**valueNumeric:** `*int64` 
     
 </dd>
 </dl>
@@ -11128,7 +11208,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**yearlyUnitPrice:** `*int` 
+**yearlyUnitPrice:** `*int64` 
     
 </dd>
 </dl>
@@ -11221,11 +11301,11 @@ request := &schematichq.CountPlanEntitlementsRequest{
         WithMeteredProducts: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Entitlements.CountPlanEntitlements(
@@ -11319,7 +11399,7 @@ client.Entitlements.CountPlanEntitlements(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -11327,7 +11407,7 @@ client.Entitlements.CountPlanEntitlements(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -11540,6 +11620,9 @@ request := &schematichq.ListPlansRequest{
         HasProductID: schematichq.Bool(
             true,
         ),
+        IncludeDraftVersions: schematichq.Bool(
+            true,
+        ),
         PlanType: schematichq.PlanTypePlan.Ptr(),
         Q: schematichq.String(
             "q",
@@ -11550,11 +11633,11 @@ request := &schematichq.ListPlansRequest{
         WithoutPaidProductID: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Plans.ListPlans(
@@ -11624,6 +11707,14 @@ client.Plans.ListPlans(
 <dl>
 <dd>
 
+**includeDraftVersions:** `*bool` — Include billing settings from draft versions for plans which have draft version
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **planType:** `*schematichq.PlanType` — Filter by plan type
     
 </dd>
@@ -11656,7 +11747,7 @@ client.Plans.ListPlans(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -11664,7 +11755,7 @@ client.Plans.ListPlans(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -11969,6 +12060,9 @@ request := &schematichq.CountPlansRequest{
         HasProductID: schematichq.Bool(
             true,
         ),
+        IncludeDraftVersions: schematichq.Bool(
+            true,
+        ),
         PlanType: schematichq.PlanTypePlan.Ptr(),
         Q: schematichq.String(
             "q",
@@ -11979,11 +12073,11 @@ request := &schematichq.CountPlansRequest{
         WithoutPaidProductID: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Plans.CountPlans(
@@ -12053,6 +12147,14 @@ client.Plans.CountPlans(
 <dl>
 <dd>
 
+**includeDraftVersions:** `*bool` — Include billing settings from draft versions for plans which have draft version
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **planType:** `*schematichq.PlanType` — Filter by plan type
     
 </dd>
@@ -12085,7 +12187,7 @@ client.Plans.CountPlans(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -12093,7 +12195,7 @@ client.Plans.CountPlans(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -12176,9 +12278,15 @@ client.Plans.ListPlanIssues(
 <dd>
 
 ```go
+request := &schematichq.DeletePlanVersionRequest{
+        PromoteArchivedVersion: schematichq.Bool(
+            true,
+        ),
+    }
 client.Plans.DeletePlanVersion(
         context.TODO(),
         "plan_id",
+        request,
     )
 }
 ```
@@ -12196,6 +12304,14 @@ client.Plans.DeletePlanVersion(
 <dd>
 
 **planID:** `string` — plan_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**promoteArchivedVersion:** `*bool` 
     
 </dd>
 </dl>
@@ -12292,11 +12408,11 @@ request := &schematichq.ListComponentsRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Components.ListComponents(
@@ -12326,7 +12442,7 @@ client.Components.ListComponents(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -12334,7 +12450,7 @@ client.Components.ListComponents(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -12593,11 +12709,11 @@ request := &schematichq.CountComponentsRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Components.CountComponents(
@@ -12627,7 +12743,7 @@ client.Components.CountComponents(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -12635,7 +12751,7 @@ client.Components.CountComponents(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -12890,11 +13006,11 @@ request := &schematichq.GetEventSummariesRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Events.GetEventSummaries(
@@ -12932,7 +13048,7 @@ client.Events.GetEventSummaries(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -12940,7 +13056,7 @@ client.Events.GetEventSummaries(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -12978,11 +13094,11 @@ request := &schematichq.ListEventsRequest{
         UserID: schematichq.String(
             "user_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Events.ListEvents(
@@ -13044,7 +13160,7 @@ client.Events.ListEvents(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -13052,7 +13168,7 @@ client.Events.ListEvents(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -13213,11 +13329,11 @@ request := &schematichq.ListFeaturesRequest{
         BooleanRequireEvent: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Features.ListFeatures(
@@ -13295,7 +13411,7 @@ client.Features.ListFeatures(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -13303,7 +13419,7 @@ client.Features.ListFeatures(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -13695,11 +13811,11 @@ request := &schematichq.CountFeaturesRequest{
         BooleanRequireEvent: schematichq.Bool(
             true,
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Features.CountFeatures(
@@ -13777,7 +13893,7 @@ client.Features.CountFeatures(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -13785,7 +13901,7 @@ client.Features.CountFeatures(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -13817,11 +13933,11 @@ request := &schematichq.ListFlagsRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Features.ListFlags(
@@ -13867,7 +13983,7 @@ client.Features.ListFlags(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -13875,7 +13991,7 @@ client.Features.ListFlags(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -14129,7 +14245,7 @@ request := &schematichq.UpdateFlagRulesRequestBody{
                     },
                 },
                 Name: "name",
-                Priority: 1,
+                Priority: int64(1000000),
                 Value: true,
             },
         },
@@ -14342,11 +14458,11 @@ request := &schematichq.CountFlagsRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Features.CountFlags(
@@ -14392,7 +14508,7 @@ client.Features.CountFlags(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -14400,7 +14516,7 @@ client.Features.CountFlags(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -14936,7 +15052,7 @@ client.Plangroups.CreatePlanGroup(
 <dl>
 <dd>
 
-**trialDays:** `*int` 
+**trialDays:** `*int64` 
     
 </dd>
 </dl>
@@ -15271,7 +15387,7 @@ client.Plangroups.UpdatePlanGroup(
 <dl>
 <dd>
 
-**trialDays:** `*int` 
+**trialDays:** `*int64` 
     
 </dd>
 </dl>
@@ -15329,11 +15445,11 @@ request := &schematichq.ListCompanyMigrationsRequest{
             "q",
         ),
         Status: schematichq.PlanVersionCompanyMigrationStatusCompleted.Ptr(),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Planmigrations.ListCompanyMigrations(
@@ -15379,7 +15495,7 @@ client.Planmigrations.ListCompanyMigrations(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -15387,7 +15503,7 @@ client.Planmigrations.ListCompanyMigrations(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -15420,11 +15536,11 @@ request := &schematichq.CountCompanyMigrationsRequest{
             "q",
         ),
         Status: schematichq.PlanVersionCompanyMigrationStatusCompleted.Ptr(),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Planmigrations.CountCompanyMigrations(
@@ -15470,7 +15586,7 @@ client.Planmigrations.CountCompanyMigrations(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -15478,7 +15594,7 @@ client.Planmigrations.CountCompanyMigrations(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -15508,11 +15624,11 @@ request := &schematichq.ListMigrationsRequest{
             "plan_version_id",
         ),
         Status: schematichq.PlanVersionMigrationStatusCompleted.Ptr(),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Planmigrations.ListMigrations(
@@ -15550,7 +15666,7 @@ client.Planmigrations.ListMigrations(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -15558,7 +15674,7 @@ client.Planmigrations.ListMigrations(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -15632,11 +15748,11 @@ request := &schematichq.CountMigrationsRequest{
             "plan_version_id",
         ),
         Status: schematichq.PlanVersionMigrationStatusCompleted.Ptr(),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Planmigrations.CountMigrations(
@@ -15674,7 +15790,7 @@ client.Planmigrations.CountMigrations(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -15682,7 +15798,7 @@ client.Planmigrations.CountMigrations(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -15742,11 +15858,11 @@ request := &schematichq.ListScheduledCheckoutsRequest{
             "company_id",
         ),
         Status: schematichq.ScheduledCheckoutStatusCancelled.Ptr(),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Scheduledcheckout.ListScheduledCheckouts(
@@ -15784,7 +15900,7 @@ client.Scheduledcheckout.ListScheduledCheckouts(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -15792,7 +15908,7 @@ client.Scheduledcheckout.ListScheduledCheckouts(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -16068,11 +16184,11 @@ request := &schematichq.ListWebhookEventsRequest{
         WebhookID: schematichq.String(
             "webhook_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Webhooks.ListWebhookEvents(
@@ -16118,7 +16234,7 @@ client.Webhooks.ListWebhookEvents(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -16126,7 +16242,7 @@ client.Webhooks.ListWebhookEvents(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -16202,11 +16318,11 @@ request := &schematichq.CountWebhookEventsRequest{
         WebhookID: schematichq.String(
             "webhook_id",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Webhooks.CountWebhookEvents(
@@ -16252,7 +16368,7 @@ client.Webhooks.CountWebhookEvents(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -16260,7 +16376,7 @@ client.Webhooks.CountWebhookEvents(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -16289,11 +16405,11 @@ request := &schematichq.ListWebhooksRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Webhooks.ListWebhooks(
@@ -16323,7 +16439,7 @@ client.Webhooks.ListWebhooks(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -16331,7 +16447,7 @@ client.Webhooks.ListWebhooks(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -16625,11 +16741,11 @@ request := &schematichq.CountWebhooksRequest{
         Q: schematichq.String(
             "q",
         ),
-        Limit: schematichq.Int(
-            1,
+        Limit: schematichq.Int64(
+            int64(1000000),
         ),
-        Offset: schematichq.Int(
-            1,
+        Offset: schematichq.Int64(
+            int64(1000000),
         ),
     }
 client.Webhooks.CountWebhooks(
@@ -16659,7 +16775,7 @@ client.Webhooks.CountWebhooks(
 <dl>
 <dd>
 
-**limit:** `*int` — Page limit (default 100)
+**limit:** `*int64` — Page limit (default 100)
     
 </dd>
 </dl>
@@ -16667,7 +16783,7 @@ client.Webhooks.CountWebhooks(
 <dl>
 <dd>
 
-**offset:** `*int` — Page offset (default 0)
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -16678,3 +16794,4 @@ client.Webhooks.CountWebhooks(
 </dd>
 </dl>
 </details>
+

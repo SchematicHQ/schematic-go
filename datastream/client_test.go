@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -85,11 +84,11 @@ func setupMockWebSocketServer() (*httptest.Server, chan string, chan string) {
 		if err != nil {
 			return
 		}
-		defer conn.Close()
+		defer func() { _ = conn.Close() }()
 
 		// Immediately send flags to client on connection
 		flagsData := createMockFlagsData()
-		conn.WriteMessage(websocket.TextMessage, []byte(flagsData))
+		_ = conn.WriteMessage(websocket.TextMessage, []byte(flagsData))
 
 		// Handle incoming messages
 		go func() {
@@ -104,7 +103,7 @@ func setupMockWebSocketServer() (*httptest.Server, chan string, chan string) {
 
 		// Send outgoing messages
 		for msg := range outgoingMessages {
-			conn.WriteMessage(websocket.TextMessage, []byte(msg))
+			_ = conn.WriteMessage(websocket.TextMessage, []byte(msg))
 		}
 	}))
 
@@ -270,7 +269,7 @@ func TestCheckFlagCompany(t *testing.T) {
 	go func() {
 		for msg := range incomingMessages {
 			var req schematicdatastreamws.DataStreamBaseReq
-			json.Unmarshal([]byte(msg), &req)
+			_ = json.Unmarshal([]byte(msg), &req)
 
 			if req.Data.EntityType == schematicdatastreamws.EntityTypeCompany {
 				companyID := req.Data.Keys["company_id"]
@@ -325,7 +324,7 @@ func TestCheckFlagUser(t *testing.T) {
 	go func() {
 		for msg := range incomingMessages {
 			var req schematicdatastreamws.DataStreamBaseReq
-			json.Unmarshal([]byte(msg), &req)
+			_ = json.Unmarshal([]byte(msg), &req)
 
 			if req.Data.EntityType == schematicdatastreamws.EntityTypeUser {
 				companyID := req.Data.Keys["user_id"]
@@ -392,7 +391,7 @@ func TestSingleFlagMessage(t *testing.T) {
 		go func() {
 			for msg := range incomingMessages {
 				var req schematicdatastreamws.DataStreamBaseReq
-				json.Unmarshal([]byte(msg), &req)
+				_ = json.Unmarshal([]byte(msg), &req)
 
 				if req.Data.EntityType == schematicdatastreamws.EntityTypeCompany {
 					companyID := req.Data.Keys["company_id"]
@@ -447,7 +446,7 @@ func TestSingleFlagMessage(t *testing.T) {
 		go func() {
 			for msg := range incomingMessages {
 				var req schematicdatastreamws.DataStreamBaseReq
-				json.Unmarshal([]byte(msg), &req)
+				_ = json.Unmarshal([]byte(msg), &req)
 
 				if req.Data.EntityType == schematicdatastreamws.EntityTypeCompany {
 					companyID := req.Data.Keys["company_id"]
@@ -744,11 +743,6 @@ func TestNewDataStreamClientFlagCache(t *testing.T) {
 		// The client should use the provided cache, but we can't easily verify this
 		// without accessing private fields. The test ensures the client creation works.
 	})
-}
-
-// Helper function to create cache keys in the same format as the datastream package
-func createTestCacheKey(resourceType string, key string, value string) string {
-	return fmt.Sprintf("schematic:%s:%s:%s:%s", resourceType, rulesengine.VersionKey, strings.ToLower(key), strings.ToLower(value))
 }
 
 // Helper to create a company message with specific ID and keys

@@ -42,9 +42,9 @@ type CountBillingProductsRequest struct {
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -129,14 +129,14 @@ func (c *CountBillingProductsRequest) SetWithoutLinkedToPlan(withoutLinkedToPlan
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingProductsRequest) SetLimit(limit *int) {
+func (c *CountBillingProductsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countBillingProductsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingProductsRequest) SetOffset(offset *int) {
+func (c *CountBillingProductsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countBillingProductsRequestFieldOffset)
 }
@@ -156,9 +156,9 @@ type CountCustomersRequest struct {
 	ProviderType *BillingProviderType `json:"-" url:"provider_type,omitempty"`
 	Q            *string              `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -201,37 +201,40 @@ func (c *CountCustomersRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCustomersRequest) SetLimit(limit *int) {
+func (c *CountCustomersRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCustomersRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCustomersRequest) SetOffset(offset *int) {
+func (c *CountCustomersRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCustomersRequestFieldOffset)
 }
 
 var (
-	listBillingPricesRequestFieldForInitialPlan     = big.NewInt(1 << 0)
-	listBillingPricesRequestFieldForTrialExpiryPlan = big.NewInt(1 << 1)
-	listBillingPricesRequestFieldIDs                = big.NewInt(1 << 2)
-	listBillingPricesRequestFieldInterval           = big.NewInt(1 << 3)
-	listBillingPricesRequestFieldIsActive           = big.NewInt(1 << 4)
-	listBillingPricesRequestFieldPrice              = big.NewInt(1 << 5)
-	listBillingPricesRequestFieldProductID          = big.NewInt(1 << 6)
-	listBillingPricesRequestFieldProductIDs         = big.NewInt(1 << 7)
-	listBillingPricesRequestFieldProviderType       = big.NewInt(1 << 8)
-	listBillingPricesRequestFieldQ                  = big.NewInt(1 << 9)
-	listBillingPricesRequestFieldTiersMode          = big.NewInt(1 << 10)
-	listBillingPricesRequestFieldUsageType          = big.NewInt(1 << 11)
-	listBillingPricesRequestFieldWithMeter          = big.NewInt(1 << 12)
-	listBillingPricesRequestFieldLimit              = big.NewInt(1 << 13)
-	listBillingPricesRequestFieldOffset             = big.NewInt(1 << 14)
+	listBillingPricesRequestFieldCurrency           = big.NewInt(1 << 0)
+	listBillingPricesRequestFieldForInitialPlan     = big.NewInt(1 << 1)
+	listBillingPricesRequestFieldForTrialExpiryPlan = big.NewInt(1 << 2)
+	listBillingPricesRequestFieldIDs                = big.NewInt(1 << 3)
+	listBillingPricesRequestFieldInterval           = big.NewInt(1 << 4)
+	listBillingPricesRequestFieldIsActive           = big.NewInt(1 << 5)
+	listBillingPricesRequestFieldPrice              = big.NewInt(1 << 6)
+	listBillingPricesRequestFieldProductID          = big.NewInt(1 << 7)
+	listBillingPricesRequestFieldProductIDs         = big.NewInt(1 << 8)
+	listBillingPricesRequestFieldProviderType       = big.NewInt(1 << 9)
+	listBillingPricesRequestFieldQ                  = big.NewInt(1 << 10)
+	listBillingPricesRequestFieldTiersMode          = big.NewInt(1 << 11)
+	listBillingPricesRequestFieldUsageType          = big.NewInt(1 << 12)
+	listBillingPricesRequestFieldWithMeter          = big.NewInt(1 << 13)
+	listBillingPricesRequestFieldLimit              = big.NewInt(1 << 14)
+	listBillingPricesRequestFieldOffset             = big.NewInt(1 << 15)
 )
 
 type ListBillingPricesRequest struct {
+	// Filter for prices in a specific currency (e.g. usd, eur)
+	Currency *string `json:"-" url:"currency,omitempty"`
 	// Filter for prices valid for initial plans (free prices only)
 	ForInitialPlan *bool `json:"-" url:"for_initial_plan,omitempty"`
 	// Filter for prices valid for trial expiry plans (free prices only)
@@ -240,7 +243,7 @@ type ListBillingPricesRequest struct {
 	Interval           *string   `json:"-" url:"interval,omitempty"`
 	// Filter for active prices on active products (defaults to true if not specified)
 	IsActive     *bool                  `json:"-" url:"is_active,omitempty"`
-	Price        *int                   `json:"-" url:"price,omitempty"`
+	Price        *int64                 `json:"-" url:"price,omitempty"`
 	ProductID    *string                `json:"-" url:"product_id,omitempty"`
 	ProductIDs   []*string              `json:"-" url:"product_ids,omitempty"`
 	ProviderType *BillingProviderType   `json:"-" url:"provider_type,omitempty"`
@@ -250,9 +253,9 @@ type ListBillingPricesRequest struct {
 	// Filter for prices with a meter
 	WithMeter *bool `json:"-" url:"with_meter,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -263,6 +266,13 @@ func (l *ListBillingPricesRequest) require(field *big.Int) {
 		l.explicitFields = big.NewInt(0)
 	}
 	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingPricesRequest) SetCurrency(currency *string) {
+	l.Currency = currency
+	l.require(listBillingPricesRequestFieldCurrency)
 }
 
 // SetForInitialPlan sets the ForInitialPlan field and marks it as non-optional;
@@ -302,7 +312,7 @@ func (l *ListBillingPricesRequest) SetIsActive(isActive *bool) {
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPricesRequest) SetPrice(price *int) {
+func (l *ListBillingPricesRequest) SetPrice(price *int64) {
 	l.Price = price
 	l.require(listBillingPricesRequestFieldPrice)
 }
@@ -358,37 +368,40 @@ func (l *ListBillingPricesRequest) SetWithMeter(withMeter *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPricesRequest) SetLimit(limit *int) {
+func (l *ListBillingPricesRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingPricesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPricesRequest) SetOffset(offset *int) {
+func (l *ListBillingPricesRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingPricesRequestFieldOffset)
 }
 
 var (
-	listBillingProductPricesRequestFieldForInitialPlan     = big.NewInt(1 << 0)
-	listBillingProductPricesRequestFieldForTrialExpiryPlan = big.NewInt(1 << 1)
-	listBillingProductPricesRequestFieldIDs                = big.NewInt(1 << 2)
-	listBillingProductPricesRequestFieldInterval           = big.NewInt(1 << 3)
-	listBillingProductPricesRequestFieldIsActive           = big.NewInt(1 << 4)
-	listBillingProductPricesRequestFieldPrice              = big.NewInt(1 << 5)
-	listBillingProductPricesRequestFieldProductID          = big.NewInt(1 << 6)
-	listBillingProductPricesRequestFieldProductIDs         = big.NewInt(1 << 7)
-	listBillingProductPricesRequestFieldProviderType       = big.NewInt(1 << 8)
-	listBillingProductPricesRequestFieldQ                  = big.NewInt(1 << 9)
-	listBillingProductPricesRequestFieldTiersMode          = big.NewInt(1 << 10)
-	listBillingProductPricesRequestFieldUsageType          = big.NewInt(1 << 11)
-	listBillingProductPricesRequestFieldWithMeter          = big.NewInt(1 << 12)
-	listBillingProductPricesRequestFieldLimit              = big.NewInt(1 << 13)
-	listBillingProductPricesRequestFieldOffset             = big.NewInt(1 << 14)
+	listBillingProductPricesRequestFieldCurrency           = big.NewInt(1 << 0)
+	listBillingProductPricesRequestFieldForInitialPlan     = big.NewInt(1 << 1)
+	listBillingProductPricesRequestFieldForTrialExpiryPlan = big.NewInt(1 << 2)
+	listBillingProductPricesRequestFieldIDs                = big.NewInt(1 << 3)
+	listBillingProductPricesRequestFieldInterval           = big.NewInt(1 << 4)
+	listBillingProductPricesRequestFieldIsActive           = big.NewInt(1 << 5)
+	listBillingProductPricesRequestFieldPrice              = big.NewInt(1 << 6)
+	listBillingProductPricesRequestFieldProductID          = big.NewInt(1 << 7)
+	listBillingProductPricesRequestFieldProductIDs         = big.NewInt(1 << 8)
+	listBillingProductPricesRequestFieldProviderType       = big.NewInt(1 << 9)
+	listBillingProductPricesRequestFieldQ                  = big.NewInt(1 << 10)
+	listBillingProductPricesRequestFieldTiersMode          = big.NewInt(1 << 11)
+	listBillingProductPricesRequestFieldUsageType          = big.NewInt(1 << 12)
+	listBillingProductPricesRequestFieldWithMeter          = big.NewInt(1 << 13)
+	listBillingProductPricesRequestFieldLimit              = big.NewInt(1 << 14)
+	listBillingProductPricesRequestFieldOffset             = big.NewInt(1 << 15)
 )
 
 type ListBillingProductPricesRequest struct {
+	// Filter for prices in a specific currency (e.g. usd, eur)
+	Currency *string `json:"-" url:"currency,omitempty"`
 	// Filter for prices valid for initial plans (free prices only)
 	ForInitialPlan *bool `json:"-" url:"for_initial_plan,omitempty"`
 	// Filter for prices valid for trial expiry plans (free prices only)
@@ -397,7 +410,7 @@ type ListBillingProductPricesRequest struct {
 	Interval           *string   `json:"-" url:"interval,omitempty"`
 	// Filter for active prices on active products (defaults to true if not specified)
 	IsActive     *bool                  `json:"-" url:"is_active,omitempty"`
-	Price        *int                   `json:"-" url:"price,omitempty"`
+	Price        *int64                 `json:"-" url:"price,omitempty"`
 	ProductID    *string                `json:"-" url:"product_id,omitempty"`
 	ProductIDs   []*string              `json:"-" url:"product_ids,omitempty"`
 	ProviderType *BillingProviderType   `json:"-" url:"provider_type,omitempty"`
@@ -407,9 +420,9 @@ type ListBillingProductPricesRequest struct {
 	// Filter for prices with a meter
 	WithMeter *bool `json:"-" url:"with_meter,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -420,6 +433,13 @@ func (l *ListBillingProductPricesRequest) require(field *big.Int) {
 		l.explicitFields = big.NewInt(0)
 	}
 	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductPricesRequest) SetCurrency(currency *string) {
+	l.Currency = currency
+	l.require(listBillingProductPricesRequestFieldCurrency)
 }
 
 // SetForInitialPlan sets the ForInitialPlan field and marks it as non-optional;
@@ -459,7 +479,7 @@ func (l *ListBillingProductPricesRequest) SetIsActive(isActive *bool) {
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductPricesRequest) SetPrice(price *int) {
+func (l *ListBillingProductPricesRequest) SetPrice(price *int64) {
 	l.Price = price
 	l.require(listBillingProductPricesRequestFieldPrice)
 }
@@ -515,14 +535,14 @@ func (l *ListBillingProductPricesRequest) SetWithMeter(withMeter *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductPricesRequest) SetLimit(limit *int) {
+func (l *ListBillingProductPricesRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingProductPricesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductPricesRequest) SetOffset(offset *int) {
+func (l *ListBillingProductPricesRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingProductPricesRequestFieldOffset)
 }
@@ -559,9 +579,9 @@ type ListBillingProductsRequest struct {
 	// Filter products that are not linked to any plan
 	WithoutLinkedToPlan *bool `json:"-" url:"without_linked_to_plan,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -646,14 +666,14 @@ func (l *ListBillingProductsRequest) SetWithoutLinkedToPlan(withoutLinkedToPlan 
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductsRequest) SetLimit(limit *int) {
+func (l *ListBillingProductsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingProductsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductsRequest) SetOffset(offset *int) {
+func (l *ListBillingProductsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingProductsRequestFieldOffset)
 }
@@ -669,9 +689,9 @@ type ListCouponsRequest struct {
 	IsActive *bool   `json:"-" url:"is_active,omitempty"`
 	Q        *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -700,14 +720,14 @@ func (l *ListCouponsRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCouponsRequest) SetLimit(limit *int) {
+func (l *ListCouponsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCouponsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCouponsRequest) SetOffset(offset *int) {
+func (l *ListCouponsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCouponsRequestFieldOffset)
 }
@@ -727,9 +747,9 @@ type ListCustomersWithSubscriptionsRequest struct {
 	ProviderType *BillingProviderType `json:"-" url:"provider_type,omitempty"`
 	Q            *string              `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -772,14 +792,14 @@ func (l *ListCustomersWithSubscriptionsRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCustomersWithSubscriptionsRequest) SetLimit(limit *int) {
+func (l *ListCustomersWithSubscriptionsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCustomersWithSubscriptionsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCustomersWithSubscriptionsRequest) SetOffset(offset *int) {
+func (l *ListCustomersWithSubscriptionsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCustomersWithSubscriptionsRequestFieldOffset)
 }
@@ -797,9 +817,9 @@ type ListInvoicesRequest struct {
 	CustomerExternalID     string  `json:"-" url:"customer_external_id"`
 	SubscriptionExternalID string  `json:"-" url:"subscription_external_id"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -835,14 +855,14 @@ func (l *ListInvoicesRequest) SetSubscriptionExternalID(subscriptionExternalID s
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListInvoicesRequest) SetLimit(limit *int) {
+func (l *ListInvoicesRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listInvoicesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListInvoicesRequest) SetOffset(offset *int) {
+func (l *ListInvoicesRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listInvoicesRequestFieldOffset)
 }
@@ -856,9 +876,9 @@ var (
 type ListMetersRequest struct {
 	DisplayName *string `json:"-" url:"display_name,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -880,14 +900,14 @@ func (l *ListMetersRequest) SetDisplayName(displayName *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMetersRequest) SetLimit(limit *int) {
+func (l *ListMetersRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listMetersRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMetersRequest) SetOffset(offset *int) {
+func (l *ListMetersRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listMetersRequestFieldOffset)
 }
@@ -903,9 +923,9 @@ type ListPaymentMethodsRequest struct {
 	CompanyID          *string `json:"-" url:"company_id,omitempty"`
 	CustomerExternalID string  `json:"-" url:"customer_external_id"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -934,14 +954,14 @@ func (l *ListPaymentMethodsRequest) SetCustomerExternalID(customerExternalID str
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPaymentMethodsRequest) SetLimit(limit *int) {
+func (l *ListPaymentMethodsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPaymentMethodsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPaymentMethodsRequest) SetOffset(offset *int) {
+func (l *ListPaymentMethodsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPaymentMethodsRequestFieldOffset)
 }
@@ -967,23 +987,23 @@ var (
 )
 
 type BillingCouponResponseData struct {
-	AccountID        string                 `json:"account_id" url:"account_id"`
-	AmountOff        *int                   `json:"amount_off,omitempty" url:"amount_off,omitempty"`
-	Currency         *string                `json:"currency,omitempty" url:"currency,omitempty"`
-	Duration         *string                `json:"duration,omitempty" url:"duration,omitempty"`
-	DurationInMonths *int                   `json:"duration_in_months,omitempty" url:"duration_in_months,omitempty"`
-	EnvironmentID    string                 `json:"environment_id" url:"environment_id"`
-	ExternalID       string                 `json:"external_id" url:"external_id"`
-	ID               string                 `json:"id" url:"id"`
-	IsActive         bool                   `json:"is_active" url:"is_active"`
-	MaxRedemptions   *int                   `json:"max_redemptions,omitempty" url:"max_redemptions,omitempty"`
-	Metadata         map[string]interface{} `json:"metadata" url:"metadata"`
-	Name             string                 `json:"name" url:"name"`
-	PercentOff       *float64               `json:"percent_off,omitempty" url:"percent_off,omitempty"`
-	ProviderType     BillingProviderType    `json:"provider_type" url:"provider_type"`
-	TimesRedeemed    int                    `json:"times_redeemed" url:"times_redeemed"`
-	ValidFrom        *time.Time             `json:"valid_from,omitempty" url:"valid_from,omitempty"`
-	ValidUntil       *time.Time             `json:"valid_until,omitempty" url:"valid_until,omitempty"`
+	AccountID        string              `json:"account_id" url:"account_id"`
+	AmountOff        *int64              `json:"amount_off,omitempty" url:"amount_off,omitempty"`
+	Currency         *string             `json:"currency,omitempty" url:"currency,omitempty"`
+	Duration         *string             `json:"duration,omitempty" url:"duration,omitempty"`
+	DurationInMonths *int64              `json:"duration_in_months,omitempty" url:"duration_in_months,omitempty"`
+	EnvironmentID    string              `json:"environment_id" url:"environment_id"`
+	ExternalID       string              `json:"external_id" url:"external_id"`
+	ID               string              `json:"id" url:"id"`
+	IsActive         bool                `json:"is_active" url:"is_active"`
+	MaxRedemptions   *int64              `json:"max_redemptions,omitempty" url:"max_redemptions,omitempty"`
+	Metadata         map[string]any      `json:"metadata" url:"metadata"`
+	Name             string              `json:"name" url:"name"`
+	PercentOff       *float64            `json:"percent_off,omitempty" url:"percent_off,omitempty"`
+	ProviderType     BillingProviderType `json:"provider_type" url:"provider_type"`
+	TimesRedeemed    int64               `json:"times_redeemed" url:"times_redeemed"`
+	ValidFrom        *time.Time          `json:"valid_from,omitempty" url:"valid_from,omitempty"`
+	ValidUntil       *time.Time          `json:"valid_until,omitempty" url:"valid_until,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -999,7 +1019,7 @@ func (b *BillingCouponResponseData) GetAccountID() string {
 	return b.AccountID
 }
 
-func (b *BillingCouponResponseData) GetAmountOff() *int {
+func (b *BillingCouponResponseData) GetAmountOff() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -1020,7 +1040,7 @@ func (b *BillingCouponResponseData) GetDuration() *string {
 	return b.Duration
 }
 
-func (b *BillingCouponResponseData) GetDurationInMonths() *int {
+func (b *BillingCouponResponseData) GetDurationInMonths() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -1055,14 +1075,14 @@ func (b *BillingCouponResponseData) GetIsActive() bool {
 	return b.IsActive
 }
 
-func (b *BillingCouponResponseData) GetMaxRedemptions() *int {
+func (b *BillingCouponResponseData) GetMaxRedemptions() *int64 {
 	if b == nil {
 		return nil
 	}
 	return b.MaxRedemptions
 }
 
-func (b *BillingCouponResponseData) GetMetadata() map[string]interface{} {
+func (b *BillingCouponResponseData) GetMetadata() map[string]any {
 	if b == nil {
 		return nil
 	}
@@ -1090,7 +1110,7 @@ func (b *BillingCouponResponseData) GetProviderType() BillingProviderType {
 	return b.ProviderType
 }
 
-func (b *BillingCouponResponseData) GetTimesRedeemed() int {
+func (b *BillingCouponResponseData) GetTimesRedeemed() int64 {
 	if b == nil {
 		return 0
 	}
@@ -1112,6 +1132,9 @@ func (b *BillingCouponResponseData) GetValidUntil() *time.Time {
 }
 
 func (b *BillingCouponResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -1131,7 +1154,7 @@ func (b *BillingCouponResponseData) SetAccountID(accountID string) {
 
 // SetAmountOff sets the AmountOff field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCouponResponseData) SetAmountOff(amountOff *int) {
+func (b *BillingCouponResponseData) SetAmountOff(amountOff *int64) {
 	b.AmountOff = amountOff
 	b.require(billingCouponResponseDataFieldAmountOff)
 }
@@ -1152,7 +1175,7 @@ func (b *BillingCouponResponseData) SetDuration(duration *string) {
 
 // SetDurationInMonths sets the DurationInMonths field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCouponResponseData) SetDurationInMonths(durationInMonths *int) {
+func (b *BillingCouponResponseData) SetDurationInMonths(durationInMonths *int64) {
 	b.DurationInMonths = durationInMonths
 	b.require(billingCouponResponseDataFieldDurationInMonths)
 }
@@ -1187,14 +1210,14 @@ func (b *BillingCouponResponseData) SetIsActive(isActive bool) {
 
 // SetMaxRedemptions sets the MaxRedemptions field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCouponResponseData) SetMaxRedemptions(maxRedemptions *int) {
+func (b *BillingCouponResponseData) SetMaxRedemptions(maxRedemptions *int64) {
 	b.MaxRedemptions = maxRedemptions
 	b.require(billingCouponResponseDataFieldMaxRedemptions)
 }
 
 // SetMetadata sets the Metadata field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCouponResponseData) SetMetadata(metadata map[string]interface{}) {
+func (b *BillingCouponResponseData) SetMetadata(metadata map[string]any) {
 	b.Metadata = metadata
 	b.require(billingCouponResponseDataFieldMetadata)
 }
@@ -1222,7 +1245,7 @@ func (b *BillingCouponResponseData) SetProviderType(providerType BillingProvider
 
 // SetTimesRedeemed sets the TimesRedeemed field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCouponResponseData) SetTimesRedeemed(timesRedeemed int) {
+func (b *BillingCouponResponseData) SetTimesRedeemed(timesRedeemed int64) {
 	b.TimesRedeemed = timesRedeemed
 	b.require(billingCouponResponseDataFieldTimesRedeemed)
 }
@@ -1281,6 +1304,9 @@ func (b *BillingCouponResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCouponResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -1377,6 +1403,9 @@ func (b *BillingCustomerResponseData) GetUpdatedAt() time.Time {
 }
 
 func (b *BillingCustomerResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -1483,6 +1512,9 @@ func (b *BillingCustomerResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCustomerResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -1508,8 +1540,8 @@ type BillingCustomerSubscription struct {
 	ExpiredAt    *time.Time `json:"expired_at,omitempty" url:"expired_at,omitempty"`
 	Interval     string     `json:"interval" url:"interval"`
 	MeteredUsage bool       `json:"metered_usage" url:"metered_usage"`
-	PerUnitPrice int        `json:"per_unit_price" url:"per_unit_price"`
-	TotalPrice   int        `json:"total_price" url:"total_price"`
+	PerUnitPrice int64      `json:"per_unit_price" url:"per_unit_price"`
+	TotalPrice   int64      `json:"total_price" url:"total_price"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1546,14 +1578,14 @@ func (b *BillingCustomerSubscription) GetMeteredUsage() bool {
 	return b.MeteredUsage
 }
 
-func (b *BillingCustomerSubscription) GetPerUnitPrice() int {
+func (b *BillingCustomerSubscription) GetPerUnitPrice() int64 {
 	if b == nil {
 		return 0
 	}
 	return b.PerUnitPrice
 }
 
-func (b *BillingCustomerSubscription) GetTotalPrice() int {
+func (b *BillingCustomerSubscription) GetTotalPrice() int64 {
 	if b == nil {
 		return 0
 	}
@@ -1561,6 +1593,9 @@ func (b *BillingCustomerSubscription) GetTotalPrice() int {
 }
 
 func (b *BillingCustomerSubscription) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -1601,14 +1636,14 @@ func (b *BillingCustomerSubscription) SetMeteredUsage(meteredUsage bool) {
 
 // SetPerUnitPrice sets the PerUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCustomerSubscription) SetPerUnitPrice(perUnitPrice int) {
+func (b *BillingCustomerSubscription) SetPerUnitPrice(perUnitPrice int64) {
 	b.PerUnitPrice = perUnitPrice
 	b.require(billingCustomerSubscriptionFieldPerUnitPrice)
 }
 
 // SetTotalPrice sets the TotalPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCustomerSubscription) SetTotalPrice(totalPrice int) {
+func (b *BillingCustomerSubscription) SetTotalPrice(totalPrice int64) {
 	b.TotalPrice = totalPrice
 	b.require(billingCustomerSubscriptionFieldTotalPrice)
 }
@@ -1649,6 +1684,9 @@ func (b *BillingCustomerSubscription) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCustomerSubscription) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -1754,6 +1792,9 @@ func (b *BillingCustomerWithSubscriptionsResponseData) GetUpdatedAt() time.Time 
 }
 
 func (b *BillingCustomerWithSubscriptionsResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -1867,6 +1908,9 @@ func (b *BillingCustomerWithSubscriptionsResponseData) MarshalJSON() ([]byte, er
 }
 
 func (b *BillingCustomerWithSubscriptionsResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -1945,6 +1989,9 @@ func (b *BillingMeterResponseData) GetProviderType() BillingProviderType {
 }
 
 func (b *BillingMeterResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -2025,6 +2072,9 @@ func (b *BillingMeterResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingMeterResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2052,16 +2102,16 @@ var (
 )
 
 type BillingProductPricing struct {
-	BillingThreshold           *int                  `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
+	BillingThreshold           *int64                `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
 	Currency                   string                `json:"currency" url:"currency"`
 	Interval                   string                `json:"interval" url:"interval"`
 	MeterID                    *string               `json:"meter_id,omitempty" url:"meter_id,omitempty"`
-	PackageSize                *int                  `json:"package_size,omitempty" url:"package_size,omitempty"`
-	Price                      int                   `json:"price" url:"price"`
+	PackageSize                *int64                `json:"package_size,omitempty" url:"package_size,omitempty"`
+	Price                      int64                 `json:"price" url:"price"`
 	PriceDecimal               *string               `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
 	PriceExternalID            string                `json:"price_external_id" url:"price_external_id"`
 	ProductExternalID          string                `json:"product_external_id" url:"product_external_id"`
-	Quantity                   int                   `json:"quantity" url:"quantity"`
+	Quantity                   int64                 `json:"quantity" url:"quantity"`
 	SubscriptionItemExternalID *string               `json:"subscription_item_external_id,omitempty" url:"subscription_item_external_id,omitempty"`
 	UsageType                  BillingPriceUsageType `json:"usage_type" url:"usage_type"`
 
@@ -2072,7 +2122,7 @@ type BillingProductPricing struct {
 	rawJSON         json.RawMessage
 }
 
-func (b *BillingProductPricing) GetBillingThreshold() *int {
+func (b *BillingProductPricing) GetBillingThreshold() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -2100,14 +2150,14 @@ func (b *BillingProductPricing) GetMeterID() *string {
 	return b.MeterID
 }
 
-func (b *BillingProductPricing) GetPackageSize() *int {
+func (b *BillingProductPricing) GetPackageSize() *int64 {
 	if b == nil {
 		return nil
 	}
 	return b.PackageSize
 }
 
-func (b *BillingProductPricing) GetPrice() int {
+func (b *BillingProductPricing) GetPrice() int64 {
 	if b == nil {
 		return 0
 	}
@@ -2135,7 +2185,7 @@ func (b *BillingProductPricing) GetProductExternalID() string {
 	return b.ProductExternalID
 }
 
-func (b *BillingProductPricing) GetQuantity() int {
+func (b *BillingProductPricing) GetQuantity() int64 {
 	if b == nil {
 		return 0
 	}
@@ -2157,6 +2207,9 @@ func (b *BillingProductPricing) GetUsageType() BillingPriceUsageType {
 }
 
 func (b *BillingProductPricing) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -2169,7 +2222,7 @@ func (b *BillingProductPricing) require(field *big.Int) {
 
 // SetBillingThreshold sets the BillingThreshold field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPricing) SetBillingThreshold(billingThreshold *int) {
+func (b *BillingProductPricing) SetBillingThreshold(billingThreshold *int64) {
 	b.BillingThreshold = billingThreshold
 	b.require(billingProductPricingFieldBillingThreshold)
 }
@@ -2197,14 +2250,14 @@ func (b *BillingProductPricing) SetMeterID(meterID *string) {
 
 // SetPackageSize sets the PackageSize field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPricing) SetPackageSize(packageSize *int) {
+func (b *BillingProductPricing) SetPackageSize(packageSize *int64) {
 	b.PackageSize = packageSize
 	b.require(billingProductPricingFieldPackageSize)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPricing) SetPrice(price int) {
+func (b *BillingProductPricing) SetPrice(price int64) {
 	b.Price = price
 	b.require(billingProductPricingFieldPrice)
 }
@@ -2232,7 +2285,7 @@ func (b *BillingProductPricing) SetProductExternalID(productExternalID string) {
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPricing) SetQuantity(quantity int) {
+func (b *BillingProductPricing) SetQuantity(quantity int64) {
 	b.Quantity = quantity
 	b.require(billingProductPricingFieldQuantity)
 }
@@ -2279,6 +2332,9 @@ func (b *BillingProductPricing) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingProductPricing) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2366,6 +2422,9 @@ func (b *BillingSubscriptionDiscount) GetStartedAt() time.Time {
 }
 
 func (b *BillingSubscriptionDiscount) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -2465,6 +2524,9 @@ func (b *BillingSubscriptionDiscount) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingSubscriptionDiscount) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2501,7 +2563,7 @@ var (
 
 type BillingSubscriptionResponseData struct {
 	ApplicationID          *string                             `json:"application_id,omitempty" url:"application_id,omitempty"`
-	CancelAt               *int                                `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
+	CancelAt               *int64                              `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
 	CancelAtPeriodEnd      bool                                `json:"cancel_at_period_end" url:"cancel_at_period_end"`
 	CompanyID              *string                             `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CreatedAt              time.Time                           `json:"created_at" url:"created_at"`
@@ -2511,14 +2573,14 @@ type BillingSubscriptionResponseData struct {
 	ExpiredAt              *time.Time                          `json:"expired_at,omitempty" url:"expired_at,omitempty"`
 	ID                     string                              `json:"id" url:"id"`
 	Interval               string                              `json:"interval" url:"interval"`
-	Metadata               map[string]interface{}              `json:"metadata,omitempty" url:"metadata,omitempty"`
-	PeriodEnd              int                                 `json:"period_end" url:"period_end"`
-	PeriodStart            int                                 `json:"period_start" url:"period_start"`
+	Metadata               map[string]any                      `json:"metadata,omitempty" url:"metadata,omitempty"`
+	PeriodEnd              int64                               `json:"period_end" url:"period_end"`
+	PeriodStart            int64                               `json:"period_start" url:"period_start"`
 	ProviderType           BillingProviderType                 `json:"provider_type" url:"provider_type"`
 	Status                 string                              `json:"status" url:"status"`
 	SubscriptionExternalID string                              `json:"subscription_external_id" url:"subscription_external_id"`
-	TotalPrice             int                                 `json:"total_price" url:"total_price"`
-	TrialEnd               *int                                `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	TotalPrice             int64                               `json:"total_price" url:"total_price"`
+	TrialEnd               *int64                              `json:"trial_end,omitempty" url:"trial_end,omitempty"`
 	TrialEndSetting        *BillingSubscriptionTrialEndSetting `json:"trial_end_setting,omitempty" url:"trial_end_setting,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -2535,7 +2597,7 @@ func (b *BillingSubscriptionResponseData) GetApplicationID() *string {
 	return b.ApplicationID
 }
 
-func (b *BillingSubscriptionResponseData) GetCancelAt() *int {
+func (b *BillingSubscriptionResponseData) GetCancelAt() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -2605,21 +2667,21 @@ func (b *BillingSubscriptionResponseData) GetInterval() string {
 	return b.Interval
 }
 
-func (b *BillingSubscriptionResponseData) GetMetadata() map[string]interface{} {
+func (b *BillingSubscriptionResponseData) GetMetadata() map[string]any {
 	if b == nil {
 		return nil
 	}
 	return b.Metadata
 }
 
-func (b *BillingSubscriptionResponseData) GetPeriodEnd() int {
+func (b *BillingSubscriptionResponseData) GetPeriodEnd() int64 {
 	if b == nil {
 		return 0
 	}
 	return b.PeriodEnd
 }
 
-func (b *BillingSubscriptionResponseData) GetPeriodStart() int {
+func (b *BillingSubscriptionResponseData) GetPeriodStart() int64 {
 	if b == nil {
 		return 0
 	}
@@ -2647,14 +2709,14 @@ func (b *BillingSubscriptionResponseData) GetSubscriptionExternalID() string {
 	return b.SubscriptionExternalID
 }
 
-func (b *BillingSubscriptionResponseData) GetTotalPrice() int {
+func (b *BillingSubscriptionResponseData) GetTotalPrice() int64 {
 	if b == nil {
 		return 0
 	}
 	return b.TotalPrice
 }
 
-func (b *BillingSubscriptionResponseData) GetTrialEnd() *int {
+func (b *BillingSubscriptionResponseData) GetTrialEnd() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -2669,6 +2731,9 @@ func (b *BillingSubscriptionResponseData) GetTrialEndSetting() *BillingSubscript
 }
 
 func (b *BillingSubscriptionResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -2688,7 +2753,7 @@ func (b *BillingSubscriptionResponseData) SetApplicationID(applicationID *string
 
 // SetCancelAt sets the CancelAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionResponseData) SetCancelAt(cancelAt *int) {
+func (b *BillingSubscriptionResponseData) SetCancelAt(cancelAt *int64) {
 	b.CancelAt = cancelAt
 	b.require(billingSubscriptionResponseDataFieldCancelAt)
 }
@@ -2758,21 +2823,21 @@ func (b *BillingSubscriptionResponseData) SetInterval(interval string) {
 
 // SetMetadata sets the Metadata field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionResponseData) SetMetadata(metadata map[string]interface{}) {
+func (b *BillingSubscriptionResponseData) SetMetadata(metadata map[string]any) {
 	b.Metadata = metadata
 	b.require(billingSubscriptionResponseDataFieldMetadata)
 }
 
 // SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionResponseData) SetPeriodEnd(periodEnd int) {
+func (b *BillingSubscriptionResponseData) SetPeriodEnd(periodEnd int64) {
 	b.PeriodEnd = periodEnd
 	b.require(billingSubscriptionResponseDataFieldPeriodEnd)
 }
 
 // SetPeriodStart sets the PeriodStart field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionResponseData) SetPeriodStart(periodStart int) {
+func (b *BillingSubscriptionResponseData) SetPeriodStart(periodStart int64) {
 	b.PeriodStart = periodStart
 	b.require(billingSubscriptionResponseDataFieldPeriodStart)
 }
@@ -2800,14 +2865,14 @@ func (b *BillingSubscriptionResponseData) SetSubscriptionExternalID(subscription
 
 // SetTotalPrice sets the TotalPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionResponseData) SetTotalPrice(totalPrice int) {
+func (b *BillingSubscriptionResponseData) SetTotalPrice(totalPrice int64) {
 	b.TotalPrice = totalPrice
 	b.require(billingSubscriptionResponseDataFieldTotalPrice)
 }
 
 // SetTrialEnd sets the TrialEnd field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionResponseData) SetTrialEnd(trialEnd *int) {
+func (b *BillingSubscriptionResponseData) SetTrialEnd(trialEnd *int64) {
 	b.TrialEnd = trialEnd
 	b.require(billingSubscriptionResponseDataFieldTrialEnd)
 }
@@ -2859,6 +2924,9 @@ func (b *BillingSubscriptionResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingSubscriptionResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2880,12 +2948,12 @@ var (
 )
 
 type CreateBillingPriceTierRequestBody struct {
-	FlatAmount      *int                 `json:"flat_amount,omitempty" url:"flat_amount,omitempty"`
+	FlatAmount      *int64               `json:"flat_amount,omitempty" url:"flat_amount,omitempty"`
 	PerUnitDecimal  *string              `json:"per_unit_decimal,omitempty" url:"per_unit_decimal,omitempty"`
-	PerUnitPrice    *int                 `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
+	PerUnitPrice    *int64               `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
 	PriceExternalID string               `json:"price_external_id" url:"price_external_id"`
 	ProviderType    *BillingProviderType `json:"provider_type,omitempty" url:"provider_type,omitempty"`
-	UpTo            *int                 `json:"up_to,omitempty" url:"up_to,omitempty"`
+	UpTo            *int64               `json:"up_to,omitempty" url:"up_to,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2894,7 +2962,7 @@ type CreateBillingPriceTierRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreateBillingPriceTierRequestBody) GetFlatAmount() *int {
+func (c *CreateBillingPriceTierRequestBody) GetFlatAmount() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -2908,7 +2976,7 @@ func (c *CreateBillingPriceTierRequestBody) GetPerUnitDecimal() *string {
 	return c.PerUnitDecimal
 }
 
-func (c *CreateBillingPriceTierRequestBody) GetPerUnitPrice() *int {
+func (c *CreateBillingPriceTierRequestBody) GetPerUnitPrice() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -2929,7 +2997,7 @@ func (c *CreateBillingPriceTierRequestBody) GetProviderType() *BillingProviderTy
 	return c.ProviderType
 }
 
-func (c *CreateBillingPriceTierRequestBody) GetUpTo() *int {
+func (c *CreateBillingPriceTierRequestBody) GetUpTo() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -2937,6 +3005,9 @@ func (c *CreateBillingPriceTierRequestBody) GetUpTo() *int {
 }
 
 func (c *CreateBillingPriceTierRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2949,7 +3020,7 @@ func (c *CreateBillingPriceTierRequestBody) require(field *big.Int) {
 
 // SetFlatAmount sets the FlatAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPriceTierRequestBody) SetFlatAmount(flatAmount *int) {
+func (c *CreateBillingPriceTierRequestBody) SetFlatAmount(flatAmount *int64) {
 	c.FlatAmount = flatAmount
 	c.require(createBillingPriceTierRequestBodyFieldFlatAmount)
 }
@@ -2963,7 +3034,7 @@ func (c *CreateBillingPriceTierRequestBody) SetPerUnitDecimal(perUnitDecimal *st
 
 // SetPerUnitPrice sets the PerUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPriceTierRequestBody) SetPerUnitPrice(perUnitPrice *int) {
+func (c *CreateBillingPriceTierRequestBody) SetPerUnitPrice(perUnitPrice *int64) {
 	c.PerUnitPrice = perUnitPrice
 	c.require(createBillingPriceTierRequestBodyFieldPerUnitPrice)
 }
@@ -2984,7 +3055,7 @@ func (c *CreateBillingPriceTierRequestBody) SetProviderType(providerType *Billin
 
 // SetUpTo sets the UpTo field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPriceTierRequestBody) SetUpTo(upTo *int) {
+func (c *CreateBillingPriceTierRequestBody) SetUpTo(upTo *int64) {
 	c.UpTo = upTo
 	c.require(createBillingPriceTierRequestBodyFieldUpTo)
 }
@@ -3017,6 +3088,9 @@ func (c *CreateBillingPriceTierRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateBillingPriceTierRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3049,10 +3123,10 @@ type CountBillingProductsParams struct {
 	// Filter products that are active. Defaults to true if not specified
 	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
-	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64  `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
 	// Page offset (default 0)
-	Offset         *int                   `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset         *int64                 `json:"offset,omitempty" url:"offset,omitempty"`
 	PriceUsageType *BillingPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
 	ProviderType   *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
 	Q              *string                `json:"q,omitempty" url:"q,omitempty"`
@@ -3086,7 +3160,7 @@ func (c *CountBillingProductsParams) GetIsActive() *bool {
 	return c.IsActive
 }
 
-func (c *CountBillingProductsParams) GetLimit() *int {
+func (c *CountBillingProductsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3100,7 +3174,7 @@ func (c *CountBillingProductsParams) GetName() *string {
 	return c.Name
 }
 
-func (c *CountBillingProductsParams) GetOffset() *int {
+func (c *CountBillingProductsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3157,6 +3231,9 @@ func (c *CountBillingProductsParams) GetWithoutLinkedToPlan() *bool {
 }
 
 func (c *CountBillingProductsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3183,7 +3260,7 @@ func (c *CountBillingProductsParams) SetIsActive(isActive *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingProductsParams) SetLimit(limit *int) {
+func (c *CountBillingProductsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countBillingProductsParamsFieldLimit)
 }
@@ -3197,7 +3274,7 @@ func (c *CountBillingProductsParams) SetName(name *string) {
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingProductsParams) SetOffset(offset *int) {
+func (c *CountBillingProductsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countBillingProductsParamsFieldOffset)
 }
@@ -3279,6 +3356,9 @@ func (c *CountBillingProductsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountBillingProductsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3322,6 +3402,9 @@ func (c *CountBillingProductsResponse) GetParams() *CountBillingProductsParams {
 }
 
 func (c *CountBillingProductsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3374,6 +3457,9 @@ func (c *CountBillingProductsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountBillingProductsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3398,10 +3484,10 @@ var (
 type CountCustomersParams struct {
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64  `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
 	// Page offset (default 0)
-	Offset       *int                 `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset       *int64               `json:"offset,omitempty" url:"offset,omitempty"`
 	ProviderType *BillingProviderType `json:"provider_type,omitempty" url:"provider_type,omitempty"`
 	Q            *string              `json:"q,omitempty" url:"q,omitempty"`
 
@@ -3419,7 +3505,7 @@ func (c *CountCustomersParams) GetCompanyIDs() []string {
 	return c.CompanyIDs
 }
 
-func (c *CountCustomersParams) GetLimit() *int {
+func (c *CountCustomersParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3433,7 +3519,7 @@ func (c *CountCustomersParams) GetName() *string {
 	return c.Name
 }
 
-func (c *CountCustomersParams) GetOffset() *int {
+func (c *CountCustomersParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3455,6 +3541,9 @@ func (c *CountCustomersParams) GetQ() *string {
 }
 
 func (c *CountCustomersParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3474,7 +3563,7 @@ func (c *CountCustomersParams) SetCompanyIDs(companyIDs []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCustomersParams) SetLimit(limit *int) {
+func (c *CountCustomersParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCustomersParamsFieldLimit)
 }
@@ -3488,7 +3577,7 @@ func (c *CountCustomersParams) SetName(name *string) {
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCustomersParams) SetOffset(offset *int) {
+func (c *CountCustomersParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCustomersParamsFieldOffset)
 }
@@ -3535,6 +3624,9 @@ func (c *CountCustomersParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCustomersParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3578,6 +3670,9 @@ func (c *CountCustomersResponse) GetParams() *CountCustomersParams {
 }
 
 func (c *CountCustomersResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3630,6 +3725,9 @@ func (c *CountCustomersResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCustomersResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3649,7 +3747,7 @@ var (
 type DeleteBillingProductResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3665,7 +3763,7 @@ func (d *DeleteBillingProductResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteBillingProductResponse) GetParams() map[string]interface{} {
+func (d *DeleteBillingProductResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -3673,6 +3771,9 @@ func (d *DeleteBillingProductResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteBillingProductResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -3692,7 +3793,7 @@ func (d *DeleteBillingProductResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteBillingProductResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteBillingProductResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteBillingProductResponseFieldParams)
 }
@@ -3725,6 +3826,9 @@ func (d *DeleteBillingProductResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteBillingProductResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -3744,7 +3848,7 @@ var (
 type DeleteProductPriceResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3760,7 +3864,7 @@ func (d *DeleteProductPriceResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteProductPriceResponse) GetParams() map[string]interface{} {
+func (d *DeleteProductPriceResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -3768,6 +3872,9 @@ func (d *DeleteProductPriceResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteProductPriceResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -3787,7 +3894,7 @@ func (d *DeleteProductPriceResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteProductPriceResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteProductPriceResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteProductPriceResponseFieldParams)
 }
@@ -3820,6 +3927,9 @@ func (d *DeleteProductPriceResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteProductPriceResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -3833,24 +3943,27 @@ func (d *DeleteProductPriceResponse) String() string {
 
 // Input parameters
 var (
-	listBillingPricesParamsFieldForInitialPlan     = big.NewInt(1 << 0)
-	listBillingPricesParamsFieldForTrialExpiryPlan = big.NewInt(1 << 1)
-	listBillingPricesParamsFieldIDs                = big.NewInt(1 << 2)
-	listBillingPricesParamsFieldInterval           = big.NewInt(1 << 3)
-	listBillingPricesParamsFieldIsActive           = big.NewInt(1 << 4)
-	listBillingPricesParamsFieldLimit              = big.NewInt(1 << 5)
-	listBillingPricesParamsFieldOffset             = big.NewInt(1 << 6)
-	listBillingPricesParamsFieldPrice              = big.NewInt(1 << 7)
-	listBillingPricesParamsFieldProductID          = big.NewInt(1 << 8)
-	listBillingPricesParamsFieldProductIDs         = big.NewInt(1 << 9)
-	listBillingPricesParamsFieldProviderType       = big.NewInt(1 << 10)
-	listBillingPricesParamsFieldQ                  = big.NewInt(1 << 11)
-	listBillingPricesParamsFieldTiersMode          = big.NewInt(1 << 12)
-	listBillingPricesParamsFieldUsageType          = big.NewInt(1 << 13)
-	listBillingPricesParamsFieldWithMeter          = big.NewInt(1 << 14)
+	listBillingPricesParamsFieldCurrency           = big.NewInt(1 << 0)
+	listBillingPricesParamsFieldForInitialPlan     = big.NewInt(1 << 1)
+	listBillingPricesParamsFieldForTrialExpiryPlan = big.NewInt(1 << 2)
+	listBillingPricesParamsFieldIDs                = big.NewInt(1 << 3)
+	listBillingPricesParamsFieldInterval           = big.NewInt(1 << 4)
+	listBillingPricesParamsFieldIsActive           = big.NewInt(1 << 5)
+	listBillingPricesParamsFieldLimit              = big.NewInt(1 << 6)
+	listBillingPricesParamsFieldOffset             = big.NewInt(1 << 7)
+	listBillingPricesParamsFieldPrice              = big.NewInt(1 << 8)
+	listBillingPricesParamsFieldProductID          = big.NewInt(1 << 9)
+	listBillingPricesParamsFieldProductIDs         = big.NewInt(1 << 10)
+	listBillingPricesParamsFieldProviderType       = big.NewInt(1 << 11)
+	listBillingPricesParamsFieldQ                  = big.NewInt(1 << 12)
+	listBillingPricesParamsFieldTiersMode          = big.NewInt(1 << 13)
+	listBillingPricesParamsFieldUsageType          = big.NewInt(1 << 14)
+	listBillingPricesParamsFieldWithMeter          = big.NewInt(1 << 15)
 )
 
 type ListBillingPricesParams struct {
+	// Filter for prices in a specific currency (e.g. usd, eur)
+	Currency *string `json:"currency,omitempty" url:"currency,omitempty"`
 	// Filter for prices valid for initial plans (free prices only)
 	ForInitialPlan *bool `json:"for_initial_plan,omitempty" url:"for_initial_plan,omitempty"`
 	// Filter for prices valid for trial expiry plans (free prices only)
@@ -3860,10 +3973,10 @@ type ListBillingPricesParams struct {
 	// Filter for active prices on active products (defaults to true if not specified)
 	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset       *int                   `json:"offset,omitempty" url:"offset,omitempty"`
-	Price        *int                   `json:"price,omitempty" url:"price,omitempty"`
+	Offset       *int64                 `json:"offset,omitempty" url:"offset,omitempty"`
+	Price        *int64                 `json:"price,omitempty" url:"price,omitempty"`
 	ProductID    *string                `json:"product_id,omitempty" url:"product_id,omitempty"`
 	ProductIDs   []string               `json:"product_ids,omitempty" url:"product_ids,omitempty"`
 	ProviderType *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
@@ -3878,6 +3991,13 @@ type ListBillingPricesParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (l *ListBillingPricesParams) GetCurrency() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Currency
 }
 
 func (l *ListBillingPricesParams) GetForInitialPlan() *bool {
@@ -3915,21 +4035,21 @@ func (l *ListBillingPricesParams) GetIsActive() *bool {
 	return l.IsActive
 }
 
-func (l *ListBillingPricesParams) GetLimit() *int {
+func (l *ListBillingPricesParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListBillingPricesParams) GetOffset() *int {
+func (l *ListBillingPricesParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Offset
 }
 
-func (l *ListBillingPricesParams) GetPrice() *int {
+func (l *ListBillingPricesParams) GetPrice() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -3986,6 +4106,9 @@ func (l *ListBillingPricesParams) GetWithMeter() *bool {
 }
 
 func (l *ListBillingPricesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -3994,6 +4117,13 @@ func (l *ListBillingPricesParams) require(field *big.Int) {
 		l.explicitFields = big.NewInt(0)
 	}
 	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingPricesParams) SetCurrency(currency *string) {
+	l.Currency = currency
+	l.require(listBillingPricesParamsFieldCurrency)
 }
 
 // SetForInitialPlan sets the ForInitialPlan field and marks it as non-optional;
@@ -4033,21 +4163,21 @@ func (l *ListBillingPricesParams) SetIsActive(isActive *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPricesParams) SetLimit(limit *int) {
+func (l *ListBillingPricesParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingPricesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPricesParams) SetOffset(offset *int) {
+func (l *ListBillingPricesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingPricesParamsFieldOffset)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPricesParams) SetPrice(price *int) {
+func (l *ListBillingPricesParams) SetPrice(price *int64) {
 	l.Price = price
 	l.require(listBillingPricesParamsFieldPrice)
 }
@@ -4129,6 +4259,9 @@ func (l *ListBillingPricesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingPricesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -4172,6 +4305,9 @@ func (l *ListBillingPricesResponse) GetParams() *ListBillingPricesParams {
 }
 
 func (l *ListBillingPricesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -4224,6 +4360,9 @@ func (l *ListBillingPricesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingPricesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -4237,24 +4376,27 @@ func (l *ListBillingPricesResponse) String() string {
 
 // Input parameters
 var (
-	listBillingProductPricesParamsFieldForInitialPlan     = big.NewInt(1 << 0)
-	listBillingProductPricesParamsFieldForTrialExpiryPlan = big.NewInt(1 << 1)
-	listBillingProductPricesParamsFieldIDs                = big.NewInt(1 << 2)
-	listBillingProductPricesParamsFieldInterval           = big.NewInt(1 << 3)
-	listBillingProductPricesParamsFieldIsActive           = big.NewInt(1 << 4)
-	listBillingProductPricesParamsFieldLimit              = big.NewInt(1 << 5)
-	listBillingProductPricesParamsFieldOffset             = big.NewInt(1 << 6)
-	listBillingProductPricesParamsFieldPrice              = big.NewInt(1 << 7)
-	listBillingProductPricesParamsFieldProductID          = big.NewInt(1 << 8)
-	listBillingProductPricesParamsFieldProductIDs         = big.NewInt(1 << 9)
-	listBillingProductPricesParamsFieldProviderType       = big.NewInt(1 << 10)
-	listBillingProductPricesParamsFieldQ                  = big.NewInt(1 << 11)
-	listBillingProductPricesParamsFieldTiersMode          = big.NewInt(1 << 12)
-	listBillingProductPricesParamsFieldUsageType          = big.NewInt(1 << 13)
-	listBillingProductPricesParamsFieldWithMeter          = big.NewInt(1 << 14)
+	listBillingProductPricesParamsFieldCurrency           = big.NewInt(1 << 0)
+	listBillingProductPricesParamsFieldForInitialPlan     = big.NewInt(1 << 1)
+	listBillingProductPricesParamsFieldForTrialExpiryPlan = big.NewInt(1 << 2)
+	listBillingProductPricesParamsFieldIDs                = big.NewInt(1 << 3)
+	listBillingProductPricesParamsFieldInterval           = big.NewInt(1 << 4)
+	listBillingProductPricesParamsFieldIsActive           = big.NewInt(1 << 5)
+	listBillingProductPricesParamsFieldLimit              = big.NewInt(1 << 6)
+	listBillingProductPricesParamsFieldOffset             = big.NewInt(1 << 7)
+	listBillingProductPricesParamsFieldPrice              = big.NewInt(1 << 8)
+	listBillingProductPricesParamsFieldProductID          = big.NewInt(1 << 9)
+	listBillingProductPricesParamsFieldProductIDs         = big.NewInt(1 << 10)
+	listBillingProductPricesParamsFieldProviderType       = big.NewInt(1 << 11)
+	listBillingProductPricesParamsFieldQ                  = big.NewInt(1 << 12)
+	listBillingProductPricesParamsFieldTiersMode          = big.NewInt(1 << 13)
+	listBillingProductPricesParamsFieldUsageType          = big.NewInt(1 << 14)
+	listBillingProductPricesParamsFieldWithMeter          = big.NewInt(1 << 15)
 )
 
 type ListBillingProductPricesParams struct {
+	// Filter for prices in a specific currency (e.g. usd, eur)
+	Currency *string `json:"currency,omitempty" url:"currency,omitempty"`
 	// Filter for prices valid for initial plans (free prices only)
 	ForInitialPlan *bool `json:"for_initial_plan,omitempty" url:"for_initial_plan,omitempty"`
 	// Filter for prices valid for trial expiry plans (free prices only)
@@ -4264,10 +4406,10 @@ type ListBillingProductPricesParams struct {
 	// Filter for active prices on active products (defaults to true if not specified)
 	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset       *int                   `json:"offset,omitempty" url:"offset,omitempty"`
-	Price        *int                   `json:"price,omitempty" url:"price,omitempty"`
+	Offset       *int64                 `json:"offset,omitempty" url:"offset,omitempty"`
+	Price        *int64                 `json:"price,omitempty" url:"price,omitempty"`
 	ProductID    *string                `json:"product_id,omitempty" url:"product_id,omitempty"`
 	ProductIDs   []string               `json:"product_ids,omitempty" url:"product_ids,omitempty"`
 	ProviderType *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
@@ -4282,6 +4424,13 @@ type ListBillingProductPricesParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (l *ListBillingProductPricesParams) GetCurrency() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Currency
 }
 
 func (l *ListBillingProductPricesParams) GetForInitialPlan() *bool {
@@ -4319,21 +4468,21 @@ func (l *ListBillingProductPricesParams) GetIsActive() *bool {
 	return l.IsActive
 }
 
-func (l *ListBillingProductPricesParams) GetLimit() *int {
+func (l *ListBillingProductPricesParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListBillingProductPricesParams) GetOffset() *int {
+func (l *ListBillingProductPricesParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Offset
 }
 
-func (l *ListBillingProductPricesParams) GetPrice() *int {
+func (l *ListBillingProductPricesParams) GetPrice() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -4390,6 +4539,9 @@ func (l *ListBillingProductPricesParams) GetWithMeter() *bool {
 }
 
 func (l *ListBillingProductPricesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -4398,6 +4550,13 @@ func (l *ListBillingProductPricesParams) require(field *big.Int) {
 		l.explicitFields = big.NewInt(0)
 	}
 	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductPricesParams) SetCurrency(currency *string) {
+	l.Currency = currency
+	l.require(listBillingProductPricesParamsFieldCurrency)
 }
 
 // SetForInitialPlan sets the ForInitialPlan field and marks it as non-optional;
@@ -4437,21 +4596,21 @@ func (l *ListBillingProductPricesParams) SetIsActive(isActive *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductPricesParams) SetLimit(limit *int) {
+func (l *ListBillingProductPricesParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingProductPricesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductPricesParams) SetOffset(offset *int) {
+func (l *ListBillingProductPricesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingProductPricesParamsFieldOffset)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductPricesParams) SetPrice(price *int) {
+func (l *ListBillingProductPricesParams) SetPrice(price *int64) {
 	l.Price = price
 	l.require(listBillingProductPricesParamsFieldPrice)
 }
@@ -4533,6 +4692,9 @@ func (l *ListBillingProductPricesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingProductPricesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -4576,6 +4738,9 @@ func (l *ListBillingProductPricesResponse) GetParams() *ListBillingProductPrices
 }
 
 func (l *ListBillingProductPricesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -4628,6 +4793,9 @@ func (l *ListBillingProductPricesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingProductPricesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -4660,10 +4828,10 @@ type ListBillingProductsParams struct {
 	// Filter products that are active. Defaults to true if not specified
 	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
-	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64  `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
 	// Page offset (default 0)
-	Offset         *int                   `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset         *int64                 `json:"offset,omitempty" url:"offset,omitempty"`
 	PriceUsageType *BillingPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
 	ProviderType   *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
 	Q              *string                `json:"q,omitempty" url:"q,omitempty"`
@@ -4697,7 +4865,7 @@ func (l *ListBillingProductsParams) GetIsActive() *bool {
 	return l.IsActive
 }
 
-func (l *ListBillingProductsParams) GetLimit() *int {
+func (l *ListBillingProductsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -4711,7 +4879,7 @@ func (l *ListBillingProductsParams) GetName() *string {
 	return l.Name
 }
 
-func (l *ListBillingProductsParams) GetOffset() *int {
+func (l *ListBillingProductsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -4768,6 +4936,9 @@ func (l *ListBillingProductsParams) GetWithoutLinkedToPlan() *bool {
 }
 
 func (l *ListBillingProductsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -4794,7 +4965,7 @@ func (l *ListBillingProductsParams) SetIsActive(isActive *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductsParams) SetLimit(limit *int) {
+func (l *ListBillingProductsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingProductsParamsFieldLimit)
 }
@@ -4808,7 +4979,7 @@ func (l *ListBillingProductsParams) SetName(name *string) {
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingProductsParams) SetOffset(offset *int) {
+func (l *ListBillingProductsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingProductsParamsFieldOffset)
 }
@@ -4890,6 +5061,9 @@ func (l *ListBillingProductsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingProductsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -4933,6 +5107,9 @@ func (l *ListBillingProductsResponse) GetParams() *ListBillingProductsParams {
 }
 
 func (l *ListBillingProductsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -4985,6 +5162,9 @@ func (l *ListBillingProductsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingProductsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -5007,9 +5187,9 @@ var (
 type ListCouponsParams struct {
 	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -5026,14 +5206,14 @@ func (l *ListCouponsParams) GetIsActive() *bool {
 	return l.IsActive
 }
 
-func (l *ListCouponsParams) GetLimit() *int {
+func (l *ListCouponsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListCouponsParams) GetOffset() *int {
+func (l *ListCouponsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -5048,6 +5228,9 @@ func (l *ListCouponsParams) GetQ() *string {
 }
 
 func (l *ListCouponsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -5067,14 +5250,14 @@ func (l *ListCouponsParams) SetIsActive(isActive *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCouponsParams) SetLimit(limit *int) {
+func (l *ListCouponsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCouponsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCouponsParams) SetOffset(offset *int) {
+func (l *ListCouponsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCouponsParamsFieldOffset)
 }
@@ -5114,6 +5297,9 @@ func (l *ListCouponsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCouponsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -5157,6 +5343,9 @@ func (l *ListCouponsResponse) GetParams() *ListCouponsParams {
 }
 
 func (l *ListCouponsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -5209,6 +5398,9 @@ func (l *ListCouponsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCouponsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -5233,10 +5425,10 @@ var (
 type ListCustomersWithSubscriptionsParams struct {
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64  `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
 	// Page offset (default 0)
-	Offset       *int                 `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset       *int64               `json:"offset,omitempty" url:"offset,omitempty"`
 	ProviderType *BillingProviderType `json:"provider_type,omitempty" url:"provider_type,omitempty"`
 	Q            *string              `json:"q,omitempty" url:"q,omitempty"`
 
@@ -5254,7 +5446,7 @@ func (l *ListCustomersWithSubscriptionsParams) GetCompanyIDs() []string {
 	return l.CompanyIDs
 }
 
-func (l *ListCustomersWithSubscriptionsParams) GetLimit() *int {
+func (l *ListCustomersWithSubscriptionsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -5268,7 +5460,7 @@ func (l *ListCustomersWithSubscriptionsParams) GetName() *string {
 	return l.Name
 }
 
-func (l *ListCustomersWithSubscriptionsParams) GetOffset() *int {
+func (l *ListCustomersWithSubscriptionsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -5290,6 +5482,9 @@ func (l *ListCustomersWithSubscriptionsParams) GetQ() *string {
 }
 
 func (l *ListCustomersWithSubscriptionsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -5309,7 +5504,7 @@ func (l *ListCustomersWithSubscriptionsParams) SetCompanyIDs(companyIDs []string
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCustomersWithSubscriptionsParams) SetLimit(limit *int) {
+func (l *ListCustomersWithSubscriptionsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCustomersWithSubscriptionsParamsFieldLimit)
 }
@@ -5323,7 +5518,7 @@ func (l *ListCustomersWithSubscriptionsParams) SetName(name *string) {
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCustomersWithSubscriptionsParams) SetOffset(offset *int) {
+func (l *ListCustomersWithSubscriptionsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCustomersWithSubscriptionsParamsFieldOffset)
 }
@@ -5370,6 +5565,9 @@ func (l *ListCustomersWithSubscriptionsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCustomersWithSubscriptionsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -5413,6 +5611,9 @@ func (l *ListCustomersWithSubscriptionsResponse) GetParams() *ListCustomersWithS
 }
 
 func (l *ListCustomersWithSubscriptionsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -5465,6 +5666,9 @@ func (l *ListCustomersWithSubscriptionsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCustomersWithSubscriptionsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -5489,9 +5693,9 @@ type ListInvoicesParams struct {
 	CompanyID          *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CustomerExternalID *string `json:"customer_external_id,omitempty" url:"customer_external_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset                 *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset                 *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	SubscriptionExternalID *string `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -5515,14 +5719,14 @@ func (l *ListInvoicesParams) GetCustomerExternalID() *string {
 	return l.CustomerExternalID
 }
 
-func (l *ListInvoicesParams) GetLimit() *int {
+func (l *ListInvoicesParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListInvoicesParams) GetOffset() *int {
+func (l *ListInvoicesParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -5537,6 +5741,9 @@ func (l *ListInvoicesParams) GetSubscriptionExternalID() *string {
 }
 
 func (l *ListInvoicesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -5563,14 +5770,14 @@ func (l *ListInvoicesParams) SetCustomerExternalID(customerExternalID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListInvoicesParams) SetLimit(limit *int) {
+func (l *ListInvoicesParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listInvoicesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListInvoicesParams) SetOffset(offset *int) {
+func (l *ListInvoicesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listInvoicesParamsFieldOffset)
 }
@@ -5610,6 +5817,9 @@ func (l *ListInvoicesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListInvoicesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -5653,6 +5863,9 @@ func (l *ListInvoicesResponse) GetParams() *ListInvoicesParams {
 }
 
 func (l *ListInvoicesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -5705,6 +5918,9 @@ func (l *ListInvoicesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListInvoicesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -5726,9 +5942,9 @@ var (
 type ListMetersParams struct {
 	DisplayName *string `json:"display_name,omitempty" url:"display_name,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5744,14 +5960,14 @@ func (l *ListMetersParams) GetDisplayName() *string {
 	return l.DisplayName
 }
 
-func (l *ListMetersParams) GetLimit() *int {
+func (l *ListMetersParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListMetersParams) GetOffset() *int {
+func (l *ListMetersParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -5759,6 +5975,9 @@ func (l *ListMetersParams) GetOffset() *int {
 }
 
 func (l *ListMetersParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -5778,14 +5997,14 @@ func (l *ListMetersParams) SetDisplayName(displayName *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMetersParams) SetLimit(limit *int) {
+func (l *ListMetersParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listMetersParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMetersParams) SetOffset(offset *int) {
+func (l *ListMetersParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listMetersParamsFieldOffset)
 }
@@ -5818,6 +6037,9 @@ func (l *ListMetersParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListMetersParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -5861,6 +6083,9 @@ func (l *ListMetersResponse) GetParams() *ListMetersParams {
 }
 
 func (l *ListMetersResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -5913,6 +6138,9 @@ func (l *ListMetersResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListMetersResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -5936,9 +6164,9 @@ type ListPaymentMethodsParams struct {
 	CompanyID          *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CustomerExternalID *string `json:"customer_external_id,omitempty" url:"customer_external_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5961,14 +6189,14 @@ func (l *ListPaymentMethodsParams) GetCustomerExternalID() *string {
 	return l.CustomerExternalID
 }
 
-func (l *ListPaymentMethodsParams) GetLimit() *int {
+func (l *ListPaymentMethodsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListPaymentMethodsParams) GetOffset() *int {
+func (l *ListPaymentMethodsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -5976,6 +6204,9 @@ func (l *ListPaymentMethodsParams) GetOffset() *int {
 }
 
 func (l *ListPaymentMethodsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6002,14 +6233,14 @@ func (l *ListPaymentMethodsParams) SetCustomerExternalID(customerExternalID *str
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPaymentMethodsParams) SetLimit(limit *int) {
+func (l *ListPaymentMethodsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPaymentMethodsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPaymentMethodsParams) SetOffset(offset *int) {
+func (l *ListPaymentMethodsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPaymentMethodsParamsFieldOffset)
 }
@@ -6042,6 +6273,9 @@ func (l *ListPaymentMethodsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPaymentMethodsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6085,6 +6319,9 @@ func (l *ListPaymentMethodsResponse) GetParams() *ListPaymentMethodsParams {
 }
 
 func (l *ListPaymentMethodsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6137,6 +6374,9 @@ func (l *ListPaymentMethodsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPaymentMethodsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6156,7 +6396,7 @@ var (
 type UpsertBillingCouponResponse struct {
 	Data *BillingCouponResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6172,7 +6412,7 @@ func (u *UpsertBillingCouponResponse) GetData() *BillingCouponResponseData {
 	return u.Data
 }
 
-func (u *UpsertBillingCouponResponse) GetParams() map[string]interface{} {
+func (u *UpsertBillingCouponResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -6180,6 +6420,9 @@ func (u *UpsertBillingCouponResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertBillingCouponResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -6199,7 +6442,7 @@ func (u *UpsertBillingCouponResponse) SetData(data *BillingCouponResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingCouponResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertBillingCouponResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertBillingCouponResponseFieldParams)
 }
@@ -6232,6 +6475,9 @@ func (u *UpsertBillingCouponResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertBillingCouponResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -6251,7 +6497,7 @@ var (
 type UpsertBillingCustomerResponse struct {
 	Data *BillingCustomerResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6267,7 +6513,7 @@ func (u *UpsertBillingCustomerResponse) GetData() *BillingCustomerResponseData {
 	return u.Data
 }
 
-func (u *UpsertBillingCustomerResponse) GetParams() map[string]interface{} {
+func (u *UpsertBillingCustomerResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -6275,6 +6521,9 @@ func (u *UpsertBillingCustomerResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertBillingCustomerResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -6294,7 +6543,7 @@ func (u *UpsertBillingCustomerResponse) SetData(data *BillingCustomerResponseDat
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingCustomerResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertBillingCustomerResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertBillingCustomerResponseFieldParams)
 }
@@ -6327,6 +6576,9 @@ func (u *UpsertBillingCustomerResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertBillingCustomerResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -6346,7 +6598,7 @@ var (
 type UpsertBillingMeterResponse struct {
 	Data *BillingMeterResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6362,7 +6614,7 @@ func (u *UpsertBillingMeterResponse) GetData() *BillingMeterResponseData {
 	return u.Data
 }
 
-func (u *UpsertBillingMeterResponse) GetParams() map[string]interface{} {
+func (u *UpsertBillingMeterResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -6370,6 +6622,9 @@ func (u *UpsertBillingMeterResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertBillingMeterResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -6389,7 +6644,7 @@ func (u *UpsertBillingMeterResponse) SetData(data *BillingMeterResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingMeterResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertBillingMeterResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertBillingMeterResponseFieldParams)
 }
@@ -6422,6 +6677,9 @@ func (u *UpsertBillingMeterResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertBillingMeterResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -6441,7 +6699,7 @@ var (
 type UpsertBillingPriceResponse struct {
 	Data *BillingPriceResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6457,7 +6715,7 @@ func (u *UpsertBillingPriceResponse) GetData() *BillingPriceResponseData {
 	return u.Data
 }
 
-func (u *UpsertBillingPriceResponse) GetParams() map[string]interface{} {
+func (u *UpsertBillingPriceResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -6465,6 +6723,9 @@ func (u *UpsertBillingPriceResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertBillingPriceResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -6484,7 +6745,7 @@ func (u *UpsertBillingPriceResponse) SetData(data *BillingPriceResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingPriceResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertBillingPriceResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertBillingPriceResponseFieldParams)
 }
@@ -6517,6 +6778,9 @@ func (u *UpsertBillingPriceResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertBillingPriceResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -6536,7 +6800,7 @@ var (
 type UpsertBillingProductResponse struct {
 	Data *BillingProductResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6552,7 +6816,7 @@ func (u *UpsertBillingProductResponse) GetData() *BillingProductResponseData {
 	return u.Data
 }
 
-func (u *UpsertBillingProductResponse) GetParams() map[string]interface{} {
+func (u *UpsertBillingProductResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -6560,6 +6824,9 @@ func (u *UpsertBillingProductResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertBillingProductResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -6579,7 +6846,7 @@ func (u *UpsertBillingProductResponse) SetData(data *BillingProductResponseData)
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingProductResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertBillingProductResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertBillingProductResponseFieldParams)
 }
@@ -6612,6 +6879,9 @@ func (u *UpsertBillingProductResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertBillingProductResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -6631,7 +6901,7 @@ var (
 type UpsertBillingSubscriptionResponse struct {
 	Data *BillingSubscriptionResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6647,7 +6917,7 @@ func (u *UpsertBillingSubscriptionResponse) GetData() *BillingSubscriptionRespon
 	return u.Data
 }
 
-func (u *UpsertBillingSubscriptionResponse) GetParams() map[string]interface{} {
+func (u *UpsertBillingSubscriptionResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -6655,6 +6925,9 @@ func (u *UpsertBillingSubscriptionResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertBillingSubscriptionResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -6674,7 +6947,7 @@ func (u *UpsertBillingSubscriptionResponse) SetData(data *BillingSubscriptionRes
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingSubscriptionResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertBillingSubscriptionResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertBillingSubscriptionResponseFieldParams)
 }
@@ -6707,6 +6980,9 @@ func (u *UpsertBillingSubscriptionResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertBillingSubscriptionResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -6726,7 +7002,7 @@ var (
 type UpsertInvoiceResponse struct {
 	Data *InvoiceResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6742,7 +7018,7 @@ func (u *UpsertInvoiceResponse) GetData() *InvoiceResponseData {
 	return u.Data
 }
 
-func (u *UpsertInvoiceResponse) GetParams() map[string]interface{} {
+func (u *UpsertInvoiceResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -6750,6 +7026,9 @@ func (u *UpsertInvoiceResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertInvoiceResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -6769,7 +7048,7 @@ func (u *UpsertInvoiceResponse) SetData(data *InvoiceResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertInvoiceResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertInvoiceResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertInvoiceResponseFieldParams)
 }
@@ -6802,6 +7081,9 @@ func (u *UpsertInvoiceResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertInvoiceResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -6821,7 +7103,7 @@ var (
 type UpsertPaymentMethodResponse struct {
 	Data *PaymentMethodResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6837,7 +7119,7 @@ func (u *UpsertPaymentMethodResponse) GetData() *PaymentMethodResponseData {
 	return u.Data
 }
 
-func (u *UpsertPaymentMethodResponse) GetParams() map[string]interface{} {
+func (u *UpsertPaymentMethodResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -6845,6 +7127,9 @@ func (u *UpsertPaymentMethodResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertPaymentMethodResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -6864,7 +7149,7 @@ func (u *UpsertPaymentMethodResponse) SetData(data *PaymentMethodResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertPaymentMethodResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertPaymentMethodResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertPaymentMethodResponseFieldParams)
 }
@@ -6897,6 +7182,9 @@ func (u *UpsertPaymentMethodResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertPaymentMethodResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -6921,15 +7209,15 @@ var (
 )
 
 type CreateCouponRequestBody struct {
-	AmountOff        int     `json:"amount_off" url:"-"`
+	AmountOff        int64   `json:"amount_off" url:"-"`
 	Currency         *string `json:"currency,omitempty" url:"-"`
 	Duration         string  `json:"duration" url:"-"`
-	DurationInMonths int     `json:"duration_in_months" url:"-"`
+	DurationInMonths int64   `json:"duration_in_months" url:"-"`
 	ExternalID       string  `json:"external_id" url:"-"`
-	MaxRedemptions   int     `json:"max_redemptions" url:"-"`
+	MaxRedemptions   int64   `json:"max_redemptions" url:"-"`
 	Name             string  `json:"name" url:"-"`
 	PercentOff       float64 `json:"percent_off" url:"-"`
-	TimesRedeemed    int     `json:"times_redeemed" url:"-"`
+	TimesRedeemed    int64   `json:"times_redeemed" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6944,7 +7232,7 @@ func (c *CreateCouponRequestBody) require(field *big.Int) {
 
 // SetAmountOff sets the AmountOff field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCouponRequestBody) SetAmountOff(amountOff int) {
+func (c *CreateCouponRequestBody) SetAmountOff(amountOff int64) {
 	c.AmountOff = amountOff
 	c.require(createCouponRequestBodyFieldAmountOff)
 }
@@ -6965,7 +7253,7 @@ func (c *CreateCouponRequestBody) SetDuration(duration string) {
 
 // SetDurationInMonths sets the DurationInMonths field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCouponRequestBody) SetDurationInMonths(durationInMonths int) {
+func (c *CreateCouponRequestBody) SetDurationInMonths(durationInMonths int64) {
 	c.DurationInMonths = durationInMonths
 	c.require(createCouponRequestBodyFieldDurationInMonths)
 }
@@ -6979,7 +7267,7 @@ func (c *CreateCouponRequestBody) SetExternalID(externalID string) {
 
 // SetMaxRedemptions sets the MaxRedemptions field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCouponRequestBody) SetMaxRedemptions(maxRedemptions int) {
+func (c *CreateCouponRequestBody) SetMaxRedemptions(maxRedemptions int64) {
 	c.MaxRedemptions = maxRedemptions
 	c.require(createCouponRequestBodyFieldMaxRedemptions)
 }
@@ -7000,9 +7288,30 @@ func (c *CreateCouponRequestBody) SetPercentOff(percentOff float64) {
 
 // SetTimesRedeemed sets the TimesRedeemed field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCouponRequestBody) SetTimesRedeemed(timesRedeemed int) {
+func (c *CreateCouponRequestBody) SetTimesRedeemed(timesRedeemed int64) {
 	c.TimesRedeemed = timesRedeemed
 	c.require(createCouponRequestBodyFieldTimesRedeemed)
+}
+
+func (c *CreateCouponRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCouponRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateCouponRequestBody(body)
+	return nil
+}
+
+func (c *CreateCouponRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateCouponRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -7020,7 +7329,7 @@ type CreateBillingCustomerRequestBody struct {
 	DefaultPaymentMethodID *string              `json:"default_payment_method_id,omitempty" url:"-"`
 	Email                  string               `json:"email" url:"-"`
 	ExternalID             string               `json:"external_id" url:"-"`
-	Meta                   map[string]string    `json:"meta,omitempty" url:"-"`
+	Meta                   map[string]string    `json:"meta" url:"-"`
 	Name                   string               `json:"name" url:"-"`
 	ProviderType           *BillingProviderType `json:"provider_type,omitempty" url:"-"`
 
@@ -7084,6 +7393,27 @@ func (c *CreateBillingCustomerRequestBody) SetProviderType(providerType *Billing
 	c.require(createBillingCustomerRequestBodyFieldProviderType)
 }
 
+func (c *CreateBillingCustomerRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateBillingCustomerRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateBillingCustomerRequestBody(body)
+	return nil
+}
+
+func (c *CreateBillingCustomerRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateBillingCustomerRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	createMeterRequestBodyFieldDisplayName     = big.NewInt(1 << 0)
 	createMeterRequestBodyFieldEventName       = big.NewInt(1 << 1)
@@ -7136,6 +7466,27 @@ func (c *CreateMeterRequestBody) SetExternalID(externalID string) {
 	c.require(createMeterRequestBodyFieldExternalID)
 }
 
+func (c *CreateMeterRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateMeterRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateMeterRequestBody(body)
+	return nil
+}
+
+func (c *CreateMeterRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateMeterRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	createBillingPriceRequestBodyFieldBillingScheme     = big.NewInt(1 << 0)
 	createBillingPriceRequestBodyFieldCurrency          = big.NewInt(1 << 1)
@@ -7161,11 +7512,11 @@ type CreateBillingPriceRequestBody struct {
 	Interval          string                               `json:"interval" url:"-"`
 	IsActive          bool                                 `json:"is_active" url:"-"`
 	MeterID           *string                              `json:"meter_id,omitempty" url:"-"`
-	PackageSize       *int                                 `json:"package_size,omitempty" url:"-"`
-	Price             int                                  `json:"price" url:"-"`
+	PackageSize       *int64                               `json:"package_size,omitempty" url:"-"`
+	Price             int64                                `json:"price" url:"-"`
 	PriceDecimal      *string                              `json:"price_decimal,omitempty" url:"-"`
 	PriceExternalID   string                               `json:"price_external_id" url:"-"`
-	PriceTiers        []*CreateBillingPriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
+	PriceTiers        []*CreateBillingPriceTierRequestBody `json:"price_tiers" url:"-"`
 	ProductExternalID string                               `json:"product_external_id" url:"-"`
 	ProviderType      *BillingProviderType                 `json:"provider_type,omitempty" url:"-"`
 	TiersMode         *BillingTiersMode                    `json:"tiers_mode,omitempty" url:"-"`
@@ -7226,14 +7577,14 @@ func (c *CreateBillingPriceRequestBody) SetMeterID(meterID *string) {
 
 // SetPackageSize sets the PackageSize field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPriceRequestBody) SetPackageSize(packageSize *int) {
+func (c *CreateBillingPriceRequestBody) SetPackageSize(packageSize *int64) {
 	c.PackageSize = packageSize
 	c.require(createBillingPriceRequestBodyFieldPackageSize)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPriceRequestBody) SetPrice(price int) {
+func (c *CreateBillingPriceRequestBody) SetPrice(price int64) {
 	c.Price = price
 	c.require(createBillingPriceRequestBodyFieldPrice)
 }
@@ -7285,6 +7636,27 @@ func (c *CreateBillingPriceRequestBody) SetTiersMode(tiersMode *BillingTiersMode
 func (c *CreateBillingPriceRequestBody) SetUsageType(usageType BillingPriceUsageType) {
 	c.UsageType = usageType
 	c.require(createBillingPriceRequestBodyFieldUsageType)
+}
+
+func (c *CreateBillingPriceRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateBillingPriceRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateBillingPriceRequestBody(body)
+	return nil
+}
+
+func (c *CreateBillingPriceRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateBillingPriceRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -7348,6 +7720,27 @@ func (c *CreateBillingProductRequestBody) SetProviderType(providerType *BillingP
 	c.require(createBillingProductRequestBodyFieldProviderType)
 }
 
+func (c *CreateBillingProductRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateBillingProductRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateBillingProductRequestBody(body)
+	return nil
+}
+
+func (c *CreateBillingProductRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateBillingProductRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	createBillingSubscriptionRequestBodyFieldApplicationID                  = big.NewInt(1 << 0)
 	createBillingSubscriptionRequestBodyFieldCancelAt                       = big.NewInt(1 << 1)
@@ -7372,23 +7765,23 @@ var (
 
 type CreateBillingSubscriptionRequestBody struct {
 	ApplicationID                  *string                             `json:"application_id,omitempty" url:"-"`
-	CancelAt                       *int                                `json:"cancel_at,omitempty" url:"-"`
+	CancelAt                       *int64                              `json:"cancel_at,omitempty" url:"-"`
 	CancelAtPeriodEnd              bool                                `json:"cancel_at_period_end" url:"-"`
 	Currency                       string                              `json:"currency" url:"-"`
 	CustomerExternalID             string                              `json:"customer_external_id" url:"-"`
 	DefaultPaymentMethodExternalID *string                             `json:"default_payment_method_external_id,omitempty" url:"-"`
 	DefaultPaymentMethodID         *string                             `json:"default_payment_method_id,omitempty" url:"-"`
-	Discounts                      []*BillingSubscriptionDiscount      `json:"discounts,omitempty" url:"-"`
+	Discounts                      []*BillingSubscriptionDiscount      `json:"discounts" url:"-"`
 	ExpiredAt                      time.Time                           `json:"expired_at" url:"-"`
 	Interval                       *string                             `json:"interval,omitempty" url:"-"`
-	Metadata                       map[string]interface{}              `json:"metadata,omitempty" url:"-"`
-	PeriodEnd                      *int                                `json:"period_end,omitempty" url:"-"`
-	PeriodStart                    *int                                `json:"period_start,omitempty" url:"-"`
-	ProductExternalIDs             []*BillingProductPricing            `json:"product_external_ids,omitempty" url:"-"`
+	Metadata                       map[string]any                      `json:"metadata,omitempty" url:"-"`
+	PeriodEnd                      *int64                              `json:"period_end,omitempty" url:"-"`
+	PeriodStart                    *int64                              `json:"period_start,omitempty" url:"-"`
+	ProductExternalIDs             []*BillingProductPricing            `json:"product_external_ids" url:"-"`
 	Status                         *string                             `json:"status,omitempty" url:"-"`
 	SubscriptionExternalID         string                              `json:"subscription_external_id" url:"-"`
-	TotalPrice                     int                                 `json:"total_price" url:"-"`
-	TrialEnd                       *int                                `json:"trial_end,omitempty" url:"-"`
+	TotalPrice                     int64                               `json:"total_price" url:"-"`
+	TrialEnd                       *int64                              `json:"trial_end,omitempty" url:"-"`
 	TrialEndSetting                *BillingSubscriptionTrialEndSetting `json:"trial_end_setting,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -7411,7 +7804,7 @@ func (c *CreateBillingSubscriptionRequestBody) SetApplicationID(applicationID *s
 
 // SetCancelAt sets the CancelAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingSubscriptionRequestBody) SetCancelAt(cancelAt *int) {
+func (c *CreateBillingSubscriptionRequestBody) SetCancelAt(cancelAt *int64) {
 	c.CancelAt = cancelAt
 	c.require(createBillingSubscriptionRequestBodyFieldCancelAt)
 }
@@ -7474,21 +7867,21 @@ func (c *CreateBillingSubscriptionRequestBody) SetInterval(interval *string) {
 
 // SetMetadata sets the Metadata field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingSubscriptionRequestBody) SetMetadata(metadata map[string]interface{}) {
+func (c *CreateBillingSubscriptionRequestBody) SetMetadata(metadata map[string]any) {
 	c.Metadata = metadata
 	c.require(createBillingSubscriptionRequestBodyFieldMetadata)
 }
 
 // SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingSubscriptionRequestBody) SetPeriodEnd(periodEnd *int) {
+func (c *CreateBillingSubscriptionRequestBody) SetPeriodEnd(periodEnd *int64) {
 	c.PeriodEnd = periodEnd
 	c.require(createBillingSubscriptionRequestBodyFieldPeriodEnd)
 }
 
 // SetPeriodStart sets the PeriodStart field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingSubscriptionRequestBody) SetPeriodStart(periodStart *int) {
+func (c *CreateBillingSubscriptionRequestBody) SetPeriodStart(periodStart *int64) {
 	c.PeriodStart = periodStart
 	c.require(createBillingSubscriptionRequestBodyFieldPeriodStart)
 }
@@ -7516,14 +7909,14 @@ func (c *CreateBillingSubscriptionRequestBody) SetSubscriptionExternalID(subscri
 
 // SetTotalPrice sets the TotalPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingSubscriptionRequestBody) SetTotalPrice(totalPrice int) {
+func (c *CreateBillingSubscriptionRequestBody) SetTotalPrice(totalPrice int64) {
 	c.TotalPrice = totalPrice
 	c.require(createBillingSubscriptionRequestBodyFieldTotalPrice)
 }
 
 // SetTrialEnd sets the TrialEnd field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingSubscriptionRequestBody) SetTrialEnd(trialEnd *int) {
+func (c *CreateBillingSubscriptionRequestBody) SetTrialEnd(trialEnd *int64) {
 	c.TrialEnd = trialEnd
 	c.require(createBillingSubscriptionRequestBodyFieldTrialEnd)
 }
@@ -7575,9 +7968,9 @@ var (
 )
 
 type CreateInvoiceRequestBody struct {
-	AmountDue               int            `json:"amount_due" url:"-"`
-	AmountPaid              int            `json:"amount_paid" url:"-"`
-	AmountRemaining         int            `json:"amount_remaining" url:"-"`
+	AmountDue               int64          `json:"amount_due" url:"-"`
+	AmountPaid              int64          `json:"amount_paid" url:"-"`
+	AmountRemaining         int64          `json:"amount_remaining" url:"-"`
 	CollectionMethod        string         `json:"collection_method" url:"-"`
 	Currency                string         `json:"currency" url:"-"`
 	CustomerExternalID      string         `json:"customer_external_id" url:"-"`
@@ -7586,7 +7979,7 @@ type CreateInvoiceRequestBody struct {
 	PaymentMethodExternalID *string        `json:"payment_method_external_id,omitempty" url:"-"`
 	Status                  *InvoiceStatus `json:"status,omitempty" url:"-"`
 	SubscriptionExternalID  *string        `json:"subscription_external_id,omitempty" url:"-"`
-	Subtotal                int            `json:"subtotal" url:"-"`
+	Subtotal                int64          `json:"subtotal" url:"-"`
 	URL                     *string        `json:"url,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -7602,21 +7995,21 @@ func (c *CreateInvoiceRequestBody) require(field *big.Int) {
 
 // SetAmountDue sets the AmountDue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateInvoiceRequestBody) SetAmountDue(amountDue int) {
+func (c *CreateInvoiceRequestBody) SetAmountDue(amountDue int64) {
 	c.AmountDue = amountDue
 	c.require(createInvoiceRequestBodyFieldAmountDue)
 }
 
 // SetAmountPaid sets the AmountPaid field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateInvoiceRequestBody) SetAmountPaid(amountPaid int) {
+func (c *CreateInvoiceRequestBody) SetAmountPaid(amountPaid int64) {
 	c.AmountPaid = amountPaid
 	c.require(createInvoiceRequestBodyFieldAmountPaid)
 }
 
 // SetAmountRemaining sets the AmountRemaining field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateInvoiceRequestBody) SetAmountRemaining(amountRemaining int) {
+func (c *CreateInvoiceRequestBody) SetAmountRemaining(amountRemaining int64) {
 	c.AmountRemaining = amountRemaining
 	c.require(createInvoiceRequestBodyFieldAmountRemaining)
 }
@@ -7679,7 +8072,7 @@ func (c *CreateInvoiceRequestBody) SetSubscriptionExternalID(subscriptionExterna
 
 // SetSubtotal sets the Subtotal field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateInvoiceRequestBody) SetSubtotal(subtotal int) {
+func (c *CreateInvoiceRequestBody) SetSubtotal(subtotal int64) {
 	c.Subtotal = subtotal
 	c.require(createInvoiceRequestBodyFieldSubtotal)
 }
@@ -7736,8 +8129,8 @@ type CreatePaymentMethodRequestBody struct {
 	BillingEmail       *string `json:"billing_email,omitempty" url:"-"`
 	BillingName        *string `json:"billing_name,omitempty" url:"-"`
 	CardBrand          *string `json:"card_brand,omitempty" url:"-"`
-	CardExpMonth       *int    `json:"card_exp_month,omitempty" url:"-"`
-	CardExpYear        *int    `json:"card_exp_year,omitempty" url:"-"`
+	CardExpMonth       *int64  `json:"card_exp_month,omitempty" url:"-"`
+	CardExpYear        *int64  `json:"card_exp_year,omitempty" url:"-"`
 	CardLast4          *string `json:"card_last4,omitempty" url:"-"`
 	CustomerExternalID string  `json:"customer_external_id" url:"-"`
 	ExternalID         string  `json:"external_id" url:"-"`
@@ -7798,14 +8191,14 @@ func (c *CreatePaymentMethodRequestBody) SetCardBrand(cardBrand *string) {
 
 // SetCardExpMonth sets the CardExpMonth field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePaymentMethodRequestBody) SetCardExpMonth(cardExpMonth *int) {
+func (c *CreatePaymentMethodRequestBody) SetCardExpMonth(cardExpMonth *int64) {
 	c.CardExpMonth = cardExpMonth
 	c.require(createPaymentMethodRequestBodyFieldCardExpMonth)
 }
 
 // SetCardExpYear sets the CardExpYear field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePaymentMethodRequestBody) SetCardExpYear(cardExpYear *int) {
+func (c *CreatePaymentMethodRequestBody) SetCardExpYear(cardExpYear *int64) {
 	c.CardExpYear = cardExpYear
 	c.require(createPaymentMethodRequestBodyFieldCardExpYear)
 }
@@ -7836,4 +8229,25 @@ func (c *CreatePaymentMethodRequestBody) SetExternalID(externalID string) {
 func (c *CreatePaymentMethodRequestBody) SetPaymentMethodType(paymentMethodType string) {
 	c.PaymentMethodType = paymentMethodType
 	c.require(createPaymentMethodRequestBodyFieldPaymentMethodType)
+}
+
+func (c *CreatePaymentMethodRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePaymentMethodRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreatePaymentMethodRequestBody(body)
+	return nil
+}
+
+func (c *CreatePaymentMethodRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreatePaymentMethodRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

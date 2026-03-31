@@ -4,11 +4,12 @@ package plans
 
 import (
 	context "context"
+	http "net/http"
+
 	schematichq "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
 	internal "github.com/schematichq/schematic-go/internal"
 	option "github.com/schematichq/schematic-go/option"
-	http "net/http"
 )
 
 type RawClient struct {
@@ -460,6 +461,7 @@ func (r *RawClient) DeletePlanVersion(
 	ctx context.Context,
 	// plan_id
 	planID string,
+	request *schematichq.DeletePlanVersionRequest,
 	opts ...option.RequestOption,
 ) (*core.Response[*schematichq.DeletePlanVersionResponse], error) {
 	options := core.NewRequestOptions(opts...)
@@ -472,6 +474,13 @@ func (r *RawClient) DeletePlanVersion(
 		baseURL+"/plans/version/%v",
 		planID,
 	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		r.options.ToHeader(),
 		options.ToHeader(),

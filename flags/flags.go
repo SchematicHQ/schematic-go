@@ -11,7 +11,7 @@ import (
 // TODO: Use separators that are not valid characters in key values
 func FlagCheckCacheKey(evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("f:%s;", flagKey))
+	fmt.Fprintf(&sb, "f:%s;", flagKey)
 
 	companyKeys := make([]string, 0, len(evalCtx.Company))
 	for k := range evalCtx.Company {
@@ -19,7 +19,7 @@ func FlagCheckCacheKey(evalCtx *schematicgo.CheckFlagRequestBody, flagKey string
 	}
 	sort.Strings(companyKeys)
 	for _, k := range companyKeys {
-		sb.WriteString(fmt.Sprintf("c:%s:%s;", k, evalCtx.Company[k]))
+		fmt.Fprintf(&sb, "c:%s:%s;", k, evalCtx.Company[k])
 	}
 
 	userKeys := make([]string, 0, len(evalCtx.User))
@@ -28,7 +28,7 @@ func FlagCheckCacheKey(evalCtx *schematicgo.CheckFlagRequestBody, flagKey string
 	}
 	sort.Strings(userKeys)
 	for _, k := range userKeys {
-		sb.WriteString(fmt.Sprintf("u:%s:%s;", k, evalCtx.User[k]))
+		fmt.Fprintf(&sb, "u:%s:%s;", k, evalCtx.User[k])
 	}
 
 	return strings.TrimRight(sb.String(), ";")

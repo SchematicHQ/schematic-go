@@ -23,9 +23,9 @@ type CountWebhookEventsRequest struct {
 	Q         *string   `json:"-" url:"q,omitempty"`
 	WebhookID *string   `json:"-" url:"webhook_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -61,14 +61,14 @@ func (c *CountWebhookEventsRequest) SetWebhookID(webhookID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountWebhookEventsRequest) SetLimit(limit *int) {
+func (c *CountWebhookEventsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countWebhookEventsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountWebhookEventsRequest) SetOffset(offset *int) {
+func (c *CountWebhookEventsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countWebhookEventsRequestFieldOffset)
 }
@@ -82,9 +82,9 @@ var (
 type CountWebhooksRequest struct {
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -106,14 +106,14 @@ func (c *CountWebhooksRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountWebhooksRequest) SetLimit(limit *int) {
+func (c *CountWebhooksRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countWebhooksRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountWebhooksRequest) SetOffset(offset *int) {
+func (c *CountWebhooksRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countWebhooksRequestFieldOffset)
 }
@@ -130,7 +130,7 @@ type CreateWebhookRequestBody struct {
 	CreditTriggerConfigs      []*CreditTriggerConfig      `json:"credit_trigger_configs,omitempty" url:"-"`
 	EntitlementTriggerConfigs []*EntitlementTriggerConfig `json:"entitlement_trigger_configs,omitempty" url:"-"`
 	Name                      string                      `json:"name" url:"-"`
-	RequestTypes              []WebhookRequestType        `json:"request_types,omitempty" url:"-"`
+	RequestTypes              []WebhookRequestType        `json:"request_types" url:"-"`
 	URL                       string                      `json:"url" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -179,6 +179,27 @@ func (c *CreateWebhookRequestBody) SetURL(url string) {
 	c.require(createWebhookRequestBodyFieldURL)
 }
 
+func (c *CreateWebhookRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateWebhookRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateWebhookRequestBody(body)
+	return nil
+}
+
+func (c *CreateWebhookRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateWebhookRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	listWebhookEventsRequestFieldIDs       = big.NewInt(1 << 0)
 	listWebhookEventsRequestFieldQ         = big.NewInt(1 << 1)
@@ -192,9 +213,9 @@ type ListWebhookEventsRequest struct {
 	Q         *string   `json:"-" url:"q,omitempty"`
 	WebhookID *string   `json:"-" url:"webhook_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -230,14 +251,14 @@ func (l *ListWebhookEventsRequest) SetWebhookID(webhookID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListWebhookEventsRequest) SetLimit(limit *int) {
+func (l *ListWebhookEventsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listWebhookEventsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListWebhookEventsRequest) SetOffset(offset *int) {
+func (l *ListWebhookEventsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listWebhookEventsRequestFieldOffset)
 }
@@ -251,9 +272,9 @@ var (
 type ListWebhooksRequest struct {
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -275,14 +296,14 @@ func (l *ListWebhooksRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListWebhooksRequest) SetLimit(limit *int) {
+func (l *ListWebhooksRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listWebhooksRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListWebhooksRequest) SetOffset(offset *int) {
+func (l *ListWebhooksRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listWebhooksRequestFieldOffset)
 }
@@ -309,6 +330,9 @@ func (c *CreditTriggerConfig) GetCreditID() string {
 }
 
 func (c *CreditTriggerConfig) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -354,6 +378,9 @@ func (c *CreditTriggerConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditTriggerConfig) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -387,6 +414,9 @@ func (e *EntitlementTriggerConfig) GetFeatureID() string {
 }
 
 func (e *EntitlementTriggerConfig) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -432,6 +462,9 @@ func (e *EntitlementTriggerConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EntitlementTriggerConfig) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -461,7 +494,7 @@ type WebhookEventDetailResponseData struct {
 	ID           string               `json:"id" url:"id"`
 	Payload      *string              `json:"payload,omitempty" url:"payload,omitempty"`
 	RequestType  WebhookRequestType   `json:"request_type" url:"request_type"`
-	ResponseCode *int                 `json:"response_code,omitempty" url:"response_code,omitempty"`
+	ResponseCode *int64               `json:"response_code,omitempty" url:"response_code,omitempty"`
 	SentAt       *time.Time           `json:"sent_at,omitempty" url:"sent_at,omitempty"`
 	Status       WebhookEventStatus   `json:"status" url:"status"`
 	UpdatedAt    time.Time            `json:"updated_at" url:"updated_at"`
@@ -503,7 +536,7 @@ func (w *WebhookEventDetailResponseData) GetRequestType() WebhookRequestType {
 	return w.RequestType
 }
 
-func (w *WebhookEventDetailResponseData) GetResponseCode() *int {
+func (w *WebhookEventDetailResponseData) GetResponseCode() *int64 {
 	if w == nil {
 		return nil
 	}
@@ -546,6 +579,9 @@ func (w *WebhookEventDetailResponseData) GetWebhookID() string {
 }
 
 func (w *WebhookEventDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
 	return w.extraProperties
 }
 
@@ -586,7 +622,7 @@ func (w *WebhookEventDetailResponseData) SetRequestType(requestType WebhookReque
 
 // SetResponseCode sets the ResponseCode field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WebhookEventDetailResponseData) SetResponseCode(responseCode *int) {
+func (w *WebhookEventDetailResponseData) SetResponseCode(responseCode *int64) {
 	w.ResponseCode = responseCode
 	w.require(webhookEventDetailResponseDataFieldResponseCode)
 }
@@ -670,6 +706,9 @@ func (w *WebhookEventDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (w *WebhookEventDetailResponseData) String() string {
+	if w == nil {
+		return "<nil>"
+	}
 	if len(w.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
 			return value
@@ -717,6 +756,7 @@ const (
 	WebhookRequestTypeCompanyOverrideExpired      WebhookRequestType = "company.override.expired"
 	WebhookRequestTypeCompanyOverrideUpdated      WebhookRequestType = "company.override.updated"
 	WebhookRequestTypeCompanyPlanChanged          WebhookRequestType = "company.plan_changed"
+	WebhookRequestTypeCompanyScheduledDowngrade   WebhookRequestType = "company.scheduled_downgrade"
 	WebhookRequestTypeCompanyUpdated              WebhookRequestType = "company.updated"
 	WebhookRequestTypeCreditLimitReached          WebhookRequestType = "credit.limit.reached"
 	WebhookRequestTypeCreditLimitWarning          WebhookRequestType = "credit.limit.warning"
@@ -767,6 +807,8 @@ func NewWebhookRequestTypeFromString(s string) (WebhookRequestType, error) {
 		return WebhookRequestTypeCompanyOverrideUpdated, nil
 	case "company.plan_changed":
 		return WebhookRequestTypeCompanyPlanChanged, nil
+	case "company.scheduled_downgrade":
+		return WebhookRequestTypeCompanyScheduledDowngrade, nil
 	case "company.updated":
 		return WebhookRequestTypeCompanyUpdated, nil
 	case "credit.limit.reached":
@@ -939,6 +981,9 @@ func (w *WebhookResponseData) GetURL() string {
 }
 
 func (w *WebhookResponseData) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
 	return w.extraProperties
 }
 
@@ -1059,6 +1104,9 @@ func (w *WebhookResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (w *WebhookResponseData) String() string {
+	if w == nil {
+		return "<nil>"
+	}
 	if len(w.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
 			return value
@@ -1104,9 +1152,9 @@ var (
 type CountWebhookEventsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset    *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q         *string `json:"q,omitempty" url:"q,omitempty"`
 	WebhookID *string `json:"webhook_id,omitempty" url:"webhook_id,omitempty"`
 
@@ -1124,14 +1172,14 @@ func (c *CountWebhookEventsParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountWebhookEventsParams) GetLimit() *int {
+func (c *CountWebhookEventsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountWebhookEventsParams) GetOffset() *int {
+func (c *CountWebhookEventsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -1153,6 +1201,9 @@ func (c *CountWebhookEventsParams) GetWebhookID() *string {
 }
 
 func (c *CountWebhookEventsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1172,14 +1223,14 @@ func (c *CountWebhookEventsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountWebhookEventsParams) SetLimit(limit *int) {
+func (c *CountWebhookEventsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countWebhookEventsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountWebhookEventsParams) SetOffset(offset *int) {
+func (c *CountWebhookEventsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countWebhookEventsParamsFieldOffset)
 }
@@ -1226,6 +1277,9 @@ func (c *CountWebhookEventsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountWebhookEventsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1269,6 +1323,9 @@ func (c *CountWebhookEventsResponse) GetParams() *CountWebhookEventsParams {
 }
 
 func (c *CountWebhookEventsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1321,6 +1378,9 @@ func (c *CountWebhookEventsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountWebhookEventsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1341,9 +1401,9 @@ var (
 
 type CountWebhooksParams struct {
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -1353,14 +1413,14 @@ type CountWebhooksParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountWebhooksParams) GetLimit() *int {
+func (c *CountWebhooksParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountWebhooksParams) GetOffset() *int {
+func (c *CountWebhooksParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -1375,6 +1435,9 @@ func (c *CountWebhooksParams) GetQ() *string {
 }
 
 func (c *CountWebhooksParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1387,14 +1450,14 @@ func (c *CountWebhooksParams) require(field *big.Int) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountWebhooksParams) SetLimit(limit *int) {
+func (c *CountWebhooksParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countWebhooksParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountWebhooksParams) SetOffset(offset *int) {
+func (c *CountWebhooksParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countWebhooksParamsFieldOffset)
 }
@@ -1434,6 +1497,9 @@ func (c *CountWebhooksParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountWebhooksParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1477,6 +1543,9 @@ func (c *CountWebhooksResponse) GetParams() *CountWebhooksParams {
 }
 
 func (c *CountWebhooksResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1529,6 +1598,9 @@ func (c *CountWebhooksResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountWebhooksResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1548,7 +1620,7 @@ var (
 type CreateWebhookResponse struct {
 	Data *WebhookResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1564,7 +1636,7 @@ func (c *CreateWebhookResponse) GetData() *WebhookResponseData {
 	return c.Data
 }
 
-func (c *CreateWebhookResponse) GetParams() map[string]interface{} {
+func (c *CreateWebhookResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -1572,6 +1644,9 @@ func (c *CreateWebhookResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateWebhookResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1591,7 +1666,7 @@ func (c *CreateWebhookResponse) SetData(data *WebhookResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateWebhookResponse) SetParams(params map[string]interface{}) {
+func (c *CreateWebhookResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createWebhookResponseFieldParams)
 }
@@ -1624,6 +1699,9 @@ func (c *CreateWebhookResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateWebhookResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1643,7 +1721,7 @@ var (
 type DeleteWebhookResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1659,7 +1737,7 @@ func (d *DeleteWebhookResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteWebhookResponse) GetParams() map[string]interface{} {
+func (d *DeleteWebhookResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -1667,6 +1745,9 @@ func (d *DeleteWebhookResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteWebhookResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -1686,7 +1767,7 @@ func (d *DeleteWebhookResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteWebhookResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteWebhookResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteWebhookResponseFieldParams)
 }
@@ -1719,6 +1800,9 @@ func (d *DeleteWebhookResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteWebhookResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -1738,7 +1822,7 @@ var (
 type GetWebhookEventResponse struct {
 	Data *WebhookEventDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1754,7 +1838,7 @@ func (g *GetWebhookEventResponse) GetData() *WebhookEventDetailResponseData {
 	return g.Data
 }
 
-func (g *GetWebhookEventResponse) GetParams() map[string]interface{} {
+func (g *GetWebhookEventResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -1762,6 +1846,9 @@ func (g *GetWebhookEventResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetWebhookEventResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -1781,7 +1868,7 @@ func (g *GetWebhookEventResponse) SetData(data *WebhookEventDetailResponseData) 
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetWebhookEventResponse) SetParams(params map[string]interface{}) {
+func (g *GetWebhookEventResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getWebhookEventResponseFieldParams)
 }
@@ -1814,6 +1901,9 @@ func (g *GetWebhookEventResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetWebhookEventResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -1833,7 +1923,7 @@ var (
 type GetWebhookResponse struct {
 	Data *WebhookResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1849,7 +1939,7 @@ func (g *GetWebhookResponse) GetData() *WebhookResponseData {
 	return g.Data
 }
 
-func (g *GetWebhookResponse) GetParams() map[string]interface{} {
+func (g *GetWebhookResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -1857,6 +1947,9 @@ func (g *GetWebhookResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetWebhookResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -1876,7 +1969,7 @@ func (g *GetWebhookResponse) SetData(data *WebhookResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetWebhookResponse) SetParams(params map[string]interface{}) {
+func (g *GetWebhookResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getWebhookResponseFieldParams)
 }
@@ -1909,6 +2002,9 @@ func (g *GetWebhookResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetWebhookResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -1932,9 +2028,9 @@ var (
 type ListWebhookEventsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset    *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q         *string `json:"q,omitempty" url:"q,omitempty"`
 	WebhookID *string `json:"webhook_id,omitempty" url:"webhook_id,omitempty"`
 
@@ -1952,14 +2048,14 @@ func (l *ListWebhookEventsParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListWebhookEventsParams) GetLimit() *int {
+func (l *ListWebhookEventsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListWebhookEventsParams) GetOffset() *int {
+func (l *ListWebhookEventsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -1981,6 +2077,9 @@ func (l *ListWebhookEventsParams) GetWebhookID() *string {
 }
 
 func (l *ListWebhookEventsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -2000,14 +2099,14 @@ func (l *ListWebhookEventsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListWebhookEventsParams) SetLimit(limit *int) {
+func (l *ListWebhookEventsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listWebhookEventsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListWebhookEventsParams) SetOffset(offset *int) {
+func (l *ListWebhookEventsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listWebhookEventsParamsFieldOffset)
 }
@@ -2054,6 +2153,9 @@ func (l *ListWebhookEventsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListWebhookEventsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2097,6 +2199,9 @@ func (l *ListWebhookEventsResponse) GetParams() *ListWebhookEventsParams {
 }
 
 func (l *ListWebhookEventsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -2149,6 +2254,9 @@ func (l *ListWebhookEventsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListWebhookEventsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2169,9 +2277,9 @@ var (
 
 type ListWebhooksParams struct {
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -2181,14 +2289,14 @@ type ListWebhooksParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListWebhooksParams) GetLimit() *int {
+func (l *ListWebhooksParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListWebhooksParams) GetOffset() *int {
+func (l *ListWebhooksParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -2203,6 +2311,9 @@ func (l *ListWebhooksParams) GetQ() *string {
 }
 
 func (l *ListWebhooksParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -2215,14 +2326,14 @@ func (l *ListWebhooksParams) require(field *big.Int) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListWebhooksParams) SetLimit(limit *int) {
+func (l *ListWebhooksParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listWebhooksParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListWebhooksParams) SetOffset(offset *int) {
+func (l *ListWebhooksParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listWebhooksParamsFieldOffset)
 }
@@ -2262,6 +2373,9 @@ func (l *ListWebhooksParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListWebhooksParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2305,6 +2419,9 @@ func (l *ListWebhooksResponse) GetParams() *ListWebhooksParams {
 }
 
 func (l *ListWebhooksResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -2357,6 +2474,9 @@ func (l *ListWebhooksResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListWebhooksResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2376,7 +2496,7 @@ var (
 type UpdateWebhookResponse struct {
 	Data *WebhookResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2392,7 +2512,7 @@ func (u *UpdateWebhookResponse) GetData() *WebhookResponseData {
 	return u.Data
 }
 
-func (u *UpdateWebhookResponse) GetParams() map[string]interface{} {
+func (u *UpdateWebhookResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -2400,6 +2520,9 @@ func (u *UpdateWebhookResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdateWebhookResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -2419,7 +2542,7 @@ func (u *UpdateWebhookResponse) SetData(data *WebhookResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateWebhookResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateWebhookResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateWebhookResponseFieldParams)
 }
@@ -2452,6 +2575,9 @@ func (u *UpdateWebhookResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateWebhookResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -2531,4 +2657,25 @@ func (u *UpdateWebhookRequestBody) SetStatus(status *WebhookStatus) {
 func (u *UpdateWebhookRequestBody) SetURL(url *string) {
 	u.URL = url
 	u.require(updateWebhookRequestBodyFieldURL)
+}
+
+func (u *UpdateWebhookRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateWebhookRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateWebhookRequestBody(body)
+	return nil
+}
+
+func (u *UpdateWebhookRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateWebhookRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

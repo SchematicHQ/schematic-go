@@ -16,12 +16,13 @@ var (
 	countPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 3)
 	countPlansRequestFieldHasProductID          = big.NewInt(1 << 4)
 	countPlansRequestFieldIDs                   = big.NewInt(1 << 5)
-	countPlansRequestFieldPlanType              = big.NewInt(1 << 6)
-	countPlansRequestFieldQ                     = big.NewInt(1 << 7)
-	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 8)
-	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 9)
-	countPlansRequestFieldLimit                 = big.NewInt(1 << 10)
-	countPlansRequestFieldOffset                = big.NewInt(1 << 11)
+	countPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 6)
+	countPlansRequestFieldPlanType              = big.NewInt(1 << 7)
+	countPlansRequestFieldQ                     = big.NewInt(1 << 8)
+	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 9)
+	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 10)
+	countPlansRequestFieldLimit                 = big.NewInt(1 << 11)
+	countPlansRequestFieldOffset                = big.NewInt(1 << 12)
 )
 
 type CountPlansRequest struct {
@@ -35,6 +36,8 @@ type CountPlansRequest struct {
 	// Filter out plans that do not have a billing product ID
 	HasProductID *bool     `json:"-" url:"has_product_id,omitempty"`
 	IDs          []*string `json:"-" url:"ids,omitempty"`
+	// Include billing settings from draft versions for plans which have draft version
+	IncludeDraftVersions *bool `json:"-" url:"include_draft_versions,omitempty"`
 	// Filter by plan type
 	PlanType *PlanType `json:"-" url:"plan_type,omitempty"`
 	Q        *string   `json:"-" url:"q,omitempty"`
@@ -43,9 +46,9 @@ type CountPlansRequest struct {
 	// Filter out plans that have a paid billing product ID
 	WithoutPaidProductID *bool `json:"-" url:"without_paid_product_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -100,6 +103,13 @@ func (c *CountPlansRequest) SetIDs(ids []*string) {
 	c.require(countPlansRequestFieldIDs)
 }
 
+// SetIncludeDraftVersions sets the IncludeDraftVersions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansRequest) SetIncludeDraftVersions(includeDraftVersions *bool) {
+	c.IncludeDraftVersions = includeDraftVersions
+	c.require(countPlansRequestFieldIncludeDraftVersions)
+}
+
 // SetPlanType sets the PlanType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountPlansRequest) SetPlanType(planType *PlanType) {
@@ -130,16 +140,41 @@ func (c *CountPlansRequest) SetWithoutPaidProductID(withoutPaidProductID *bool) 
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansRequest) SetLimit(limit *int) {
+func (c *CountPlansRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countPlansRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansRequest) SetOffset(offset *int) {
+func (c *CountPlansRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countPlansRequestFieldOffset)
+}
+
+var (
+	deletePlanVersionRequestFieldPromoteArchivedVersion = big.NewInt(1 << 0)
+)
+
+type DeletePlanVersionRequest struct {
+	PromoteArchivedVersion *bool `json:"-" url:"promote_archived_version,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (d *DeletePlanVersionRequest) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetPromoteArchivedVersion sets the PromoteArchivedVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeletePlanVersionRequest) SetPromoteArchivedVersion(promoteArchivedVersion *bool) {
+	d.PromoteArchivedVersion = promoteArchivedVersion
+	d.require(deletePlanVersionRequestFieldPromoteArchivedVersion)
 }
 
 var (
@@ -209,12 +244,13 @@ var (
 	listPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 3)
 	listPlansRequestFieldHasProductID          = big.NewInt(1 << 4)
 	listPlansRequestFieldIDs                   = big.NewInt(1 << 5)
-	listPlansRequestFieldPlanType              = big.NewInt(1 << 6)
-	listPlansRequestFieldQ                     = big.NewInt(1 << 7)
-	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 8)
-	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 9)
-	listPlansRequestFieldLimit                 = big.NewInt(1 << 10)
-	listPlansRequestFieldOffset                = big.NewInt(1 << 11)
+	listPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 6)
+	listPlansRequestFieldPlanType              = big.NewInt(1 << 7)
+	listPlansRequestFieldQ                     = big.NewInt(1 << 8)
+	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 9)
+	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 10)
+	listPlansRequestFieldLimit                 = big.NewInt(1 << 11)
+	listPlansRequestFieldOffset                = big.NewInt(1 << 12)
 )
 
 type ListPlansRequest struct {
@@ -228,6 +264,8 @@ type ListPlansRequest struct {
 	// Filter out plans that do not have a billing product ID
 	HasProductID *bool     `json:"-" url:"has_product_id,omitempty"`
 	IDs          []*string `json:"-" url:"ids,omitempty"`
+	// Include billing settings from draft versions for plans which have draft version
+	IncludeDraftVersions *bool `json:"-" url:"include_draft_versions,omitempty"`
 	// Filter by plan type
 	PlanType *PlanType `json:"-" url:"plan_type,omitempty"`
 	Q        *string   `json:"-" url:"q,omitempty"`
@@ -236,9 +274,9 @@ type ListPlansRequest struct {
 	// Filter out plans that have a paid billing product ID
 	WithoutPaidProductID *bool `json:"-" url:"without_paid_product_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -293,6 +331,13 @@ func (l *ListPlansRequest) SetIDs(ids []*string) {
 	l.require(listPlansRequestFieldIDs)
 }
 
+// SetIncludeDraftVersions sets the IncludeDraftVersions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansRequest) SetIncludeDraftVersions(includeDraftVersions *bool) {
+	l.IncludeDraftVersions = includeDraftVersions
+	l.require(listPlansRequestFieldIncludeDraftVersions)
+}
+
 // SetPlanType sets the PlanType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListPlansRequest) SetPlanType(planType *PlanType) {
@@ -323,14 +368,14 @@ func (l *ListPlansRequest) SetWithoutPaidProductID(withoutPaidProductID *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansRequest) SetLimit(limit *int) {
+func (l *ListPlansRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPlansRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansRequest) SetOffset(offset *int) {
+func (l *ListPlansRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPlansRequestFieldOffset)
 }
@@ -341,7 +386,7 @@ var (
 )
 
 type PublishPlanVersionRequestBody struct {
-	ExcludedCompanyIDs []string                     `json:"excluded_company_ids,omitempty" url:"-"`
+	ExcludedCompanyIDs []string                     `json:"excluded_company_ids" url:"-"`
 	MigrationStrategy  PlanVersionMigrationStrategy `json:"migration_strategy" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -367,6 +412,27 @@ func (p *PublishPlanVersionRequestBody) SetExcludedCompanyIDs(excludedCompanyIDs
 func (p *PublishPlanVersionRequestBody) SetMigrationStrategy(migrationStrategy PlanVersionMigrationStrategy) {
 	p.MigrationStrategy = migrationStrategy
 	p.require(publishPlanVersionRequestBodyFieldMigrationStrategy)
+}
+
+func (p *PublishPlanVersionRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler PublishPlanVersionRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*p = PublishPlanVersionRequestBody(body)
+	return nil
+}
+
+func (p *PublishPlanVersionRequestBody) MarshalJSON() ([]byte, error) {
+	type embed PublishPlanVersionRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -418,6 +484,9 @@ func (p *PlanIssueResponseData) GetID() *string {
 }
 
 func (p *PlanIssueResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -484,6 +553,9 @@ func (p *PlanIssueResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanIssueResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -503,12 +575,13 @@ var (
 	countPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 3)
 	countPlansParamsFieldHasProductID          = big.NewInt(1 << 4)
 	countPlansParamsFieldIDs                   = big.NewInt(1 << 5)
-	countPlansParamsFieldLimit                 = big.NewInt(1 << 6)
-	countPlansParamsFieldOffset                = big.NewInt(1 << 7)
-	countPlansParamsFieldPlanType              = big.NewInt(1 << 8)
-	countPlansParamsFieldQ                     = big.NewInt(1 << 9)
-	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 10)
-	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 11)
+	countPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 6)
+	countPlansParamsFieldLimit                 = big.NewInt(1 << 7)
+	countPlansParamsFieldOffset                = big.NewInt(1 << 8)
+	countPlansParamsFieldPlanType              = big.NewInt(1 << 9)
+	countPlansParamsFieldQ                     = big.NewInt(1 << 10)
+	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 11)
+	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 12)
 )
 
 type CountPlansParams struct {
@@ -522,10 +595,12 @@ type CountPlansParams struct {
 	// Filter out plans that do not have a billing product ID
 	HasProductID *bool    `json:"has_product_id,omitempty" url:"has_product_id,omitempty"`
 	IDs          []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Include billing settings from draft versions for plans which have draft version
+	IncludeDraftVersions *bool `json:"include_draft_versions,omitempty" url:"include_draft_versions,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter by plan type
 	PlanType *PlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
 	Q        *string   `json:"q,omitempty" url:"q,omitempty"`
@@ -583,14 +658,21 @@ func (c *CountPlansParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountPlansParams) GetLimit() *int {
+func (c *CountPlansParams) GetIncludeDraftVersions() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.IncludeDraftVersions
+}
+
+func (c *CountPlansParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountPlansParams) GetOffset() *int {
+func (c *CountPlansParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -626,6 +708,9 @@ func (c *CountPlansParams) GetWithoutPaidProductID() *bool {
 }
 
 func (c *CountPlansParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -678,16 +763,23 @@ func (c *CountPlansParams) SetIDs(ids []string) {
 	c.require(countPlansParamsFieldIDs)
 }
 
+// SetIncludeDraftVersions sets the IncludeDraftVersions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansParams) SetIncludeDraftVersions(includeDraftVersions *bool) {
+	c.IncludeDraftVersions = includeDraftVersions
+	c.require(countPlansParamsFieldIncludeDraftVersions)
+}
+
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansParams) SetLimit(limit *int) {
+func (c *CountPlansParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countPlansParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlansParams) SetOffset(offset *int) {
+func (c *CountPlansParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countPlansParamsFieldOffset)
 }
@@ -748,6 +840,9 @@ func (c *CountPlansParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountPlansParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -791,6 +886,9 @@ func (c *CountPlansResponse) GetParams() *CountPlansParams {
 }
 
 func (c *CountPlansResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -843,6 +941,9 @@ func (c *CountPlansResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountPlansResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -862,7 +963,7 @@ var (
 type CreatePlanResponse struct {
 	Data *PlanDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -878,7 +979,7 @@ func (c *CreatePlanResponse) GetData() *PlanDetailResponseData {
 	return c.Data
 }
 
-func (c *CreatePlanResponse) GetParams() map[string]interface{} {
+func (c *CreatePlanResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -886,6 +987,9 @@ func (c *CreatePlanResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreatePlanResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -905,7 +1009,7 @@ func (c *CreatePlanResponse) SetData(data *PlanDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanResponse) SetParams(params map[string]interface{}) {
+func (c *CreatePlanResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createPlanResponseFieldParams)
 }
@@ -938,6 +1042,9 @@ func (c *CreatePlanResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreatePlanResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -957,7 +1064,7 @@ var (
 type DeletePlanResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -973,7 +1080,7 @@ func (d *DeletePlanResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeletePlanResponse) GetParams() map[string]interface{} {
+func (d *DeletePlanResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -981,6 +1088,9 @@ func (d *DeletePlanResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeletePlanResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -1000,7 +1110,7 @@ func (d *DeletePlanResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeletePlanResponse) SetParams(params map[string]interface{}) {
+func (d *DeletePlanResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deletePlanResponseFieldParams)
 }
@@ -1033,6 +1143,94 @@ func (d *DeletePlanResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeletePlanResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// Input parameters
+var (
+	deletePlanVersionParamsFieldPromoteArchivedVersion = big.NewInt(1 << 0)
+)
+
+type DeletePlanVersionParams struct {
+	PromoteArchivedVersion *bool `json:"promote_archived_version,omitempty" url:"promote_archived_version,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletePlanVersionParams) GetPromoteArchivedVersion() *bool {
+	if d == nil {
+		return nil
+	}
+	return d.PromoteArchivedVersion
+}
+
+func (d *DeletePlanVersionParams) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeletePlanVersionParams) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetPromoteArchivedVersion sets the PromoteArchivedVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeletePlanVersionParams) SetPromoteArchivedVersion(promoteArchivedVersion *bool) {
+	d.PromoteArchivedVersion = promoteArchivedVersion
+	d.require(deletePlanVersionParamsFieldPromoteArchivedVersion)
+}
+
+func (d *DeletePlanVersionParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeletePlanVersionParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeletePlanVersionParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeletePlanVersionParams) MarshalJSON() ([]byte, error) {
+	type embed DeletePlanVersionParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeletePlanVersionParams) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -1052,7 +1250,7 @@ var (
 type DeletePlanVersionResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params *DeletePlanVersionParams `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1068,7 +1266,7 @@ func (d *DeletePlanVersionResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeletePlanVersionResponse) GetParams() map[string]interface{} {
+func (d *DeletePlanVersionResponse) GetParams() *DeletePlanVersionParams {
 	if d == nil {
 		return nil
 	}
@@ -1076,6 +1274,9 @@ func (d *DeletePlanVersionResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeletePlanVersionResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -1095,7 +1296,7 @@ func (d *DeletePlanVersionResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeletePlanVersionResponse) SetParams(params map[string]interface{}) {
+func (d *DeletePlanVersionResponse) SetParams(params *DeletePlanVersionParams) {
 	d.Params = params
 	d.require(deletePlanVersionResponseFieldParams)
 }
@@ -1128,6 +1329,9 @@ func (d *DeletePlanVersionResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeletePlanVersionResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -1163,6 +1367,9 @@ func (g *GetPlanParams) GetPlanVersionID() *string {
 }
 
 func (g *GetPlanParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -1208,6 +1415,9 @@ func (g *GetPlanParams) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetPlanParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -1251,6 +1461,9 @@ func (g *GetPlanResponse) GetParams() *GetPlanParams {
 }
 
 func (g *GetPlanResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -1303,6 +1516,9 @@ func (g *GetPlanResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetPlanResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -1346,6 +1562,9 @@ func (l *ListPlanIssuesParams) GetPlanVersionID() *string {
 }
 
 func (l *ListPlanIssuesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -1398,6 +1617,9 @@ func (l *ListPlanIssuesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlanIssuesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -1441,6 +1663,9 @@ func (l *ListPlanIssuesResponse) GetParams() *ListPlanIssuesParams {
 }
 
 func (l *ListPlanIssuesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -1493,6 +1718,9 @@ func (l *ListPlanIssuesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlanIssuesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -1512,12 +1740,13 @@ var (
 	listPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 3)
 	listPlansParamsFieldHasProductID          = big.NewInt(1 << 4)
 	listPlansParamsFieldIDs                   = big.NewInt(1 << 5)
-	listPlansParamsFieldLimit                 = big.NewInt(1 << 6)
-	listPlansParamsFieldOffset                = big.NewInt(1 << 7)
-	listPlansParamsFieldPlanType              = big.NewInt(1 << 8)
-	listPlansParamsFieldQ                     = big.NewInt(1 << 9)
-	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 10)
-	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 11)
+	listPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 6)
+	listPlansParamsFieldLimit                 = big.NewInt(1 << 7)
+	listPlansParamsFieldOffset                = big.NewInt(1 << 8)
+	listPlansParamsFieldPlanType              = big.NewInt(1 << 9)
+	listPlansParamsFieldQ                     = big.NewInt(1 << 10)
+	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 11)
+	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 12)
 )
 
 type ListPlansParams struct {
@@ -1531,10 +1760,12 @@ type ListPlansParams struct {
 	// Filter out plans that do not have a billing product ID
 	HasProductID *bool    `json:"has_product_id,omitempty" url:"has_product_id,omitempty"`
 	IDs          []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Include billing settings from draft versions for plans which have draft version
+	IncludeDraftVersions *bool `json:"include_draft_versions,omitempty" url:"include_draft_versions,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter by plan type
 	PlanType *PlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
 	Q        *string   `json:"q,omitempty" url:"q,omitempty"`
@@ -1592,14 +1823,21 @@ func (l *ListPlansParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListPlansParams) GetLimit() *int {
+func (l *ListPlansParams) GetIncludeDraftVersions() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.IncludeDraftVersions
+}
+
+func (l *ListPlansParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListPlansParams) GetOffset() *int {
+func (l *ListPlansParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -1635,6 +1873,9 @@ func (l *ListPlansParams) GetWithoutPaidProductID() *bool {
 }
 
 func (l *ListPlansParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -1687,16 +1928,23 @@ func (l *ListPlansParams) SetIDs(ids []string) {
 	l.require(listPlansParamsFieldIDs)
 }
 
+// SetIncludeDraftVersions sets the IncludeDraftVersions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansParams) SetIncludeDraftVersions(includeDraftVersions *bool) {
+	l.IncludeDraftVersions = includeDraftVersions
+	l.require(listPlansParamsFieldIncludeDraftVersions)
+}
+
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansParams) SetLimit(limit *int) {
+func (l *ListPlansParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPlansParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlansParams) SetOffset(offset *int) {
+func (l *ListPlansParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPlansParamsFieldOffset)
 }
@@ -1757,6 +2005,9 @@ func (l *ListPlansParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlansParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -1800,6 +2051,9 @@ func (l *ListPlansResponse) GetParams() *ListPlansParams {
 }
 
 func (l *ListPlansResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -1852,6 +2106,9 @@ func (l *ListPlansResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlansResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -1871,7 +2128,7 @@ var (
 type PublishPlanVersionResponse struct {
 	Data *PlanVersionResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1887,7 +2144,7 @@ func (p *PublishPlanVersionResponse) GetData() *PlanVersionResponseData {
 	return p.Data
 }
 
-func (p *PublishPlanVersionResponse) GetParams() map[string]interface{} {
+func (p *PublishPlanVersionResponse) GetParams() map[string]any {
 	if p == nil {
 		return nil
 	}
@@ -1895,6 +2152,9 @@ func (p *PublishPlanVersionResponse) GetParams() map[string]interface{} {
 }
 
 func (p *PublishPlanVersionResponse) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -1914,7 +2174,7 @@ func (p *PublishPlanVersionResponse) SetData(data *PlanVersionResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionResponse) SetParams(params map[string]interface{}) {
+func (p *PublishPlanVersionResponse) SetParams(params map[string]any) {
 	p.Params = params
 	p.require(publishPlanVersionResponseFieldParams)
 }
@@ -1947,6 +2207,9 @@ func (p *PublishPlanVersionResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PublishPlanVersionResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -1966,7 +2229,7 @@ var (
 type UpdateCompanyPlansResponse struct {
 	Data *CompanyDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1982,7 +2245,7 @@ func (u *UpdateCompanyPlansResponse) GetData() *CompanyDetailResponseData {
 	return u.Data
 }
 
-func (u *UpdateCompanyPlansResponse) GetParams() map[string]interface{} {
+func (u *UpdateCompanyPlansResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -1990,6 +2253,9 @@ func (u *UpdateCompanyPlansResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdateCompanyPlansResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -2009,7 +2275,7 @@ func (u *UpdateCompanyPlansResponse) SetData(data *CompanyDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCompanyPlansResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateCompanyPlansResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateCompanyPlansResponseFieldParams)
 }
@@ -2042,6 +2308,9 @@ func (u *UpdateCompanyPlansResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateCompanyPlansResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -2061,7 +2330,7 @@ var (
 type UpdatePlanResponse struct {
 	Data *PlanDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2077,7 +2346,7 @@ func (u *UpdatePlanResponse) GetData() *PlanDetailResponseData {
 	return u.Data
 }
 
-func (u *UpdatePlanResponse) GetParams() map[string]interface{} {
+func (u *UpdatePlanResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -2085,6 +2354,9 @@ func (u *UpdatePlanResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdatePlanResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -2104,7 +2376,7 @@ func (u *UpdatePlanResponse) SetData(data *PlanDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanResponse) SetParams(params map[string]interface{}) {
+func (u *UpdatePlanResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updatePlanResponseFieldParams)
 }
@@ -2137,6 +2409,9 @@ func (u *UpdatePlanResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdatePlanResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -2156,7 +2431,7 @@ var (
 type UpsertBillingProductPlanResponse struct {
 	Data *BillingProductPlanResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2172,7 +2447,7 @@ func (u *UpsertBillingProductPlanResponse) GetData() *BillingProductPlanResponse
 	return u.Data
 }
 
-func (u *UpsertBillingProductPlanResponse) GetParams() map[string]interface{} {
+func (u *UpsertBillingProductPlanResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -2180,6 +2455,9 @@ func (u *UpsertBillingProductPlanResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertBillingProductPlanResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -2199,7 +2477,7 @@ func (u *UpsertBillingProductPlanResponse) SetData(data *BillingProductPlanRespo
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingProductPlanResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertBillingProductPlanResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertBillingProductPlanResponseFieldParams)
 }
@@ -2232,6 +2510,9 @@ func (u *UpsertBillingProductPlanResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertBillingProductPlanResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -2249,7 +2530,7 @@ var (
 )
 
 type UpdateCompanyPlansRequestBody struct {
-	AddOnIDs   []string `json:"add_on_ids,omitempty" url:"-"`
+	AddOnIDs   []string `json:"add_on_ids" url:"-"`
 	BasePlanID *string  `json:"base_plan_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -2275,4 +2556,25 @@ func (u *UpdateCompanyPlansRequestBody) SetAddOnIDs(addOnIDs []string) {
 func (u *UpdateCompanyPlansRequestBody) SetBasePlanID(basePlanID *string) {
 	u.BasePlanID = basePlanID
 	u.require(updateCompanyPlansRequestBodyFieldBasePlanID)
+}
+
+func (u *UpdateCompanyPlansRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCompanyPlansRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateCompanyPlansRequestBody(body)
+	return nil
+}
+
+func (u *UpdateCompanyPlansRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateCompanyPlansRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

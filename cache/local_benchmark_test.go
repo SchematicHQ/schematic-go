@@ -17,7 +17,7 @@ func BenchmarkLocalCache_Get(b *testing.B) {
 	// Pre-populate cache with some data
 	for i := 0; i < 1000; i++ {
 		key := fmt.Sprintf("key-%d", i)
-		cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
+		_ = cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
 	}
 
 	b.ResetTimer()
@@ -47,7 +47,7 @@ func BenchmarkLocalCache_Set(b *testing.B) {
 		i := 0
 		for pb.Next() {
 			key := fmt.Sprintf("key-%d-%d", i, rand.Intn(1000))
-			cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
+			_ = cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
 			i++
 		}
 	})
@@ -61,7 +61,7 @@ func BenchmarkLocalCache_Delete(b *testing.B) {
 	// Pre-populate cache with some data
 	for i := 0; i < 1000; i++ {
 		key := fmt.Sprintf("key-%d", i)
-		cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
+		_ = cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
 	}
 
 	b.ResetTimer()
@@ -76,7 +76,7 @@ func BenchmarkLocalCache_Delete(b *testing.B) {
 				// Miss
 				key = fmt.Sprintf("missing-%d", rand.Intn(1000))
 			}
-			cache.Delete(ctx, key)
+			_ = cache.Delete(ctx, key)
 		}
 	})
 }
@@ -89,7 +89,7 @@ func BenchmarkLocalCache_MixedWorkload(b *testing.B) {
 	// Pre-populate cache with some data
 	for i := 0; i < 500; i++ {
 		key := fmt.Sprintf("key-%d", i)
-		cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
+		_ = cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
 	}
 
 	b.ResetTimer()
@@ -113,7 +113,7 @@ func BenchmarkLocalCache_MixedWorkload(b *testing.B) {
 			} else if op < 0.9 {
 				// Set
 				key = fmt.Sprintf("key-%d-%d", i, rand.Intn(1000))
-				cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
+				_ = cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
 				i++
 			} else {
 				// Delete
@@ -124,7 +124,7 @@ func BenchmarkLocalCache_MixedWorkload(b *testing.B) {
 					// Miss
 					key = fmt.Sprintf("missing-%d", rand.Intn(1000))
 				}
-				cache.Delete(ctx, key)
+				_ = cache.Delete(ctx, key)
 			}
 		}
 	})
@@ -144,7 +144,7 @@ func BenchmarkLocalCache_CleanupRoutine(b *testing.B) {
 			// Pre-populate with items that will expire quickly
 			for i := 0; i < size; i++ {
 				key := fmt.Sprintf("key-%d", i)
-				cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
+				_ = cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
 			}
 
 			b.ResetTimer()
@@ -157,7 +157,7 @@ func BenchmarkLocalCache_CleanupRoutine(b *testing.B) {
 				// Add new items
 				for j := 0; j < size/10; j++ {
 					key := fmt.Sprintf("key-%d-%d", i, j)
-					cache.Set(ctx, key, fmt.Sprintf("value-%d-%d", i, j), nil)
+					_ = cache.Set(ctx, key, fmt.Sprintf("value-%d-%d", i, j), nil)
 				}
 			}
 		})
@@ -176,7 +176,7 @@ func BenchmarkLocalCache_LRUEviction(b *testing.B) {
 	// Continuously add new items to trigger LRU eviction
 	for i := 0; i < b.N; i++ {
 		key := fmt.Sprintf("key-%d", i)
-		cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
+		_ = cache.Set(ctx, key, fmt.Sprintf("value-%d", i), nil)
 	}
 }
 
@@ -190,7 +190,7 @@ func BenchmarkLocalCache_ValueTypes(b *testing.B) {
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			key := strconv.Itoa(i % 1000)
-			cache.Set(ctx, key, "small value", nil)
+			_ = cache.Set(ctx, key, "small value", nil)
 		}
 	})
 
@@ -205,7 +205,7 @@ func BenchmarkLocalCache_ValueTypes(b *testing.B) {
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			key := strconv.Itoa(i % 1000)
-			cache.Set(ctx, key, largeValue, nil)
+			_ = cache.Set(ctx, key, largeValue, nil)
 		}
 	})
 
@@ -233,7 +233,7 @@ func BenchmarkLocalCache_ValueTypes(b *testing.B) {
 					"key2": "value2",
 				},
 			}
-			cache.Set(ctx, key, value, nil)
+			_ = cache.Set(ctx, key, value, nil)
 		}
 	})
 }

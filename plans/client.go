@@ -4,6 +4,7 @@ package plans
 
 import (
 	context "context"
+
 	schematichq "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
 	internal "github.com/schematichq/schematic-go/internal"
@@ -193,11 +194,13 @@ func (c *Client) DeletePlanVersion(
 	ctx context.Context,
 	// plan_id
 	planID string,
+	request *schematichq.DeletePlanVersionRequest,
 	opts ...option.RequestOption,
 ) (*schematichq.DeletePlanVersionResponse, error) {
 	response, err := c.WithRawResponse.DeletePlanVersion(
 		ctx,
 		planID,
+		request,
 		opts...,
 	)
 	if err != nil {

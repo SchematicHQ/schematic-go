@@ -38,9 +38,9 @@ type CountCompanyOverridesRequest struct {
 	// Search for company overrides by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -104,14 +104,14 @@ func (c *CountCompanyOverridesRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyOverridesRequest) SetLimit(limit *int) {
+func (c *CountCompanyOverridesRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCompanyOverridesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyOverridesRequest) SetOffset(offset *int) {
+func (c *CountCompanyOverridesRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCompanyOverridesRequestFieldOffset)
 }
@@ -127,9 +127,9 @@ type CountFeatureCompaniesRequest struct {
 	FeatureID string  `json:"-" url:"feature_id"`
 	Q         *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -158,14 +158,14 @@ func (c *CountFeatureCompaniesRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureCompaniesRequest) SetLimit(limit *int) {
+func (c *CountFeatureCompaniesRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countFeatureCompaniesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureCompaniesRequest) SetOffset(offset *int) {
+func (c *CountFeatureCompaniesRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countFeatureCompaniesRequestFieldOffset)
 }
@@ -190,9 +190,9 @@ type CountFeatureUsageRequest struct {
 	Q                           *string `json:"-" url:"q,omitempty"`
 	WithoutNegativeEntitlements *bool   `json:"-" url:"without_negative_entitlements,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -249,14 +249,14 @@ func (c *CountFeatureUsageRequest) SetWithoutNegativeEntitlements(withoutNegativ
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureUsageRequest) SetLimit(limit *int) {
+func (c *CountFeatureUsageRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countFeatureUsageRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureUsageRequest) SetOffset(offset *int) {
+func (c *CountFeatureUsageRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countFeatureUsageRequestFieldOffset)
 }
@@ -272,9 +272,9 @@ type CountFeatureUsersRequest struct {
 	FeatureID string  `json:"-" url:"feature_id"`
 	Q         *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -303,14 +303,14 @@ func (c *CountFeatureUsersRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureUsersRequest) SetLimit(limit *int) {
+func (c *CountFeatureUsersRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countFeatureUsersRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureUsersRequest) SetOffset(offset *int) {
+func (c *CountFeatureUsersRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countFeatureUsersRequestFieldOffset)
 }
@@ -349,9 +349,9 @@ type CountPlanEntitlementsRequest struct {
 	// Filter plan entitlements only with metered products
 	WithMeteredProducts *bool `json:"-" url:"with_metered_products,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -429,14 +429,14 @@ func (c *CountPlanEntitlementsRequest) SetWithMeteredProducts(withMeteredProduct
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlanEntitlementsRequest) SetLimit(limit *int) {
+func (c *CountPlanEntitlementsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countPlanEntitlementsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlanEntitlementsRequest) SetOffset(offset *int) {
+func (c *CountPlanEntitlementsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countPlanEntitlementsRequestFieldOffset)
 }
@@ -466,7 +466,7 @@ type CreateCompanyOverrideRequestBody struct {
 	Note                   *string                                                 `json:"note,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
 	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
+	ValueNumeric           *int64                                                  `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              EntitlementValueType                                    `json:"value_type" url:"-"`
 
@@ -546,7 +546,7 @@ func (c *CreateCompanyOverrideRequestBody) SetValueCreditID(valueCreditID *strin
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyOverrideRequestBody) SetValueNumeric(valueNumeric *int) {
+func (c *CreateCompanyOverrideRequestBody) SetValueNumeric(valueNumeric *int64) {
 	c.ValueNumeric = valueNumeric
 	c.require(createCompanyOverrideRequestBodyFieldValueNumeric)
 }
@@ -620,7 +620,7 @@ var (
 
 type CreatePlanEntitlementRequestBody struct {
 	BillingProductID        *string                                                 `json:"billing_product_id,omitempty" url:"-"`
-	BillingThreshold        *int                                                    `json:"billing_threshold,omitempty" url:"-"`
+	BillingThreshold        *int64                                                  `json:"billing_threshold,omitempty" url:"-"`
 	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
 	FeatureID               string                                                  `json:"feature_id" url:"-"`
@@ -628,7 +628,7 @@ type CreatePlanEntitlementRequestBody struct {
 	MetricPeriodMonthReset  *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	MonthlyMeteredPriceID   *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody                           `json:"monthly_price_tiers,omitempty" url:"-"`
-	MonthlyUnitPrice        *int                                                    `json:"monthly_unit_price,omitempty" url:"-"`
+	MonthlyUnitPrice        *int64                                                  `json:"monthly_unit_price,omitempty" url:"-"`
 	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
 	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
 	PlanID                  string                                                  `json:"plan_id" url:"-"`
@@ -636,16 +636,16 @@ type CreatePlanEntitlementRequestBody struct {
 	PriceBehavior           *EntitlementPriceBehavior                               `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
-	SoftLimit              *int                          `json:"soft_limit,omitempty" url:"-"`
+	SoftLimit              *int64                        `json:"soft_limit,omitempty" url:"-"`
 	TierMode               *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
 	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
 	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int                          `json:"value_numeric,omitempty" url:"-"`
+	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
 	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
 	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
-	YearlyUnitPrice        *int                          `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
 	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -668,7 +668,7 @@ func (c *CreatePlanEntitlementRequestBody) SetBillingProductID(billingProductID 
 
 // SetBillingThreshold sets the BillingThreshold field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetBillingThreshold(billingThreshold *int) {
+func (c *CreatePlanEntitlementRequestBody) SetBillingThreshold(billingThreshold *int64) {
 	c.BillingThreshold = billingThreshold
 	c.require(createPlanEntitlementRequestBodyFieldBillingThreshold)
 }
@@ -724,7 +724,7 @@ func (c *CreatePlanEntitlementRequestBody) SetMonthlyPriceTiers(monthlyPriceTier
 
 // SetMonthlyUnitPrice sets the MonthlyUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int) {
+func (c *CreatePlanEntitlementRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int64) {
 	c.MonthlyUnitPrice = monthlyUnitPrice
 	c.require(createPlanEntitlementRequestBodyFieldMonthlyUnitPrice)
 }
@@ -773,7 +773,7 @@ func (c *CreatePlanEntitlementRequestBody) SetPriceTiers(priceTiers []*CreatePri
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetSoftLimit(softLimit *int) {
+func (c *CreatePlanEntitlementRequestBody) SetSoftLimit(softLimit *int64) {
 	c.SoftLimit = softLimit
 	c.require(createPlanEntitlementRequestBodyFieldSoftLimit)
 }
@@ -801,7 +801,7 @@ func (c *CreatePlanEntitlementRequestBody) SetValueCreditID(valueCreditID *strin
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetValueNumeric(valueNumeric *int) {
+func (c *CreatePlanEntitlementRequestBody) SetValueNumeric(valueNumeric *int64) {
 	c.ValueNumeric = valueNumeric
 	c.require(createPlanEntitlementRequestBodyFieldValueNumeric)
 }
@@ -836,7 +836,7 @@ func (c *CreatePlanEntitlementRequestBody) SetYearlyPriceTiers(yearlyPriceTiers 
 
 // SetYearlyUnitPrice sets the YearlyUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *int) {
+func (c *CreatePlanEntitlementRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *int64) {
 	c.YearlyUnitPrice = yearlyUnitPrice
 	c.require(createPlanEntitlementRequestBodyFieldYearlyUnitPrice)
 }
@@ -846,6 +846,27 @@ func (c *CreatePlanEntitlementRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *i
 func (c *CreatePlanEntitlementRequestBody) SetYearlyUnitPriceDecimal(yearlyUnitPriceDecimal *string) {
 	c.YearlyUnitPriceDecimal = yearlyUnitPriceDecimal
 	c.require(createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal)
+}
+
+func (c *CreatePlanEntitlementRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePlanEntitlementRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreatePlanEntitlementRequestBody(body)
+	return nil
+}
+
+func (c *CreatePlanEntitlementRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreatePlanEntitlementRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -880,6 +901,27 @@ func (d *DuplicatePlanEntitlementsRequestBody) SetSourcePlanID(sourcePlanID stri
 func (d *DuplicatePlanEntitlementsRequestBody) SetTargetPlanID(targetPlanID string) {
 	d.TargetPlanID = targetPlanID
 	d.require(duplicatePlanEntitlementsRequestBodyFieldTargetPlanID)
+}
+
+func (d *DuplicatePlanEntitlementsRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler DuplicatePlanEntitlementsRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*d = DuplicatePlanEntitlementsRequestBody(body)
+	return nil
+}
+
+func (d *DuplicatePlanEntitlementsRequestBody) MarshalJSON() ([]byte, error) {
+	type embed DuplicatePlanEntitlementsRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -997,9 +1039,9 @@ type ListCompanyOverridesRequest struct {
 	// Search for company overrides by feature or company name
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1063,14 +1105,14 @@ func (l *ListCompanyOverridesRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyOverridesRequest) SetLimit(limit *int) {
+func (l *ListCompanyOverridesRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompanyOverridesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyOverridesRequest) SetOffset(offset *int) {
+func (l *ListCompanyOverridesRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompanyOverridesRequestFieldOffset)
 }
@@ -1086,9 +1128,9 @@ type ListFeatureCompaniesRequest struct {
 	FeatureID string  `json:"-" url:"feature_id"`
 	Q         *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1117,14 +1159,14 @@ func (l *ListFeatureCompaniesRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureCompaniesRequest) SetLimit(limit *int) {
+func (l *ListFeatureCompaniesRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listFeatureCompaniesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureCompaniesRequest) SetOffset(offset *int) {
+func (l *ListFeatureCompaniesRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listFeatureCompaniesRequestFieldOffset)
 }
@@ -1149,9 +1191,9 @@ type ListFeatureUsageRequest struct {
 	Q                           *string `json:"-" url:"q,omitempty"`
 	WithoutNegativeEntitlements *bool   `json:"-" url:"without_negative_entitlements,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1208,14 +1250,14 @@ func (l *ListFeatureUsageRequest) SetWithoutNegativeEntitlements(withoutNegative
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureUsageRequest) SetLimit(limit *int) {
+func (l *ListFeatureUsageRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listFeatureUsageRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureUsageRequest) SetOffset(offset *int) {
+func (l *ListFeatureUsageRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listFeatureUsageRequestFieldOffset)
 }
@@ -1231,9 +1273,9 @@ type ListFeatureUsersRequest struct {
 	FeatureID string  `json:"-" url:"feature_id"`
 	Q         *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1262,14 +1304,14 @@ func (l *ListFeatureUsersRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureUsersRequest) SetLimit(limit *int) {
+func (l *ListFeatureUsersRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listFeatureUsersRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureUsersRequest) SetOffset(offset *int) {
+func (l *ListFeatureUsersRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listFeatureUsersRequestFieldOffset)
 }
@@ -1308,9 +1350,9 @@ type ListPlanEntitlementsRequest struct {
 	// Filter plan entitlements only with metered products
 	WithMeteredProducts *bool `json:"-" url:"with_metered_products,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1388,14 +1430,14 @@ func (l *ListPlanEntitlementsRequest) SetWithMeteredProducts(withMeteredProducts
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanEntitlementsRequest) SetLimit(limit *int) {
+func (l *ListPlanEntitlementsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPlanEntitlementsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanEntitlementsRequest) SetOffset(offset *int) {
+func (l *ListPlanEntitlementsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPlanEntitlementsRequestFieldOffset)
 }
@@ -1494,6 +1536,9 @@ func (c *CreditUsage) GetUsageAggregation() *CreditUsageAggregation {
 }
 
 func (c *CreditUsage) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1595,6 +1640,9 @@ func (c *CreditUsage) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditUsage) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1637,6 +1685,9 @@ func (d *DuplicatePlanEntitlementsResponseResponseData) GetSkipped() []*SkippedE
 }
 
 func (d *DuplicatePlanEntitlementsResponseResponseData) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -1689,6 +1740,9 @@ func (d *DuplicatePlanEntitlementsResponseResponseData) MarshalJSON() ([]byte, e
 }
 
 func (d *DuplicatePlanEntitlementsResponseResponseData) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -1743,7 +1797,7 @@ type FeatureCompanyResponseData struct {
 	// Whether further usage is permitted.
 	Access bool `json:"access" url:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted or that this is a credit-based entitlement (use credit_remaining instead).
-	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	Allocation *int64 `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// The type of allocation that is being used.
 	AllocationType  EntitlementValueType         `json:"allocation_type" url:"allocation_type"`
 	Company         *CompanyDetailResponseData   `json:"company,omitempty" url:"company,omitempty"`
@@ -1764,7 +1818,7 @@ type FeatureCompanyResponseData struct {
 	CreditUsageAggregation *CreditUsageAggregation `json:"credit_usage_aggregation,omitempty" url:"credit_usage_aggregation,omitempty"`
 	CreditUsed             *float64                `json:"credit_used,omitempty" url:"credit_used,omitempty"`
 	// Effective limit for usage calculations. For overage pricing, this is the soft limit where overage charges begin. For tiered pricing, this is the first tier boundary. For other pricing models, this is the base allocation. Used to calculate usage percentages and determine access thresholds.
-	EffectiveLimit *int `json:"effective_limit,omitempty" url:"effective_limit,omitempty"`
+	EffectiveLimit *int64 `json:"effective_limit,omitempty" url:"effective_limit,omitempty"`
 	// Per-unit price for current usage scenario
 	EffectivePrice            *float64   `json:"effective_price,omitempty" url:"effective_price,omitempty"`
 	EntitlementExpirationDate *time.Time `json:"entitlement_expiration_date,omitempty" url:"entitlement_expiration_date,omitempty"`
@@ -1783,7 +1837,7 @@ type FeatureCompanyResponseData struct {
 	MonthReset             *string           `json:"month_reset,omitempty" url:"month_reset,omitempty"`
 	MonthlyUsageBasedPrice *BillingPriceView `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
 	// Amount of usage exceeding soft limit (overage pricing only)
-	Overuse *int `json:"overuse,omitempty" url:"overuse,omitempty"`
+	Overuse *int64 `json:"overuse,omitempty" url:"overuse,omitempty"`
 	// Percentage of allocation consumed (0-100+)
 	PercentUsed *float64 `json:"percent_used,omitempty" url:"percent_used,omitempty"`
 	// The period over which usage is measured.
@@ -1792,9 +1846,9 @@ type FeatureCompanyResponseData struct {
 	PlanEntitlement *PlanEntitlementResponseData `json:"plan_entitlement,omitempty" url:"plan_entitlement,omitempty"`
 	PriceBehavior   *EntitlementPriceBehavior    `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// The soft limit for the feature usage. Available only for overage price behavior
-	SoftLimit *int `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	SoftLimit *int64 `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured or that this is a credit-based entitlement (use credit_used instead).
-	Usage                 *int              `json:"usage,omitempty" url:"usage,omitempty"`
+	Usage                 *int64            `json:"usage,omitempty" url:"usage,omitempty"`
 	YearlyUsageBasedPrice *BillingPriceView `json:"yearly_usage_based_price,omitempty" url:"yearly_usage_based_price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -1811,7 +1865,7 @@ func (f *FeatureCompanyResponseData) GetAccess() bool {
 	return f.Access
 }
 
-func (f *FeatureCompanyResponseData) GetAllocation() *int {
+func (f *FeatureCompanyResponseData) GetAllocation() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -1909,7 +1963,7 @@ func (f *FeatureCompanyResponseData) GetCreditUsed() *float64 {
 	return f.CreditUsed
 }
 
-func (f *FeatureCompanyResponseData) GetEffectiveLimit() *int {
+func (f *FeatureCompanyResponseData) GetEffectiveLimit() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -1993,7 +2047,7 @@ func (f *FeatureCompanyResponseData) GetMonthlyUsageBasedPrice() *BillingPriceVi
 	return f.MonthlyUsageBasedPrice
 }
 
-func (f *FeatureCompanyResponseData) GetOveruse() *int {
+func (f *FeatureCompanyResponseData) GetOveruse() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -2035,14 +2089,14 @@ func (f *FeatureCompanyResponseData) GetPriceBehavior() *EntitlementPriceBehavio
 	return f.PriceBehavior
 }
 
-func (f *FeatureCompanyResponseData) GetSoftLimit() *int {
+func (f *FeatureCompanyResponseData) GetSoftLimit() *int64 {
 	if f == nil {
 		return nil
 	}
 	return f.SoftLimit
 }
 
-func (f *FeatureCompanyResponseData) GetUsage() *int {
+func (f *FeatureCompanyResponseData) GetUsage() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -2057,6 +2111,9 @@ func (f *FeatureCompanyResponseData) GetYearlyUsageBasedPrice() *BillingPriceVie
 }
 
 func (f *FeatureCompanyResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -2076,7 +2133,7 @@ func (f *FeatureCompanyResponseData) SetAccess(access bool) {
 
 // SetAllocation sets the Allocation field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetAllocation(allocation *int) {
+func (f *FeatureCompanyResponseData) SetAllocation(allocation *int64) {
 	f.Allocation = allocation
 	f.require(featureCompanyResponseDataFieldAllocation)
 }
@@ -2174,7 +2231,7 @@ func (f *FeatureCompanyResponseData) SetCreditUsed(creditUsed *float64) {
 
 // SetEffectiveLimit sets the EffectiveLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetEffectiveLimit(effectiveLimit *int) {
+func (f *FeatureCompanyResponseData) SetEffectiveLimit(effectiveLimit *int64) {
 	f.EffectiveLimit = effectiveLimit
 	f.require(featureCompanyResponseDataFieldEffectiveLimit)
 }
@@ -2258,7 +2315,7 @@ func (f *FeatureCompanyResponseData) SetMonthlyUsageBasedPrice(monthlyUsageBased
 
 // SetOveruse sets the Overuse field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetOveruse(overuse *int) {
+func (f *FeatureCompanyResponseData) SetOveruse(overuse *int64) {
 	f.Overuse = overuse
 	f.require(featureCompanyResponseDataFieldOveruse)
 }
@@ -2300,14 +2357,14 @@ func (f *FeatureCompanyResponseData) SetPriceBehavior(priceBehavior *Entitlement
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetSoftLimit(softLimit *int) {
+func (f *FeatureCompanyResponseData) SetSoftLimit(softLimit *int64) {
 	f.SoftLimit = softLimit
 	f.require(featureCompanyResponseDataFieldSoftLimit)
 }
 
 // SetUsage sets the Usage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetUsage(usage *int) {
+func (f *FeatureCompanyResponseData) SetUsage(usage *int64) {
 	f.Usage = usage
 	f.require(featureCompanyResponseDataFieldUsage)
 }
@@ -2359,6 +2416,9 @@ func (f *FeatureCompanyResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureCompanyResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -2390,7 +2450,7 @@ type FeatureCompanyUserResponseData struct {
 	// Whether further usage is permitted.
 	Access bool `json:"access" url:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted.
-	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	Allocation *int64 `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// The type of allocation that is being used.
 	AllocationType  EntitlementValueType       `json:"allocation_type" url:"allocation_type"`
 	Company         *CompanyDetailResponseData `json:"company,omitempty" url:"company,omitempty"`
@@ -2405,7 +2465,7 @@ type FeatureCompanyUserResponseData struct {
 	Period *string           `json:"period,omitempty" url:"period,omitempty"`
 	Plan   *PlanResponseData `json:"plan,omitempty" url:"plan,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured.
-	Usage *int              `json:"usage,omitempty" url:"usage,omitempty"`
+	Usage *int64            `json:"usage,omitempty" url:"usage,omitempty"`
 	User  *UserResponseData `json:"user,omitempty" url:"user,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -2422,7 +2482,7 @@ func (f *FeatureCompanyUserResponseData) GetAccess() bool {
 	return f.Access
 }
 
-func (f *FeatureCompanyUserResponseData) GetAllocation() *int {
+func (f *FeatureCompanyUserResponseData) GetAllocation() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -2492,7 +2552,7 @@ func (f *FeatureCompanyUserResponseData) GetPlan() *PlanResponseData {
 	return f.Plan
 }
 
-func (f *FeatureCompanyUserResponseData) GetUsage() *int {
+func (f *FeatureCompanyUserResponseData) GetUsage() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -2507,6 +2567,9 @@ func (f *FeatureCompanyUserResponseData) GetUser() *UserResponseData {
 }
 
 func (f *FeatureCompanyUserResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -2526,7 +2589,7 @@ func (f *FeatureCompanyUserResponseData) SetAccess(access bool) {
 
 // SetAllocation sets the Allocation field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyUserResponseData) SetAllocation(allocation *int) {
+func (f *FeatureCompanyUserResponseData) SetAllocation(allocation *int64) {
 	f.Allocation = allocation
 	f.require(featureCompanyUserResponseDataFieldAllocation)
 }
@@ -2596,7 +2659,7 @@ func (f *FeatureCompanyUserResponseData) SetPlan(plan *PlanResponseData) {
 
 // SetUsage sets the Usage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyUserResponseData) SetUsage(usage *int) {
+func (f *FeatureCompanyUserResponseData) SetUsage(usage *int64) {
 	f.Usage = usage
 	f.require(featureCompanyUserResponseDataFieldUsage)
 }
@@ -2644,6 +2707,9 @@ func (f *FeatureCompanyUserResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureCompanyUserResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -2713,6 +2779,9 @@ func (f *FeatureUsageTimeSeriesResponseData) GetUsagePoints() []*UsageTimeSeries
 }
 
 func (f *FeatureUsageTimeSeriesResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -2786,6 +2855,9 @@ func (f *FeatureUsageTimeSeriesResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureUsageTimeSeriesResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -2810,7 +2882,7 @@ type LimitTimeSeriesPointResponseData struct {
 	EffectiveAt   time.Time                 `json:"effective_at" url:"effective_at"`
 	IsSoftLimit   bool                      `json:"is_soft_limit" url:"is_soft_limit"`
 	LimitSource   EntitlementType           `json:"limit_source" url:"limit_source"`
-	LimitValue    *int                      `json:"limit_value,omitempty" url:"limit_value,omitempty"`
+	LimitValue    *int64                    `json:"limit_value,omitempty" url:"limit_value,omitempty"`
 	PlanID        *string                   `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	PriceBehavior *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 
@@ -2842,7 +2914,7 @@ func (l *LimitTimeSeriesPointResponseData) GetLimitSource() EntitlementType {
 	return l.LimitSource
 }
 
-func (l *LimitTimeSeriesPointResponseData) GetLimitValue() *int {
+func (l *LimitTimeSeriesPointResponseData) GetLimitValue() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -2864,6 +2936,9 @@ func (l *LimitTimeSeriesPointResponseData) GetPriceBehavior() *EntitlementPriceB
 }
 
 func (l *LimitTimeSeriesPointResponseData) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -2897,7 +2972,7 @@ func (l *LimitTimeSeriesPointResponseData) SetLimitSource(limitSource Entitlemen
 
 // SetLimitValue sets the LimitValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *LimitTimeSeriesPointResponseData) SetLimitValue(limitValue *int) {
+func (l *LimitTimeSeriesPointResponseData) SetLimitValue(limitValue *int64) {
 	l.LimitValue = limitValue
 	l.require(limitTimeSeriesPointResponseDataFieldLimitValue)
 }
@@ -2952,6 +3027,9 @@ func (l *LimitTimeSeriesPointResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (l *LimitTimeSeriesPointResponseData) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2985,6 +3063,9 @@ func (s *SkippedEntitlementErrorResponseData) GetMessage() string {
 }
 
 func (s *SkippedEntitlementErrorResponseData) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
 	return s.extraProperties
 }
 
@@ -3030,6 +3111,9 @@ func (s *SkippedEntitlementErrorResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (s *SkippedEntitlementErrorResponseData) String() string {
+	if s == nil {
+		return "<nil>"
+	}
 	if len(s.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
@@ -3090,6 +3174,9 @@ func (s *SkippedEntitlementResponseData) GetFeatureName() string {
 }
 
 func (s *SkippedEntitlementResponseData) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
 	return s.extraProperties
 }
 
@@ -3156,6 +3243,9 @@ func (s *SkippedEntitlementResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (s *SkippedEntitlementResponseData) String() string {
+	if s == nil {
+		return "<nil>"
+	}
 	if len(s.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
@@ -3206,7 +3296,7 @@ type UsageTimeSeriesPointResponseData struct {
 	PeriodEnd   *time.Time `json:"period_end,omitempty" url:"period_end,omitempty"`
 	PeriodStart *time.Time `json:"period_start,omitempty" url:"period_start,omitempty"`
 	Timestamp   time.Time  `json:"timestamp" url:"timestamp"`
-	Usage       int        `json:"usage" url:"usage"`
+	Usage       int64      `json:"usage" url:"usage"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3236,7 +3326,7 @@ func (u *UsageTimeSeriesPointResponseData) GetTimestamp() time.Time {
 	return u.Timestamp
 }
 
-func (u *UsageTimeSeriesPointResponseData) GetUsage() int {
+func (u *UsageTimeSeriesPointResponseData) GetUsage() int64 {
 	if u == nil {
 		return 0
 	}
@@ -3244,6 +3334,9 @@ func (u *UsageTimeSeriesPointResponseData) GetUsage() int {
 }
 
 func (u *UsageTimeSeriesPointResponseData) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -3277,7 +3370,7 @@ func (u *UsageTimeSeriesPointResponseData) SetTimestamp(timestamp time.Time) {
 
 // SetUsage sets the Usage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UsageTimeSeriesPointResponseData) SetUsage(usage int) {
+func (u *UsageTimeSeriesPointResponseData) SetUsage(usage int64) {
 	u.Usage = usage
 	u.require(usageTimeSeriesPointResponseDataFieldUsage)
 }
@@ -3326,6 +3419,9 @@ func (u *UsageTimeSeriesPointResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UsageTimeSeriesPointResponseData) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -3362,9 +3458,9 @@ type CountCompanyOverridesParams struct {
 	// Filter company overrides by multiple company override IDs (starting with cmov_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Search for company overrides by feature or company name
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter company overrides by whether they have not expired
@@ -3412,14 +3508,14 @@ func (c *CountCompanyOverridesParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountCompanyOverridesParams) GetLimit() *int {
+func (c *CountCompanyOverridesParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountCompanyOverridesParams) GetOffset() *int {
+func (c *CountCompanyOverridesParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3441,6 +3537,9 @@ func (c *CountCompanyOverridesParams) GetWithoutExpired() *bool {
 }
 
 func (c *CountCompanyOverridesParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3488,14 +3587,14 @@ func (c *CountCompanyOverridesParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyOverridesParams) SetLimit(limit *int) {
+func (c *CountCompanyOverridesParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCompanyOverridesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyOverridesParams) SetOffset(offset *int) {
+func (c *CountCompanyOverridesParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCompanyOverridesParamsFieldOffset)
 }
@@ -3542,6 +3641,9 @@ func (c *CountCompanyOverridesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCompanyOverridesParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3585,6 +3687,9 @@ func (c *CountCompanyOverridesResponse) GetParams() *CountCompanyOverridesParams
 }
 
 func (c *CountCompanyOverridesResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3637,6 +3742,9 @@ func (c *CountCompanyOverridesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCompanyOverridesResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3659,9 +3767,9 @@ var (
 type CountFeatureCompaniesParams struct {
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -3678,14 +3786,14 @@ func (c *CountFeatureCompaniesParams) GetFeatureID() *string {
 	return c.FeatureID
 }
 
-func (c *CountFeatureCompaniesParams) GetLimit() *int {
+func (c *CountFeatureCompaniesParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountFeatureCompaniesParams) GetOffset() *int {
+func (c *CountFeatureCompaniesParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3700,6 +3808,9 @@ func (c *CountFeatureCompaniesParams) GetQ() *string {
 }
 
 func (c *CountFeatureCompaniesParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3719,14 +3830,14 @@ func (c *CountFeatureCompaniesParams) SetFeatureID(featureID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureCompaniesParams) SetLimit(limit *int) {
+func (c *CountFeatureCompaniesParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countFeatureCompaniesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureCompaniesParams) SetOffset(offset *int) {
+func (c *CountFeatureCompaniesParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countFeatureCompaniesParamsFieldOffset)
 }
@@ -3766,6 +3877,9 @@ func (c *CountFeatureCompaniesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountFeatureCompaniesParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3809,6 +3923,9 @@ func (c *CountFeatureCompaniesResponse) GetParams() *CountFeatureCompaniesParams
 }
 
 func (c *CountFeatureCompaniesResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3861,6 +3978,9 @@ func (c *CountFeatureCompaniesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountFeatureCompaniesResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3891,9 +4011,9 @@ type CountFeatureUsageParams struct {
 	// Include time-bucketed usage aggregation (today, this week, this month, billing period) for credit-based entitlements. Defaults to false for performance.
 	IncludeUsageAggregation *bool `json:"include_usage_aggregation,omitempty" url:"include_usage_aggregation,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset                      *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset                      *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q                           *string `json:"q,omitempty" url:"q,omitempty"`
 	WithoutNegativeEntitlements *bool   `json:"without_negative_entitlements,omitempty" url:"without_negative_entitlements,omitempty"`
 
@@ -3932,14 +4052,14 @@ func (c *CountFeatureUsageParams) GetIncludeUsageAggregation() *bool {
 	return c.IncludeUsageAggregation
 }
 
-func (c *CountFeatureUsageParams) GetLimit() *int {
+func (c *CountFeatureUsageParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountFeatureUsageParams) GetOffset() *int {
+func (c *CountFeatureUsageParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3961,6 +4081,9 @@ func (c *CountFeatureUsageParams) GetWithoutNegativeEntitlements() *bool {
 }
 
 func (c *CountFeatureUsageParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4001,14 +4124,14 @@ func (c *CountFeatureUsageParams) SetIncludeUsageAggregation(includeUsageAggrega
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureUsageParams) SetLimit(limit *int) {
+func (c *CountFeatureUsageParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countFeatureUsageParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureUsageParams) SetOffset(offset *int) {
+func (c *CountFeatureUsageParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countFeatureUsageParamsFieldOffset)
 }
@@ -4055,6 +4178,9 @@ func (c *CountFeatureUsageParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountFeatureUsageParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4098,6 +4224,9 @@ func (c *CountFeatureUsageResponse) GetParams() *CountFeatureUsageParams {
 }
 
 func (c *CountFeatureUsageResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4150,6 +4279,9 @@ func (c *CountFeatureUsageResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountFeatureUsageResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4172,9 +4304,9 @@ var (
 type CountFeatureUsersParams struct {
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -4191,14 +4323,14 @@ func (c *CountFeatureUsersParams) GetFeatureID() *string {
 	return c.FeatureID
 }
 
-func (c *CountFeatureUsersParams) GetLimit() *int {
+func (c *CountFeatureUsersParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountFeatureUsersParams) GetOffset() *int {
+func (c *CountFeatureUsersParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4213,6 +4345,9 @@ func (c *CountFeatureUsersParams) GetQ() *string {
 }
 
 func (c *CountFeatureUsersParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4232,14 +4367,14 @@ func (c *CountFeatureUsersParams) SetFeatureID(featureID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureUsersParams) SetLimit(limit *int) {
+func (c *CountFeatureUsersParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countFeatureUsersParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeatureUsersParams) SetOffset(offset *int) {
+func (c *CountFeatureUsersParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countFeatureUsersParamsFieldOffset)
 }
@@ -4279,6 +4414,9 @@ func (c *CountFeatureUsersParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountFeatureUsersParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4322,6 +4460,9 @@ func (c *CountFeatureUsersResponse) GetParams() *CountFeatureUsersParams {
 }
 
 func (c *CountFeatureUsersResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4374,6 +4515,9 @@ func (c *CountFeatureUsersResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountFeatureUsersResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4408,9 +4552,9 @@ type CountPlanEntitlementsParams struct {
 	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter plan entitlements by a single plan ID (starting with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Filter plan entitlements by multiple plan IDs (starting with plan_)
@@ -4452,14 +4596,14 @@ func (c *CountPlanEntitlementsParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountPlanEntitlementsParams) GetLimit() *int {
+func (c *CountPlanEntitlementsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountPlanEntitlementsParams) GetOffset() *int {
+func (c *CountPlanEntitlementsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4509,6 +4653,9 @@ func (c *CountPlanEntitlementsParams) GetWithMeteredProducts() *bool {
 }
 
 func (c *CountPlanEntitlementsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4542,14 +4689,14 @@ func (c *CountPlanEntitlementsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlanEntitlementsParams) SetLimit(limit *int) {
+func (c *CountPlanEntitlementsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countPlanEntitlementsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlanEntitlementsParams) SetOffset(offset *int) {
+func (c *CountPlanEntitlementsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countPlanEntitlementsParamsFieldOffset)
 }
@@ -4624,6 +4771,9 @@ func (c *CountPlanEntitlementsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountPlanEntitlementsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4667,6 +4817,9 @@ func (c *CountPlanEntitlementsResponse) GetParams() *CountPlanEntitlementsParams
 }
 
 func (c *CountPlanEntitlementsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4719,6 +4872,9 @@ func (c *CountPlanEntitlementsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountPlanEntitlementsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4788,7 +4944,7 @@ var (
 type CreateCompanyOverrideResponse struct {
 	Data *CompanyOverrideResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4804,7 +4960,7 @@ func (c *CreateCompanyOverrideResponse) GetData() *CompanyOverrideResponseData {
 	return c.Data
 }
 
-func (c *CreateCompanyOverrideResponse) GetParams() map[string]interface{} {
+func (c *CreateCompanyOverrideResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -4812,6 +4968,9 @@ func (c *CreateCompanyOverrideResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateCompanyOverrideResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4831,7 +4990,7 @@ func (c *CreateCompanyOverrideResponse) SetData(data *CompanyOverrideResponseDat
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyOverrideResponse) SetParams(params map[string]interface{}) {
+func (c *CreateCompanyOverrideResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createCompanyOverrideResponseFieldParams)
 }
@@ -4864,6 +5023,9 @@ func (c *CreateCompanyOverrideResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateCompanyOverrideResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4933,7 +5095,7 @@ var (
 type CreatePlanEntitlementResponse struct {
 	Data *PlanEntitlementResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4949,7 +5111,7 @@ func (c *CreatePlanEntitlementResponse) GetData() *PlanEntitlementResponseData {
 	return c.Data
 }
 
-func (c *CreatePlanEntitlementResponse) GetParams() map[string]interface{} {
+func (c *CreatePlanEntitlementResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -4957,6 +5119,9 @@ func (c *CreatePlanEntitlementResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreatePlanEntitlementResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4976,7 +5141,7 @@ func (c *CreatePlanEntitlementResponse) SetData(data *PlanEntitlementResponseDat
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementResponse) SetParams(params map[string]interface{}) {
+func (c *CreatePlanEntitlementResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createPlanEntitlementResponseFieldParams)
 }
@@ -5009,6 +5174,9 @@ func (c *CreatePlanEntitlementResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreatePlanEntitlementResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5028,7 +5196,7 @@ var (
 type DeleteCompanyOverrideResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5044,7 +5212,7 @@ func (d *DeleteCompanyOverrideResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteCompanyOverrideResponse) GetParams() map[string]interface{} {
+func (d *DeleteCompanyOverrideResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -5052,6 +5220,9 @@ func (d *DeleteCompanyOverrideResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteCompanyOverrideResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5071,7 +5242,7 @@ func (d *DeleteCompanyOverrideResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteCompanyOverrideResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteCompanyOverrideResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteCompanyOverrideResponseFieldParams)
 }
@@ -5104,6 +5275,9 @@ func (d *DeleteCompanyOverrideResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteCompanyOverrideResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5123,7 +5297,7 @@ var (
 type DeletePlanEntitlementResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5139,7 +5313,7 @@ func (d *DeletePlanEntitlementResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeletePlanEntitlementResponse) GetParams() map[string]interface{} {
+func (d *DeletePlanEntitlementResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -5147,6 +5321,9 @@ func (d *DeletePlanEntitlementResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeletePlanEntitlementResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5166,7 +5343,7 @@ func (d *DeletePlanEntitlementResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeletePlanEntitlementResponse) SetParams(params map[string]interface{}) {
+func (d *DeletePlanEntitlementResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deletePlanEntitlementResponseFieldParams)
 }
@@ -5199,6 +5376,9 @@ func (d *DeletePlanEntitlementResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeletePlanEntitlementResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5218,7 +5398,7 @@ var (
 type DuplicatePlanEntitlementsResponse struct {
 	Data *DuplicatePlanEntitlementsResponseResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5234,7 +5414,7 @@ func (d *DuplicatePlanEntitlementsResponse) GetData() *DuplicatePlanEntitlements
 	return d.Data
 }
 
-func (d *DuplicatePlanEntitlementsResponse) GetParams() map[string]interface{} {
+func (d *DuplicatePlanEntitlementsResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -5242,6 +5422,9 @@ func (d *DuplicatePlanEntitlementsResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DuplicatePlanEntitlementsResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5261,7 +5444,7 @@ func (d *DuplicatePlanEntitlementsResponse) SetData(data *DuplicatePlanEntitleme
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DuplicatePlanEntitlementsResponse) SetParams(params map[string]interface{}) {
+func (d *DuplicatePlanEntitlementsResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(duplicatePlanEntitlementsResponseFieldParams)
 }
@@ -5294,6 +5477,9 @@ func (d *DuplicatePlanEntitlementsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DuplicatePlanEntitlementsResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5313,7 +5499,7 @@ var (
 type GetCompanyOverrideResponse struct {
 	Data *CompanyOverrideResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5329,7 +5515,7 @@ func (g *GetCompanyOverrideResponse) GetData() *CompanyOverrideResponseData {
 	return g.Data
 }
 
-func (g *GetCompanyOverrideResponse) GetParams() map[string]interface{} {
+func (g *GetCompanyOverrideResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -5337,6 +5523,9 @@ func (g *GetCompanyOverrideResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetCompanyOverrideResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -5356,7 +5545,7 @@ func (g *GetCompanyOverrideResponse) SetData(data *CompanyOverrideResponseData) 
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetCompanyOverrideResponse) SetParams(params map[string]interface{}) {
+func (g *GetCompanyOverrideResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getCompanyOverrideResponseFieldParams)
 }
@@ -5389,6 +5578,9 @@ func (g *GetCompanyOverrideResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetCompanyOverrideResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -5423,6 +5615,9 @@ func (g *GetFeatureUsageByCompanyParams) GetKeys() map[string]string {
 }
 
 func (g *GetFeatureUsageByCompanyParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -5468,6 +5663,9 @@ func (g *GetFeatureUsageByCompanyParams) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetFeatureUsageByCompanyParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -5511,6 +5709,9 @@ func (g *GetFeatureUsageByCompanyResponse) GetParams() *GetFeatureUsageByCompany
 }
 
 func (g *GetFeatureUsageByCompanyResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -5563,6 +5764,9 @@ func (g *GetFeatureUsageByCompanyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetFeatureUsageByCompanyResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -5633,6 +5837,9 @@ func (g *GetFeatureUsageTimeSeriesParams) GetStartTime() *time.Time {
 }
 
 func (g *GetFeatureUsageTimeSeriesParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -5718,6 +5925,9 @@ func (g *GetFeatureUsageTimeSeriesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetFeatureUsageTimeSeriesParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -5761,6 +5971,9 @@ func (g *GetFeatureUsageTimeSeriesResponse) GetParams() *GetFeatureUsageTimeSeri
 }
 
 func (g *GetFeatureUsageTimeSeriesResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -5813,6 +6026,9 @@ func (g *GetFeatureUsageTimeSeriesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetFeatureUsageTimeSeriesResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -5832,7 +6048,7 @@ var (
 type GetPlanEntitlementResponse struct {
 	Data *PlanEntitlementResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5848,7 +6064,7 @@ func (g *GetPlanEntitlementResponse) GetData() *PlanEntitlementResponseData {
 	return g.Data
 }
 
-func (g *GetPlanEntitlementResponse) GetParams() map[string]interface{} {
+func (g *GetPlanEntitlementResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -5856,6 +6072,9 @@ func (g *GetPlanEntitlementResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetPlanEntitlementResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -5875,7 +6094,7 @@ func (g *GetPlanEntitlementResponse) SetData(data *PlanEntitlementResponseData) 
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetPlanEntitlementResponse) SetParams(params map[string]interface{}) {
+func (g *GetPlanEntitlementResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getPlanEntitlementResponseFieldParams)
 }
@@ -5908,6 +6127,9 @@ func (g *GetPlanEntitlementResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetPlanEntitlementResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -5944,9 +6166,9 @@ type ListCompanyOverridesParams struct {
 	// Filter company overrides by multiple company override IDs (starting with cmov_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Search for company overrides by feature or company name
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Filter company overrides by whether they have not expired
@@ -5994,14 +6216,14 @@ func (l *ListCompanyOverridesParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListCompanyOverridesParams) GetLimit() *int {
+func (l *ListCompanyOverridesParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListCompanyOverridesParams) GetOffset() *int {
+func (l *ListCompanyOverridesParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -6023,6 +6245,9 @@ func (l *ListCompanyOverridesParams) GetWithoutExpired() *bool {
 }
 
 func (l *ListCompanyOverridesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6070,14 +6295,14 @@ func (l *ListCompanyOverridesParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyOverridesParams) SetLimit(limit *int) {
+func (l *ListCompanyOverridesParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompanyOverridesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyOverridesParams) SetOffset(offset *int) {
+func (l *ListCompanyOverridesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompanyOverridesParamsFieldOffset)
 }
@@ -6124,6 +6349,9 @@ func (l *ListCompanyOverridesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompanyOverridesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6167,6 +6395,9 @@ func (l *ListCompanyOverridesResponse) GetParams() *ListCompanyOverridesParams {
 }
 
 func (l *ListCompanyOverridesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6219,6 +6450,9 @@ func (l *ListCompanyOverridesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompanyOverridesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6241,9 +6475,9 @@ var (
 type ListFeatureCompaniesParams struct {
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -6260,14 +6494,14 @@ func (l *ListFeatureCompaniesParams) GetFeatureID() *string {
 	return l.FeatureID
 }
 
-func (l *ListFeatureCompaniesParams) GetLimit() *int {
+func (l *ListFeatureCompaniesParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListFeatureCompaniesParams) GetOffset() *int {
+func (l *ListFeatureCompaniesParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -6282,6 +6516,9 @@ func (l *ListFeatureCompaniesParams) GetQ() *string {
 }
 
 func (l *ListFeatureCompaniesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6301,14 +6538,14 @@ func (l *ListFeatureCompaniesParams) SetFeatureID(featureID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureCompaniesParams) SetLimit(limit *int) {
+func (l *ListFeatureCompaniesParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listFeatureCompaniesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureCompaniesParams) SetOffset(offset *int) {
+func (l *ListFeatureCompaniesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listFeatureCompaniesParamsFieldOffset)
 }
@@ -6348,6 +6585,9 @@ func (l *ListFeatureCompaniesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListFeatureCompaniesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6391,6 +6631,9 @@ func (l *ListFeatureCompaniesResponse) GetParams() *ListFeatureCompaniesParams {
 }
 
 func (l *ListFeatureCompaniesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6443,6 +6686,9 @@ func (l *ListFeatureCompaniesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListFeatureCompaniesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6473,9 +6719,9 @@ type ListFeatureUsageParams struct {
 	// Include time-bucketed usage aggregation (today, this week, this month, billing period) for credit-based entitlements. Defaults to false for performance.
 	IncludeUsageAggregation *bool `json:"include_usage_aggregation,omitempty" url:"include_usage_aggregation,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset                      *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset                      *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q                           *string `json:"q,omitempty" url:"q,omitempty"`
 	WithoutNegativeEntitlements *bool   `json:"without_negative_entitlements,omitempty" url:"without_negative_entitlements,omitempty"`
 
@@ -6514,14 +6760,14 @@ func (l *ListFeatureUsageParams) GetIncludeUsageAggregation() *bool {
 	return l.IncludeUsageAggregation
 }
 
-func (l *ListFeatureUsageParams) GetLimit() *int {
+func (l *ListFeatureUsageParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListFeatureUsageParams) GetOffset() *int {
+func (l *ListFeatureUsageParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -6543,6 +6789,9 @@ func (l *ListFeatureUsageParams) GetWithoutNegativeEntitlements() *bool {
 }
 
 func (l *ListFeatureUsageParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6583,14 +6832,14 @@ func (l *ListFeatureUsageParams) SetIncludeUsageAggregation(includeUsageAggregat
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureUsageParams) SetLimit(limit *int) {
+func (l *ListFeatureUsageParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listFeatureUsageParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureUsageParams) SetOffset(offset *int) {
+func (l *ListFeatureUsageParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listFeatureUsageParamsFieldOffset)
 }
@@ -6637,6 +6886,9 @@ func (l *ListFeatureUsageParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListFeatureUsageParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6680,6 +6932,9 @@ func (l *ListFeatureUsageResponse) GetParams() *ListFeatureUsageParams {
 }
 
 func (l *ListFeatureUsageResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6732,6 +6987,9 @@ func (l *ListFeatureUsageResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListFeatureUsageResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6754,9 +7012,9 @@ var (
 type ListFeatureUsersParams struct {
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -6773,14 +7031,14 @@ func (l *ListFeatureUsersParams) GetFeatureID() *string {
 	return l.FeatureID
 }
 
-func (l *ListFeatureUsersParams) GetLimit() *int {
+func (l *ListFeatureUsersParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListFeatureUsersParams) GetOffset() *int {
+func (l *ListFeatureUsersParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -6795,6 +7053,9 @@ func (l *ListFeatureUsersParams) GetQ() *string {
 }
 
 func (l *ListFeatureUsersParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6814,14 +7075,14 @@ func (l *ListFeatureUsersParams) SetFeatureID(featureID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureUsersParams) SetLimit(limit *int) {
+func (l *ListFeatureUsersParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listFeatureUsersParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeatureUsersParams) SetOffset(offset *int) {
+func (l *ListFeatureUsersParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listFeatureUsersParamsFieldOffset)
 }
@@ -6861,6 +7122,9 @@ func (l *ListFeatureUsersParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListFeatureUsersParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6904,6 +7168,9 @@ func (l *ListFeatureUsersResponse) GetParams() *ListFeatureUsersParams {
 }
 
 func (l *ListFeatureUsersResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6956,6 +7223,9 @@ func (l *ListFeatureUsersResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListFeatureUsersResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6990,9 +7260,9 @@ type ListPlanEntitlementsParams struct {
 	// Filter plan entitlements by multiple plan entitlement IDs (starting with pltl_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter plan entitlements by a single plan ID (starting with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Filter plan entitlements by multiple plan IDs (starting with plan_)
@@ -7034,14 +7304,14 @@ func (l *ListPlanEntitlementsParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListPlanEntitlementsParams) GetLimit() *int {
+func (l *ListPlanEntitlementsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListPlanEntitlementsParams) GetOffset() *int {
+func (l *ListPlanEntitlementsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -7091,6 +7361,9 @@ func (l *ListPlanEntitlementsParams) GetWithMeteredProducts() *bool {
 }
 
 func (l *ListPlanEntitlementsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7124,14 +7397,14 @@ func (l *ListPlanEntitlementsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanEntitlementsParams) SetLimit(limit *int) {
+func (l *ListPlanEntitlementsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPlanEntitlementsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanEntitlementsParams) SetOffset(offset *int) {
+func (l *ListPlanEntitlementsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPlanEntitlementsParamsFieldOffset)
 }
@@ -7206,6 +7479,9 @@ func (l *ListPlanEntitlementsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlanEntitlementsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7249,6 +7525,9 @@ func (l *ListPlanEntitlementsResponse) GetParams() *ListPlanEntitlementsParams {
 }
 
 func (l *ListPlanEntitlementsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7301,6 +7580,9 @@ func (l *ListPlanEntitlementsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlanEntitlementsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7370,7 +7652,7 @@ var (
 type UpdateCompanyOverrideResponse struct {
 	Data *CompanyOverrideResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7386,7 +7668,7 @@ func (u *UpdateCompanyOverrideResponse) GetData() *CompanyOverrideResponseData {
 	return u.Data
 }
 
-func (u *UpdateCompanyOverrideResponse) GetParams() map[string]interface{} {
+func (u *UpdateCompanyOverrideResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -7394,6 +7676,9 @@ func (u *UpdateCompanyOverrideResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdateCompanyOverrideResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -7413,7 +7698,7 @@ func (u *UpdateCompanyOverrideResponse) SetData(data *CompanyOverrideResponseDat
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCompanyOverrideResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateCompanyOverrideResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateCompanyOverrideResponseFieldParams)
 }
@@ -7446,6 +7731,9 @@ func (u *UpdateCompanyOverrideResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateCompanyOverrideResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -7515,7 +7803,7 @@ var (
 type UpdatePlanEntitlementResponse struct {
 	Data *PlanEntitlementResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7531,7 +7819,7 @@ func (u *UpdatePlanEntitlementResponse) GetData() *PlanEntitlementResponseData {
 	return u.Data
 }
 
-func (u *UpdatePlanEntitlementResponse) GetParams() map[string]interface{} {
+func (u *UpdatePlanEntitlementResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -7539,6 +7827,9 @@ func (u *UpdatePlanEntitlementResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdatePlanEntitlementResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -7558,7 +7849,7 @@ func (u *UpdatePlanEntitlementResponse) SetData(data *PlanEntitlementResponseDat
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementResponse) SetParams(params map[string]interface{}) {
+func (u *UpdatePlanEntitlementResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updatePlanEntitlementResponseFieldParams)
 }
@@ -7591,6 +7882,9 @@ func (u *UpdatePlanEntitlementResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdatePlanEntitlementResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -7623,7 +7917,7 @@ type UpdateCompanyOverrideRequestBody struct {
 	Note                   *string                                                 `json:"note,omitempty" url:"-"`
 	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
 	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int                                                    `json:"value_numeric,omitempty" url:"-"`
+	ValueNumeric           *int64                                                  `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              EntitlementValueType                                    `json:"value_type" url:"-"`
 
@@ -7689,7 +7983,7 @@ func (u *UpdateCompanyOverrideRequestBody) SetValueCreditID(valueCreditID *strin
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCompanyOverrideRequestBody) SetValueNumeric(valueNumeric *int) {
+func (u *UpdateCompanyOverrideRequestBody) SetValueNumeric(valueNumeric *int64) {
 	u.ValueNumeric = valueNumeric
 	u.require(updateCompanyOverrideRequestBodyFieldValueNumeric)
 }
@@ -7760,29 +8054,29 @@ var (
 
 type UpdatePlanEntitlementRequestBody struct {
 	BillingProductID        *string                                                 `json:"billing_product_id,omitempty" url:"-"`
-	BillingThreshold        *int                                                    `json:"billing_threshold,omitempty" url:"-"`
+	BillingThreshold        *int64                                                  `json:"billing_threshold,omitempty" url:"-"`
 	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
 	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
 	MetricPeriod            *UpdatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset  *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	MonthlyMeteredPriceID   *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody                           `json:"monthly_price_tiers,omitempty" url:"-"`
-	MonthlyUnitPrice        *int                                                    `json:"monthly_unit_price,omitempty" url:"-"`
+	MonthlyUnitPrice        *int64                                                  `json:"monthly_unit_price,omitempty" url:"-"`
 	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
 	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
 	PriceBehavior           *EntitlementPriceBehavior                               `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
-	SoftLimit              *int                          `json:"soft_limit,omitempty" url:"-"`
+	SoftLimit              *int64                        `json:"soft_limit,omitempty" url:"-"`
 	TierMode               *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
 	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
 	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int                          `json:"value_numeric,omitempty" url:"-"`
+	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
 	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
 	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
-	YearlyUnitPrice        *int                          `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
 	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -7805,7 +8099,7 @@ func (u *UpdatePlanEntitlementRequestBody) SetBillingProductID(billingProductID 
 
 // SetBillingThreshold sets the BillingThreshold field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetBillingThreshold(billingThreshold *int) {
+func (u *UpdatePlanEntitlementRequestBody) SetBillingThreshold(billingThreshold *int64) {
 	u.BillingThreshold = billingThreshold
 	u.require(updatePlanEntitlementRequestBodyFieldBillingThreshold)
 }
@@ -7854,7 +8148,7 @@ func (u *UpdatePlanEntitlementRequestBody) SetMonthlyPriceTiers(monthlyPriceTier
 
 // SetMonthlyUnitPrice sets the MonthlyUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int) {
+func (u *UpdatePlanEntitlementRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int64) {
 	u.MonthlyUnitPrice = monthlyUnitPrice
 	u.require(updatePlanEntitlementRequestBodyFieldMonthlyUnitPrice)
 }
@@ -7889,7 +8183,7 @@ func (u *UpdatePlanEntitlementRequestBody) SetPriceTiers(priceTiers []*CreatePri
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetSoftLimit(softLimit *int) {
+func (u *UpdatePlanEntitlementRequestBody) SetSoftLimit(softLimit *int64) {
 	u.SoftLimit = softLimit
 	u.require(updatePlanEntitlementRequestBodyFieldSoftLimit)
 }
@@ -7917,7 +8211,7 @@ func (u *UpdatePlanEntitlementRequestBody) SetValueCreditID(valueCreditID *strin
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetValueNumeric(valueNumeric *int) {
+func (u *UpdatePlanEntitlementRequestBody) SetValueNumeric(valueNumeric *int64) {
 	u.ValueNumeric = valueNumeric
 	u.require(updatePlanEntitlementRequestBodyFieldValueNumeric)
 }
@@ -7952,7 +8246,7 @@ func (u *UpdatePlanEntitlementRequestBody) SetYearlyPriceTiers(yearlyPriceTiers 
 
 // SetYearlyUnitPrice sets the YearlyUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *int) {
+func (u *UpdatePlanEntitlementRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *int64) {
 	u.YearlyUnitPrice = yearlyUnitPrice
 	u.require(updatePlanEntitlementRequestBodyFieldYearlyUnitPrice)
 }
@@ -7962,4 +8256,25 @@ func (u *UpdatePlanEntitlementRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *i
 func (u *UpdatePlanEntitlementRequestBody) SetYearlyUnitPriceDecimal(yearlyUnitPriceDecimal *string) {
 	u.YearlyUnitPriceDecimal = yearlyUnitPriceDecimal
 	u.require(updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal)
+}
+
+func (u *UpdatePlanEntitlementRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePlanEntitlementRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdatePlanEntitlementRequestBody(body)
+	return nil
+}
+
+func (u *UpdatePlanEntitlementRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdatePlanEntitlementRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

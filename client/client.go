@@ -4,6 +4,7 @@ package client
 
 import (
 	context "context"
+
 	accesstokens "github.com/schematichq/schematic-go/accesstokens"
 	accounts "github.com/schematichq/schematic-go/accounts"
 	billing "github.com/schematichq/schematic-go/billing"

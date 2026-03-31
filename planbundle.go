@@ -20,7 +20,7 @@ var (
 type CreatePlanBundleRequestBody struct {
 	BillingProduct *UpsertBillingProductRequestBody    `json:"billing_product,omitempty" url:"-"`
 	CreditGrants   []*PlanBundleCreditGrantRequestBody `json:"credit_grants,omitempty" url:"-"`
-	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements,omitempty" url:"-"`
+	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements" url:"-"`
 	Plan           *CreatePlanRequestBody              `json:"plan,omitempty" url:"-"`
 	Traits         []*UpdatePlanTraitTraitRequestBody  `json:"traits,omitempty" url:"-"`
 
@@ -70,6 +70,27 @@ func (c *CreatePlanBundleRequestBody) SetTraits(traits []*UpdatePlanTraitTraitRe
 	c.require(createPlanBundleRequestBodyFieldTraits)
 }
 
+func (c *CreatePlanBundleRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePlanBundleRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreatePlanBundleRequestBody(body)
+	return nil
+}
+
+func (c *CreatePlanBundleRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreatePlanBundleRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	createEntitlementInBundleRequestBodyFieldBillingProductID        = big.NewInt(1 << 0)
 	createEntitlementInBundleRequestBodyFieldBillingThreshold        = big.NewInt(1 << 1)
@@ -102,7 +123,7 @@ var (
 
 type CreateEntitlementInBundleRequestBody struct {
 	BillingProductID        *string                                                     `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
-	BillingThreshold        *int                                                        `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
+	BillingThreshold        *int64                                                      `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
 	CreditConsumptionRate   *float64                                                    `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
 	Currency                *string                                                     `json:"currency,omitempty" url:"currency,omitempty"`
 	FeatureID               string                                                      `json:"feature_id" url:"feature_id"`
@@ -110,7 +131,7 @@ type CreateEntitlementInBundleRequestBody struct {
 	MetricPeriodMonthReset  *CreateEntitlementInBundleRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	MonthlyMeteredPriceID   *string                                                     `json:"monthly_metered_price_id,omitempty" url:"monthly_metered_price_id,omitempty"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody                               `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
-	MonthlyUnitPrice        *int                                                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
+	MonthlyUnitPrice        *int64                                                      `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
 	MonthlyUnitPriceDecimal *string                                                     `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
 	OverageBillingProductID *string                                                     `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
 	PlanID                  string                                                      `json:"plan_id" url:"plan_id"`
@@ -118,16 +139,16 @@ type CreateEntitlementInBundleRequestBody struct {
 	PriceBehavior           *EntitlementPriceBehavior                                   `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
-	SoftLimit              *int                          `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	SoftLimit              *int64                        `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	TierMode               *BillingTiersMode             `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
 	ValueBool              *bool                         `json:"value_bool,omitempty" url:"value_bool,omitempty"`
 	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
-	ValueNumeric           *int                          `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
 	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
 	ValueType              EntitlementValueType          `json:"value_type" url:"value_type"`
 	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
 	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
-	YearlyUnitPrice        *int                          `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
+	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
 	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -144,7 +165,7 @@ func (c *CreateEntitlementInBundleRequestBody) GetBillingProductID() *string {
 	return c.BillingProductID
 }
 
-func (c *CreateEntitlementInBundleRequestBody) GetBillingThreshold() *int {
+func (c *CreateEntitlementInBundleRequestBody) GetBillingThreshold() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -200,7 +221,7 @@ func (c *CreateEntitlementInBundleRequestBody) GetMonthlyPriceTiers() []*CreateP
 	return c.MonthlyPriceTiers
 }
 
-func (c *CreateEntitlementInBundleRequestBody) GetMonthlyUnitPrice() *int {
+func (c *CreateEntitlementInBundleRequestBody) GetMonthlyUnitPrice() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -249,7 +270,7 @@ func (c *CreateEntitlementInBundleRequestBody) GetPriceTiers() []*CreatePriceTie
 	return c.PriceTiers
 }
 
-func (c *CreateEntitlementInBundleRequestBody) GetSoftLimit() *int {
+func (c *CreateEntitlementInBundleRequestBody) GetSoftLimit() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -277,7 +298,7 @@ func (c *CreateEntitlementInBundleRequestBody) GetValueCreditID() *string {
 	return c.ValueCreditID
 }
 
-func (c *CreateEntitlementInBundleRequestBody) GetValueNumeric() *int {
+func (c *CreateEntitlementInBundleRequestBody) GetValueNumeric() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -312,7 +333,7 @@ func (c *CreateEntitlementInBundleRequestBody) GetYearlyPriceTiers() []*CreatePr
 	return c.YearlyPriceTiers
 }
 
-func (c *CreateEntitlementInBundleRequestBody) GetYearlyUnitPrice() *int {
+func (c *CreateEntitlementInBundleRequestBody) GetYearlyUnitPrice() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -327,6 +348,9 @@ func (c *CreateEntitlementInBundleRequestBody) GetYearlyUnitPriceDecimal() *stri
 }
 
 func (c *CreateEntitlementInBundleRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -346,7 +370,7 @@ func (c *CreateEntitlementInBundleRequestBody) SetBillingProductID(billingProduc
 
 // SetBillingThreshold sets the BillingThreshold field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEntitlementInBundleRequestBody) SetBillingThreshold(billingThreshold *int) {
+func (c *CreateEntitlementInBundleRequestBody) SetBillingThreshold(billingThreshold *int64) {
 	c.BillingThreshold = billingThreshold
 	c.require(createEntitlementInBundleRequestBodyFieldBillingThreshold)
 }
@@ -402,7 +426,7 @@ func (c *CreateEntitlementInBundleRequestBody) SetMonthlyPriceTiers(monthlyPrice
 
 // SetMonthlyUnitPrice sets the MonthlyUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEntitlementInBundleRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int) {
+func (c *CreateEntitlementInBundleRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int64) {
 	c.MonthlyUnitPrice = monthlyUnitPrice
 	c.require(createEntitlementInBundleRequestBodyFieldMonthlyUnitPrice)
 }
@@ -451,7 +475,7 @@ func (c *CreateEntitlementInBundleRequestBody) SetPriceTiers(priceTiers []*Creat
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEntitlementInBundleRequestBody) SetSoftLimit(softLimit *int) {
+func (c *CreateEntitlementInBundleRequestBody) SetSoftLimit(softLimit *int64) {
 	c.SoftLimit = softLimit
 	c.require(createEntitlementInBundleRequestBodyFieldSoftLimit)
 }
@@ -479,7 +503,7 @@ func (c *CreateEntitlementInBundleRequestBody) SetValueCreditID(valueCreditID *s
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEntitlementInBundleRequestBody) SetValueNumeric(valueNumeric *int) {
+func (c *CreateEntitlementInBundleRequestBody) SetValueNumeric(valueNumeric *int64) {
 	c.ValueNumeric = valueNumeric
 	c.require(createEntitlementInBundleRequestBodyFieldValueNumeric)
 }
@@ -514,7 +538,7 @@ func (c *CreateEntitlementInBundleRequestBody) SetYearlyPriceTiers(yearlyPriceTi
 
 // SetYearlyUnitPrice sets the YearlyUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEntitlementInBundleRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *int) {
+func (c *CreateEntitlementInBundleRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *int64) {
 	c.YearlyUnitPrice = yearlyUnitPrice
 	c.require(createEntitlementInBundleRequestBodyFieldYearlyUnitPrice)
 }
@@ -554,6 +578,9 @@ func (c *CreateEntitlementInBundleRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateEntitlementInBundleRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -637,6 +664,9 @@ func (d *DeleteBillingPlanCreditGrantRequestBody) GetApplyToExisting() *bool {
 }
 
 func (d *DeleteBillingPlanCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -682,6 +712,9 @@ func (d *DeleteBillingPlanCreditGrantRequestBody) MarshalJSON() ([]byte, error) 
 }
 
 func (d *DeleteBillingPlanCreditGrantRequestBody) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -776,6 +809,9 @@ func (p *PlanBundleCreditGrantRequestBody) GetUpdateReq() *UpdateBillingPlanCred
 }
 
 func (p *PlanBundleCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -849,6 +885,9 @@ func (p *PlanBundleCreditGrantRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanBundleCreditGrantRequestBody) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -900,6 +939,9 @@ func (p *PlanBundleEntitlementRequestBody) GetReq() *CreateEntitlementInBundleRe
 }
 
 func (p *PlanBundleEntitlementRequestBody) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -959,6 +1001,9 @@ func (p *PlanBundleEntitlementRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanBundleEntitlementRequestBody) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -1028,6 +1073,9 @@ func (p *PlanBundleResponseData) GetTraits() []*PlanTraitResponseData {
 }
 
 func (p *PlanBundleResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -1101,6 +1149,9 @@ func (p *PlanBundleResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanBundleResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -1120,7 +1171,7 @@ var (
 type CreatePlanBundleResponse struct {
 	Data *PlanBundleResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1136,7 +1187,7 @@ func (c *CreatePlanBundleResponse) GetData() *PlanBundleResponseData {
 	return c.Data
 }
 
-func (c *CreatePlanBundleResponse) GetParams() map[string]interface{} {
+func (c *CreatePlanBundleResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -1144,6 +1195,9 @@ func (c *CreatePlanBundleResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreatePlanBundleResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1163,7 +1217,7 @@ func (c *CreatePlanBundleResponse) SetData(data *PlanBundleResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanBundleResponse) SetParams(params map[string]interface{}) {
+func (c *CreatePlanBundleResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createPlanBundleResponseFieldParams)
 }
@@ -1196,6 +1250,9 @@ func (c *CreatePlanBundleResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreatePlanBundleResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1215,7 +1272,7 @@ var (
 type UpdatePlanBundleResponse struct {
 	Data *PlanBundleResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1231,7 +1288,7 @@ func (u *UpdatePlanBundleResponse) GetData() *PlanBundleResponseData {
 	return u.Data
 }
 
-func (u *UpdatePlanBundleResponse) GetParams() map[string]interface{} {
+func (u *UpdatePlanBundleResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -1239,6 +1296,9 @@ func (u *UpdatePlanBundleResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdatePlanBundleResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -1258,7 +1318,7 @@ func (u *UpdatePlanBundleResponse) SetData(data *PlanBundleResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanBundleResponse) SetParams(params map[string]interface{}) {
+func (u *UpdatePlanBundleResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updatePlanBundleResponseFieldParams)
 }
@@ -1291,6 +1351,9 @@ func (u *UpdatePlanBundleResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdatePlanBundleResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -1314,7 +1377,7 @@ var (
 type UpdatePlanBundleRequestBody struct {
 	BillingProduct *UpsertBillingProductRequestBody    `json:"billing_product,omitempty" url:"-"`
 	CreditGrants   []*PlanBundleCreditGrantRequestBody `json:"credit_grants,omitempty" url:"-"`
-	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements,omitempty" url:"-"`
+	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements" url:"-"`
 	Plan           *UpdatePlanRequestBody              `json:"plan,omitempty" url:"-"`
 	PlanVersionID  *string                             `json:"plan_version_id,omitempty" url:"-"`
 	Traits         []*UpdatePlanTraitTraitRequestBody  `json:"traits,omitempty" url:"-"`
@@ -1370,4 +1433,25 @@ func (u *UpdatePlanBundleRequestBody) SetPlanVersionID(planVersionID *string) {
 func (u *UpdatePlanBundleRequestBody) SetTraits(traits []*UpdatePlanTraitTraitRequestBody) {
 	u.Traits = traits
 	u.require(updatePlanBundleRequestBodyFieldTraits)
+}
+
+func (u *UpdatePlanBundleRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePlanBundleRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdatePlanBundleRequestBody(body)
+	return nil
+}
+
+func (u *UpdatePlanBundleRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdatePlanBundleRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

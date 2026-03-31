@@ -57,7 +57,7 @@ func readJSON(r *http.Request, v any) error {
 func writeJSON(w http.ResponseWriter, status int, v any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(v)
+	_ = json.NewEncoder(w).Encode(v)
 }
 
 func getClient() *schematicclient.SchematicClient {
@@ -335,7 +335,7 @@ func main() {
 		mu.RUnlock()
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
-		server.Shutdown(ctx)
+		_ = server.Shutdown(ctx)
 	}()
 
 	fmt.Printf("SDK E2E test app listening on http://localhost:%s\n", port)

@@ -183,7 +183,7 @@ func (c *localCache[T]) DeleteMissing(ctx context.Context, keys []string) {
 
 	// Delete the keys that weren't found in the provided list
 	for _, key := range keysToDelete {
-		c.Delete(ctx, key) // Use the provided context
+		_ = c.Delete(ctx, key) // Use the provided context
 	}
 }
 

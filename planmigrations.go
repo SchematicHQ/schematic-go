@@ -23,9 +23,9 @@ type CountCompanyMigrationsRequest struct {
 	Q           *string                            `json:"-" url:"q,omitempty"`
 	Status      *PlanVersionCompanyMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -61,14 +61,14 @@ func (c *CountCompanyMigrationsRequest) SetStatus(status *PlanVersionCompanyMigr
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyMigrationsRequest) SetLimit(limit *int) {
+func (c *CountCompanyMigrationsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCompanyMigrationsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyMigrationsRequest) SetOffset(offset *int) {
+func (c *CountCompanyMigrationsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCompanyMigrationsRequestFieldOffset)
 }
@@ -84,9 +84,9 @@ type CountMigrationsRequest struct {
 	PlanVersionID *string                     `json:"-" url:"plan_version_id,omitempty"`
 	Status        *PlanVersionMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -115,14 +115,14 @@ func (c *CountMigrationsRequest) SetStatus(status *PlanVersionMigrationStatus) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountMigrationsRequest) SetLimit(limit *int) {
+func (c *CountMigrationsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countMigrationsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountMigrationsRequest) SetOffset(offset *int) {
+func (c *CountMigrationsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countMigrationsRequestFieldOffset)
 }
@@ -140,9 +140,9 @@ type ListCompanyMigrationsRequest struct {
 	Q           *string                            `json:"-" url:"q,omitempty"`
 	Status      *PlanVersionCompanyMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -178,14 +178,14 @@ func (l *ListCompanyMigrationsRequest) SetStatus(status *PlanVersionCompanyMigra
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyMigrationsRequest) SetLimit(limit *int) {
+func (l *ListCompanyMigrationsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompanyMigrationsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyMigrationsRequest) SetOffset(offset *int) {
+func (l *ListCompanyMigrationsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompanyMigrationsRequestFieldOffset)
 }
@@ -201,9 +201,9 @@ type ListMigrationsRequest struct {
 	PlanVersionID *string                     `json:"-" url:"plan_version_id,omitempty"`
 	Status        *PlanVersionMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -232,14 +232,14 @@ func (l *ListMigrationsRequest) SetStatus(status *PlanVersionMigrationStatus) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMigrationsRequest) SetLimit(limit *int) {
+func (l *ListMigrationsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listMigrationsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMigrationsRequest) SetOffset(offset *int) {
+func (l *ListMigrationsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listMigrationsRequestFieldOffset)
 }
@@ -356,6 +356,9 @@ func (p *PlanVersionCompanyMigrationResponseData) GetUpdatedAt() time.Time {
 }
 
 func (p *PlanVersionCompanyMigrationResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -491,6 +494,9 @@ func (p *PlanVersionCompanyMigrationResponseData) MarshalJSON() ([]byte, error) 
 }
 
 func (p *PlanVersionCompanyMigrationResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -553,19 +559,19 @@ var (
 
 type PlanVersionMigrationResponseData struct {
 	CompletedAt        *time.Time                   `json:"completed_at,omitempty" url:"completed_at,omitempty"`
-	CompletedCompanies int                          `json:"completed_companies" url:"completed_companies"`
+	CompletedCompanies int64                        `json:"completed_companies" url:"completed_companies"`
 	CreatedAt          time.Time                    `json:"created_at" url:"created_at"`
 	Error              *string                      `json:"error,omitempty" url:"error,omitempty"`
-	FailedCompanies    int                          `json:"failed_companies" url:"failed_companies"`
+	FailedCompanies    int64                        `json:"failed_companies" url:"failed_companies"`
 	ID                 string                       `json:"id" url:"id"`
 	PlanID             string                       `json:"plan_id" url:"plan_id"`
 	PlanVersionIDFrom  *string                      `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
 	PlanVersionIDTo    string                       `json:"plan_version_id_to" url:"plan_version_id_to"`
-	SkippedCompanies   int                          `json:"skipped_companies" url:"skipped_companies"`
+	SkippedCompanies   int64                        `json:"skipped_companies" url:"skipped_companies"`
 	StartedAt          *time.Time                   `json:"started_at,omitempty" url:"started_at,omitempty"`
 	Status             PlanVersionMigrationStatus   `json:"status" url:"status"`
 	Strategy           PlanVersionMigrationStrategy `json:"strategy" url:"strategy"`
-	TotalCompanies     int                          `json:"total_companies" url:"total_companies"`
+	TotalCompanies     int64                        `json:"total_companies" url:"total_companies"`
 	UpdatedAt          time.Time                    `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -582,7 +588,7 @@ func (p *PlanVersionMigrationResponseData) GetCompletedAt() *time.Time {
 	return p.CompletedAt
 }
 
-func (p *PlanVersionMigrationResponseData) GetCompletedCompanies() int {
+func (p *PlanVersionMigrationResponseData) GetCompletedCompanies() int64 {
 	if p == nil {
 		return 0
 	}
@@ -603,7 +609,7 @@ func (p *PlanVersionMigrationResponseData) GetError() *string {
 	return p.Error
 }
 
-func (p *PlanVersionMigrationResponseData) GetFailedCompanies() int {
+func (p *PlanVersionMigrationResponseData) GetFailedCompanies() int64 {
 	if p == nil {
 		return 0
 	}
@@ -638,7 +644,7 @@ func (p *PlanVersionMigrationResponseData) GetPlanVersionIDTo() string {
 	return p.PlanVersionIDTo
 }
 
-func (p *PlanVersionMigrationResponseData) GetSkippedCompanies() int {
+func (p *PlanVersionMigrationResponseData) GetSkippedCompanies() int64 {
 	if p == nil {
 		return 0
 	}
@@ -666,7 +672,7 @@ func (p *PlanVersionMigrationResponseData) GetStrategy() PlanVersionMigrationStr
 	return p.Strategy
 }
 
-func (p *PlanVersionMigrationResponseData) GetTotalCompanies() int {
+func (p *PlanVersionMigrationResponseData) GetTotalCompanies() int64 {
 	if p == nil {
 		return 0
 	}
@@ -681,6 +687,9 @@ func (p *PlanVersionMigrationResponseData) GetUpdatedAt() time.Time {
 }
 
 func (p *PlanVersionMigrationResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -700,7 +709,7 @@ func (p *PlanVersionMigrationResponseData) SetCompletedAt(completedAt *time.Time
 
 // SetCompletedCompanies sets the CompletedCompanies field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanVersionMigrationResponseData) SetCompletedCompanies(completedCompanies int) {
+func (p *PlanVersionMigrationResponseData) SetCompletedCompanies(completedCompanies int64) {
 	p.CompletedCompanies = completedCompanies
 	p.require(planVersionMigrationResponseDataFieldCompletedCompanies)
 }
@@ -721,7 +730,7 @@ func (p *PlanVersionMigrationResponseData) SetError(error_ *string) {
 
 // SetFailedCompanies sets the FailedCompanies field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanVersionMigrationResponseData) SetFailedCompanies(failedCompanies int) {
+func (p *PlanVersionMigrationResponseData) SetFailedCompanies(failedCompanies int64) {
 	p.FailedCompanies = failedCompanies
 	p.require(planVersionMigrationResponseDataFieldFailedCompanies)
 }
@@ -756,7 +765,7 @@ func (p *PlanVersionMigrationResponseData) SetPlanVersionIDTo(planVersionIDTo st
 
 // SetSkippedCompanies sets the SkippedCompanies field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanVersionMigrationResponseData) SetSkippedCompanies(skippedCompanies int) {
+func (p *PlanVersionMigrationResponseData) SetSkippedCompanies(skippedCompanies int64) {
 	p.SkippedCompanies = skippedCompanies
 	p.require(planVersionMigrationResponseDataFieldSkippedCompanies)
 }
@@ -784,7 +793,7 @@ func (p *PlanVersionMigrationResponseData) SetStrategy(strategy PlanVersionMigra
 
 // SetTotalCompanies sets the TotalCompanies field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanVersionMigrationResponseData) SetTotalCompanies(totalCompanies int) {
+func (p *PlanVersionMigrationResponseData) SetTotalCompanies(totalCompanies int64) {
 	p.TotalCompanies = totalCompanies
 	p.require(planVersionMigrationResponseDataFieldTotalCompanies)
 }
@@ -844,6 +853,9 @@ func (p *PlanVersionMigrationResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanVersionMigrationResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -894,10 +906,10 @@ var (
 
 type CountCompanyMigrationsParams struct {
 	// Page limit (default 100)
-	Limit       *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit       *int64  `json:"limit,omitempty" url:"limit,omitempty"`
 	MigrationID *string `json:"migration_id,omitempty" url:"migration_id,omitempty"`
 	// Page offset (default 0)
-	Offset *int                               `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64                             `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string                            `json:"q,omitempty" url:"q,omitempty"`
 	Status *PlanVersionCompanyMigrationStatus `json:"status,omitempty" url:"status,omitempty"`
 
@@ -908,7 +920,7 @@ type CountCompanyMigrationsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountCompanyMigrationsParams) GetLimit() *int {
+func (c *CountCompanyMigrationsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -922,7 +934,7 @@ func (c *CountCompanyMigrationsParams) GetMigrationID() *string {
 	return c.MigrationID
 }
 
-func (c *CountCompanyMigrationsParams) GetOffset() *int {
+func (c *CountCompanyMigrationsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -944,6 +956,9 @@ func (c *CountCompanyMigrationsParams) GetStatus() *PlanVersionCompanyMigrationS
 }
 
 func (c *CountCompanyMigrationsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -956,7 +971,7 @@ func (c *CountCompanyMigrationsParams) require(field *big.Int) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyMigrationsParams) SetLimit(limit *int) {
+func (c *CountCompanyMigrationsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCompanyMigrationsParamsFieldLimit)
 }
@@ -970,7 +985,7 @@ func (c *CountCompanyMigrationsParams) SetMigrationID(migrationID *string) {
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyMigrationsParams) SetOffset(offset *int) {
+func (c *CountCompanyMigrationsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCompanyMigrationsParamsFieldOffset)
 }
@@ -1017,6 +1032,9 @@ func (c *CountCompanyMigrationsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCompanyMigrationsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1060,6 +1078,9 @@ func (c *CountCompanyMigrationsResponse) GetParams() *CountCompanyMigrationsPara
 }
 
 func (c *CountCompanyMigrationsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1112,6 +1133,9 @@ func (c *CountCompanyMigrationsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCompanyMigrationsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1133,9 +1157,9 @@ var (
 
 type CountMigrationsParams struct {
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset        *int                        `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset        *int64                      `json:"offset,omitempty" url:"offset,omitempty"`
 	PlanVersionID *string                     `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	Status        *PlanVersionMigrationStatus `json:"status,omitempty" url:"status,omitempty"`
 
@@ -1146,14 +1170,14 @@ type CountMigrationsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountMigrationsParams) GetLimit() *int {
+func (c *CountMigrationsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountMigrationsParams) GetOffset() *int {
+func (c *CountMigrationsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -1175,6 +1199,9 @@ func (c *CountMigrationsParams) GetStatus() *PlanVersionMigrationStatus {
 }
 
 func (c *CountMigrationsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1187,14 +1214,14 @@ func (c *CountMigrationsParams) require(field *big.Int) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountMigrationsParams) SetLimit(limit *int) {
+func (c *CountMigrationsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countMigrationsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountMigrationsParams) SetOffset(offset *int) {
+func (c *CountMigrationsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countMigrationsParamsFieldOffset)
 }
@@ -1241,6 +1268,9 @@ func (c *CountMigrationsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountMigrationsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1284,6 +1314,9 @@ func (c *CountMigrationsResponse) GetParams() *CountMigrationsParams {
 }
 
 func (c *CountMigrationsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1336,6 +1369,9 @@ func (c *CountMigrationsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountMigrationsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1355,7 +1391,7 @@ var (
 type GetMigrationResponse struct {
 	Data *PlanVersionMigrationResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1371,7 +1407,7 @@ func (g *GetMigrationResponse) GetData() *PlanVersionMigrationResponseData {
 	return g.Data
 }
 
-func (g *GetMigrationResponse) GetParams() map[string]interface{} {
+func (g *GetMigrationResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -1379,6 +1415,9 @@ func (g *GetMigrationResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetMigrationResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -1398,7 +1437,7 @@ func (g *GetMigrationResponse) SetData(data *PlanVersionMigrationResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetMigrationResponse) SetParams(params map[string]interface{}) {
+func (g *GetMigrationResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getMigrationResponseFieldParams)
 }
@@ -1431,6 +1470,9 @@ func (g *GetMigrationResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetMigrationResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -1453,10 +1495,10 @@ var (
 
 type ListCompanyMigrationsParams struct {
 	// Page limit (default 100)
-	Limit       *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit       *int64  `json:"limit,omitempty" url:"limit,omitempty"`
 	MigrationID *string `json:"migration_id,omitempty" url:"migration_id,omitempty"`
 	// Page offset (default 0)
-	Offset *int                               `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64                             `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string                            `json:"q,omitempty" url:"q,omitempty"`
 	Status *PlanVersionCompanyMigrationStatus `json:"status,omitempty" url:"status,omitempty"`
 
@@ -1467,7 +1509,7 @@ type ListCompanyMigrationsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListCompanyMigrationsParams) GetLimit() *int {
+func (l *ListCompanyMigrationsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -1481,7 +1523,7 @@ func (l *ListCompanyMigrationsParams) GetMigrationID() *string {
 	return l.MigrationID
 }
 
-func (l *ListCompanyMigrationsParams) GetOffset() *int {
+func (l *ListCompanyMigrationsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -1503,6 +1545,9 @@ func (l *ListCompanyMigrationsParams) GetStatus() *PlanVersionCompanyMigrationSt
 }
 
 func (l *ListCompanyMigrationsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -1515,7 +1560,7 @@ func (l *ListCompanyMigrationsParams) require(field *big.Int) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyMigrationsParams) SetLimit(limit *int) {
+func (l *ListCompanyMigrationsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompanyMigrationsParamsFieldLimit)
 }
@@ -1529,7 +1574,7 @@ func (l *ListCompanyMigrationsParams) SetMigrationID(migrationID *string) {
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyMigrationsParams) SetOffset(offset *int) {
+func (l *ListCompanyMigrationsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompanyMigrationsParamsFieldOffset)
 }
@@ -1576,6 +1621,9 @@ func (l *ListCompanyMigrationsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompanyMigrationsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -1619,6 +1667,9 @@ func (l *ListCompanyMigrationsResponse) GetParams() *ListCompanyMigrationsParams
 }
 
 func (l *ListCompanyMigrationsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -1671,6 +1722,9 @@ func (l *ListCompanyMigrationsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompanyMigrationsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -1692,9 +1746,9 @@ var (
 
 type ListMigrationsParams struct {
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset        *int                        `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset        *int64                      `json:"offset,omitempty" url:"offset,omitempty"`
 	PlanVersionID *string                     `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	Status        *PlanVersionMigrationStatus `json:"status,omitempty" url:"status,omitempty"`
 
@@ -1705,14 +1759,14 @@ type ListMigrationsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListMigrationsParams) GetLimit() *int {
+func (l *ListMigrationsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListMigrationsParams) GetOffset() *int {
+func (l *ListMigrationsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -1734,6 +1788,9 @@ func (l *ListMigrationsParams) GetStatus() *PlanVersionMigrationStatus {
 }
 
 func (l *ListMigrationsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -1746,14 +1803,14 @@ func (l *ListMigrationsParams) require(field *big.Int) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMigrationsParams) SetLimit(limit *int) {
+func (l *ListMigrationsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listMigrationsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMigrationsParams) SetOffset(offset *int) {
+func (l *ListMigrationsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listMigrationsParamsFieldOffset)
 }
@@ -1800,6 +1857,9 @@ func (l *ListMigrationsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListMigrationsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -1843,6 +1903,9 @@ func (l *ListMigrationsResponse) GetParams() *ListMigrationsParams {
 }
 
 func (l *ListMigrationsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -1895,6 +1958,9 @@ func (l *ListMigrationsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListMigrationsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value

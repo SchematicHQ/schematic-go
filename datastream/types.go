@@ -36,9 +36,6 @@ type DataStreamClient struct {
 	pendingUserRequests    map[string][]chan *rulesengine.User
 	pendingFlagRequest     chan bool
 
-	// Connection state tracking
-	connected bool
-
 	// Replicator mode configuration
 	replicatorMode         bool
 	replicatorHealthURL    string
@@ -54,7 +51,5 @@ type DataStreamClient struct {
 	pendingCompReqMu sync.Mutex   // For pending company request operations
 	pendingUserReqMu sync.Mutex   // For pending user request operations
 	pendingFlagReqMu sync.Mutex   // For pending flag request operations
-	writeMu          sync.Mutex   // Existing mutex for WebSocket writes
-	connectedMu      sync.RWMutex // For connection state operations
 	replicatorMu     sync.RWMutex // For replicator state operations
 }

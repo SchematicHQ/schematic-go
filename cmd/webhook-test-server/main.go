@@ -86,7 +86,7 @@ func main() {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Webhook received and verified successfully"))
+		_, _ = w.Write([]byte("Webhook received and verified successfully"))
 	})
 
 	// Start server

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -744,11 +743,6 @@ func TestNewDataStreamClientFlagCache(t *testing.T) {
 		// The client should use the provided cache, but we can't easily verify this
 		// without accessing private fields. The test ensures the client creation works.
 	})
-}
-
-// Helper function to create cache keys in the same format as the datastream package
-func createTestCacheKey(resourceType string, key string, value string) string {
-	return fmt.Sprintf("schematic:%s:%s:%s:%s", resourceType, rulesengine.VersionKey, strings.ToLower(key), strings.ToLower(value))
 }
 
 // Helper to create a company message with specific ID and keys

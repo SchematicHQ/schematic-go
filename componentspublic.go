@@ -19,27 +19,28 @@ var (
 	planViewPublicResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 5)
 	planViewPublicResponseDataFieldControlledBy         = big.NewInt(1 << 6)
 	planViewPublicResponseDataFieldCreatedAt            = big.NewInt(1 << 7)
-	planViewPublicResponseDataFieldCustom               = big.NewInt(1 << 8)
-	planViewPublicResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 9)
-	planViewPublicResponseDataFieldDescription          = big.NewInt(1 << 10)
-	planViewPublicResponseDataFieldDraftVersion         = big.NewInt(1 << 11)
-	planViewPublicResponseDataFieldEntitlements         = big.NewInt(1 << 12)
-	planViewPublicResponseDataFieldFeatures             = big.NewInt(1 << 13)
-	planViewPublicResponseDataFieldIcon                 = big.NewInt(1 << 14)
-	planViewPublicResponseDataFieldID                   = big.NewInt(1 << 15)
-	planViewPublicResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 16)
-	planViewPublicResponseDataFieldIsCustom             = big.NewInt(1 << 17)
-	planViewPublicResponseDataFieldIsDefault            = big.NewInt(1 << 18)
-	planViewPublicResponseDataFieldIsFree               = big.NewInt(1 << 19)
-	planViewPublicResponseDataFieldIsTrialable          = big.NewInt(1 << 20)
-	planViewPublicResponseDataFieldMonthlyPrice         = big.NewInt(1 << 21)
-	planViewPublicResponseDataFieldName                 = big.NewInt(1 << 22)
-	planViewPublicResponseDataFieldOneTimePrice         = big.NewInt(1 << 23)
-	planViewPublicResponseDataFieldPlanType             = big.NewInt(1 << 24)
-	planViewPublicResponseDataFieldTrialDays            = big.NewInt(1 << 25)
-	planViewPublicResponseDataFieldUpdatedAt            = big.NewInt(1 << 26)
-	planViewPublicResponseDataFieldVersions             = big.NewInt(1 << 27)
-	planViewPublicResponseDataFieldYearlyPrice          = big.NewInt(1 << 28)
+	planViewPublicResponseDataFieldCurrencyPrices       = big.NewInt(1 << 8)
+	planViewPublicResponseDataFieldCustom               = big.NewInt(1 << 9)
+	planViewPublicResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 10)
+	planViewPublicResponseDataFieldDescription          = big.NewInt(1 << 11)
+	planViewPublicResponseDataFieldDraftVersion         = big.NewInt(1 << 12)
+	planViewPublicResponseDataFieldEntitlements         = big.NewInt(1 << 13)
+	planViewPublicResponseDataFieldFeatures             = big.NewInt(1 << 14)
+	planViewPublicResponseDataFieldIcon                 = big.NewInt(1 << 15)
+	planViewPublicResponseDataFieldID                   = big.NewInt(1 << 16)
+	planViewPublicResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 17)
+	planViewPublicResponseDataFieldIsCustom             = big.NewInt(1 << 18)
+	planViewPublicResponseDataFieldIsDefault            = big.NewInt(1 << 19)
+	planViewPublicResponseDataFieldIsFree               = big.NewInt(1 << 20)
+	planViewPublicResponseDataFieldIsTrialable          = big.NewInt(1 << 21)
+	planViewPublicResponseDataFieldMonthlyPrice         = big.NewInt(1 << 22)
+	planViewPublicResponseDataFieldName                 = big.NewInt(1 << 23)
+	planViewPublicResponseDataFieldOneTimePrice         = big.NewInt(1 << 24)
+	planViewPublicResponseDataFieldPlanType             = big.NewInt(1 << 25)
+	planViewPublicResponseDataFieldTrialDays            = big.NewInt(1 << 26)
+	planViewPublicResponseDataFieldUpdatedAt            = big.NewInt(1 << 27)
+	planViewPublicResponseDataFieldVersions             = big.NewInt(1 << 28)
+	planViewPublicResponseDataFieldYearlyPrice          = big.NewInt(1 << 29)
 )
 
 type PlanViewPublicResponseData struct {
@@ -47,10 +48,11 @@ type PlanViewPublicResponseData struct {
 	AudienceType         *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	BillingProduct       *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	ChargeType           ChargeType                        `json:"charge_type" url:"charge_type"`
-	CompanyCount         int                               `json:"company_count" url:"company_count"`
+	CompanyCount         int64                             `json:"company_count" url:"company_count"`
 	CompatiblePlanIDs    []string                          `json:"compatible_plan_ids" url:"compatible_plan_ids"`
 	ControlledBy         PlanControlledByType              `json:"controlled_by" url:"controlled_by"`
 	CreatedAt            time.Time                         `json:"created_at" url:"created_at"`
+	CurrencyPrices       []*PlanCurrencyPricesResponseData `json:"currency_prices" url:"currency_prices"`
 	Custom               bool                              `json:"custom" url:"custom"`
 	CustomPlanConfig     *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
 	Description          string                            `json:"description" url:"description"`
@@ -68,7 +70,7 @@ type PlanViewPublicResponseData struct {
 	Name                 string                            `json:"name" url:"name"`
 	OneTimePrice         *BillingPriceResponseData         `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	PlanType             PlanType                          `json:"plan_type" url:"plan_type"`
-	TrialDays            *int                              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialDays            *int64                            `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt            time.Time                         `json:"updated_at" url:"updated_at"`
 	Versions             []*PlanVersionResponseData        `json:"versions" url:"versions"`
 	YearlyPrice          *BillingPriceResponseData         `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
@@ -108,7 +110,7 @@ func (p *PlanViewPublicResponseData) GetChargeType() ChargeType {
 	return p.ChargeType
 }
 
-func (p *PlanViewPublicResponseData) GetCompanyCount() int {
+func (p *PlanViewPublicResponseData) GetCompanyCount() int64 {
 	if p == nil {
 		return 0
 	}
@@ -134,6 +136,13 @@ func (p *PlanViewPublicResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return p.CreatedAt
+}
+
+func (p *PlanViewPublicResponseData) GetCurrencyPrices() []*PlanCurrencyPricesResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.CurrencyPrices
 }
 
 func (p *PlanViewPublicResponseData) GetCustom() bool {
@@ -255,7 +264,7 @@ func (p *PlanViewPublicResponseData) GetPlanType() PlanType {
 	return p.PlanType
 }
 
-func (p *PlanViewPublicResponseData) GetTrialDays() *int {
+func (p *PlanViewPublicResponseData) GetTrialDays() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -284,6 +293,9 @@ func (p *PlanViewPublicResponseData) GetYearlyPrice() *BillingPriceResponseData 
 }
 
 func (p *PlanViewPublicResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -324,7 +336,7 @@ func (p *PlanViewPublicResponseData) SetChargeType(chargeType ChargeType) {
 
 // SetCompanyCount sets the CompanyCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanViewPublicResponseData) SetCompanyCount(companyCount int) {
+func (p *PlanViewPublicResponseData) SetCompanyCount(companyCount int64) {
 	p.CompanyCount = companyCount
 	p.require(planViewPublicResponseDataFieldCompanyCount)
 }
@@ -348,6 +360,13 @@ func (p *PlanViewPublicResponseData) SetControlledBy(controlledBy PlanControlled
 func (p *PlanViewPublicResponseData) SetCreatedAt(createdAt time.Time) {
 	p.CreatedAt = createdAt
 	p.require(planViewPublicResponseDataFieldCreatedAt)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanViewPublicResponseData) SetCurrencyPrices(currencyPrices []*PlanCurrencyPricesResponseData) {
+	p.CurrencyPrices = currencyPrices
+	p.require(planViewPublicResponseDataFieldCurrencyPrices)
 }
 
 // SetCustom sets the Custom field and marks it as non-optional;
@@ -471,7 +490,7 @@ func (p *PlanViewPublicResponseData) SetPlanType(planType PlanType) {
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanViewPublicResponseData) SetTrialDays(trialDays *int) {
+func (p *PlanViewPublicResponseData) SetTrialDays(trialDays *int64) {
 	p.TrialDays = trialDays
 	p.require(planViewPublicResponseDataFieldTrialDays)
 }
@@ -537,6 +556,9 @@ func (p *PlanViewPublicResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanViewPublicResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -642,6 +664,9 @@ func (p *PublicPlansResponseData) GetShowZeroPriceAsFree() bool {
 }
 
 func (p *PublicPlansResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -743,6 +768,9 @@ func (p *PublicPlansResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PublicPlansResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -762,7 +790,7 @@ var (
 type GetPublicPlansResponse struct {
 	Data *PublicPlansResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -778,7 +806,7 @@ func (g *GetPublicPlansResponse) GetData() *PublicPlansResponseData {
 	return g.Data
 }
 
-func (g *GetPublicPlansResponse) GetParams() map[string]interface{} {
+func (g *GetPublicPlansResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -786,6 +814,9 @@ func (g *GetPublicPlansResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetPublicPlansResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -805,7 +836,7 @@ func (g *GetPublicPlansResponse) SetData(data *PublicPlansResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetPublicPlansResponse) SetParams(params map[string]interface{}) {
+func (g *GetPublicPlansResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getPublicPlansResponseFieldParams)
 }
@@ -838,6 +869,9 @@ func (g *GetPublicPlansResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetPublicPlansResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value

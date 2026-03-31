@@ -48,7 +48,7 @@ var (
 type CreatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
-	AddOnIDs                               []string                          `json:"add_on_ids,omitempty" url:"-"`
+	AddOnIDs                               []string                          `json:"add_on_ids" url:"-"`
 	CheckoutCollectAddress                 bool                              `json:"checkout_collect_address" url:"-"`
 	CheckoutCollectEmail                   bool                              `json:"checkout_collect_email" url:"-"`
 	CheckoutCollectPhone                   bool                              `json:"checkout_collect_phone" url:"-"`
@@ -58,9 +58,9 @@ type CreatePlanGroupRequestBody struct {
 	FallbackPlanID                         *string                           `json:"fallback_plan_id,omitempty" url:"-"`
 	InitialPlanID                          *string                           `json:"initial_plan_id,omitempty" url:"-"`
 	InitialPlanPriceID                     *string                           `json:"initial_plan_price_id,omitempty" url:"-"`
-	OrderedAddOns                          []*OrderedPlansInGroup            `json:"ordered_add_ons,omitempty" url:"-"`
-	OrderedBundleList                      []*PlanGroupBundleOrder           `json:"ordered_bundle_list,omitempty" url:"-"`
-	OrderedPlans                           []*OrderedPlansInGroup            `json:"ordered_plans,omitempty" url:"-"`
+	OrderedAddOns                          []*OrderedPlansInGroup            `json:"ordered_add_ons" url:"-"`
+	OrderedBundleList                      []*PlanGroupBundleOrder           `json:"ordered_bundle_list" url:"-"`
+	OrderedPlans                           []*OrderedPlansInGroup            `json:"ordered_plans" url:"-"`
 	PreventDowngradesWhenOverLimit         bool                              `json:"prevent_downgrades_when_over_limit" url:"-"`
 	PreventSelfServiceDowngrade            bool                              `json:"prevent_self_service_downgrade" url:"-"`
 	PreventSelfServiceDowngradeButtonText  *string                           `json:"prevent_self_service_downgrade_button_text,omitempty" url:"-"`
@@ -75,7 +75,7 @@ type CreatePlanGroupRequestBody struct {
 	ShowPeriodToggle                       bool                              `json:"show_period_toggle" url:"-"`
 	ShowZeroPriceAsFree                    bool                              `json:"show_zero_price_as_free" url:"-"`
 	SyncCustomerBillingDetails             bool                              `json:"sync_customer_billing_details" url:"-"`
-	TrialDays                              *int                              `json:"trial_days,omitempty" url:"-"`
+	TrialDays                              *int64                            `json:"trial_days,omitempty" url:"-"`
 	TrialExpiryPlanID                      *string                           `json:"trial_expiry_plan_id,omitempty" url:"-"`
 	TrialExpiryPlanPriceID                 *string                           `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
 	TrialPaymentMethodRequired             *bool                             `json:"trial_payment_method_required,omitempty" url:"-"`
@@ -289,7 +289,7 @@ func (c *CreatePlanGroupRequestBody) SetSyncCustomerBillingDetails(syncCustomerB
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanGroupRequestBody) SetTrialDays(trialDays *int) {
+func (c *CreatePlanGroupRequestBody) SetTrialDays(trialDays *int64) {
 	c.TrialDays = trialDays
 	c.require(createPlanGroupRequestBodyFieldTrialDays)
 }
@@ -313,6 +313,27 @@ func (c *CreatePlanGroupRequestBody) SetTrialExpiryPlanPriceID(trialExpiryPlanPr
 func (c *CreatePlanGroupRequestBody) SetTrialPaymentMethodRequired(trialPaymentMethodRequired *bool) {
 	c.TrialPaymentMethodRequired = trialPaymentMethodRequired
 	c.require(createPlanGroupRequestBodyFieldTrialPaymentMethodRequired)
+}
+
+func (c *CreatePlanGroupRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePlanGroupRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreatePlanGroupRequestBody(body)
+	return nil
+}
+
+func (c *CreatePlanGroupRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreatePlanGroupRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -380,6 +401,9 @@ func (c *CheckoutSettingsResponseData) GetCollectPhone() bool {
 }
 
 func (c *CheckoutSettingsResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -439,6 +463,9 @@ func (c *CheckoutSettingsResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CheckoutSettingsResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -481,6 +508,9 @@ func (c *CompatiblePlansResponseData) GetSourcePlanID() string {
 }
 
 func (c *CompatiblePlansResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -533,6 +563,9 @@ func (c *CompatiblePlansResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompatiblePlansResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -611,6 +644,9 @@ func (c *ComponentSettingsResponseData) GetShowZeroPriceAsFree() bool {
 }
 
 func (c *ComponentSettingsResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -691,6 +727,9 @@ func (c *ComponentSettingsResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ComponentSettingsResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -742,6 +781,9 @@ func (c *CustomPlanViewConfigResponseData) GetPriceText() string {
 }
 
 func (c *CustomPlanViewConfigResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -801,6 +843,9 @@ func (c *CustomPlanViewConfigResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CustomPlanViewConfigResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -843,6 +888,9 @@ func (e *EntitlementsInPlan) GetVisible() *bool {
 }
 
 func (e *EntitlementsInPlan) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -895,6 +943,9 @@ func (e *EntitlementsInPlan) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EntitlementsInPlan) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -937,6 +988,9 @@ func (o *OrderedPlansInGroup) GetPlanID() string {
 }
 
 func (o *OrderedPlansInGroup) GetExtraProperties() map[string]interface{} {
+	if o == nil {
+		return nil
+	}
 	return o.extraProperties
 }
 
@@ -989,6 +1043,9 @@ func (o *OrderedPlansInGroup) MarshalJSON() ([]byte, error) {
 }
 
 func (o *OrderedPlansInGroup) String() string {
+	if o == nil {
+		return "<nil>"
+	}
 	if len(o.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(o.rawJSON); err == nil {
 			return value
@@ -1031,6 +1088,9 @@ func (p *PlanEntitlementsOrder) GetVisible() *bool {
 }
 
 func (p *PlanEntitlementsOrder) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -1083,6 +1143,9 @@ func (p *PlanEntitlementsOrder) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanEntitlementsOrder) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -1116,6 +1179,9 @@ func (p *PlanGroupBundleOrder) GetBundleID() string {
 }
 
 func (p *PlanGroupBundleOrder) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -1161,6 +1227,9 @@ func (p *PlanGroupBundleOrder) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanGroupBundleOrder) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -1244,7 +1313,7 @@ type PlanGroupDetailResponseData struct {
 	ShowZeroPriceAsFree                    bool                               `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
 	SyncCustomerBillingDetails             bool                               `json:"sync_customer_billing_details" url:"sync_customer_billing_details"`
 	TaxCollectionEnabled                   bool                               `json:"tax_collection_enabled" url:"tax_collection_enabled"`
-	TrialDays                              *int                               `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialDays                              *int64                             `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	TrialExpiryPlan                        *PlanGroupPlanDetailResponseData   `json:"trial_expiry_plan,omitempty" url:"trial_expiry_plan,omitempty"`
 	TrialExpiryPlanID                      *string                            `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
 	TrialExpiryPlanPrice                   *BillingPriceView                  `json:"trial_expiry_plan_price,omitempty" url:"trial_expiry_plan_price,omitempty"`
@@ -1475,7 +1544,7 @@ func (p *PlanGroupDetailResponseData) GetTaxCollectionEnabled() bool {
 	return p.TaxCollectionEnabled
 }
 
-func (p *PlanGroupDetailResponseData) GetTrialDays() *int {
+func (p *PlanGroupDetailResponseData) GetTrialDays() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -1518,6 +1587,9 @@ func (p *PlanGroupDetailResponseData) GetTrialPaymentMethodRequired() *bool {
 }
 
 func (p *PlanGroupDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -1747,7 +1819,7 @@ func (p *PlanGroupDetailResponseData) SetTaxCollectionEnabled(taxCollectionEnabl
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanGroupDetailResponseData) SetTrialDays(trialDays *int) {
+func (p *PlanGroupDetailResponseData) SetTrialDays(trialDays *int64) {
 	p.TrialDays = trialDays
 	p.require(planGroupDetailResponseDataFieldTrialDays)
 }
@@ -1815,6 +1887,9 @@ func (p *PlanGroupDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanGroupDetailResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -1835,26 +1910,27 @@ var (
 	planGroupPlanDetailResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 5)
 	planGroupPlanDetailResponseDataFieldControlledBy         = big.NewInt(1 << 6)
 	planGroupPlanDetailResponseDataFieldCreatedAt            = big.NewInt(1 << 7)
-	planGroupPlanDetailResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 8)
-	planGroupPlanDetailResponseDataFieldDescription          = big.NewInt(1 << 9)
-	planGroupPlanDetailResponseDataFieldDraftVersion         = big.NewInt(1 << 10)
-	planGroupPlanDetailResponseDataFieldEntitlements         = big.NewInt(1 << 11)
-	planGroupPlanDetailResponseDataFieldFeatures             = big.NewInt(1 << 12)
-	planGroupPlanDetailResponseDataFieldIcon                 = big.NewInt(1 << 13)
-	planGroupPlanDetailResponseDataFieldID                   = big.NewInt(1 << 14)
-	planGroupPlanDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 15)
-	planGroupPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 16)
-	planGroupPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 17)
-	planGroupPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 18)
-	planGroupPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 19)
-	planGroupPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 20)
-	planGroupPlanDetailResponseDataFieldName                 = big.NewInt(1 << 21)
-	planGroupPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 22)
-	planGroupPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 23)
-	planGroupPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 24)
-	planGroupPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 25)
-	planGroupPlanDetailResponseDataFieldVersions             = big.NewInt(1 << 26)
-	planGroupPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 27)
+	planGroupPlanDetailResponseDataFieldCurrencyPrices       = big.NewInt(1 << 8)
+	planGroupPlanDetailResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 9)
+	planGroupPlanDetailResponseDataFieldDescription          = big.NewInt(1 << 10)
+	planGroupPlanDetailResponseDataFieldDraftVersion         = big.NewInt(1 << 11)
+	planGroupPlanDetailResponseDataFieldEntitlements         = big.NewInt(1 << 12)
+	planGroupPlanDetailResponseDataFieldFeatures             = big.NewInt(1 << 13)
+	planGroupPlanDetailResponseDataFieldIcon                 = big.NewInt(1 << 14)
+	planGroupPlanDetailResponseDataFieldID                   = big.NewInt(1 << 15)
+	planGroupPlanDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 16)
+	planGroupPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 17)
+	planGroupPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 18)
+	planGroupPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 19)
+	planGroupPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 20)
+	planGroupPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 21)
+	planGroupPlanDetailResponseDataFieldName                 = big.NewInt(1 << 22)
+	planGroupPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 23)
+	planGroupPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 24)
+	planGroupPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 25)
+	planGroupPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 26)
+	planGroupPlanDetailResponseDataFieldVersions             = big.NewInt(1 << 27)
+	planGroupPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 28)
 )
 
 type PlanGroupPlanDetailResponseData struct {
@@ -1862,10 +1938,11 @@ type PlanGroupPlanDetailResponseData struct {
 	AudienceType         *string                               `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	BillingProduct       *BillingProductDetailResponseData     `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	ChargeType           ChargeType                            `json:"charge_type" url:"charge_type"`
-	CompanyCount         int                                   `json:"company_count" url:"company_count"`
+	CompanyCount         int64                                 `json:"company_count" url:"company_count"`
 	CompatiblePlanIDs    []string                              `json:"compatible_plan_ids" url:"compatible_plan_ids"`
 	ControlledBy         PlanControlledByType                  `json:"controlled_by" url:"controlled_by"`
 	CreatedAt            time.Time                             `json:"created_at" url:"created_at"`
+	CurrencyPrices       []*PlanCurrencyPricesResponseData     `json:"currency_prices" url:"currency_prices"`
 	CustomPlanConfig     *CustomPlanViewConfigResponseData     `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
 	Description          string                                `json:"description" url:"description"`
 	DraftVersion         *PlanVersionResponseData              `json:"draft_version,omitempty" url:"draft_version,omitempty"`
@@ -1882,7 +1959,7 @@ type PlanGroupPlanDetailResponseData struct {
 	Name                 string                                `json:"name" url:"name"`
 	OneTimePrice         *BillingPriceResponseData             `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	PlanType             PlanType                              `json:"plan_type" url:"plan_type"`
-	TrialDays            *int                                  `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialDays            *int64                                `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt            time.Time                             `json:"updated_at" url:"updated_at"`
 	Versions             []*PlanVersionResponseData            `json:"versions" url:"versions"`
 	YearlyPrice          *BillingPriceResponseData             `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
@@ -1922,7 +1999,7 @@ func (p *PlanGroupPlanDetailResponseData) GetChargeType() ChargeType {
 	return p.ChargeType
 }
 
-func (p *PlanGroupPlanDetailResponseData) GetCompanyCount() int {
+func (p *PlanGroupPlanDetailResponseData) GetCompanyCount() int64 {
 	if p == nil {
 		return 0
 	}
@@ -1948,6 +2025,13 @@ func (p *PlanGroupPlanDetailResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return p.CreatedAt
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetCurrencyPrices() []*PlanCurrencyPricesResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.CurrencyPrices
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetCustomPlanConfig() *CustomPlanViewConfigResponseData {
@@ -2062,7 +2146,7 @@ func (p *PlanGroupPlanDetailResponseData) GetPlanType() PlanType {
 	return p.PlanType
 }
 
-func (p *PlanGroupPlanDetailResponseData) GetTrialDays() *int {
+func (p *PlanGroupPlanDetailResponseData) GetTrialDays() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -2091,6 +2175,9 @@ func (p *PlanGroupPlanDetailResponseData) GetYearlyPrice() *BillingPriceResponse
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -2131,7 +2218,7 @@ func (p *PlanGroupPlanDetailResponseData) SetChargeType(chargeType ChargeType) {
 
 // SetCompanyCount sets the CompanyCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanGroupPlanDetailResponseData) SetCompanyCount(companyCount int) {
+func (p *PlanGroupPlanDetailResponseData) SetCompanyCount(companyCount int64) {
 	p.CompanyCount = companyCount
 	p.require(planGroupPlanDetailResponseDataFieldCompanyCount)
 }
@@ -2155,6 +2242,13 @@ func (p *PlanGroupPlanDetailResponseData) SetControlledBy(controlledBy PlanContr
 func (p *PlanGroupPlanDetailResponseData) SetCreatedAt(createdAt time.Time) {
 	p.CreatedAt = createdAt
 	p.require(planGroupPlanDetailResponseDataFieldCreatedAt)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanDetailResponseData) SetCurrencyPrices(currencyPrices []*PlanCurrencyPricesResponseData) {
+	p.CurrencyPrices = currencyPrices
+	p.require(planGroupPlanDetailResponseDataFieldCurrencyPrices)
 }
 
 // SetCustomPlanConfig sets the CustomPlanConfig field and marks it as non-optional;
@@ -2271,7 +2365,7 @@ func (p *PlanGroupPlanDetailResponseData) SetPlanType(planType PlanType) {
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanGroupPlanDetailResponseData) SetTrialDays(trialDays *int) {
+func (p *PlanGroupPlanDetailResponseData) SetTrialDays(trialDays *int64) {
 	p.TrialDays = trialDays
 	p.require(planGroupPlanDetailResponseDataFieldTrialDays)
 }
@@ -2337,6 +2431,9 @@ func (p *PlanGroupPlanDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanGroupPlanDetailResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -2379,6 +2476,9 @@ func (p *PlanGroupPlanEntitlementsOrder) GetPlanID() string {
 }
 
 func (p *PlanGroupPlanEntitlementsOrder) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -2431,6 +2531,9 @@ func (p *PlanGroupPlanEntitlementsOrder) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanGroupPlanEntitlementsOrder) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -2498,7 +2601,7 @@ type PlanGroupResponseData struct {
 	ShowZeroPriceAsFree                    bool                           `json:"show_zero_price_as_free" url:"show_zero_price_as_free"`
 	SyncCustomerBillingDetails             bool                           `json:"sync_customer_billing_details" url:"sync_customer_billing_details"`
 	TaxCollectionEnabled                   bool                           `json:"tax_collection_enabled" url:"tax_collection_enabled"`
-	TrialDays                              *int                           `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialDays                              *int64                         `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	TrialExpiryPlanID                      *string                        `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
 	TrialExpiryPlanPriceID                 *string                        `json:"trial_expiry_plan_price_id,omitempty" url:"trial_expiry_plan_price_id,omitempty"`
 	TrialPaymentMethodRequired             *bool                          `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
@@ -2678,7 +2781,7 @@ func (p *PlanGroupResponseData) GetTaxCollectionEnabled() bool {
 	return p.TaxCollectionEnabled
 }
 
-func (p *PlanGroupResponseData) GetTrialDays() *int {
+func (p *PlanGroupResponseData) GetTrialDays() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -2707,6 +2810,9 @@ func (p *PlanGroupResponseData) GetTrialPaymentMethodRequired() *bool {
 }
 
 func (p *PlanGroupResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -2887,7 +2993,7 @@ func (p *PlanGroupResponseData) SetTaxCollectionEnabled(taxCollectionEnabled boo
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanGroupResponseData) SetTrialDays(trialDays *int) {
+func (p *PlanGroupResponseData) SetTrialDays(trialDays *int64) {
 	p.TrialDays = trialDays
 	p.require(planGroupResponseDataFieldTrialDays)
 }
@@ -2941,6 +3047,9 @@ func (p *PlanGroupResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanGroupResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -3004,7 +3113,7 @@ var (
 type CreatePlanGroupResponse struct {
 	Data *PlanGroupResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3020,7 +3129,7 @@ func (c *CreatePlanGroupResponse) GetData() *PlanGroupResponseData {
 	return c.Data
 }
 
-func (c *CreatePlanGroupResponse) GetParams() map[string]interface{} {
+func (c *CreatePlanGroupResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -3028,6 +3137,9 @@ func (c *CreatePlanGroupResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreatePlanGroupResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3047,7 +3159,7 @@ func (c *CreatePlanGroupResponse) SetData(data *PlanGroupResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanGroupResponse) SetParams(params map[string]interface{}) {
+func (c *CreatePlanGroupResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createPlanGroupResponseFieldParams)
 }
@@ -3080,6 +3192,9 @@ func (c *CreatePlanGroupResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreatePlanGroupResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3114,6 +3229,9 @@ func (g *GetPlanGroupParams) GetIncludeCompanyCounts() *bool {
 }
 
 func (g *GetPlanGroupParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -3159,6 +3277,9 @@ func (g *GetPlanGroupParams) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetPlanGroupParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -3202,6 +3323,9 @@ func (g *GetPlanGroupResponse) GetParams() *GetPlanGroupParams {
 }
 
 func (g *GetPlanGroupResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -3254,6 +3378,9 @@ func (g *GetPlanGroupResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetPlanGroupResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -3273,7 +3400,7 @@ var (
 type UpdatePlanGroupResponse struct {
 	Data *PlanGroupResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3289,7 +3416,7 @@ func (u *UpdatePlanGroupResponse) GetData() *PlanGroupResponseData {
 	return u.Data
 }
 
-func (u *UpdatePlanGroupResponse) GetParams() map[string]interface{} {
+func (u *UpdatePlanGroupResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -3297,6 +3424,9 @@ func (u *UpdatePlanGroupResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdatePlanGroupResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -3316,7 +3446,7 @@ func (u *UpdatePlanGroupResponse) SetData(data *PlanGroupResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanGroupResponse) SetParams(params map[string]interface{}) {
+func (u *UpdatePlanGroupResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updatePlanGroupResponseFieldParams)
 }
@@ -3349,6 +3479,9 @@ func (u *UpdatePlanGroupResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdatePlanGroupResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -3398,7 +3531,7 @@ var (
 type UpdatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
-	AddOnIDs                               []string                          `json:"add_on_ids,omitempty" url:"-"`
+	AddOnIDs                               []string                          `json:"add_on_ids" url:"-"`
 	CheckoutCollectAddress                 bool                              `json:"checkout_collect_address" url:"-"`
 	CheckoutCollectEmail                   bool                              `json:"checkout_collect_email" url:"-"`
 	CheckoutCollectPhone                   bool                              `json:"checkout_collect_phone" url:"-"`
@@ -3408,9 +3541,9 @@ type UpdatePlanGroupRequestBody struct {
 	FallbackPlanID                         *string                           `json:"fallback_plan_id,omitempty" url:"-"`
 	InitialPlanID                          *string                           `json:"initial_plan_id,omitempty" url:"-"`
 	InitialPlanPriceID                     *string                           `json:"initial_plan_price_id,omitempty" url:"-"`
-	OrderedAddOns                          []*OrderedPlansInGroup            `json:"ordered_add_ons,omitempty" url:"-"`
-	OrderedBundleList                      []*PlanGroupBundleOrder           `json:"ordered_bundle_list,omitempty" url:"-"`
-	OrderedPlans                           []*OrderedPlansInGroup            `json:"ordered_plans,omitempty" url:"-"`
+	OrderedAddOns                          []*OrderedPlansInGroup            `json:"ordered_add_ons" url:"-"`
+	OrderedBundleList                      []*PlanGroupBundleOrder           `json:"ordered_bundle_list" url:"-"`
+	OrderedPlans                           []*OrderedPlansInGroup            `json:"ordered_plans" url:"-"`
 	PreventDowngradesWhenOverLimit         bool                              `json:"prevent_downgrades_when_over_limit" url:"-"`
 	PreventSelfServiceDowngrade            bool                              `json:"prevent_self_service_downgrade" url:"-"`
 	PreventSelfServiceDowngradeButtonText  *string                           `json:"prevent_self_service_downgrade_button_text,omitempty" url:"-"`
@@ -3425,7 +3558,7 @@ type UpdatePlanGroupRequestBody struct {
 	ShowPeriodToggle                       bool                              `json:"show_period_toggle" url:"-"`
 	ShowZeroPriceAsFree                    bool                              `json:"show_zero_price_as_free" url:"-"`
 	SyncCustomerBillingDetails             bool                              `json:"sync_customer_billing_details" url:"-"`
-	TrialDays                              *int                              `json:"trial_days,omitempty" url:"-"`
+	TrialDays                              *int64                            `json:"trial_days,omitempty" url:"-"`
 	TrialExpiryPlanID                      *string                           `json:"trial_expiry_plan_id,omitempty" url:"-"`
 	TrialExpiryPlanPriceID                 *string                           `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
 	TrialPaymentMethodRequired             *bool                             `json:"trial_payment_method_required,omitempty" url:"-"`
@@ -3639,7 +3772,7 @@ func (u *UpdatePlanGroupRequestBody) SetSyncCustomerBillingDetails(syncCustomerB
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanGroupRequestBody) SetTrialDays(trialDays *int) {
+func (u *UpdatePlanGroupRequestBody) SetTrialDays(trialDays *int64) {
 	u.TrialDays = trialDays
 	u.require(updatePlanGroupRequestBodyFieldTrialDays)
 }
@@ -3663,4 +3796,25 @@ func (u *UpdatePlanGroupRequestBody) SetTrialExpiryPlanPriceID(trialExpiryPlanPr
 func (u *UpdatePlanGroupRequestBody) SetTrialPaymentMethodRequired(trialPaymentMethodRequired *bool) {
 	u.TrialPaymentMethodRequired = trialPaymentMethodRequired
 	u.require(updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired)
+}
+
+func (u *UpdatePlanGroupRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePlanGroupRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdatePlanGroupRequestBody(body)
+	return nil
+}
+
+func (u *UpdatePlanGroupRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdatePlanGroupRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

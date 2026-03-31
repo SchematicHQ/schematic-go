@@ -4,6 +4,7 @@ package companies
 
 import (
 	context "context"
+
 	schematichq "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
 	internal "github.com/schematichq/schematic-go/internal"
@@ -148,6 +149,11 @@ func (c *Client) DeleteCompanyByKeys(
 	return response.Body, nil
 }
 
+// Company lookup is determined to resolve a company from its keys, similar to how many of our other apis work.
+// The following approaches will all work to resolve a company and any of them are appropriate:
+// 1. `/companies/lookup?keys={"foo": "bar", "fizz": "buzz"}`
+// 2. `/companies/lookup?keys[foo]=bar&keys[fizz]=buzz`
+// 2. `/companies/lookup?foo=bar&fizz=buzz`
 func (c *Client) LookupCompany(
 	ctx context.Context,
 	request *schematichq.LookupCompanyRequest,

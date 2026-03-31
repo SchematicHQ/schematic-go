@@ -17,9 +17,9 @@ var (
 )
 
 type CreateDataExportRequestBody struct {
-	ExportType     DataExportType           `json:"export_type,omitempty" url:"-"`
+	ExportType     DataExportType           `json:"export_type" url:"-"`
 	Metadata       string                   `json:"metadata" url:"-"`
-	OutputFileType DataExportOutputFileType `json:"output_file_type,omitempty" url:"-"`
+	OutputFileType DataExportOutputFileType `json:"output_file_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -51,6 +51,27 @@ func (c *CreateDataExportRequestBody) SetMetadata(metadata string) {
 func (c *CreateDataExportRequestBody) SetOutputFileType(outputFileType DataExportOutputFileType) {
 	c.OutputFileType = outputFileType
 	c.require(createDataExportRequestBodyFieldOutputFileType)
+}
+
+func (c *CreateDataExportRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateDataExportRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateDataExportRequestBody(body)
+	return nil
+}
+
+func (c *CreateDataExportRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateDataExportRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 type DataExportOutputFileType = string
@@ -135,6 +156,9 @@ func (d *DataExportResponseData) GetUpdatedAt() time.Time {
 }
 
 func (d *DataExportResponseData) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -248,6 +272,9 @@ func (d *DataExportResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DataExportResponseData) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -294,7 +321,7 @@ var (
 type CreateDataExportResponse struct {
 	Data *DataExportResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -310,7 +337,7 @@ func (c *CreateDataExportResponse) GetData() *DataExportResponseData {
 	return c.Data
 }
 
-func (c *CreateDataExportResponse) GetParams() map[string]interface{} {
+func (c *CreateDataExportResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -318,6 +345,9 @@ func (c *CreateDataExportResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateDataExportResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -337,7 +367,7 @@ func (c *CreateDataExportResponse) SetData(data *DataExportResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateDataExportResponse) SetParams(params map[string]interface{}) {
+func (c *CreateDataExportResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createDataExportResponseFieldParams)
 }
@@ -370,6 +400,9 @@ func (c *CreateDataExportResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateDataExportResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value

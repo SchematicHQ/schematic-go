@@ -65,9 +65,9 @@ type CountCompaniesRequest struct {
 	// Filter companies that have a subscription
 	WithSubscription *bool `json:"-" url:"with_subscription,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -194,14 +194,14 @@ func (c *CountCompaniesRequest) SetWithSubscription(withSubscription *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesRequest) SetLimit(limit *int) {
+func (c *CountCompaniesRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCompaniesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesRequest) SetOffset(offset *int) {
+func (c *CountCompaniesRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCompaniesRequestFieldOffset)
 }
@@ -219,9 +219,9 @@ type CountEntityKeyDefinitionsRequest struct {
 	IDs        []*string   `json:"-" url:"ids,omitempty"`
 	Q          *string     `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -257,14 +257,14 @@ func (c *CountEntityKeyDefinitionsRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityKeyDefinitionsRequest) SetLimit(limit *int) {
+func (c *CountEntityKeyDefinitionsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countEntityKeyDefinitionsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityKeyDefinitionsRequest) SetOffset(offset *int) {
+func (c *CountEntityKeyDefinitionsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countEntityKeyDefinitionsRequestFieldOffset)
 }
@@ -286,9 +286,9 @@ type CountEntityTraitDefinitionsRequest struct {
 	TraitType  *TraitType   `json:"-" url:"trait_type,omitempty"`
 	TraitTypes []*TraitType `json:"-" url:"trait_types,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -338,14 +338,14 @@ func (c *CountEntityTraitDefinitionsRequest) SetTraitTypes(traitTypes []*TraitTy
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityTraitDefinitionsRequest) SetLimit(limit *int) {
+func (c *CountEntityTraitDefinitionsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countEntityTraitDefinitionsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityTraitDefinitionsRequest) SetOffset(offset *int) {
+func (c *CountEntityTraitDefinitionsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countEntityTraitDefinitionsRequestFieldOffset)
 }
@@ -365,9 +365,9 @@ type CountPlanTraitsRequest struct {
 	TraitID  *string   `json:"-" url:"trait_id,omitempty"`
 	TraitIDs []*string `json:"-" url:"trait_ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -410,14 +410,14 @@ func (c *CountPlanTraitsRequest) SetTraitIDs(traitIDs []*string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlanTraitsRequest) SetLimit(limit *int) {
+func (c *CountPlanTraitsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countPlanTraitsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlanTraitsRequest) SetOffset(offset *int) {
+func (c *CountPlanTraitsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countPlanTraitsRequestFieldOffset)
 }
@@ -441,9 +441,9 @@ type CountUsersRequest struct {
 	// Search for users by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -486,14 +486,14 @@ func (c *CountUsersRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountUsersRequest) SetLimit(limit *int) {
+func (c *CountUsersRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countUsersRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountUsersRequest) SetOffset(offset *int) {
+func (c *CountUsersRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countUsersRequestFieldOffset)
 }
@@ -541,6 +541,27 @@ func (c *CreatePlanTraitRequestBody) SetTraitValue(traitValue string) {
 	c.require(createPlanTraitRequestBodyFieldTraitValue)
 }
 
+func (c *CreatePlanTraitRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePlanTraitRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreatePlanTraitRequestBody(body)
+	return nil
+}
+
+func (c *CreatePlanTraitRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreatePlanTraitRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	deleteCompanyRequestFieldCancelSubscription = big.NewInt(1 << 0)
 	deleteCompanyRequestFieldProrate            = big.NewInt(1 << 1)
@@ -586,9 +607,9 @@ type GetActiveCompanySubscriptionRequest struct {
 	CompanyID  *string   `json:"-" url:"company_id,omitempty"`
 	CompanyIDs []*string `json:"-" url:"company_ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -617,14 +638,14 @@ func (g *GetActiveCompanySubscriptionRequest) SetCompanyIDs(companyIDs []*string
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveCompanySubscriptionRequest) SetLimit(limit *int) {
+func (g *GetActiveCompanySubscriptionRequest) SetLimit(limit *int64) {
 	g.Limit = limit
 	g.require(getActiveCompanySubscriptionRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveCompanySubscriptionRequest) SetOffset(offset *int) {
+func (g *GetActiveCompanySubscriptionRequest) SetOffset(offset *int64) {
 	g.Offset = offset
 	g.require(getActiveCompanySubscriptionRequestFieldOffset)
 }
@@ -640,9 +661,9 @@ type GetEntityTraitValuesRequest struct {
 	DefinitionID string  `json:"-" url:"definition_id"`
 	Q            *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -671,14 +692,14 @@ func (g *GetEntityTraitValuesRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEntityTraitValuesRequest) SetLimit(limit *int) {
+func (g *GetEntityTraitValuesRequest) SetLimit(limit *int64) {
 	g.Limit = limit
 	g.require(getEntityTraitValuesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEntityTraitValuesRequest) SetOffset(offset *int) {
+func (g *GetEntityTraitValuesRequest) SetOffset(offset *int64) {
 	g.Offset = offset
 	g.require(getEntityTraitValuesRequestFieldOffset)
 }
@@ -717,6 +738,27 @@ func (g *GetOrCreateCompanyMembershipRequestBody) SetUserID(userID string) {
 	g.require(getOrCreateCompanyMembershipRequestBodyFieldUserID)
 }
 
+func (g *GetOrCreateCompanyMembershipRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetOrCreateCompanyMembershipRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*g = GetOrCreateCompanyMembershipRequestBody(body)
+	return nil
+}
+
+func (g *GetOrCreateCompanyMembershipRequestBody) MarshalJSON() ([]byte, error) {
+	type embed GetOrCreateCompanyMembershipRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	createEntityTraitDefinitionRequestBodyFieldDisplayName = big.NewInt(1 << 0)
 	createEntityTraitDefinitionRequestBodyFieldEntityType  = big.NewInt(1 << 1)
@@ -727,7 +769,7 @@ var (
 type CreateEntityTraitDefinitionRequestBody struct {
 	DisplayName *string    `json:"display_name,omitempty" url:"-"`
 	EntityType  EntityType `json:"entity_type" url:"-"`
-	Hierarchy   []string   `json:"hierarchy,omitempty" url:"-"`
+	Hierarchy   []string   `json:"hierarchy" url:"-"`
 	TraitType   TraitType  `json:"trait_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -767,6 +809,27 @@ func (c *CreateEntityTraitDefinitionRequestBody) SetHierarchy(hierarchy []string
 func (c *CreateEntityTraitDefinitionRequestBody) SetTraitType(traitType TraitType) {
 	c.TraitType = traitType
 	c.require(createEntityTraitDefinitionRequestBodyFieldTraitType)
+}
+
+func (c *CreateEntityTraitDefinitionRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateEntityTraitDefinitionRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateEntityTraitDefinitionRequestBody(body)
+	return nil
+}
+
+func (c *CreateEntityTraitDefinitionRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateEntityTraitDefinitionRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -824,9 +887,9 @@ type ListCompaniesRequest struct {
 	// Filter companies that have a subscription
 	WithSubscription *bool `json:"-" url:"with_subscription,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -953,14 +1016,14 @@ func (l *ListCompaniesRequest) SetWithSubscription(withSubscription *bool) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesRequest) SetLimit(limit *int) {
+func (l *ListCompaniesRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompaniesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesRequest) SetOffset(offset *int) {
+func (l *ListCompaniesRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompaniesRequestFieldOffset)
 }
@@ -976,9 +1039,9 @@ type ListCompanyMembershipsRequest struct {
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
 	UserID    *string `json:"-" url:"user_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1007,14 +1070,14 @@ func (l *ListCompanyMembershipsRequest) SetUserID(userID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyMembershipsRequest) SetLimit(limit *int) {
+func (l *ListCompanyMembershipsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompanyMembershipsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyMembershipsRequest) SetOffset(offset *int) {
+func (l *ListCompanyMembershipsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompanyMembershipsRequestFieldOffset)
 }
@@ -1032,9 +1095,9 @@ type ListEntityKeyDefinitionsRequest struct {
 	IDs        []*string   `json:"-" url:"ids,omitempty"`
 	Q          *string     `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1070,14 +1133,14 @@ func (l *ListEntityKeyDefinitionsRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityKeyDefinitionsRequest) SetLimit(limit *int) {
+func (l *ListEntityKeyDefinitionsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listEntityKeyDefinitionsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityKeyDefinitionsRequest) SetOffset(offset *int) {
+func (l *ListEntityKeyDefinitionsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEntityKeyDefinitionsRequestFieldOffset)
 }
@@ -1099,9 +1162,9 @@ type ListEntityTraitDefinitionsRequest struct {
 	TraitType  *TraitType   `json:"-" url:"trait_type,omitempty"`
 	TraitTypes []*TraitType `json:"-" url:"trait_types,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1151,14 +1214,14 @@ func (l *ListEntityTraitDefinitionsRequest) SetTraitTypes(traitTypes []*TraitTyp
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityTraitDefinitionsRequest) SetLimit(limit *int) {
+func (l *ListEntityTraitDefinitionsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listEntityTraitDefinitionsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityTraitDefinitionsRequest) SetOffset(offset *int) {
+func (l *ListEntityTraitDefinitionsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEntityTraitDefinitionsRequestFieldOffset)
 }
@@ -1180,9 +1243,9 @@ type ListPlanChangesRequest struct {
 	CompanyIDs     []*string `json:"-" url:"company_ids,omitempty"`
 	PlanIDs        []*string `json:"-" url:"plan_ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1232,14 +1295,14 @@ func (l *ListPlanChangesRequest) SetPlanIDs(planIDs []*string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesRequest) SetLimit(limit *int) {
+func (l *ListPlanChangesRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPlanChangesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesRequest) SetOffset(offset *int) {
+func (l *ListPlanChangesRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPlanChangesRequestFieldOffset)
 }
@@ -1259,9 +1322,9 @@ type ListPlanTraitsRequest struct {
 	TraitID  *string   `json:"-" url:"trait_id,omitempty"`
 	TraitIDs []*string `json:"-" url:"trait_ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1304,14 +1367,14 @@ func (l *ListPlanTraitsRequest) SetTraitIDs(traitIDs []*string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanTraitsRequest) SetLimit(limit *int) {
+func (l *ListPlanTraitsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPlanTraitsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanTraitsRequest) SetOffset(offset *int) {
+func (l *ListPlanTraitsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPlanTraitsRequestFieldOffset)
 }
@@ -1335,9 +1398,9 @@ type ListUsersRequest struct {
 	// Search for users by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1380,14 +1443,14 @@ func (l *ListUsersRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListUsersRequest) SetLimit(limit *int) {
+func (l *ListUsersRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listUsersRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListUsersRequest) SetOffset(offset *int) {
+func (l *ListUsersRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listUsersRequestFieldOffset)
 }
@@ -1511,6 +1574,9 @@ func (c *CompanyMembershipDetailResponseData) GetUserID() string {
 }
 
 func (c *CompanyMembershipDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1603,6 +1669,9 @@ func (c *CompanyMembershipDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyMembershipDetailResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1690,6 +1759,9 @@ func (c *CompanyResponseData) GetUpdatedAt() time.Time {
 }
 
 func (c *CompanyResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1793,6 +1865,9 @@ func (c *CompanyResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1835,6 +1910,9 @@ func (e *EntityTraitValue) GetValue() string {
 }
 
 func (e *EntityTraitValue) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -1887,6 +1965,9 @@ func (e *EntityTraitValue) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EntityTraitValue) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -1920,6 +2001,9 @@ func (k *KeysRequestBody) GetKeys() map[string]string {
 }
 
 func (k *KeysRequestBody) GetExtraProperties() map[string]interface{} {
+	if k == nil {
+		return nil
+	}
 	return k.extraProperties
 }
 
@@ -1965,6 +2049,9 @@ func (k *KeysRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (k *KeysRequestBody) String() string {
+	if k == nil {
+		return "<nil>"
+	}
 	if len(k.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(k.rawJSON); err == nil {
 			return value
@@ -2062,18 +2149,20 @@ var (
 	planChangeResponseDataFieldAuditLog                 = big.NewInt(1 << 5)
 	planChangeResponseDataFieldBasePlan                 = big.NewInt(1 << 6)
 	planChangeResponseDataFieldBasePlanAction           = big.NewInt(1 << 7)
-	planChangeResponseDataFieldCompany                  = big.NewInt(1 << 8)
-	planChangeResponseDataFieldCompanyID                = big.NewInt(1 << 9)
-	planChangeResponseDataFieldCreatedAt                = big.NewInt(1 << 10)
-	planChangeResponseDataFieldEnvironmentID            = big.NewInt(1 << 11)
-	planChangeResponseDataFieldID                       = big.NewInt(1 << 12)
-	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 13)
-	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 14)
-	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 15)
-	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 16)
-	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 17)
-	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 18)
-	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 19)
+	planChangeResponseDataFieldBasePlanVersion          = big.NewInt(1 << 8)
+	planChangeResponseDataFieldCompany                  = big.NewInt(1 << 9)
+	planChangeResponseDataFieldCompanyID                = big.NewInt(1 << 10)
+	planChangeResponseDataFieldCreatedAt                = big.NewInt(1 << 11)
+	planChangeResponseDataFieldEnvironmentID            = big.NewInt(1 << 12)
+	planChangeResponseDataFieldID                       = big.NewInt(1 << 13)
+	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 14)
+	planChangeResponseDataFieldPreviousBasePlanVersion  = big.NewInt(1 << 15)
+	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 16)
+	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 17)
+	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 18)
+	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 19)
+	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 20)
+	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 21)
 )
 
 type PlanChangeResponseData struct {
@@ -2085,14 +2174,18 @@ type PlanChangeResponseData struct {
 	AuditLog      *AuditLogListResponseData `json:"audit_log,omitempty" url:"audit_log,omitempty"`
 	BasePlan      *PlanSnapshotView         `json:"base_plan,omitempty" url:"base_plan,omitempty"`
 	// Any special behavior that affected the assignment of the base plan during this change.
-	BasePlanAction   *PlanChangeBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
-	Company          *CompanyResponseData      `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID        string                    `json:"company_id" url:"company_id"`
-	CreatedAt        time.Time                 `json:"created_at" url:"created_at"`
-	EnvironmentID    string                    `json:"environment_id" url:"environment_id"`
-	ID               string                    `json:"id" url:"id"`
-	PreviousBasePlan *PlanSnapshotView         `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
-	RequestID        *string                   `json:"request_id,omitempty" url:"request_id,omitempty"`
+	BasePlanAction *PlanChangeBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
+	// The plan version that was assigned during this change.
+	BasePlanVersion  *PlanVersionSnapshotView `json:"base_plan_version,omitempty" url:"base_plan_version,omitempty"`
+	Company          *CompanyResponseData     `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID        string                   `json:"company_id" url:"company_id"`
+	CreatedAt        time.Time                `json:"created_at" url:"created_at"`
+	EnvironmentID    string                   `json:"environment_id" url:"environment_id"`
+	ID               string                   `json:"id" url:"id"`
+	PreviousBasePlan *PlanSnapshotView        `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
+	// The plan version of the previous base plan before this change.
+	PreviousBasePlanVersion *PlanVersionSnapshotView `json:"previous_base_plan_version,omitempty" url:"previous_base_plan_version,omitempty"`
+	RequestID               *string                  `json:"request_id,omitempty" url:"request_id,omitempty"`
 	// If a subscription was changed as a part of this plan change, indicates the type of change that was made.
 	SubscriptionChangeAction *PlanChangeSubscriptionAction `json:"subscription_change_action,omitempty" url:"subscription_change_action,omitempty"`
 	// Any traits were updated as part of this plan change (via pay-in-advance entitlements).
@@ -2164,6 +2257,13 @@ func (p *PlanChangeResponseData) GetBasePlanAction() *PlanChangeBasePlanAction {
 	return p.BasePlanAction
 }
 
+func (p *PlanChangeResponseData) GetBasePlanVersion() *PlanVersionSnapshotView {
+	if p == nil {
+		return nil
+	}
+	return p.BasePlanVersion
+}
+
 func (p *PlanChangeResponseData) GetCompany() *CompanyResponseData {
 	if p == nil {
 		return nil
@@ -2204,6 +2304,13 @@ func (p *PlanChangeResponseData) GetPreviousBasePlan() *PlanSnapshotView {
 		return nil
 	}
 	return p.PreviousBasePlan
+}
+
+func (p *PlanChangeResponseData) GetPreviousBasePlanVersion() *PlanVersionSnapshotView {
+	if p == nil {
+		return nil
+	}
+	return p.PreviousBasePlanVersion
 }
 
 func (p *PlanChangeResponseData) GetRequestID() *string {
@@ -2249,6 +2356,9 @@ func (p *PlanChangeResponseData) GetUserName() *string {
 }
 
 func (p *PlanChangeResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -2315,6 +2425,13 @@ func (p *PlanChangeResponseData) SetBasePlanAction(basePlanAction *PlanChangeBas
 	p.require(planChangeResponseDataFieldBasePlanAction)
 }
 
+// SetBasePlanVersion sets the BasePlanVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetBasePlanVersion(basePlanVersion *PlanVersionSnapshotView) {
+	p.BasePlanVersion = basePlanVersion
+	p.require(planChangeResponseDataFieldBasePlanVersion)
+}
+
 // SetCompany sets the Company field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanChangeResponseData) SetCompany(company *CompanyResponseData) {
@@ -2355,6 +2472,13 @@ func (p *PlanChangeResponseData) SetID(id string) {
 func (p *PlanChangeResponseData) SetPreviousBasePlan(previousBasePlan *PlanSnapshotView) {
 	p.PreviousBasePlan = previousBasePlan
 	p.require(planChangeResponseDataFieldPreviousBasePlan)
+}
+
+// SetPreviousBasePlanVersion sets the PreviousBasePlanVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetPreviousBasePlanVersion(previousBasePlanVersion *PlanVersionSnapshotView) {
+	p.PreviousBasePlanVersion = previousBasePlanVersion
+	p.require(planChangeResponseDataFieldPreviousBasePlanVersion)
 }
 
 // SetRequestID sets the RequestID field and marks it as non-optional;
@@ -2439,6 +2563,9 @@ func (p *PlanChangeResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanChangeResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -2545,6 +2672,9 @@ func (p *PlanSnapshotView) GetName() string {
 }
 
 func (p *PlanSnapshotView) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -2618,6 +2748,125 @@ func (p *PlanSnapshotView) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanSnapshotView) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	planVersionSnapshotViewFieldID      = big.NewInt(1 << 0)
+	planVersionSnapshotViewFieldName    = big.NewInt(1 << 1)
+	planVersionSnapshotViewFieldVersion = big.NewInt(1 << 2)
+)
+
+type PlanVersionSnapshotView struct {
+	ID      string `json:"id" url:"id"`
+	Name    string `json:"name" url:"name"`
+	Version int64  `json:"version" url:"version"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanVersionSnapshotView) GetID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ID
+}
+
+func (p *PlanVersionSnapshotView) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PlanVersionSnapshotView) GetVersion() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.Version
+}
+
+func (p *PlanVersionSnapshotView) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanVersionSnapshotView) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionSnapshotView) SetID(id string) {
+	p.ID = id
+	p.require(planVersionSnapshotViewFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionSnapshotView) SetName(name string) {
+	p.Name = name
+	p.require(planVersionSnapshotViewFieldName)
+}
+
+// SetVersion sets the Version field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionSnapshotView) SetVersion(version int64) {
+	p.Version = version
+	p.require(planVersionSnapshotViewFieldVersion)
+}
+
+func (p *PlanVersionSnapshotView) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanVersionSnapshotView
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanVersionSnapshotView(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanVersionSnapshotView) MarshalJSON() ([]byte, error) {
+	type embed PlanVersionSnapshotView
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanVersionSnapshotView) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -2748,6 +2997,9 @@ func (s *SubscriptionTraitUpdate) GetValue() string {
 }
 
 func (s *SubscriptionTraitUpdate) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
 	return s.extraProperties
 }
 
@@ -2835,6 +3087,9 @@ func (s *SubscriptionTraitUpdate) MarshalJSON() ([]byte, error) {
 }
 
 func (s *SubscriptionTraitUpdate) String() string {
+	if s == nil {
+		return "<nil>"
+	}
 	if len(s.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
@@ -2893,8 +3148,8 @@ type UpsertCompanyRequestBody struct {
 	Name            *string           `json:"name,omitempty" url:"name,omitempty"`
 	PreventKeyRemap *bool             `json:"prevent_key_remap,omitempty" url:"prevent_key_remap,omitempty"`
 	// A map of trait names to trait values
-	Traits     map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
-	UpdateOnly *bool                  `json:"update_only,omitempty" url:"update_only,omitempty"`
+	Traits     map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
+	UpdateOnly *bool          `json:"update_only,omitempty" url:"update_only,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2938,7 +3193,7 @@ func (u *UpsertCompanyRequestBody) GetPreventKeyRemap() *bool {
 	return u.PreventKeyRemap
 }
 
-func (u *UpsertCompanyRequestBody) GetTraits() map[string]interface{} {
+func (u *UpsertCompanyRequestBody) GetTraits() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -2953,6 +3208,9 @@ func (u *UpsertCompanyRequestBody) GetUpdateOnly() *bool {
 }
 
 func (u *UpsertCompanyRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -3000,7 +3258,7 @@ func (u *UpsertCompanyRequestBody) SetPreventKeyRemap(preventKeyRemap *bool) {
 
 // SetTraits sets the Traits field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertCompanyRequestBody) SetTraits(traits map[string]interface{}) {
+func (u *UpsertCompanyRequestBody) SetTraits(traits map[string]any) {
 	u.Traits = traits
 	u.require(upsertCompanyRequestBodyFieldTraits)
 }
@@ -3048,6 +3306,9 @@ func (u *UpsertCompanyRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertCompanyRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -3069,7 +3330,7 @@ var (
 
 type UpsertTraitRequestBody struct {
 	// Amount to increment the trait by (positive or negative)
-	Incr *int `json:"incr,omitempty" url:"incr,omitempty"`
+	Incr *int64 `json:"incr,omitempty" url:"incr,omitempty"`
 	// Key/value pairs to identify a company or user
 	Keys map[string]string `json:"keys" url:"keys"`
 	// Value to set the trait to
@@ -3086,7 +3347,7 @@ type UpsertTraitRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (u *UpsertTraitRequestBody) GetIncr() *int {
+func (u *UpsertTraitRequestBody) GetIncr() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -3122,6 +3383,9 @@ func (u *UpsertTraitRequestBody) GetUpdateOnly() *bool {
 }
 
 func (u *UpsertTraitRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -3134,7 +3398,7 @@ func (u *UpsertTraitRequestBody) require(field *big.Int) {
 
 // SetIncr sets the Incr field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertTraitRequestBody) SetIncr(incr *int) {
+func (u *UpsertTraitRequestBody) SetIncr(incr *int64) {
 	u.Incr = incr
 	u.require(upsertTraitRequestBodyFieldIncr)
 }
@@ -3195,6 +3459,9 @@ func (u *UpsertTraitRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertTraitRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -3235,8 +3502,8 @@ type UpsertUserRequestBody struct {
 	LastSeenAt *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
 	Name       *string           `json:"name,omitempty" url:"name,omitempty"`
 	// A map of trait names to trait values
-	Traits     map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
-	UpdateOnly *bool                  `json:"update_only,omitempty" url:"update_only,omitempty"`
+	Traits     map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
+	UpdateOnly *bool          `json:"update_only,omitempty" url:"update_only,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3301,7 +3568,7 @@ func (u *UpsertUserRequestBody) GetName() *string {
 	return u.Name
 }
 
-func (u *UpsertUserRequestBody) GetTraits() map[string]interface{} {
+func (u *UpsertUserRequestBody) GetTraits() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -3316,6 +3583,9 @@ func (u *UpsertUserRequestBody) GetUpdateOnly() *bool {
 }
 
 func (u *UpsertUserRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -3384,7 +3654,7 @@ func (u *UpsertUserRequestBody) SetName(name *string) {
 
 // SetTraits sets the Traits field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertUserRequestBody) SetTraits(traits map[string]interface{}) {
+func (u *UpsertUserRequestBody) SetTraits(traits map[string]any) {
 	u.Traits = traits
 	u.require(upsertUserRequestBodyFieldTraits)
 }
@@ -3432,6 +3702,9 @@ func (u *UpsertUserRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertUserRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -3466,8 +3739,8 @@ type UserDetailResponseData struct {
 	LastSeenAt         *time.Time                             `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
 	Name               string                                 `json:"name" url:"name"`
 	// A map of trait names to trait values
-	Traits    map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
-	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
+	Traits    map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
+	UpdatedAt time.Time      `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3532,7 +3805,7 @@ func (u *UserDetailResponseData) GetName() string {
 	return u.Name
 }
 
-func (u *UserDetailResponseData) GetTraits() map[string]interface{} {
+func (u *UserDetailResponseData) GetTraits() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -3547,6 +3820,9 @@ func (u *UserDetailResponseData) GetUpdatedAt() time.Time {
 }
 
 func (u *UserDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -3615,7 +3891,7 @@ func (u *UserDetailResponseData) SetName(name string) {
 
 // SetTraits sets the Traits field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UserDetailResponseData) SetTraits(traits map[string]interface{}) {
+func (u *UserDetailResponseData) SetTraits(traits map[string]any) {
 	u.Traits = traits
 	u.require(userDetailResponseDataFieldTraits)
 }
@@ -3671,6 +3947,9 @@ func (u *UserDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UserDetailResponseData) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -3710,11 +3989,11 @@ type CountCompaniesParams struct {
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Filter companies that have monetized subscriptions
 	MonetizedSubscriptions *bool `json:"monetized_subscriptions,omitempty" url:"monetized_subscriptions,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter companies by plan ID (starts with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Filter companies by one or more plan IDs (each ID starts with plan_)
@@ -3763,7 +4042,7 @@ func (c *CountCompaniesParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountCompaniesParams) GetLimit() *int {
+func (c *CountCompaniesParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3777,7 +4056,7 @@ func (c *CountCompaniesParams) GetMonetizedSubscriptions() *bool {
 	return c.MonetizedSubscriptions
 }
 
-func (c *CountCompaniesParams) GetOffset() *int {
+func (c *CountCompaniesParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3876,6 +4155,9 @@ func (c *CountCompaniesParams) GetWithoutSubscription() *bool {
 }
 
 func (c *CountCompaniesParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3902,7 +4184,7 @@ func (c *CountCompaniesParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesParams) SetLimit(limit *int) {
+func (c *CountCompaniesParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCompaniesParamsFieldLimit)
 }
@@ -3916,7 +4198,7 @@ func (c *CountCompaniesParams) SetMonetizedSubscriptions(monetizedSubscriptions 
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompaniesParams) SetOffset(offset *int) {
+func (c *CountCompaniesParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCompaniesParamsFieldOffset)
 }
@@ -4040,6 +4322,9 @@ func (c *CountCompaniesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCompaniesParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4083,6 +4368,9 @@ func (c *CountCompaniesResponse) GetParams() *CountCompaniesParams {
 }
 
 func (c *CountCompaniesResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4135,6 +4423,9 @@ func (c *CountCompaniesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCompaniesResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4159,9 +4450,9 @@ type CountEntityKeyDefinitionsParams struct {
 	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
 	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -4185,14 +4476,14 @@ func (c *CountEntityKeyDefinitionsParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountEntityKeyDefinitionsParams) GetLimit() *int {
+func (c *CountEntityKeyDefinitionsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountEntityKeyDefinitionsParams) GetOffset() *int {
+func (c *CountEntityKeyDefinitionsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4207,6 +4498,9 @@ func (c *CountEntityKeyDefinitionsParams) GetQ() *string {
 }
 
 func (c *CountEntityKeyDefinitionsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4233,14 +4527,14 @@ func (c *CountEntityKeyDefinitionsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityKeyDefinitionsParams) SetLimit(limit *int) {
+func (c *CountEntityKeyDefinitionsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countEntityKeyDefinitionsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityKeyDefinitionsParams) SetOffset(offset *int) {
+func (c *CountEntityKeyDefinitionsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countEntityKeyDefinitionsParamsFieldOffset)
 }
@@ -4280,6 +4574,9 @@ func (c *CountEntityKeyDefinitionsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountEntityKeyDefinitionsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4323,6 +4620,9 @@ func (c *CountEntityKeyDefinitionsResponse) GetParams() *CountEntityKeyDefinitio
 }
 
 func (c *CountEntityKeyDefinitionsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4375,6 +4675,9 @@ func (c *CountEntityKeyDefinitionsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountEntityKeyDefinitionsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4401,9 +4704,9 @@ type CountEntityTraitDefinitionsParams struct {
 	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
 	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset     *int        `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset     *int64      `json:"offset,omitempty" url:"offset,omitempty"`
 	Q          *string     `json:"q,omitempty" url:"q,omitempty"`
 	TraitType  *TraitType  `json:"trait_type,omitempty" url:"trait_type,omitempty"`
 	TraitTypes []TraitType `json:"trait_types,omitempty" url:"trait_types,omitempty"`
@@ -4429,14 +4732,14 @@ func (c *CountEntityTraitDefinitionsParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountEntityTraitDefinitionsParams) GetLimit() *int {
+func (c *CountEntityTraitDefinitionsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountEntityTraitDefinitionsParams) GetOffset() *int {
+func (c *CountEntityTraitDefinitionsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4465,6 +4768,9 @@ func (c *CountEntityTraitDefinitionsParams) GetTraitTypes() []TraitType {
 }
 
 func (c *CountEntityTraitDefinitionsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4491,14 +4797,14 @@ func (c *CountEntityTraitDefinitionsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityTraitDefinitionsParams) SetLimit(limit *int) {
+func (c *CountEntityTraitDefinitionsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countEntityTraitDefinitionsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountEntityTraitDefinitionsParams) SetOffset(offset *int) {
+func (c *CountEntityTraitDefinitionsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countEntityTraitDefinitionsParamsFieldOffset)
 }
@@ -4552,6 +4858,9 @@ func (c *CountEntityTraitDefinitionsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountEntityTraitDefinitionsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4595,6 +4904,9 @@ func (c *CountEntityTraitDefinitionsResponse) GetParams() *CountEntityTraitDefin
 }
 
 func (c *CountEntityTraitDefinitionsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4647,6 +4959,9 @@ func (c *CountEntityTraitDefinitionsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountEntityTraitDefinitionsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4671,9 +4986,9 @@ var (
 type CountPlanTraitsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset   *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset   *int64   `json:"offset,omitempty" url:"offset,omitempty"`
 	PlanID   *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	TraitID  *string  `json:"trait_id,omitempty" url:"trait_id,omitempty"`
 	TraitIDs []string `json:"trait_ids,omitempty" url:"trait_ids,omitempty"`
@@ -4692,14 +5007,14 @@ func (c *CountPlanTraitsParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountPlanTraitsParams) GetLimit() *int {
+func (c *CountPlanTraitsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountPlanTraitsParams) GetOffset() *int {
+func (c *CountPlanTraitsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4728,6 +5043,9 @@ func (c *CountPlanTraitsParams) GetTraitIDs() []string {
 }
 
 func (c *CountPlanTraitsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4747,14 +5065,14 @@ func (c *CountPlanTraitsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlanTraitsParams) SetLimit(limit *int) {
+func (c *CountPlanTraitsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countPlanTraitsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountPlanTraitsParams) SetOffset(offset *int) {
+func (c *CountPlanTraitsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countPlanTraitsParamsFieldOffset)
 }
@@ -4808,6 +5126,9 @@ func (c *CountPlanTraitsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountPlanTraitsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4851,6 +5172,9 @@ func (c *CountPlanTraitsResponse) GetParams() *CountPlanTraitsParams {
 }
 
 func (c *CountPlanTraitsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4903,6 +5227,9 @@ func (c *CountPlanTraitsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountPlanTraitsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4930,9 +5257,9 @@ type CountUsersParams struct {
 	// Filter users by multiple user IDs (starts with user_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter users by plan ID (starts with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Search for users by name, keys or string traits
@@ -4959,14 +5286,14 @@ func (c *CountUsersParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountUsersParams) GetLimit() *int {
+func (c *CountUsersParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountUsersParams) GetOffset() *int {
+func (c *CountUsersParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4988,6 +5315,9 @@ func (c *CountUsersParams) GetQ() *string {
 }
 
 func (c *CountUsersParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5014,14 +5344,14 @@ func (c *CountUsersParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountUsersParams) SetLimit(limit *int) {
+func (c *CountUsersParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countUsersParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountUsersParams) SetOffset(offset *int) {
+func (c *CountUsersParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countUsersParamsFieldOffset)
 }
@@ -5068,6 +5398,9 @@ func (c *CountUsersParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountUsersParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5111,6 +5444,9 @@ func (c *CountUsersResponse) GetParams() *CountUsersParams {
 }
 
 func (c *CountUsersResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5163,6 +5499,9 @@ func (c *CountUsersResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountUsersResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5182,7 +5521,7 @@ var (
 type CreateCompanyResponse struct {
 	Data *CompanyDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5198,7 +5537,7 @@ func (c *CreateCompanyResponse) GetData() *CompanyDetailResponseData {
 	return c.Data
 }
 
-func (c *CreateCompanyResponse) GetParams() map[string]interface{} {
+func (c *CreateCompanyResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -5206,6 +5545,9 @@ func (c *CreateCompanyResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateCompanyResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5225,7 +5567,7 @@ func (c *CreateCompanyResponse) SetData(data *CompanyDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyResponse) SetParams(params map[string]interface{}) {
+func (c *CreateCompanyResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createCompanyResponseFieldParams)
 }
@@ -5258,6 +5600,9 @@ func (c *CreateCompanyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateCompanyResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5277,7 +5622,7 @@ var (
 type CreatePlanTraitResponse struct {
 	Data *PlanTraitResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5293,7 +5638,7 @@ func (c *CreatePlanTraitResponse) GetData() *PlanTraitResponseData {
 	return c.Data
 }
 
-func (c *CreatePlanTraitResponse) GetParams() map[string]interface{} {
+func (c *CreatePlanTraitResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -5301,6 +5646,9 @@ func (c *CreatePlanTraitResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreatePlanTraitResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5320,7 +5668,7 @@ func (c *CreatePlanTraitResponse) SetData(data *PlanTraitResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanTraitResponse) SetParams(params map[string]interface{}) {
+func (c *CreatePlanTraitResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createPlanTraitResponseFieldParams)
 }
@@ -5353,6 +5701,9 @@ func (c *CreatePlanTraitResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreatePlanTraitResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5372,7 +5723,7 @@ var (
 type CreateUserResponse struct {
 	Data *UserDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5388,7 +5739,7 @@ func (c *CreateUserResponse) GetData() *UserDetailResponseData {
 	return c.Data
 }
 
-func (c *CreateUserResponse) GetParams() map[string]interface{} {
+func (c *CreateUserResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -5396,6 +5747,9 @@ func (c *CreateUserResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateUserResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5415,7 +5769,7 @@ func (c *CreateUserResponse) SetData(data *UserDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateUserResponse) SetParams(params map[string]interface{}) {
+func (c *CreateUserResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createUserResponseFieldParams)
 }
@@ -5448,6 +5802,9 @@ func (c *CreateUserResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateUserResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5467,7 +5824,7 @@ var (
 type DeleteCompanyByKeysResponse struct {
 	Data *CompanyResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5483,7 +5840,7 @@ func (d *DeleteCompanyByKeysResponse) GetData() *CompanyResponseData {
 	return d.Data
 }
 
-func (d *DeleteCompanyByKeysResponse) GetParams() map[string]interface{} {
+func (d *DeleteCompanyByKeysResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -5491,6 +5848,9 @@ func (d *DeleteCompanyByKeysResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteCompanyByKeysResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5510,7 +5870,7 @@ func (d *DeleteCompanyByKeysResponse) SetData(data *CompanyResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteCompanyByKeysResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteCompanyByKeysResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteCompanyByKeysResponseFieldParams)
 }
@@ -5543,6 +5903,9 @@ func (d *DeleteCompanyByKeysResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteCompanyByKeysResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5562,7 +5925,7 @@ var (
 type DeleteCompanyMembershipResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5578,7 +5941,7 @@ func (d *DeleteCompanyMembershipResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteCompanyMembershipResponse) GetParams() map[string]interface{} {
+func (d *DeleteCompanyMembershipResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -5586,6 +5949,9 @@ func (d *DeleteCompanyMembershipResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteCompanyMembershipResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5605,7 +5971,7 @@ func (d *DeleteCompanyMembershipResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteCompanyMembershipResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteCompanyMembershipResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteCompanyMembershipResponseFieldParams)
 }
@@ -5638,6 +6004,9 @@ func (d *DeleteCompanyMembershipResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteCompanyMembershipResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5681,6 +6050,9 @@ func (d *DeleteCompanyParams) GetProrate() *bool {
 }
 
 func (d *DeleteCompanyParams) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5733,6 +6105,9 @@ func (d *DeleteCompanyParams) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteCompanyParams) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5776,6 +6151,9 @@ func (d *DeleteCompanyResponse) GetParams() *DeleteCompanyParams {
 }
 
 func (d *DeleteCompanyResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5828,6 +6206,9 @@ func (d *DeleteCompanyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteCompanyResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5847,7 +6228,7 @@ var (
 type DeletePlanTraitResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5863,7 +6244,7 @@ func (d *DeletePlanTraitResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeletePlanTraitResponse) GetParams() map[string]interface{} {
+func (d *DeletePlanTraitResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -5871,6 +6252,9 @@ func (d *DeletePlanTraitResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeletePlanTraitResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5890,7 +6274,7 @@ func (d *DeletePlanTraitResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeletePlanTraitResponse) SetParams(params map[string]interface{}) {
+func (d *DeletePlanTraitResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deletePlanTraitResponseFieldParams)
 }
@@ -5923,6 +6307,9 @@ func (d *DeletePlanTraitResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeletePlanTraitResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5942,7 +6329,7 @@ var (
 type DeleteUserByKeysResponse struct {
 	Data *UserResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5958,7 +6345,7 @@ func (d *DeleteUserByKeysResponse) GetData() *UserResponseData {
 	return d.Data
 }
 
-func (d *DeleteUserByKeysResponse) GetParams() map[string]interface{} {
+func (d *DeleteUserByKeysResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -5966,6 +6353,9 @@ func (d *DeleteUserByKeysResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteUserByKeysResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5985,7 +6375,7 @@ func (d *DeleteUserByKeysResponse) SetData(data *UserResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteUserByKeysResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteUserByKeysResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteUserByKeysResponseFieldParams)
 }
@@ -6018,6 +6408,9 @@ func (d *DeleteUserByKeysResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteUserByKeysResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -6037,7 +6430,7 @@ var (
 type DeleteUserResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6053,7 +6446,7 @@ func (d *DeleteUserResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteUserResponse) GetParams() map[string]interface{} {
+func (d *DeleteUserResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -6061,6 +6454,9 @@ func (d *DeleteUserResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteUserResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -6080,7 +6476,7 @@ func (d *DeleteUserResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteUserResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteUserResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteUserResponseFieldParams)
 }
@@ -6113,6 +6509,9 @@ func (d *DeleteUserResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteUserResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -6136,9 +6535,9 @@ type GetActiveCompanySubscriptionParams struct {
 	CompanyID  *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6161,14 +6560,14 @@ func (g *GetActiveCompanySubscriptionParams) GetCompanyIDs() []string {
 	return g.CompanyIDs
 }
 
-func (g *GetActiveCompanySubscriptionParams) GetLimit() *int {
+func (g *GetActiveCompanySubscriptionParams) GetLimit() *int64 {
 	if g == nil {
 		return nil
 	}
 	return g.Limit
 }
 
-func (g *GetActiveCompanySubscriptionParams) GetOffset() *int {
+func (g *GetActiveCompanySubscriptionParams) GetOffset() *int64 {
 	if g == nil {
 		return nil
 	}
@@ -6176,6 +6575,9 @@ func (g *GetActiveCompanySubscriptionParams) GetOffset() *int {
 }
 
 func (g *GetActiveCompanySubscriptionParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6202,14 +6604,14 @@ func (g *GetActiveCompanySubscriptionParams) SetCompanyIDs(companyIDs []string) 
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveCompanySubscriptionParams) SetLimit(limit *int) {
+func (g *GetActiveCompanySubscriptionParams) SetLimit(limit *int64) {
 	g.Limit = limit
 	g.require(getActiveCompanySubscriptionParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetActiveCompanySubscriptionParams) SetOffset(offset *int) {
+func (g *GetActiveCompanySubscriptionParams) SetOffset(offset *int64) {
 	g.Offset = offset
 	g.require(getActiveCompanySubscriptionParamsFieldOffset)
 }
@@ -6242,6 +6644,9 @@ func (g *GetActiveCompanySubscriptionParams) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetActiveCompanySubscriptionParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6285,6 +6690,9 @@ func (g *GetActiveCompanySubscriptionResponse) GetParams() *GetActiveCompanySubs
 }
 
 func (g *GetActiveCompanySubscriptionResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6337,6 +6745,9 @@ func (g *GetActiveCompanySubscriptionResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetActiveCompanySubscriptionResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6356,7 +6767,7 @@ var (
 type GetCompanyResponse struct {
 	Data *CompanyDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6372,7 +6783,7 @@ func (g *GetCompanyResponse) GetData() *CompanyDetailResponseData {
 	return g.Data
 }
 
-func (g *GetCompanyResponse) GetParams() map[string]interface{} {
+func (g *GetCompanyResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -6380,6 +6791,9 @@ func (g *GetCompanyResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetCompanyResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6399,7 +6813,7 @@ func (g *GetCompanyResponse) SetData(data *CompanyDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetCompanyResponse) SetParams(params map[string]interface{}) {
+func (g *GetCompanyResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getCompanyResponseFieldParams)
 }
@@ -6432,6 +6846,9 @@ func (g *GetCompanyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetCompanyResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6451,7 +6868,7 @@ var (
 type GetEntityTraitDefinitionResponse struct {
 	Data *EntityTraitDefinitionResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6467,7 +6884,7 @@ func (g *GetEntityTraitDefinitionResponse) GetData() *EntityTraitDefinitionRespo
 	return g.Data
 }
 
-func (g *GetEntityTraitDefinitionResponse) GetParams() map[string]interface{} {
+func (g *GetEntityTraitDefinitionResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -6475,6 +6892,9 @@ func (g *GetEntityTraitDefinitionResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetEntityTraitDefinitionResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6494,7 +6914,7 @@ func (g *GetEntityTraitDefinitionResponse) SetData(data *EntityTraitDefinitionRe
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEntityTraitDefinitionResponse) SetParams(params map[string]interface{}) {
+func (g *GetEntityTraitDefinitionResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getEntityTraitDefinitionResponseFieldParams)
 }
@@ -6527,6 +6947,9 @@ func (g *GetEntityTraitDefinitionResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEntityTraitDefinitionResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6549,9 +6972,9 @@ var (
 type GetEntityTraitValuesParams struct {
 	DefinitionID *string `json:"definition_id,omitempty" url:"definition_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -6568,14 +6991,14 @@ func (g *GetEntityTraitValuesParams) GetDefinitionID() *string {
 	return g.DefinitionID
 }
 
-func (g *GetEntityTraitValuesParams) GetLimit() *int {
+func (g *GetEntityTraitValuesParams) GetLimit() *int64 {
 	if g == nil {
 		return nil
 	}
 	return g.Limit
 }
 
-func (g *GetEntityTraitValuesParams) GetOffset() *int {
+func (g *GetEntityTraitValuesParams) GetOffset() *int64 {
 	if g == nil {
 		return nil
 	}
@@ -6590,6 +7013,9 @@ func (g *GetEntityTraitValuesParams) GetQ() *string {
 }
 
 func (g *GetEntityTraitValuesParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6609,14 +7035,14 @@ func (g *GetEntityTraitValuesParams) SetDefinitionID(definitionID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEntityTraitValuesParams) SetLimit(limit *int) {
+func (g *GetEntityTraitValuesParams) SetLimit(limit *int64) {
 	g.Limit = limit
 	g.require(getEntityTraitValuesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEntityTraitValuesParams) SetOffset(offset *int) {
+func (g *GetEntityTraitValuesParams) SetOffset(offset *int64) {
 	g.Offset = offset
 	g.require(getEntityTraitValuesParamsFieldOffset)
 }
@@ -6656,6 +7082,9 @@ func (g *GetEntityTraitValuesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEntityTraitValuesParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6699,6 +7128,9 @@ func (g *GetEntityTraitValuesResponse) GetParams() *GetEntityTraitValuesParams {
 }
 
 func (g *GetEntityTraitValuesResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6751,6 +7183,9 @@ func (g *GetEntityTraitValuesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEntityTraitValuesResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6770,7 +7205,7 @@ var (
 type GetOrCreateCompanyMembershipResponse struct {
 	Data *CompanyMembershipDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6786,7 +7221,7 @@ func (g *GetOrCreateCompanyMembershipResponse) GetData() *CompanyMembershipDetai
 	return g.Data
 }
 
-func (g *GetOrCreateCompanyMembershipResponse) GetParams() map[string]interface{} {
+func (g *GetOrCreateCompanyMembershipResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -6794,6 +7229,9 @@ func (g *GetOrCreateCompanyMembershipResponse) GetParams() map[string]interface{
 }
 
 func (g *GetOrCreateCompanyMembershipResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6813,7 +7251,7 @@ func (g *GetOrCreateCompanyMembershipResponse) SetData(data *CompanyMembershipDe
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetOrCreateCompanyMembershipResponse) SetParams(params map[string]interface{}) {
+func (g *GetOrCreateCompanyMembershipResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getOrCreateCompanyMembershipResponseFieldParams)
 }
@@ -6846,6 +7284,9 @@ func (g *GetOrCreateCompanyMembershipResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetOrCreateCompanyMembershipResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6865,7 +7306,7 @@ var (
 type GetOrCreateEntityTraitDefinitionResponse struct {
 	Data *EntityTraitDefinitionResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6881,7 +7322,7 @@ func (g *GetOrCreateEntityTraitDefinitionResponse) GetData() *EntityTraitDefinit
 	return g.Data
 }
 
-func (g *GetOrCreateEntityTraitDefinitionResponse) GetParams() map[string]interface{} {
+func (g *GetOrCreateEntityTraitDefinitionResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -6889,6 +7330,9 @@ func (g *GetOrCreateEntityTraitDefinitionResponse) GetParams() map[string]interf
 }
 
 func (g *GetOrCreateEntityTraitDefinitionResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6908,7 +7352,7 @@ func (g *GetOrCreateEntityTraitDefinitionResponse) SetData(data *EntityTraitDefi
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetOrCreateEntityTraitDefinitionResponse) SetParams(params map[string]interface{}) {
+func (g *GetOrCreateEntityTraitDefinitionResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getOrCreateEntityTraitDefinitionResponseFieldParams)
 }
@@ -6941,6 +7385,9 @@ func (g *GetOrCreateEntityTraitDefinitionResponse) MarshalJSON() ([]byte, error)
 }
 
 func (g *GetOrCreateEntityTraitDefinitionResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6960,7 +7407,7 @@ var (
 type GetPlanChangeResponse struct {
 	Data *PlanChangeResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6976,7 +7423,7 @@ func (g *GetPlanChangeResponse) GetData() *PlanChangeResponseData {
 	return g.Data
 }
 
-func (g *GetPlanChangeResponse) GetParams() map[string]interface{} {
+func (g *GetPlanChangeResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -6984,6 +7431,9 @@ func (g *GetPlanChangeResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetPlanChangeResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -7003,7 +7453,7 @@ func (g *GetPlanChangeResponse) SetData(data *PlanChangeResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetPlanChangeResponse) SetParams(params map[string]interface{}) {
+func (g *GetPlanChangeResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getPlanChangeResponseFieldParams)
 }
@@ -7036,6 +7486,9 @@ func (g *GetPlanChangeResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetPlanChangeResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -7055,7 +7508,7 @@ var (
 type GetPlanTraitResponse struct {
 	Data *PlanTraitResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7071,7 +7524,7 @@ func (g *GetPlanTraitResponse) GetData() *PlanTraitResponseData {
 	return g.Data
 }
 
-func (g *GetPlanTraitResponse) GetParams() map[string]interface{} {
+func (g *GetPlanTraitResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -7079,6 +7532,9 @@ func (g *GetPlanTraitResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetPlanTraitResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -7098,7 +7554,7 @@ func (g *GetPlanTraitResponse) SetData(data *PlanTraitResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetPlanTraitResponse) SetParams(params map[string]interface{}) {
+func (g *GetPlanTraitResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getPlanTraitResponseFieldParams)
 }
@@ -7131,6 +7587,9 @@ func (g *GetPlanTraitResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetPlanTraitResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -7150,7 +7609,7 @@ var (
 type GetUserResponse struct {
 	Data *UserDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7166,7 +7625,7 @@ func (g *GetUserResponse) GetData() *UserDetailResponseData {
 	return g.Data
 }
 
-func (g *GetUserResponse) GetParams() map[string]interface{} {
+func (g *GetUserResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -7174,6 +7633,9 @@ func (g *GetUserResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetUserResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -7193,7 +7655,7 @@ func (g *GetUserResponse) SetData(data *UserDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetUserResponse) SetParams(params map[string]interface{}) {
+func (g *GetUserResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getUserResponseFieldParams)
 }
@@ -7226,6 +7688,9 @@ func (g *GetUserResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetUserResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -7265,11 +7730,11 @@ type ListCompaniesParams struct {
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Filter companies that have monetized subscriptions
 	MonetizedSubscriptions *bool `json:"monetized_subscriptions,omitempty" url:"monetized_subscriptions,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter companies by plan ID (starts with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Filter companies by one or more plan IDs (each ID starts with plan_)
@@ -7318,7 +7783,7 @@ func (l *ListCompaniesParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListCompaniesParams) GetLimit() *int {
+func (l *ListCompaniesParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -7332,7 +7797,7 @@ func (l *ListCompaniesParams) GetMonetizedSubscriptions() *bool {
 	return l.MonetizedSubscriptions
 }
 
-func (l *ListCompaniesParams) GetOffset() *int {
+func (l *ListCompaniesParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -7431,6 +7896,9 @@ func (l *ListCompaniesParams) GetWithoutSubscription() *bool {
 }
 
 func (l *ListCompaniesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7457,7 +7925,7 @@ func (l *ListCompaniesParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesParams) SetLimit(limit *int) {
+func (l *ListCompaniesParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompaniesParamsFieldLimit)
 }
@@ -7471,7 +7939,7 @@ func (l *ListCompaniesParams) SetMonetizedSubscriptions(monetizedSubscriptions *
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompaniesParams) SetOffset(offset *int) {
+func (l *ListCompaniesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompaniesParamsFieldOffset)
 }
@@ -7595,6 +8063,9 @@ func (l *ListCompaniesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompaniesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7638,6 +8109,9 @@ func (l *ListCompaniesResponse) GetParams() *ListCompaniesParams {
 }
 
 func (l *ListCompaniesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7690,6 +8164,9 @@ func (l *ListCompaniesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompaniesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7712,9 +8189,9 @@ var (
 type ListCompanyMembershipsParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -7731,14 +8208,14 @@ func (l *ListCompanyMembershipsParams) GetCompanyID() *string {
 	return l.CompanyID
 }
 
-func (l *ListCompanyMembershipsParams) GetLimit() *int {
+func (l *ListCompanyMembershipsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListCompanyMembershipsParams) GetOffset() *int {
+func (l *ListCompanyMembershipsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -7753,6 +8230,9 @@ func (l *ListCompanyMembershipsParams) GetUserID() *string {
 }
 
 func (l *ListCompanyMembershipsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7772,14 +8252,14 @@ func (l *ListCompanyMembershipsParams) SetCompanyID(companyID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyMembershipsParams) SetLimit(limit *int) {
+func (l *ListCompanyMembershipsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompanyMembershipsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyMembershipsParams) SetOffset(offset *int) {
+func (l *ListCompanyMembershipsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompanyMembershipsParamsFieldOffset)
 }
@@ -7819,6 +8299,9 @@ func (l *ListCompanyMembershipsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompanyMembershipsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7862,6 +8345,9 @@ func (l *ListCompanyMembershipsResponse) GetParams() *ListCompanyMembershipsPara
 }
 
 func (l *ListCompanyMembershipsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7914,6 +8400,9 @@ func (l *ListCompanyMembershipsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompanyMembershipsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7938,9 +8427,9 @@ type ListEntityKeyDefinitionsParams struct {
 	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
 	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -7964,14 +8453,14 @@ func (l *ListEntityKeyDefinitionsParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListEntityKeyDefinitionsParams) GetLimit() *int {
+func (l *ListEntityKeyDefinitionsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListEntityKeyDefinitionsParams) GetOffset() *int {
+func (l *ListEntityKeyDefinitionsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -7986,6 +8475,9 @@ func (l *ListEntityKeyDefinitionsParams) GetQ() *string {
 }
 
 func (l *ListEntityKeyDefinitionsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -8012,14 +8504,14 @@ func (l *ListEntityKeyDefinitionsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityKeyDefinitionsParams) SetLimit(limit *int) {
+func (l *ListEntityKeyDefinitionsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listEntityKeyDefinitionsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityKeyDefinitionsParams) SetOffset(offset *int) {
+func (l *ListEntityKeyDefinitionsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEntityKeyDefinitionsParamsFieldOffset)
 }
@@ -8059,6 +8551,9 @@ func (l *ListEntityKeyDefinitionsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListEntityKeyDefinitionsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -8102,6 +8597,9 @@ func (l *ListEntityKeyDefinitionsResponse) GetParams() *ListEntityKeyDefinitions
 }
 
 func (l *ListEntityKeyDefinitionsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -8154,6 +8652,9 @@ func (l *ListEntityKeyDefinitionsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListEntityKeyDefinitionsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -8180,9 +8681,9 @@ type ListEntityTraitDefinitionsParams struct {
 	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
 	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset     *int        `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset     *int64      `json:"offset,omitempty" url:"offset,omitempty"`
 	Q          *string     `json:"q,omitempty" url:"q,omitempty"`
 	TraitType  *TraitType  `json:"trait_type,omitempty" url:"trait_type,omitempty"`
 	TraitTypes []TraitType `json:"trait_types,omitempty" url:"trait_types,omitempty"`
@@ -8208,14 +8709,14 @@ func (l *ListEntityTraitDefinitionsParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListEntityTraitDefinitionsParams) GetLimit() *int {
+func (l *ListEntityTraitDefinitionsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListEntityTraitDefinitionsParams) GetOffset() *int {
+func (l *ListEntityTraitDefinitionsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -8244,6 +8745,9 @@ func (l *ListEntityTraitDefinitionsParams) GetTraitTypes() []TraitType {
 }
 
 func (l *ListEntityTraitDefinitionsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -8270,14 +8774,14 @@ func (l *ListEntityTraitDefinitionsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityTraitDefinitionsParams) SetLimit(limit *int) {
+func (l *ListEntityTraitDefinitionsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listEntityTraitDefinitionsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEntityTraitDefinitionsParams) SetOffset(offset *int) {
+func (l *ListEntityTraitDefinitionsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEntityTraitDefinitionsParamsFieldOffset)
 }
@@ -8331,6 +8835,9 @@ func (l *ListEntityTraitDefinitionsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListEntityTraitDefinitionsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -8374,6 +8881,9 @@ func (l *ListEntityTraitDefinitionsResponse) GetParams() *ListEntityTraitDefinit
 }
 
 func (l *ListEntityTraitDefinitionsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -8426,6 +8936,9 @@ func (l *ListEntityTraitDefinitionsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListEntityTraitDefinitionsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -8454,9 +8967,9 @@ type ListPlanChangesParams struct {
 	CompanyID      *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CompanyIDs     []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset  *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset  *int64   `json:"offset,omitempty" url:"offset,omitempty"`
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -8494,14 +9007,14 @@ func (l *ListPlanChangesParams) GetCompanyIDs() []string {
 	return l.CompanyIDs
 }
 
-func (l *ListPlanChangesParams) GetLimit() *int {
+func (l *ListPlanChangesParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListPlanChangesParams) GetOffset() *int {
+func (l *ListPlanChangesParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -8516,6 +9029,9 @@ func (l *ListPlanChangesParams) GetPlanIDs() []string {
 }
 
 func (l *ListPlanChangesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -8556,14 +9072,14 @@ func (l *ListPlanChangesParams) SetCompanyIDs(companyIDs []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesParams) SetLimit(limit *int) {
+func (l *ListPlanChangesParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPlanChangesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesParams) SetOffset(offset *int) {
+func (l *ListPlanChangesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPlanChangesParamsFieldOffset)
 }
@@ -8603,6 +9119,9 @@ func (l *ListPlanChangesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlanChangesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -8646,6 +9165,9 @@ func (l *ListPlanChangesResponse) GetParams() *ListPlanChangesParams {
 }
 
 func (l *ListPlanChangesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -8698,6 +9220,9 @@ func (l *ListPlanChangesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlanChangesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -8722,9 +9247,9 @@ var (
 type ListPlanTraitsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset   *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset   *int64   `json:"offset,omitempty" url:"offset,omitempty"`
 	PlanID   *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	TraitID  *string  `json:"trait_id,omitempty" url:"trait_id,omitempty"`
 	TraitIDs []string `json:"trait_ids,omitempty" url:"trait_ids,omitempty"`
@@ -8743,14 +9268,14 @@ func (l *ListPlanTraitsParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListPlanTraitsParams) GetLimit() *int {
+func (l *ListPlanTraitsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListPlanTraitsParams) GetOffset() *int {
+func (l *ListPlanTraitsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -8779,6 +9304,9 @@ func (l *ListPlanTraitsParams) GetTraitIDs() []string {
 }
 
 func (l *ListPlanTraitsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -8798,14 +9326,14 @@ func (l *ListPlanTraitsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanTraitsParams) SetLimit(limit *int) {
+func (l *ListPlanTraitsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listPlanTraitsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanTraitsParams) SetOffset(offset *int) {
+func (l *ListPlanTraitsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPlanTraitsParamsFieldOffset)
 }
@@ -8859,6 +9387,9 @@ func (l *ListPlanTraitsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlanTraitsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -8902,6 +9433,9 @@ func (l *ListPlanTraitsResponse) GetParams() *ListPlanTraitsParams {
 }
 
 func (l *ListPlanTraitsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -8954,6 +9488,9 @@ func (l *ListPlanTraitsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListPlanTraitsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -8981,9 +9518,9 @@ type ListUsersParams struct {
 	// Filter users by multiple user IDs (starts with user_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter users by plan ID (starts with plan_)
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Search for users by name, keys or string traits
@@ -9010,14 +9547,14 @@ func (l *ListUsersParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListUsersParams) GetLimit() *int {
+func (l *ListUsersParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListUsersParams) GetOffset() *int {
+func (l *ListUsersParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -9039,6 +9576,9 @@ func (l *ListUsersParams) GetQ() *string {
 }
 
 func (l *ListUsersParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -9065,14 +9605,14 @@ func (l *ListUsersParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListUsersParams) SetLimit(limit *int) {
+func (l *ListUsersParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listUsersParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListUsersParams) SetOffset(offset *int) {
+func (l *ListUsersParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listUsersParamsFieldOffset)
 }
@@ -9119,6 +9659,9 @@ func (l *ListUsersParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListUsersParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -9162,6 +9705,9 @@ func (l *ListUsersResponse) GetParams() *ListUsersParams {
 }
 
 func (l *ListUsersResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -9214,6 +9760,9 @@ func (l *ListUsersResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListUsersResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -9248,6 +9797,9 @@ func (l *LookupCompanyParams) GetKeys() map[string]string {
 }
 
 func (l *LookupCompanyParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -9293,6 +9845,9 @@ func (l *LookupCompanyParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *LookupCompanyParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -9336,6 +9891,9 @@ func (l *LookupCompanyResponse) GetParams() *LookupCompanyParams {
 }
 
 func (l *LookupCompanyResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -9388,6 +9946,9 @@ func (l *LookupCompanyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *LookupCompanyResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -9422,6 +9983,9 @@ func (l *LookupUserParams) GetKeys() map[string]string {
 }
 
 func (l *LookupUserParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -9467,6 +10031,9 @@ func (l *LookupUserParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *LookupUserParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -9510,6 +10077,9 @@ func (l *LookupUserResponse) GetParams() *LookupUserParams {
 }
 
 func (l *LookupUserResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -9562,6 +10132,9 @@ func (l *LookupUserResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *LookupUserResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -9581,7 +10154,7 @@ var (
 type UpdateEntityTraitDefinitionResponse struct {
 	Data *EntityTraitDefinitionResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -9597,7 +10170,7 @@ func (u *UpdateEntityTraitDefinitionResponse) GetData() *EntityTraitDefinitionRe
 	return u.Data
 }
 
-func (u *UpdateEntityTraitDefinitionResponse) GetParams() map[string]interface{} {
+func (u *UpdateEntityTraitDefinitionResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -9605,6 +10178,9 @@ func (u *UpdateEntityTraitDefinitionResponse) GetParams() map[string]interface{}
 }
 
 func (u *UpdateEntityTraitDefinitionResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -9624,7 +10200,7 @@ func (u *UpdateEntityTraitDefinitionResponse) SetData(data *EntityTraitDefinitio
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateEntityTraitDefinitionResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateEntityTraitDefinitionResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateEntityTraitDefinitionResponseFieldParams)
 }
@@ -9657,6 +10233,9 @@ func (u *UpdateEntityTraitDefinitionResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateEntityTraitDefinitionResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -9676,7 +10255,7 @@ var (
 type UpdatePlanTraitResponse struct {
 	Data *PlanTraitResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -9692,7 +10271,7 @@ func (u *UpdatePlanTraitResponse) GetData() *PlanTraitResponseData {
 	return u.Data
 }
 
-func (u *UpdatePlanTraitResponse) GetParams() map[string]interface{} {
+func (u *UpdatePlanTraitResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -9700,6 +10279,9 @@ func (u *UpdatePlanTraitResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdatePlanTraitResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -9719,7 +10301,7 @@ func (u *UpdatePlanTraitResponse) SetData(data *PlanTraitResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanTraitResponse) SetParams(params map[string]interface{}) {
+func (u *UpdatePlanTraitResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updatePlanTraitResponseFieldParams)
 }
@@ -9752,6 +10334,9 @@ func (u *UpdatePlanTraitResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdatePlanTraitResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -9771,7 +10356,7 @@ var (
 type UpdatePlanTraitsBulkResponse struct {
 	Data []*PlanTraitResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -9787,7 +10372,7 @@ func (u *UpdatePlanTraitsBulkResponse) GetData() []*PlanTraitResponseData {
 	return u.Data
 }
 
-func (u *UpdatePlanTraitsBulkResponse) GetParams() map[string]interface{} {
+func (u *UpdatePlanTraitsBulkResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -9795,6 +10380,9 @@ func (u *UpdatePlanTraitsBulkResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdatePlanTraitsBulkResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -9814,7 +10402,7 @@ func (u *UpdatePlanTraitsBulkResponse) SetData(data []*PlanTraitResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanTraitsBulkResponse) SetParams(params map[string]interface{}) {
+func (u *UpdatePlanTraitsBulkResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updatePlanTraitsBulkResponseFieldParams)
 }
@@ -9847,6 +10435,9 @@ func (u *UpdatePlanTraitsBulkResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdatePlanTraitsBulkResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -9866,7 +10457,7 @@ var (
 type UpsertCompanyResponse struct {
 	Data *CompanyDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -9882,7 +10473,7 @@ func (u *UpsertCompanyResponse) GetData() *CompanyDetailResponseData {
 	return u.Data
 }
 
-func (u *UpsertCompanyResponse) GetParams() map[string]interface{} {
+func (u *UpsertCompanyResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -9890,6 +10481,9 @@ func (u *UpsertCompanyResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertCompanyResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -9909,7 +10503,7 @@ func (u *UpsertCompanyResponse) SetData(data *CompanyDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertCompanyResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertCompanyResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertCompanyResponseFieldParams)
 }
@@ -9942,6 +10536,9 @@ func (u *UpsertCompanyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertCompanyResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -9961,7 +10558,7 @@ var (
 type UpsertCompanyTraitResponse struct {
 	Data *CompanyDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -9977,7 +10574,7 @@ func (u *UpsertCompanyTraitResponse) GetData() *CompanyDetailResponseData {
 	return u.Data
 }
 
-func (u *UpsertCompanyTraitResponse) GetParams() map[string]interface{} {
+func (u *UpsertCompanyTraitResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -9985,6 +10582,9 @@ func (u *UpsertCompanyTraitResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertCompanyTraitResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -10004,7 +10604,7 @@ func (u *UpsertCompanyTraitResponse) SetData(data *CompanyDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertCompanyTraitResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertCompanyTraitResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertCompanyTraitResponseFieldParams)
 }
@@ -10037,6 +10637,9 @@ func (u *UpsertCompanyTraitResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertCompanyTraitResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -10056,7 +10659,7 @@ var (
 type UpsertUserResponse struct {
 	Data *UserDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -10072,7 +10675,7 @@ func (u *UpsertUserResponse) GetData() *UserDetailResponseData {
 	return u.Data
 }
 
-func (u *UpsertUserResponse) GetParams() map[string]interface{} {
+func (u *UpsertUserResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -10080,6 +10683,9 @@ func (u *UpsertUserResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertUserResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -10099,7 +10705,7 @@ func (u *UpsertUserResponse) SetData(data *UserDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertUserResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertUserResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertUserResponseFieldParams)
 }
@@ -10132,6 +10738,9 @@ func (u *UpsertUserResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertUserResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -10151,7 +10760,7 @@ var (
 type UpsertUserTraitResponse struct {
 	Data *UserDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -10167,7 +10776,7 @@ func (u *UpsertUserTraitResponse) GetData() *UserDetailResponseData {
 	return u.Data
 }
 
-func (u *UpsertUserTraitResponse) GetParams() map[string]interface{} {
+func (u *UpsertUserTraitResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -10175,6 +10784,9 @@ func (u *UpsertUserTraitResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpsertUserTraitResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -10194,7 +10806,7 @@ func (u *UpsertUserTraitResponse) SetData(data *UserDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertUserTraitResponse) SetParams(params map[string]interface{}) {
+func (u *UpsertUserTraitResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(upsertUserTraitResponseFieldParams)
 }
@@ -10227,6 +10839,9 @@ func (u *UpsertUserTraitResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertUserTraitResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -10272,6 +10887,27 @@ func (u *UpdateEntityTraitDefinitionRequestBody) SetTraitType(traitType TraitTyp
 	u.require(updateEntityTraitDefinitionRequestBodyFieldTraitType)
 }
 
+func (u *UpdateEntityTraitDefinitionRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateEntityTraitDefinitionRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateEntityTraitDefinitionRequestBody(body)
+	return nil
+}
+
+func (u *UpdateEntityTraitDefinitionRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateEntityTraitDefinitionRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	updatePlanTraitRequestBodyFieldPlanID     = big.NewInt(1 << 0)
 	updatePlanTraitRequestBodyFieldTraitValue = big.NewInt(1 << 1)
@@ -10306,6 +10942,27 @@ func (u *UpdatePlanTraitRequestBody) SetTraitValue(traitValue string) {
 	u.require(updatePlanTraitRequestBodyFieldTraitValue)
 }
 
+func (u *UpdatePlanTraitRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePlanTraitRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdatePlanTraitRequestBody(body)
+	return nil
+}
+
+func (u *UpdatePlanTraitRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdatePlanTraitRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	updatePlanTraitBulkRequestBodyFieldApplyToExistingCompanies = big.NewInt(1 << 0)
 	updatePlanTraitBulkRequestBodyFieldPlanID                   = big.NewInt(1 << 1)
@@ -10315,7 +10972,7 @@ var (
 type UpdatePlanTraitBulkRequestBody struct {
 	ApplyToExistingCompanies bool                               `json:"apply_to_existing_companies" url:"-"`
 	PlanID                   string                             `json:"plan_id" url:"-"`
-	Traits                   []*UpdatePlanTraitTraitRequestBody `json:"traits,omitempty" url:"-"`
+	Traits                   []*UpdatePlanTraitTraitRequestBody `json:"traits" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -10347,4 +11004,25 @@ func (u *UpdatePlanTraitBulkRequestBody) SetPlanID(planID string) {
 func (u *UpdatePlanTraitBulkRequestBody) SetTraits(traits []*UpdatePlanTraitTraitRequestBody) {
 	u.Traits = traits
 	u.require(updatePlanTraitBulkRequestBodyFieldTraits)
+}
+
+func (u *UpdatePlanTraitBulkRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePlanTraitBulkRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdatePlanTraitBulkRequestBody(body)
+	return nil
+}
+
+func (u *UpdatePlanTraitBulkRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdatePlanTraitBulkRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

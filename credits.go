@@ -21,9 +21,9 @@ type CountBillingCreditsRequest struct {
 	IDs  []*string `json:"-" url:"ids,omitempty"`
 	Name *string   `json:"-" url:"name,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -52,14 +52,14 @@ func (c *CountBillingCreditsRequest) SetName(name *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingCreditsRequest) SetLimit(limit *int) {
+func (c *CountBillingCreditsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countBillingCreditsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingCreditsRequest) SetOffset(offset *int) {
+func (c *CountBillingCreditsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countBillingCreditsRequestFieldOffset)
 }
@@ -75,9 +75,9 @@ type CountBillingCreditsGrantsRequest struct {
 	CreditID *string   `json:"-" url:"credit_id,omitempty"`
 	IDs      []*string `json:"-" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -106,14 +106,14 @@ func (c *CountBillingCreditsGrantsRequest) SetIDs(ids []*string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingCreditsGrantsRequest) SetLimit(limit *int) {
+func (c *CountBillingCreditsGrantsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countBillingCreditsGrantsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingCreditsGrantsRequest) SetOffset(offset *int) {
+func (c *CountBillingCreditsGrantsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countBillingCreditsGrantsRequestFieldOffset)
 }
@@ -135,9 +135,9 @@ type CountBillingPlanCreditGrantsRequest struct {
 	PlanIDs       []*string `json:"-" url:"plan_ids,omitempty"`
 	PlanVersionID *string   `json:"-" url:"plan_version_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -187,14 +187,14 @@ func (c *CountBillingPlanCreditGrantsRequest) SetPlanVersionID(planVersionID *st
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingPlanCreditGrantsRequest) SetLimit(limit *int) {
+func (c *CountBillingPlanCreditGrantsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countBillingPlanCreditGrantsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingPlanCreditGrantsRequest) SetOffset(offset *int) {
+func (c *CountBillingPlanCreditGrantsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countBillingPlanCreditGrantsRequestFieldOffset)
 }
@@ -212,9 +212,9 @@ type CountCompanyGrantsRequest struct {
 	Order     *CreditGrantSortOrder `json:"-" url:"order,omitempty"`
 	Dir       *SortDirection        `json:"-" url:"dir,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -250,14 +250,14 @@ func (c *CountCompanyGrantsRequest) SetDir(dir *SortDirection) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyGrantsRequest) SetLimit(limit *int) {
+func (c *CountCompanyGrantsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCompanyGrantsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyGrantsRequest) SetOffset(offset *int) {
+func (c *CountCompanyGrantsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCompanyGrantsRequestFieldOffset)
 }
@@ -277,9 +277,9 @@ type CountCreditBundlesRequest struct {
 	Status     *BillingCreditBundleStatus `json:"-" url:"status,omitempty"`
 	BundleType *BillingCreditBundleType   `json:"-" url:"bundle_type,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -322,14 +322,14 @@ func (c *CountCreditBundlesRequest) SetBundleType(bundleType *BillingCreditBundl
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditBundlesRequest) SetLimit(limit *int) {
+func (c *CountCreditBundlesRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCreditBundlesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditBundlesRequest) SetOffset(offset *int) {
+func (c *CountCreditBundlesRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCreditBundlesRequestFieldOffset)
 }
@@ -353,9 +353,9 @@ type CountCreditEventLedgerRequest struct {
 	FeatureID       *string          `json:"-" url:"feature_id,omitempty"`
 	StartTime       *string          `json:"-" url:"start_time,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -412,14 +412,14 @@ func (c *CountCreditEventLedgerRequest) SetStartTime(startTime *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditEventLedgerRequest) SetLimit(limit *int) {
+func (c *CountCreditEventLedgerRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCreditEventLedgerRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditEventLedgerRequest) SetOffset(offset *int) {
+func (c *CountCreditEventLedgerRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCreditEventLedgerRequestFieldOffset)
 }
@@ -443,9 +443,9 @@ type CountCreditLedgerRequest struct {
 	StartTime       *string            `json:"-" url:"start_time,omitempty"`
 	EndTime         *string            `json:"-" url:"end_time,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -502,14 +502,14 @@ func (c *CountCreditLedgerRequest) SetEndTime(endTime *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditLedgerRequest) SetLimit(limit *int) {
+func (c *CountCreditLedgerRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCreditLedgerRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditLedgerRequest) SetOffset(offset *int) {
+func (c *CountCreditLedgerRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCreditLedgerRequestFieldOffset)
 }
@@ -517,31 +517,33 @@ func (c *CountCreditLedgerRequest) SetOffset(offset *int) {
 var (
 	createBillingCreditRequestBodyFieldBurnStrategy           = big.NewInt(1 << 0)
 	createBillingCreditRequestBodyFieldCurrency               = big.NewInt(1 << 1)
-	createBillingCreditRequestBodyFieldDefaultExpiryUnit      = big.NewInt(1 << 2)
-	createBillingCreditRequestBodyFieldDefaultExpiryUnitCount = big.NewInt(1 << 3)
-	createBillingCreditRequestBodyFieldDefaultRolloverPolicy  = big.NewInt(1 << 4)
-	createBillingCreditRequestBodyFieldDescription            = big.NewInt(1 << 5)
-	createBillingCreditRequestBodyFieldIcon                   = big.NewInt(1 << 6)
-	createBillingCreditRequestBodyFieldName                   = big.NewInt(1 << 7)
-	createBillingCreditRequestBodyFieldPerUnitPrice           = big.NewInt(1 << 8)
-	createBillingCreditRequestBodyFieldPerUnitPriceDecimal    = big.NewInt(1 << 9)
-	createBillingCreditRequestBodyFieldPluralName             = big.NewInt(1 << 10)
-	createBillingCreditRequestBodyFieldSingularName           = big.NewInt(1 << 11)
+	createBillingCreditRequestBodyFieldCurrencyPrices         = big.NewInt(1 << 2)
+	createBillingCreditRequestBodyFieldDefaultExpiryUnit      = big.NewInt(1 << 3)
+	createBillingCreditRequestBodyFieldDefaultExpiryUnitCount = big.NewInt(1 << 4)
+	createBillingCreditRequestBodyFieldDefaultRolloverPolicy  = big.NewInt(1 << 5)
+	createBillingCreditRequestBodyFieldDescription            = big.NewInt(1 << 6)
+	createBillingCreditRequestBodyFieldIcon                   = big.NewInt(1 << 7)
+	createBillingCreditRequestBodyFieldName                   = big.NewInt(1 << 8)
+	createBillingCreditRequestBodyFieldPerUnitPrice           = big.NewInt(1 << 9)
+	createBillingCreditRequestBodyFieldPerUnitPriceDecimal    = big.NewInt(1 << 10)
+	createBillingCreditRequestBodyFieldPluralName             = big.NewInt(1 << 11)
+	createBillingCreditRequestBodyFieldSingularName           = big.NewInt(1 << 12)
 )
 
 type CreateBillingCreditRequestBody struct {
-	BurnStrategy           *BillingCreditBurnStrategy   `json:"burn_strategy,omitempty" url:"-"`
-	Currency               string                       `json:"currency" url:"-"`
-	DefaultExpiryUnit      *BillingCreditExpiryUnit     `json:"default_expiry_unit,omitempty" url:"-"`
-	DefaultExpiryUnitCount *int                         `json:"default_expiry_unit_count,omitempty" url:"-"`
-	DefaultRolloverPolicy  *BillingCreditRolloverPolicy `json:"default_rollover_policy,omitempty" url:"-"`
-	Description            string                       `json:"description" url:"-"`
-	Icon                   *string                      `json:"icon,omitempty" url:"-"`
-	Name                   string                       `json:"name" url:"-"`
-	PerUnitPrice           *int                         `json:"per_unit_price,omitempty" url:"-"`
-	PerUnitPriceDecimal    *string                      `json:"per_unit_price_decimal,omitempty" url:"-"`
-	PluralName             *string                      `json:"plural_name,omitempty" url:"-"`
-	SingularName           *string                      `json:"singular_name,omitempty" url:"-"`
+	BurnStrategy           *BillingCreditBurnStrategy        `json:"burn_strategy,omitempty" url:"-"`
+	Currency               string                            `json:"currency" url:"-"`
+	CurrencyPrices         []*CreditCurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"-"`
+	DefaultExpiryUnit      *BillingCreditExpiryUnit          `json:"default_expiry_unit,omitempty" url:"-"`
+	DefaultExpiryUnitCount *int64                            `json:"default_expiry_unit_count,omitempty" url:"-"`
+	DefaultRolloverPolicy  *BillingCreditRolloverPolicy      `json:"default_rollover_policy,omitempty" url:"-"`
+	Description            string                            `json:"description" url:"-"`
+	Icon                   *string                           `json:"icon,omitempty" url:"-"`
+	Name                   string                            `json:"name" url:"-"`
+	PerUnitPrice           *int64                            `json:"per_unit_price,omitempty" url:"-"`
+	PerUnitPriceDecimal    *string                           `json:"per_unit_price_decimal,omitempty" url:"-"`
+	PluralName             *string                           `json:"plural_name,omitempty" url:"-"`
+	SingularName           *string                           `json:"singular_name,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -568,6 +570,13 @@ func (c *CreateBillingCreditRequestBody) SetCurrency(currency string) {
 	c.require(createBillingCreditRequestBodyFieldCurrency)
 }
 
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingCreditRequestBody) SetCurrencyPrices(currencyPrices []*CreditCurrencyPriceRequestBody) {
+	c.CurrencyPrices = currencyPrices
+	c.require(createBillingCreditRequestBodyFieldCurrencyPrices)
+}
+
 // SetDefaultExpiryUnit sets the DefaultExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateBillingCreditRequestBody) SetDefaultExpiryUnit(defaultExpiryUnit *BillingCreditExpiryUnit) {
@@ -577,7 +586,7 @@ func (c *CreateBillingCreditRequestBody) SetDefaultExpiryUnit(defaultExpiryUnit 
 
 // SetDefaultExpiryUnitCount sets the DefaultExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingCreditRequestBody) SetDefaultExpiryUnitCount(defaultExpiryUnitCount *int) {
+func (c *CreateBillingCreditRequestBody) SetDefaultExpiryUnitCount(defaultExpiryUnitCount *int64) {
 	c.DefaultExpiryUnitCount = defaultExpiryUnitCount
 	c.require(createBillingCreditRequestBodyFieldDefaultExpiryUnitCount)
 }
@@ -612,7 +621,7 @@ func (c *CreateBillingCreditRequestBody) SetName(name string) {
 
 // SetPerUnitPrice sets the PerUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingCreditRequestBody) SetPerUnitPrice(perUnitPrice *int) {
+func (c *CreateBillingCreditRequestBody) SetPerUnitPrice(perUnitPrice *int64) {
 	c.PerUnitPrice = perUnitPrice
 	c.require(createBillingCreditRequestBodyFieldPerUnitPrice)
 }
@@ -638,32 +647,55 @@ func (c *CreateBillingCreditRequestBody) SetSingularName(singularName *string) {
 	c.require(createBillingCreditRequestBodyFieldSingularName)
 }
 
+func (c *CreateBillingCreditRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateBillingCreditRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateBillingCreditRequestBody(body)
+	return nil
+}
+
+func (c *CreateBillingCreditRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateBillingCreditRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	createCreditBundleRequestBodyFieldBundleName          = big.NewInt(1 << 0)
 	createCreditBundleRequestBodyFieldBundleType          = big.NewInt(1 << 1)
 	createCreditBundleRequestBodyFieldCreditID            = big.NewInt(1 << 2)
 	createCreditBundleRequestBodyFieldCurrency            = big.NewInt(1 << 3)
-	createCreditBundleRequestBodyFieldExpiryType          = big.NewInt(1 << 4)
-	createCreditBundleRequestBodyFieldExpiryUnit          = big.NewInt(1 << 5)
-	createCreditBundleRequestBodyFieldExpiryUnitCount     = big.NewInt(1 << 6)
-	createCreditBundleRequestBodyFieldPricePerUnit        = big.NewInt(1 << 7)
-	createCreditBundleRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 8)
-	createCreditBundleRequestBodyFieldQuantity            = big.NewInt(1 << 9)
-	createCreditBundleRequestBodyFieldStatus              = big.NewInt(1 << 10)
+	createCreditBundleRequestBodyFieldCurrencyPrices      = big.NewInt(1 << 4)
+	createCreditBundleRequestBodyFieldExpiryType          = big.NewInt(1 << 5)
+	createCreditBundleRequestBodyFieldExpiryUnit          = big.NewInt(1 << 6)
+	createCreditBundleRequestBodyFieldExpiryUnitCount     = big.NewInt(1 << 7)
+	createCreditBundleRequestBodyFieldPricePerUnit        = big.NewInt(1 << 8)
+	createCreditBundleRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 9)
+	createCreditBundleRequestBodyFieldQuantity            = big.NewInt(1 << 10)
+	createCreditBundleRequestBodyFieldStatus              = big.NewInt(1 << 11)
 )
 
 type CreateCreditBundleRequestBody struct {
-	BundleName          string                     `json:"bundle_name" url:"-"`
-	BundleType          *BillingCreditBundleType   `json:"bundle_type,omitempty" url:"-"`
-	CreditID            string                     `json:"credit_id" url:"-"`
-	Currency            string                     `json:"currency" url:"-"`
-	ExpiryType          *BillingCreditExpiryType   `json:"expiry_type,omitempty" url:"-"`
-	ExpiryUnit          *BillingCreditExpiryUnit   `json:"expiry_unit,omitempty" url:"-"`
-	ExpiryUnitCount     *int                       `json:"expiry_unit_count,omitempty" url:"-"`
-	PricePerUnit        int                        `json:"price_per_unit" url:"-"`
-	PricePerUnitDecimal *string                    `json:"price_per_unit_decimal,omitempty" url:"-"`
-	Quantity            *int                       `json:"quantity,omitempty" url:"-"`
-	Status              *BillingCreditBundleStatus `json:"status,omitempty" url:"-"`
+	BundleName          string                                  `json:"bundle_name" url:"-"`
+	BundleType          *BillingCreditBundleType                `json:"bundle_type,omitempty" url:"-"`
+	CreditID            string                                  `json:"credit_id" url:"-"`
+	Currency            string                                  `json:"currency" url:"-"`
+	CurrencyPrices      []*CreditBundleCurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"-"`
+	ExpiryType          *BillingCreditExpiryType                `json:"expiry_type,omitempty" url:"-"`
+	ExpiryUnit          *BillingCreditExpiryUnit                `json:"expiry_unit,omitempty" url:"-"`
+	ExpiryUnitCount     *int64                                  `json:"expiry_unit_count,omitempty" url:"-"`
+	PricePerUnit        int64                                   `json:"price_per_unit" url:"-"`
+	PricePerUnitDecimal *string                                 `json:"price_per_unit_decimal,omitempty" url:"-"`
+	Quantity            *int64                                  `json:"quantity,omitempty" url:"-"`
+	Status              *BillingCreditBundleStatus              `json:"status,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -704,6 +736,13 @@ func (c *CreateCreditBundleRequestBody) SetCurrency(currency string) {
 	c.require(createCreditBundleRequestBodyFieldCurrency)
 }
 
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCreditBundleRequestBody) SetCurrencyPrices(currencyPrices []*CreditBundleCurrencyPriceRequestBody) {
+	c.CurrencyPrices = currencyPrices
+	c.require(createCreditBundleRequestBodyFieldCurrencyPrices)
+}
+
 // SetExpiryType sets the ExpiryType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateCreditBundleRequestBody) SetExpiryType(expiryType *BillingCreditExpiryType) {
@@ -720,14 +759,14 @@ func (c *CreateCreditBundleRequestBody) SetExpiryUnit(expiryUnit *BillingCreditE
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCreditBundleRequestBody) SetExpiryUnitCount(expiryUnitCount *int) {
+func (c *CreateCreditBundleRequestBody) SetExpiryUnitCount(expiryUnitCount *int64) {
 	c.ExpiryUnitCount = expiryUnitCount
 	c.require(createCreditBundleRequestBodyFieldExpiryUnitCount)
 }
 
 // SetPricePerUnit sets the PricePerUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCreditBundleRequestBody) SetPricePerUnit(pricePerUnit int) {
+func (c *CreateCreditBundleRequestBody) SetPricePerUnit(pricePerUnit int64) {
 	c.PricePerUnit = pricePerUnit
 	c.require(createCreditBundleRequestBodyFieldPricePerUnit)
 }
@@ -741,7 +780,7 @@ func (c *CreateCreditBundleRequestBody) SetPricePerUnitDecimal(pricePerUnitDecim
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCreditBundleRequestBody) SetQuantity(quantity *int) {
+func (c *CreateCreditBundleRequestBody) SetQuantity(quantity *int64) {
 	c.Quantity = quantity
 	c.require(createCreditBundleRequestBodyFieldQuantity)
 }
@@ -751,6 +790,27 @@ func (c *CreateCreditBundleRequestBody) SetQuantity(quantity *int) {
 func (c *CreateCreditBundleRequestBody) SetStatus(status *BillingCreditBundleStatus) {
 	c.Status = status
 	c.require(createCreditBundleRequestBodyFieldStatus)
+}
+
+func (c *CreateCreditBundleRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCreditBundleRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateCreditBundleRequestBody(body)
+	return nil
+}
+
+func (c *CreateCreditBundleRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateCreditBundleRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -797,9 +857,9 @@ type GetEnrichedCreditLedgerRequest struct {
 	StartTime       *string            `json:"-" url:"start_time,omitempty"`
 	EndTime         *string            `json:"-" url:"end_time,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -856,14 +916,14 @@ func (g *GetEnrichedCreditLedgerRequest) SetEndTime(endTime *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEnrichedCreditLedgerRequest) SetLimit(limit *int) {
+func (g *GetEnrichedCreditLedgerRequest) SetLimit(limit *int64) {
 	g.Limit = limit
 	g.require(getEnrichedCreditLedgerRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEnrichedCreditLedgerRequest) SetOffset(offset *int) {
+func (g *GetEnrichedCreditLedgerRequest) SetOffset(offset *int64) {
 	g.Offset = offset
 	g.require(getEnrichedCreditLedgerRequestFieldOffset)
 }
@@ -872,25 +932,27 @@ var (
 	createCompanyCreditGrantFieldBillingPeriodsCount = big.NewInt(1 << 0)
 	createCompanyCreditGrantFieldCompanyID           = big.NewInt(1 << 1)
 	createCompanyCreditGrantFieldCreditID            = big.NewInt(1 << 2)
-	createCompanyCreditGrantFieldExpiresAt           = big.NewInt(1 << 3)
-	createCompanyCreditGrantFieldExpiryType          = big.NewInt(1 << 4)
-	createCompanyCreditGrantFieldExpiryUnit          = big.NewInt(1 << 5)
-	createCompanyCreditGrantFieldExpiryUnitCount     = big.NewInt(1 << 6)
-	createCompanyCreditGrantFieldQuantity            = big.NewInt(1 << 7)
-	createCompanyCreditGrantFieldReason              = big.NewInt(1 << 8)
-	createCompanyCreditGrantFieldRenewalEnabled      = big.NewInt(1 << 9)
-	createCompanyCreditGrantFieldRenewalPeriod       = big.NewInt(1 << 10)
+	createCompanyCreditGrantFieldCurrency            = big.NewInt(1 << 3)
+	createCompanyCreditGrantFieldExpiresAt           = big.NewInt(1 << 4)
+	createCompanyCreditGrantFieldExpiryType          = big.NewInt(1 << 5)
+	createCompanyCreditGrantFieldExpiryUnit          = big.NewInt(1 << 6)
+	createCompanyCreditGrantFieldExpiryUnitCount     = big.NewInt(1 << 7)
+	createCompanyCreditGrantFieldQuantity            = big.NewInt(1 << 8)
+	createCompanyCreditGrantFieldReason              = big.NewInt(1 << 9)
+	createCompanyCreditGrantFieldRenewalEnabled      = big.NewInt(1 << 10)
+	createCompanyCreditGrantFieldRenewalPeriod       = big.NewInt(1 << 11)
 )
 
 type CreateCompanyCreditGrant struct {
-	BillingPeriodsCount *int                              `json:"billing_periods_count,omitempty" url:"-"`
+	BillingPeriodsCount *int64                            `json:"billing_periods_count,omitempty" url:"-"`
 	CompanyID           string                            `json:"company_id" url:"-"`
 	CreditID            string                            `json:"credit_id" url:"-"`
+	Currency            *string                           `json:"currency,omitempty" url:"-"`
 	ExpiresAt           *time.Time                        `json:"expires_at,omitempty" url:"-"`
 	ExpiryType          *BillingCreditExpiryType          `json:"expiry_type,omitempty" url:"-"`
 	ExpiryUnit          *BillingCreditExpiryUnit          `json:"expiry_unit,omitempty" url:"-"`
-	ExpiryUnitCount     *int                              `json:"expiry_unit_count,omitempty" url:"-"`
-	Quantity            int                               `json:"quantity" url:"-"`
+	ExpiryUnitCount     *int64                            `json:"expiry_unit_count,omitempty" url:"-"`
+	Quantity            int64                             `json:"quantity" url:"-"`
 	Reason              BillingCreditGrantReason          `json:"reason" url:"-"`
 	RenewalEnabled      *bool                             `json:"renewal_enabled,omitempty" url:"-"`
 	RenewalPeriod       *BillingPlanCreditGrantResetStart `json:"renewal_period,omitempty" url:"-"`
@@ -908,7 +970,7 @@ func (c *CreateCompanyCreditGrant) require(field *big.Int) {
 
 // SetBillingPeriodsCount sets the BillingPeriodsCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyCreditGrant) SetBillingPeriodsCount(billingPeriodsCount *int) {
+func (c *CreateCompanyCreditGrant) SetBillingPeriodsCount(billingPeriodsCount *int64) {
 	c.BillingPeriodsCount = billingPeriodsCount
 	c.require(createCompanyCreditGrantFieldBillingPeriodsCount)
 }
@@ -925,6 +987,13 @@ func (c *CreateCompanyCreditGrant) SetCompanyID(companyID string) {
 func (c *CreateCompanyCreditGrant) SetCreditID(creditID string) {
 	c.CreditID = creditID
 	c.require(createCompanyCreditGrantFieldCreditID)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCompanyCreditGrant) SetCurrency(currency *string) {
+	c.Currency = currency
+	c.require(createCompanyCreditGrantFieldCurrency)
 }
 
 // SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
@@ -950,14 +1019,14 @@ func (c *CreateCompanyCreditGrant) SetExpiryUnit(expiryUnit *BillingCreditExpiry
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyCreditGrant) SetExpiryUnitCount(expiryUnitCount *int) {
+func (c *CreateCompanyCreditGrant) SetExpiryUnitCount(expiryUnitCount *int64) {
 	c.ExpiryUnitCount = expiryUnitCount
 	c.require(createCompanyCreditGrantFieldExpiryUnitCount)
 }
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyCreditGrant) SetQuantity(quantity int) {
+func (c *CreateCompanyCreditGrant) SetQuantity(quantity int64) {
 	c.Quantity = quantity
 	c.require(createCompanyCreditGrantFieldQuantity)
 }
@@ -1017,9 +1086,9 @@ type ListBillingCreditsRequest struct {
 	IDs  []*string `json:"-" url:"ids,omitempty"`
 	Name *string   `json:"-" url:"name,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1048,14 +1117,14 @@ func (l *ListBillingCreditsRequest) SetName(name *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingCreditsRequest) SetLimit(limit *int) {
+func (l *ListBillingCreditsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingCreditsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingCreditsRequest) SetOffset(offset *int) {
+func (l *ListBillingCreditsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingCreditsRequestFieldOffset)
 }
@@ -1077,9 +1146,9 @@ type ListBillingPlanCreditGrantsRequest struct {
 	PlanIDs       []*string `json:"-" url:"plan_ids,omitempty"`
 	PlanVersionID *string   `json:"-" url:"plan_version_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1129,14 +1198,14 @@ func (l *ListBillingPlanCreditGrantsRequest) SetPlanVersionID(planVersionID *str
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPlanCreditGrantsRequest) SetLimit(limit *int) {
+func (l *ListBillingPlanCreditGrantsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingPlanCreditGrantsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPlanCreditGrantsRequest) SetOffset(offset *int) {
+func (l *ListBillingPlanCreditGrantsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingPlanCreditGrantsRequestFieldOffset)
 }
@@ -1154,9 +1223,9 @@ type ListCompanyGrantsRequest struct {
 	Order     *CreditGrantSortOrder `json:"-" url:"order,omitempty"`
 	Dir       *SortDirection        `json:"-" url:"dir,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1192,14 +1261,14 @@ func (l *ListCompanyGrantsRequest) SetDir(dir *SortDirection) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyGrantsRequest) SetLimit(limit *int) {
+func (l *ListCompanyGrantsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompanyGrantsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyGrantsRequest) SetOffset(offset *int) {
+func (l *ListCompanyGrantsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompanyGrantsRequestFieldOffset)
 }
@@ -1219,9 +1288,9 @@ type ListCreditBundlesRequest struct {
 	Status     *BillingCreditBundleStatus `json:"-" url:"status,omitempty"`
 	BundleType *BillingCreditBundleType   `json:"-" url:"bundle_type,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1264,14 +1333,14 @@ func (l *ListCreditBundlesRequest) SetBundleType(bundleType *BillingCreditBundle
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditBundlesRequest) SetLimit(limit *int) {
+func (l *ListCreditBundlesRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCreditBundlesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditBundlesRequest) SetOffset(offset *int) {
+func (l *ListCreditBundlesRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCreditBundlesRequestFieldOffset)
 }
@@ -1295,9 +1364,9 @@ type ListCreditEventLedgerRequest struct {
 	FeatureID       *string          `json:"-" url:"feature_id,omitempty"`
 	StartTime       *string          `json:"-" url:"start_time,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1354,14 +1423,14 @@ func (l *ListCreditEventLedgerRequest) SetStartTime(startTime *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditEventLedgerRequest) SetLimit(limit *int) {
+func (l *ListCreditEventLedgerRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCreditEventLedgerRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditEventLedgerRequest) SetOffset(offset *int) {
+func (l *ListCreditEventLedgerRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCreditEventLedgerRequestFieldOffset)
 }
@@ -1377,9 +1446,9 @@ type ListGrantsForCreditRequest struct {
 	CreditID *string   `json:"-" url:"credit_id,omitempty"`
 	IDs      []*string `json:"-" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1408,14 +1477,14 @@ func (l *ListGrantsForCreditRequest) SetIDs(ids []*string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListGrantsForCreditRequest) SetLimit(limit *int) {
+func (l *ListGrantsForCreditRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listGrantsForCreditRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListGrantsForCreditRequest) SetOffset(offset *int) {
+func (l *ListGrantsForCreditRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listGrantsForCreditRequestFieldOffset)
 }
@@ -1427,23 +1496,24 @@ var (
 	billingCreditGrantResponseDataFieldCreditIcon        = big.NewInt(1 << 3)
 	billingCreditGrantResponseDataFieldCreditID          = big.NewInt(1 << 4)
 	billingCreditGrantResponseDataFieldCreditName        = big.NewInt(1 << 5)
-	billingCreditGrantResponseDataFieldExpiresAt         = big.NewInt(1 << 6)
-	billingCreditGrantResponseDataFieldGrantReason       = big.NewInt(1 << 7)
-	billingCreditGrantResponseDataFieldID                = big.NewInt(1 << 8)
-	billingCreditGrantResponseDataFieldPlanID            = big.NewInt(1 << 9)
-	billingCreditGrantResponseDataFieldPlanName          = big.NewInt(1 << 10)
-	billingCreditGrantResponseDataFieldPrice             = big.NewInt(1 << 11)
-	billingCreditGrantResponseDataFieldQuantity          = big.NewInt(1 << 12)
-	billingCreditGrantResponseDataFieldQuantityRemaining = big.NewInt(1 << 13)
-	billingCreditGrantResponseDataFieldQuantityUsed      = big.NewInt(1 << 14)
-	billingCreditGrantResponseDataFieldRenewalEnabled    = big.NewInt(1 << 15)
-	billingCreditGrantResponseDataFieldRenewalPeriod     = big.NewInt(1 << 16)
-	billingCreditGrantResponseDataFieldSourceLabel       = big.NewInt(1 << 17)
-	billingCreditGrantResponseDataFieldTransfers         = big.NewInt(1 << 18)
-	billingCreditGrantResponseDataFieldUpdatedAt         = big.NewInt(1 << 19)
-	billingCreditGrantResponseDataFieldValidFrom         = big.NewInt(1 << 20)
-	billingCreditGrantResponseDataFieldZeroedOutDate     = big.NewInt(1 << 21)
-	billingCreditGrantResponseDataFieldZeroedOutReason   = big.NewInt(1 << 22)
+	billingCreditGrantResponseDataFieldCurrency          = big.NewInt(1 << 6)
+	billingCreditGrantResponseDataFieldExpiresAt         = big.NewInt(1 << 7)
+	billingCreditGrantResponseDataFieldGrantReason       = big.NewInt(1 << 8)
+	billingCreditGrantResponseDataFieldID                = big.NewInt(1 << 9)
+	billingCreditGrantResponseDataFieldPlanID            = big.NewInt(1 << 10)
+	billingCreditGrantResponseDataFieldPlanName          = big.NewInt(1 << 11)
+	billingCreditGrantResponseDataFieldPrice             = big.NewInt(1 << 12)
+	billingCreditGrantResponseDataFieldQuantity          = big.NewInt(1 << 13)
+	billingCreditGrantResponseDataFieldQuantityRemaining = big.NewInt(1 << 14)
+	billingCreditGrantResponseDataFieldQuantityUsed      = big.NewInt(1 << 15)
+	billingCreditGrantResponseDataFieldRenewalEnabled    = big.NewInt(1 << 16)
+	billingCreditGrantResponseDataFieldRenewalPeriod     = big.NewInt(1 << 17)
+	billingCreditGrantResponseDataFieldSourceLabel       = big.NewInt(1 << 18)
+	billingCreditGrantResponseDataFieldTransfers         = big.NewInt(1 << 19)
+	billingCreditGrantResponseDataFieldUpdatedAt         = big.NewInt(1 << 20)
+	billingCreditGrantResponseDataFieldValidFrom         = big.NewInt(1 << 21)
+	billingCreditGrantResponseDataFieldZeroedOutDate     = big.NewInt(1 << 22)
+	billingCreditGrantResponseDataFieldZeroedOutReason   = big.NewInt(1 << 23)
 )
 
 type BillingCreditGrantResponseData struct {
@@ -1453,13 +1523,14 @@ type BillingCreditGrantResponseData struct {
 	CreditIcon        *string                             `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
 	CreditID          string                              `json:"credit_id" url:"credit_id"`
 	CreditName        string                              `json:"credit_name" url:"credit_name"`
+	Currency          *string                             `json:"currency,omitempty" url:"currency,omitempty"`
 	ExpiresAt         *time.Time                          `json:"expires_at,omitempty" url:"expires_at,omitempty"`
 	GrantReason       BillingCreditGrantReason            `json:"grant_reason" url:"grant_reason"`
 	ID                string                              `json:"id" url:"id"`
 	PlanID            *string                             `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	PlanName          *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
 	Price             *BillingPriceResponseData           `json:"price,omitempty" url:"price,omitempty"`
-	Quantity          int                                 `json:"quantity" url:"quantity"`
+	Quantity          int64                               `json:"quantity" url:"quantity"`
 	QuantityRemaining float64                             `json:"quantity_remaining" url:"quantity_remaining"`
 	QuantityUsed      float64                             `json:"quantity_used" url:"quantity_used"`
 	RenewalEnabled    bool                                `json:"renewal_enabled" url:"renewal_enabled"`
@@ -1520,6 +1591,13 @@ func (b *BillingCreditGrantResponseData) GetCreditName() string {
 	return b.CreditName
 }
 
+func (b *BillingCreditGrantResponseData) GetCurrency() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Currency
+}
+
 func (b *BillingCreditGrantResponseData) GetExpiresAt() *time.Time {
 	if b == nil {
 		return nil
@@ -1562,7 +1640,7 @@ func (b *BillingCreditGrantResponseData) GetPrice() *BillingPriceResponseData {
 	return b.Price
 }
 
-func (b *BillingCreditGrantResponseData) GetQuantity() int {
+func (b *BillingCreditGrantResponseData) GetQuantity() int64 {
 	if b == nil {
 		return 0
 	}
@@ -1640,6 +1718,9 @@ func (b *BillingCreditGrantResponseData) GetZeroedOutReason() *BillingCreditGran
 }
 
 func (b *BillingCreditGrantResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -1692,6 +1773,13 @@ func (b *BillingCreditGrantResponseData) SetCreditName(creditName string) {
 	b.require(billingCreditGrantResponseDataFieldCreditName)
 }
 
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetCurrency(currency *string) {
+	b.Currency = currency
+	b.require(billingCreditGrantResponseDataFieldCurrency)
+}
+
 // SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingCreditGrantResponseData) SetExpiresAt(expiresAt *time.Time) {
@@ -1736,7 +1824,7 @@ func (b *BillingCreditGrantResponseData) SetPrice(price *BillingPriceResponseDat
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditGrantResponseData) SetQuantity(quantity int) {
+func (b *BillingCreditGrantResponseData) SetQuantity(quantity int64) {
 	b.Quantity = quantity
 	b.require(billingCreditGrantResponseDataFieldQuantity)
 }
@@ -1863,6 +1951,9 @@ func (b *BillingCreditGrantResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCreditGrantResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -1941,6 +2032,9 @@ func (b *BillingCreditLedgerResponseData) GetSingularName() *string {
 }
 
 func (b *BillingCreditLedgerResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -2021,6 +2115,9 @@ func (b *BillingCreditLedgerResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCreditLedgerResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2072,6 +2169,9 @@ func (c *CompanyLedgerResponseData) GetName() string {
 }
 
 func (c *CompanyLedgerResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2131,6 +2231,241 @@ func (c *CompanyLedgerResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyLedgerResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditBundleCurrencyPriceRequestBodyFieldCurrency            = big.NewInt(1 << 0)
+	creditBundleCurrencyPriceRequestBodyFieldPricePerUnit        = big.NewInt(1 << 1)
+	creditBundleCurrencyPriceRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 2)
+)
+
+type CreditBundleCurrencyPriceRequestBody struct {
+	Currency            string  `json:"currency" url:"currency"`
+	PricePerUnit        *int64  `json:"price_per_unit,omitempty" url:"price_per_unit,omitempty"`
+	PricePerUnitDecimal *string `json:"price_per_unit_decimal,omitempty" url:"price_per_unit_decimal,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditBundleCurrencyPriceRequestBody) GetCurrency() string {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CreditBundleCurrencyPriceRequestBody) GetPricePerUnit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.PricePerUnit
+}
+
+func (c *CreditBundleCurrencyPriceRequestBody) GetPricePerUnitDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PricePerUnitDecimal
+}
+
+func (c *CreditBundleCurrencyPriceRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditBundleCurrencyPriceRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBundleCurrencyPriceRequestBody) SetCurrency(currency string) {
+	c.Currency = currency
+	c.require(creditBundleCurrencyPriceRequestBodyFieldCurrency)
+}
+
+// SetPricePerUnit sets the PricePerUnit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBundleCurrencyPriceRequestBody) SetPricePerUnit(pricePerUnit *int64) {
+	c.PricePerUnit = pricePerUnit
+	c.require(creditBundleCurrencyPriceRequestBodyFieldPricePerUnit)
+}
+
+// SetPricePerUnitDecimal sets the PricePerUnitDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBundleCurrencyPriceRequestBody) SetPricePerUnitDecimal(pricePerUnitDecimal *string) {
+	c.PricePerUnitDecimal = pricePerUnitDecimal
+	c.require(creditBundleCurrencyPriceRequestBodyFieldPricePerUnitDecimal)
+}
+
+func (c *CreditBundleCurrencyPriceRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditBundleCurrencyPriceRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditBundleCurrencyPriceRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditBundleCurrencyPriceRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreditBundleCurrencyPriceRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditBundleCurrencyPriceRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditCurrencyPriceRequestBodyFieldCurrency            = big.NewInt(1 << 0)
+	creditCurrencyPriceRequestBodyFieldPricePerUnit        = big.NewInt(1 << 1)
+	creditCurrencyPriceRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 2)
+)
+
+type CreditCurrencyPriceRequestBody struct {
+	Currency            string  `json:"currency" url:"currency"`
+	PricePerUnit        *int64  `json:"price_per_unit,omitempty" url:"price_per_unit,omitempty"`
+	PricePerUnitDecimal *string `json:"price_per_unit_decimal,omitempty" url:"price_per_unit_decimal,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditCurrencyPriceRequestBody) GetCurrency() string {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CreditCurrencyPriceRequestBody) GetPricePerUnit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.PricePerUnit
+}
+
+func (c *CreditCurrencyPriceRequestBody) GetPricePerUnitDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PricePerUnitDecimal
+}
+
+func (c *CreditCurrencyPriceRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditCurrencyPriceRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCurrencyPriceRequestBody) SetCurrency(currency string) {
+	c.Currency = currency
+	c.require(creditCurrencyPriceRequestBodyFieldCurrency)
+}
+
+// SetPricePerUnit sets the PricePerUnit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCurrencyPriceRequestBody) SetPricePerUnit(pricePerUnit *int64) {
+	c.PricePerUnit = pricePerUnit
+	c.require(creditCurrencyPriceRequestBodyFieldPricePerUnit)
+}
+
+// SetPricePerUnitDecimal sets the PricePerUnitDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCurrencyPriceRequestBody) SetPricePerUnitDecimal(pricePerUnitDecimal *string) {
+	c.PricePerUnitDecimal = pricePerUnitDecimal
+	c.require(creditCurrencyPriceRequestBodyFieldPricePerUnitDecimal)
+}
+
+func (c *CreditCurrencyPriceRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditCurrencyPriceRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditCurrencyPriceRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditCurrencyPriceRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreditCurrencyPriceRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditCurrencyPriceRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2191,20 +2526,20 @@ type CreditEventLedgerResponseData struct {
 	EventType                  CreditEventType                    `json:"event_type" url:"event_type"`
 	ExpiryType                 *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
 	ExpiryUnit                 *BillingCreditExpiryUnit           `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount            *int                               `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ExpiryUnitCount            *int64                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	Feature                    *FeatureLedgerResponseData         `json:"feature,omitempty" url:"feature,omitempty"`
 	FeatureID                  *string                            `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	FromGrantID                *string                            `json:"from_grant_id,omitempty" url:"from_grant_id,omitempty"`
 	GrantExpiresAt             *time.Time                         `json:"grant_expires_at,omitempty" url:"grant_expires_at,omitempty"`
 	GrantID                    *string                            `json:"grant_id,omitempty" url:"grant_id,omitempty"`
-	GrantQuantity              *int                               `json:"grant_quantity,omitempty" url:"grant_quantity,omitempty"`
+	GrantQuantity              *int64                             `json:"grant_quantity,omitempty" url:"grant_quantity,omitempty"`
 	GrantQuantityRemaining     *float64                           `json:"grant_quantity_remaining,omitempty" url:"grant_quantity_remaining,omitempty"`
 	GrantReason                *BillingCreditGrantReason          `json:"grant_reason,omitempty" url:"grant_reason,omitempty"`
 	GrantValidFrom             *time.Time                         `json:"grant_valid_from,omitempty" url:"grant_valid_from,omitempty"`
 	PlanID                     *string                            `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	QuantityConsumed           *float64                           `json:"quantity_consumed,omitempty" url:"quantity_consumed,omitempty"`
 	QuantityRemainingAtZeroOut *float64                           `json:"quantity_remaining_at_zero_out,omitempty" url:"quantity_remaining_at_zero_out,omitempty"`
-	SourceID                   int                                `json:"source_id" url:"source_id"`
+	SourceID                   int64                              `json:"source_id" url:"source_id"`
 	ToGrantID                  *string                            `json:"to_grant_id,omitempty" url:"to_grant_id,omitempty"`
 	UsageEventID               *string                            `json:"usage_event_id,omitempty" url:"usage_event_id,omitempty"`
 	ZeroedOutReason            *BillingCreditGrantZeroedOutReason `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
@@ -2314,7 +2649,7 @@ func (c *CreditEventLedgerResponseData) GetExpiryUnit() *BillingCreditExpiryUnit
 	return c.ExpiryUnit
 }
 
-func (c *CreditEventLedgerResponseData) GetExpiryUnitCount() *int {
+func (c *CreditEventLedgerResponseData) GetExpiryUnitCount() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -2356,7 +2691,7 @@ func (c *CreditEventLedgerResponseData) GetGrantID() *string {
 	return c.GrantID
 }
 
-func (c *CreditEventLedgerResponseData) GetGrantQuantity() *int {
+func (c *CreditEventLedgerResponseData) GetGrantQuantity() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -2405,7 +2740,7 @@ func (c *CreditEventLedgerResponseData) GetQuantityRemainingAtZeroOut() *float64
 	return c.QuantityRemainingAtZeroOut
 }
 
-func (c *CreditEventLedgerResponseData) GetSourceID() int {
+func (c *CreditEventLedgerResponseData) GetSourceID() int64 {
 	if c == nil {
 		return 0
 	}
@@ -2434,6 +2769,9 @@ func (c *CreditEventLedgerResponseData) GetZeroedOutReason() *BillingCreditGrant
 }
 
 func (c *CreditEventLedgerResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2544,7 +2882,7 @@ func (c *CreditEventLedgerResponseData) SetExpiryUnit(expiryUnit *BillingCreditE
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditEventLedgerResponseData) SetExpiryUnitCount(expiryUnitCount *int) {
+func (c *CreditEventLedgerResponseData) SetExpiryUnitCount(expiryUnitCount *int64) {
 	c.ExpiryUnitCount = expiryUnitCount
 	c.require(creditEventLedgerResponseDataFieldExpiryUnitCount)
 }
@@ -2586,7 +2924,7 @@ func (c *CreditEventLedgerResponseData) SetGrantID(grantID *string) {
 
 // SetGrantQuantity sets the GrantQuantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditEventLedgerResponseData) SetGrantQuantity(grantQuantity *int) {
+func (c *CreditEventLedgerResponseData) SetGrantQuantity(grantQuantity *int64) {
 	c.GrantQuantity = grantQuantity
 	c.require(creditEventLedgerResponseDataFieldGrantQuantity)
 }
@@ -2635,7 +2973,7 @@ func (c *CreditEventLedgerResponseData) SetQuantityRemainingAtZeroOut(quantityRe
 
 // SetSourceID sets the SourceID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditEventLedgerResponseData) SetSourceID(sourceID int) {
+func (c *CreditEventLedgerResponseData) SetSourceID(sourceID int64) {
 	c.SourceID = sourceID
 	c.require(creditEventLedgerResponseDataFieldSourceID)
 }
@@ -2705,6 +3043,9 @@ func (c *CreditEventLedgerResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditEventLedgerResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2798,28 +3139,28 @@ var (
 )
 
 type CreditLedgerEnrichedEntryResponseData struct {
-	BillingCreditAutoTopupGrantCount int                              `json:"billing_credit_auto_topup_grant_count" url:"billing_credit_auto_topup_grant_count"`
+	BillingCreditAutoTopupGrantCount int64                            `json:"billing_credit_auto_topup_grant_count" url:"billing_credit_auto_topup_grant_count"`
 	BillingCreditID                  string                           `json:"billing_credit_id" url:"billing_credit_id"`
 	Company                          *CompanyLedgerResponseData       `json:"company,omitempty" url:"company,omitempty"`
 	CompanyID                        string                           `json:"company_id" url:"company_id"`
 	Credit                           *BillingCreditLedgerResponseData `json:"credit,omitempty" url:"credit,omitempty"`
-	ExpiredGrantCount                int                              `json:"expired_grant_count" url:"expired_grant_count"`
+	ExpiredGrantCount                int64                            `json:"expired_grant_count" url:"expired_grant_count"`
 	Feature                          *FeatureLedgerResponseData       `json:"feature,omitempty" url:"feature,omitempty"`
 	FeatureID                        *string                          `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	FirstTransactionAt               time.Time                        `json:"first_transaction_at" url:"first_transaction_at"`
-	FreeGrantCount                   int                              `json:"free_grant_count" url:"free_grant_count"`
-	GrantCount                       int                              `json:"grant_count" url:"grant_count"`
+	FreeGrantCount                   int64                            `json:"free_grant_count" url:"free_grant_count"`
+	GrantCount                       int64                            `json:"grant_count" url:"grant_count"`
 	LastTransactionAt                time.Time                        `json:"last_transaction_at" url:"last_transaction_at"`
-	ManuallyZeroedCount              int                              `json:"manually_zeroed_count" url:"manually_zeroed_count"`
+	ManuallyZeroedCount              int64                            `json:"manually_zeroed_count" url:"manually_zeroed_count"`
 	NetChange                        float64                          `json:"net_change" url:"net_change"`
-	PlanGrantCount                   int                              `json:"plan_grant_count" url:"plan_grant_count"`
-	PurchasedGrantCount              int                              `json:"purchased_grant_count" url:"purchased_grant_count"`
+	PlanGrantCount                   int64                            `json:"plan_grant_count" url:"plan_grant_count"`
+	PurchasedGrantCount              int64                            `json:"purchased_grant_count" url:"purchased_grant_count"`
 	TimeBucket                       time.Time                        `json:"time_bucket" url:"time_bucket"`
 	TotalConsumed                    float64                          `json:"total_consumed" url:"total_consumed"`
 	TotalGranted                     float64                          `json:"total_granted" url:"total_granted"`
-	TransactionCount                 int                              `json:"transaction_count" url:"transaction_count"`
-	UsageCount                       int                              `json:"usage_count" url:"usage_count"`
-	ZeroedOutCount                   int                              `json:"zeroed_out_count" url:"zeroed_out_count"`
+	TransactionCount                 int64                            `json:"transaction_count" url:"transaction_count"`
+	UsageCount                       int64                            `json:"usage_count" url:"usage_count"`
+	ZeroedOutCount                   int64                            `json:"zeroed_out_count" url:"zeroed_out_count"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2828,7 +3169,7 @@ type CreditLedgerEnrichedEntryResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetBillingCreditAutoTopupGrantCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetBillingCreditAutoTopupGrantCount() int64 {
 	if c == nil {
 		return 0
 	}
@@ -2863,7 +3204,7 @@ func (c *CreditLedgerEnrichedEntryResponseData) GetCredit() *BillingCreditLedger
 	return c.Credit
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetExpiredGrantCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetExpiredGrantCount() int64 {
 	if c == nil {
 		return 0
 	}
@@ -2891,14 +3232,14 @@ func (c *CreditLedgerEnrichedEntryResponseData) GetFirstTransactionAt() time.Tim
 	return c.FirstTransactionAt
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetFreeGrantCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetFreeGrantCount() int64 {
 	if c == nil {
 		return 0
 	}
 	return c.FreeGrantCount
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetGrantCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetGrantCount() int64 {
 	if c == nil {
 		return 0
 	}
@@ -2912,7 +3253,7 @@ func (c *CreditLedgerEnrichedEntryResponseData) GetLastTransactionAt() time.Time
 	return c.LastTransactionAt
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetManuallyZeroedCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetManuallyZeroedCount() int64 {
 	if c == nil {
 		return 0
 	}
@@ -2926,14 +3267,14 @@ func (c *CreditLedgerEnrichedEntryResponseData) GetNetChange() float64 {
 	return c.NetChange
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetPlanGrantCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetPlanGrantCount() int64 {
 	if c == nil {
 		return 0
 	}
 	return c.PlanGrantCount
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetPurchasedGrantCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetPurchasedGrantCount() int64 {
 	if c == nil {
 		return 0
 	}
@@ -2961,21 +3302,21 @@ func (c *CreditLedgerEnrichedEntryResponseData) GetTotalGranted() float64 {
 	return c.TotalGranted
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetTransactionCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetTransactionCount() int64 {
 	if c == nil {
 		return 0
 	}
 	return c.TransactionCount
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetUsageCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetUsageCount() int64 {
 	if c == nil {
 		return 0
 	}
 	return c.UsageCount
 }
 
-func (c *CreditLedgerEnrichedEntryResponseData) GetZeroedOutCount() int {
+func (c *CreditLedgerEnrichedEntryResponseData) GetZeroedOutCount() int64 {
 	if c == nil {
 		return 0
 	}
@@ -2983,6 +3324,9 @@ func (c *CreditLedgerEnrichedEntryResponseData) GetZeroedOutCount() int {
 }
 
 func (c *CreditLedgerEnrichedEntryResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2995,7 +3339,7 @@ func (c *CreditLedgerEnrichedEntryResponseData) require(field *big.Int) {
 
 // SetBillingCreditAutoTopupGrantCount sets the BillingCreditAutoTopupGrantCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetBillingCreditAutoTopupGrantCount(billingCreditAutoTopupGrantCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetBillingCreditAutoTopupGrantCount(billingCreditAutoTopupGrantCount int64) {
 	c.BillingCreditAutoTopupGrantCount = billingCreditAutoTopupGrantCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldBillingCreditAutoTopupGrantCount)
 }
@@ -3030,7 +3374,7 @@ func (c *CreditLedgerEnrichedEntryResponseData) SetCredit(credit *BillingCreditL
 
 // SetExpiredGrantCount sets the ExpiredGrantCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetExpiredGrantCount(expiredGrantCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetExpiredGrantCount(expiredGrantCount int64) {
 	c.ExpiredGrantCount = expiredGrantCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldExpiredGrantCount)
 }
@@ -3058,14 +3402,14 @@ func (c *CreditLedgerEnrichedEntryResponseData) SetFirstTransactionAt(firstTrans
 
 // SetFreeGrantCount sets the FreeGrantCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetFreeGrantCount(freeGrantCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetFreeGrantCount(freeGrantCount int64) {
 	c.FreeGrantCount = freeGrantCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldFreeGrantCount)
 }
 
 // SetGrantCount sets the GrantCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetGrantCount(grantCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetGrantCount(grantCount int64) {
 	c.GrantCount = grantCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldGrantCount)
 }
@@ -3079,7 +3423,7 @@ func (c *CreditLedgerEnrichedEntryResponseData) SetLastTransactionAt(lastTransac
 
 // SetManuallyZeroedCount sets the ManuallyZeroedCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetManuallyZeroedCount(manuallyZeroedCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetManuallyZeroedCount(manuallyZeroedCount int64) {
 	c.ManuallyZeroedCount = manuallyZeroedCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldManuallyZeroedCount)
 }
@@ -3093,14 +3437,14 @@ func (c *CreditLedgerEnrichedEntryResponseData) SetNetChange(netChange float64) 
 
 // SetPlanGrantCount sets the PlanGrantCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetPlanGrantCount(planGrantCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetPlanGrantCount(planGrantCount int64) {
 	c.PlanGrantCount = planGrantCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldPlanGrantCount)
 }
 
 // SetPurchasedGrantCount sets the PurchasedGrantCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetPurchasedGrantCount(purchasedGrantCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetPurchasedGrantCount(purchasedGrantCount int64) {
 	c.PurchasedGrantCount = purchasedGrantCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldPurchasedGrantCount)
 }
@@ -3128,21 +3472,21 @@ func (c *CreditLedgerEnrichedEntryResponseData) SetTotalGranted(totalGranted flo
 
 // SetTransactionCount sets the TransactionCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetTransactionCount(transactionCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetTransactionCount(transactionCount int64) {
 	c.TransactionCount = transactionCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldTransactionCount)
 }
 
 // SetUsageCount sets the UsageCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetUsageCount(usageCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetUsageCount(usageCount int64) {
 	c.UsageCount = usageCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldUsageCount)
 }
 
 // SetZeroedOutCount sets the ZeroedOutCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditLedgerEnrichedEntryResponseData) SetZeroedOutCount(zeroedOutCount int) {
+func (c *CreditLedgerEnrichedEntryResponseData) SetZeroedOutCount(zeroedOutCount int64) {
 	c.ZeroedOutCount = zeroedOutCount
 	c.require(creditLedgerEnrichedEntryResponseDataFieldZeroedOutCount)
 }
@@ -3191,6 +3535,9 @@ func (c *CreditLedgerEnrichedEntryResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditLedgerEnrichedEntryResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3297,6 +3644,9 @@ func (c *CreditTransferResponseData) GetRelatedGrantID() string {
 }
 
 func (c *CreditTransferResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3385,6 +3735,9 @@ func (c *CreditTransferResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditTransferResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3445,6 +3798,9 @@ func (f *FeatureLedgerResponseData) GetName() string {
 }
 
 func (f *FeatureLedgerResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -3511,6 +3867,9 @@ func (f *FeatureLedgerResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureLedgerResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -3534,9 +3893,9 @@ type CountBillingCreditsGrantsParams struct {
 	CreditID *string  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	IDs      []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3559,14 +3918,14 @@ func (c *CountBillingCreditsGrantsParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountBillingCreditsGrantsParams) GetLimit() *int {
+func (c *CountBillingCreditsGrantsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountBillingCreditsGrantsParams) GetOffset() *int {
+func (c *CountBillingCreditsGrantsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3574,6 +3933,9 @@ func (c *CountBillingCreditsGrantsParams) GetOffset() *int {
 }
 
 func (c *CountBillingCreditsGrantsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3600,14 +3962,14 @@ func (c *CountBillingCreditsGrantsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingCreditsGrantsParams) SetLimit(limit *int) {
+func (c *CountBillingCreditsGrantsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countBillingCreditsGrantsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingCreditsGrantsParams) SetOffset(offset *int) {
+func (c *CountBillingCreditsGrantsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countBillingCreditsGrantsParamsFieldOffset)
 }
@@ -3640,6 +4002,9 @@ func (c *CountBillingCreditsGrantsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountBillingCreditsGrantsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3683,6 +4048,9 @@ func (c *CountBillingCreditsGrantsResponse) GetParams() *CountBillingCreditsGran
 }
 
 func (c *CountBillingCreditsGrantsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3735,6 +4103,9 @@ func (c *CountBillingCreditsGrantsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountBillingCreditsGrantsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3757,10 +4128,10 @@ var (
 type CountBillingCreditsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64  `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3776,7 +4147,7 @@ func (c *CountBillingCreditsParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountBillingCreditsParams) GetLimit() *int {
+func (c *CountBillingCreditsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3790,7 +4161,7 @@ func (c *CountBillingCreditsParams) GetName() *string {
 	return c.Name
 }
 
-func (c *CountBillingCreditsParams) GetOffset() *int {
+func (c *CountBillingCreditsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3798,6 +4169,9 @@ func (c *CountBillingCreditsParams) GetOffset() *int {
 }
 
 func (c *CountBillingCreditsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3817,7 +4191,7 @@ func (c *CountBillingCreditsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingCreditsParams) SetLimit(limit *int) {
+func (c *CountBillingCreditsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countBillingCreditsParamsFieldLimit)
 }
@@ -3831,7 +4205,7 @@ func (c *CountBillingCreditsParams) SetName(name *string) {
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingCreditsParams) SetOffset(offset *int) {
+func (c *CountBillingCreditsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countBillingCreditsParamsFieldOffset)
 }
@@ -3864,6 +4238,9 @@ func (c *CountBillingCreditsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountBillingCreditsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3907,6 +4284,9 @@ func (c *CountBillingCreditsResponse) GetParams() *CountBillingCreditsParams {
 }
 
 func (c *CountBillingCreditsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3959,6 +4339,9 @@ func (c *CountBillingCreditsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountBillingCreditsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3985,9 +4368,9 @@ type CountBillingPlanCreditGrantsParams struct {
 	CreditID *string  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	IDs      []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset        *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset        *int64   `json:"offset,omitempty" url:"offset,omitempty"`
 	PlanID        *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	PlanIDs       []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 	PlanVersionID *string  `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
@@ -4013,14 +4396,14 @@ func (c *CountBillingPlanCreditGrantsParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountBillingPlanCreditGrantsParams) GetLimit() *int {
+func (c *CountBillingPlanCreditGrantsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountBillingPlanCreditGrantsParams) GetOffset() *int {
+func (c *CountBillingPlanCreditGrantsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4049,6 +4432,9 @@ func (c *CountBillingPlanCreditGrantsParams) GetPlanVersionID() *string {
 }
 
 func (c *CountBillingPlanCreditGrantsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4075,14 +4461,14 @@ func (c *CountBillingPlanCreditGrantsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingPlanCreditGrantsParams) SetLimit(limit *int) {
+func (c *CountBillingPlanCreditGrantsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countBillingPlanCreditGrantsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountBillingPlanCreditGrantsParams) SetOffset(offset *int) {
+func (c *CountBillingPlanCreditGrantsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countBillingPlanCreditGrantsParamsFieldOffset)
 }
@@ -4136,6 +4522,9 @@ func (c *CountBillingPlanCreditGrantsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountBillingPlanCreditGrantsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4179,6 +4568,9 @@ func (c *CountBillingPlanCreditGrantsResponse) GetParams() *CountBillingPlanCred
 }
 
 func (c *CountBillingPlanCreditGrantsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4231,6 +4623,9 @@ func (c *CountBillingPlanCreditGrantsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountBillingPlanCreditGrantsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4255,9 +4650,9 @@ type CountCompanyGrantsParams struct {
 	CompanyID *string        `json:"company_id,omitempty" url:"company_id,omitempty"`
 	Dir       *SortDirection `json:"dir,omitempty" url:"dir,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int                  `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64                `json:"offset,omitempty" url:"offset,omitempty"`
 	Order  *CreditGrantSortOrder `json:"order,omitempty" url:"order,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -4281,14 +4676,14 @@ func (c *CountCompanyGrantsParams) GetDir() *SortDirection {
 	return c.Dir
 }
 
-func (c *CountCompanyGrantsParams) GetLimit() *int {
+func (c *CountCompanyGrantsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountCompanyGrantsParams) GetOffset() *int {
+func (c *CountCompanyGrantsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4303,6 +4698,9 @@ func (c *CountCompanyGrantsParams) GetOrder() *CreditGrantSortOrder {
 }
 
 func (c *CountCompanyGrantsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4329,14 +4727,14 @@ func (c *CountCompanyGrantsParams) SetDir(dir *SortDirection) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyGrantsParams) SetLimit(limit *int) {
+func (c *CountCompanyGrantsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCompanyGrantsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyGrantsParams) SetOffset(offset *int) {
+func (c *CountCompanyGrantsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCompanyGrantsParamsFieldOffset)
 }
@@ -4376,6 +4774,9 @@ func (c *CountCompanyGrantsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCompanyGrantsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4419,6 +4820,9 @@ func (c *CountCompanyGrantsResponse) GetParams() *CountCompanyGrantsParams {
 }
 
 func (c *CountCompanyGrantsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4471,6 +4875,9 @@ func (c *CountCompanyGrantsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCompanyGrantsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4497,9 +4904,9 @@ type CountCreditBundlesParams struct {
 	CreditID   *string                  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	IDs        []string                 `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int                       `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64                     `json:"offset,omitempty" url:"offset,omitempty"`
 	Status *BillingCreditBundleStatus `json:"status,omitempty" url:"status,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -4523,14 +4930,14 @@ func (c *CountCreditBundlesParams) GetIDs() []string {
 	return c.IDs
 }
 
-func (c *CountCreditBundlesParams) GetLimit() *int {
+func (c *CountCreditBundlesParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountCreditBundlesParams) GetOffset() *int {
+func (c *CountCreditBundlesParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4545,6 +4952,9 @@ func (c *CountCreditBundlesParams) GetStatus() *BillingCreditBundleStatus {
 }
 
 func (c *CountCreditBundlesParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4578,14 +4988,14 @@ func (c *CountCreditBundlesParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditBundlesParams) SetLimit(limit *int) {
+func (c *CountCreditBundlesParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCreditBundlesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditBundlesParams) SetOffset(offset *int) {
+func (c *CountCreditBundlesParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCreditBundlesParamsFieldOffset)
 }
@@ -4625,6 +5035,9 @@ func (c *CountCreditBundlesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCreditBundlesParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4668,6 +5081,9 @@ func (c *CountCreditBundlesResponse) GetParams() *CountCreditBundlesParams {
 }
 
 func (c *CountCreditBundlesResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4720,6 +5136,9 @@ func (c *CountCreditBundlesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCreditBundlesResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4750,9 +5169,9 @@ type CountCreditEventLedgerParams struct {
 	EventType       *CreditEventType `json:"event_type,omitempty" url:"event_type,omitempty"`
 	FeatureID       *string          `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset    *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	StartTime *string `json:"start_time,omitempty" url:"start_time,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -4797,14 +5216,14 @@ func (c *CountCreditEventLedgerParams) GetFeatureID() *string {
 	return c.FeatureID
 }
 
-func (c *CountCreditEventLedgerParams) GetLimit() *int {
+func (c *CountCreditEventLedgerParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountCreditEventLedgerParams) GetOffset() *int {
+func (c *CountCreditEventLedgerParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -4819,6 +5238,9 @@ func (c *CountCreditEventLedgerParams) GetStartTime() *string {
 }
 
 func (c *CountCreditEventLedgerParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -4866,14 +5288,14 @@ func (c *CountCreditEventLedgerParams) SetFeatureID(featureID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditEventLedgerParams) SetLimit(limit *int) {
+func (c *CountCreditEventLedgerParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCreditEventLedgerParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditEventLedgerParams) SetOffset(offset *int) {
+func (c *CountCreditEventLedgerParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCreditEventLedgerParamsFieldOffset)
 }
@@ -4913,6 +5335,9 @@ func (c *CountCreditEventLedgerParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCreditEventLedgerParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -4956,6 +5381,9 @@ func (c *CountCreditEventLedgerResponse) GetParams() *CountCreditEventLedgerPara
 }
 
 func (c *CountCreditEventLedgerResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5008,6 +5436,9 @@ func (c *CountCreditEventLedgerResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCreditEventLedgerResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5037,9 +5468,9 @@ type CountCreditLedgerParams struct {
 	EndTime         *string `json:"end_time,omitempty" url:"end_time,omitempty"`
 	FeatureID       *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int                `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset    *int64              `json:"offset,omitempty" url:"offset,omitempty"`
 	Period    *CreditLedgerPeriod `json:"period,omitempty" url:"period,omitempty"`
 	StartTime *string             `json:"start_time,omitempty" url:"start_time,omitempty"`
 
@@ -5078,14 +5509,14 @@ func (c *CountCreditLedgerParams) GetFeatureID() *string {
 	return c.FeatureID
 }
 
-func (c *CountCreditLedgerParams) GetLimit() *int {
+func (c *CountCreditLedgerParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountCreditLedgerParams) GetOffset() *int {
+func (c *CountCreditLedgerParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -5107,6 +5538,9 @@ func (c *CountCreditLedgerParams) GetStartTime() *string {
 }
 
 func (c *CountCreditLedgerParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5147,14 +5581,14 @@ func (c *CountCreditLedgerParams) SetFeatureID(featureID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditLedgerParams) SetLimit(limit *int) {
+func (c *CountCreditLedgerParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countCreditLedgerParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCreditLedgerParams) SetOffset(offset *int) {
+func (c *CountCreditLedgerParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCreditLedgerParamsFieldOffset)
 }
@@ -5201,6 +5635,9 @@ func (c *CountCreditLedgerParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCreditLedgerParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5244,6 +5681,9 @@ func (c *CountCreditLedgerResponse) GetParams() *CountCreditLedgerParams {
 }
 
 func (c *CountCreditLedgerResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5296,6 +5736,9 @@ func (c *CountCreditLedgerResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCreditLedgerResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5315,7 +5758,7 @@ var (
 type CreateBillingCreditResponse struct {
 	Data *BillingCreditResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5331,7 +5774,7 @@ func (c *CreateBillingCreditResponse) GetData() *BillingCreditResponseData {
 	return c.Data
 }
 
-func (c *CreateBillingCreditResponse) GetParams() map[string]interface{} {
+func (c *CreateBillingCreditResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -5339,6 +5782,9 @@ func (c *CreateBillingCreditResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateBillingCreditResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5358,7 +5804,7 @@ func (c *CreateBillingCreditResponse) SetData(data *BillingCreditResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingCreditResponse) SetParams(params map[string]interface{}) {
+func (c *CreateBillingCreditResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createBillingCreditResponseFieldParams)
 }
@@ -5391,6 +5837,9 @@ func (c *CreateBillingCreditResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateBillingCreditResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5410,7 +5859,7 @@ var (
 type CreateBillingPlanCreditGrantResponse struct {
 	Data *BillingPlanCreditGrantResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5426,7 +5875,7 @@ func (c *CreateBillingPlanCreditGrantResponse) GetData() *BillingPlanCreditGrant
 	return c.Data
 }
 
-func (c *CreateBillingPlanCreditGrantResponse) GetParams() map[string]interface{} {
+func (c *CreateBillingPlanCreditGrantResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -5434,6 +5883,9 @@ func (c *CreateBillingPlanCreditGrantResponse) GetParams() map[string]interface{
 }
 
 func (c *CreateBillingPlanCreditGrantResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5453,7 +5905,7 @@ func (c *CreateBillingPlanCreditGrantResponse) SetData(data *BillingPlanCreditGr
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantResponse) SetParams(params map[string]interface{}) {
+func (c *CreateBillingPlanCreditGrantResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createBillingPlanCreditGrantResponseFieldParams)
 }
@@ -5486,6 +5938,9 @@ func (c *CreateBillingPlanCreditGrantResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateBillingPlanCreditGrantResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5505,7 +5960,7 @@ var (
 type CreateCreditBundleResponse struct {
 	Data *BillingCreditBundleResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5521,7 +5976,7 @@ func (c *CreateCreditBundleResponse) GetData() *BillingCreditBundleResponseData 
 	return c.Data
 }
 
-func (c *CreateCreditBundleResponse) GetParams() map[string]interface{} {
+func (c *CreateCreditBundleResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -5529,6 +5984,9 @@ func (c *CreateCreditBundleResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateCreditBundleResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5548,7 +6006,7 @@ func (c *CreateCreditBundleResponse) SetData(data *BillingCreditBundleResponseDa
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCreditBundleResponse) SetParams(params map[string]interface{}) {
+func (c *CreateCreditBundleResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createCreditBundleResponseFieldParams)
 }
@@ -5581,6 +6039,9 @@ func (c *CreateCreditBundleResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateCreditBundleResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5615,6 +6076,9 @@ func (d *DeleteBillingPlanCreditGrantParams) GetApplyToExisting() *bool {
 }
 
 func (d *DeleteBillingPlanCreditGrantParams) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5660,6 +6124,9 @@ func (d *DeleteBillingPlanCreditGrantParams) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteBillingPlanCreditGrantParams) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5703,6 +6170,9 @@ func (d *DeleteBillingPlanCreditGrantResponse) GetParams() *DeleteBillingPlanCre
 }
 
 func (d *DeleteBillingPlanCreditGrantResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5755,6 +6225,9 @@ func (d *DeleteBillingPlanCreditGrantResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteBillingPlanCreditGrantResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5774,7 +6247,7 @@ var (
 type DeleteCreditBundleResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5790,7 +6263,7 @@ func (d *DeleteCreditBundleResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteCreditBundleResponse) GetParams() map[string]interface{} {
+func (d *DeleteCreditBundleResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -5798,6 +6271,9 @@ func (d *DeleteCreditBundleResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteCreditBundleResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -5817,7 +6293,7 @@ func (d *DeleteCreditBundleResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteCreditBundleResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteCreditBundleResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteCreditBundleResponseFieldParams)
 }
@@ -5850,6 +6326,9 @@ func (d *DeleteCreditBundleResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteCreditBundleResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -5869,7 +6348,7 @@ var (
 type GetCreditBundleResponse struct {
 	Data *BillingCreditBundleResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5885,7 +6364,7 @@ func (g *GetCreditBundleResponse) GetData() *BillingCreditBundleResponseData {
 	return g.Data
 }
 
-func (g *GetCreditBundleResponse) GetParams() map[string]interface{} {
+func (g *GetCreditBundleResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -5893,6 +6372,9 @@ func (g *GetCreditBundleResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetCreditBundleResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -5912,7 +6394,7 @@ func (g *GetCreditBundleResponse) SetData(data *BillingCreditBundleResponseData)
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetCreditBundleResponse) SetParams(params map[string]interface{}) {
+func (g *GetCreditBundleResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getCreditBundleResponseFieldParams)
 }
@@ -5945,6 +6427,9 @@ func (g *GetCreditBundleResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetCreditBundleResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -5974,9 +6459,9 @@ type GetEnrichedCreditLedgerParams struct {
 	EndTime         *string `json:"end_time,omitempty" url:"end_time,omitempty"`
 	FeatureID       *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int                `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset    *int64              `json:"offset,omitempty" url:"offset,omitempty"`
 	Period    *CreditLedgerPeriod `json:"period,omitempty" url:"period,omitempty"`
 	StartTime *string             `json:"start_time,omitempty" url:"start_time,omitempty"`
 
@@ -6015,14 +6500,14 @@ func (g *GetEnrichedCreditLedgerParams) GetFeatureID() *string {
 	return g.FeatureID
 }
 
-func (g *GetEnrichedCreditLedgerParams) GetLimit() *int {
+func (g *GetEnrichedCreditLedgerParams) GetLimit() *int64 {
 	if g == nil {
 		return nil
 	}
 	return g.Limit
 }
 
-func (g *GetEnrichedCreditLedgerParams) GetOffset() *int {
+func (g *GetEnrichedCreditLedgerParams) GetOffset() *int64 {
 	if g == nil {
 		return nil
 	}
@@ -6044,6 +6529,9 @@ func (g *GetEnrichedCreditLedgerParams) GetStartTime() *string {
 }
 
 func (g *GetEnrichedCreditLedgerParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6084,14 +6572,14 @@ func (g *GetEnrichedCreditLedgerParams) SetFeatureID(featureID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEnrichedCreditLedgerParams) SetLimit(limit *int) {
+func (g *GetEnrichedCreditLedgerParams) SetLimit(limit *int64) {
 	g.Limit = limit
 	g.require(getEnrichedCreditLedgerParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEnrichedCreditLedgerParams) SetOffset(offset *int) {
+func (g *GetEnrichedCreditLedgerParams) SetOffset(offset *int64) {
 	g.Offset = offset
 	g.require(getEnrichedCreditLedgerParamsFieldOffset)
 }
@@ -6138,6 +6626,9 @@ func (g *GetEnrichedCreditLedgerParams) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEnrichedCreditLedgerParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6181,6 +6672,9 @@ func (g *GetEnrichedCreditLedgerResponse) GetParams() *GetEnrichedCreditLedgerPa
 }
 
 func (g *GetEnrichedCreditLedgerResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6233,6 +6727,9 @@ func (g *GetEnrichedCreditLedgerResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEnrichedCreditLedgerResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6252,7 +6749,7 @@ var (
 type GetSingleBillingCreditResponse struct {
 	Data *BillingCreditResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6268,7 +6765,7 @@ func (g *GetSingleBillingCreditResponse) GetData() *BillingCreditResponseData {
 	return g.Data
 }
 
-func (g *GetSingleBillingCreditResponse) GetParams() map[string]interface{} {
+func (g *GetSingleBillingCreditResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -6276,6 +6773,9 @@ func (g *GetSingleBillingCreditResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetSingleBillingCreditResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6295,7 +6795,7 @@ func (g *GetSingleBillingCreditResponse) SetData(data *BillingCreditResponseData
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetSingleBillingCreditResponse) SetParams(params map[string]interface{}) {
+func (g *GetSingleBillingCreditResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getSingleBillingCreditResponseFieldParams)
 }
@@ -6328,6 +6828,9 @@ func (g *GetSingleBillingCreditResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetSingleBillingCreditResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6347,7 +6850,7 @@ var (
 type GrantBillingCreditsToCompanyResponse struct {
 	Data *BillingCreditGrantResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6363,7 +6866,7 @@ func (g *GrantBillingCreditsToCompanyResponse) GetData() *BillingCreditGrantResp
 	return g.Data
 }
 
-func (g *GrantBillingCreditsToCompanyResponse) GetParams() map[string]interface{} {
+func (g *GrantBillingCreditsToCompanyResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -6371,6 +6874,9 @@ func (g *GrantBillingCreditsToCompanyResponse) GetParams() map[string]interface{
 }
 
 func (g *GrantBillingCreditsToCompanyResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -6390,7 +6896,7 @@ func (g *GrantBillingCreditsToCompanyResponse) SetData(data *BillingCreditGrantR
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GrantBillingCreditsToCompanyResponse) SetParams(params map[string]interface{}) {
+func (g *GrantBillingCreditsToCompanyResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(grantBillingCreditsToCompanyResponseFieldParams)
 }
@@ -6423,6 +6929,9 @@ func (g *GrantBillingCreditsToCompanyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GrantBillingCreditsToCompanyResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -6445,10 +6954,10 @@ var (
 type ListBillingCreditsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int    `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64  `json:"limit,omitempty" url:"limit,omitempty"`
 	Name  *string `json:"name,omitempty" url:"name,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6464,7 +6973,7 @@ func (l *ListBillingCreditsParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListBillingCreditsParams) GetLimit() *int {
+func (l *ListBillingCreditsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -6478,7 +6987,7 @@ func (l *ListBillingCreditsParams) GetName() *string {
 	return l.Name
 }
 
-func (l *ListBillingCreditsParams) GetOffset() *int {
+func (l *ListBillingCreditsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -6486,6 +6995,9 @@ func (l *ListBillingCreditsParams) GetOffset() *int {
 }
 
 func (l *ListBillingCreditsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6505,7 +7017,7 @@ func (l *ListBillingCreditsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingCreditsParams) SetLimit(limit *int) {
+func (l *ListBillingCreditsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingCreditsParamsFieldLimit)
 }
@@ -6519,7 +7031,7 @@ func (l *ListBillingCreditsParams) SetName(name *string) {
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingCreditsParams) SetOffset(offset *int) {
+func (l *ListBillingCreditsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingCreditsParamsFieldOffset)
 }
@@ -6552,6 +7064,9 @@ func (l *ListBillingCreditsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingCreditsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6595,6 +7110,9 @@ func (l *ListBillingCreditsResponse) GetParams() *ListBillingCreditsParams {
 }
 
 func (l *ListBillingCreditsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6647,6 +7165,9 @@ func (l *ListBillingCreditsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingCreditsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6673,9 +7194,9 @@ type ListBillingPlanCreditGrantsParams struct {
 	CreditID *string  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	IDs      []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset        *int     `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset        *int64   `json:"offset,omitempty" url:"offset,omitempty"`
 	PlanID        *string  `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	PlanIDs       []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 	PlanVersionID *string  `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
@@ -6701,14 +7222,14 @@ func (l *ListBillingPlanCreditGrantsParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListBillingPlanCreditGrantsParams) GetLimit() *int {
+func (l *ListBillingPlanCreditGrantsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListBillingPlanCreditGrantsParams) GetOffset() *int {
+func (l *ListBillingPlanCreditGrantsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -6737,6 +7258,9 @@ func (l *ListBillingPlanCreditGrantsParams) GetPlanVersionID() *string {
 }
 
 func (l *ListBillingPlanCreditGrantsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6763,14 +7287,14 @@ func (l *ListBillingPlanCreditGrantsParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPlanCreditGrantsParams) SetLimit(limit *int) {
+func (l *ListBillingPlanCreditGrantsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listBillingPlanCreditGrantsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListBillingPlanCreditGrantsParams) SetOffset(offset *int) {
+func (l *ListBillingPlanCreditGrantsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingPlanCreditGrantsParamsFieldOffset)
 }
@@ -6824,6 +7348,9 @@ func (l *ListBillingPlanCreditGrantsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingPlanCreditGrantsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6867,6 +7394,9 @@ func (l *ListBillingPlanCreditGrantsResponse) GetParams() *ListBillingPlanCredit
 }
 
 func (l *ListBillingPlanCreditGrantsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -6919,6 +7449,9 @@ func (l *ListBillingPlanCreditGrantsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingPlanCreditGrantsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -6943,9 +7476,9 @@ type ListCompanyGrantsParams struct {
 	CompanyID *string        `json:"company_id,omitempty" url:"company_id,omitempty"`
 	Dir       *SortDirection `json:"dir,omitempty" url:"dir,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int                  `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64                `json:"offset,omitempty" url:"offset,omitempty"`
 	Order  *CreditGrantSortOrder `json:"order,omitempty" url:"order,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -6969,14 +7502,14 @@ func (l *ListCompanyGrantsParams) GetDir() *SortDirection {
 	return l.Dir
 }
 
-func (l *ListCompanyGrantsParams) GetLimit() *int {
+func (l *ListCompanyGrantsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListCompanyGrantsParams) GetOffset() *int {
+func (l *ListCompanyGrantsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -6991,6 +7524,9 @@ func (l *ListCompanyGrantsParams) GetOrder() *CreditGrantSortOrder {
 }
 
 func (l *ListCompanyGrantsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7017,14 +7553,14 @@ func (l *ListCompanyGrantsParams) SetDir(dir *SortDirection) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyGrantsParams) SetLimit(limit *int) {
+func (l *ListCompanyGrantsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCompanyGrantsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyGrantsParams) SetOffset(offset *int) {
+func (l *ListCompanyGrantsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompanyGrantsParamsFieldOffset)
 }
@@ -7064,6 +7600,9 @@ func (l *ListCompanyGrantsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompanyGrantsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7107,6 +7646,9 @@ func (l *ListCompanyGrantsResponse) GetParams() *ListCompanyGrantsParams {
 }
 
 func (l *ListCompanyGrantsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7159,6 +7701,9 @@ func (l *ListCompanyGrantsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompanyGrantsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7185,9 +7730,9 @@ type ListCreditBundlesParams struct {
 	CreditID   *string                  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	IDs        []string                 `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int                       `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64                     `json:"offset,omitempty" url:"offset,omitempty"`
 	Status *BillingCreditBundleStatus `json:"status,omitempty" url:"status,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -7211,14 +7756,14 @@ func (l *ListCreditBundlesParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListCreditBundlesParams) GetLimit() *int {
+func (l *ListCreditBundlesParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListCreditBundlesParams) GetOffset() *int {
+func (l *ListCreditBundlesParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -7233,6 +7778,9 @@ func (l *ListCreditBundlesParams) GetStatus() *BillingCreditBundleStatus {
 }
 
 func (l *ListCreditBundlesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7266,14 +7814,14 @@ func (l *ListCreditBundlesParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditBundlesParams) SetLimit(limit *int) {
+func (l *ListCreditBundlesParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCreditBundlesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditBundlesParams) SetOffset(offset *int) {
+func (l *ListCreditBundlesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCreditBundlesParamsFieldOffset)
 }
@@ -7313,6 +7861,9 @@ func (l *ListCreditBundlesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCreditBundlesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7356,6 +7907,9 @@ func (l *ListCreditBundlesResponse) GetParams() *ListCreditBundlesParams {
 }
 
 func (l *ListCreditBundlesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7408,6 +7962,9 @@ func (l *ListCreditBundlesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCreditBundlesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7438,9 +7995,9 @@ type ListCreditEventLedgerParams struct {
 	EventType       *CreditEventType `json:"event_type,omitempty" url:"event_type,omitempty"`
 	FeatureID       *string          `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset    *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	StartTime *string `json:"start_time,omitempty" url:"start_time,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -7485,14 +8042,14 @@ func (l *ListCreditEventLedgerParams) GetFeatureID() *string {
 	return l.FeatureID
 }
 
-func (l *ListCreditEventLedgerParams) GetLimit() *int {
+func (l *ListCreditEventLedgerParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListCreditEventLedgerParams) GetOffset() *int {
+func (l *ListCreditEventLedgerParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -7507,6 +8064,9 @@ func (l *ListCreditEventLedgerParams) GetStartTime() *string {
 }
 
 func (l *ListCreditEventLedgerParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7554,14 +8114,14 @@ func (l *ListCreditEventLedgerParams) SetFeatureID(featureID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditEventLedgerParams) SetLimit(limit *int) {
+func (l *ListCreditEventLedgerParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listCreditEventLedgerParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCreditEventLedgerParams) SetOffset(offset *int) {
+func (l *ListCreditEventLedgerParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCreditEventLedgerParamsFieldOffset)
 }
@@ -7601,6 +8161,9 @@ func (l *ListCreditEventLedgerParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCreditEventLedgerParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7644,6 +8207,9 @@ func (l *ListCreditEventLedgerResponse) GetParams() *ListCreditEventLedgerParams
 }
 
 func (l *ListCreditEventLedgerResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7696,6 +8262,9 @@ func (l *ListCreditEventLedgerResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCreditEventLedgerResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7719,9 +8288,9 @@ type ListGrantsForCreditParams struct {
 	CreditID *string  `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	IDs      []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7744,14 +8313,14 @@ func (l *ListGrantsForCreditParams) GetIDs() []string {
 	return l.IDs
 }
 
-func (l *ListGrantsForCreditParams) GetLimit() *int {
+func (l *ListGrantsForCreditParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListGrantsForCreditParams) GetOffset() *int {
+func (l *ListGrantsForCreditParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -7759,6 +8328,9 @@ func (l *ListGrantsForCreditParams) GetOffset() *int {
 }
 
 func (l *ListGrantsForCreditParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7785,14 +8357,14 @@ func (l *ListGrantsForCreditParams) SetIDs(ids []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListGrantsForCreditParams) SetLimit(limit *int) {
+func (l *ListGrantsForCreditParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listGrantsForCreditParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListGrantsForCreditParams) SetOffset(offset *int) {
+func (l *ListGrantsForCreditParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listGrantsForCreditParamsFieldOffset)
 }
@@ -7825,6 +8397,9 @@ func (l *ListGrantsForCreditParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListGrantsForCreditParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7868,6 +8443,9 @@ func (l *ListGrantsForCreditResponse) GetParams() *ListGrantsForCreditParams {
 }
 
 func (l *ListGrantsForCreditResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -7920,6 +8498,9 @@ func (l *ListGrantsForCreditResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListGrantsForCreditResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -7939,7 +8520,7 @@ var (
 type SoftDeleteBillingCreditResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7955,7 +8536,7 @@ func (s *SoftDeleteBillingCreditResponse) GetData() *DeleteResponse {
 	return s.Data
 }
 
-func (s *SoftDeleteBillingCreditResponse) GetParams() map[string]interface{} {
+func (s *SoftDeleteBillingCreditResponse) GetParams() map[string]any {
 	if s == nil {
 		return nil
 	}
@@ -7963,6 +8544,9 @@ func (s *SoftDeleteBillingCreditResponse) GetParams() map[string]interface{} {
 }
 
 func (s *SoftDeleteBillingCreditResponse) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
 	return s.extraProperties
 }
 
@@ -7982,7 +8566,7 @@ func (s *SoftDeleteBillingCreditResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (s *SoftDeleteBillingCreditResponse) SetParams(params map[string]interface{}) {
+func (s *SoftDeleteBillingCreditResponse) SetParams(params map[string]any) {
 	s.Params = params
 	s.require(softDeleteBillingCreditResponseFieldParams)
 }
@@ -8015,6 +8599,9 @@ func (s *SoftDeleteBillingCreditResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (s *SoftDeleteBillingCreditResponse) String() string {
+	if s == nil {
+		return "<nil>"
+	}
 	if len(s.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
@@ -8034,7 +8621,7 @@ var (
 type UpdateBillingCreditResponse struct {
 	Data *BillingCreditResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -8050,7 +8637,7 @@ func (u *UpdateBillingCreditResponse) GetData() *BillingCreditResponseData {
 	return u.Data
 }
 
-func (u *UpdateBillingCreditResponse) GetParams() map[string]interface{} {
+func (u *UpdateBillingCreditResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -8058,6 +8645,9 @@ func (u *UpdateBillingCreditResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdateBillingCreditResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -8077,7 +8667,7 @@ func (u *UpdateBillingCreditResponse) SetData(data *BillingCreditResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingCreditResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateBillingCreditResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateBillingCreditResponseFieldParams)
 }
@@ -8110,6 +8700,9 @@ func (u *UpdateBillingCreditResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateBillingCreditResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -8129,7 +8722,7 @@ var (
 type UpdateBillingPlanCreditGrantResponse struct {
 	Data *BillingPlanCreditGrantResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -8145,7 +8738,7 @@ func (u *UpdateBillingPlanCreditGrantResponse) GetData() *BillingPlanCreditGrant
 	return u.Data
 }
 
-func (u *UpdateBillingPlanCreditGrantResponse) GetParams() map[string]interface{} {
+func (u *UpdateBillingPlanCreditGrantResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -8153,6 +8746,9 @@ func (u *UpdateBillingPlanCreditGrantResponse) GetParams() map[string]interface{
 }
 
 func (u *UpdateBillingPlanCreditGrantResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -8172,7 +8768,7 @@ func (u *UpdateBillingPlanCreditGrantResponse) SetData(data *BillingPlanCreditGr
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateBillingPlanCreditGrantResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateBillingPlanCreditGrantResponseFieldParams)
 }
@@ -8205,6 +8801,9 @@ func (u *UpdateBillingPlanCreditGrantResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateBillingPlanCreditGrantResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -8224,7 +8823,7 @@ var (
 type UpdateCreditBundleDetailsResponse struct {
 	Data *BillingCreditBundleResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -8240,7 +8839,7 @@ func (u *UpdateCreditBundleDetailsResponse) GetData() *BillingCreditBundleRespon
 	return u.Data
 }
 
-func (u *UpdateCreditBundleDetailsResponse) GetParams() map[string]interface{} {
+func (u *UpdateCreditBundleDetailsResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -8248,6 +8847,9 @@ func (u *UpdateCreditBundleDetailsResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdateCreditBundleDetailsResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -8267,7 +8869,7 @@ func (u *UpdateCreditBundleDetailsResponse) SetData(data *BillingCreditBundleRes
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCreditBundleDetailsResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateCreditBundleDetailsResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateCreditBundleDetailsResponseFieldParams)
 }
@@ -8300,6 +8902,9 @@ func (u *UpdateCreditBundleDetailsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateCreditBundleDetailsResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -8319,7 +8924,7 @@ var (
 type ZeroOutGrantResponse struct {
 	Data *BillingCreditGrantResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -8335,7 +8940,7 @@ func (z *ZeroOutGrantResponse) GetData() *BillingCreditGrantResponseData {
 	return z.Data
 }
 
-func (z *ZeroOutGrantResponse) GetParams() map[string]interface{} {
+func (z *ZeroOutGrantResponse) GetParams() map[string]any {
 	if z == nil {
 		return nil
 	}
@@ -8343,6 +8948,9 @@ func (z *ZeroOutGrantResponse) GetParams() map[string]interface{} {
 }
 
 func (z *ZeroOutGrantResponse) GetExtraProperties() map[string]interface{} {
+	if z == nil {
+		return nil
+	}
 	return z.extraProperties
 }
 
@@ -8362,7 +8970,7 @@ func (z *ZeroOutGrantResponse) SetData(data *BillingCreditGrantResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (z *ZeroOutGrantResponse) SetParams(params map[string]interface{}) {
+func (z *ZeroOutGrantResponse) SetParams(params map[string]any) {
 	z.Params = params
 	z.require(zeroOutGrantResponseFieldParams)
 }
@@ -8395,6 +9003,9 @@ func (z *ZeroOutGrantResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (z *ZeroOutGrantResponse) String() string {
+	if z == nil {
+		return "<nil>"
+	}
 	if len(z.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(z.rawJSON); err == nil {
 			return value
@@ -8408,30 +9019,32 @@ func (z *ZeroOutGrantResponse) String() string {
 
 var (
 	updateBillingCreditRequestBodyFieldBurnStrategy           = big.NewInt(1 << 0)
-	updateBillingCreditRequestBodyFieldDefaultExpiryUnit      = big.NewInt(1 << 1)
-	updateBillingCreditRequestBodyFieldDefaultExpiryUnitCount = big.NewInt(1 << 2)
-	updateBillingCreditRequestBodyFieldDefaultRolloverPolicy  = big.NewInt(1 << 3)
-	updateBillingCreditRequestBodyFieldDescription            = big.NewInt(1 << 4)
-	updateBillingCreditRequestBodyFieldIcon                   = big.NewInt(1 << 5)
-	updateBillingCreditRequestBodyFieldName                   = big.NewInt(1 << 6)
-	updateBillingCreditRequestBodyFieldPerUnitPrice           = big.NewInt(1 << 7)
-	updateBillingCreditRequestBodyFieldPerUnitPriceDecimal    = big.NewInt(1 << 8)
-	updateBillingCreditRequestBodyFieldPluralName             = big.NewInt(1 << 9)
-	updateBillingCreditRequestBodyFieldSingularName           = big.NewInt(1 << 10)
+	updateBillingCreditRequestBodyFieldCurrencyPrices         = big.NewInt(1 << 1)
+	updateBillingCreditRequestBodyFieldDefaultExpiryUnit      = big.NewInt(1 << 2)
+	updateBillingCreditRequestBodyFieldDefaultExpiryUnitCount = big.NewInt(1 << 3)
+	updateBillingCreditRequestBodyFieldDefaultRolloverPolicy  = big.NewInt(1 << 4)
+	updateBillingCreditRequestBodyFieldDescription            = big.NewInt(1 << 5)
+	updateBillingCreditRequestBodyFieldIcon                   = big.NewInt(1 << 6)
+	updateBillingCreditRequestBodyFieldName                   = big.NewInt(1 << 7)
+	updateBillingCreditRequestBodyFieldPerUnitPrice           = big.NewInt(1 << 8)
+	updateBillingCreditRequestBodyFieldPerUnitPriceDecimal    = big.NewInt(1 << 9)
+	updateBillingCreditRequestBodyFieldPluralName             = big.NewInt(1 << 10)
+	updateBillingCreditRequestBodyFieldSingularName           = big.NewInt(1 << 11)
 )
 
 type UpdateBillingCreditRequestBody struct {
-	BurnStrategy           *BillingCreditBurnStrategy   `json:"burn_strategy,omitempty" url:"-"`
-	DefaultExpiryUnit      *BillingCreditExpiryUnit     `json:"default_expiry_unit,omitempty" url:"-"`
-	DefaultExpiryUnitCount *int                         `json:"default_expiry_unit_count,omitempty" url:"-"`
-	DefaultRolloverPolicy  *BillingCreditRolloverPolicy `json:"default_rollover_policy,omitempty" url:"-"`
-	Description            string                       `json:"description" url:"-"`
-	Icon                   *string                      `json:"icon,omitempty" url:"-"`
-	Name                   string                       `json:"name" url:"-"`
-	PerUnitPrice           *int                         `json:"per_unit_price,omitempty" url:"-"`
-	PerUnitPriceDecimal    *string                      `json:"per_unit_price_decimal,omitempty" url:"-"`
-	PluralName             *string                      `json:"plural_name,omitempty" url:"-"`
-	SingularName           *string                      `json:"singular_name,omitempty" url:"-"`
+	BurnStrategy           *BillingCreditBurnStrategy        `json:"burn_strategy,omitempty" url:"-"`
+	CurrencyPrices         []*CreditCurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"-"`
+	DefaultExpiryUnit      *BillingCreditExpiryUnit          `json:"default_expiry_unit,omitempty" url:"-"`
+	DefaultExpiryUnitCount *int64                            `json:"default_expiry_unit_count,omitempty" url:"-"`
+	DefaultRolloverPolicy  *BillingCreditRolloverPolicy      `json:"default_rollover_policy,omitempty" url:"-"`
+	Description            string                            `json:"description" url:"-"`
+	Icon                   *string                           `json:"icon,omitempty" url:"-"`
+	Name                   string                            `json:"name" url:"-"`
+	PerUnitPrice           *int64                            `json:"per_unit_price,omitempty" url:"-"`
+	PerUnitPriceDecimal    *string                           `json:"per_unit_price_decimal,omitempty" url:"-"`
+	PluralName             *string                           `json:"plural_name,omitempty" url:"-"`
+	SingularName           *string                           `json:"singular_name,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -8451,6 +9064,13 @@ func (u *UpdateBillingCreditRequestBody) SetBurnStrategy(burnStrategy *BillingCr
 	u.require(updateBillingCreditRequestBodyFieldBurnStrategy)
 }
 
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingCreditRequestBody) SetCurrencyPrices(currencyPrices []*CreditCurrencyPriceRequestBody) {
+	u.CurrencyPrices = currencyPrices
+	u.require(updateBillingCreditRequestBodyFieldCurrencyPrices)
+}
+
 // SetDefaultExpiryUnit sets the DefaultExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdateBillingCreditRequestBody) SetDefaultExpiryUnit(defaultExpiryUnit *BillingCreditExpiryUnit) {
@@ -8460,7 +9080,7 @@ func (u *UpdateBillingCreditRequestBody) SetDefaultExpiryUnit(defaultExpiryUnit 
 
 // SetDefaultExpiryUnitCount sets the DefaultExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingCreditRequestBody) SetDefaultExpiryUnitCount(defaultExpiryUnitCount *int) {
+func (u *UpdateBillingCreditRequestBody) SetDefaultExpiryUnitCount(defaultExpiryUnitCount *int64) {
 	u.DefaultExpiryUnitCount = defaultExpiryUnitCount
 	u.require(updateBillingCreditRequestBodyFieldDefaultExpiryUnitCount)
 }
@@ -8495,7 +9115,7 @@ func (u *UpdateBillingCreditRequestBody) SetName(name string) {
 
 // SetPerUnitPrice sets the PerUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingCreditRequestBody) SetPerUnitPrice(perUnitPrice *int) {
+func (u *UpdateBillingCreditRequestBody) SetPerUnitPrice(perUnitPrice *int64) {
 	u.PerUnitPrice = perUnitPrice
 	u.require(updateBillingCreditRequestBodyFieldPerUnitPrice)
 }
@@ -8521,26 +9141,49 @@ func (u *UpdateBillingCreditRequestBody) SetSingularName(singularName *string) {
 	u.require(updateBillingCreditRequestBodyFieldSingularName)
 }
 
+func (u *UpdateBillingCreditRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateBillingCreditRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateBillingCreditRequestBody(body)
+	return nil
+}
+
+func (u *UpdateBillingCreditRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateBillingCreditRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	updateCreditBundleDetailsRequestBodyFieldBundleName          = big.NewInt(1 << 0)
-	updateCreditBundleDetailsRequestBodyFieldExpiryType          = big.NewInt(1 << 1)
-	updateCreditBundleDetailsRequestBodyFieldExpiryUnit          = big.NewInt(1 << 2)
-	updateCreditBundleDetailsRequestBodyFieldExpiryUnitCount     = big.NewInt(1 << 3)
-	updateCreditBundleDetailsRequestBodyFieldPricePerUnit        = big.NewInt(1 << 4)
-	updateCreditBundleDetailsRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 5)
-	updateCreditBundleDetailsRequestBodyFieldQuantity            = big.NewInt(1 << 6)
-	updateCreditBundleDetailsRequestBodyFieldStatus              = big.NewInt(1 << 7)
+	updateCreditBundleDetailsRequestBodyFieldCurrencyPrices      = big.NewInt(1 << 1)
+	updateCreditBundleDetailsRequestBodyFieldExpiryType          = big.NewInt(1 << 2)
+	updateCreditBundleDetailsRequestBodyFieldExpiryUnit          = big.NewInt(1 << 3)
+	updateCreditBundleDetailsRequestBodyFieldExpiryUnitCount     = big.NewInt(1 << 4)
+	updateCreditBundleDetailsRequestBodyFieldPricePerUnit        = big.NewInt(1 << 5)
+	updateCreditBundleDetailsRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 6)
+	updateCreditBundleDetailsRequestBodyFieldQuantity            = big.NewInt(1 << 7)
+	updateCreditBundleDetailsRequestBodyFieldStatus              = big.NewInt(1 << 8)
 )
 
 type UpdateCreditBundleDetailsRequestBody struct {
-	BundleName          string                     `json:"bundle_name" url:"-"`
-	ExpiryType          *BillingCreditExpiryType   `json:"expiry_type,omitempty" url:"-"`
-	ExpiryUnit          *BillingCreditExpiryUnit   `json:"expiry_unit,omitempty" url:"-"`
-	ExpiryUnitCount     *int                       `json:"expiry_unit_count,omitempty" url:"-"`
-	PricePerUnit        int                        `json:"price_per_unit" url:"-"`
-	PricePerUnitDecimal *string                    `json:"price_per_unit_decimal,omitempty" url:"-"`
-	Quantity            *int                       `json:"quantity,omitempty" url:"-"`
-	Status              *BillingCreditBundleStatus `json:"status,omitempty" url:"-"`
+	BundleName          string                                  `json:"bundle_name" url:"-"`
+	CurrencyPrices      []*CreditBundleCurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"-"`
+	ExpiryType          *BillingCreditExpiryType                `json:"expiry_type,omitempty" url:"-"`
+	ExpiryUnit          *BillingCreditExpiryUnit                `json:"expiry_unit,omitempty" url:"-"`
+	ExpiryUnitCount     *int64                                  `json:"expiry_unit_count,omitempty" url:"-"`
+	PricePerUnit        int64                                   `json:"price_per_unit" url:"-"`
+	PricePerUnitDecimal *string                                 `json:"price_per_unit_decimal,omitempty" url:"-"`
+	Quantity            *int64                                  `json:"quantity,omitempty" url:"-"`
+	Status              *BillingCreditBundleStatus              `json:"status,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -8560,6 +9203,13 @@ func (u *UpdateCreditBundleDetailsRequestBody) SetBundleName(bundleName string) 
 	u.require(updateCreditBundleDetailsRequestBodyFieldBundleName)
 }
 
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCreditBundleDetailsRequestBody) SetCurrencyPrices(currencyPrices []*CreditBundleCurrencyPriceRequestBody) {
+	u.CurrencyPrices = currencyPrices
+	u.require(updateCreditBundleDetailsRequestBodyFieldCurrencyPrices)
+}
+
 // SetExpiryType sets the ExpiryType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdateCreditBundleDetailsRequestBody) SetExpiryType(expiryType *BillingCreditExpiryType) {
@@ -8576,14 +9226,14 @@ func (u *UpdateCreditBundleDetailsRequestBody) SetExpiryUnit(expiryUnit *Billing
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCreditBundleDetailsRequestBody) SetExpiryUnitCount(expiryUnitCount *int) {
+func (u *UpdateCreditBundleDetailsRequestBody) SetExpiryUnitCount(expiryUnitCount *int64) {
 	u.ExpiryUnitCount = expiryUnitCount
 	u.require(updateCreditBundleDetailsRequestBodyFieldExpiryUnitCount)
 }
 
 // SetPricePerUnit sets the PricePerUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCreditBundleDetailsRequestBody) SetPricePerUnit(pricePerUnit int) {
+func (u *UpdateCreditBundleDetailsRequestBody) SetPricePerUnit(pricePerUnit int64) {
 	u.PricePerUnit = pricePerUnit
 	u.require(updateCreditBundleDetailsRequestBodyFieldPricePerUnit)
 }
@@ -8597,7 +9247,7 @@ func (u *UpdateCreditBundleDetailsRequestBody) SetPricePerUnitDecimal(pricePerUn
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCreditBundleDetailsRequestBody) SetQuantity(quantity *int) {
+func (u *UpdateCreditBundleDetailsRequestBody) SetQuantity(quantity *int64) {
 	u.Quantity = quantity
 	u.require(updateCreditBundleDetailsRequestBodyFieldQuantity)
 }
@@ -8607,6 +9257,27 @@ func (u *UpdateCreditBundleDetailsRequestBody) SetQuantity(quantity *int) {
 func (u *UpdateCreditBundleDetailsRequestBody) SetStatus(status *BillingCreditBundleStatus) {
 	u.Status = status
 	u.require(updateCreditBundleDetailsRequestBodyFieldStatus)
+}
+
+func (u *UpdateCreditBundleDetailsRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCreditBundleDetailsRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateCreditBundleDetailsRequestBody(body)
+	return nil
+}
+
+func (u *UpdateCreditBundleDetailsRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateCreditBundleDetailsRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -8632,4 +9303,25 @@ func (z *ZeroOutGrantRequestBody) require(field *big.Int) {
 func (z *ZeroOutGrantRequestBody) SetReason(reason *BillingCreditGrantZeroedOutReason) {
 	z.Reason = reason
 	z.require(zeroOutGrantRequestBodyFieldReason)
+}
+
+func (z *ZeroOutGrantRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler ZeroOutGrantRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*z = ZeroOutGrantRequestBody(body)
+	return nil
+}
+
+func (z *ZeroOutGrantRequestBody) MarshalJSON() ([]byte, error) {
+	type embed ZeroOutGrantRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*z),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, z.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

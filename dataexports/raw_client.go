@@ -5,12 +5,13 @@ package dataexports
 import (
 	bytes "bytes"
 	context "context"
+	io "io"
+	http "net/http"
+
 	schematichq "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
 	internal "github.com/schematichq/schematic-go/internal"
 	option "github.com/schematichq/schematic-go/option"
-	io "io"
-	http "net/http"
 )
 
 type RawClient struct {

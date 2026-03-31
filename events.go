@@ -15,7 +15,7 @@ var (
 )
 
 type CreateEventBatchRequestBody struct {
-	Events []*CreateEventRequestBody `json:"events,omitempty" url:"-"`
+	Events []*CreateEventRequestBody `json:"events" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -35,6 +35,27 @@ func (c *CreateEventBatchRequestBody) SetEvents(events []*CreateEventRequestBody
 	c.require(createEventBatchRequestBodyFieldEvents)
 }
 
+func (c *CreateEventBatchRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateEventBatchRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateEventBatchRequestBody(body)
+	return nil
+}
+
+func (c *CreateEventBatchRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateEventBatchRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	getEventSummariesRequestFieldQ             = big.NewInt(1 << 0)
 	getEventSummariesRequestFieldEventSubtypes = big.NewInt(1 << 1)
@@ -46,9 +67,9 @@ type GetEventSummariesRequest struct {
 	Q             *string   `json:"-" url:"q,omitempty"`
 	EventSubtypes []*string `json:"-" url:"event_subtypes,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -77,14 +98,14 @@ func (g *GetEventSummariesRequest) SetEventSubtypes(eventSubtypes []*string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEventSummariesRequest) SetLimit(limit *int) {
+func (g *GetEventSummariesRequest) SetLimit(limit *int64) {
 	g.Limit = limit
 	g.require(getEventSummariesRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEventSummariesRequest) SetOffset(offset *int) {
+func (g *GetEventSummariesRequest) SetOffset(offset *int64) {
 	g.Offset = offset
 	g.require(getEventSummariesRequestFieldOffset)
 }
@@ -106,9 +127,9 @@ type ListEventsRequest struct {
 	FlagID       *string      `json:"-" url:"flag_id,omitempty"`
 	UserID       *string      `json:"-" url:"user_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -158,14 +179,14 @@ func (l *ListEventsRequest) SetUserID(userID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEventsRequest) SetLimit(limit *int) {
+func (l *ListEventsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listEventsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEventsRequest) SetOffset(offset *int) {
+func (l *ListEventsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEventsRequestFieldOffset)
 }
@@ -212,6 +233,9 @@ func (c *CreateEventRequestBody) GetSentAt() *time.Time {
 }
 
 func (c *CreateEventRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -279,6 +303,9 @@ func (c *CreateEventRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateEventRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -486,6 +513,9 @@ func (e *EventBodyFlagCheck) GetValue() bool {
 }
 
 func (e *EventBodyFlagCheck) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -594,6 +624,9 @@ func (e *EventBodyFlagCheck) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EventBodyFlagCheck) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -620,7 +653,7 @@ type EventBodyIdentify struct {
 	// The display name of the user being identified; required only if it is a new user
 	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	// A map of trait names to trait values
-	Traits map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+	Traits map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -650,7 +683,7 @@ func (e *EventBodyIdentify) GetName() *string {
 	return e.Name
 }
 
-func (e *EventBodyIdentify) GetTraits() map[string]interface{} {
+func (e *EventBodyIdentify) GetTraits() map[string]any {
 	if e == nil {
 		return nil
 	}
@@ -658,6 +691,9 @@ func (e *EventBodyIdentify) GetTraits() map[string]interface{} {
 }
 
 func (e *EventBodyIdentify) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -691,7 +727,7 @@ func (e *EventBodyIdentify) SetName(name *string) {
 
 // SetTraits sets the Traits field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventBodyIdentify) SetTraits(traits map[string]interface{}) {
+func (e *EventBodyIdentify) SetTraits(traits map[string]any) {
 	e.Traits = traits
 	e.require(eventBodyIdentifyFieldTraits)
 }
@@ -724,6 +760,9 @@ func (e *EventBodyIdentify) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EventBodyIdentify) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -748,7 +787,7 @@ type EventBodyIdentifyCompany struct {
 	// The display name of the company; required only if it is a new company
 	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	// A map of trait names to trait values
-	Traits map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+	Traits map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -771,7 +810,7 @@ func (e *EventBodyIdentifyCompany) GetName() *string {
 	return e.Name
 }
 
-func (e *EventBodyIdentifyCompany) GetTraits() map[string]interface{} {
+func (e *EventBodyIdentifyCompany) GetTraits() map[string]any {
 	if e == nil {
 		return nil
 	}
@@ -779,6 +818,9 @@ func (e *EventBodyIdentifyCompany) GetTraits() map[string]interface{} {
 }
 
 func (e *EventBodyIdentifyCompany) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -805,7 +847,7 @@ func (e *EventBodyIdentifyCompany) SetName(name *string) {
 
 // SetTraits sets the Traits field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventBodyIdentifyCompany) SetTraits(traits map[string]interface{}) {
+func (e *EventBodyIdentifyCompany) SetTraits(traits map[string]any) {
 	e.Traits = traits
 	e.require(eventBodyIdentifyCompanyFieldTraits)
 }
@@ -838,6 +880,9 @@ func (e *EventBodyIdentifyCompany) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EventBodyIdentifyCompany) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -865,7 +910,7 @@ type EventBodyTrack struct {
 	// Optionally specify the quantity of the event
 	Quantity *int `json:"quantity,omitempty" url:"quantity,omitempty"`
 	// A map of trait names to trait values
-	Traits map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
+	Traits map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
 	// Key-value pairs to identify user associated with track event
 	User map[string]string `json:"user,omitempty" url:"user,omitempty"`
 
@@ -897,7 +942,7 @@ func (e *EventBodyTrack) GetQuantity() *int {
 	return e.Quantity
 }
 
-func (e *EventBodyTrack) GetTraits() map[string]interface{} {
+func (e *EventBodyTrack) GetTraits() map[string]any {
 	if e == nil {
 		return nil
 	}
@@ -912,6 +957,9 @@ func (e *EventBodyTrack) GetUser() map[string]string {
 }
 
 func (e *EventBodyTrack) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -945,7 +993,7 @@ func (e *EventBodyTrack) SetQuantity(quantity *int) {
 
 // SetTraits sets the Traits field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventBodyTrack) SetTraits(traits map[string]interface{}) {
+func (e *EventBodyTrack) SetTraits(traits map[string]any) {
 	e.Traits = traits
 	e.require(eventBodyTrackFieldTraits)
 }
@@ -985,6 +1033,9 @@ func (e *EventBodyTrack) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EventBodyTrack) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -1022,28 +1073,28 @@ var (
 )
 
 type EventDetailResponseData struct {
-	APIKey        *string                `json:"api_key,omitempty" url:"api_key,omitempty"`
-	Body          map[string]interface{} `json:"body" url:"body"`
-	BodyPreview   string                 `json:"body_preview" url:"body_preview"`
-	CapturedAt    time.Time              `json:"captured_at" url:"captured_at"`
-	Company       *PreviewObject         `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID     *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EnrichedAt    *time.Time             `json:"enriched_at,omitempty" url:"enriched_at,omitempty"`
-	EnvironmentID *string                `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ErrorMessage  *string                `json:"error_message,omitempty" url:"error_message,omitempty"`
-	FeatureIDs    []string               `json:"feature_ids" url:"feature_ids"`
-	Features      []*PreviewObject       `json:"features" url:"features"`
-	ID            string                 `json:"id" url:"id"`
-	LoadedAt      *time.Time             `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
-	ProcessedAt   *time.Time             `json:"processed_at,omitempty" url:"processed_at,omitempty"`
-	Quantity      int                    `json:"quantity" url:"quantity"`
-	SentAt        *time.Time             `json:"sent_at,omitempty" url:"sent_at,omitempty"`
-	Status        EventStatus            `json:"status" url:"status"`
-	Subtype       *string                `json:"subtype,omitempty" url:"subtype,omitempty"`
-	Type          EventType              `json:"type" url:"type"`
-	UpdatedAt     *time.Time             `json:"updated_at,omitempty" url:"updated_at,omitempty"`
-	User          *PreviewObject         `json:"user,omitempty" url:"user,omitempty"`
-	UserID        *string                `json:"user_id,omitempty" url:"user_id,omitempty"`
+	APIKey        *string          `json:"api_key,omitempty" url:"api_key,omitempty"`
+	Body          map[string]any   `json:"body" url:"body"`
+	BodyPreview   string           `json:"body_preview" url:"body_preview"`
+	CapturedAt    time.Time        `json:"captured_at" url:"captured_at"`
+	Company       *PreviewObject   `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID     *string          `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EnrichedAt    *time.Time       `json:"enriched_at,omitempty" url:"enriched_at,omitempty"`
+	EnvironmentID *string          `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ErrorMessage  *string          `json:"error_message,omitempty" url:"error_message,omitempty"`
+	FeatureIDs    []string         `json:"feature_ids" url:"feature_ids"`
+	Features      []*PreviewObject `json:"features" url:"features"`
+	ID            string           `json:"id" url:"id"`
+	LoadedAt      *time.Time       `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
+	ProcessedAt   *time.Time       `json:"processed_at,omitempty" url:"processed_at,omitempty"`
+	Quantity      int64            `json:"quantity" url:"quantity"`
+	SentAt        *time.Time       `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+	Status        EventStatus      `json:"status" url:"status"`
+	Subtype       *string          `json:"subtype,omitempty" url:"subtype,omitempty"`
+	Type          EventType        `json:"type" url:"type"`
+	UpdatedAt     *time.Time       `json:"updated_at,omitempty" url:"updated_at,omitempty"`
+	User          *PreviewObject   `json:"user,omitempty" url:"user,omitempty"`
+	UserID        *string          `json:"user_id,omitempty" url:"user_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1059,7 +1110,7 @@ func (e *EventDetailResponseData) GetAPIKey() *string {
 	return e.APIKey
 }
 
-func (e *EventDetailResponseData) GetBody() map[string]interface{} {
+func (e *EventDetailResponseData) GetBody() map[string]any {
 	if e == nil {
 		return nil
 	}
@@ -1150,7 +1201,7 @@ func (e *EventDetailResponseData) GetProcessedAt() *time.Time {
 	return e.ProcessedAt
 }
 
-func (e *EventDetailResponseData) GetQuantity() int {
+func (e *EventDetailResponseData) GetQuantity() int64 {
 	if e == nil {
 		return 0
 	}
@@ -1207,6 +1258,9 @@ func (e *EventDetailResponseData) GetUserID() *string {
 }
 
 func (e *EventDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -1226,7 +1280,7 @@ func (e *EventDetailResponseData) SetAPIKey(apiKey *string) {
 
 // SetBody sets the Body field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventDetailResponseData) SetBody(body map[string]interface{}) {
+func (e *EventDetailResponseData) SetBody(body map[string]any) {
 	e.Body = body
 	e.require(eventDetailResponseDataFieldBody)
 }
@@ -1317,7 +1371,7 @@ func (e *EventDetailResponseData) SetProcessedAt(processedAt *time.Time) {
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventDetailResponseData) SetQuantity(quantity int) {
+func (e *EventDetailResponseData) SetQuantity(quantity int64) {
 	e.Quantity = quantity
 	e.require(eventDetailResponseDataFieldQuantity)
 }
@@ -1427,6 +1481,9 @@ func (e *EventDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EventDetailResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -1516,6 +1573,9 @@ func (r *RawEventBatchResponseData) GetEvents() []*RawEventResponseData {
 }
 
 func (r *RawEventBatchResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -1561,6 +1621,9 @@ func (r *RawEventBatchResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RawEventBatchResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -1630,6 +1693,9 @@ func (r *RawEventResponseData) GetUserAgent() string {
 }
 
 func (r *RawEventResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -1711,6 +1777,9 @@ func (r *RawEventResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RawEventResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -1762,6 +1831,9 @@ func (s *SegmentStatusResp) GetLastEventAt() *time.Time {
 }
 
 func (s *SegmentStatusResp) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
 	return s.extraProperties
 }
 
@@ -1829,6 +1901,9 @@ func (s *SegmentStatusResp) MarshalJSON() ([]byte, error) {
 }
 
 func (s *SegmentStatusResp) String() string {
+	if s == nil {
+		return "<nil>"
+	}
 	if len(s.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
@@ -1848,7 +1923,7 @@ var (
 type CreateEventBatchResponse struct {
 	Data *RawEventBatchResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1864,7 +1939,7 @@ func (c *CreateEventBatchResponse) GetData() *RawEventBatchResponseData {
 	return c.Data
 }
 
-func (c *CreateEventBatchResponse) GetParams() map[string]interface{} {
+func (c *CreateEventBatchResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -1872,6 +1947,9 @@ func (c *CreateEventBatchResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateEventBatchResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1891,7 +1969,7 @@ func (c *CreateEventBatchResponse) SetData(data *RawEventBatchResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEventBatchResponse) SetParams(params map[string]interface{}) {
+func (c *CreateEventBatchResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createEventBatchResponseFieldParams)
 }
@@ -1924,6 +2002,9 @@ func (c *CreateEventBatchResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateEventBatchResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1943,7 +2024,7 @@ var (
 type CreateEventResponse struct {
 	Data *RawEventResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1959,7 +2040,7 @@ func (c *CreateEventResponse) GetData() *RawEventResponseData {
 	return c.Data
 }
 
-func (c *CreateEventResponse) GetParams() map[string]interface{} {
+func (c *CreateEventResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -1967,6 +2048,9 @@ func (c *CreateEventResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateEventResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1986,7 +2070,7 @@ func (c *CreateEventResponse) SetData(data *RawEventResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEventResponse) SetParams(params map[string]interface{}) {
+func (c *CreateEventResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createEventResponseFieldParams)
 }
@@ -2019,6 +2103,9 @@ func (c *CreateEventResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateEventResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2038,7 +2125,7 @@ var (
 type GetEventResponse struct {
 	Data *EventDetailResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2054,7 +2141,7 @@ func (g *GetEventResponse) GetData() *EventDetailResponseData {
 	return g.Data
 }
 
-func (g *GetEventResponse) GetParams() map[string]interface{} {
+func (g *GetEventResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -2062,6 +2149,9 @@ func (g *GetEventResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetEventResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -2081,7 +2171,7 @@ func (g *GetEventResponse) SetData(data *EventDetailResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEventResponse) SetParams(params map[string]interface{}) {
+func (g *GetEventResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getEventResponseFieldParams)
 }
@@ -2114,6 +2204,9 @@ func (g *GetEventResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEventResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2136,9 +2229,9 @@ var (
 type GetEventSummariesParams struct {
 	EventSubtypes []string `json:"event_subtypes,omitempty" url:"event_subtypes,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -2155,14 +2248,14 @@ func (g *GetEventSummariesParams) GetEventSubtypes() []string {
 	return g.EventSubtypes
 }
 
-func (g *GetEventSummariesParams) GetLimit() *int {
+func (g *GetEventSummariesParams) GetLimit() *int64 {
 	if g == nil {
 		return nil
 	}
 	return g.Limit
 }
 
-func (g *GetEventSummariesParams) GetOffset() *int {
+func (g *GetEventSummariesParams) GetOffset() *int64 {
 	if g == nil {
 		return nil
 	}
@@ -2177,6 +2270,9 @@ func (g *GetEventSummariesParams) GetQ() *string {
 }
 
 func (g *GetEventSummariesParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -2196,14 +2292,14 @@ func (g *GetEventSummariesParams) SetEventSubtypes(eventSubtypes []string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEventSummariesParams) SetLimit(limit *int) {
+func (g *GetEventSummariesParams) SetLimit(limit *int64) {
 	g.Limit = limit
 	g.require(getEventSummariesParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetEventSummariesParams) SetOffset(offset *int) {
+func (g *GetEventSummariesParams) SetOffset(offset *int64) {
 	g.Offset = offset
 	g.require(getEventSummariesParamsFieldOffset)
 }
@@ -2243,6 +2339,9 @@ func (g *GetEventSummariesParams) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEventSummariesParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2286,6 +2385,9 @@ func (g *GetEventSummariesResponse) GetParams() *GetEventSummariesParams {
 }
 
 func (g *GetEventSummariesResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -2338,6 +2440,9 @@ func (g *GetEventSummariesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEventSummariesResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2357,7 +2462,7 @@ var (
 type GetSegmentIntegrationStatusResponse struct {
 	Data *SegmentStatusResp `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2373,7 +2478,7 @@ func (g *GetSegmentIntegrationStatusResponse) GetData() *SegmentStatusResp {
 	return g.Data
 }
 
-func (g *GetSegmentIntegrationStatusResponse) GetParams() map[string]interface{} {
+func (g *GetSegmentIntegrationStatusResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -2381,6 +2486,9 @@ func (g *GetSegmentIntegrationStatusResponse) GetParams() map[string]interface{}
 }
 
 func (g *GetSegmentIntegrationStatusResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -2400,7 +2508,7 @@ func (g *GetSegmentIntegrationStatusResponse) SetData(data *SegmentStatusResp) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetSegmentIntegrationStatusResponse) SetParams(params map[string]interface{}) {
+func (g *GetSegmentIntegrationStatusResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getSegmentIntegrationStatusResponseFieldParams)
 }
@@ -2433,6 +2541,9 @@ func (g *GetSegmentIntegrationStatusResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetSegmentIntegrationStatusResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -2461,9 +2572,9 @@ type ListEventsParams struct {
 	EventTypes   []EventType `json:"event_types,omitempty" url:"event_types,omitempty"`
 	FlagID       *string     `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -2501,14 +2612,14 @@ func (l *ListEventsParams) GetFlagID() *string {
 	return l.FlagID
 }
 
-func (l *ListEventsParams) GetLimit() *int {
+func (l *ListEventsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListEventsParams) GetOffset() *int {
+func (l *ListEventsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -2523,6 +2634,9 @@ func (l *ListEventsParams) GetUserID() *string {
 }
 
 func (l *ListEventsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -2563,14 +2677,14 @@ func (l *ListEventsParams) SetFlagID(flagID *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEventsParams) SetLimit(limit *int) {
+func (l *ListEventsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listEventsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListEventsParams) SetOffset(offset *int) {
+func (l *ListEventsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEventsParamsFieldOffset)
 }
@@ -2610,6 +2724,9 @@ func (l *ListEventsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListEventsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -2653,6 +2770,9 @@ func (l *ListEventsResponse) GetParams() *ListEventsParams {
 }
 
 func (l *ListEventsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -2705,6 +2825,9 @@ func (l *ListEventsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListEventsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value

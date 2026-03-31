@@ -64,6 +64,9 @@ func (a *APIError) GetError() string {
 }
 
 func (a *APIError) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
 	return a.extraProperties
 }
 
@@ -109,6 +112,9 @@ func (a *APIError) MarshalJSON() ([]byte, error) {
 }
 
 func (a *APIError) String() string {
+	if a == nil {
+		return "<nil>"
+	}
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value
@@ -214,6 +220,9 @@ func (a *APIKeyResponseData) GetUpdatedAt() time.Time {
 }
 
 func (a *APIKeyResponseData) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
 	return a.extraProperties
 }
 
@@ -331,6 +340,9 @@ func (a *APIKeyResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (a *APIKeyResponseData) String() string {
+	if a == nil {
+		return "<nil>"
+	}
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value
@@ -395,11 +407,11 @@ type AuditLogListResponseData struct {
 	EnvironmentID     *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	ID                string     `json:"id" url:"id"`
 	Method            string     `json:"method" url:"method"`
-	ResourceID        *int       `json:"resource_id,omitempty" url:"resource_id,omitempty"`
+	ResourceID        *int64     `json:"resource_id,omitempty" url:"resource_id,omitempty"`
 	ResourceIDString  *string    `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
 	ResourceName      *string    `json:"resource_name,omitempty" url:"resource_name,omitempty"`
 	ResourceType      *string    `json:"resource_type,omitempty" url:"resource_type,omitempty"`
-	RespCode          *int       `json:"resp_code,omitempty" url:"resp_code,omitempty"`
+	RespCode          *int64     `json:"resp_code,omitempty" url:"resp_code,omitempty"`
 	SecondaryResource *string    `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
 	StartedAt         time.Time  `json:"started_at" url:"started_at"`
 	URL               string     `json:"url" url:"url"`
@@ -454,7 +466,7 @@ func (a *AuditLogListResponseData) GetMethod() string {
 	return a.Method
 }
 
-func (a *AuditLogListResponseData) GetResourceID() *int {
+func (a *AuditLogListResponseData) GetResourceID() *int64 {
 	if a == nil {
 		return nil
 	}
@@ -482,7 +494,7 @@ func (a *AuditLogListResponseData) GetResourceType() *string {
 	return a.ResourceType
 }
 
-func (a *AuditLogListResponseData) GetRespCode() *int {
+func (a *AuditLogListResponseData) GetRespCode() *int64 {
 	if a == nil {
 		return nil
 	}
@@ -518,6 +530,9 @@ func (a *AuditLogListResponseData) GetUserName() *string {
 }
 
 func (a *AuditLogListResponseData) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
 	return a.extraProperties
 }
 
@@ -572,7 +587,7 @@ func (a *AuditLogListResponseData) SetMethod(method string) {
 
 // SetResourceID sets the ResourceID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AuditLogListResponseData) SetResourceID(resourceID *int) {
+func (a *AuditLogListResponseData) SetResourceID(resourceID *int64) {
 	a.ResourceID = resourceID
 	a.require(auditLogListResponseDataFieldResourceID)
 }
@@ -600,7 +615,7 @@ func (a *AuditLogListResponseData) SetResourceType(resourceType *string) {
 
 // SetRespCode sets the RespCode field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AuditLogListResponseData) SetRespCode(respCode *int) {
+func (a *AuditLogListResponseData) SetRespCode(respCode *int64) {
 	a.RespCode = respCode
 	a.require(auditLogListResponseDataFieldRespCode)
 }
@@ -673,6 +688,9 @@ func (a *AuditLogListResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (a *AuditLogListResponseData) String() string {
+	if a == nil {
+		return "<nil>"
+	}
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value
@@ -685,53 +703,64 @@ func (a *AuditLogListResponseData) String() string {
 }
 
 var (
-	billingCreditBundleResponseDataFieldBundleType        = big.NewInt(1 << 0)
-	billingCreditBundleResponseDataFieldCreatedAt         = big.NewInt(1 << 1)
-	billingCreditBundleResponseDataFieldCreditDescription = big.NewInt(1 << 2)
-	billingCreditBundleResponseDataFieldCreditIcon        = big.NewInt(1 << 3)
-	billingCreditBundleResponseDataFieldCreditID          = big.NewInt(1 << 4)
-	billingCreditBundleResponseDataFieldCreditName        = big.NewInt(1 << 5)
-	billingCreditBundleResponseDataFieldExpiryType        = big.NewInt(1 << 6)
-	billingCreditBundleResponseDataFieldExpiryUnit        = big.NewInt(1 << 7)
-	billingCreditBundleResponseDataFieldExpiryUnitCount   = big.NewInt(1 << 8)
-	billingCreditBundleResponseDataFieldHasGrants         = big.NewInt(1 << 9)
-	billingCreditBundleResponseDataFieldID                = big.NewInt(1 << 10)
-	billingCreditBundleResponseDataFieldName              = big.NewInt(1 << 11)
-	billingCreditBundleResponseDataFieldPluralName        = big.NewInt(1 << 12)
-	billingCreditBundleResponseDataFieldPrice             = big.NewInt(1 << 13)
-	billingCreditBundleResponseDataFieldQuantity          = big.NewInt(1 << 14)
-	billingCreditBundleResponseDataFieldSingularName      = big.NewInt(1 << 15)
-	billingCreditBundleResponseDataFieldStatus            = big.NewInt(1 << 16)
-	billingCreditBundleResponseDataFieldUnitPrice         = big.NewInt(1 << 17)
-	billingCreditBundleResponseDataFieldUpdatedAt         = big.NewInt(1 << 18)
+	billingCreditBundleResponseDataFieldBillingInvoiceID  = big.NewInt(1 << 0)
+	billingCreditBundleResponseDataFieldBundleType        = big.NewInt(1 << 1)
+	billingCreditBundleResponseDataFieldCreatedAt         = big.NewInt(1 << 2)
+	billingCreditBundleResponseDataFieldCreditDescription = big.NewInt(1 << 3)
+	billingCreditBundleResponseDataFieldCreditIcon        = big.NewInt(1 << 4)
+	billingCreditBundleResponseDataFieldCreditID          = big.NewInt(1 << 5)
+	billingCreditBundleResponseDataFieldCreditName        = big.NewInt(1 << 6)
+	billingCreditBundleResponseDataFieldCurrencyPrices    = big.NewInt(1 << 7)
+	billingCreditBundleResponseDataFieldExpiryType        = big.NewInt(1 << 8)
+	billingCreditBundleResponseDataFieldExpiryUnit        = big.NewInt(1 << 9)
+	billingCreditBundleResponseDataFieldExpiryUnitCount   = big.NewInt(1 << 10)
+	billingCreditBundleResponseDataFieldHasGrants         = big.NewInt(1 << 11)
+	billingCreditBundleResponseDataFieldID                = big.NewInt(1 << 12)
+	billingCreditBundleResponseDataFieldName              = big.NewInt(1 << 13)
+	billingCreditBundleResponseDataFieldPluralName        = big.NewInt(1 << 14)
+	billingCreditBundleResponseDataFieldPrice             = big.NewInt(1 << 15)
+	billingCreditBundleResponseDataFieldQuantity          = big.NewInt(1 << 16)
+	billingCreditBundleResponseDataFieldSingularName      = big.NewInt(1 << 17)
+	billingCreditBundleResponseDataFieldStatus            = big.NewInt(1 << 18)
+	billingCreditBundleResponseDataFieldUnitPrice         = big.NewInt(1 << 19)
+	billingCreditBundleResponseDataFieldUpdatedAt         = big.NewInt(1 << 20)
 )
 
 type BillingCreditBundleResponseData struct {
-	BundleType        BillingCreditBundleType   `json:"bundle_type" url:"bundle_type"`
-	CreatedAt         time.Time                 `json:"created_at" url:"created_at"`
-	CreditDescription *string                   `json:"credit_description,omitempty" url:"credit_description,omitempty"`
-	CreditIcon        *string                   `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
-	CreditID          string                    `json:"credit_id" url:"credit_id"`
-	CreditName        string                    `json:"credit_name" url:"credit_name"`
-	ExpiryType        BillingCreditExpiryType   `json:"expiry_type" url:"expiry_type"`
-	ExpiryUnit        BillingCreditExpiryUnit   `json:"expiry_unit" url:"expiry_unit"`
-	ExpiryUnitCount   *int                      `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	HasGrants         bool                      `json:"has_grants" url:"has_grants"`
-	ID                string                    `json:"id" url:"id"`
-	Name              string                    `json:"name" url:"name"`
-	PluralName        *string                   `json:"plural_name,omitempty" url:"plural_name,omitempty"`
-	Price             *BillingPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
-	Quantity          *int                      `json:"quantity,omitempty" url:"quantity,omitempty"`
-	SingularName      *string                   `json:"singular_name,omitempty" url:"singular_name,omitempty"`
-	Status            BillingCreditBundleStatus `json:"status" url:"status"`
-	UnitPrice         *BillingPriceResponseData `json:"unit_price,omitempty" url:"unit_price,omitempty"`
-	UpdatedAt         time.Time                 `json:"updated_at" url:"updated_at"`
+	BillingInvoiceID  *string                                  `json:"billing_invoice_id,omitempty" url:"billing_invoice_id,omitempty"`
+	BundleType        BillingCreditBundleType                  `json:"bundle_type" url:"bundle_type"`
+	CreatedAt         time.Time                                `json:"created_at" url:"created_at"`
+	CreditDescription *string                                  `json:"credit_description,omitempty" url:"credit_description,omitempty"`
+	CreditIcon        *string                                  `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID          string                                   `json:"credit_id" url:"credit_id"`
+	CreditName        string                                   `json:"credit_name" url:"credit_name"`
+	CurrencyPrices    []*CreditBundleCurrencyPriceResponseData `json:"currency_prices" url:"currency_prices"`
+	ExpiryType        BillingCreditExpiryType                  `json:"expiry_type" url:"expiry_type"`
+	ExpiryUnit        BillingCreditExpiryUnit                  `json:"expiry_unit" url:"expiry_unit"`
+	ExpiryUnitCount   *int64                                   `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	HasGrants         bool                                     `json:"has_grants" url:"has_grants"`
+	ID                string                                   `json:"id" url:"id"`
+	Name              string                                   `json:"name" url:"name"`
+	PluralName        *string                                  `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	Price             *BillingPriceResponseData                `json:"price,omitempty" url:"price,omitempty"`
+	Quantity          *int64                                   `json:"quantity,omitempty" url:"quantity,omitempty"`
+	SingularName      *string                                  `json:"singular_name,omitempty" url:"singular_name,omitempty"`
+	Status            BillingCreditBundleStatus                `json:"status" url:"status"`
+	UnitPrice         *BillingPriceResponseData                `json:"unit_price,omitempty" url:"unit_price,omitempty"`
+	UpdatedAt         time.Time                                `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (b *BillingCreditBundleResponseData) GetBillingInvoiceID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.BillingInvoiceID
 }
 
 func (b *BillingCreditBundleResponseData) GetCreatedAt() time.Time {
@@ -769,6 +798,13 @@ func (b *BillingCreditBundleResponseData) GetCreditName() string {
 	return b.CreditName
 }
 
+func (b *BillingCreditBundleResponseData) GetCurrencyPrices() []*CreditBundleCurrencyPriceResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.CurrencyPrices
+}
+
 func (b *BillingCreditBundleResponseData) GetExpiryType() BillingCreditExpiryType {
 	if b == nil {
 		return ""
@@ -783,7 +819,7 @@ func (b *BillingCreditBundleResponseData) GetExpiryUnit() BillingCreditExpiryUni
 	return b.ExpiryUnit
 }
 
-func (b *BillingCreditBundleResponseData) GetExpiryUnitCount() *int {
+func (b *BillingCreditBundleResponseData) GetExpiryUnitCount() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -825,7 +861,7 @@ func (b *BillingCreditBundleResponseData) GetPrice() *BillingPriceResponseData {
 	return b.Price
 }
 
-func (b *BillingCreditBundleResponseData) GetQuantity() *int {
+func (b *BillingCreditBundleResponseData) GetQuantity() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -861,6 +897,9 @@ func (b *BillingCreditBundleResponseData) GetUpdatedAt() time.Time {
 }
 
 func (b *BillingCreditBundleResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -869,6 +908,13 @@ func (b *BillingCreditBundleResponseData) require(field *big.Int) {
 		b.explicitFields = big.NewInt(0)
 	}
 	b.explicitFields.Or(b.explicitFields, field)
+}
+
+// SetBillingInvoiceID sets the BillingInvoiceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditBundleResponseData) SetBillingInvoiceID(billingInvoiceID *string) {
+	b.BillingInvoiceID = billingInvoiceID
+	b.require(billingCreditBundleResponseDataFieldBillingInvoiceID)
 }
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
@@ -913,6 +959,13 @@ func (b *BillingCreditBundleResponseData) SetCreditName(creditName string) {
 	b.require(billingCreditBundleResponseDataFieldCreditName)
 }
 
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditBundleResponseData) SetCurrencyPrices(currencyPrices []*CreditBundleCurrencyPriceResponseData) {
+	b.CurrencyPrices = currencyPrices
+	b.require(billingCreditBundleResponseDataFieldCurrencyPrices)
+}
+
 // SetExpiryType sets the ExpiryType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingCreditBundleResponseData) SetExpiryType(expiryType BillingCreditExpiryType) {
@@ -929,7 +982,7 @@ func (b *BillingCreditBundleResponseData) SetExpiryUnit(expiryUnit BillingCredit
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleResponseData) SetExpiryUnitCount(expiryUnitCount *int) {
+func (b *BillingCreditBundleResponseData) SetExpiryUnitCount(expiryUnitCount *int64) {
 	b.ExpiryUnitCount = expiryUnitCount
 	b.require(billingCreditBundleResponseDataFieldExpiryUnitCount)
 }
@@ -971,7 +1024,7 @@ func (b *BillingCreditBundleResponseData) SetPrice(price *BillingPriceResponseDa
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleResponseData) SetQuantity(quantity *int) {
+func (b *BillingCreditBundleResponseData) SetQuantity(quantity *int64) {
 	b.Quantity = quantity
 	b.require(billingCreditBundleResponseDataFieldQuantity)
 }
@@ -1044,6 +1097,9 @@ func (b *BillingCreditBundleResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCreditBundleResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -1220,36 +1276,38 @@ var (
 	billingCreditResponseDataFieldBurnStrategy           = big.NewInt(1 << 0)
 	billingCreditResponseDataFieldCostEditable           = big.NewInt(1 << 1)
 	billingCreditResponseDataFieldCreatedAt              = big.NewInt(1 << 2)
-	billingCreditResponseDataFieldDefaultExpiryUnit      = big.NewInt(1 << 3)
-	billingCreditResponseDataFieldDefaultExpiryUnitCount = big.NewInt(1 << 4)
-	billingCreditResponseDataFieldDefaultRolloverPolicy  = big.NewInt(1 << 5)
-	billingCreditResponseDataFieldDescription            = big.NewInt(1 << 6)
-	billingCreditResponseDataFieldIcon                   = big.NewInt(1 << 7)
-	billingCreditResponseDataFieldID                     = big.NewInt(1 << 8)
-	billingCreditResponseDataFieldName                   = big.NewInt(1 << 9)
-	billingCreditResponseDataFieldPluralName             = big.NewInt(1 << 10)
-	billingCreditResponseDataFieldPrice                  = big.NewInt(1 << 11)
-	billingCreditResponseDataFieldProduct                = big.NewInt(1 << 12)
-	billingCreditResponseDataFieldSingularName           = big.NewInt(1 << 13)
-	billingCreditResponseDataFieldUpdatedAt              = big.NewInt(1 << 14)
+	billingCreditResponseDataFieldCurrencyPrices         = big.NewInt(1 << 3)
+	billingCreditResponseDataFieldDefaultExpiryUnit      = big.NewInt(1 << 4)
+	billingCreditResponseDataFieldDefaultExpiryUnitCount = big.NewInt(1 << 5)
+	billingCreditResponseDataFieldDefaultRolloverPolicy  = big.NewInt(1 << 6)
+	billingCreditResponseDataFieldDescription            = big.NewInt(1 << 7)
+	billingCreditResponseDataFieldIcon                   = big.NewInt(1 << 8)
+	billingCreditResponseDataFieldID                     = big.NewInt(1 << 9)
+	billingCreditResponseDataFieldName                   = big.NewInt(1 << 10)
+	billingCreditResponseDataFieldPluralName             = big.NewInt(1 << 11)
+	billingCreditResponseDataFieldPrice                  = big.NewInt(1 << 12)
+	billingCreditResponseDataFieldProduct                = big.NewInt(1 << 13)
+	billingCreditResponseDataFieldSingularName           = big.NewInt(1 << 14)
+	billingCreditResponseDataFieldUpdatedAt              = big.NewInt(1 << 15)
 )
 
 type BillingCreditResponseData struct {
-	BurnStrategy           BillingCreditBurnStrategy   `json:"burn_strategy" url:"burn_strategy"`
-	CostEditable           bool                        `json:"cost_editable" url:"cost_editable"`
-	CreatedAt              time.Time                   `json:"created_at" url:"created_at"`
-	DefaultExpiryUnit      BillingCreditExpiryUnit     `json:"default_expiry_unit" url:"default_expiry_unit"`
-	DefaultExpiryUnitCount *int                        `json:"default_expiry_unit_count,omitempty" url:"default_expiry_unit_count,omitempty"`
-	DefaultRolloverPolicy  BillingCreditRolloverPolicy `json:"default_rollover_policy" url:"default_rollover_policy"`
-	Description            string                      `json:"description" url:"description"`
-	Icon                   *string                     `json:"icon,omitempty" url:"icon,omitempty"`
-	ID                     string                      `json:"id" url:"id"`
-	Name                   string                      `json:"name" url:"name"`
-	PluralName             *string                     `json:"plural_name,omitempty" url:"plural_name,omitempty"`
-	Price                  *BillingPriceResponseData   `json:"price,omitempty" url:"price,omitempty"`
-	Product                *BillingProductResponseData `json:"product,omitempty" url:"product,omitempty"`
-	SingularName           *string                     `json:"singular_name,omitempty" url:"singular_name,omitempty"`
-	UpdatedAt              time.Time                   `json:"updated_at" url:"updated_at"`
+	BurnStrategy           BillingCreditBurnStrategy          `json:"burn_strategy" url:"burn_strategy"`
+	CostEditable           bool                               `json:"cost_editable" url:"cost_editable"`
+	CreatedAt              time.Time                          `json:"created_at" url:"created_at"`
+	CurrencyPrices         []*CreditCurrencyPriceResponseData `json:"currency_prices" url:"currency_prices"`
+	DefaultExpiryUnit      BillingCreditExpiryUnit            `json:"default_expiry_unit" url:"default_expiry_unit"`
+	DefaultExpiryUnitCount *int64                             `json:"default_expiry_unit_count,omitempty" url:"default_expiry_unit_count,omitempty"`
+	DefaultRolloverPolicy  BillingCreditRolloverPolicy        `json:"default_rollover_policy" url:"default_rollover_policy"`
+	Description            string                             `json:"description" url:"description"`
+	Icon                   *string                            `json:"icon,omitempty" url:"icon,omitempty"`
+	ID                     string                             `json:"id" url:"id"`
+	Name                   string                             `json:"name" url:"name"`
+	PluralName             *string                            `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	Price                  *BillingPriceResponseData          `json:"price,omitempty" url:"price,omitempty"`
+	Product                *BillingProductResponseData        `json:"product,omitempty" url:"product,omitempty"`
+	SingularName           *string                            `json:"singular_name,omitempty" url:"singular_name,omitempty"`
+	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1279,6 +1337,13 @@ func (b *BillingCreditResponseData) GetCreatedAt() time.Time {
 	return b.CreatedAt
 }
 
+func (b *BillingCreditResponseData) GetCurrencyPrices() []*CreditCurrencyPriceResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.CurrencyPrices
+}
+
 func (b *BillingCreditResponseData) GetDefaultExpiryUnit() BillingCreditExpiryUnit {
 	if b == nil {
 		return ""
@@ -1286,7 +1351,7 @@ func (b *BillingCreditResponseData) GetDefaultExpiryUnit() BillingCreditExpiryUn
 	return b.DefaultExpiryUnit
 }
 
-func (b *BillingCreditResponseData) GetDefaultExpiryUnitCount() *int {
+func (b *BillingCreditResponseData) GetDefaultExpiryUnitCount() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -1364,6 +1429,9 @@ func (b *BillingCreditResponseData) GetUpdatedAt() time.Time {
 }
 
 func (b *BillingCreditResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -1395,6 +1463,13 @@ func (b *BillingCreditResponseData) SetCreatedAt(createdAt time.Time) {
 	b.require(billingCreditResponseDataFieldCreatedAt)
 }
 
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditResponseData) SetCurrencyPrices(currencyPrices []*CreditCurrencyPriceResponseData) {
+	b.CurrencyPrices = currencyPrices
+	b.require(billingCreditResponseDataFieldCurrencyPrices)
+}
+
 // SetDefaultExpiryUnit sets the DefaultExpiryUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingCreditResponseData) SetDefaultExpiryUnit(defaultExpiryUnit BillingCreditExpiryUnit) {
@@ -1404,7 +1479,7 @@ func (b *BillingCreditResponseData) SetDefaultExpiryUnit(defaultExpiryUnit Billi
 
 // SetDefaultExpiryUnitCount sets the DefaultExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditResponseData) SetDefaultExpiryUnitCount(defaultExpiryUnitCount *int) {
+func (b *BillingCreditResponseData) SetDefaultExpiryUnitCount(defaultExpiryUnitCount *int64) {
 	b.DefaultExpiryUnitCount = defaultExpiryUnitCount
 	b.require(billingCreditResponseDataFieldDefaultExpiryUnitCount)
 }
@@ -1519,6 +1594,9 @@ func (b *BillingCreditResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCreditResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -1583,7 +1661,7 @@ type BillingCreditView struct {
 	CostEditable           bool                        `json:"cost_editable" url:"cost_editable"`
 	CreatedAt              time.Time                   `json:"created_at" url:"created_at"`
 	DefaultExpiryUnit      BillingCreditExpiryUnit     `json:"default_expiry_unit" url:"default_expiry_unit"`
-	DefaultExpiryUnitCount *int                        `json:"default_expiry_unit_count,omitempty" url:"default_expiry_unit_count,omitempty"`
+	DefaultExpiryUnitCount *int64                      `json:"default_expiry_unit_count,omitempty" url:"default_expiry_unit_count,omitempty"`
 	DefaultRolloverPolicy  BillingCreditRolloverPolicy `json:"default_rollover_policy" url:"default_rollover_policy"`
 	Description            string                      `json:"description" url:"description"`
 	EnvironmentID          string                      `json:"environment_id" url:"environment_id"`
@@ -1592,7 +1670,7 @@ type BillingCreditView struct {
 	Name                   string                      `json:"name" url:"name"`
 	PluralName             *string                     `json:"plural_name,omitempty" url:"plural_name,omitempty"`
 	Price                  *BillingPriceView           `json:"price,omitempty" url:"price,omitempty"`
-	PricePerUnit           *int                        `json:"price_per_unit,omitempty" url:"price_per_unit,omitempty"`
+	PricePerUnit           *int64                      `json:"price_per_unit,omitempty" url:"price_per_unit,omitempty"`
 	PricePerUnitDecimal    *string                     `json:"price_per_unit_decimal,omitempty" url:"price_per_unit_decimal,omitempty"`
 	Product                *BillingProductResponseData `json:"product,omitempty" url:"product,omitempty"`
 	SingularName           *string                     `json:"singular_name,omitempty" url:"singular_name,omitempty"`
@@ -1640,7 +1718,7 @@ func (b *BillingCreditView) GetDefaultExpiryUnit() BillingCreditExpiryUnit {
 	return b.DefaultExpiryUnit
 }
 
-func (b *BillingCreditView) GetDefaultExpiryUnitCount() *int {
+func (b *BillingCreditView) GetDefaultExpiryUnitCount() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -1703,7 +1781,7 @@ func (b *BillingCreditView) GetPrice() *BillingPriceView {
 	return b.Price
 }
 
-func (b *BillingCreditView) GetPricePerUnit() *int {
+func (b *BillingCreditView) GetPricePerUnit() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -1739,6 +1817,9 @@ func (b *BillingCreditView) GetUpdatedAt() time.Time {
 }
 
 func (b *BillingCreditView) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -1786,7 +1867,7 @@ func (b *BillingCreditView) SetDefaultExpiryUnit(defaultExpiryUnit BillingCredit
 
 // SetDefaultExpiryUnitCount sets the DefaultExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditView) SetDefaultExpiryUnitCount(defaultExpiryUnitCount *int) {
+func (b *BillingCreditView) SetDefaultExpiryUnitCount(defaultExpiryUnitCount *int64) {
 	b.DefaultExpiryUnitCount = defaultExpiryUnitCount
 	b.require(billingCreditViewFieldDefaultExpiryUnitCount)
 }
@@ -1849,7 +1930,7 @@ func (b *BillingCreditView) SetPrice(price *BillingPriceView) {
 
 // SetPricePerUnit sets the PricePerUnit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditView) SetPricePerUnit(pricePerUnit *int) {
+func (b *BillingCreditView) SetPricePerUnit(pricePerUnit *int64) {
 	b.PricePerUnit = pricePerUnit
 	b.require(billingCreditViewFieldPricePerUnit)
 }
@@ -1922,6 +2003,9 @@ func (b *BillingCreditView) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCreditView) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2035,16 +2119,16 @@ var (
 )
 
 type BillingPlanCreditGrantResponseData struct {
-	AutoTopupAmount           *int                       `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
+	AutoTopupAmount           *int64                     `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
 	AutoTopupAmountType       *string                    `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
 	AutoTopupEnabled          bool                       `json:"auto_topup_enabled" url:"auto_topup_enabled"`
 	AutoTopupExpiryType       *BillingCreditExpiryType   `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
 	AutoTopupExpiryUnit       *BillingCreditExpiryUnit   `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
-	AutoTopupExpiryUnitCount  *int                       `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
-	AutoTopupThresholdPercent *int                       `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
+	AutoTopupExpiryUnitCount  *int64                     `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
+	AutoTopupThresholdPercent *int64                     `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
 	CreatedAt                 time.Time                  `json:"created_at" url:"created_at"`
 	Credit                    *BillingCreditResponseData `json:"credit,omitempty" url:"credit,omitempty"`
-	CreditAmount              int                        `json:"credit_amount" url:"credit_amount"`
+	CreditAmount              int64                      `json:"credit_amount" url:"credit_amount"`
 	CreditID                  string                     `json:"credit_id" url:"credit_id"`
 	// Use credit.name from the nested credit object instead
 	CreditName string `json:"credit_name" url:"credit_name"`
@@ -2054,7 +2138,7 @@ type BillingPlanCreditGrantResponseData struct {
 	CreditSingularName *string                    `json:"credit_singular_name,omitempty" url:"credit_singular_name,omitempty"`
 	ExpiryType         *BillingCreditExpiryType   `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
 	ExpiryUnit         *BillingCreditExpiryUnit   `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount    *int                       `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ExpiryUnitCount    *int64                     `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	ID                 string                     `json:"id" url:"id"`
 	Plan               *PreviewObjectResponseData `json:"plan,omitempty" url:"plan,omitempty"`
 	PlanID             string                     `json:"plan_id" url:"plan_id"`
@@ -2073,7 +2157,7 @@ type BillingPlanCreditGrantResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (b *BillingPlanCreditGrantResponseData) GetAutoTopupAmount() *int {
+func (b *BillingPlanCreditGrantResponseData) GetAutoTopupAmount() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -2108,14 +2192,14 @@ func (b *BillingPlanCreditGrantResponseData) GetAutoTopupExpiryUnit() *BillingCr
 	return b.AutoTopupExpiryUnit
 }
 
-func (b *BillingPlanCreditGrantResponseData) GetAutoTopupExpiryUnitCount() *int {
+func (b *BillingPlanCreditGrantResponseData) GetAutoTopupExpiryUnitCount() *int64 {
 	if b == nil {
 		return nil
 	}
 	return b.AutoTopupExpiryUnitCount
 }
 
-func (b *BillingPlanCreditGrantResponseData) GetAutoTopupThresholdPercent() *int {
+func (b *BillingPlanCreditGrantResponseData) GetAutoTopupThresholdPercent() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -2136,7 +2220,7 @@ func (b *BillingPlanCreditGrantResponseData) GetCredit() *BillingCreditResponseD
 	return b.Credit
 }
 
-func (b *BillingPlanCreditGrantResponseData) GetCreditAmount() int {
+func (b *BillingPlanCreditGrantResponseData) GetCreditAmount() int64 {
 	if b == nil {
 		return 0
 	}
@@ -2185,7 +2269,7 @@ func (b *BillingPlanCreditGrantResponseData) GetExpiryUnit() *BillingCreditExpir
 	return b.ExpiryUnit
 }
 
-func (b *BillingPlanCreditGrantResponseData) GetExpiryUnitCount() *int {
+func (b *BillingPlanCreditGrantResponseData) GetExpiryUnitCount() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -2256,6 +2340,9 @@ func (b *BillingPlanCreditGrantResponseData) GetUpdatedAt() time.Time {
 }
 
 func (b *BillingPlanCreditGrantResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -2268,7 +2355,7 @@ func (b *BillingPlanCreditGrantResponseData) require(field *big.Int) {
 
 // SetAutoTopupAmount sets the AutoTopupAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPlanCreditGrantResponseData) SetAutoTopupAmount(autoTopupAmount *int) {
+func (b *BillingPlanCreditGrantResponseData) SetAutoTopupAmount(autoTopupAmount *int64) {
 	b.AutoTopupAmount = autoTopupAmount
 	b.require(billingPlanCreditGrantResponseDataFieldAutoTopupAmount)
 }
@@ -2303,14 +2390,14 @@ func (b *BillingPlanCreditGrantResponseData) SetAutoTopupExpiryUnit(autoTopupExp
 
 // SetAutoTopupExpiryUnitCount sets the AutoTopupExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPlanCreditGrantResponseData) SetAutoTopupExpiryUnitCount(autoTopupExpiryUnitCount *int) {
+func (b *BillingPlanCreditGrantResponseData) SetAutoTopupExpiryUnitCount(autoTopupExpiryUnitCount *int64) {
 	b.AutoTopupExpiryUnitCount = autoTopupExpiryUnitCount
 	b.require(billingPlanCreditGrantResponseDataFieldAutoTopupExpiryUnitCount)
 }
 
 // SetAutoTopupThresholdPercent sets the AutoTopupThresholdPercent field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPlanCreditGrantResponseData) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int) {
+func (b *BillingPlanCreditGrantResponseData) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int64) {
 	b.AutoTopupThresholdPercent = autoTopupThresholdPercent
 	b.require(billingPlanCreditGrantResponseDataFieldAutoTopupThresholdPercent)
 }
@@ -2331,7 +2418,7 @@ func (b *BillingPlanCreditGrantResponseData) SetCredit(credit *BillingCreditResp
 
 // SetCreditAmount sets the CreditAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPlanCreditGrantResponseData) SetCreditAmount(creditAmount int) {
+func (b *BillingPlanCreditGrantResponseData) SetCreditAmount(creditAmount int64) {
 	b.CreditAmount = creditAmount
 	b.require(billingPlanCreditGrantResponseDataFieldCreditAmount)
 }
@@ -2380,7 +2467,7 @@ func (b *BillingPlanCreditGrantResponseData) SetExpiryUnit(expiryUnit *BillingCr
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPlanCreditGrantResponseData) SetExpiryUnitCount(expiryUnitCount *int) {
+func (b *BillingPlanCreditGrantResponseData) SetExpiryUnitCount(expiryUnitCount *int64) {
 	b.ExpiryUnitCount = expiryUnitCount
 	b.require(billingPlanCreditGrantResponseDataFieldExpiryUnitCount)
 }
@@ -2488,6 +2575,9 @@ func (b *BillingPlanCreditGrantResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingPlanCreditGrantResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2515,7 +2605,7 @@ type BillingPriceResponseData struct {
 	ExternalPriceID string                      `json:"external_price_id" url:"external_price_id"`
 	ID              string                      `json:"id" url:"id"`
 	Interval        BillingProductPriceInterval `json:"interval" url:"interval"`
-	Price           int                         `json:"price" url:"price"`
+	Price           int64                       `json:"price" url:"price"`
 	PriceDecimal    *string                     `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
 	ProviderType    BillingProviderType         `json:"provider_type" url:"provider_type"`
 	Scheme          BillingPriceScheme          `json:"scheme" url:"scheme"`
@@ -2555,7 +2645,7 @@ func (b *BillingPriceResponseData) GetInterval() BillingProductPriceInterval {
 	return b.Interval
 }
 
-func (b *BillingPriceResponseData) GetPrice() int {
+func (b *BillingPriceResponseData) GetPrice() int64 {
 	if b == nil {
 		return 0
 	}
@@ -2584,6 +2674,9 @@ func (b *BillingPriceResponseData) GetScheme() BillingPriceScheme {
 }
 
 func (b *BillingPriceResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -2624,7 +2717,7 @@ func (b *BillingPriceResponseData) SetInterval(interval BillingProductPriceInter
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPriceResponseData) SetPrice(price int) {
+func (b *BillingPriceResponseData) SetPrice(price int64) {
 	b.Price = price
 	b.require(billingPriceResponseDataFieldPrice)
 }
@@ -2678,6 +2771,9 @@ func (b *BillingPriceResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingPriceResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -2768,8 +2864,8 @@ type BillingPriceView struct {
 	MeterEventName       *string                                `json:"meter_event_name,omitempty" url:"meter_event_name,omitempty"`
 	MeterEventPayloadKey *string                                `json:"meter_event_payload_key,omitempty" url:"meter_event_payload_key,omitempty"`
 	MeterID              *string                                `json:"meter_id,omitempty" url:"meter_id,omitempty"`
-	PackageSize          int                                    `json:"package_size" url:"package_size"`
-	Price                int                                    `json:"price" url:"price"`
+	PackageSize          int64                                  `json:"package_size" url:"package_size"`
+	Price                int64                                  `json:"price" url:"price"`
 	PriceDecimal         *string                                `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
 	PriceExternalID      string                                 `json:"price_external_id" url:"price_external_id"`
 	PriceID              string                                 `json:"price_id" url:"price_id"`
@@ -2852,14 +2948,14 @@ func (b *BillingPriceView) GetMeterID() *string {
 	return b.MeterID
 }
 
-func (b *BillingPriceView) GetPackageSize() int {
+func (b *BillingPriceView) GetPackageSize() int64 {
 	if b == nil {
 		return 0
 	}
 	return b.PackageSize
 }
 
-func (b *BillingPriceView) GetPrice() int {
+func (b *BillingPriceView) GetPrice() int64 {
 	if b == nil {
 		return 0
 	}
@@ -2944,6 +3040,9 @@ func (b *BillingPriceView) GetUsageType() BillingPriceUsageType {
 }
 
 func (b *BillingPriceView) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -3019,14 +3118,14 @@ func (b *BillingPriceView) SetMeterID(meterID *string) {
 
 // SetPackageSize sets the PackageSize field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPriceView) SetPackageSize(packageSize int) {
+func (b *BillingPriceView) SetPackageSize(packageSize int64) {
 	b.PackageSize = packageSize
 	b.require(billingPriceViewFieldPackageSize)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPriceView) SetPrice(price int) {
+func (b *BillingPriceView) SetPrice(price int64) {
 	b.Price = price
 	b.require(billingPriceViewFieldPrice)
 }
@@ -3148,6 +3247,9 @@ func (b *BillingPriceView) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingPriceView) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -3192,7 +3294,7 @@ type BillingProductDetailResponseData struct {
 	ProductID         string                      `json:"product_id" url:"product_id"`
 	ProviderType      BillingProviderType         `json:"provider_type" url:"provider_type"`
 	Quantity          float64                     `json:"quantity" url:"quantity"`
-	SubscriptionCount int                         `json:"subscription_count" url:"subscription_count"`
+	SubscriptionCount int64                       `json:"subscription_count" url:"subscription_count"`
 	UpdatedAt         time.Time                   `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -3293,7 +3395,7 @@ func (b *BillingProductDetailResponseData) GetQuantity() float64 {
 	return b.Quantity
 }
 
-func (b *BillingProductDetailResponseData) GetSubscriptionCount() int {
+func (b *BillingProductDetailResponseData) GetSubscriptionCount() int64 {
 	if b == nil {
 		return 0
 	}
@@ -3308,6 +3410,9 @@ func (b *BillingProductDetailResponseData) GetUpdatedAt() time.Time {
 }
 
 func (b *BillingProductDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -3411,7 +3516,7 @@ func (b *BillingProductDetailResponseData) SetQuantity(quantity float64) {
 
 // SetSubscriptionCount sets the SubscriptionCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductDetailResponseData) SetSubscriptionCount(subscriptionCount int) {
+func (b *BillingProductDetailResponseData) SetSubscriptionCount(subscriptionCount int64) {
 	b.SubscriptionCount = subscriptionCount
 	b.require(billingProductDetailResponseDataFieldSubscriptionCount)
 }
@@ -3463,6 +3568,9 @@ func (b *BillingProductDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingProductDetailResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -3501,7 +3609,7 @@ var (
 
 type BillingProductForSubscriptionResponseData struct {
 	BillingScheme              BillingPriceScheme                     `json:"billing_scheme" url:"billing_scheme"`
-	BillingThreshold           *int                                   `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
+	BillingThreshold           *int64                                 `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
 	CreatedAt                  time.Time                              `json:"created_at" url:"created_at"`
 	Currency                   string                                 `json:"currency" url:"currency"`
 	EnvironmentID              string                                 `json:"environment_id" url:"environment_id"`
@@ -3510,8 +3618,8 @@ type BillingProductForSubscriptionResponseData struct {
 	Interval                   string                                 `json:"interval" url:"interval"`
 	MeterID                    *string                                `json:"meter_id,omitempty" url:"meter_id,omitempty"`
 	Name                       string                                 `json:"name" url:"name"`
-	PackageSize                int                                    `json:"package_size" url:"package_size"`
-	Price                      int                                    `json:"price" url:"price"`
+	PackageSize                int64                                  `json:"package_size" url:"package_size"`
+	Price                      int64                                  `json:"price" url:"price"`
 	PriceDecimal               *string                                `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
 	PriceExternalID            string                                 `json:"price_external_id" url:"price_external_id"`
 	PriceID                    string                                 `json:"price_id" url:"price_id"`
@@ -3537,7 +3645,7 @@ func (b *BillingProductForSubscriptionResponseData) GetBillingScheme() BillingPr
 	return b.BillingScheme
 }
 
-func (b *BillingProductForSubscriptionResponseData) GetBillingThreshold() *int {
+func (b *BillingProductForSubscriptionResponseData) GetBillingThreshold() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -3600,14 +3708,14 @@ func (b *BillingProductForSubscriptionResponseData) GetName() string {
 	return b.Name
 }
 
-func (b *BillingProductForSubscriptionResponseData) GetPackageSize() int {
+func (b *BillingProductForSubscriptionResponseData) GetPackageSize() int64 {
 	if b == nil {
 		return 0
 	}
 	return b.PackageSize
 }
 
-func (b *BillingProductForSubscriptionResponseData) GetPrice() int {
+func (b *BillingProductForSubscriptionResponseData) GetPrice() int64 {
 	if b == nil {
 		return 0
 	}
@@ -3685,6 +3793,9 @@ func (b *BillingProductForSubscriptionResponseData) GetUsageType() BillingPriceU
 }
 
 func (b *BillingProductForSubscriptionResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -3704,7 +3815,7 @@ func (b *BillingProductForSubscriptionResponseData) SetBillingScheme(billingSche
 
 // SetBillingThreshold sets the BillingThreshold field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductForSubscriptionResponseData) SetBillingThreshold(billingThreshold *int) {
+func (b *BillingProductForSubscriptionResponseData) SetBillingThreshold(billingThreshold *int64) {
 	b.BillingThreshold = billingThreshold
 	b.require(billingProductForSubscriptionResponseDataFieldBillingThreshold)
 }
@@ -3767,14 +3878,14 @@ func (b *BillingProductForSubscriptionResponseData) SetName(name string) {
 
 // SetPackageSize sets the PackageSize field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductForSubscriptionResponseData) SetPackageSize(packageSize int) {
+func (b *BillingProductForSubscriptionResponseData) SetPackageSize(packageSize int64) {
 	b.PackageSize = packageSize
 	b.require(billingProductForSubscriptionResponseDataFieldPackageSize)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductForSubscriptionResponseData) SetPrice(price int) {
+func (b *BillingProductForSubscriptionResponseData) SetPrice(price int64) {
 	b.Price = price
 	b.require(billingProductForSubscriptionResponseDataFieldPrice)
 }
@@ -3889,6 +4000,9 @@ func (b *BillingProductForSubscriptionResponseData) MarshalJSON() ([]byte, error
 }
 
 func (b *BillingProductForSubscriptionResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -3924,7 +4038,7 @@ type BillingProductPlanResponseData struct {
 	MonthlyPriceID   *string              `json:"monthly_price_id,omitempty" url:"monthly_price_id,omitempty"`
 	OneTimePriceID   *string              `json:"one_time_price_id,omitempty" url:"one_time_price_id,omitempty"`
 	PlanID           string               `json:"plan_id" url:"plan_id"`
-	TrialDays        *int                 `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialDays        *int64               `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	YearlyPriceID    *string              `json:"yearly_price_id,omitempty" url:"yearly_price_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -3997,7 +4111,7 @@ func (b *BillingProductPlanResponseData) GetPlanID() string {
 	return b.PlanID
 }
 
-func (b *BillingProductPlanResponseData) GetTrialDays() *int {
+func (b *BillingProductPlanResponseData) GetTrialDays() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -4012,6 +4126,9 @@ func (b *BillingProductPlanResponseData) GetYearlyPriceID() *string {
 }
 
 func (b *BillingProductPlanResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -4087,7 +4204,7 @@ func (b *BillingProductPlanResponseData) SetPlanID(planID string) {
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPlanResponseData) SetTrialDays(trialDays *int) {
+func (b *BillingProductPlanResponseData) SetTrialDays(trialDays *int64) {
 	b.TrialDays = trialDays
 	b.require(billingProductPlanResponseDataFieldTrialDays)
 }
@@ -4127,6 +4244,9 @@ func (b *BillingProductPlanResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingProductPlanResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -4174,10 +4294,10 @@ var (
 )
 
 type BillingProductPriceTierResponseData struct {
-	FlatAmount          *int    `json:"flat_amount,omitempty" url:"flat_amount,omitempty"`
-	PerUnitPrice        *int    `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
+	FlatAmount          *int64  `json:"flat_amount,omitempty" url:"flat_amount,omitempty"`
+	PerUnitPrice        *int64  `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
 	PerUnitPriceDecimal *string `json:"per_unit_price_decimal,omitempty" url:"per_unit_price_decimal,omitempty"`
-	UpTo                *int    `json:"up_to,omitempty" url:"up_to,omitempty"`
+	UpTo                *int64  `json:"up_to,omitempty" url:"up_to,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4186,14 +4306,14 @@ type BillingProductPriceTierResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (b *BillingProductPriceTierResponseData) GetFlatAmount() *int {
+func (b *BillingProductPriceTierResponseData) GetFlatAmount() *int64 {
 	if b == nil {
 		return nil
 	}
 	return b.FlatAmount
 }
 
-func (b *BillingProductPriceTierResponseData) GetPerUnitPrice() *int {
+func (b *BillingProductPriceTierResponseData) GetPerUnitPrice() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -4207,7 +4327,7 @@ func (b *BillingProductPriceTierResponseData) GetPerUnitPriceDecimal() *string {
 	return b.PerUnitPriceDecimal
 }
 
-func (b *BillingProductPriceTierResponseData) GetUpTo() *int {
+func (b *BillingProductPriceTierResponseData) GetUpTo() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -4215,6 +4335,9 @@ func (b *BillingProductPriceTierResponseData) GetUpTo() *int {
 }
 
 func (b *BillingProductPriceTierResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -4227,14 +4350,14 @@ func (b *BillingProductPriceTierResponseData) require(field *big.Int) {
 
 // SetFlatAmount sets the FlatAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceTierResponseData) SetFlatAmount(flatAmount *int) {
+func (b *BillingProductPriceTierResponseData) SetFlatAmount(flatAmount *int64) {
 	b.FlatAmount = flatAmount
 	b.require(billingProductPriceTierResponseDataFieldFlatAmount)
 }
 
 // SetPerUnitPrice sets the PerUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceTierResponseData) SetPerUnitPrice(perUnitPrice *int) {
+func (b *BillingProductPriceTierResponseData) SetPerUnitPrice(perUnitPrice *int64) {
 	b.PerUnitPrice = perUnitPrice
 	b.require(billingProductPriceTierResponseDataFieldPerUnitPrice)
 }
@@ -4248,7 +4371,7 @@ func (b *BillingProductPriceTierResponseData) SetPerUnitPriceDecimal(perUnitPric
 
 // SetUpTo sets the UpTo field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceTierResponseData) SetUpTo(upTo *int) {
+func (b *BillingProductPriceTierResponseData) SetUpTo(upTo *int64) {
 	b.UpTo = upTo
 	b.require(billingProductPriceTierResponseDataFieldUpTo)
 }
@@ -4281,6 +4404,9 @@ func (b *BillingProductPriceTierResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingProductPriceTierResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -4423,6 +4549,9 @@ func (b *BillingProductResponseData) GetUpdatedAt() time.Time {
 }
 
 func (b *BillingProductResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -4564,6 +4693,9 @@ func (b *BillingProductResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingProductResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -4615,14 +4747,14 @@ var (
 )
 
 type BillingSubscriptionDiscountView struct {
-	AmountOff              *int       `json:"amount_off,omitempty" url:"amount_off,omitempty"`
+	AmountOff              *int64     `json:"amount_off,omitempty" url:"amount_off,omitempty"`
 	CouponID               string     `json:"coupon_id" url:"coupon_id"`
 	CouponName             string     `json:"coupon_name" url:"coupon_name"`
 	Currency               *string    `json:"currency,omitempty" url:"currency,omitempty"`
 	CustomerFacingCode     *string    `json:"customer_facing_code,omitempty" url:"customer_facing_code,omitempty"`
 	DiscountExternalID     string     `json:"discount_external_id" url:"discount_external_id"`
 	Duration               string     `json:"duration" url:"duration"`
-	DurationInMonths       *int       `json:"duration_in_months,omitempty" url:"duration_in_months,omitempty"`
+	DurationInMonths       *int64     `json:"duration_in_months,omitempty" url:"duration_in_months,omitempty"`
 	EndedAt                *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
 	IsActive               bool       `json:"is_active" url:"is_active"`
 	PercentOff             *float64   `json:"percent_off,omitempty" url:"percent_off,omitempty"`
@@ -4637,7 +4769,7 @@ type BillingSubscriptionDiscountView struct {
 	rawJSON         json.RawMessage
 }
 
-func (b *BillingSubscriptionDiscountView) GetAmountOff() *int {
+func (b *BillingSubscriptionDiscountView) GetAmountOff() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -4686,7 +4818,7 @@ func (b *BillingSubscriptionDiscountView) GetDuration() string {
 	return b.Duration
 }
 
-func (b *BillingSubscriptionDiscountView) GetDurationInMonths() *int {
+func (b *BillingSubscriptionDiscountView) GetDurationInMonths() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -4736,6 +4868,9 @@ func (b *BillingSubscriptionDiscountView) GetSubscriptionExternalID() string {
 }
 
 func (b *BillingSubscriptionDiscountView) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -4748,7 +4883,7 @@ func (b *BillingSubscriptionDiscountView) require(field *big.Int) {
 
 // SetAmountOff sets the AmountOff field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionDiscountView) SetAmountOff(amountOff *int) {
+func (b *BillingSubscriptionDiscountView) SetAmountOff(amountOff *int64) {
 	b.AmountOff = amountOff
 	b.require(billingSubscriptionDiscountViewFieldAmountOff)
 }
@@ -4797,7 +4932,7 @@ func (b *BillingSubscriptionDiscountView) SetDuration(duration string) {
 
 // SetDurationInMonths sets the DurationInMonths field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionDiscountView) SetDurationInMonths(durationInMonths *int) {
+func (b *BillingSubscriptionDiscountView) SetDurationInMonths(durationInMonths *int64) {
 	b.DurationInMonths = durationInMonths
 	b.require(billingSubscriptionDiscountViewFieldDurationInMonths)
 }
@@ -4884,6 +5019,9 @@ func (b *BillingSubscriptionDiscountView) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingSubscriptionDiscountView) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -4946,7 +5084,7 @@ var (
 
 type BillingSubscriptionView struct {
 	ApplicationID          *string                                      `json:"application_id,omitempty" url:"application_id,omitempty"`
-	CancelAt               *int                                         `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
+	CancelAt               *int64                                       `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
 	CancelAtPeriodEnd      bool                                         `json:"cancel_at_period_end" url:"cancel_at_period_end"`
 	CompanyID              *string                                      `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CreatedAt              time.Time                                    `json:"created_at" url:"created_at"`
@@ -4958,16 +5096,16 @@ type BillingSubscriptionView struct {
 	ID                     string                                       `json:"id" url:"id"`
 	Interval               string                                       `json:"interval" url:"interval"`
 	LatestInvoice          *InvoiceResponseData                         `json:"latest_invoice,omitempty" url:"latest_invoice,omitempty"`
-	Metadata               map[string]interface{}                       `json:"metadata,omitempty" url:"metadata,omitempty"`
+	Metadata               map[string]any                               `json:"metadata,omitempty" url:"metadata,omitempty"`
 	PaymentMethod          *PaymentMethodResponseData                   `json:"payment_method,omitempty" url:"payment_method,omitempty"`
-	PeriodEnd              int                                          `json:"period_end" url:"period_end"`
-	PeriodStart            int                                          `json:"period_start" url:"period_start"`
+	PeriodEnd              int64                                        `json:"period_end" url:"period_end"`
+	PeriodStart            int64                                        `json:"period_start" url:"period_start"`
 	Products               []*BillingProductForSubscriptionResponseData `json:"products" url:"products"`
 	ProviderType           BillingProviderType                          `json:"provider_type" url:"provider_type"`
 	Status                 string                                       `json:"status" url:"status"`
 	SubscriptionExternalID string                                       `json:"subscription_external_id" url:"subscription_external_id"`
-	TotalPrice             int                                          `json:"total_price" url:"total_price"`
-	TrialEnd               *int                                         `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	TotalPrice             int64                                        `json:"total_price" url:"total_price"`
+	TrialEnd               *int64                                       `json:"trial_end,omitempty" url:"trial_end,omitempty"`
 	TrialEndSetting        *BillingSubscriptionTrialEndSetting          `json:"trial_end_setting,omitempty" url:"trial_end_setting,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -4984,7 +5122,7 @@ func (b *BillingSubscriptionView) GetApplicationID() *string {
 	return b.ApplicationID
 }
 
-func (b *BillingSubscriptionView) GetCancelAt() *int {
+func (b *BillingSubscriptionView) GetCancelAt() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -5068,7 +5206,7 @@ func (b *BillingSubscriptionView) GetLatestInvoice() *InvoiceResponseData {
 	return b.LatestInvoice
 }
 
-func (b *BillingSubscriptionView) GetMetadata() map[string]interface{} {
+func (b *BillingSubscriptionView) GetMetadata() map[string]any {
 	if b == nil {
 		return nil
 	}
@@ -5082,14 +5220,14 @@ func (b *BillingSubscriptionView) GetPaymentMethod() *PaymentMethodResponseData 
 	return b.PaymentMethod
 }
 
-func (b *BillingSubscriptionView) GetPeriodEnd() int {
+func (b *BillingSubscriptionView) GetPeriodEnd() int64 {
 	if b == nil {
 		return 0
 	}
 	return b.PeriodEnd
 }
 
-func (b *BillingSubscriptionView) GetPeriodStart() int {
+func (b *BillingSubscriptionView) GetPeriodStart() int64 {
 	if b == nil {
 		return 0
 	}
@@ -5124,14 +5262,14 @@ func (b *BillingSubscriptionView) GetSubscriptionExternalID() string {
 	return b.SubscriptionExternalID
 }
 
-func (b *BillingSubscriptionView) GetTotalPrice() int {
+func (b *BillingSubscriptionView) GetTotalPrice() int64 {
 	if b == nil {
 		return 0
 	}
 	return b.TotalPrice
 }
 
-func (b *BillingSubscriptionView) GetTrialEnd() *int {
+func (b *BillingSubscriptionView) GetTrialEnd() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -5146,6 +5284,9 @@ func (b *BillingSubscriptionView) GetTrialEndSetting() *BillingSubscriptionTrial
 }
 
 func (b *BillingSubscriptionView) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -5165,7 +5306,7 @@ func (b *BillingSubscriptionView) SetApplicationID(applicationID *string) {
 
 // SetCancelAt sets the CancelAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionView) SetCancelAt(cancelAt *int) {
+func (b *BillingSubscriptionView) SetCancelAt(cancelAt *int64) {
 	b.CancelAt = cancelAt
 	b.require(billingSubscriptionViewFieldCancelAt)
 }
@@ -5249,7 +5390,7 @@ func (b *BillingSubscriptionView) SetLatestInvoice(latestInvoice *InvoiceRespons
 
 // SetMetadata sets the Metadata field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionView) SetMetadata(metadata map[string]interface{}) {
+func (b *BillingSubscriptionView) SetMetadata(metadata map[string]any) {
 	b.Metadata = metadata
 	b.require(billingSubscriptionViewFieldMetadata)
 }
@@ -5263,14 +5404,14 @@ func (b *BillingSubscriptionView) SetPaymentMethod(paymentMethod *PaymentMethodR
 
 // SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionView) SetPeriodEnd(periodEnd int) {
+func (b *BillingSubscriptionView) SetPeriodEnd(periodEnd int64) {
 	b.PeriodEnd = periodEnd
 	b.require(billingSubscriptionViewFieldPeriodEnd)
 }
 
 // SetPeriodStart sets the PeriodStart field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionView) SetPeriodStart(periodStart int) {
+func (b *BillingSubscriptionView) SetPeriodStart(periodStart int64) {
 	b.PeriodStart = periodStart
 	b.require(billingSubscriptionViewFieldPeriodStart)
 }
@@ -5305,14 +5446,14 @@ func (b *BillingSubscriptionView) SetSubscriptionExternalID(subscriptionExternal
 
 // SetTotalPrice sets the TotalPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionView) SetTotalPrice(totalPrice int) {
+func (b *BillingSubscriptionView) SetTotalPrice(totalPrice int64) {
 	b.TotalPrice = totalPrice
 	b.require(billingSubscriptionViewFieldTotalPrice)
 }
 
 // SetTrialEnd sets the TrialEnd field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionView) SetTrialEnd(trialEnd *int) {
+func (b *BillingSubscriptionView) SetTrialEnd(trialEnd *int64) {
 	b.TrialEnd = trialEnd
 	b.require(billingSubscriptionViewFieldTrialEnd)
 }
@@ -5364,6 +5505,9 @@ func (b *BillingSubscriptionView) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingSubscriptionView) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -5395,6 +5539,246 @@ func NewBillingTiersModeFromString(s string) (BillingTiersMode, error) {
 
 func (b BillingTiersMode) Ptr() *BillingTiersMode {
 	return &b
+}
+
+var (
+	captureRawEventFieldCapturedAt = big.NewInt(1 << 0)
+	captureRawEventFieldEventID    = big.NewInt(1 << 1)
+	captureRawEventFieldRawBytes   = big.NewInt(1 << 2)
+	captureRawEventFieldRemoteIP   = big.NewInt(1 << 3)
+	captureRawEventFieldUserAgent  = big.NewInt(1 << 4)
+)
+
+type CaptureRawEvent struct {
+	CapturedAt time.Time `json:"captured_at" url:"captured_at"`
+	EventID    *string   `json:"event_id,omitempty" url:"event_id,omitempty"`
+	RawBytes   string    `json:"raw_bytes" url:"raw_bytes"`
+	RemoteIP   string    `json:"remote_ip" url:"remote_ip"`
+	UserAgent  string    `json:"user_agent" url:"user_agent"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CaptureRawEvent) GetCapturedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CapturedAt
+}
+
+func (c *CaptureRawEvent) GetEventID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EventID
+}
+
+func (c *CaptureRawEvent) GetRawBytes() string {
+	if c == nil {
+		return ""
+	}
+	return c.RawBytes
+}
+
+func (c *CaptureRawEvent) GetRemoteIP() string {
+	if c == nil {
+		return ""
+	}
+	return c.RemoteIP
+}
+
+func (c *CaptureRawEvent) GetUserAgent() string {
+	if c == nil {
+		return ""
+	}
+	return c.UserAgent
+}
+
+func (c *CaptureRawEvent) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CaptureRawEvent) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCapturedAt sets the CapturedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CaptureRawEvent) SetCapturedAt(capturedAt time.Time) {
+	c.CapturedAt = capturedAt
+	c.require(captureRawEventFieldCapturedAt)
+}
+
+// SetEventID sets the EventID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CaptureRawEvent) SetEventID(eventID *string) {
+	c.EventID = eventID
+	c.require(captureRawEventFieldEventID)
+}
+
+// SetRawBytes sets the RawBytes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CaptureRawEvent) SetRawBytes(rawBytes string) {
+	c.RawBytes = rawBytes
+	c.require(captureRawEventFieldRawBytes)
+}
+
+// SetRemoteIP sets the RemoteIP field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CaptureRawEvent) SetRemoteIP(remoteIP string) {
+	c.RemoteIP = remoteIP
+	c.require(captureRawEventFieldRemoteIP)
+}
+
+// SetUserAgent sets the UserAgent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CaptureRawEvent) SetUserAgent(userAgent string) {
+	c.UserAgent = userAgent
+	c.require(captureRawEventFieldUserAgent)
+}
+
+func (c *CaptureRawEvent) UnmarshalJSON(data []byte) error {
+	type embed CaptureRawEvent
+	var unmarshaler = struct {
+		embed
+		CapturedAt *internal.DateTime `json:"captured_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CaptureRawEvent(unmarshaler.embed)
+	c.CapturedAt = unmarshaler.CapturedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CaptureRawEvent) MarshalJSON() ([]byte, error) {
+	type embed CaptureRawEvent
+	var marshaler = struct {
+		embed
+		CapturedAt *internal.DateTime `json:"captured_at"`
+	}{
+		embed:      embed(*c),
+		CapturedAt: internal.NewDateTime(c.CapturedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CaptureRawEvent) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	captureRawEventBatchFieldEvents = big.NewInt(1 << 0)
+)
+
+type CaptureRawEventBatch struct {
+	Events []*CaptureRawEvent `json:"events" url:"events"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CaptureRawEventBatch) GetEvents() []*CaptureRawEvent {
+	if c == nil {
+		return nil
+	}
+	return c.Events
+}
+
+func (c *CaptureRawEventBatch) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CaptureRawEventBatch) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetEvents sets the Events field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CaptureRawEventBatch) SetEvents(events []*CaptureRawEvent) {
+	c.Events = events
+	c.require(captureRawEventBatchFieldEvents)
+}
+
+func (c *CaptureRawEventBatch) UnmarshalJSON(data []byte) error {
+	type unmarshaler CaptureRawEventBatch
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CaptureRawEventBatch(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CaptureRawEventBatch) MarshalJSON() ([]byte, error) {
+	type embed CaptureRawEventBatch
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CaptureRawEventBatch) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 var (
@@ -5491,6 +5875,9 @@ func (c *ChangeSubscriptionRequestBody) GetSkipTrial() bool {
 }
 
 func (c *ChangeSubscriptionRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -5592,6 +5979,9 @@ func (c *ChangeSubscriptionRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ChangeSubscriptionRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -5676,9 +6066,9 @@ type CompanyDetailResponseData struct {
 	Rules                 []*Rule                                  `json:"rules" url:"rules"`
 	ScheduledDowngrade    *ScheduledDowngradeResponseData          `json:"scheduled_downgrade,omitempty" url:"scheduled_downgrade,omitempty"`
 	// A map of trait names to trait values
-	Traits    map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
-	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
-	UserCount int                    `json:"user_count" url:"user_count"`
+	Traits    map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
+	UpdatedAt time.Time      `json:"updated_at" url:"updated_at"`
+	UserCount int64          `json:"user_count" url:"user_count"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5827,7 +6217,7 @@ func (c *CompanyDetailResponseData) GetScheduledDowngrade() *ScheduledDowngradeR
 	return c.ScheduledDowngrade
 }
 
-func (c *CompanyDetailResponseData) GetTraits() map[string]interface{} {
+func (c *CompanyDetailResponseData) GetTraits() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -5841,7 +6231,7 @@ func (c *CompanyDetailResponseData) GetUpdatedAt() time.Time {
 	return c.UpdatedAt
 }
 
-func (c *CompanyDetailResponseData) GetUserCount() int {
+func (c *CompanyDetailResponseData) GetUserCount() int64 {
 	if c == nil {
 		return 0
 	}
@@ -5849,6 +6239,9 @@ func (c *CompanyDetailResponseData) GetUserCount() int {
 }
 
 func (c *CompanyDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -6001,7 +6394,7 @@ func (c *CompanyDetailResponseData) SetScheduledDowngrade(scheduledDowngrade *Sc
 
 // SetTraits sets the Traits field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyDetailResponseData) SetTraits(traits map[string]interface{}) {
+func (c *CompanyDetailResponseData) SetTraits(traits map[string]any) {
 	c.Traits = traits
 	c.require(companyDetailResponseDataFieldTraits)
 }
@@ -6015,7 +6408,7 @@ func (c *CompanyDetailResponseData) SetUpdatedAt(updatedAt time.Time) {
 
 // SetUserCount sets the UserCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyDetailResponseData) SetUserCount(userCount int) {
+func (c *CompanyDetailResponseData) SetUserCount(userCount int64) {
 	c.UserCount = userCount
 	c.require(companyDetailResponseDataFieldUserCount)
 }
@@ -6064,6 +6457,9 @@ func (c *CompanyDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyDetailResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -6100,7 +6496,7 @@ type CompanyEventPeriodMetricsResponseData struct {
 	MonthReset    string     `json:"month_reset" url:"month_reset"`
 	Period        string     `json:"period" url:"period"`
 	ValidUntil    *time.Time `json:"valid_until,omitempty" url:"valid_until,omitempty"`
-	Value         int        `json:"value" url:"value"`
+	Value         int64      `json:"value" url:"value"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6179,7 +6575,7 @@ func (c *CompanyEventPeriodMetricsResponseData) GetValidUntil() *time.Time {
 	return c.ValidUntil
 }
 
-func (c *CompanyEventPeriodMetricsResponseData) GetValue() int {
+func (c *CompanyEventPeriodMetricsResponseData) GetValue() int64 {
 	if c == nil {
 		return 0
 	}
@@ -6187,6 +6583,9 @@ func (c *CompanyEventPeriodMetricsResponseData) GetValue() int {
 }
 
 func (c *CompanyEventPeriodMetricsResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -6269,7 +6668,7 @@ func (c *CompanyEventPeriodMetricsResponseData) SetValidUntil(validUntil *time.T
 
 // SetValue sets the Value field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyEventPeriodMetricsResponseData) SetValue(value int) {
+func (c *CompanyEventPeriodMetricsResponseData) SetValue(value int64) {
 	c.Value = value
 	c.require(companyEventPeriodMetricsResponseDataFieldValue)
 }
@@ -6322,6 +6721,9 @@ func (c *CompanyEventPeriodMetricsResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyEventPeriodMetricsResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -6391,6 +6793,9 @@ func (c *CompanyMembershipResponseData) GetUserID() string {
 }
 
 func (c *CompanyMembershipResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -6476,6 +6881,9 @@ func (c *CompanyMembershipResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyMembershipResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -6554,6 +6962,9 @@ func (c *CompanyOverrideNoteResponseData) GetUpdatedAt() time.Time {
 }
 
 func (c *CompanyOverrideNoteResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -6646,6 +7057,9 @@ func (c *CompanyOverrideNoteResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyOverrideNoteResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -6697,7 +7111,7 @@ type CompanyOverrideResponseData struct {
 	RuleIDUsageExceeded    *string                            `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
 	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
 	ValueBool              *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueNumeric           *int                               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueNumeric           *int64                             `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
 	ValueTrait             *EntityTraitDefinitionResponseData `json:"value_trait,omitempty" url:"value_trait,omitempty"`
 	ValueTraitID           *string                            `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
 	ValueType              EntitlementValueType               `json:"value_type" url:"value_type"`
@@ -6821,7 +7235,7 @@ func (c *CompanyOverrideResponseData) GetValueBool() *bool {
 	return c.ValueBool
 }
 
-func (c *CompanyOverrideResponseData) GetValueNumeric() *int {
+func (c *CompanyOverrideResponseData) GetValueNumeric() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -6850,6 +7264,9 @@ func (c *CompanyOverrideResponseData) GetValueType() EntitlementValueType {
 }
 
 func (c *CompanyOverrideResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -6974,7 +7391,7 @@ func (c *CompanyOverrideResponseData) SetValueBool(valueBool *bool) {
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyOverrideResponseData) SetValueNumeric(valueNumeric *int) {
+func (c *CompanyOverrideResponseData) SetValueNumeric(valueNumeric *int64) {
 	c.ValueNumeric = valueNumeric
 	c.require(companyOverrideResponseDataFieldValueNumeric)
 }
@@ -7044,6 +7461,9 @@ func (c *CompanyOverrideResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyOverrideResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -7079,7 +7499,7 @@ type CompanyPlanWithBillingSubView struct {
 	IncludedCreditGrants     []*PlanCreditGrantView `json:"included_credit_grants" url:"included_credit_grants"`
 	Name                     string                 `json:"name" url:"name"`
 	PlanPeriod               *string                `json:"plan_period,omitempty" url:"plan_period,omitempty"`
-	PlanPrice                *int                   `json:"plan_price,omitempty" url:"plan_price,omitempty"`
+	PlanPrice                *int64                 `json:"plan_price,omitempty" url:"plan_price,omitempty"`
 	PlanVersionID            *string                `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -7152,7 +7572,7 @@ func (c *CompanyPlanWithBillingSubView) GetPlanPeriod() *string {
 	return c.PlanPeriod
 }
 
-func (c *CompanyPlanWithBillingSubView) GetPlanPrice() *int {
+func (c *CompanyPlanWithBillingSubView) GetPlanPrice() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -7167,6 +7587,9 @@ func (c *CompanyPlanWithBillingSubView) GetPlanVersionID() *string {
 }
 
 func (c *CompanyPlanWithBillingSubView) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -7242,7 +7665,7 @@ func (c *CompanyPlanWithBillingSubView) SetPlanPeriod(planPeriod *string) {
 
 // SetPlanPrice sets the PlanPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanWithBillingSubView) SetPlanPrice(planPrice *int) {
+func (c *CompanyPlanWithBillingSubView) SetPlanPrice(planPrice *int64) {
 	c.PlanPrice = planPrice
 	c.require(companyPlanWithBillingSubViewFieldPlanPrice)
 }
@@ -7290,6 +7713,9 @@ func (c *CompanyPlanWithBillingSubView) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyPlanWithBillingSubView) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -7331,7 +7757,7 @@ type CompanySubscriptionResponseData struct {
 	Products               []*BillingProductForSubscriptionResponseData `json:"products" url:"products"`
 	Status                 string                                       `json:"status" url:"status"`
 	SubscriptionExternalID string                                       `json:"subscription_external_id" url:"subscription_external_id"`
-	TotalPrice             int                                          `json:"total_price" url:"total_price"`
+	TotalPrice             int64                                        `json:"total_price" url:"total_price"`
 	TrialEnd               *time.Time                                   `json:"trial_end,omitempty" url:"trial_end,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -7425,7 +7851,7 @@ func (c *CompanySubscriptionResponseData) GetSubscriptionExternalID() string {
 	return c.SubscriptionExternalID
 }
 
-func (c *CompanySubscriptionResponseData) GetTotalPrice() int {
+func (c *CompanySubscriptionResponseData) GetTotalPrice() int64 {
 	if c == nil {
 		return 0
 	}
@@ -7440,6 +7866,9 @@ func (c *CompanySubscriptionResponseData) GetTrialEnd() *time.Time {
 }
 
 func (c *CompanySubscriptionResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -7536,7 +7965,7 @@ func (c *CompanySubscriptionResponseData) SetSubscriptionExternalID(subscription
 
 // SetTotalPrice sets the TotalPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanySubscriptionResponseData) SetTotalPrice(totalPrice int) {
+func (c *CompanySubscriptionResponseData) SetTotalPrice(totalPrice int64) {
 	c.TotalPrice = totalPrice
 	c.require(companySubscriptionResponseDataFieldTotalPrice)
 }
@@ -7592,6 +8021,9 @@ func (c *CompanySubscriptionResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanySubscriptionResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -7634,6 +8066,9 @@ func (c *CompatiblePlans) GetSourcePlanID() string {
 }
 
 func (c *CompatiblePlans) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -7686,6 +8121,9 @@ func (c *CompatiblePlans) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompatiblePlans) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -7728,6 +8166,9 @@ func (c *ComponentCapabilities) GetCheckout() bool {
 }
 
 func (c *ComponentCapabilities) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -7780,6 +8221,9 @@ func (c *ComponentCapabilities) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ComponentCapabilities) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -7858,6 +8302,9 @@ func (c *ComponentDisplaySettings) GetShowZeroPriceAsFree() bool {
 }
 
 func (c *ComponentDisplaySettings) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -7938,6 +8385,9 @@ func (c *ComponentDisplaySettings) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ComponentDisplaySettings) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -8196,6 +8646,9 @@ func (c *ComponentHydrateResponseData) GetUpcomingInvoice() *InvoiceResponseData
 }
 
 func (c *ComponentHydrateResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -8416,6 +8869,9 @@ func (c *ComponentHydrateResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ComponentHydrateResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -8456,7 +8912,7 @@ type Condition struct {
 	ID                        string                           `json:"id" url:"id"`
 	MetricPeriod              *ConditionMetricPeriod           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset    *ConditionMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	MetricValue               *int                             `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	MetricValue               *int64                           `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator                  ConditionOperator                `json:"operator" url:"operator"`
 	ResourceIDs               []string                         `json:"resource_ids" url:"resource_ids"`
 	TraitDefinition           *TraitDefinition                 `json:"trait_definition,omitempty" url:"trait_definition,omitempty"`
@@ -8539,7 +8995,7 @@ func (c *Condition) GetMetricPeriodMonthReset() *ConditionMetricPeriodMonthReset
 	return c.MetricPeriodMonthReset
 }
 
-func (c *Condition) GetMetricValue() *int {
+func (c *Condition) GetMetricValue() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -8575,6 +9031,9 @@ func (c *Condition) GetTraitValue() string {
 }
 
 func (c *Condition) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -8657,7 +9116,7 @@ func (c *Condition) SetMetricPeriodMonthReset(metricPeriodMonthReset *ConditionM
 
 // SetMetricValue sets the MetricValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *Condition) SetMetricValue(metricValue *int) {
+func (c *Condition) SetMetricValue(metricValue *int64) {
 	c.MetricValue = metricValue
 	c.require(conditionFieldMetricValue)
 }
@@ -8718,6 +9177,9 @@ func (c *Condition) MarshalJSON() ([]byte, error) {
 }
 
 func (c *Condition) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -8794,6 +9256,9 @@ func (c *ConditionGroup) GetConditions() []*Condition {
 }
 
 func (c *ConditionGroup) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -8839,6 +9304,9 @@ func (c *ConditionGroup) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ConditionGroup) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -8856,9 +9324,8 @@ var (
 	conditionGroupResponseDataFieldEnvironmentID = big.NewInt(1 << 2)
 	conditionGroupResponseDataFieldFlagID        = big.NewInt(1 << 3)
 	conditionGroupResponseDataFieldID            = big.NewInt(1 << 4)
-	conditionGroupResponseDataFieldPlanVersionID = big.NewInt(1 << 5)
-	conditionGroupResponseDataFieldRuleID        = big.NewInt(1 << 6)
-	conditionGroupResponseDataFieldUpdatedAt     = big.NewInt(1 << 7)
+	conditionGroupResponseDataFieldRuleID        = big.NewInt(1 << 5)
+	conditionGroupResponseDataFieldUpdatedAt     = big.NewInt(1 << 6)
 )
 
 type ConditionGroupResponseData struct {
@@ -8867,7 +9334,6 @@ type ConditionGroupResponseData struct {
 	EnvironmentID string    `json:"environment_id" url:"environment_id"`
 	FlagID        *string   `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID            string    `json:"id" url:"id"`
-	PlanVersionID *string   `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	RuleID        string    `json:"rule_id" url:"rule_id"`
 	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
 
@@ -8913,13 +9379,6 @@ func (c *ConditionGroupResponseData) GetID() string {
 	return c.ID
 }
 
-func (c *ConditionGroupResponseData) GetPlanVersionID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.PlanVersionID
-}
-
 func (c *ConditionGroupResponseData) GetRuleID() string {
 	if c == nil {
 		return ""
@@ -8935,6 +9394,9 @@ func (c *ConditionGroupResponseData) GetUpdatedAt() time.Time {
 }
 
 func (c *ConditionGroupResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -8978,13 +9440,6 @@ func (c *ConditionGroupResponseData) SetFlagID(flagID *string) {
 func (c *ConditionGroupResponseData) SetID(id string) {
 	c.ID = id
 	c.require(conditionGroupResponseDataFieldID)
-}
-
-// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ConditionGroupResponseData) SetPlanVersionID(planVersionID *string) {
-	c.PlanVersionID = planVersionID
-	c.require(conditionGroupResponseDataFieldPlanVersionID)
 }
 
 // SetRuleID sets the RuleID field and marks it as non-optional;
@@ -9041,6 +9496,9 @@ func (c *ConditionGroupResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ConditionGroupResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -9059,9 +9517,8 @@ var (
 	conditionGroupViewFieldEnvironmentID = big.NewInt(1 << 3)
 	conditionGroupViewFieldFlagID        = big.NewInt(1 << 4)
 	conditionGroupViewFieldID            = big.NewInt(1 << 5)
-	conditionGroupViewFieldPlanVersionID = big.NewInt(1 << 6)
-	conditionGroupViewFieldRuleID        = big.NewInt(1 << 7)
-	conditionGroupViewFieldUpdatedAt     = big.NewInt(1 << 8)
+	conditionGroupViewFieldRuleID        = big.NewInt(1 << 6)
+	conditionGroupViewFieldUpdatedAt     = big.NewInt(1 << 7)
 )
 
 type ConditionGroupView struct {
@@ -9071,7 +9528,6 @@ type ConditionGroupView struct {
 	EnvironmentID string           `json:"environment_id" url:"environment_id"`
 	FlagID        *string          `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID            string           `json:"id" url:"id"`
-	PlanVersionID *string          `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	RuleID        string           `json:"rule_id" url:"rule_id"`
 	UpdatedAt     time.Time        `json:"updated_at" url:"updated_at"`
 
@@ -9124,13 +9580,6 @@ func (c *ConditionGroupView) GetID() string {
 	return c.ID
 }
 
-func (c *ConditionGroupView) GetPlanVersionID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.PlanVersionID
-}
-
 func (c *ConditionGroupView) GetRuleID() string {
 	if c == nil {
 		return ""
@@ -9146,6 +9595,9 @@ func (c *ConditionGroupView) GetUpdatedAt() time.Time {
 }
 
 func (c *ConditionGroupView) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -9196,13 +9648,6 @@ func (c *ConditionGroupView) SetFlagID(flagID *string) {
 func (c *ConditionGroupView) SetID(id string) {
 	c.ID = id
 	c.require(conditionGroupViewFieldID)
-}
-
-// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ConditionGroupView) SetPlanVersionID(planVersionID *string) {
-	c.PlanVersionID = planVersionID
-	c.require(conditionGroupViewFieldPlanVersionID)
 }
 
 // SetRuleID sets the RuleID field and marks it as non-optional;
@@ -9259,6 +9704,9 @@ func (c *ConditionGroupView) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ConditionGroupView) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -9376,16 +9824,15 @@ var (
 	conditionResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 12)
 	conditionResponseDataFieldMetricValue            = big.NewInt(1 << 13)
 	conditionResponseDataFieldOperator               = big.NewInt(1 << 14)
-	conditionResponseDataFieldPlanVersionID          = big.NewInt(1 << 15)
-	conditionResponseDataFieldResourceUnspecifiedIDs = big.NewInt(1 << 16)
-	conditionResponseDataFieldRuleID                 = big.NewInt(1 << 17)
-	conditionResponseDataFieldTraitEntityType        = big.NewInt(1 << 18)
-	conditionResponseDataFieldTraitID                = big.NewInt(1 << 19)
-	conditionResponseDataFieldTraitValue             = big.NewInt(1 << 20)
-	conditionResponseDataFieldTraitValueBool         = big.NewInt(1 << 21)
-	conditionResponseDataFieldTraitValueDate         = big.NewInt(1 << 22)
-	conditionResponseDataFieldTraitValueInt          = big.NewInt(1 << 23)
-	conditionResponseDataFieldUpdatedAt              = big.NewInt(1 << 24)
+	conditionResponseDataFieldResourceUnspecifiedIDs = big.NewInt(1 << 15)
+	conditionResponseDataFieldRuleID                 = big.NewInt(1 << 16)
+	conditionResponseDataFieldTraitEntityType        = big.NewInt(1 << 17)
+	conditionResponseDataFieldTraitID                = big.NewInt(1 << 18)
+	conditionResponseDataFieldTraitValue             = big.NewInt(1 << 19)
+	conditionResponseDataFieldTraitValueBool         = big.NewInt(1 << 20)
+	conditionResponseDataFieldTraitValueDate         = big.NewInt(1 << 21)
+	conditionResponseDataFieldTraitValueInt          = big.NewInt(1 << 22)
+	conditionResponseDataFieldUpdatedAt              = big.NewInt(1 << 23)
 )
 
 type ConditionResponseData struct {
@@ -9402,9 +9849,8 @@ type ConditionResponseData struct {
 	ID                     string      `json:"id" url:"id"`
 	MetricPeriod           *string     `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *string     `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	MetricValue            *int        `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	MetricValue            *int64      `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator               string      `json:"operator" url:"operator"`
-	PlanVersionID          *string     `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	ResourceUnspecifiedIDs []string    `json:"resource_unspecified_ids" url:"resource_unspecified_ids"`
 	RuleID                 string      `json:"rule_id" url:"rule_id"`
 	TraitEntityType        *EntityType `json:"trait_entity_type,omitempty" url:"trait_entity_type,omitempty"`
@@ -9412,7 +9858,7 @@ type ConditionResponseData struct {
 	TraitValue             string      `json:"trait_value" url:"trait_value"`
 	TraitValueBool         bool        `json:"trait_value_bool" url:"trait_value_bool"`
 	TraitValueDate         *time.Time  `json:"trait_value_date,omitempty" url:"trait_value_date,omitempty"`
-	TraitValueInt          int         `json:"trait_value_int" url:"trait_value_int"`
+	TraitValueInt          int64       `json:"trait_value_int" url:"trait_value_int"`
 	UpdatedAt              time.Time   `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -9513,7 +9959,7 @@ func (c *ConditionResponseData) GetMetricPeriodMonthReset() *string {
 	return c.MetricPeriodMonthReset
 }
 
-func (c *ConditionResponseData) GetMetricValue() *int {
+func (c *ConditionResponseData) GetMetricValue() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -9525,13 +9971,6 @@ func (c *ConditionResponseData) GetOperator() string {
 		return ""
 	}
 	return c.Operator
-}
-
-func (c *ConditionResponseData) GetPlanVersionID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.PlanVersionID
 }
 
 func (c *ConditionResponseData) GetResourceUnspecifiedIDs() []string {
@@ -9583,7 +10022,7 @@ func (c *ConditionResponseData) GetTraitValueDate() *time.Time {
 	return c.TraitValueDate
 }
 
-func (c *ConditionResponseData) GetTraitValueInt() int {
+func (c *ConditionResponseData) GetTraitValueInt() int64 {
 	if c == nil {
 		return 0
 	}
@@ -9598,6 +10037,9 @@ func (c *ConditionResponseData) GetUpdatedAt() time.Time {
 }
 
 func (c *ConditionResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -9701,7 +10143,7 @@ func (c *ConditionResponseData) SetMetricPeriodMonthReset(metricPeriodMonthReset
 
 // SetMetricValue sets the MetricValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ConditionResponseData) SetMetricValue(metricValue *int) {
+func (c *ConditionResponseData) SetMetricValue(metricValue *int64) {
 	c.MetricValue = metricValue
 	c.require(conditionResponseDataFieldMetricValue)
 }
@@ -9711,13 +10153,6 @@ func (c *ConditionResponseData) SetMetricValue(metricValue *int) {
 func (c *ConditionResponseData) SetOperator(operator string) {
 	c.Operator = operator
 	c.require(conditionResponseDataFieldOperator)
-}
-
-// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ConditionResponseData) SetPlanVersionID(planVersionID *string) {
-	c.PlanVersionID = planVersionID
-	c.require(conditionResponseDataFieldPlanVersionID)
 }
 
 // SetResourceUnspecifiedIDs sets the ResourceUnspecifiedIDs field and marks it as non-optional;
@@ -9771,7 +10206,7 @@ func (c *ConditionResponseData) SetTraitValueDate(traitValueDate *time.Time) {
 
 // SetTraitValueInt sets the TraitValueInt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ConditionResponseData) SetTraitValueInt(traitValueInt int) {
+func (c *ConditionResponseData) SetTraitValueInt(traitValueInt int64) {
 	c.TraitValueInt = traitValueInt
 	c.require(conditionResponseDataFieldTraitValueInt)
 }
@@ -9827,6 +10262,9 @@ func (c *ConditionResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ConditionResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -9857,20 +10295,19 @@ var (
 	conditionViewFieldMetricPeriodMonthReset = big.NewInt(1 << 15)
 	conditionViewFieldMetricValue            = big.NewInt(1 << 16)
 	conditionViewFieldOperator               = big.NewInt(1 << 17)
-	conditionViewFieldPlanVersionID          = big.NewInt(1 << 18)
-	conditionViewFieldPlanVersions           = big.NewInt(1 << 19)
-	conditionViewFieldPlans                  = big.NewInt(1 << 20)
-	conditionViewFieldResourceUnspecifiedIDs = big.NewInt(1 << 21)
-	conditionViewFieldRuleID                 = big.NewInt(1 << 22)
-	conditionViewFieldTrait                  = big.NewInt(1 << 23)
-	conditionViewFieldTraitEntityType        = big.NewInt(1 << 24)
-	conditionViewFieldTraitID                = big.NewInt(1 << 25)
-	conditionViewFieldTraitValue             = big.NewInt(1 << 26)
-	conditionViewFieldTraitValueBool         = big.NewInt(1 << 27)
-	conditionViewFieldTraitValueDate         = big.NewInt(1 << 28)
-	conditionViewFieldTraitValueInt          = big.NewInt(1 << 29)
-	conditionViewFieldUpdatedAt              = big.NewInt(1 << 30)
-	conditionViewFieldUsers                  = big.NewInt(1 << 31)
+	conditionViewFieldPlanVersions           = big.NewInt(1 << 18)
+	conditionViewFieldPlans                  = big.NewInt(1 << 19)
+	conditionViewFieldResourceUnspecifiedIDs = big.NewInt(1 << 20)
+	conditionViewFieldRuleID                 = big.NewInt(1 << 21)
+	conditionViewFieldTrait                  = big.NewInt(1 << 22)
+	conditionViewFieldTraitEntityType        = big.NewInt(1 << 23)
+	conditionViewFieldTraitID                = big.NewInt(1 << 24)
+	conditionViewFieldTraitValue             = big.NewInt(1 << 25)
+	conditionViewFieldTraitValueBool         = big.NewInt(1 << 26)
+	conditionViewFieldTraitValueDate         = big.NewInt(1 << 27)
+	conditionViewFieldTraitValueInt          = big.NewInt(1 << 28)
+	conditionViewFieldUpdatedAt              = big.NewInt(1 << 29)
+	conditionViewFieldUsers                  = big.NewInt(1 << 30)
 )
 
 type ConditionView struct {
@@ -9890,9 +10327,8 @@ type ConditionView struct {
 	ID                     string                             `json:"id" url:"id"`
 	MetricPeriod           *string                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *string                            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	MetricValue            *int                               `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	MetricValue            *int64                             `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator               string                             `json:"operator" url:"operator"`
-	PlanVersionID          *string                            `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	PlanVersions           []*GenericPreviewObject            `json:"plan_versions" url:"plan_versions"`
 	Plans                  []*GenericPreviewObject            `json:"plans" url:"plans"`
 	ResourceUnspecifiedIDs []string                           `json:"resource_unspecified_ids" url:"resource_unspecified_ids"`
@@ -9903,7 +10339,7 @@ type ConditionView struct {
 	TraitValue             string                             `json:"trait_value" url:"trait_value"`
 	TraitValueBool         bool                               `json:"trait_value_bool" url:"trait_value_bool"`
 	TraitValueDate         *time.Time                         `json:"trait_value_date,omitempty" url:"trait_value_date,omitempty"`
-	TraitValueInt          int                                `json:"trait_value_int" url:"trait_value_int"`
+	TraitValueInt          int64                              `json:"trait_value_int" url:"trait_value_int"`
 	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
 	Users                  []*GenericPreviewObject            `json:"users" url:"users"`
 
@@ -10026,7 +10462,7 @@ func (c *ConditionView) GetMetricPeriodMonthReset() *string {
 	return c.MetricPeriodMonthReset
 }
 
-func (c *ConditionView) GetMetricValue() *int {
+func (c *ConditionView) GetMetricValue() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -10038,13 +10474,6 @@ func (c *ConditionView) GetOperator() string {
 		return ""
 	}
 	return c.Operator
-}
-
-func (c *ConditionView) GetPlanVersionID() *string {
-	if c == nil {
-		return nil
-	}
-	return c.PlanVersionID
 }
 
 func (c *ConditionView) GetPlanVersions() []*GenericPreviewObject {
@@ -10117,7 +10546,7 @@ func (c *ConditionView) GetTraitValueDate() *time.Time {
 	return c.TraitValueDate
 }
 
-func (c *ConditionView) GetTraitValueInt() int {
+func (c *ConditionView) GetTraitValueInt() int64 {
 	if c == nil {
 		return 0
 	}
@@ -10139,6 +10568,9 @@ func (c *ConditionView) GetUsers() []*GenericPreviewObject {
 }
 
 func (c *ConditionView) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -10263,7 +10695,7 @@ func (c *ConditionView) SetMetricPeriodMonthReset(metricPeriodMonthReset *string
 
 // SetMetricValue sets the MetricValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ConditionView) SetMetricValue(metricValue *int) {
+func (c *ConditionView) SetMetricValue(metricValue *int64) {
 	c.MetricValue = metricValue
 	c.require(conditionViewFieldMetricValue)
 }
@@ -10273,13 +10705,6 @@ func (c *ConditionView) SetMetricValue(metricValue *int) {
 func (c *ConditionView) SetOperator(operator string) {
 	c.Operator = operator
 	c.require(conditionViewFieldOperator)
-}
-
-// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ConditionView) SetPlanVersionID(planVersionID *string) {
-	c.PlanVersionID = planVersionID
-	c.require(conditionViewFieldPlanVersionID)
 }
 
 // SetPlanVersions sets the PlanVersions field and marks it as non-optional;
@@ -10354,7 +10779,7 @@ func (c *ConditionView) SetTraitValueDate(traitValueDate *time.Time) {
 
 // SetTraitValueInt sets the TraitValueInt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ConditionView) SetTraitValueInt(traitValueInt int) {
+func (c *ConditionView) SetTraitValueInt(traitValueInt int64) {
 	c.TraitValueInt = traitValueInt
 	c.require(conditionViewFieldTraitValueInt)
 }
@@ -10417,6 +10842,9 @@ func (c *ConditionView) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ConditionView) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -10451,6 +10879,9 @@ func (c *CountResponse) GetCount() *int {
 }
 
 func (c *CountResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -10496,6 +10927,9 @@ func (c *CountResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -10519,14 +10953,14 @@ var (
 )
 
 type CouponRequestBody struct {
-	AmountOff        int     `json:"amount_off" url:"amount_off"`
+	AmountOff        int64   `json:"amount_off" url:"amount_off"`
 	Currency         *string `json:"currency,omitempty" url:"currency,omitempty"`
 	Duration         string  `json:"duration" url:"duration"`
-	DurationInMonths int     `json:"duration_in_months" url:"duration_in_months"`
-	MaxRedemptions   int     `json:"max_redemptions" url:"max_redemptions"`
+	DurationInMonths int64   `json:"duration_in_months" url:"duration_in_months"`
+	MaxRedemptions   int64   `json:"max_redemptions" url:"max_redemptions"`
 	Name             string  `json:"name" url:"name"`
 	PercentOff       float64 `json:"percent_off" url:"percent_off"`
-	TimesRedeemed    int     `json:"times_redeemed" url:"times_redeemed"`
+	TimesRedeemed    int64   `json:"times_redeemed" url:"times_redeemed"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -10535,7 +10969,7 @@ type CouponRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CouponRequestBody) GetAmountOff() int {
+func (c *CouponRequestBody) GetAmountOff() int64 {
 	if c == nil {
 		return 0
 	}
@@ -10556,14 +10990,14 @@ func (c *CouponRequestBody) GetDuration() string {
 	return c.Duration
 }
 
-func (c *CouponRequestBody) GetDurationInMonths() int {
+func (c *CouponRequestBody) GetDurationInMonths() int64 {
 	if c == nil {
 		return 0
 	}
 	return c.DurationInMonths
 }
 
-func (c *CouponRequestBody) GetMaxRedemptions() int {
+func (c *CouponRequestBody) GetMaxRedemptions() int64 {
 	if c == nil {
 		return 0
 	}
@@ -10584,7 +11018,7 @@ func (c *CouponRequestBody) GetPercentOff() float64 {
 	return c.PercentOff
 }
 
-func (c *CouponRequestBody) GetTimesRedeemed() int {
+func (c *CouponRequestBody) GetTimesRedeemed() int64 {
 	if c == nil {
 		return 0
 	}
@@ -10592,6 +11026,9 @@ func (c *CouponRequestBody) GetTimesRedeemed() int {
 }
 
 func (c *CouponRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -10604,7 +11041,7 @@ func (c *CouponRequestBody) require(field *big.Int) {
 
 // SetAmountOff sets the AmountOff field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CouponRequestBody) SetAmountOff(amountOff int) {
+func (c *CouponRequestBody) SetAmountOff(amountOff int64) {
 	c.AmountOff = amountOff
 	c.require(couponRequestBodyFieldAmountOff)
 }
@@ -10625,14 +11062,14 @@ func (c *CouponRequestBody) SetDuration(duration string) {
 
 // SetDurationInMonths sets the DurationInMonths field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CouponRequestBody) SetDurationInMonths(durationInMonths int) {
+func (c *CouponRequestBody) SetDurationInMonths(durationInMonths int64) {
 	c.DurationInMonths = durationInMonths
 	c.require(couponRequestBodyFieldDurationInMonths)
 }
 
 // SetMaxRedemptions sets the MaxRedemptions field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CouponRequestBody) SetMaxRedemptions(maxRedemptions int) {
+func (c *CouponRequestBody) SetMaxRedemptions(maxRedemptions int64) {
 	c.MaxRedemptions = maxRedemptions
 	c.require(couponRequestBodyFieldMaxRedemptions)
 }
@@ -10653,7 +11090,7 @@ func (c *CouponRequestBody) SetPercentOff(percentOff float64) {
 
 // SetTimesRedeemed sets the TimesRedeemed field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CouponRequestBody) SetTimesRedeemed(timesRedeemed int) {
+func (c *CouponRequestBody) SetTimesRedeemed(timesRedeemed int64) {
 	c.TimesRedeemed = timesRedeemed
 	c.require(couponRequestBodyFieldTimesRedeemed)
 }
@@ -10686,6 +11123,9 @@ func (c *CouponRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CouponRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -10720,18 +11160,18 @@ var (
 
 type CreateBillingPlanCreditGrantRequestBody struct {
 	ApplyToExisting           *bool                              `json:"apply_to_existing,omitempty" url:"apply_to_existing,omitempty"`
-	AutoTopupAmount           *int                               `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
+	AutoTopupAmount           *int64                             `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
 	AutoTopupAmountType       *CreditAutoTopupAmountType         `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
 	AutoTopupEnabled          *bool                              `json:"auto_topup_enabled,omitempty" url:"auto_topup_enabled,omitempty"`
 	AutoTopupExpiryType       *BillingCreditExpiryType           `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
 	AutoTopupExpiryUnit       *BillingCreditExpiryUnit           `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
-	AutoTopupExpiryUnitCount  *int                               `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
-	AutoTopupThresholdPercent *int                               `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
-	CreditAmount              int                                `json:"credit_amount" url:"credit_amount"`
+	AutoTopupExpiryUnitCount  *int64                             `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
+	AutoTopupThresholdPercent *int64                             `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
+	CreditAmount              int64                              `json:"credit_amount" url:"credit_amount"`
 	CreditID                  string                             `json:"credit_id" url:"credit_id"`
 	ExpiryType                *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
 	ExpiryUnit                *BillingCreditExpiryUnit           `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount           *int                               `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ExpiryUnitCount           *int64                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	PlanID                    string                             `json:"plan_id" url:"plan_id"`
 	PlanVersionID             *string                            `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	ResetCadence              BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
@@ -10752,7 +11192,7 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetApplyToExisting() *bool {
 	return c.ApplyToExisting
 }
 
-func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupAmount() *int {
+func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupAmount() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -10780,21 +11220,21 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupExpiryUnit() *Bill
 	return c.AutoTopupExpiryUnit
 }
 
-func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupExpiryUnitCount() *int {
+func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupExpiryUnitCount() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.AutoTopupExpiryUnitCount
 }
 
-func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent() *int {
+func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.AutoTopupThresholdPercent
 }
 
-func (c *CreateBillingPlanCreditGrantRequestBody) GetCreditAmount() int {
+func (c *CreateBillingPlanCreditGrantRequestBody) GetCreditAmount() int64 {
 	if c == nil {
 		return 0
 	}
@@ -10822,7 +11262,7 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetExpiryUnit() *BillingCredit
 	return c.ExpiryUnit
 }
 
-func (c *CreateBillingPlanCreditGrantRequestBody) GetExpiryUnitCount() *int {
+func (c *CreateBillingPlanCreditGrantRequestBody) GetExpiryUnitCount() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -10865,6 +11305,9 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetResetType() *BillingPlanCre
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -10884,7 +11327,7 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetApplyToExisting(applyToExis
 
 // SetAutoTopupAmount sets the AutoTopupAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupAmount(autoTopupAmount *int) {
+func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupAmount(autoTopupAmount *int64) {
 	c.AutoTopupAmount = autoTopupAmount
 	c.require(createBillingPlanCreditGrantRequestBodyFieldAutoTopupAmount)
 }
@@ -10919,21 +11362,21 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnit(autoTop
 
 // SetAutoTopupExpiryUnitCount sets the AutoTopupExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnitCount(autoTopupExpiryUnitCount *int) {
+func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnitCount(autoTopupExpiryUnitCount *int64) {
 	c.AutoTopupExpiryUnitCount = autoTopupExpiryUnitCount
 	c.require(createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount)
 }
 
 // SetAutoTopupThresholdPercent sets the AutoTopupThresholdPercent field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int) {
+func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int64) {
 	c.AutoTopupThresholdPercent = autoTopupThresholdPercent
 	c.require(createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent)
 }
 
 // SetCreditAmount sets the CreditAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetCreditAmount(creditAmount int) {
+func (c *CreateBillingPlanCreditGrantRequestBody) SetCreditAmount(creditAmount int64) {
 	c.CreditAmount = creditAmount
 	c.require(createBillingPlanCreditGrantRequestBodyFieldCreditAmount)
 }
@@ -10961,7 +11404,7 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetExpiryUnit(expiryUnit *Bill
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingPlanCreditGrantRequestBody) SetExpiryUnitCount(expiryUnitCount *int) {
+func (c *CreateBillingPlanCreditGrantRequestBody) SetExpiryUnitCount(expiryUnitCount *int64) {
 	c.ExpiryUnitCount = expiryUnitCount
 	c.require(createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount)
 }
@@ -11029,6 +11472,9 @@ func (c *CreateBillingPlanCreditGrantRequestBody) MarshalJSON() ([]byte, error) 
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -11059,7 +11505,7 @@ type CreateEntitlementReqCommon struct {
 	MetricPeriodMonthReset *CreateEntitlementReqCommonMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	ValueBool              *bool                                             `json:"value_bool,omitempty" url:"value_bool,omitempty"`
 	ValueCreditID          *string                                           `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
-	ValueNumeric           *int                                              `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueNumeric           *int64                                            `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
 	ValueTraitID           *string                                           `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
 	ValueType              EntitlementValueType                              `json:"value_type" url:"value_type"`
 
@@ -11112,7 +11558,7 @@ func (c *CreateEntitlementReqCommon) GetValueCreditID() *string {
 	return c.ValueCreditID
 }
 
-func (c *CreateEntitlementReqCommon) GetValueNumeric() *int {
+func (c *CreateEntitlementReqCommon) GetValueNumeric() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -11134,6 +11580,9 @@ func (c *CreateEntitlementReqCommon) GetValueType() EntitlementValueType {
 }
 
 func (c *CreateEntitlementReqCommon) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -11188,7 +11637,7 @@ func (c *CreateEntitlementReqCommon) SetValueCreditID(valueCreditID *string) {
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEntitlementReqCommon) SetValueNumeric(valueNumeric *int) {
+func (c *CreateEntitlementReqCommon) SetValueNumeric(valueNumeric *int64) {
 	c.ValueNumeric = valueNumeric
 	c.require(createEntitlementReqCommonFieldValueNumeric)
 }
@@ -11235,6 +11684,9 @@ func (c *CreateEntitlementReqCommon) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateEntitlementReqCommon) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -11345,6 +11797,9 @@ func (c *CreatePlanRequestBody) GetPlanType() PlanType {
 }
 
 func (c *CreatePlanRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -11411,6 +11866,9 @@ func (c *CreatePlanRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreatePlanRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -11430,10 +11888,10 @@ var (
 )
 
 type CreatePriceTierRequestBody struct {
-	FlatAmount          *int    `json:"flat_amount,omitempty" url:"flat_amount,omitempty"`
-	PerUnitPrice        *int    `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
+	FlatAmount          *int64  `json:"flat_amount,omitempty" url:"flat_amount,omitempty"`
+	PerUnitPrice        *int64  `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
 	PerUnitPriceDecimal *string `json:"per_unit_price_decimal,omitempty" url:"per_unit_price_decimal,omitempty"`
-	UpTo                *int    `json:"up_to,omitempty" url:"up_to,omitempty"`
+	UpTo                *int64  `json:"up_to,omitempty" url:"up_to,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -11442,14 +11900,14 @@ type CreatePriceTierRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreatePriceTierRequestBody) GetFlatAmount() *int {
+func (c *CreatePriceTierRequestBody) GetFlatAmount() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.FlatAmount
 }
 
-func (c *CreatePriceTierRequestBody) GetPerUnitPrice() *int {
+func (c *CreatePriceTierRequestBody) GetPerUnitPrice() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -11463,7 +11921,7 @@ func (c *CreatePriceTierRequestBody) GetPerUnitPriceDecimal() *string {
 	return c.PerUnitPriceDecimal
 }
 
-func (c *CreatePriceTierRequestBody) GetUpTo() *int {
+func (c *CreatePriceTierRequestBody) GetUpTo() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -11471,6 +11929,9 @@ func (c *CreatePriceTierRequestBody) GetUpTo() *int {
 }
 
 func (c *CreatePriceTierRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -11483,14 +11944,14 @@ func (c *CreatePriceTierRequestBody) require(field *big.Int) {
 
 // SetFlatAmount sets the FlatAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePriceTierRequestBody) SetFlatAmount(flatAmount *int) {
+func (c *CreatePriceTierRequestBody) SetFlatAmount(flatAmount *int64) {
 	c.FlatAmount = flatAmount
 	c.require(createPriceTierRequestBodyFieldFlatAmount)
 }
 
 // SetPerUnitPrice sets the PerUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePriceTierRequestBody) SetPerUnitPrice(perUnitPrice *int) {
+func (c *CreatePriceTierRequestBody) SetPerUnitPrice(perUnitPrice *int64) {
 	c.PerUnitPrice = perUnitPrice
 	c.require(createPriceTierRequestBodyFieldPerUnitPrice)
 }
@@ -11504,7 +11965,7 @@ func (c *CreatePriceTierRequestBody) SetPerUnitPriceDecimal(perUnitPriceDecimal 
 
 // SetUpTo sets the UpTo field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePriceTierRequestBody) SetUpTo(upTo *int) {
+func (c *CreatePriceTierRequestBody) SetUpTo(upTo *int64) {
 	c.UpTo = upTo
 	c.require(createPriceTierRequestBodyFieldUpTo)
 }
@@ -11537,6 +11998,9 @@ func (c *CreatePriceTierRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreatePriceTierRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -11549,6 +12013,206 @@ func (c *CreatePriceTierRequestBody) String() string {
 }
 
 type CreditAutoTopupAmountType = string
+
+var (
+	creditBundleCurrencyPriceResponseDataFieldCurrency = big.NewInt(1 << 0)
+	creditBundleCurrencyPriceResponseDataFieldPrice    = big.NewInt(1 << 1)
+)
+
+type CreditBundleCurrencyPriceResponseData struct {
+	Currency string                    `json:"currency" url:"currency"`
+	Price    *BillingPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditBundleCurrencyPriceResponseData) GetCurrency() string {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CreditBundleCurrencyPriceResponseData) GetPrice() *BillingPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Price
+}
+
+func (c *CreditBundleCurrencyPriceResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditBundleCurrencyPriceResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBundleCurrencyPriceResponseData) SetCurrency(currency string) {
+	c.Currency = currency
+	c.require(creditBundleCurrencyPriceResponseDataFieldCurrency)
+}
+
+// SetPrice sets the Price field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBundleCurrencyPriceResponseData) SetPrice(price *BillingPriceResponseData) {
+	c.Price = price
+	c.require(creditBundleCurrencyPriceResponseDataFieldPrice)
+}
+
+func (c *CreditBundleCurrencyPriceResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditBundleCurrencyPriceResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditBundleCurrencyPriceResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditBundleCurrencyPriceResponseData) MarshalJSON() ([]byte, error) {
+	type embed CreditBundleCurrencyPriceResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditBundleCurrencyPriceResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditCurrencyPriceResponseDataFieldCurrency = big.NewInt(1 << 0)
+	creditCurrencyPriceResponseDataFieldPrice    = big.NewInt(1 << 1)
+)
+
+type CreditCurrencyPriceResponseData struct {
+	Currency string                    `json:"currency" url:"currency"`
+	Price    *BillingPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditCurrencyPriceResponseData) GetCurrency() string {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CreditCurrencyPriceResponseData) GetPrice() *BillingPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Price
+}
+
+func (c *CreditCurrencyPriceResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditCurrencyPriceResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCurrencyPriceResponseData) SetCurrency(currency string) {
+	c.Currency = currency
+	c.require(creditCurrencyPriceResponseDataFieldCurrency)
+}
+
+// SetPrice sets the Price field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCurrencyPriceResponseData) SetPrice(price *BillingPriceResponseData) {
+	c.Price = price
+	c.require(creditCurrencyPriceResponseDataFieldPrice)
+}
+
+func (c *CreditCurrencyPriceResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditCurrencyPriceResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditCurrencyPriceResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditCurrencyPriceResponseData) MarshalJSON() ([]byte, error) {
+	type embed CreditCurrencyPriceResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditCurrencyPriceResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
 
 var (
 	creditGrantDetailFieldCreditTypeIcon = big.NewInt(1 << 0)
@@ -11599,6 +12263,9 @@ func (c *CreditGrantDetail) GetQuantity() float64 {
 }
 
 func (c *CreditGrantDetail) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -11673,6 +12340,9 @@ func (c *CreditGrantDetail) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditGrantDetail) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -11696,7 +12366,7 @@ var (
 type CreditGrantExpiryRequestBody struct {
 	ExpiryType      *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
 	ExpiryUnit      *BillingCreditExpiryUnit           `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount *int                               `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ExpiryUnitCount *int64                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	ResetCadence    BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
 	ResetStart      BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
 	ResetType       *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
@@ -11722,7 +12392,7 @@ func (c *CreditGrantExpiryRequestBody) GetExpiryUnit() *BillingCreditExpiryUnit 
 	return c.ExpiryUnit
 }
 
-func (c *CreditGrantExpiryRequestBody) GetExpiryUnitCount() *int {
+func (c *CreditGrantExpiryRequestBody) GetExpiryUnitCount() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -11751,6 +12421,9 @@ func (c *CreditGrantExpiryRequestBody) GetResetType() *BillingPlanCreditGrantRes
 }
 
 func (c *CreditGrantExpiryRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -11777,7 +12450,7 @@ func (c *CreditGrantExpiryRequestBody) SetExpiryUnit(expiryUnit *BillingCreditEx
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditGrantExpiryRequestBody) SetExpiryUnitCount(expiryUnitCount *int) {
+func (c *CreditGrantExpiryRequestBody) SetExpiryUnitCount(expiryUnitCount *int64) {
 	c.ExpiryUnitCount = expiryUnitCount
 	c.require(creditGrantExpiryRequestBodyFieldExpiryUnitCount)
 }
@@ -11831,6 +12504,9 @@ func (c *CreditGrantExpiryRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditGrantExpiryRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -11895,6 +12571,9 @@ func (c *CreditUsageAggregation) GetUsageToday() *float64 {
 }
 
 func (c *CreditUsageAggregation) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -11961,6 +12640,9 @@ func (c *CreditUsageAggregation) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditUsageAggregation) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -12003,6 +12685,9 @@ func (c *CreditsAutoTopupCompanySummary) GetName() string {
 }
 
 func (c *CreditsAutoTopupCompanySummary) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -12055,6 +12740,9 @@ func (c *CreditsAutoTopupCompanySummary) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditsAutoTopupCompanySummary) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -12097,6 +12785,9 @@ func (c *CreditsAutoTopupCreditSummary) GetName() string {
 }
 
 func (c *CreditsAutoTopupCreditSummary) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -12149,6 +12840,9 @@ func (c *CreditsAutoTopupCreditSummary) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditsAutoTopupCreditSummary) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -12209,6 +12903,9 @@ func (c *CreditsAutoTopupHardFailure) GetStripeErrorCode() *string {
 }
 
 func (c *CreditsAutoTopupHardFailure) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -12275,6 +12972,9 @@ func (c *CreditsAutoTopupHardFailure) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditsAutoTopupHardFailure) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -12296,7 +12996,7 @@ var (
 
 type CreditsAutoTopupRetryFailure struct {
 	Company             *CreditsAutoTopupCompanySummary `json:"company,omitempty" url:"company,omitempty"`
-	ConsecutiveFailures int                             `json:"consecutive_failures" url:"consecutive_failures"`
+	ConsecutiveFailures int64                           `json:"consecutive_failures" url:"consecutive_failures"`
 	Credit              *CreditsAutoTopupCreditSummary  `json:"credit,omitempty" url:"credit,omitempty"`
 	LastErrorMessage    *string                         `json:"last_error_message,omitempty" url:"last_error_message,omitempty"`
 	StripeErrorCode     *string                         `json:"stripe_error_code,omitempty" url:"stripe_error_code,omitempty"`
@@ -12315,7 +13015,7 @@ func (c *CreditsAutoTopupRetryFailure) GetCompany() *CreditsAutoTopupCompanySumm
 	return c.Company
 }
 
-func (c *CreditsAutoTopupRetryFailure) GetConsecutiveFailures() int {
+func (c *CreditsAutoTopupRetryFailure) GetConsecutiveFailures() int64 {
 	if c == nil {
 		return 0
 	}
@@ -12344,6 +13044,9 @@ func (c *CreditsAutoTopupRetryFailure) GetStripeErrorCode() *string {
 }
 
 func (c *CreditsAutoTopupRetryFailure) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -12363,7 +13066,7 @@ func (c *CreditsAutoTopupRetryFailure) SetCompany(company *CreditsAutoTopupCompa
 
 // SetConsecutiveFailures sets the ConsecutiveFailures field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditsAutoTopupRetryFailure) SetConsecutiveFailures(consecutiveFailures int) {
+func (c *CreditsAutoTopupRetryFailure) SetConsecutiveFailures(consecutiveFailures int64) {
 	c.ConsecutiveFailures = consecutiveFailures
 	c.require(creditsAutoTopupRetryFailureFieldConsecutiveFailures)
 }
@@ -12417,6 +13120,9 @@ func (c *CreditsAutoTopupRetryFailure) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditsAutoTopupRetryFailure) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -12468,6 +13174,9 @@ func (c *CustomPlanConfig) GetPriceText() string {
 }
 
 func (c *CustomPlanConfig) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -12527,6 +13236,9 @@ func (c *CustomPlanConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CustomPlanConfig) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -12536,6 +13248,146 @@ func (c *CustomPlanConfig) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	dataEventPayloadFieldAPIKey = big.NewInt(1 << 0)
+	dataEventPayloadFieldBody   = big.NewInt(1 << 1)
+	dataEventPayloadFieldSentAt = big.NewInt(1 << 2)
+	dataEventPayloadFieldType   = big.NewInt(1 << 3)
+)
+
+type DataEventPayload struct {
+	APIKey string         `json:"api_key" url:"api_key"`
+	Body   map[string]any `json:"body,omitempty" url:"body,omitempty"`
+	SentAt *time.Time     `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+	Type   EventType      `json:"type" url:"type"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DataEventPayload) GetAPIKey() string {
+	if d == nil {
+		return ""
+	}
+	return d.APIKey
+}
+
+func (d *DataEventPayload) GetBody() map[string]any {
+	if d == nil {
+		return nil
+	}
+	return d.Body
+}
+
+func (d *DataEventPayload) GetSentAt() *time.Time {
+	if d == nil {
+		return nil
+	}
+	return d.SentAt
+}
+
+func (d *DataEventPayload) GetType() EventType {
+	if d == nil {
+		return ""
+	}
+	return d.Type
+}
+
+func (d *DataEventPayload) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DataEventPayload) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetAPIKey sets the APIKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DataEventPayload) SetAPIKey(apiKey string) {
+	d.APIKey = apiKey
+	d.require(dataEventPayloadFieldAPIKey)
+}
+
+// SetBody sets the Body field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DataEventPayload) SetBody(body map[string]any) {
+	d.Body = body
+	d.require(dataEventPayloadFieldBody)
+}
+
+// SetSentAt sets the SentAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DataEventPayload) SetSentAt(sentAt *time.Time) {
+	d.SentAt = sentAt
+	d.require(dataEventPayloadFieldSentAt)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DataEventPayload) SetType(type_ EventType) {
+	d.Type = type_
+	d.require(dataEventPayloadFieldType)
+}
+
+func (d *DataEventPayload) UnmarshalJSON(data []byte) error {
+	type embed DataEventPayload
+	var unmarshaler = struct {
+		embed
+		SentAt *internal.DateTime `json:"sent_at,omitempty"`
+	}{
+		embed: embed(*d),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*d = DataEventPayload(unmarshaler.embed)
+	d.SentAt = unmarshaler.SentAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DataEventPayload) MarshalJSON() ([]byte, error) {
+	type embed DataEventPayload
+	var marshaler = struct {
+		embed
+		SentAt *internal.DateTime `json:"sent_at,omitempty"`
+	}{
+		embed:  embed(*d),
+		SentAt: internal.NewOptionalDateTime(d.SentAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DataEventPayload) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
 }
 
 var (
@@ -12561,6 +13413,9 @@ func (d *DeleteResponse) GetDeleted() *bool {
 }
 
 func (d *DeleteResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -12606,6 +13461,9 @@ func (d *DeleteResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -12615,6 +13473,122 @@ func (d *DeleteResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
+}
+
+var (
+	entitlementCurrencyPricesResponseDataFieldCurrency     = big.NewInt(1 << 0)
+	entitlementCurrencyPricesResponseDataFieldMonthlyPrice = big.NewInt(1 << 1)
+	entitlementCurrencyPricesResponseDataFieldYearlyPrice  = big.NewInt(1 << 2)
+)
+
+type EntitlementCurrencyPricesResponseData struct {
+	Currency     string            `json:"currency" url:"currency"`
+	MonthlyPrice *BillingPriceView `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	YearlyPrice  *BillingPriceView `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EntitlementCurrencyPricesResponseData) GetCurrency() string {
+	if e == nil {
+		return ""
+	}
+	return e.Currency
+}
+
+func (e *EntitlementCurrencyPricesResponseData) GetMonthlyPrice() *BillingPriceView {
+	if e == nil {
+		return nil
+	}
+	return e.MonthlyPrice
+}
+
+func (e *EntitlementCurrencyPricesResponseData) GetYearlyPrice() *BillingPriceView {
+	if e == nil {
+		return nil
+	}
+	return e.YearlyPrice
+}
+
+func (e *EntitlementCurrencyPricesResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.extraProperties
+}
+
+func (e *EntitlementCurrencyPricesResponseData) require(field *big.Int) {
+	if e.explicitFields == nil {
+		e.explicitFields = big.NewInt(0)
+	}
+	e.explicitFields.Or(e.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EntitlementCurrencyPricesResponseData) SetCurrency(currency string) {
+	e.Currency = currency
+	e.require(entitlementCurrencyPricesResponseDataFieldCurrency)
+}
+
+// SetMonthlyPrice sets the MonthlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EntitlementCurrencyPricesResponseData) SetMonthlyPrice(monthlyPrice *BillingPriceView) {
+	e.MonthlyPrice = monthlyPrice
+	e.require(entitlementCurrencyPricesResponseDataFieldMonthlyPrice)
+}
+
+// SetYearlyPrice sets the YearlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EntitlementCurrencyPricesResponseData) SetYearlyPrice(yearlyPrice *BillingPriceView) {
+	e.YearlyPrice = yearlyPrice
+	e.require(entitlementCurrencyPricesResponseDataFieldYearlyPrice)
+}
+
+func (e *EntitlementCurrencyPricesResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler EntitlementCurrencyPricesResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EntitlementCurrencyPricesResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EntitlementCurrencyPricesResponseData) MarshalJSON() ([]byte, error) {
+	type embed EntitlementCurrencyPricesResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*e),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, e.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (e *EntitlementCurrencyPricesResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
 }
 
 type EntitlementPriceBehavior string
@@ -12765,6 +13739,9 @@ func (e *EntityKeyDefinitionResponseData) GetUpdatedAt() time.Time {
 }
 
 func (e *EntityKeyDefinitionResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -12850,6 +13827,9 @@ func (e *EntityKeyDefinitionResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EntityKeyDefinitionResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -12964,6 +13944,9 @@ func (e *EntityKeyDetailResponseData) GetValue() string {
 }
 
 func (e *EntityKeyDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -13084,6 +14067,9 @@ func (e *EntityKeyDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EntityKeyDetailResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -13189,6 +14175,9 @@ func (e *EntityKeyResponseData) GetValue() string {
 }
 
 func (e *EntityKeyResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -13302,6 +14291,9 @@ func (e *EntityKeyResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EntityKeyResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -13389,6 +14381,9 @@ func (e *EntityTraitDefinitionResponseData) GetUpdatedAt() time.Time {
 }
 
 func (e *EntityTraitDefinitionResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -13488,6 +14483,9 @@ func (e *EntityTraitDefinitionResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EntityTraitDefinitionResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -13575,6 +14573,9 @@ func (e *EntityTraitDetailResponseData) GetValue() string {
 }
 
 func (e *EntityTraitDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -13674,6 +14675,9 @@ func (e *EntityTraitDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EntityTraitDetailResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -13752,6 +14756,9 @@ func (e *EntityTraitResponseData) GetValue() string {
 }
 
 func (e *EntityTraitResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -13844,6 +14851,9 @@ func (e *EntityTraitResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EntityTraitResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -13900,25 +14910,25 @@ var (
 )
 
 type EventResponseData struct {
-	APIKey        *string                `json:"api_key,omitempty" url:"api_key,omitempty"`
-	Body          map[string]interface{} `json:"body" url:"body"`
-	BodyPreview   string                 `json:"body_preview" url:"body_preview"`
-	CapturedAt    time.Time              `json:"captured_at" url:"captured_at"`
-	CompanyID     *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EnrichedAt    *time.Time             `json:"enriched_at,omitempty" url:"enriched_at,omitempty"`
-	EnvironmentID *string                `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ErrorMessage  *string                `json:"error_message,omitempty" url:"error_message,omitempty"`
-	FeatureIDs    []string               `json:"feature_ids" url:"feature_ids"`
-	ID            string                 `json:"id" url:"id"`
-	LoadedAt      *time.Time             `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
-	ProcessedAt   *time.Time             `json:"processed_at,omitempty" url:"processed_at,omitempty"`
-	Quantity      int                    `json:"quantity" url:"quantity"`
-	SentAt        *time.Time             `json:"sent_at,omitempty" url:"sent_at,omitempty"`
-	Status        EventStatus            `json:"status" url:"status"`
-	Subtype       *string                `json:"subtype,omitempty" url:"subtype,omitempty"`
-	Type          EventType              `json:"type" url:"type"`
-	UpdatedAt     *time.Time             `json:"updated_at,omitempty" url:"updated_at,omitempty"`
-	UserID        *string                `json:"user_id,omitempty" url:"user_id,omitempty"`
+	APIKey        *string        `json:"api_key,omitempty" url:"api_key,omitempty"`
+	Body          map[string]any `json:"body" url:"body"`
+	BodyPreview   string         `json:"body_preview" url:"body_preview"`
+	CapturedAt    time.Time      `json:"captured_at" url:"captured_at"`
+	CompanyID     *string        `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EnrichedAt    *time.Time     `json:"enriched_at,omitempty" url:"enriched_at,omitempty"`
+	EnvironmentID *string        `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ErrorMessage  *string        `json:"error_message,omitempty" url:"error_message,omitempty"`
+	FeatureIDs    []string       `json:"feature_ids" url:"feature_ids"`
+	ID            string         `json:"id" url:"id"`
+	LoadedAt      *time.Time     `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
+	ProcessedAt   *time.Time     `json:"processed_at,omitempty" url:"processed_at,omitempty"`
+	Quantity      int64          `json:"quantity" url:"quantity"`
+	SentAt        *time.Time     `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+	Status        EventStatus    `json:"status" url:"status"`
+	Subtype       *string        `json:"subtype,omitempty" url:"subtype,omitempty"`
+	Type          EventType      `json:"type" url:"type"`
+	UpdatedAt     *time.Time     `json:"updated_at,omitempty" url:"updated_at,omitempty"`
+	UserID        *string        `json:"user_id,omitempty" url:"user_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -13934,7 +14944,7 @@ func (e *EventResponseData) GetAPIKey() *string {
 	return e.APIKey
 }
 
-func (e *EventResponseData) GetBody() map[string]interface{} {
+func (e *EventResponseData) GetBody() map[string]any {
 	if e == nil {
 		return nil
 	}
@@ -14011,7 +15021,7 @@ func (e *EventResponseData) GetProcessedAt() *time.Time {
 	return e.ProcessedAt
 }
 
-func (e *EventResponseData) GetQuantity() int {
+func (e *EventResponseData) GetQuantity() int64 {
 	if e == nil {
 		return 0
 	}
@@ -14061,6 +15071,9 @@ func (e *EventResponseData) GetUserID() *string {
 }
 
 func (e *EventResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -14080,7 +15093,7 @@ func (e *EventResponseData) SetAPIKey(apiKey *string) {
 
 // SetBody sets the Body field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventResponseData) SetBody(body map[string]interface{}) {
+func (e *EventResponseData) SetBody(body map[string]any) {
 	e.Body = body
 	e.require(eventResponseDataFieldBody)
 }
@@ -14157,7 +15170,7 @@ func (e *EventResponseData) SetProcessedAt(processedAt *time.Time) {
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventResponseData) SetQuantity(quantity int) {
+func (e *EventResponseData) SetQuantity(quantity int64) {
 	e.Quantity = quantity
 	e.require(eventResponseDataFieldQuantity)
 }
@@ -14260,6 +15273,9 @@ func (e *EventResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EventResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -14281,12 +15297,12 @@ var (
 )
 
 type EventSummaryResponseData struct {
-	CompanyCount  int        `json:"company_count" url:"company_count"`
+	CompanyCount  int64      `json:"company_count" url:"company_count"`
 	EnvironmentID string     `json:"environment_id" url:"environment_id"`
-	EventCount    int        `json:"event_count" url:"event_count"`
+	EventCount    int64      `json:"event_count" url:"event_count"`
 	EventSubtype  string     `json:"event_subtype" url:"event_subtype"`
 	LastSeenAt    *time.Time `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	UserCount     int        `json:"user_count" url:"user_count"`
+	UserCount     int64      `json:"user_count" url:"user_count"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -14295,7 +15311,7 @@ type EventSummaryResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (e *EventSummaryResponseData) GetCompanyCount() int {
+func (e *EventSummaryResponseData) GetCompanyCount() int64 {
 	if e == nil {
 		return 0
 	}
@@ -14309,7 +15325,7 @@ func (e *EventSummaryResponseData) GetEnvironmentID() string {
 	return e.EnvironmentID
 }
 
-func (e *EventSummaryResponseData) GetEventCount() int {
+func (e *EventSummaryResponseData) GetEventCount() int64 {
 	if e == nil {
 		return 0
 	}
@@ -14330,7 +15346,7 @@ func (e *EventSummaryResponseData) GetLastSeenAt() *time.Time {
 	return e.LastSeenAt
 }
 
-func (e *EventSummaryResponseData) GetUserCount() int {
+func (e *EventSummaryResponseData) GetUserCount() int64 {
 	if e == nil {
 		return 0
 	}
@@ -14338,6 +15354,9 @@ func (e *EventSummaryResponseData) GetUserCount() int {
 }
 
 func (e *EventSummaryResponseData) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
 	return e.extraProperties
 }
 
@@ -14350,7 +15369,7 @@ func (e *EventSummaryResponseData) require(field *big.Int) {
 
 // SetCompanyCount sets the CompanyCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventSummaryResponseData) SetCompanyCount(companyCount int) {
+func (e *EventSummaryResponseData) SetCompanyCount(companyCount int64) {
 	e.CompanyCount = companyCount
 	e.require(eventSummaryResponseDataFieldCompanyCount)
 }
@@ -14364,7 +15383,7 @@ func (e *EventSummaryResponseData) SetEnvironmentID(environmentID string) {
 
 // SetEventCount sets the EventCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventSummaryResponseData) SetEventCount(eventCount int) {
+func (e *EventSummaryResponseData) SetEventCount(eventCount int64) {
 	e.EventCount = eventCount
 	e.require(eventSummaryResponseDataFieldEventCount)
 }
@@ -14385,7 +15404,7 @@ func (e *EventSummaryResponseData) SetLastSeenAt(lastSeenAt *time.Time) {
 
 // SetUserCount sets the UserCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventSummaryResponseData) SetUserCount(userCount int) {
+func (e *EventSummaryResponseData) SetUserCount(userCount int64) {
 	e.UserCount = userCount
 	e.require(eventSummaryResponseDataFieldUserCount)
 }
@@ -14426,6 +15445,9 @@ func (e *EventSummaryResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EventSummaryResponseData) String() string {
+	if e == nil {
+		return "<nil>"
+	}
 	if len(e.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
 			return value
@@ -14603,6 +15625,9 @@ func (f *FeatureDetailResponseData) GetUpdatedAt() time.Time {
 }
 
 func (f *FeatureDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -14772,6 +15797,9 @@ func (f *FeatureDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureDetailResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -14802,7 +15830,7 @@ var (
 
 type FeatureEntitlement struct {
 	// If the company has a numeric entitlement for this feature, the allocated amount
-	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	Allocation *int64 `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the ID of the credit
 	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the remaining credit amount
@@ -14824,9 +15852,9 @@ type FeatureEntitlement struct {
 	// For event-based feature entitlements that have a monthly period, whether that monthly reset is based on the calendar month or a billing cycle
 	MonthReset *FeatureEntitlementMonthReset `json:"month_reset,omitempty" url:"month_reset,omitempty"`
 	// For usage-based pricing, the soft limit for overage charges or the next tier boundary
-	SoftLimit *int `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	SoftLimit *int64 `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// If the company has a numeric entitlement for this feature, the current usage amount
-	Usage *int `json:"usage,omitempty" url:"usage,omitempty"`
+	Usage *int64 `json:"usage,omitempty" url:"usage,omitempty"`
 	// The type of the entitlement value
 	ValueType EntitlementValueType `json:"value_type" url:"value_type"`
 
@@ -14837,7 +15865,7 @@ type FeatureEntitlement struct {
 	rawJSON         json.RawMessage
 }
 
-func (f *FeatureEntitlement) GetAllocation() *int {
+func (f *FeatureEntitlement) GetAllocation() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -14914,14 +15942,14 @@ func (f *FeatureEntitlement) GetMonthReset() *FeatureEntitlementMonthReset {
 	return f.MonthReset
 }
 
-func (f *FeatureEntitlement) GetSoftLimit() *int {
+func (f *FeatureEntitlement) GetSoftLimit() *int64 {
 	if f == nil {
 		return nil
 	}
 	return f.SoftLimit
 }
 
-func (f *FeatureEntitlement) GetUsage() *int {
+func (f *FeatureEntitlement) GetUsage() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -14936,6 +15964,9 @@ func (f *FeatureEntitlement) GetValueType() EntitlementValueType {
 }
 
 func (f *FeatureEntitlement) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -14948,7 +15979,7 @@ func (f *FeatureEntitlement) require(field *big.Int) {
 
 // SetAllocation sets the Allocation field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureEntitlement) SetAllocation(allocation *int) {
+func (f *FeatureEntitlement) SetAllocation(allocation *int64) {
 	f.Allocation = allocation
 	f.require(featureEntitlementFieldAllocation)
 }
@@ -15025,14 +16056,14 @@ func (f *FeatureEntitlement) SetMonthReset(monthReset *FeatureEntitlementMonthRe
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureEntitlement) SetSoftLimit(softLimit *int) {
+func (f *FeatureEntitlement) SetSoftLimit(softLimit *int64) {
 	f.SoftLimit = softLimit
 	f.require(featureEntitlementFieldSoftLimit)
 }
 
 // SetUsage sets the Usage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureEntitlement) SetUsage(usage *int) {
+func (f *FeatureEntitlement) SetUsage(usage *int64) {
 	f.Usage = usage
 	f.require(featureEntitlementFieldUsage)
 }
@@ -15080,6 +16111,9 @@ func (f *FeatureEntitlement) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureEntitlement) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -15316,6 +16350,9 @@ func (f *FeatureResponseData) GetUpdatedAt() time.Time {
 }
 
 func (f *FeatureResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -15457,6 +16494,9 @@ func (f *FeatureResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -15515,6 +16555,9 @@ func (f *FeatureUsageDetailResponseData) GetFeatures() []*FeatureUsageResponseDa
 }
 
 func (f *FeatureUsageDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -15560,6 +16603,9 @@ func (f *FeatureUsageDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureUsageDetailResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -15581,12 +16627,12 @@ var (
 )
 
 type FeatureUsageLegacyResponseData struct {
-	Allocation    *int         `json:"Allocation,omitempty" url:"Allocation,omitempty"`
+	Allocation    *int64       `json:"Allocation,omitempty" url:"Allocation,omitempty"`
 	CreditUsage   *CreditUsage `json:"CreditUsage,omitempty" url:"CreditUsage,omitempty"`
 	Entitlement   string       `json:"Entitlement" url:"Entitlement"`
 	Feature       *FeatureView `json:"Feature,omitempty" url:"Feature,omitempty"`
 	MetricResetAt *time.Time   `json:"MetricResetAt,omitempty" url:"MetricResetAt,omitempty"`
-	Usage         *int         `json:"Usage,omitempty" url:"Usage,omitempty"`
+	Usage         *int64       `json:"Usage,omitempty" url:"Usage,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -15595,7 +16641,7 @@ type FeatureUsageLegacyResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (f *FeatureUsageLegacyResponseData) GetAllocation() *int {
+func (f *FeatureUsageLegacyResponseData) GetAllocation() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -15630,7 +16676,7 @@ func (f *FeatureUsageLegacyResponseData) GetMetricResetAt() *time.Time {
 	return f.MetricResetAt
 }
 
-func (f *FeatureUsageLegacyResponseData) GetUsage() *int {
+func (f *FeatureUsageLegacyResponseData) GetUsage() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -15638,6 +16684,9 @@ func (f *FeatureUsageLegacyResponseData) GetUsage() *int {
 }
 
 func (f *FeatureUsageLegacyResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -15650,7 +16699,7 @@ func (f *FeatureUsageLegacyResponseData) require(field *big.Int) {
 
 // SetAllocation sets the Allocation field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageLegacyResponseData) SetAllocation(allocation *int) {
+func (f *FeatureUsageLegacyResponseData) SetAllocation(allocation *int64) {
 	f.Allocation = allocation
 	f.require(featureUsageLegacyResponseDataFieldAllocation)
 }
@@ -15685,7 +16734,7 @@ func (f *FeatureUsageLegacyResponseData) SetMetricResetAt(metricResetAt *time.Ti
 
 // SetUsage sets the Usage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageLegacyResponseData) SetUsage(usage *int) {
+func (f *FeatureUsageLegacyResponseData) SetUsage(usage *int64) {
 	f.Usage = usage
 	f.require(featureUsageLegacyResponseDataFieldUsage)
 }
@@ -15726,6 +16775,9 @@ func (f *FeatureUsageLegacyResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureUsageLegacyResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -15778,7 +16830,7 @@ type FeatureUsageResponseData struct {
 	// Whether further usage is permitted.
 	Access bool `json:"access" url:"access"`
 	// The maximum amount of usage that is permitted; a null value indicates that unlimited usage is permitted or that this is a credit-based entitlement (use credit_remaining instead).
-	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	Allocation *int64 `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// The type of allocation that is being used.
 	AllocationType  EntitlementValueType         `json:"allocation_type" url:"allocation_type"`
 	CompanyOverride *CompanyOverrideResponseData `json:"company_override,omitempty" url:"company_override,omitempty"`
@@ -15797,7 +16849,7 @@ type FeatureUsageResponseData struct {
 	CreditUsageAggregation *CreditUsageAggregation `json:"credit_usage_aggregation,omitempty" url:"credit_usage_aggregation,omitempty"`
 	CreditUsed             *float64                `json:"credit_used,omitempty" url:"credit_used,omitempty"`
 	// Effective limit for usage calculations. For overage pricing, this is the soft limit where overage charges begin. For tiered pricing, this is the first tier boundary. For other pricing models, this is the base allocation. Used to calculate usage percentages and determine access thresholds.
-	EffectiveLimit *int `json:"effective_limit,omitempty" url:"effective_limit,omitempty"`
+	EffectiveLimit *int64 `json:"effective_limit,omitempty" url:"effective_limit,omitempty"`
 	// Per-unit price for current usage scenario
 	EffectivePrice            *float64   `json:"effective_price,omitempty" url:"effective_price,omitempty"`
 	EntitlementExpirationDate *time.Time `json:"entitlement_expiration_date,omitempty" url:"entitlement_expiration_date,omitempty"`
@@ -15816,7 +16868,7 @@ type FeatureUsageResponseData struct {
 	MonthReset             *string           `json:"month_reset,omitempty" url:"month_reset,omitempty"`
 	MonthlyUsageBasedPrice *BillingPriceView `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
 	// Amount of usage exceeding soft limit (overage pricing only)
-	Overuse *int `json:"overuse,omitempty" url:"overuse,omitempty"`
+	Overuse *int64 `json:"overuse,omitempty" url:"overuse,omitempty"`
 	// Percentage of allocation consumed (0-100+)
 	PercentUsed *float64 `json:"percent_used,omitempty" url:"percent_used,omitempty"`
 	// The period over which usage is measured.
@@ -15825,9 +16877,9 @@ type FeatureUsageResponseData struct {
 	PlanEntitlement *PlanEntitlementResponseData `json:"plan_entitlement,omitempty" url:"plan_entitlement,omitempty"`
 	PriceBehavior   *EntitlementPriceBehavior    `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// The soft limit for the feature usage. Available only for overage price behavior
-	SoftLimit *int `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	SoftLimit *int64 `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured or that this is a credit-based entitlement (use credit_used instead).
-	Usage                 *int              `json:"usage,omitempty" url:"usage,omitempty"`
+	Usage                 *int64            `json:"usage,omitempty" url:"usage,omitempty"`
 	YearlyUsageBasedPrice *BillingPriceView `json:"yearly_usage_based_price,omitempty" url:"yearly_usage_based_price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -15844,7 +16896,7 @@ func (f *FeatureUsageResponseData) GetAccess() bool {
 	return f.Access
 }
 
-func (f *FeatureUsageResponseData) GetAllocation() *int {
+func (f *FeatureUsageResponseData) GetAllocation() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -15928,7 +16980,7 @@ func (f *FeatureUsageResponseData) GetCreditUsed() *float64 {
 	return f.CreditUsed
 }
 
-func (f *FeatureUsageResponseData) GetEffectiveLimit() *int {
+func (f *FeatureUsageResponseData) GetEffectiveLimit() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -16012,7 +17064,7 @@ func (f *FeatureUsageResponseData) GetMonthlyUsageBasedPrice() *BillingPriceView
 	return f.MonthlyUsageBasedPrice
 }
 
-func (f *FeatureUsageResponseData) GetOveruse() *int {
+func (f *FeatureUsageResponseData) GetOveruse() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -16054,14 +17106,14 @@ func (f *FeatureUsageResponseData) GetPriceBehavior() *EntitlementPriceBehavior 
 	return f.PriceBehavior
 }
 
-func (f *FeatureUsageResponseData) GetSoftLimit() *int {
+func (f *FeatureUsageResponseData) GetSoftLimit() *int64 {
 	if f == nil {
 		return nil
 	}
 	return f.SoftLimit
 }
 
-func (f *FeatureUsageResponseData) GetUsage() *int {
+func (f *FeatureUsageResponseData) GetUsage() *int64 {
 	if f == nil {
 		return nil
 	}
@@ -16076,6 +17128,9 @@ func (f *FeatureUsageResponseData) GetYearlyUsageBasedPrice() *BillingPriceView 
 }
 
 func (f *FeatureUsageResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -16095,7 +17150,7 @@ func (f *FeatureUsageResponseData) SetAccess(access bool) {
 
 // SetAllocation sets the Allocation field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageResponseData) SetAllocation(allocation *int) {
+func (f *FeatureUsageResponseData) SetAllocation(allocation *int64) {
 	f.Allocation = allocation
 	f.require(featureUsageResponseDataFieldAllocation)
 }
@@ -16179,7 +17234,7 @@ func (f *FeatureUsageResponseData) SetCreditUsed(creditUsed *float64) {
 
 // SetEffectiveLimit sets the EffectiveLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageResponseData) SetEffectiveLimit(effectiveLimit *int) {
+func (f *FeatureUsageResponseData) SetEffectiveLimit(effectiveLimit *int64) {
 	f.EffectiveLimit = effectiveLimit
 	f.require(featureUsageResponseDataFieldEffectiveLimit)
 }
@@ -16263,7 +17318,7 @@ func (f *FeatureUsageResponseData) SetMonthlyUsageBasedPrice(monthlyUsageBasedPr
 
 // SetOveruse sets the Overuse field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageResponseData) SetOveruse(overuse *int) {
+func (f *FeatureUsageResponseData) SetOveruse(overuse *int64) {
 	f.Overuse = overuse
 	f.require(featureUsageResponseDataFieldOveruse)
 }
@@ -16305,14 +17360,14 @@ func (f *FeatureUsageResponseData) SetPriceBehavior(priceBehavior *EntitlementPr
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageResponseData) SetSoftLimit(softLimit *int) {
+func (f *FeatureUsageResponseData) SetSoftLimit(softLimit *int64) {
 	f.SoftLimit = softLimit
 	f.require(featureUsageResponseDataFieldSoftLimit)
 }
 
 // SetUsage sets the Usage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureUsageResponseData) SetUsage(usage *int) {
+func (f *FeatureUsageResponseData) SetUsage(usage *int64) {
 	f.Usage = usage
 	f.require(featureUsageResponseDataFieldUsage)
 }
@@ -16364,6 +17419,9 @@ func (f *FeatureUsageResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureUsageResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -16550,6 +17608,9 @@ func (f *FeatureView) GetUpdatedAt() time.Time {
 }
 
 func (f *FeatureView) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -16726,6 +17787,9 @@ func (f *FeatureView) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureView) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -16860,6 +17924,9 @@ func (f *FlagDetailResponseData) GetUpdatedAt() time.Time {
 }
 
 func (f *FlagDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -17005,6 +18072,9 @@ func (f *FlagDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FlagDetailResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -17150,6 +18220,9 @@ func (f *FlagView) GetUpdatedAt() time.Time {
 }
 
 func (f *FlagView) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
 	return f.extraProperties
 }
 
@@ -17302,6 +18375,9 @@ func (f *FlagView) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FlagView) String() string {
+	if f == nil {
+		return "<nil>"
+	}
 	if len(f.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
 			return value
@@ -17362,6 +18438,9 @@ func (g *GenericPreviewObject) GetName() string {
 }
 
 func (g *GenericPreviewObject) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -17428,6 +18507,9 @@ func (g *GenericPreviewObject) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GenericPreviewObject) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -17455,9 +18537,9 @@ var (
 )
 
 type InvoiceRequestBody struct {
-	AmountDue               int            `json:"amount_due" url:"amount_due"`
-	AmountPaid              int            `json:"amount_paid" url:"amount_paid"`
-	AmountRemaining         int            `json:"amount_remaining" url:"amount_remaining"`
+	AmountDue               int64          `json:"amount_due" url:"amount_due"`
+	AmountPaid              int64          `json:"amount_paid" url:"amount_paid"`
+	AmountRemaining         int64          `json:"amount_remaining" url:"amount_remaining"`
 	CollectionMethod        string         `json:"collection_method" url:"collection_method"`
 	Currency                string         `json:"currency" url:"currency"`
 	CustomerExternalID      string         `json:"customer_external_id" url:"customer_external_id"`
@@ -17465,7 +18547,7 @@ type InvoiceRequestBody struct {
 	PaymentMethodExternalID *string        `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
 	Status                  *InvoiceStatus `json:"status,omitempty" url:"status,omitempty"`
 	SubscriptionExternalID  *string        `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
-	Subtotal                int            `json:"subtotal" url:"subtotal"`
+	Subtotal                int64          `json:"subtotal" url:"subtotal"`
 	URL                     *string        `json:"url,omitempty" url:"url,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -17475,21 +18557,21 @@ type InvoiceRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (i *InvoiceRequestBody) GetAmountDue() int {
+func (i *InvoiceRequestBody) GetAmountDue() int64 {
 	if i == nil {
 		return 0
 	}
 	return i.AmountDue
 }
 
-func (i *InvoiceRequestBody) GetAmountPaid() int {
+func (i *InvoiceRequestBody) GetAmountPaid() int64 {
 	if i == nil {
 		return 0
 	}
 	return i.AmountPaid
 }
 
-func (i *InvoiceRequestBody) GetAmountRemaining() int {
+func (i *InvoiceRequestBody) GetAmountRemaining() int64 {
 	if i == nil {
 		return 0
 	}
@@ -17545,7 +18627,7 @@ func (i *InvoiceRequestBody) GetSubscriptionExternalID() *string {
 	return i.SubscriptionExternalID
 }
 
-func (i *InvoiceRequestBody) GetSubtotal() int {
+func (i *InvoiceRequestBody) GetSubtotal() int64 {
 	if i == nil {
 		return 0
 	}
@@ -17560,6 +18642,9 @@ func (i *InvoiceRequestBody) GetURL() *string {
 }
 
 func (i *InvoiceRequestBody) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
 	return i.extraProperties
 }
 
@@ -17572,21 +18657,21 @@ func (i *InvoiceRequestBody) require(field *big.Int) {
 
 // SetAmountDue sets the AmountDue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceRequestBody) SetAmountDue(amountDue int) {
+func (i *InvoiceRequestBody) SetAmountDue(amountDue int64) {
 	i.AmountDue = amountDue
 	i.require(invoiceRequestBodyFieldAmountDue)
 }
 
 // SetAmountPaid sets the AmountPaid field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceRequestBody) SetAmountPaid(amountPaid int) {
+func (i *InvoiceRequestBody) SetAmountPaid(amountPaid int64) {
 	i.AmountPaid = amountPaid
 	i.require(invoiceRequestBodyFieldAmountPaid)
 }
 
 // SetAmountRemaining sets the AmountRemaining field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceRequestBody) SetAmountRemaining(amountRemaining int) {
+func (i *InvoiceRequestBody) SetAmountRemaining(amountRemaining int64) {
 	i.AmountRemaining = amountRemaining
 	i.require(invoiceRequestBodyFieldAmountRemaining)
 }
@@ -17642,7 +18727,7 @@ func (i *InvoiceRequestBody) SetSubscriptionExternalID(subscriptionExternalID *s
 
 // SetSubtotal sets the Subtotal field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceRequestBody) SetSubtotal(subtotal int) {
+func (i *InvoiceRequestBody) SetSubtotal(subtotal int64) {
 	i.Subtotal = subtotal
 	i.require(invoiceRequestBodyFieldSubtotal)
 }
@@ -17690,6 +18775,9 @@ func (i *InvoiceRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (i *InvoiceRequestBody) String() string {
+	if i == nil {
+		return "<nil>"
+	}
 	if len(i.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
 			return value
@@ -17724,9 +18812,9 @@ var (
 )
 
 type InvoiceResponseData struct {
-	AmountDue               int                 `json:"amount_due" url:"amount_due"`
-	AmountPaid              int                 `json:"amount_paid" url:"amount_paid"`
-	AmountRemaining         int                 `json:"amount_remaining" url:"amount_remaining"`
+	AmountDue               int64               `json:"amount_due" url:"amount_due"`
+	AmountPaid              int64               `json:"amount_paid" url:"amount_paid"`
+	AmountRemaining         int64               `json:"amount_remaining" url:"amount_remaining"`
 	CollectionMethod        string              `json:"collection_method" url:"collection_method"`
 	CompanyID               *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CreatedAt               time.Time           `json:"created_at" url:"created_at"`
@@ -17740,7 +18828,7 @@ type InvoiceResponseData struct {
 	ProviderType            BillingProviderType `json:"provider_type" url:"provider_type"`
 	Status                  *InvoiceStatus      `json:"status,omitempty" url:"status,omitempty"`
 	SubscriptionExternalID  *string             `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
-	Subtotal                int                 `json:"subtotal" url:"subtotal"`
+	Subtotal                int64               `json:"subtotal" url:"subtotal"`
 	UpdatedAt               time.Time           `json:"updated_at" url:"updated_at"`
 	URL                     *string             `json:"url,omitempty" url:"url,omitempty"`
 
@@ -17751,21 +18839,21 @@ type InvoiceResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (i *InvoiceResponseData) GetAmountDue() int {
+func (i *InvoiceResponseData) GetAmountDue() int64 {
 	if i == nil {
 		return 0
 	}
 	return i.AmountDue
 }
 
-func (i *InvoiceResponseData) GetAmountPaid() int {
+func (i *InvoiceResponseData) GetAmountPaid() int64 {
 	if i == nil {
 		return 0
 	}
 	return i.AmountPaid
 }
 
-func (i *InvoiceResponseData) GetAmountRemaining() int {
+func (i *InvoiceResponseData) GetAmountRemaining() int64 {
 	if i == nil {
 		return 0
 	}
@@ -17863,7 +18951,7 @@ func (i *InvoiceResponseData) GetSubscriptionExternalID() *string {
 	return i.SubscriptionExternalID
 }
 
-func (i *InvoiceResponseData) GetSubtotal() int {
+func (i *InvoiceResponseData) GetSubtotal() int64 {
 	if i == nil {
 		return 0
 	}
@@ -17885,6 +18973,9 @@ func (i *InvoiceResponseData) GetURL() *string {
 }
 
 func (i *InvoiceResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
 	return i.extraProperties
 }
 
@@ -17897,21 +18988,21 @@ func (i *InvoiceResponseData) require(field *big.Int) {
 
 // SetAmountDue sets the AmountDue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceResponseData) SetAmountDue(amountDue int) {
+func (i *InvoiceResponseData) SetAmountDue(amountDue int64) {
 	i.AmountDue = amountDue
 	i.require(invoiceResponseDataFieldAmountDue)
 }
 
 // SetAmountPaid sets the AmountPaid field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceResponseData) SetAmountPaid(amountPaid int) {
+func (i *InvoiceResponseData) SetAmountPaid(amountPaid int64) {
 	i.AmountPaid = amountPaid
 	i.require(invoiceResponseDataFieldAmountPaid)
 }
 
 // SetAmountRemaining sets the AmountRemaining field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceResponseData) SetAmountRemaining(amountRemaining int) {
+func (i *InvoiceResponseData) SetAmountRemaining(amountRemaining int64) {
 	i.AmountRemaining = amountRemaining
 	i.require(invoiceResponseDataFieldAmountRemaining)
 }
@@ -18009,7 +19100,7 @@ func (i *InvoiceResponseData) SetSubscriptionExternalID(subscriptionExternalID *
 
 // SetSubtotal sets the Subtotal field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceResponseData) SetSubtotal(subtotal int) {
+func (i *InvoiceResponseData) SetSubtotal(subtotal int64) {
 	i.Subtotal = subtotal
 	i.require(invoiceResponseDataFieldSubtotal)
 }
@@ -18072,6 +19163,9 @@ func (i *InvoiceResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (i *InvoiceResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
 	if len(i.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
 			return value
@@ -18154,6 +19248,9 @@ func (m *MeterRequestBody) GetEventPayloadKey() string {
 }
 
 func (m *MeterRequestBody) GetExtraProperties() map[string]interface{} {
+	if m == nil {
+		return nil
+	}
 	return m.extraProperties
 }
 
@@ -18213,6 +19310,9 @@ func (m *MeterRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (m *MeterRequestBody) String() string {
+	if m == nil {
+		return "<nil>"
+	}
 	if len(m.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
 			return value
@@ -18245,8 +19345,8 @@ type PaymentMethodRequestBody struct {
 	BillingEmail       *string `json:"billing_email,omitempty" url:"billing_email,omitempty"`
 	BillingName        *string `json:"billing_name,omitempty" url:"billing_name,omitempty"`
 	CardBrand          *string `json:"card_brand,omitempty" url:"card_brand,omitempty"`
-	CardExpMonth       *int    `json:"card_exp_month,omitempty" url:"card_exp_month,omitempty"`
-	CardExpYear        *int    `json:"card_exp_year,omitempty" url:"card_exp_year,omitempty"`
+	CardExpMonth       *int64  `json:"card_exp_month,omitempty" url:"card_exp_month,omitempty"`
+	CardExpYear        *int64  `json:"card_exp_year,omitempty" url:"card_exp_year,omitempty"`
 	CardLast4          *string `json:"card_last4,omitempty" url:"card_last4,omitempty"`
 	CustomerExternalID string  `json:"customer_external_id" url:"customer_external_id"`
 	PaymentMethodType  string  `json:"payment_method_type" url:"payment_method_type"`
@@ -18300,14 +19400,14 @@ func (p *PaymentMethodRequestBody) GetCardBrand() *string {
 	return p.CardBrand
 }
 
-func (p *PaymentMethodRequestBody) GetCardExpMonth() *int {
+func (p *PaymentMethodRequestBody) GetCardExpMonth() *int64 {
 	if p == nil {
 		return nil
 	}
 	return p.CardExpMonth
 }
 
-func (p *PaymentMethodRequestBody) GetCardExpYear() *int {
+func (p *PaymentMethodRequestBody) GetCardExpYear() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -18336,6 +19436,9 @@ func (p *PaymentMethodRequestBody) GetPaymentMethodType() string {
 }
 
 func (p *PaymentMethodRequestBody) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -18390,14 +19493,14 @@ func (p *PaymentMethodRequestBody) SetCardBrand(cardBrand *string) {
 
 // SetCardExpMonth sets the CardExpMonth field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PaymentMethodRequestBody) SetCardExpMonth(cardExpMonth *int) {
+func (p *PaymentMethodRequestBody) SetCardExpMonth(cardExpMonth *int64) {
 	p.CardExpMonth = cardExpMonth
 	p.require(paymentMethodRequestBodyFieldCardExpMonth)
 }
 
 // SetCardExpYear sets the CardExpYear field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PaymentMethodRequestBody) SetCardExpYear(cardExpYear *int) {
+func (p *PaymentMethodRequestBody) SetCardExpYear(cardExpYear *int64) {
 	p.CardExpYear = cardExpYear
 	p.require(paymentMethodRequestBodyFieldCardExpYear)
 }
@@ -18451,6 +19554,9 @@ func (p *PaymentMethodRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PaymentMethodRequestBody) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -18490,8 +19596,8 @@ type PaymentMethodResponseData struct {
 	BillingEmail       *string             `json:"billing_email,omitempty" url:"billing_email,omitempty"`
 	BillingName        *string             `json:"billing_name,omitempty" url:"billing_name,omitempty"`
 	CardBrand          *string             `json:"card_brand,omitempty" url:"card_brand,omitempty"`
-	CardExpMonth       *int                `json:"card_exp_month,omitempty" url:"card_exp_month,omitempty"`
-	CardExpYear        *int                `json:"card_exp_year,omitempty" url:"card_exp_year,omitempty"`
+	CardExpMonth       *int64              `json:"card_exp_month,omitempty" url:"card_exp_month,omitempty"`
+	CardExpYear        *int64              `json:"card_exp_year,omitempty" url:"card_exp_year,omitempty"`
 	CardLast4          *string             `json:"card_last4,omitempty" url:"card_last4,omitempty"`
 	CompanyID          *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CreatedAt          time.Time           `json:"created_at" url:"created_at"`
@@ -18552,14 +19658,14 @@ func (p *PaymentMethodResponseData) GetCardBrand() *string {
 	return p.CardBrand
 }
 
-func (p *PaymentMethodResponseData) GetCardExpMonth() *int {
+func (p *PaymentMethodResponseData) GetCardExpMonth() *int64 {
 	if p == nil {
 		return nil
 	}
 	return p.CardExpMonth
 }
 
-func (p *PaymentMethodResponseData) GetCardExpYear() *int {
+func (p *PaymentMethodResponseData) GetCardExpYear() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -18637,6 +19743,9 @@ func (p *PaymentMethodResponseData) GetUpdatedAt() time.Time {
 }
 
 func (p *PaymentMethodResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -18691,14 +19800,14 @@ func (p *PaymentMethodResponseData) SetCardBrand(cardBrand *string) {
 
 // SetCardExpMonth sets the CardExpMonth field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PaymentMethodResponseData) SetCardExpMonth(cardExpMonth *int) {
+func (p *PaymentMethodResponseData) SetCardExpMonth(cardExpMonth *int64) {
 	p.CardExpMonth = cardExpMonth
 	p.require(paymentMethodResponseDataFieldCardExpMonth)
 }
 
 // SetCardExpYear sets the CardExpYear field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PaymentMethodResponseData) SetCardExpYear(cardExpYear *int) {
+func (p *PaymentMethodResponseData) SetCardExpYear(cardExpYear *int64) {
 	p.CardExpYear = cardExpYear
 	p.require(paymentMethodResponseDataFieldCardExpYear)
 }
@@ -18813,6 +19922,9 @@ func (p *PaymentMethodResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PaymentMethodResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -18877,16 +19989,16 @@ var (
 )
 
 type PlanCreditGrantView struct {
-	BillingCreditAutoTopupAmount           *int                     `json:"billing_credit_auto_topup_amount,omitempty" url:"billing_credit_auto_topup_amount,omitempty"`
+	BillingCreditAutoTopupAmount           *int64                   `json:"billing_credit_auto_topup_amount,omitempty" url:"billing_credit_auto_topup_amount,omitempty"`
 	BillingCreditAutoTopupAmountType       *string                  `json:"billing_credit_auto_topup_amount_type,omitempty" url:"billing_credit_auto_topup_amount_type,omitempty"`
 	BillingCreditAutoTopupEnabled          bool                     `json:"billing_credit_auto_topup_enabled" url:"billing_credit_auto_topup_enabled"`
 	BillingCreditAutoTopupExpiryType       *BillingCreditExpiryType `json:"billing_credit_auto_topup_expiry_type,omitempty" url:"billing_credit_auto_topup_expiry_type,omitempty"`
 	BillingCreditAutoTopupExpiryUnit       *BillingCreditExpiryUnit `json:"billing_credit_auto_topup_expiry_unit,omitempty" url:"billing_credit_auto_topup_expiry_unit,omitempty"`
-	BillingCreditAutoTopupExpiryUnitCount  *int                     `json:"billing_credit_auto_topup_expiry_unit_count,omitempty" url:"billing_credit_auto_topup_expiry_unit_count,omitempty"`
-	BillingCreditAutoTopupThresholdPercent *int                     `json:"billing_credit_auto_topup_threshold_percent,omitempty" url:"billing_credit_auto_topup_threshold_percent,omitempty"`
+	BillingCreditAutoTopupExpiryUnitCount  *int64                   `json:"billing_credit_auto_topup_expiry_unit_count,omitempty" url:"billing_credit_auto_topup_expiry_unit_count,omitempty"`
+	BillingCreditAutoTopupThresholdPercent *int64                   `json:"billing_credit_auto_topup_threshold_percent,omitempty" url:"billing_credit_auto_topup_threshold_percent,omitempty"`
 	CreatedAt                              time.Time                `json:"created_at" url:"created_at"`
 	Credit                                 *BillingCreditView       `json:"credit,omitempty" url:"credit,omitempty"`
-	CreditAmount                           int                      `json:"credit_amount" url:"credit_amount"`
+	CreditAmount                           int64                    `json:"credit_amount" url:"credit_amount"`
 	// Deprecated field, will be removed in the future. Use Credit.Description instead.
 	CreditDescription string `json:"credit_description" url:"credit_description"`
 	// Deprecated field, will be removed in the future. Use Credit.Icon instead.
@@ -18896,7 +20008,7 @@ type PlanCreditGrantView struct {
 	CreditName      string                   `json:"credit_name" url:"credit_name"`
 	ExpiryType      *BillingCreditExpiryType `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
 	ExpiryUnit      *BillingCreditExpiryUnit `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount *int                     `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ExpiryUnitCount *int64                   `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	ID              string                   `json:"id" url:"id"`
 	Plan            *GenericPreviewObject    `json:"plan,omitempty" url:"plan,omitempty"`
 	PlanID          string                   `json:"plan_id" url:"plan_id"`
@@ -18917,7 +20029,7 @@ type PlanCreditGrantView struct {
 	rawJSON         json.RawMessage
 }
 
-func (p *PlanCreditGrantView) GetBillingCreditAutoTopupAmount() *int {
+func (p *PlanCreditGrantView) GetBillingCreditAutoTopupAmount() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -18952,14 +20064,14 @@ func (p *PlanCreditGrantView) GetBillingCreditAutoTopupExpiryUnit() *BillingCred
 	return p.BillingCreditAutoTopupExpiryUnit
 }
 
-func (p *PlanCreditGrantView) GetBillingCreditAutoTopupExpiryUnitCount() *int {
+func (p *PlanCreditGrantView) GetBillingCreditAutoTopupExpiryUnitCount() *int64 {
 	if p == nil {
 		return nil
 	}
 	return p.BillingCreditAutoTopupExpiryUnitCount
 }
 
-func (p *PlanCreditGrantView) GetBillingCreditAutoTopupThresholdPercent() *int {
+func (p *PlanCreditGrantView) GetBillingCreditAutoTopupThresholdPercent() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -18980,7 +20092,7 @@ func (p *PlanCreditGrantView) GetCredit() *BillingCreditView {
 	return p.Credit
 }
 
-func (p *PlanCreditGrantView) GetCreditAmount() int {
+func (p *PlanCreditGrantView) GetCreditAmount() int64 {
 	if p == nil {
 		return 0
 	}
@@ -19029,7 +20141,7 @@ func (p *PlanCreditGrantView) GetExpiryUnit() *BillingCreditExpiryUnit {
 	return p.ExpiryUnit
 }
 
-func (p *PlanCreditGrantView) GetExpiryUnitCount() *int {
+func (p *PlanCreditGrantView) GetExpiryUnitCount() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -19107,6 +20219,9 @@ func (p *PlanCreditGrantView) GetUpdatedAt() time.Time {
 }
 
 func (p *PlanCreditGrantView) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -19119,7 +20234,7 @@ func (p *PlanCreditGrantView) require(field *big.Int) {
 
 // SetBillingCreditAutoTopupAmount sets the BillingCreditAutoTopupAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetBillingCreditAutoTopupAmount(billingCreditAutoTopupAmount *int) {
+func (p *PlanCreditGrantView) SetBillingCreditAutoTopupAmount(billingCreditAutoTopupAmount *int64) {
 	p.BillingCreditAutoTopupAmount = billingCreditAutoTopupAmount
 	p.require(planCreditGrantViewFieldBillingCreditAutoTopupAmount)
 }
@@ -19154,14 +20269,14 @@ func (p *PlanCreditGrantView) SetBillingCreditAutoTopupExpiryUnit(billingCreditA
 
 // SetBillingCreditAutoTopupExpiryUnitCount sets the BillingCreditAutoTopupExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetBillingCreditAutoTopupExpiryUnitCount(billingCreditAutoTopupExpiryUnitCount *int) {
+func (p *PlanCreditGrantView) SetBillingCreditAutoTopupExpiryUnitCount(billingCreditAutoTopupExpiryUnitCount *int64) {
 	p.BillingCreditAutoTopupExpiryUnitCount = billingCreditAutoTopupExpiryUnitCount
 	p.require(planCreditGrantViewFieldBillingCreditAutoTopupExpiryUnitCount)
 }
 
 // SetBillingCreditAutoTopupThresholdPercent sets the BillingCreditAutoTopupThresholdPercent field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetBillingCreditAutoTopupThresholdPercent(billingCreditAutoTopupThresholdPercent *int) {
+func (p *PlanCreditGrantView) SetBillingCreditAutoTopupThresholdPercent(billingCreditAutoTopupThresholdPercent *int64) {
 	p.BillingCreditAutoTopupThresholdPercent = billingCreditAutoTopupThresholdPercent
 	p.require(planCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent)
 }
@@ -19182,7 +20297,7 @@ func (p *PlanCreditGrantView) SetCredit(credit *BillingCreditView) {
 
 // SetCreditAmount sets the CreditAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetCreditAmount(creditAmount int) {
+func (p *PlanCreditGrantView) SetCreditAmount(creditAmount int64) {
 	p.CreditAmount = creditAmount
 	p.require(planCreditGrantViewFieldCreditAmount)
 }
@@ -19231,7 +20346,7 @@ func (p *PlanCreditGrantView) SetExpiryUnit(expiryUnit *BillingCreditExpiryUnit)
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCreditGrantView) SetExpiryUnitCount(expiryUnitCount *int) {
+func (p *PlanCreditGrantView) SetExpiryUnitCount(expiryUnitCount *int64) {
 	p.ExpiryUnitCount = expiryUnitCount
 	p.require(planCreditGrantViewFieldExpiryUnitCount)
 }
@@ -19346,6 +20461,273 @@ func (p *PlanCreditGrantView) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanCreditGrantView) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	planCurrencyPriceRequestBodyFieldCurrency     = big.NewInt(1 << 0)
+	planCurrencyPriceRequestBodyFieldMonthlyPrice = big.NewInt(1 << 1)
+	planCurrencyPriceRequestBodyFieldOneTimePrice = big.NewInt(1 << 2)
+	planCurrencyPriceRequestBodyFieldYearlyPrice  = big.NewInt(1 << 3)
+)
+
+type PlanCurrencyPriceRequestBody struct {
+	Currency     string `json:"currency" url:"currency"`
+	MonthlyPrice *int64 `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	OneTimePrice *int64 `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	YearlyPrice  *int64 `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanCurrencyPriceRequestBody) GetCurrency() string {
+	if p == nil {
+		return ""
+	}
+	return p.Currency
+}
+
+func (p *PlanCurrencyPriceRequestBody) GetMonthlyPrice() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.MonthlyPrice
+}
+
+func (p *PlanCurrencyPriceRequestBody) GetOneTimePrice() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.OneTimePrice
+}
+
+func (p *PlanCurrencyPriceRequestBody) GetYearlyPrice() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.YearlyPrice
+}
+
+func (p *PlanCurrencyPriceRequestBody) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanCurrencyPriceRequestBody) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPriceRequestBody) SetCurrency(currency string) {
+	p.Currency = currency
+	p.require(planCurrencyPriceRequestBodyFieldCurrency)
+}
+
+// SetMonthlyPrice sets the MonthlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPriceRequestBody) SetMonthlyPrice(monthlyPrice *int64) {
+	p.MonthlyPrice = monthlyPrice
+	p.require(planCurrencyPriceRequestBodyFieldMonthlyPrice)
+}
+
+// SetOneTimePrice sets the OneTimePrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPriceRequestBody) SetOneTimePrice(oneTimePrice *int64) {
+	p.OneTimePrice = oneTimePrice
+	p.require(planCurrencyPriceRequestBodyFieldOneTimePrice)
+}
+
+// SetYearlyPrice sets the YearlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPriceRequestBody) SetYearlyPrice(yearlyPrice *int64) {
+	p.YearlyPrice = yearlyPrice
+	p.require(planCurrencyPriceRequestBodyFieldYearlyPrice)
+}
+
+func (p *PlanCurrencyPriceRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanCurrencyPriceRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanCurrencyPriceRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanCurrencyPriceRequestBody) MarshalJSON() ([]byte, error) {
+	type embed PlanCurrencyPriceRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanCurrencyPriceRequestBody) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	planCurrencyPricesResponseDataFieldCurrency     = big.NewInt(1 << 0)
+	planCurrencyPricesResponseDataFieldMonthlyPrice = big.NewInt(1 << 1)
+	planCurrencyPricesResponseDataFieldOneTimePrice = big.NewInt(1 << 2)
+	planCurrencyPricesResponseDataFieldYearlyPrice  = big.NewInt(1 << 3)
+)
+
+type PlanCurrencyPricesResponseData struct {
+	Currency     string                    `json:"currency" url:"currency"`
+	MonthlyPrice *BillingPriceResponseData `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	OneTimePrice *BillingPriceResponseData `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	YearlyPrice  *BillingPriceResponseData `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanCurrencyPricesResponseData) GetCurrency() string {
+	if p == nil {
+		return ""
+	}
+	return p.Currency
+}
+
+func (p *PlanCurrencyPricesResponseData) GetMonthlyPrice() *BillingPriceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.MonthlyPrice
+}
+
+func (p *PlanCurrencyPricesResponseData) GetOneTimePrice() *BillingPriceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.OneTimePrice
+}
+
+func (p *PlanCurrencyPricesResponseData) GetYearlyPrice() *BillingPriceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.YearlyPrice
+}
+
+func (p *PlanCurrencyPricesResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanCurrencyPricesResponseData) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPricesResponseData) SetCurrency(currency string) {
+	p.Currency = currency
+	p.require(planCurrencyPricesResponseDataFieldCurrency)
+}
+
+// SetMonthlyPrice sets the MonthlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPricesResponseData) SetMonthlyPrice(monthlyPrice *BillingPriceResponseData) {
+	p.MonthlyPrice = monthlyPrice
+	p.require(planCurrencyPricesResponseDataFieldMonthlyPrice)
+}
+
+// SetOneTimePrice sets the OneTimePrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPricesResponseData) SetOneTimePrice(oneTimePrice *BillingPriceResponseData) {
+	p.OneTimePrice = oneTimePrice
+	p.require(planCurrencyPricesResponseDataFieldOneTimePrice)
+}
+
+// SetYearlyPrice sets the YearlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPricesResponseData) SetYearlyPrice(yearlyPrice *BillingPriceResponseData) {
+	p.YearlyPrice = yearlyPrice
+	p.require(planCurrencyPricesResponseDataFieldYearlyPrice)
+}
+
+func (p *PlanCurrencyPricesResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanCurrencyPricesResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanCurrencyPricesResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanCurrencyPricesResponseData) MarshalJSON() ([]byte, error) {
+	type embed PlanCurrencyPricesResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanCurrencyPricesResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -19365,23 +20747,24 @@ var (
 	planDetailResponseDataFieldCompanyCount         = big.NewInt(1 << 4)
 	planDetailResponseDataFieldControlledBy         = big.NewInt(1 << 5)
 	planDetailResponseDataFieldCreatedAt            = big.NewInt(1 << 6)
-	planDetailResponseDataFieldDescription          = big.NewInt(1 << 7)
-	planDetailResponseDataFieldDraftVersion         = big.NewInt(1 << 8)
-	planDetailResponseDataFieldFeatures             = big.NewInt(1 << 9)
-	planDetailResponseDataFieldIcon                 = big.NewInt(1 << 10)
-	planDetailResponseDataFieldID                   = big.NewInt(1 << 11)
-	planDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 12)
-	planDetailResponseDataFieldIsDefault            = big.NewInt(1 << 13)
-	planDetailResponseDataFieldIsFree               = big.NewInt(1 << 14)
-	planDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 15)
-	planDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 16)
-	planDetailResponseDataFieldName                 = big.NewInt(1 << 17)
-	planDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 18)
-	planDetailResponseDataFieldPlanType             = big.NewInt(1 << 19)
-	planDetailResponseDataFieldTrialDays            = big.NewInt(1 << 20)
-	planDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 21)
-	planDetailResponseDataFieldVersions             = big.NewInt(1 << 22)
-	planDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 23)
+	planDetailResponseDataFieldCurrencyPrices       = big.NewInt(1 << 7)
+	planDetailResponseDataFieldDescription          = big.NewInt(1 << 8)
+	planDetailResponseDataFieldDraftVersion         = big.NewInt(1 << 9)
+	planDetailResponseDataFieldFeatures             = big.NewInt(1 << 10)
+	planDetailResponseDataFieldIcon                 = big.NewInt(1 << 11)
+	planDetailResponseDataFieldID                   = big.NewInt(1 << 12)
+	planDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 13)
+	planDetailResponseDataFieldIsDefault            = big.NewInt(1 << 14)
+	planDetailResponseDataFieldIsFree               = big.NewInt(1 << 15)
+	planDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 16)
+	planDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 17)
+	planDetailResponseDataFieldName                 = big.NewInt(1 << 18)
+	planDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 19)
+	planDetailResponseDataFieldPlanType             = big.NewInt(1 << 20)
+	planDetailResponseDataFieldTrialDays            = big.NewInt(1 << 21)
+	planDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 22)
+	planDetailResponseDataFieldVersions             = big.NewInt(1 << 23)
+	planDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 24)
 )
 
 type PlanDetailResponseData struct {
@@ -19389,9 +20772,10 @@ type PlanDetailResponseData struct {
 	AudienceType         *string                               `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	BillingProduct       *BillingProductDetailResponseData     `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	ChargeType           ChargeType                            `json:"charge_type" url:"charge_type"`
-	CompanyCount         int                                   `json:"company_count" url:"company_count"`
+	CompanyCount         int64                                 `json:"company_count" url:"company_count"`
 	ControlledBy         PlanControlledByType                  `json:"controlled_by" url:"controlled_by"`
 	CreatedAt            time.Time                             `json:"created_at" url:"created_at"`
+	CurrencyPrices       []*PlanCurrencyPricesResponseData     `json:"currency_prices" url:"currency_prices"`
 	Description          string                                `json:"description" url:"description"`
 	DraftVersion         *PlanVersionResponseData              `json:"draft_version,omitempty" url:"draft_version,omitempty"`
 	Features             []*FeatureDetailResponseData          `json:"features" url:"features"`
@@ -19405,7 +20789,7 @@ type PlanDetailResponseData struct {
 	Name                 string                                `json:"name" url:"name"`
 	OneTimePrice         *BillingPriceResponseData             `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	PlanType             PlanType                              `json:"plan_type" url:"plan_type"`
-	TrialDays            *int                                  `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialDays            *int64                                `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt            time.Time                             `json:"updated_at" url:"updated_at"`
 	Versions             []*PlanVersionResponseData            `json:"versions" url:"versions"`
 	YearlyPrice          *BillingPriceResponseData             `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
@@ -19445,7 +20829,7 @@ func (p *PlanDetailResponseData) GetChargeType() ChargeType {
 	return p.ChargeType
 }
 
-func (p *PlanDetailResponseData) GetCompanyCount() int {
+func (p *PlanDetailResponseData) GetCompanyCount() int64 {
 	if p == nil {
 		return 0
 	}
@@ -19464,6 +20848,13 @@ func (p *PlanDetailResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return p.CreatedAt
+}
+
+func (p *PlanDetailResponseData) GetCurrencyPrices() []*PlanCurrencyPricesResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.CurrencyPrices
 }
 
 func (p *PlanDetailResponseData) GetDescription() string {
@@ -19557,7 +20948,7 @@ func (p *PlanDetailResponseData) GetPlanType() PlanType {
 	return p.PlanType
 }
 
-func (p *PlanDetailResponseData) GetTrialDays() *int {
+func (p *PlanDetailResponseData) GetTrialDays() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -19586,6 +20977,9 @@ func (p *PlanDetailResponseData) GetYearlyPrice() *BillingPriceResponseData {
 }
 
 func (p *PlanDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -19626,7 +21020,7 @@ func (p *PlanDetailResponseData) SetChargeType(chargeType ChargeType) {
 
 // SetCompanyCount sets the CompanyCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanDetailResponseData) SetCompanyCount(companyCount int) {
+func (p *PlanDetailResponseData) SetCompanyCount(companyCount int64) {
 	p.CompanyCount = companyCount
 	p.require(planDetailResponseDataFieldCompanyCount)
 }
@@ -19643,6 +21037,13 @@ func (p *PlanDetailResponseData) SetControlledBy(controlledBy PlanControlledByTy
 func (p *PlanDetailResponseData) SetCreatedAt(createdAt time.Time) {
 	p.CreatedAt = createdAt
 	p.require(planDetailResponseDataFieldCreatedAt)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanDetailResponseData) SetCurrencyPrices(currencyPrices []*PlanCurrencyPricesResponseData) {
+	p.CurrencyPrices = currencyPrices
+	p.require(planDetailResponseDataFieldCurrencyPrices)
 }
 
 // SetDescription sets the Description field and marks it as non-optional;
@@ -19738,7 +21139,7 @@ func (p *PlanDetailResponseData) SetPlanType(planType PlanType) {
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanDetailResponseData) SetTrialDays(trialDays *int) {
+func (p *PlanDetailResponseData) SetTrialDays(trialDays *int64) {
 	p.TrialDays = trialDays
 	p.require(planDetailResponseDataFieldTrialDays)
 }
@@ -19804,6 +21205,9 @@ func (p *PlanDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanDetailResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -19819,56 +21223,58 @@ var (
 	planEntitlementResponseDataFieldBillingThreshold       = big.NewInt(1 << 0)
 	planEntitlementResponseDataFieldConsumptionRate        = big.NewInt(1 << 1)
 	planEntitlementResponseDataFieldCreatedAt              = big.NewInt(1 << 2)
-	planEntitlementResponseDataFieldEnvironmentID          = big.NewInt(1 << 3)
-	planEntitlementResponseDataFieldFeature                = big.NewInt(1 << 4)
-	planEntitlementResponseDataFieldFeatureID              = big.NewInt(1 << 5)
-	planEntitlementResponseDataFieldID                     = big.NewInt(1 << 6)
-	planEntitlementResponseDataFieldMeteredMonthlyPrice    = big.NewInt(1 << 7)
-	planEntitlementResponseDataFieldMeteredYearlyPrice     = big.NewInt(1 << 8)
-	planEntitlementResponseDataFieldMetricPeriod           = big.NewInt(1 << 9)
-	planEntitlementResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 10)
-	planEntitlementResponseDataFieldPlan                   = big.NewInt(1 << 11)
-	planEntitlementResponseDataFieldPlanID                 = big.NewInt(1 << 12)
-	planEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 13)
-	planEntitlementResponseDataFieldRuleID                 = big.NewInt(1 << 14)
-	planEntitlementResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 15)
-	planEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 16)
-	planEntitlementResponseDataFieldUpdatedAt              = big.NewInt(1 << 17)
-	planEntitlementResponseDataFieldUsageBasedProduct      = big.NewInt(1 << 18)
-	planEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 19)
-	planEntitlementResponseDataFieldValueCredit            = big.NewInt(1 << 20)
-	planEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 21)
-	planEntitlementResponseDataFieldValueTrait             = big.NewInt(1 << 22)
-	planEntitlementResponseDataFieldValueTraitID           = big.NewInt(1 << 23)
-	planEntitlementResponseDataFieldValueType              = big.NewInt(1 << 24)
+	planEntitlementResponseDataFieldCurrencyPrices         = big.NewInt(1 << 3)
+	planEntitlementResponseDataFieldEnvironmentID          = big.NewInt(1 << 4)
+	planEntitlementResponseDataFieldFeature                = big.NewInt(1 << 5)
+	planEntitlementResponseDataFieldFeatureID              = big.NewInt(1 << 6)
+	planEntitlementResponseDataFieldID                     = big.NewInt(1 << 7)
+	planEntitlementResponseDataFieldMeteredMonthlyPrice    = big.NewInt(1 << 8)
+	planEntitlementResponseDataFieldMeteredYearlyPrice     = big.NewInt(1 << 9)
+	planEntitlementResponseDataFieldMetricPeriod           = big.NewInt(1 << 10)
+	planEntitlementResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 11)
+	planEntitlementResponseDataFieldPlan                   = big.NewInt(1 << 12)
+	planEntitlementResponseDataFieldPlanID                 = big.NewInt(1 << 13)
+	planEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 14)
+	planEntitlementResponseDataFieldRuleID                 = big.NewInt(1 << 15)
+	planEntitlementResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 16)
+	planEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 17)
+	planEntitlementResponseDataFieldUpdatedAt              = big.NewInt(1 << 18)
+	planEntitlementResponseDataFieldUsageBasedProduct      = big.NewInt(1 << 19)
+	planEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 20)
+	planEntitlementResponseDataFieldValueCredit            = big.NewInt(1 << 21)
+	planEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 22)
+	planEntitlementResponseDataFieldValueTrait             = big.NewInt(1 << 23)
+	planEntitlementResponseDataFieldValueTraitID           = big.NewInt(1 << 24)
+	planEntitlementResponseDataFieldValueType              = big.NewInt(1 << 25)
 )
 
 type PlanEntitlementResponseData struct {
-	BillingThreshold       *int                               `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
-	ConsumptionRate        *float64                           `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
-	CreatedAt              time.Time                          `json:"created_at" url:"created_at"`
-	EnvironmentID          string                             `json:"environment_id" url:"environment_id"`
-	Feature                *FeatureResponseData               `json:"feature,omitempty" url:"feature,omitempty"`
-	FeatureID              string                             `json:"feature_id" url:"feature_id"`
-	ID                     string                             `json:"id" url:"id"`
-	MeteredMonthlyPrice    *BillingPriceView                  `json:"metered_monthly_price,omitempty" url:"metered_monthly_price,omitempty"`
-	MeteredYearlyPrice     *BillingPriceView                  `json:"metered_yearly_price,omitempty" url:"metered_yearly_price,omitempty"`
-	MetricPeriod           *string                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
-	MetricPeriodMonthReset *string                            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	Plan                   *PlanResponseData                  `json:"plan,omitempty" url:"plan,omitempty"`
-	PlanID                 string                             `json:"plan_id" url:"plan_id"`
-	PriceBehavior          *EntitlementPriceBehavior          `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
-	RuleID                 string                             `json:"rule_id" url:"rule_id"`
-	RuleIDUsageExceeded    *string                            `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
-	SoftLimit              *int                               `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
-	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
-	UsageBasedProduct      *BillingProductResponseData        `json:"usage_based_product,omitempty" url:"usage_based_product,omitempty"`
-	ValueBool              *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueCredit            *BillingCreditResponseData         `json:"value_credit,omitempty" url:"value_credit,omitempty"`
-	ValueNumeric           *int                               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	ValueTrait             *EntityTraitDefinitionResponseData `json:"value_trait,omitempty" url:"value_trait,omitempty"`
-	ValueTraitID           *string                            `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
-	ValueType              EntitlementValueType               `json:"value_type" url:"value_type"`
+	BillingThreshold       *int64                                   `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
+	ConsumptionRate        *float64                                 `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
+	CreatedAt              time.Time                                `json:"created_at" url:"created_at"`
+	CurrencyPrices         []*EntitlementCurrencyPricesResponseData `json:"currency_prices" url:"currency_prices"`
+	EnvironmentID          string                                   `json:"environment_id" url:"environment_id"`
+	Feature                *FeatureResponseData                     `json:"feature,omitempty" url:"feature,omitempty"`
+	FeatureID              string                                   `json:"feature_id" url:"feature_id"`
+	ID                     string                                   `json:"id" url:"id"`
+	MeteredMonthlyPrice    *BillingPriceView                        `json:"metered_monthly_price,omitempty" url:"metered_monthly_price,omitempty"`
+	MeteredYearlyPrice     *BillingPriceView                        `json:"metered_yearly_price,omitempty" url:"metered_yearly_price,omitempty"`
+	MetricPeriod           *string                                  `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset *string                                  `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	Plan                   *PlanResponseData                        `json:"plan,omitempty" url:"plan,omitempty"`
+	PlanID                 string                                   `json:"plan_id" url:"plan_id"`
+	PriceBehavior          *EntitlementPriceBehavior                `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	RuleID                 string                                   `json:"rule_id" url:"rule_id"`
+	RuleIDUsageExceeded    *string                                  `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
+	SoftLimit              *int64                                   `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	UpdatedAt              time.Time                                `json:"updated_at" url:"updated_at"`
+	UsageBasedProduct      *BillingProductResponseData              `json:"usage_based_product,omitempty" url:"usage_based_product,omitempty"`
+	ValueBool              *bool                                    `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueCredit            *BillingCreditResponseData               `json:"value_credit,omitempty" url:"value_credit,omitempty"`
+	ValueNumeric           *int64                                   `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueTrait             *EntityTraitDefinitionResponseData       `json:"value_trait,omitempty" url:"value_trait,omitempty"`
+	ValueTraitID           *string                                  `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
+	ValueType              EntitlementValueType                     `json:"value_type" url:"value_type"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -19877,7 +21283,7 @@ type PlanEntitlementResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (p *PlanEntitlementResponseData) GetBillingThreshold() *int {
+func (p *PlanEntitlementResponseData) GetBillingThreshold() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -19896,6 +21302,13 @@ func (p *PlanEntitlementResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return p.CreatedAt
+}
+
+func (p *PlanEntitlementResponseData) GetCurrencyPrices() []*EntitlementCurrencyPricesResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.CurrencyPrices
 }
 
 func (p *PlanEntitlementResponseData) GetEnvironmentID() string {
@@ -19989,7 +21402,7 @@ func (p *PlanEntitlementResponseData) GetRuleIDUsageExceeded() *string {
 	return p.RuleIDUsageExceeded
 }
 
-func (p *PlanEntitlementResponseData) GetSoftLimit() *int {
+func (p *PlanEntitlementResponseData) GetSoftLimit() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -20024,7 +21437,7 @@ func (p *PlanEntitlementResponseData) GetValueCredit() *BillingCreditResponseDat
 	return p.ValueCredit
 }
 
-func (p *PlanEntitlementResponseData) GetValueNumeric() *int {
+func (p *PlanEntitlementResponseData) GetValueNumeric() *int64 {
 	if p == nil {
 		return nil
 	}
@@ -20053,6 +21466,9 @@ func (p *PlanEntitlementResponseData) GetValueType() EntitlementValueType {
 }
 
 func (p *PlanEntitlementResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -20065,7 +21481,7 @@ func (p *PlanEntitlementResponseData) require(field *big.Int) {
 
 // SetBillingThreshold sets the BillingThreshold field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanEntitlementResponseData) SetBillingThreshold(billingThreshold *int) {
+func (p *PlanEntitlementResponseData) SetBillingThreshold(billingThreshold *int64) {
 	p.BillingThreshold = billingThreshold
 	p.require(planEntitlementResponseDataFieldBillingThreshold)
 }
@@ -20082,6 +21498,13 @@ func (p *PlanEntitlementResponseData) SetConsumptionRate(consumptionRate *float6
 func (p *PlanEntitlementResponseData) SetCreatedAt(createdAt time.Time) {
 	p.CreatedAt = createdAt
 	p.require(planEntitlementResponseDataFieldCreatedAt)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanEntitlementResponseData) SetCurrencyPrices(currencyPrices []*EntitlementCurrencyPricesResponseData) {
+	p.CurrencyPrices = currencyPrices
+	p.require(planEntitlementResponseDataFieldCurrencyPrices)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -20177,7 +21600,7 @@ func (p *PlanEntitlementResponseData) SetRuleIDUsageExceeded(ruleIDUsageExceeded
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanEntitlementResponseData) SetSoftLimit(softLimit *int) {
+func (p *PlanEntitlementResponseData) SetSoftLimit(softLimit *int64) {
 	p.SoftLimit = softLimit
 	p.require(planEntitlementResponseDataFieldSoftLimit)
 }
@@ -20212,7 +21635,7 @@ func (p *PlanEntitlementResponseData) SetValueCredit(valueCredit *BillingCreditR
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanEntitlementResponseData) SetValueNumeric(valueNumeric *int) {
+func (p *PlanEntitlementResponseData) SetValueNumeric(valueNumeric *int64) {
 	p.ValueNumeric = valueNumeric
 	p.require(planEntitlementResponseDataFieldValueNumeric)
 }
@@ -20278,6 +21701,9 @@ func (p *PlanEntitlementResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanEntitlementResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -20374,6 +21800,9 @@ func (p *PlanResponseData) GetUpdatedAt() time.Time {
 }
 
 func (p *PlanResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -20480,6 +21909,9 @@ func (p *PlanResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -20585,6 +22017,9 @@ func (p *PlanTraitResponseData) GetUpdatedAt() time.Time {
 }
 
 func (p *PlanTraitResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -20698,6 +22133,9 @@ func (p *PlanTraitResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanTraitResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -20778,7 +22216,7 @@ type PlanVersionResponseData struct {
 	PlanType       PlanType          `json:"plan_type" url:"plan_type"`
 	Status         PlanVersionStatus `json:"status" url:"status"`
 	UpdatedAt      time.Time         `json:"updated_at" url:"updated_at"`
-	Version        int               `json:"version" url:"version"`
+	Version        int64             `json:"version" url:"version"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -20857,7 +22295,7 @@ func (p *PlanVersionResponseData) GetUpdatedAt() time.Time {
 	return p.UpdatedAt
 }
 
-func (p *PlanVersionResponseData) GetVersion() int {
+func (p *PlanVersionResponseData) GetVersion() int64 {
 	if p == nil {
 		return 0
 	}
@@ -20865,6 +22303,9 @@ func (p *PlanVersionResponseData) GetVersion() int {
 }
 
 func (p *PlanVersionResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -20947,7 +22388,7 @@ func (p *PlanVersionResponseData) SetUpdatedAt(updatedAt time.Time) {
 
 // SetVersion sets the Version field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanVersionResponseData) SetVersion(version int) {
+func (p *PlanVersionResponseData) SetVersion(version int64) {
 	p.Version = version
 	p.require(planVersionResponseDataFieldVersion)
 }
@@ -20992,6 +22433,9 @@ func (p *PlanVersionResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanVersionResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -21077,6 +22521,9 @@ func (p *PreviewObject) GetName() string {
 }
 
 func (p *PreviewObject) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -21143,6 +22590,9 @@ func (p *PreviewObject) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PreviewObject) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -21203,6 +22653,9 @@ func (p *PreviewObjectResponseData) GetName() string {
 }
 
 func (p *PreviewObjectResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -21269,6 +22722,9 @@ func (p *PreviewObjectResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PreviewObjectResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -21301,7 +22757,7 @@ type Rule struct {
 	FlagID          *string           `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID              string            `json:"id" url:"id"`
 	Name            string            `json:"name" url:"name"`
-	Priority        int               `json:"priority" url:"priority"`
+	Priority        int64             `json:"priority" url:"priority"`
 	RuleType        RuleRuleType      `json:"rule_type" url:"rule_type"`
 	Value           bool              `json:"value" url:"value"`
 
@@ -21361,7 +22817,7 @@ func (r *Rule) GetName() string {
 	return r.Name
 }
 
-func (r *Rule) GetPriority() int {
+func (r *Rule) GetPriority() int64 {
 	if r == nil {
 		return 0
 	}
@@ -21383,6 +22839,9 @@ func (r *Rule) GetValue() bool {
 }
 
 func (r *Rule) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -21444,7 +22903,7 @@ func (r *Rule) SetName(name string) {
 
 // SetPriority sets the Priority field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *Rule) SetPriority(priority int) {
+func (r *Rule) SetPriority(priority int64) {
 	r.Priority = priority
 	r.require(ruleFieldPriority)
 }
@@ -21491,6 +22950,9 @@ func (r *Rule) MarshalJSON() ([]byte, error) {
 }
 
 func (r *Rule) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -21538,7 +23000,7 @@ type RuleConditionDetailResponseData struct {
 	ID                     string                             `json:"id" url:"id"`
 	MetricPeriod           *string                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *string                            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	MetricValue            *int                               `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	MetricValue            *int64                             `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator               string                             `json:"operator" url:"operator"`
 	ResourceIDs            []string                           `json:"resource_ids" url:"resource_ids"`
 	Resources              []*PreviewObjectResponseData       `json:"resources" url:"resources"`
@@ -21633,7 +23095,7 @@ func (r *RuleConditionDetailResponseData) GetMetricPeriodMonthReset() *string {
 	return r.MetricPeriodMonthReset
 }
 
-func (r *RuleConditionDetailResponseData) GetMetricValue() *int {
+func (r *RuleConditionDetailResponseData) GetMetricValue() *int64 {
 	if r == nil {
 		return nil
 	}
@@ -21704,6 +23166,9 @@ func (r *RuleConditionDetailResponseData) GetUpdatedAt() time.Time {
 }
 
 func (r *RuleConditionDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -21793,7 +23258,7 @@ func (r *RuleConditionDetailResponseData) SetMetricPeriodMonthReset(metricPeriod
 
 // SetMetricValue sets the MetricValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RuleConditionDetailResponseData) SetMetricValue(metricValue *int) {
+func (r *RuleConditionDetailResponseData) SetMetricValue(metricValue *int64) {
 	r.MetricValue = metricValue
 	r.require(ruleConditionDetailResponseDataFieldMetricValue)
 }
@@ -21901,6 +23366,9 @@ func (r *RuleConditionDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RuleConditionDetailResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -21988,6 +23456,9 @@ func (r *RuleConditionGroupDetailResponseData) GetUpdatedAt() time.Time {
 }
 
 func (r *RuleConditionGroupDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -22087,6 +23558,9 @@ func (r *RuleConditionGroupDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RuleConditionGroupDetailResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -22165,6 +23639,9 @@ func (r *RuleConditionGroupResponseData) GetUpdatedAt() time.Time {
 }
 
 func (r *RuleConditionGroupResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -22257,6 +23734,9 @@ func (r *RuleConditionGroupResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RuleConditionGroupResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -22300,7 +23780,7 @@ type RuleConditionResponseData struct {
 	ID                     string      `json:"id" url:"id"`
 	MetricPeriod           *string     `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *string     `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	MetricValue            *int        `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	MetricValue            *int64      `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator               string      `json:"operator" url:"operator"`
 	ResourceIDs            []string    `json:"resource_ids" url:"resource_ids"`
 	RuleID                 string      `json:"rule_id" url:"rule_id"`
@@ -22386,7 +23866,7 @@ func (r *RuleConditionResponseData) GetMetricPeriodMonthReset() *string {
 	return r.MetricPeriodMonthReset
 }
 
-func (r *RuleConditionResponseData) GetMetricValue() *int {
+func (r *RuleConditionResponseData) GetMetricValue() *int64 {
 	if r == nil {
 		return nil
 	}
@@ -22443,6 +23923,9 @@ func (r *RuleConditionResponseData) GetUpdatedAt() time.Time {
 }
 
 func (r *RuleConditionResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -22525,7 +24008,7 @@ func (r *RuleConditionResponseData) SetMetricPeriodMonthReset(metricPeriodMonthR
 
 // SetMetricValue sets the MetricValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RuleConditionResponseData) SetMetricValue(metricValue *int) {
+func (r *RuleConditionResponseData) SetMetricValue(metricValue *int64) {
 	r.MetricValue = metricValue
 	r.require(ruleConditionResponseDataFieldMetricValue)
 }
@@ -22619,6 +24102,9 @@ func (r *RuleConditionResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RuleConditionResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -22652,7 +24138,7 @@ type RuleDetailResponseData struct {
 	FlagID          *string                                 `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID              string                                  `json:"id" url:"id"`
 	Name            string                                  `json:"name" url:"name"`
-	Priority        int                                     `json:"priority" url:"priority"`
+	Priority        int64                                   `json:"priority" url:"priority"`
 	RuleType        string                                  `json:"rule_type" url:"rule_type"`
 	UpdatedAt       time.Time                               `json:"updated_at" url:"updated_at"`
 	Value           bool                                    `json:"value" url:"value"`
@@ -22713,7 +24199,7 @@ func (r *RuleDetailResponseData) GetName() string {
 	return r.Name
 }
 
-func (r *RuleDetailResponseData) GetPriority() int {
+func (r *RuleDetailResponseData) GetPriority() int64 {
 	if r == nil {
 		return 0
 	}
@@ -22742,6 +24228,9 @@ func (r *RuleDetailResponseData) GetValue() bool {
 }
 
 func (r *RuleDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -22803,7 +24292,7 @@ func (r *RuleDetailResponseData) SetName(name string) {
 
 // SetPriority sets the Priority field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RuleDetailResponseData) SetPriority(priority int) {
+func (r *RuleDetailResponseData) SetPriority(priority int64) {
 	r.Priority = priority
 	r.require(ruleDetailResponseDataFieldPriority)
 }
@@ -22869,6 +24358,9 @@ func (r *RuleDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RuleDetailResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -22898,7 +24390,7 @@ type RuleResponseData struct {
 	FlagID        *string   `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID            string    `json:"id" url:"id"`
 	Name          string    `json:"name" url:"name"`
-	Priority      int       `json:"priority" url:"priority"`
+	Priority      int64     `json:"priority" url:"priority"`
 	RuleType      string    `json:"rule_type" url:"rule_type"`
 	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
 	Value         bool      `json:"value" url:"value"`
@@ -22945,7 +24437,7 @@ func (r *RuleResponseData) GetName() string {
 	return r.Name
 }
 
-func (r *RuleResponseData) GetPriority() int {
+func (r *RuleResponseData) GetPriority() int64 {
 	if r == nil {
 		return 0
 	}
@@ -22974,6 +24466,9 @@ func (r *RuleResponseData) GetValue() bool {
 }
 
 func (r *RuleResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -23021,7 +24516,7 @@ func (r *RuleResponseData) SetName(name string) {
 
 // SetPriority sets the Priority field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RuleResponseData) SetPriority(priority int) {
+func (r *RuleResponseData) SetPriority(priority int64) {
 	r.Priority = priority
 	r.require(ruleResponseDataFieldPriority)
 }
@@ -23087,6 +24582,9 @@ func (r *RuleResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RuleResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -23144,11 +24642,10 @@ var (
 	ruleViewFieldFlagID          = big.NewInt(1 << 5)
 	ruleViewFieldID              = big.NewInt(1 << 6)
 	ruleViewFieldName            = big.NewInt(1 << 7)
-	ruleViewFieldPlanVersionID   = big.NewInt(1 << 8)
-	ruleViewFieldPriority        = big.NewInt(1 << 9)
-	ruleViewFieldRuleType        = big.NewInt(1 << 10)
-	ruleViewFieldUpdatedAt       = big.NewInt(1 << 11)
-	ruleViewFieldValue           = big.NewInt(1 << 12)
+	ruleViewFieldPriority        = big.NewInt(1 << 8)
+	ruleViewFieldRuleType        = big.NewInt(1 << 9)
+	ruleViewFieldUpdatedAt       = big.NewInt(1 << 10)
+	ruleViewFieldValue           = big.NewInt(1 << 11)
 )
 
 type RuleView struct {
@@ -23160,8 +24657,7 @@ type RuleView struct {
 	FlagID          *string               `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID              string                `json:"id" url:"id"`
 	Name            string                `json:"name" url:"name"`
-	PlanVersionID   *string               `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
-	Priority        int                   `json:"priority" url:"priority"`
+	Priority        int64                 `json:"priority" url:"priority"`
 	RuleType        string                `json:"rule_type" url:"rule_type"`
 	UpdatedAt       time.Time             `json:"updated_at" url:"updated_at"`
 	Value           bool                  `json:"value" url:"value"`
@@ -23229,14 +24725,7 @@ func (r *RuleView) GetName() string {
 	return r.Name
 }
 
-func (r *RuleView) GetPlanVersionID() *string {
-	if r == nil {
-		return nil
-	}
-	return r.PlanVersionID
-}
-
-func (r *RuleView) GetPriority() int {
+func (r *RuleView) GetPriority() int64 {
 	if r == nil {
 		return 0
 	}
@@ -23265,6 +24754,9 @@ func (r *RuleView) GetValue() bool {
 }
 
 func (r *RuleView) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -23331,16 +24823,9 @@ func (r *RuleView) SetName(name string) {
 	r.require(ruleViewFieldName)
 }
 
-// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RuleView) SetPlanVersionID(planVersionID *string) {
-	r.PlanVersionID = planVersionID
-	r.require(ruleViewFieldPlanVersionID)
-}
-
 // SetPriority sets the Priority field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RuleView) SetPriority(priority int) {
+func (r *RuleView) SetPriority(priority int64) {
 	r.Priority = priority
 	r.require(ruleViewFieldPriority)
 }
@@ -23406,6 +24891,9 @@ func (r *RuleView) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RuleView) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -23421,14 +24909,14 @@ func (r *RuleView) String() string {
 type RulesEngineSchemaVersion string
 
 const (
-	RulesEngineSchemaVersionV0F048Dd3                       RulesEngineSchemaVersion = "v0f048dd3"
+	RulesEngineSchemaVersionV5F633Cc3                       RulesEngineSchemaVersion = "v5f633cc3"
 	RulesEngineSchemaVersionPlaceholderForFernCompatibility RulesEngineSchemaVersion = "placeholder-for-fern-compatibility"
 )
 
 func NewRulesEngineSchemaVersionFromString(s string) (RulesEngineSchemaVersion, error) {
 	switch s {
-	case "v0f048dd3":
-		return RulesEngineSchemaVersionV0F048Dd3, nil
+	case "v5f633cc3":
+		return RulesEngineSchemaVersionV5F633Cc3, nil
 	case "placeholder-for-fern-compatibility":
 		return RulesEngineSchemaVersionPlaceholderForFernCompatibility, nil
 	}
@@ -23462,8 +24950,8 @@ type RulesengineCheckFlagResult struct {
 	CompanyID           *string                                       `json:"company_id,omitempty" url:"company_id,omitempty"`
 	Entitlement         *RulesengineFeatureEntitlement                `json:"entitlement,omitempty" url:"entitlement,omitempty"`
 	Err                 *string                                       `json:"err,omitempty" url:"err,omitempty"`
-	FeatureAllocation   *int                                          `json:"feature_allocation,omitempty" url:"feature_allocation,omitempty"`
-	FeatureUsage        *int                                          `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	FeatureAllocation   *int64                                        `json:"feature_allocation,omitempty" url:"feature_allocation,omitempty"`
+	FeatureUsage        *int64                                        `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
 	FeatureUsageEvent   *string                                       `json:"feature_usage_event,omitempty" url:"feature_usage_event,omitempty"`
 	FeatureUsagePeriod  *RulesengineCheckFlagResultFeatureUsagePeriod `json:"feature_usage_period,omitempty" url:"feature_usage_period,omitempty"`
 	FeatureUsageResetAt *time.Time                                    `json:"feature_usage_reset_at,omitempty" url:"feature_usage_reset_at,omitempty"`
@@ -23503,14 +24991,14 @@ func (r *RulesengineCheckFlagResult) GetErr() *string {
 	return r.Err
 }
 
-func (r *RulesengineCheckFlagResult) GetFeatureAllocation() *int {
+func (r *RulesengineCheckFlagResult) GetFeatureAllocation() *int64 {
 	if r == nil {
 		return nil
 	}
 	return r.FeatureAllocation
 }
 
-func (r *RulesengineCheckFlagResult) GetFeatureUsage() *int {
+func (r *RulesengineCheckFlagResult) GetFeatureUsage() *int64 {
 	if r == nil {
 		return nil
 	}
@@ -23588,6 +25076,9 @@ func (r *RulesengineCheckFlagResult) GetValue() bool {
 }
 
 func (r *RulesengineCheckFlagResult) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -23621,14 +25112,14 @@ func (r *RulesengineCheckFlagResult) SetErr(err *string) {
 
 // SetFeatureAllocation sets the FeatureAllocation field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineCheckFlagResult) SetFeatureAllocation(featureAllocation *int) {
+func (r *RulesengineCheckFlagResult) SetFeatureAllocation(featureAllocation *int64) {
 	r.FeatureAllocation = featureAllocation
 	r.require(rulesengineCheckFlagResultFieldFeatureAllocation)
 }
 
 // SetFeatureUsage sets the FeatureUsage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineCheckFlagResult) SetFeatureUsage(featureUsage *int) {
+func (r *RulesengineCheckFlagResult) SetFeatureUsage(featureUsage *int64) {
 	r.FeatureUsage = featureUsage
 	r.require(rulesengineCheckFlagResultFieldFeatureUsage)
 }
@@ -23739,6 +25230,9 @@ func (r *RulesengineCheckFlagResult) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineCheckFlagResult) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -23954,6 +25448,9 @@ func (r *RulesengineCompany) GetTraits() []*RulesengineTrait {
 }
 
 func (r *RulesengineCompany) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -24090,6 +25587,9 @@ func (r *RulesengineCompany) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineCompany) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -24122,7 +25622,7 @@ type RulesengineCompanyMetric struct {
 	MonthReset    RulesengineCompanyMetricMonthReset `json:"month_reset" url:"month_reset"`
 	Period        RulesengineCompanyMetricPeriod     `json:"period" url:"period"`
 	ValidUntil    *time.Time                         `json:"valid_until,omitempty" url:"valid_until,omitempty"`
-	Value         int                                `json:"value" url:"value"`
+	Value         int64                              `json:"value" url:"value"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -24187,7 +25687,7 @@ func (r *RulesengineCompanyMetric) GetValidUntil() *time.Time {
 	return r.ValidUntil
 }
 
-func (r *RulesengineCompanyMetric) GetValue() int {
+func (r *RulesengineCompanyMetric) GetValue() int64 {
 	if r == nil {
 		return 0
 	}
@@ -24195,6 +25695,9 @@ func (r *RulesengineCompanyMetric) GetValue() int {
 }
 
 func (r *RulesengineCompanyMetric) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -24263,7 +25766,7 @@ func (r *RulesengineCompanyMetric) SetValidUntil(validUntil *time.Time) {
 
 // SetValue sets the Value field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineCompanyMetric) SetValue(value int) {
+func (r *RulesengineCompanyMetric) SetValue(value int64) {
 	r.Value = value
 	r.require(rulesengineCompanyMetricFieldValue)
 }
@@ -24308,6 +25811,9 @@ func (r *RulesengineCompanyMetric) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineCompanyMetric) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -24398,7 +25904,7 @@ type RulesengineCondition struct {
 	ID                        string                                      `json:"id" url:"id"`
 	MetricPeriod              *RulesengineConditionMetricPeriod           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset    *RulesengineConditionMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	MetricValue               *int                                        `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	MetricValue               *int64                                      `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator                  RulesengineConditionOperator                `json:"operator" url:"operator"`
 	ResourceIDs               []string                                    `json:"resource_ids" url:"resource_ids"`
 	TraitDefinition           *RulesengineTraitDefinition                 `json:"trait_definition,omitempty" url:"trait_definition,omitempty"`
@@ -24481,7 +25987,7 @@ func (r *RulesengineCondition) GetMetricPeriodMonthReset() *RulesengineCondition
 	return r.MetricPeriodMonthReset
 }
 
-func (r *RulesengineCondition) GetMetricValue() *int {
+func (r *RulesengineCondition) GetMetricValue() *int64 {
 	if r == nil {
 		return nil
 	}
@@ -24517,6 +26023,9 @@ func (r *RulesengineCondition) GetTraitValue() string {
 }
 
 func (r *RulesengineCondition) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -24599,7 +26108,7 @@ func (r *RulesengineCondition) SetMetricPeriodMonthReset(metricPeriodMonthReset 
 
 // SetMetricValue sets the MetricValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineCondition) SetMetricValue(metricValue *int) {
+func (r *RulesengineCondition) SetMetricValue(metricValue *int64) {
 	r.MetricValue = metricValue
 	r.require(rulesengineConditionFieldMetricValue)
 }
@@ -24660,6 +26169,9 @@ func (r *RulesengineCondition) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineCondition) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -24736,6 +26248,9 @@ func (r *RulesengineConditionGroup) GetConditions() []*RulesengineCondition {
 }
 
 func (r *RulesengineConditionGroup) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -24781,6 +26296,9 @@ func (r *RulesengineConditionGroup) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineConditionGroup) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -24957,7 +26475,7 @@ var (
 
 type RulesengineFeatureEntitlement struct {
 	// If the company has a numeric entitlement for this feature, the allocated amount
-	Allocation *int `json:"allocation,omitempty" url:"allocation,omitempty"`
+	Allocation *int64 `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the ID of the credit
 	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the remaining credit amount
@@ -24979,9 +26497,9 @@ type RulesengineFeatureEntitlement struct {
 	// For event-based feature entitlements that have a monthly period, whether that monthly reset is based on the calendar month or a billing cycle
 	MonthReset *RulesengineFeatureEntitlementMonthReset `json:"month_reset,omitempty" url:"month_reset,omitempty"`
 	// For usage-based pricing, the soft limit for overage charges or the next tier boundary
-	SoftLimit *int `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	SoftLimit *int64 `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// If the company has a numeric entitlement for this feature, the current usage amount
-	Usage *int `json:"usage,omitempty" url:"usage,omitempty"`
+	Usage *int64 `json:"usage,omitempty" url:"usage,omitempty"`
 	// The type of the entitlement value
 	ValueType RulesengineEntitlementValueType `json:"value_type" url:"value_type"`
 
@@ -24992,7 +26510,7 @@ type RulesengineFeatureEntitlement struct {
 	rawJSON         json.RawMessage
 }
 
-func (r *RulesengineFeatureEntitlement) GetAllocation() *int {
+func (r *RulesengineFeatureEntitlement) GetAllocation() *int64 {
 	if r == nil {
 		return nil
 	}
@@ -25069,14 +26587,14 @@ func (r *RulesengineFeatureEntitlement) GetMonthReset() *RulesengineFeatureEntit
 	return r.MonthReset
 }
 
-func (r *RulesengineFeatureEntitlement) GetSoftLimit() *int {
+func (r *RulesengineFeatureEntitlement) GetSoftLimit() *int64 {
 	if r == nil {
 		return nil
 	}
 	return r.SoftLimit
 }
 
-func (r *RulesengineFeatureEntitlement) GetUsage() *int {
+func (r *RulesengineFeatureEntitlement) GetUsage() *int64 {
 	if r == nil {
 		return nil
 	}
@@ -25091,6 +26609,9 @@ func (r *RulesengineFeatureEntitlement) GetValueType() RulesengineEntitlementVal
 }
 
 func (r *RulesengineFeatureEntitlement) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -25103,7 +26624,7 @@ func (r *RulesengineFeatureEntitlement) require(field *big.Int) {
 
 // SetAllocation sets the Allocation field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineFeatureEntitlement) SetAllocation(allocation *int) {
+func (r *RulesengineFeatureEntitlement) SetAllocation(allocation *int64) {
 	r.Allocation = allocation
 	r.require(rulesengineFeatureEntitlementFieldAllocation)
 }
@@ -25180,14 +26701,14 @@ func (r *RulesengineFeatureEntitlement) SetMonthReset(monthReset *RulesengineFea
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineFeatureEntitlement) SetSoftLimit(softLimit *int) {
+func (r *RulesengineFeatureEntitlement) SetSoftLimit(softLimit *int64) {
 	r.SoftLimit = softLimit
 	r.require(rulesengineFeatureEntitlementFieldSoftLimit)
 }
 
 // SetUsage sets the Usage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineFeatureEntitlement) SetUsage(usage *int) {
+func (r *RulesengineFeatureEntitlement) SetUsage(usage *int64) {
 	r.Usage = usage
 	r.require(rulesengineFeatureEntitlementFieldUsage)
 }
@@ -25235,6 +26756,9 @@ func (r *RulesengineFeatureEntitlement) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineFeatureEntitlement) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -25365,6 +26889,9 @@ func (r *RulesengineFlag) GetRules() []*RulesengineRule {
 }
 
 func (r *RulesengineFlag) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -25445,6 +26972,9 @@ func (r *RulesengineFlag) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineFlag) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -25477,7 +27007,7 @@ type RulesengineRule struct {
 	FlagID          *string                      `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	ID              string                       `json:"id" url:"id"`
 	Name            string                       `json:"name" url:"name"`
-	Priority        int                          `json:"priority" url:"priority"`
+	Priority        int64                        `json:"priority" url:"priority"`
 	RuleType        RulesengineRuleRuleType      `json:"rule_type" url:"rule_type"`
 	Value           bool                         `json:"value" url:"value"`
 
@@ -25537,7 +27067,7 @@ func (r *RulesengineRule) GetName() string {
 	return r.Name
 }
 
-func (r *RulesengineRule) GetPriority() int {
+func (r *RulesengineRule) GetPriority() int64 {
 	if r == nil {
 		return 0
 	}
@@ -25559,6 +27089,9 @@ func (r *RulesengineRule) GetValue() bool {
 }
 
 func (r *RulesengineRule) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -25620,7 +27153,7 @@ func (r *RulesengineRule) SetName(name string) {
 
 // SetPriority sets the Priority field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineRule) SetPriority(priority int) {
+func (r *RulesengineRule) SetPriority(priority int64) {
 	r.Priority = priority
 	r.require(rulesengineRuleFieldPriority)
 }
@@ -25667,6 +27200,9 @@ func (r *RulesengineRule) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineRule) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -25755,6 +27291,9 @@ func (r *RulesengineSubscription) GetPeriodStart() time.Time {
 }
 
 func (r *RulesengineSubscription) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -25826,6 +27365,9 @@ func (r *RulesengineSubscription) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineSubscription) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -25868,6 +27410,9 @@ func (r *RulesengineTrait) GetValue() string {
 }
 
 func (r *RulesengineTrait) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -25920,6 +27465,9 @@ func (r *RulesengineTrait) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineTrait) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -25971,6 +27519,9 @@ func (r *RulesengineTraitDefinition) GetID() string {
 }
 
 func (r *RulesengineTraitDefinition) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -26030,6 +27581,9 @@ func (r *RulesengineTraitDefinition) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineTraitDefinition) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -26136,6 +27690,9 @@ func (r *RulesengineUser) GetTraits() []*RulesengineTrait {
 }
 
 func (r *RulesengineUser) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
 	return r.extraProperties
 }
 
@@ -26216,6 +27773,9 @@ func (r *RulesengineUser) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineUser) String() string {
+	if r == nil {
+		return "<nil>"
+	}
 	if len(r.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
 			return value
@@ -26246,11 +27806,11 @@ type ScheduledDowngradeResponseData struct {
 	EffectiveAfter        time.Time `json:"effective_after" url:"effective_after"`
 	FromPlanID            string    `json:"from_plan_id" url:"from_plan_id"`
 	FromPlanName          string    `json:"from_plan_name" url:"from_plan_name"`
-	FromSubscriptionPrice int       `json:"from_subscription_price" url:"from_subscription_price"`
+	FromSubscriptionPrice int64     `json:"from_subscription_price" url:"from_subscription_price"`
 	ID                    string    `json:"id" url:"id"`
 	Interval              string    `json:"interval" url:"interval"`
 	ScheduledInterval     *string   `json:"scheduled_interval,omitempty" url:"scheduled_interval,omitempty"`
-	ScheduledPrice        *int      `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
+	ScheduledPrice        *int64    `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
 	ToPlanID              string    `json:"to_plan_id" url:"to_plan_id"`
 	ToPlanName            string    `json:"to_plan_name" url:"to_plan_name"`
 
@@ -26289,7 +27849,7 @@ func (s *ScheduledDowngradeResponseData) GetFromPlanName() string {
 	return s.FromPlanName
 }
 
-func (s *ScheduledDowngradeResponseData) GetFromSubscriptionPrice() int {
+func (s *ScheduledDowngradeResponseData) GetFromSubscriptionPrice() int64 {
 	if s == nil {
 		return 0
 	}
@@ -26317,7 +27877,7 @@ func (s *ScheduledDowngradeResponseData) GetScheduledInterval() *string {
 	return s.ScheduledInterval
 }
 
-func (s *ScheduledDowngradeResponseData) GetScheduledPrice() *int {
+func (s *ScheduledDowngradeResponseData) GetScheduledPrice() *int64 {
 	if s == nil {
 		return nil
 	}
@@ -26339,6 +27899,9 @@ func (s *ScheduledDowngradeResponseData) GetToPlanName() string {
 }
 
 func (s *ScheduledDowngradeResponseData) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
 	return s.extraProperties
 }
 
@@ -26379,7 +27942,7 @@ func (s *ScheduledDowngradeResponseData) SetFromPlanName(fromPlanName string) {
 
 // SetFromSubscriptionPrice sets the FromSubscriptionPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (s *ScheduledDowngradeResponseData) SetFromSubscriptionPrice(fromSubscriptionPrice int) {
+func (s *ScheduledDowngradeResponseData) SetFromSubscriptionPrice(fromSubscriptionPrice int64) {
 	s.FromSubscriptionPrice = fromSubscriptionPrice
 	s.require(scheduledDowngradeResponseDataFieldFromSubscriptionPrice)
 }
@@ -26407,7 +27970,7 @@ func (s *ScheduledDowngradeResponseData) SetScheduledInterval(scheduledInterval 
 
 // SetScheduledPrice sets the ScheduledPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (s *ScheduledDowngradeResponseData) SetScheduledPrice(scheduledPrice *int) {
+func (s *ScheduledDowngradeResponseData) SetScheduledPrice(scheduledPrice *int64) {
 	s.ScheduledPrice = scheduledPrice
 	s.require(scheduledDowngradeResponseDataFieldScheduledPrice)
 }
@@ -26462,6 +28025,9 @@ func (s *ScheduledDowngradeResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (s *ScheduledDowngradeResponseData) String() string {
+	if s == nil {
+		return "<nil>"
+	}
 	if len(s.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
@@ -26564,6 +28130,9 @@ func (t *TemporaryAccessTokenResponseData) GetUpdatedAt() time.Time {
 }
 
 func (t *TemporaryAccessTokenResponseData) GetExtraProperties() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
 	return t.extraProperties
 }
 
@@ -26667,6 +28236,9 @@ func (t *TemporaryAccessTokenResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (t *TemporaryAccessTokenResponseData) String() string {
+	if t == nil {
+		return "<nil>"
+	}
 	if len(t.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
 			return value
@@ -26718,6 +28290,9 @@ func (t *TraitDefinition) GetID() string {
 }
 
 func (t *TraitDefinition) GetExtraProperties() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
 	return t.extraProperties
 }
 
@@ -26777,6 +28352,9 @@ func (t *TraitDefinition) MarshalJSON() ([]byte, error) {
 }
 
 func (t *TraitDefinition) String() string {
+	if t == nil {
+		return "<nil>"
+	}
 	if len(t.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
 			return value
@@ -26870,17 +28448,17 @@ var (
 
 type UpdateBillingPlanCreditGrantRequestBody struct {
 	ApplyToExisting           *bool                              `json:"apply_to_existing,omitempty" url:"apply_to_existing,omitempty"`
-	AutoTopupAmount           *int                               `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
+	AutoTopupAmount           *int64                             `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
 	AutoTopupAmountType       *CreditAutoTopupAmountType         `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
 	AutoTopupEnabled          *bool                              `json:"auto_topup_enabled,omitempty" url:"auto_topup_enabled,omitempty"`
 	AutoTopupExpiryType       *BillingCreditExpiryType           `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
 	AutoTopupExpiryUnit       *BillingCreditExpiryUnit           `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
-	AutoTopupExpiryUnitCount  *int                               `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
-	AutoTopupThresholdPercent *int                               `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
-	CreditAmount              *int                               `json:"credit_amount,omitempty" url:"credit_amount,omitempty"`
+	AutoTopupExpiryUnitCount  *int64                             `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
+	AutoTopupThresholdPercent *int64                             `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
+	CreditAmount              *int64                             `json:"credit_amount,omitempty" url:"credit_amount,omitempty"`
 	ExpiryType                *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
 	ExpiryUnit                *BillingCreditExpiryUnit           `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount           *int                               `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ExpiryUnitCount           *int64                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	ResetCadence              BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
 	ResetStart                BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
 	ResetType                 *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
@@ -26899,7 +28477,7 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetApplyToExisting() *bool {
 	return u.ApplyToExisting
 }
 
-func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupAmount() *int {
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupAmount() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -26927,21 +28505,21 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupExpiryUnit() *Bill
 	return u.AutoTopupExpiryUnit
 }
 
-func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupExpiryUnitCount() *int {
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupExpiryUnitCount() *int64 {
 	if u == nil {
 		return nil
 	}
 	return u.AutoTopupExpiryUnitCount
 }
 
-func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent() *int {
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent() *int64 {
 	if u == nil {
 		return nil
 	}
 	return u.AutoTopupThresholdPercent
 }
 
-func (u *UpdateBillingPlanCreditGrantRequestBody) GetCreditAmount() *int {
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetCreditAmount() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -26962,7 +28540,7 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetExpiryUnit() *BillingCredit
 	return u.ExpiryUnit
 }
 
-func (u *UpdateBillingPlanCreditGrantRequestBody) GetExpiryUnitCount() *int {
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetExpiryUnitCount() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -26991,6 +28569,9 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetResetType() *BillingPlanCre
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -27010,7 +28591,7 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetApplyToExisting(applyToExis
 
 // SetAutoTopupAmount sets the AutoTopupAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupAmount(autoTopupAmount *int) {
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupAmount(autoTopupAmount *int64) {
 	u.AutoTopupAmount = autoTopupAmount
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldAutoTopupAmount)
 }
@@ -27045,21 +28626,21 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnit(autoTop
 
 // SetAutoTopupExpiryUnitCount sets the AutoTopupExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnitCount(autoTopupExpiryUnitCount *int) {
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnitCount(autoTopupExpiryUnitCount *int64) {
 	u.AutoTopupExpiryUnitCount = autoTopupExpiryUnitCount
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount)
 }
 
 // SetAutoTopupThresholdPercent sets the AutoTopupThresholdPercent field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int) {
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int64) {
 	u.AutoTopupThresholdPercent = autoTopupThresholdPercent
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent)
 }
 
 // SetCreditAmount sets the CreditAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetCreditAmount(creditAmount *int) {
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetCreditAmount(creditAmount *int64) {
 	u.CreditAmount = creditAmount
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldCreditAmount)
 }
@@ -27080,7 +28661,7 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetExpiryUnit(expiryUnit *Bill
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateBillingPlanCreditGrantRequestBody) SetExpiryUnitCount(expiryUnitCount *int) {
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetExpiryUnitCount(expiryUnitCount *int64) {
 	u.ExpiryUnitCount = expiryUnitCount
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount)
 }
@@ -27134,6 +28715,9 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) MarshalJSON() ([]byte, error) 
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -27162,7 +28746,7 @@ type UpdateEntitlementReqCommon struct {
 	MetricPeriodMonthReset *UpdateEntitlementReqCommonMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	ValueBool              *bool                                             `json:"value_bool,omitempty" url:"value_bool,omitempty"`
 	ValueCreditID          *string                                           `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
-	ValueNumeric           *int                                              `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueNumeric           *int64                                            `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
 	ValueTraitID           *string                                           `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
 	ValueType              EntitlementValueType                              `json:"value_type" url:"value_type"`
 
@@ -27208,7 +28792,7 @@ func (u *UpdateEntitlementReqCommon) GetValueCreditID() *string {
 	return u.ValueCreditID
 }
 
-func (u *UpdateEntitlementReqCommon) GetValueNumeric() *int {
+func (u *UpdateEntitlementReqCommon) GetValueNumeric() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -27230,6 +28814,9 @@ func (u *UpdateEntitlementReqCommon) GetValueType() EntitlementValueType {
 }
 
 func (u *UpdateEntitlementReqCommon) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -27277,7 +28864,7 @@ func (u *UpdateEntitlementReqCommon) SetValueCreditID(valueCreditID *string) {
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateEntitlementReqCommon) SetValueNumeric(valueNumeric *int) {
+func (u *UpdateEntitlementReqCommon) SetValueNumeric(valueNumeric *int64) {
 	u.ValueNumeric = valueNumeric
 	u.require(updateEntitlementReqCommonFieldValueNumeric)
 }
@@ -27324,6 +28911,9 @@ func (u *UpdateEntitlementReqCommon) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateEntitlementReqCommon) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -27425,6 +29015,9 @@ func (u *UpdatePlanRequestBody) GetName() string {
 }
 
 func (u *UpdatePlanRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -27484,6 +29077,9 @@ func (u *UpdatePlanRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdatePlanRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -27526,6 +29122,9 @@ func (u *UpdatePlanTraitTraitRequestBody) GetTraitValue() string {
 }
 
 func (u *UpdatePlanTraitTraitRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -27578,6 +29177,9 @@ func (u *UpdatePlanTraitTraitRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdatePlanTraitTraitRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -27601,7 +29203,7 @@ type UpdateRuleRequestBody struct {
 	ConditionGroups []*CreateOrUpdateConditionGroupRequestBody `json:"condition_groups" url:"condition_groups"`
 	Conditions      []*CreateOrUpdateConditionRequestBody      `json:"conditions" url:"conditions"`
 	Name            string                                     `json:"name" url:"name"`
-	Priority        int                                        `json:"priority" url:"priority"`
+	Priority        int64                                      `json:"priority" url:"priority"`
 	Value           bool                                       `json:"value" url:"value"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -27632,7 +29234,7 @@ func (u *UpdateRuleRequestBody) GetName() string {
 	return u.Name
 }
 
-func (u *UpdateRuleRequestBody) GetPriority() int {
+func (u *UpdateRuleRequestBody) GetPriority() int64 {
 	if u == nil {
 		return 0
 	}
@@ -27647,6 +29249,9 @@ func (u *UpdateRuleRequestBody) GetValue() bool {
 }
 
 func (u *UpdateRuleRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -27680,7 +29285,7 @@ func (u *UpdateRuleRequestBody) SetName(name string) {
 
 // SetPriority sets the Priority field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateRuleRequestBody) SetPriority(priority int) {
+func (u *UpdateRuleRequestBody) SetPriority(priority int64) {
 	u.Priority = priority
 	u.require(updateRuleRequestBodyFieldPriority)
 }
@@ -27720,6 +29325,9 @@ func (u *UpdateRuleRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateRuleRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -27735,28 +29343,30 @@ var (
 	upsertBillingProductRequestBodyFieldBillingProductID = big.NewInt(1 << 0)
 	upsertBillingProductRequestBodyFieldChargeType       = big.NewInt(1 << 1)
 	upsertBillingProductRequestBodyFieldCurrency         = big.NewInt(1 << 2)
-	upsertBillingProductRequestBodyFieldIsTrialable      = big.NewInt(1 << 3)
-	upsertBillingProductRequestBodyFieldMonthlyPrice     = big.NewInt(1 << 4)
-	upsertBillingProductRequestBodyFieldMonthlyPriceID   = big.NewInt(1 << 5)
-	upsertBillingProductRequestBodyFieldOneTimePrice     = big.NewInt(1 << 6)
-	upsertBillingProductRequestBodyFieldOneTimePriceID   = big.NewInt(1 << 7)
-	upsertBillingProductRequestBodyFieldTrialDays        = big.NewInt(1 << 8)
-	upsertBillingProductRequestBodyFieldYearlyPrice      = big.NewInt(1 << 9)
-	upsertBillingProductRequestBodyFieldYearlyPriceID    = big.NewInt(1 << 10)
+	upsertBillingProductRequestBodyFieldCurrencyPrices   = big.NewInt(1 << 3)
+	upsertBillingProductRequestBodyFieldIsTrialable      = big.NewInt(1 << 4)
+	upsertBillingProductRequestBodyFieldMonthlyPrice     = big.NewInt(1 << 5)
+	upsertBillingProductRequestBodyFieldMonthlyPriceID   = big.NewInt(1 << 6)
+	upsertBillingProductRequestBodyFieldOneTimePrice     = big.NewInt(1 << 7)
+	upsertBillingProductRequestBodyFieldOneTimePriceID   = big.NewInt(1 << 8)
+	upsertBillingProductRequestBodyFieldTrialDays        = big.NewInt(1 << 9)
+	upsertBillingProductRequestBodyFieldYearlyPrice      = big.NewInt(1 << 10)
+	upsertBillingProductRequestBodyFieldYearlyPriceID    = big.NewInt(1 << 11)
 )
 
 type UpsertBillingProductRequestBody struct {
-	BillingProductID *string    `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
-	ChargeType       ChargeType `json:"charge_type" url:"charge_type"`
-	Currency         *string    `json:"currency,omitempty" url:"currency,omitempty"`
-	IsTrialable      bool       `json:"is_trialable" url:"is_trialable"`
-	MonthlyPrice     *int       `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	MonthlyPriceID   *string    `json:"monthly_price_id,omitempty" url:"monthly_price_id,omitempty"`
-	OneTimePrice     *int       `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
-	OneTimePriceID   *string    `json:"one_time_price_id,omitempty" url:"one_time_price_id,omitempty"`
-	TrialDays        *int       `json:"trial_days,omitempty" url:"trial_days,omitempty"`
-	YearlyPrice      *int       `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
-	YearlyPriceID    *string    `json:"yearly_price_id,omitempty" url:"yearly_price_id,omitempty"`
+	BillingProductID *string                         `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
+	ChargeType       ChargeType                      `json:"charge_type" url:"charge_type"`
+	Currency         *string                         `json:"currency,omitempty" url:"currency,omitempty"`
+	CurrencyPrices   []*PlanCurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
+	IsTrialable      bool                            `json:"is_trialable" url:"is_trialable"`
+	MonthlyPrice     *int64                          `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	MonthlyPriceID   *string                         `json:"monthly_price_id,omitempty" url:"monthly_price_id,omitempty"`
+	OneTimePrice     *int64                          `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	OneTimePriceID   *string                         `json:"one_time_price_id,omitempty" url:"one_time_price_id,omitempty"`
+	TrialDays        *int64                          `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	YearlyPrice      *int64                          `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+	YearlyPriceID    *string                         `json:"yearly_price_id,omitempty" url:"yearly_price_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -27786,6 +29396,13 @@ func (u *UpsertBillingProductRequestBody) GetCurrency() *string {
 	return u.Currency
 }
 
+func (u *UpsertBillingProductRequestBody) GetCurrencyPrices() []*PlanCurrencyPriceRequestBody {
+	if u == nil {
+		return nil
+	}
+	return u.CurrencyPrices
+}
+
 func (u *UpsertBillingProductRequestBody) GetIsTrialable() bool {
 	if u == nil {
 		return false
@@ -27793,7 +29410,7 @@ func (u *UpsertBillingProductRequestBody) GetIsTrialable() bool {
 	return u.IsTrialable
 }
 
-func (u *UpsertBillingProductRequestBody) GetMonthlyPrice() *int {
+func (u *UpsertBillingProductRequestBody) GetMonthlyPrice() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -27807,7 +29424,7 @@ func (u *UpsertBillingProductRequestBody) GetMonthlyPriceID() *string {
 	return u.MonthlyPriceID
 }
 
-func (u *UpsertBillingProductRequestBody) GetOneTimePrice() *int {
+func (u *UpsertBillingProductRequestBody) GetOneTimePrice() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -27821,14 +29438,14 @@ func (u *UpsertBillingProductRequestBody) GetOneTimePriceID() *string {
 	return u.OneTimePriceID
 }
 
-func (u *UpsertBillingProductRequestBody) GetTrialDays() *int {
+func (u *UpsertBillingProductRequestBody) GetTrialDays() *int64 {
 	if u == nil {
 		return nil
 	}
 	return u.TrialDays
 }
 
-func (u *UpsertBillingProductRequestBody) GetYearlyPrice() *int {
+func (u *UpsertBillingProductRequestBody) GetYearlyPrice() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -27843,6 +29460,9 @@ func (u *UpsertBillingProductRequestBody) GetYearlyPriceID() *string {
 }
 
 func (u *UpsertBillingProductRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -27874,6 +29494,13 @@ func (u *UpsertBillingProductRequestBody) SetCurrency(currency *string) {
 	u.require(upsertBillingProductRequestBodyFieldCurrency)
 }
 
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertBillingProductRequestBody) SetCurrencyPrices(currencyPrices []*PlanCurrencyPriceRequestBody) {
+	u.CurrencyPrices = currencyPrices
+	u.require(upsertBillingProductRequestBodyFieldCurrencyPrices)
+}
+
 // SetIsTrialable sets the IsTrialable field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpsertBillingProductRequestBody) SetIsTrialable(isTrialable bool) {
@@ -27883,7 +29510,7 @@ func (u *UpsertBillingProductRequestBody) SetIsTrialable(isTrialable bool) {
 
 // SetMonthlyPrice sets the MonthlyPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingProductRequestBody) SetMonthlyPrice(monthlyPrice *int) {
+func (u *UpsertBillingProductRequestBody) SetMonthlyPrice(monthlyPrice *int64) {
 	u.MonthlyPrice = monthlyPrice
 	u.require(upsertBillingProductRequestBodyFieldMonthlyPrice)
 }
@@ -27897,7 +29524,7 @@ func (u *UpsertBillingProductRequestBody) SetMonthlyPriceID(monthlyPriceID *stri
 
 // SetOneTimePrice sets the OneTimePrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingProductRequestBody) SetOneTimePrice(oneTimePrice *int) {
+func (u *UpsertBillingProductRequestBody) SetOneTimePrice(oneTimePrice *int64) {
 	u.OneTimePrice = oneTimePrice
 	u.require(upsertBillingProductRequestBodyFieldOneTimePrice)
 }
@@ -27911,14 +29538,14 @@ func (u *UpsertBillingProductRequestBody) SetOneTimePriceID(oneTimePriceID *stri
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingProductRequestBody) SetTrialDays(trialDays *int) {
+func (u *UpsertBillingProductRequestBody) SetTrialDays(trialDays *int64) {
 	u.TrialDays = trialDays
 	u.require(upsertBillingProductRequestBodyFieldTrialDays)
 }
 
 // SetYearlyPrice sets the YearlyPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingProductRequestBody) SetYearlyPrice(yearlyPrice *int) {
+func (u *UpsertBillingProductRequestBody) SetYearlyPrice(yearlyPrice *int64) {
 	u.YearlyPrice = yearlyPrice
 	u.require(upsertBillingProductRequestBodyFieldYearlyPrice)
 }
@@ -27958,6 +29585,9 @@ func (u *UpsertBillingProductRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertBillingProductRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -27992,8 +29622,8 @@ type UpsertUserSubRequestBody struct {
 	LastSeenAt *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
 	Name       *string           `json:"name,omitempty" url:"name,omitempty"`
 	// A map of trait names to trait values
-	Traits     map[string]interface{} `json:"traits,omitempty" url:"traits,omitempty"`
-	UpdateOnly *bool                  `json:"update_only,omitempty" url:"update_only,omitempty"`
+	Traits     map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
+	UpdateOnly *bool          `json:"update_only,omitempty" url:"update_only,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -28044,7 +29674,7 @@ func (u *UpsertUserSubRequestBody) GetName() *string {
 	return u.Name
 }
 
-func (u *UpsertUserSubRequestBody) GetTraits() map[string]interface{} {
+func (u *UpsertUserSubRequestBody) GetTraits() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -28059,6 +29689,9 @@ func (u *UpsertUserSubRequestBody) GetUpdateOnly() *bool {
 }
 
 func (u *UpsertUserSubRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -28113,7 +29746,7 @@ func (u *UpsertUserSubRequestBody) SetName(name *string) {
 
 // SetTraits sets the Traits field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertUserSubRequestBody) SetTraits(traits map[string]interface{}) {
+func (u *UpsertUserSubRequestBody) SetTraits(traits map[string]any) {
 	u.Traits = traits
 	u.require(upsertUserSubRequestBodyFieldTraits)
 }
@@ -28161,6 +29794,9 @@ func (u *UpsertUserSubRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpsertUserSubRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -28193,21 +29829,21 @@ var (
 
 type UsageBasedEntitlementRequestBody struct {
 	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
-	BillingThreshold        *int                          `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
+	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
 	Currency                *string                       `json:"currency,omitempty" url:"currency,omitempty"`
 	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"monthly_metered_price_id,omitempty"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
-	MonthlyUnitPrice        *int                          `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
+	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
 	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
 	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
 	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
-	SoftLimit              *int                          `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	SoftLimit              *int64                        `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	TierMode               *BillingTiersMode             `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
 	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
 	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
-	YearlyUnitPrice        *int                          `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
+	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
 	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -28224,7 +29860,7 @@ func (u *UsageBasedEntitlementRequestBody) GetBillingProductID() *string {
 	return u.BillingProductID
 }
 
-func (u *UsageBasedEntitlementRequestBody) GetBillingThreshold() *int {
+func (u *UsageBasedEntitlementRequestBody) GetBillingThreshold() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -28252,7 +29888,7 @@ func (u *UsageBasedEntitlementRequestBody) GetMonthlyPriceTiers() []*CreatePrice
 	return u.MonthlyPriceTiers
 }
 
-func (u *UsageBasedEntitlementRequestBody) GetMonthlyUnitPrice() *int {
+func (u *UsageBasedEntitlementRequestBody) GetMonthlyUnitPrice() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -28287,7 +29923,7 @@ func (u *UsageBasedEntitlementRequestBody) GetPriceTiers() []*CreatePriceTierReq
 	return u.PriceTiers
 }
 
-func (u *UsageBasedEntitlementRequestBody) GetSoftLimit() *int {
+func (u *UsageBasedEntitlementRequestBody) GetSoftLimit() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -28315,7 +29951,7 @@ func (u *UsageBasedEntitlementRequestBody) GetYearlyPriceTiers() []*CreatePriceT
 	return u.YearlyPriceTiers
 }
 
-func (u *UsageBasedEntitlementRequestBody) GetYearlyUnitPrice() *int {
+func (u *UsageBasedEntitlementRequestBody) GetYearlyUnitPrice() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -28330,6 +29966,9 @@ func (u *UsageBasedEntitlementRequestBody) GetYearlyUnitPriceDecimal() *string {
 }
 
 func (u *UsageBasedEntitlementRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -28349,7 +29988,7 @@ func (u *UsageBasedEntitlementRequestBody) SetBillingProductID(billingProductID 
 
 // SetBillingThreshold sets the BillingThreshold field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UsageBasedEntitlementRequestBody) SetBillingThreshold(billingThreshold *int) {
+func (u *UsageBasedEntitlementRequestBody) SetBillingThreshold(billingThreshold *int64) {
 	u.BillingThreshold = billingThreshold
 	u.require(usageBasedEntitlementRequestBodyFieldBillingThreshold)
 }
@@ -28377,7 +30016,7 @@ func (u *UsageBasedEntitlementRequestBody) SetMonthlyPriceTiers(monthlyPriceTier
 
 // SetMonthlyUnitPrice sets the MonthlyUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UsageBasedEntitlementRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int) {
+func (u *UsageBasedEntitlementRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int64) {
 	u.MonthlyUnitPrice = monthlyUnitPrice
 	u.require(usageBasedEntitlementRequestBodyFieldMonthlyUnitPrice)
 }
@@ -28412,7 +30051,7 @@ func (u *UsageBasedEntitlementRequestBody) SetPriceTiers(priceTiers []*CreatePri
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UsageBasedEntitlementRequestBody) SetSoftLimit(softLimit *int) {
+func (u *UsageBasedEntitlementRequestBody) SetSoftLimit(softLimit *int64) {
 	u.SoftLimit = softLimit
 	u.require(usageBasedEntitlementRequestBodyFieldSoftLimit)
 }
@@ -28440,7 +30079,7 @@ func (u *UsageBasedEntitlementRequestBody) SetYearlyPriceTiers(yearlyPriceTiers 
 
 // SetYearlyUnitPrice sets the YearlyUnitPrice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UsageBasedEntitlementRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *int) {
+func (u *UsageBasedEntitlementRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *int64) {
 	u.YearlyUnitPrice = yearlyUnitPrice
 	u.require(usageBasedEntitlementRequestBodyFieldYearlyUnitPrice)
 }
@@ -28480,6 +30119,9 @@ func (u *UsageBasedEntitlementRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UsageBasedEntitlementRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -28507,7 +30149,7 @@ var (
 )
 
 type UsageBasedEntitlementResponseData struct {
-	BillingThreshold       *int                      `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
+	BillingThreshold       *int64                    `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
 	ConsumptionRate        *float64                  `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
 	FeatureID              string                    `json:"feature_id" url:"feature_id"`
 	MeteredPrice           *BillingPriceView         `json:"metered_price,omitempty" url:"metered_price,omitempty"`
@@ -28516,7 +30158,7 @@ type UsageBasedEntitlementResponseData struct {
 	MonthlyUsageBasedPrice *BillingPriceView         `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
 	PriceBehavior          *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	ValueBool              *bool                     `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueNumeric           *int                      `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueNumeric           *int64                    `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
 	ValueType              EntitlementValueType      `json:"value_type" url:"value_type"`
 	YearlyUsageBasedPrice  *BillingPriceView         `json:"yearly_usage_based_price,omitempty" url:"yearly_usage_based_price,omitempty"`
 
@@ -28527,7 +30169,7 @@ type UsageBasedEntitlementResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (u *UsageBasedEntitlementResponseData) GetBillingThreshold() *int {
+func (u *UsageBasedEntitlementResponseData) GetBillingThreshold() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -28590,7 +30232,7 @@ func (u *UsageBasedEntitlementResponseData) GetValueBool() *bool {
 	return u.ValueBool
 }
 
-func (u *UsageBasedEntitlementResponseData) GetValueNumeric() *int {
+func (u *UsageBasedEntitlementResponseData) GetValueNumeric() *int64 {
 	if u == nil {
 		return nil
 	}
@@ -28612,6 +30254,9 @@ func (u *UsageBasedEntitlementResponseData) GetYearlyUsageBasedPrice() *BillingP
 }
 
 func (u *UsageBasedEntitlementResponseData) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -28624,7 +30269,7 @@ func (u *UsageBasedEntitlementResponseData) require(field *big.Int) {
 
 // SetBillingThreshold sets the BillingThreshold field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UsageBasedEntitlementResponseData) SetBillingThreshold(billingThreshold *int) {
+func (u *UsageBasedEntitlementResponseData) SetBillingThreshold(billingThreshold *int64) {
 	u.BillingThreshold = billingThreshold
 	u.require(usageBasedEntitlementResponseDataFieldBillingThreshold)
 }
@@ -28687,7 +30332,7 @@ func (u *UsageBasedEntitlementResponseData) SetValueBool(valueBool *bool) {
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UsageBasedEntitlementResponseData) SetValueNumeric(valueNumeric *int) {
+func (u *UsageBasedEntitlementResponseData) SetValueNumeric(valueNumeric *int64) {
 	u.ValueNumeric = valueNumeric
 	u.require(usageBasedEntitlementResponseDataFieldValueNumeric)
 }
@@ -28734,6 +30379,9 @@ func (u *UsageBasedEntitlementResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UsageBasedEntitlementResponseData) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -28812,6 +30460,9 @@ func (u *UserResponseData) GetUpdatedAt() time.Time {
 }
 
 func (u *UserResponseData) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -28908,6 +30559,9 @@ func (u *UserResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UserResponseData) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -28930,12 +30584,12 @@ var (
 )
 
 type WebFeatureUsageWebhookOutput struct {
-	Allocation    *int                       `json:"Allocation,omitempty" url:"Allocation,omitempty"`
+	Allocation    *int64                     `json:"Allocation,omitempty" url:"Allocation,omitempty"`
 	CreditUsage   *CreditUsage               `json:"CreditUsage,omitempty" url:"CreditUsage,omitempty"`
 	Entitlement   string                     `json:"Entitlement" url:"Entitlement"`
 	Feature       *FeatureView               `json:"Feature,omitempty" url:"Feature,omitempty"`
 	MetricResetAt *time.Time                 `json:"MetricResetAt,omitempty" url:"MetricResetAt,omitempty"`
-	Usage         *int                       `json:"Usage,omitempty" url:"Usage,omitempty"`
+	Usage         *int64                     `json:"Usage,omitempty" url:"Usage,omitempty"`
 	Company       *CompanyDetailResponseData `json:"company,omitempty" url:"company,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -28945,7 +30599,7 @@ type WebFeatureUsageWebhookOutput struct {
 	rawJSON         json.RawMessage
 }
 
-func (w *WebFeatureUsageWebhookOutput) GetAllocation() *int {
+func (w *WebFeatureUsageWebhookOutput) GetAllocation() *int64 {
 	if w == nil {
 		return nil
 	}
@@ -28980,7 +30634,7 @@ func (w *WebFeatureUsageWebhookOutput) GetMetricResetAt() *time.Time {
 	return w.MetricResetAt
 }
 
-func (w *WebFeatureUsageWebhookOutput) GetUsage() *int {
+func (w *WebFeatureUsageWebhookOutput) GetUsage() *int64 {
 	if w == nil {
 		return nil
 	}
@@ -28995,6 +30649,9 @@ func (w *WebFeatureUsageWebhookOutput) GetCompany() *CompanyDetailResponseData {
 }
 
 func (w *WebFeatureUsageWebhookOutput) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
 	return w.extraProperties
 }
 
@@ -29007,7 +30664,7 @@ func (w *WebFeatureUsageWebhookOutput) require(field *big.Int) {
 
 // SetAllocation sets the Allocation field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WebFeatureUsageWebhookOutput) SetAllocation(allocation *int) {
+func (w *WebFeatureUsageWebhookOutput) SetAllocation(allocation *int64) {
 	w.Allocation = allocation
 	w.require(webFeatureUsageWebhookOutputFieldAllocation)
 }
@@ -29042,7 +30699,7 @@ func (w *WebFeatureUsageWebhookOutput) SetMetricResetAt(metricResetAt *time.Time
 
 // SetUsage sets the Usage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WebFeatureUsageWebhookOutput) SetUsage(usage *int) {
+func (w *WebFeatureUsageWebhookOutput) SetUsage(usage *int64) {
 	w.Usage = usage
 	w.require(webFeatureUsageWebhookOutputFieldUsage)
 }
@@ -29090,6 +30747,197 @@ func (w *WebFeatureUsageWebhookOutput) MarshalJSON() ([]byte, error) {
 }
 
 func (w *WebFeatureUsageWebhookOutput) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+var (
+	webScheduledDowngradeWebhookOutputFieldCompany           = big.NewInt(1 << 0)
+	webScheduledDowngradeWebhookOutputFieldExecuteAfter      = big.NewInt(1 << 1)
+	webScheduledDowngradeWebhookOutputFieldFromPlan          = big.NewInt(1 << 2)
+	webScheduledDowngradeWebhookOutputFieldID                = big.NewInt(1 << 3)
+	webScheduledDowngradeWebhookOutputFieldScheduledInterval = big.NewInt(1 << 4)
+	webScheduledDowngradeWebhookOutputFieldScheduledPrice    = big.NewInt(1 << 5)
+	webScheduledDowngradeWebhookOutputFieldToPlan            = big.NewInt(1 << 6)
+)
+
+type WebScheduledDowngradeWebhookOutput struct {
+	Company           *CompanyResponseData `json:"company,omitempty" url:"company,omitempty"`
+	ExecuteAfter      time.Time            `json:"execute_after" url:"execute_after"`
+	FromPlan          *PlanSnapshotView    `json:"from_plan,omitempty" url:"from_plan,omitempty"`
+	ID                string               `json:"id" url:"id"`
+	ScheduledInterval *string              `json:"scheduled_interval,omitempty" url:"scheduled_interval,omitempty"`
+	ScheduledPrice    *int64               `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
+	ToPlan            *PlanSnapshotView    `json:"to_plan,omitempty" url:"to_plan,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) GetCompany() *CompanyResponseData {
+	if w == nil {
+		return nil
+	}
+	return w.Company
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) GetExecuteAfter() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.ExecuteAfter
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) GetFromPlan() *PlanSnapshotView {
+	if w == nil {
+		return nil
+	}
+	return w.FromPlan
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) GetID() string {
+	if w == nil {
+		return ""
+	}
+	return w.ID
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) GetScheduledInterval() *string {
+	if w == nil {
+		return nil
+	}
+	return w.ScheduledInterval
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) GetScheduledPrice() *int64 {
+	if w == nil {
+		return nil
+	}
+	return w.ScheduledPrice
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) GetToPlan() *PlanSnapshotView {
+	if w == nil {
+		return nil
+	}
+	return w.ToPlan
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetCompany sets the Company field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebScheduledDowngradeWebhookOutput) SetCompany(company *CompanyResponseData) {
+	w.Company = company
+	w.require(webScheduledDowngradeWebhookOutputFieldCompany)
+}
+
+// SetExecuteAfter sets the ExecuteAfter field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebScheduledDowngradeWebhookOutput) SetExecuteAfter(executeAfter time.Time) {
+	w.ExecuteAfter = executeAfter
+	w.require(webScheduledDowngradeWebhookOutputFieldExecuteAfter)
+}
+
+// SetFromPlan sets the FromPlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebScheduledDowngradeWebhookOutput) SetFromPlan(fromPlan *PlanSnapshotView) {
+	w.FromPlan = fromPlan
+	w.require(webScheduledDowngradeWebhookOutputFieldFromPlan)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebScheduledDowngradeWebhookOutput) SetID(id string) {
+	w.ID = id
+	w.require(webScheduledDowngradeWebhookOutputFieldID)
+}
+
+// SetScheduledInterval sets the ScheduledInterval field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebScheduledDowngradeWebhookOutput) SetScheduledInterval(scheduledInterval *string) {
+	w.ScheduledInterval = scheduledInterval
+	w.require(webScheduledDowngradeWebhookOutputFieldScheduledInterval)
+}
+
+// SetScheduledPrice sets the ScheduledPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebScheduledDowngradeWebhookOutput) SetScheduledPrice(scheduledPrice *int64) {
+	w.ScheduledPrice = scheduledPrice
+	w.require(webScheduledDowngradeWebhookOutputFieldScheduledPrice)
+}
+
+// SetToPlan sets the ToPlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebScheduledDowngradeWebhookOutput) SetToPlan(toPlan *PlanSnapshotView) {
+	w.ToPlan = toPlan
+	w.require(webScheduledDowngradeWebhookOutputFieldToPlan)
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) UnmarshalJSON(data []byte) error {
+	type embed WebScheduledDowngradeWebhookOutput
+	var unmarshaler = struct {
+		embed
+		ExecuteAfter *internal.DateTime `json:"execute_after"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebScheduledDowngradeWebhookOutput(unmarshaler.embed)
+	w.ExecuteAfter = unmarshaler.ExecuteAfter.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) MarshalJSON() ([]byte, error) {
+	type embed WebScheduledDowngradeWebhookOutput
+	var marshaler = struct {
+		embed
+		ExecuteAfter *internal.DateTime `json:"execute_after"`
+	}{
+		embed:        embed(*w),
+		ExecuteAfter: internal.NewDateTime(w.ExecuteAfter),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) String() string {
+	if w == nil {
+		return "<nil>"
+	}
 	if len(w.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
 			return value
@@ -29118,7 +30966,7 @@ type WebhookEventResponseData struct {
 	ID           string             `json:"id" url:"id"`
 	Payload      *string            `json:"payload,omitempty" url:"payload,omitempty"`
 	RequestType  WebhookRequestType `json:"request_type" url:"request_type"`
-	ResponseCode *int               `json:"response_code,omitempty" url:"response_code,omitempty"`
+	ResponseCode *int64             `json:"response_code,omitempty" url:"response_code,omitempty"`
 	SentAt       *time.Time         `json:"sent_at,omitempty" url:"sent_at,omitempty"`
 	Status       WebhookEventStatus `json:"status" url:"status"`
 	UpdatedAt    time.Time          `json:"updated_at" url:"updated_at"`
@@ -29159,7 +31007,7 @@ func (w *WebhookEventResponseData) GetRequestType() WebhookRequestType {
 	return w.RequestType
 }
 
-func (w *WebhookEventResponseData) GetResponseCode() *int {
+func (w *WebhookEventResponseData) GetResponseCode() *int64 {
 	if w == nil {
 		return nil
 	}
@@ -29195,6 +31043,9 @@ func (w *WebhookEventResponseData) GetWebhookID() string {
 }
 
 func (w *WebhookEventResponseData) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
 	return w.extraProperties
 }
 
@@ -29235,7 +31086,7 @@ func (w *WebhookEventResponseData) SetRequestType(requestType WebhookRequestType
 
 // SetResponseCode sets the ResponseCode field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WebhookEventResponseData) SetResponseCode(responseCode *int) {
+func (w *WebhookEventResponseData) SetResponseCode(responseCode *int64) {
 	w.ResponseCode = responseCode
 	w.require(webhookEventResponseDataFieldResponseCode)
 }
@@ -29312,6 +31163,9 @@ func (w *WebhookEventResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (w *WebhookEventResponseData) String() string {
+	if w == nil {
+		return "<nil>"
+	}
 	if len(w.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
 			return value

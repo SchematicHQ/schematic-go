@@ -19,9 +19,9 @@ var (
 type CountComponentsRequest struct {
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -43,14 +43,14 @@ func (c *CountComponentsRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountComponentsRequest) SetLimit(limit *int) {
+func (c *CountComponentsRequest) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countComponentsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountComponentsRequest) SetOffset(offset *int) {
+func (c *CountComponentsRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countComponentsRequestFieldOffset)
 }
@@ -98,6 +98,27 @@ func (c *CreateComponentRequestBody) SetName(name string) {
 	c.require(createComponentRequestBodyFieldName)
 }
 
+func (c *CreateComponentRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateComponentRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateComponentRequestBody(body)
+	return nil
+}
+
+func (c *CreateComponentRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateComponentRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 var (
 	listComponentsRequestFieldQ      = big.NewInt(1 << 0)
 	listComponentsRequestFieldLimit  = big.NewInt(1 << 1)
@@ -107,9 +128,9 @@ var (
 type ListComponentsRequest struct {
 	Q *string `json:"-" url:"q,omitempty"`
 	// Page limit (default 100)
-	Limit *int `json:"-" url:"limit,omitempty"`
+	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int `json:"-" url:"offset,omitempty"`
+	Offset *int64 `json:"-" url:"offset,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -131,14 +152,14 @@ func (l *ListComponentsRequest) SetQ(q *string) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListComponentsRequest) SetLimit(limit *int) {
+func (l *ListComponentsRequest) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listComponentsRequestFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListComponentsRequest) SetOffset(offset *int) {
+func (l *ListComponentsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listComponentsRequestFieldOffset)
 }
@@ -184,19 +205,20 @@ var (
 	billingCreditBundleViewFieldCreditIcon        = big.NewInt(1 << 3)
 	billingCreditBundleViewFieldCreditID          = big.NewInt(1 << 4)
 	billingCreditBundleViewFieldCreditName        = big.NewInt(1 << 5)
-	billingCreditBundleViewFieldExpiryType        = big.NewInt(1 << 6)
-	billingCreditBundleViewFieldExpiryUnit        = big.NewInt(1 << 7)
-	billingCreditBundleViewFieldExpiryUnitCount   = big.NewInt(1 << 8)
-	billingCreditBundleViewFieldHasGrants         = big.NewInt(1 << 9)
-	billingCreditBundleViewFieldID                = big.NewInt(1 << 10)
-	billingCreditBundleViewFieldName              = big.NewInt(1 << 11)
-	billingCreditBundleViewFieldPluralName        = big.NewInt(1 << 12)
-	billingCreditBundleViewFieldPrice             = big.NewInt(1 << 13)
-	billingCreditBundleViewFieldQuantity          = big.NewInt(1 << 14)
-	billingCreditBundleViewFieldSingularName      = big.NewInt(1 << 15)
-	billingCreditBundleViewFieldStatus            = big.NewInt(1 << 16)
-	billingCreditBundleViewFieldUnitPrice         = big.NewInt(1 << 17)
-	billingCreditBundleViewFieldUpdatedAt         = big.NewInt(1 << 18)
+	billingCreditBundleViewFieldCurrencyPrices    = big.NewInt(1 << 6)
+	billingCreditBundleViewFieldExpiryType        = big.NewInt(1 << 7)
+	billingCreditBundleViewFieldExpiryUnit        = big.NewInt(1 << 8)
+	billingCreditBundleViewFieldExpiryUnitCount   = big.NewInt(1 << 9)
+	billingCreditBundleViewFieldHasGrants         = big.NewInt(1 << 10)
+	billingCreditBundleViewFieldID                = big.NewInt(1 << 11)
+	billingCreditBundleViewFieldName              = big.NewInt(1 << 12)
+	billingCreditBundleViewFieldPluralName        = big.NewInt(1 << 13)
+	billingCreditBundleViewFieldPrice             = big.NewInt(1 << 14)
+	billingCreditBundleViewFieldQuantity          = big.NewInt(1 << 15)
+	billingCreditBundleViewFieldSingularName      = big.NewInt(1 << 16)
+	billingCreditBundleViewFieldStatus            = big.NewInt(1 << 17)
+	billingCreditBundleViewFieldUnitPrice         = big.NewInt(1 << 18)
+	billingCreditBundleViewFieldUpdatedAt         = big.NewInt(1 << 19)
 )
 
 type BillingCreditBundleView struct {
@@ -206,15 +228,16 @@ type BillingCreditBundleView struct {
 	CreditIcon        *string                          `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
 	CreditID          string                           `json:"credit_id" url:"credit_id"`
 	CreditName        string                           `json:"credit_name" url:"credit_name"`
+	CurrencyPrices    []*CreditBundleCurrencyPrice     `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
 	ExpiryType        BillingCreditExpiryType          `json:"expiry_type" url:"expiry_type"`
 	ExpiryUnit        BillingCreditExpiryUnit          `json:"expiry_unit" url:"expiry_unit"`
-	ExpiryUnitCount   *int                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ExpiryUnitCount   *int64                           `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	HasGrants         bool                             `json:"has_grants" url:"has_grants"`
 	ID                string                           `json:"id" url:"id"`
 	Name              string                           `json:"name" url:"name"`
 	PluralName        *string                          `json:"plural_name,omitempty" url:"plural_name,omitempty"`
 	Price             *BillingProductPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
-	Quantity          *int                             `json:"quantity,omitempty" url:"quantity,omitempty"`
+	Quantity          *int64                           `json:"quantity,omitempty" url:"quantity,omitempty"`
 	SingularName      *string                          `json:"singular_name,omitempty" url:"singular_name,omitempty"`
 	Status            BillingCreditBundleStatus        `json:"status" url:"status"`
 	UnitPrice         *BillingProductPriceResponseData `json:"unit_price,omitempty" url:"unit_price,omitempty"`
@@ -262,6 +285,13 @@ func (b *BillingCreditBundleView) GetCreditName() string {
 	return b.CreditName
 }
 
+func (b *BillingCreditBundleView) GetCurrencyPrices() []*CreditBundleCurrencyPrice {
+	if b == nil {
+		return nil
+	}
+	return b.CurrencyPrices
+}
+
 func (b *BillingCreditBundleView) GetExpiryType() BillingCreditExpiryType {
 	if b == nil {
 		return ""
@@ -276,7 +306,7 @@ func (b *BillingCreditBundleView) GetExpiryUnit() BillingCreditExpiryUnit {
 	return b.ExpiryUnit
 }
 
-func (b *BillingCreditBundleView) GetExpiryUnitCount() *int {
+func (b *BillingCreditBundleView) GetExpiryUnitCount() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -318,7 +348,7 @@ func (b *BillingCreditBundleView) GetPrice() *BillingProductPriceResponseData {
 	return b.Price
 }
 
-func (b *BillingCreditBundleView) GetQuantity() *int {
+func (b *BillingCreditBundleView) GetQuantity() *int64 {
 	if b == nil {
 		return nil
 	}
@@ -354,6 +384,9 @@ func (b *BillingCreditBundleView) GetUpdatedAt() time.Time {
 }
 
 func (b *BillingCreditBundleView) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -406,6 +439,13 @@ func (b *BillingCreditBundleView) SetCreditName(creditName string) {
 	b.require(billingCreditBundleViewFieldCreditName)
 }
 
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditBundleView) SetCurrencyPrices(currencyPrices []*CreditBundleCurrencyPrice) {
+	b.CurrencyPrices = currencyPrices
+	b.require(billingCreditBundleViewFieldCurrencyPrices)
+}
+
 // SetExpiryType sets the ExpiryType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingCreditBundleView) SetExpiryType(expiryType BillingCreditExpiryType) {
@@ -422,7 +462,7 @@ func (b *BillingCreditBundleView) SetExpiryUnit(expiryUnit BillingCreditExpiryUn
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleView) SetExpiryUnitCount(expiryUnitCount *int) {
+func (b *BillingCreditBundleView) SetExpiryUnitCount(expiryUnitCount *int64) {
 	b.ExpiryUnitCount = expiryUnitCount
 	b.require(billingCreditBundleViewFieldExpiryUnitCount)
 }
@@ -464,7 +504,7 @@ func (b *BillingCreditBundleView) SetPrice(price *BillingProductPriceResponseDat
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditBundleView) SetQuantity(quantity *int) {
+func (b *BillingCreditBundleView) SetQuantity(quantity *int64) {
 	b.Quantity = quantity
 	b.require(billingCreditBundleViewFieldQuantity)
 }
@@ -537,6 +577,9 @@ func (b *BillingCreditBundleView) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCreditBundleView) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -575,8 +618,8 @@ type BillingProductPriceResponseData struct {
 	Interval          BillingProductPriceInterval `json:"interval" url:"interval"`
 	IsActive          bool                        `json:"is_active" url:"is_active"`
 	MeterID           *string                     `json:"meter_id,omitempty" url:"meter_id,omitempty"`
-	PackageSize       int                         `json:"package_size" url:"package_size"`
-	Price             int                         `json:"price" url:"price"`
+	PackageSize       int64                       `json:"package_size" url:"package_size"`
+	Price             int64                       `json:"price" url:"price"`
 	PriceDecimal      *string                     `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
 	PriceExternalID   string                      `json:"price_external_id" url:"price_external_id"`
 	ProductExternalID string                      `json:"product_external_id" url:"product_external_id"`
@@ -641,14 +684,14 @@ func (b *BillingProductPriceResponseData) GetMeterID() *string {
 	return b.MeterID
 }
 
-func (b *BillingProductPriceResponseData) GetPackageSize() int {
+func (b *BillingProductPriceResponseData) GetPackageSize() int64 {
 	if b == nil {
 		return 0
 	}
 	return b.PackageSize
 }
 
-func (b *BillingProductPriceResponseData) GetPrice() int {
+func (b *BillingProductPriceResponseData) GetPrice() int64 {
 	if b == nil {
 		return 0
 	}
@@ -705,6 +748,9 @@ func (b *BillingProductPriceResponseData) GetUsageType() BillingPriceUsageType {
 }
 
 func (b *BillingProductPriceResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
 	return b.extraProperties
 }
 
@@ -766,14 +812,14 @@ func (b *BillingProductPriceResponseData) SetMeterID(meterID *string) {
 
 // SetPackageSize sets the PackageSize field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceResponseData) SetPackageSize(packageSize int) {
+func (b *BillingProductPriceResponseData) SetPackageSize(packageSize int64) {
 	b.PackageSize = packageSize
 	b.require(billingProductPriceResponseDataFieldPackageSize)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceResponseData) SetPrice(price int) {
+func (b *BillingProductPriceResponseData) SetPrice(price int64) {
 	b.Price = price
 	b.require(billingProductPriceResponseDataFieldPrice)
 }
@@ -867,6 +913,9 @@ func (b *BillingProductPriceResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingProductPriceResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
 	if len(b.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
 			return value
@@ -888,31 +937,32 @@ var (
 	companyPlanDetailResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 6)
 	companyPlanDetailResponseDataFieldControlledBy         = big.NewInt(1 << 7)
 	companyPlanDetailResponseDataFieldCreatedAt            = big.NewInt(1 << 8)
-	companyPlanDetailResponseDataFieldCurrent              = big.NewInt(1 << 9)
-	companyPlanDetailResponseDataFieldCustom               = big.NewInt(1 << 10)
-	companyPlanDetailResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 11)
-	companyPlanDetailResponseDataFieldDescription          = big.NewInt(1 << 12)
-	companyPlanDetailResponseDataFieldDraftVersion         = big.NewInt(1 << 13)
-	companyPlanDetailResponseDataFieldEntitlements         = big.NewInt(1 << 14)
-	companyPlanDetailResponseDataFieldFeatures             = big.NewInt(1 << 15)
-	companyPlanDetailResponseDataFieldIcon                 = big.NewInt(1 << 16)
-	companyPlanDetailResponseDataFieldID                   = big.NewInt(1 << 17)
-	companyPlanDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 18)
-	companyPlanDetailResponseDataFieldInvalidReason        = big.NewInt(1 << 19)
-	companyPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 20)
-	companyPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 21)
-	companyPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 22)
-	companyPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 23)
-	companyPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 24)
-	companyPlanDetailResponseDataFieldName                 = big.NewInt(1 << 25)
-	companyPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 26)
-	companyPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 27)
-	companyPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 28)
-	companyPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 29)
-	companyPlanDetailResponseDataFieldUsageViolations      = big.NewInt(1 << 30)
-	companyPlanDetailResponseDataFieldValid                = big.NewInt(1 << 31)
-	companyPlanDetailResponseDataFieldVersions             = big.NewInt(1 << 32)
-	companyPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 33)
+	companyPlanDetailResponseDataFieldCurrencyPrices       = big.NewInt(1 << 9)
+	companyPlanDetailResponseDataFieldCurrent              = big.NewInt(1 << 10)
+	companyPlanDetailResponseDataFieldCustom               = big.NewInt(1 << 11)
+	companyPlanDetailResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 12)
+	companyPlanDetailResponseDataFieldDescription          = big.NewInt(1 << 13)
+	companyPlanDetailResponseDataFieldDraftVersion         = big.NewInt(1 << 14)
+	companyPlanDetailResponseDataFieldEntitlements         = big.NewInt(1 << 15)
+	companyPlanDetailResponseDataFieldFeatures             = big.NewInt(1 << 16)
+	companyPlanDetailResponseDataFieldIcon                 = big.NewInt(1 << 17)
+	companyPlanDetailResponseDataFieldID                   = big.NewInt(1 << 18)
+	companyPlanDetailResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 19)
+	companyPlanDetailResponseDataFieldInvalidReason        = big.NewInt(1 << 20)
+	companyPlanDetailResponseDataFieldIsCustom             = big.NewInt(1 << 21)
+	companyPlanDetailResponseDataFieldIsDefault            = big.NewInt(1 << 22)
+	companyPlanDetailResponseDataFieldIsFree               = big.NewInt(1 << 23)
+	companyPlanDetailResponseDataFieldIsTrialable          = big.NewInt(1 << 24)
+	companyPlanDetailResponseDataFieldMonthlyPrice         = big.NewInt(1 << 25)
+	companyPlanDetailResponseDataFieldName                 = big.NewInt(1 << 26)
+	companyPlanDetailResponseDataFieldOneTimePrice         = big.NewInt(1 << 27)
+	companyPlanDetailResponseDataFieldPlanType             = big.NewInt(1 << 28)
+	companyPlanDetailResponseDataFieldTrialDays            = big.NewInt(1 << 29)
+	companyPlanDetailResponseDataFieldUpdatedAt            = big.NewInt(1 << 30)
+	companyPlanDetailResponseDataFieldUsageViolations      = big.NewInt(1 << 31)
+	companyPlanDetailResponseDataFieldValid                = big.NewInt(1 << 32)
+	companyPlanDetailResponseDataFieldVersions             = big.NewInt(1 << 33)
+	companyPlanDetailResponseDataFieldYearlyPrice          = big.NewInt(1 << 34)
 )
 
 type CompanyPlanDetailResponseData struct {
@@ -921,10 +971,11 @@ type CompanyPlanDetailResponseData struct {
 	BillingProduct       *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	ChargeType           ChargeType                        `json:"charge_type" url:"charge_type"`
 	CompanyCanTrial      bool                              `json:"company_can_trial" url:"company_can_trial"`
-	CompanyCount         int                               `json:"company_count" url:"company_count"`
+	CompanyCount         int64                             `json:"company_count" url:"company_count"`
 	CompatiblePlanIDs    []string                          `json:"compatible_plan_ids" url:"compatible_plan_ids"`
 	ControlledBy         PlanControlledByType              `json:"controlled_by" url:"controlled_by"`
 	CreatedAt            time.Time                         `json:"created_at" url:"created_at"`
+	CurrencyPrices       []*PlanCurrencyPricesResponseData `json:"currency_prices" url:"currency_prices"`
 	Current              bool                              `json:"current" url:"current"`
 	Custom               bool                              `json:"custom" url:"custom"`
 	CustomPlanConfig     *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
@@ -944,7 +995,7 @@ type CompanyPlanDetailResponseData struct {
 	Name                 string                            `json:"name" url:"name"`
 	OneTimePrice         *BillingPriceResponseData         `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	PlanType             PlanType                          `json:"plan_type" url:"plan_type"`
-	TrialDays            *int                              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialDays            *int64                            `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt            time.Time                         `json:"updated_at" url:"updated_at"`
 	UsageViolations      []*FeatureUsageResponseData       `json:"usage_violations" url:"usage_violations"`
 	Valid                bool                              `json:"valid" url:"valid"`
@@ -993,7 +1044,7 @@ func (c *CompanyPlanDetailResponseData) GetCompanyCanTrial() bool {
 	return c.CompanyCanTrial
 }
 
-func (c *CompanyPlanDetailResponseData) GetCompanyCount() int {
+func (c *CompanyPlanDetailResponseData) GetCompanyCount() int64 {
 	if c == nil {
 		return 0
 	}
@@ -1019,6 +1070,13 @@ func (c *CompanyPlanDetailResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return c.CreatedAt
+}
+
+func (c *CompanyPlanDetailResponseData) GetCurrencyPrices() []*PlanCurrencyPricesResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.CurrencyPrices
 }
 
 func (c *CompanyPlanDetailResponseData) GetCurrent() bool {
@@ -1154,7 +1212,7 @@ func (c *CompanyPlanDetailResponseData) GetPlanType() PlanType {
 	return c.PlanType
 }
 
-func (c *CompanyPlanDetailResponseData) GetTrialDays() *int {
+func (c *CompanyPlanDetailResponseData) GetTrialDays() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -1197,6 +1255,9 @@ func (c *CompanyPlanDetailResponseData) GetYearlyPrice() *BillingPriceResponseDa
 }
 
 func (c *CompanyPlanDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1244,7 +1305,7 @@ func (c *CompanyPlanDetailResponseData) SetCompanyCanTrial(companyCanTrial bool)
 
 // SetCompanyCount sets the CompanyCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanDetailResponseData) SetCompanyCount(companyCount int) {
+func (c *CompanyPlanDetailResponseData) SetCompanyCount(companyCount int64) {
 	c.CompanyCount = companyCount
 	c.require(companyPlanDetailResponseDataFieldCompanyCount)
 }
@@ -1268,6 +1329,13 @@ func (c *CompanyPlanDetailResponseData) SetControlledBy(controlledBy PlanControl
 func (c *CompanyPlanDetailResponseData) SetCreatedAt(createdAt time.Time) {
 	c.CreatedAt = createdAt
 	c.require(companyPlanDetailResponseDataFieldCreatedAt)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanDetailResponseData) SetCurrencyPrices(currencyPrices []*PlanCurrencyPricesResponseData) {
+	c.CurrencyPrices = currencyPrices
+	c.require(companyPlanDetailResponseDataFieldCurrencyPrices)
 }
 
 // SetCurrent sets the Current field and marks it as non-optional;
@@ -1405,7 +1473,7 @@ func (c *CompanyPlanDetailResponseData) SetPlanType(planType PlanType) {
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanDetailResponseData) SetTrialDays(trialDays *int) {
+func (c *CompanyPlanDetailResponseData) SetTrialDays(trialDays *int64) {
 	c.TrialDays = trialDays
 	c.require(companyPlanDetailResponseDataFieldTrialDays)
 }
@@ -1485,6 +1553,9 @@ func (c *CompanyPlanDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyPlanDetailResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1567,6 +1638,9 @@ func (c *ComponentCheckoutSettings) GetTaxCollectionEnabled() bool {
 }
 
 func (c *ComponentCheckoutSettings) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -1633,6 +1707,9 @@ func (c *ComponentCheckoutSettings) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ComponentCheckoutSettings) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1922,6 +1999,9 @@ func (c *ComponentPreviewResponseData) GetUpcomingInvoice() *InvoiceResponseData
 }
 
 func (c *ComponentPreviewResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2149,6 +2229,9 @@ func (c *ComponentPreviewResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ComponentPreviewResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2236,6 +2319,9 @@ func (c *ComponentResponseData) GetUpdatedAt() time.Time {
 }
 
 func (c *ComponentResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2335,6 +2421,9 @@ func (c *ComponentResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ComponentResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -2369,6 +2458,106 @@ func (c ComponentState) Ptr() *ComponentState {
 }
 
 var (
+	creditBundleCurrencyPriceFieldCurrency = big.NewInt(1 << 0)
+	creditBundleCurrencyPriceFieldPrice    = big.NewInt(1 << 1)
+)
+
+type CreditBundleCurrencyPrice struct {
+	Currency string            `json:"currency" url:"currency"`
+	Price    *BillingPriceView `json:"price,omitempty" url:"price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditBundleCurrencyPrice) GetCurrency() string {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CreditBundleCurrencyPrice) GetPrice() *BillingPriceView {
+	if c == nil {
+		return nil
+	}
+	return c.Price
+}
+
+func (c *CreditBundleCurrencyPrice) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditBundleCurrencyPrice) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBundleCurrencyPrice) SetCurrency(currency string) {
+	c.Currency = currency
+	c.require(creditBundleCurrencyPriceFieldCurrency)
+}
+
+// SetPrice sets the Price field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBundleCurrencyPrice) SetPrice(price *BillingPriceView) {
+	c.Price = price
+	c.require(creditBundleCurrencyPriceFieldPrice)
+}
+
+func (c *CreditBundleCurrencyPrice) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditBundleCurrencyPrice
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditBundleCurrencyPrice(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditBundleCurrencyPrice) MarshalJSON() ([]byte, error) {
+	type embed CreditBundleCurrencyPrice
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditBundleCurrencyPrice) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	creditCompanyGrantViewFieldBillingCreditBundleID = big.NewInt(1 << 0)
 	creditCompanyGrantViewFieldBillingCreditID       = big.NewInt(1 << 1)
 	creditCompanyGrantViewFieldCompanyID             = big.NewInt(1 << 2)
@@ -2377,29 +2566,30 @@ var (
 	creditCompanyGrantViewFieldCreditDescription     = big.NewInt(1 << 5)
 	creditCompanyGrantViewFieldCreditIcon            = big.NewInt(1 << 6)
 	creditCompanyGrantViewFieldCreditName            = big.NewInt(1 << 7)
-	creditCompanyGrantViewFieldExhaustedAt           = big.NewInt(1 << 8)
-	creditCompanyGrantViewFieldExpiresAt             = big.NewInt(1 << 9)
-	creditCompanyGrantViewFieldExpiryType            = big.NewInt(1 << 10)
-	creditCompanyGrantViewFieldExpiryUnit            = big.NewInt(1 << 11)
-	creditCompanyGrantViewFieldExpiryUnitCount       = big.NewInt(1 << 12)
-	creditCompanyGrantViewFieldGrantReason           = big.NewInt(1 << 13)
-	creditCompanyGrantViewFieldID                    = big.NewInt(1 << 14)
-	creditCompanyGrantViewFieldPlanID                = big.NewInt(1 << 15)
-	creditCompanyGrantViewFieldPlanName              = big.NewInt(1 << 16)
-	creditCompanyGrantViewFieldPluralName            = big.NewInt(1 << 17)
-	creditCompanyGrantViewFieldPrice                 = big.NewInt(1 << 18)
-	creditCompanyGrantViewFieldQuantity              = big.NewInt(1 << 19)
-	creditCompanyGrantViewFieldQuantityRemaining     = big.NewInt(1 << 20)
-	creditCompanyGrantViewFieldQuantityUsed          = big.NewInt(1 << 21)
-	creditCompanyGrantViewFieldRenewalEnabled        = big.NewInt(1 << 22)
-	creditCompanyGrantViewFieldRenewalPeriod         = big.NewInt(1 << 23)
-	creditCompanyGrantViewFieldSingularName          = big.NewInt(1 << 24)
-	creditCompanyGrantViewFieldSourceLabel           = big.NewInt(1 << 25)
-	creditCompanyGrantViewFieldTransfers             = big.NewInt(1 << 26)
-	creditCompanyGrantViewFieldUpdatedAt             = big.NewInt(1 << 27)
-	creditCompanyGrantViewFieldValidFrom             = big.NewInt(1 << 28)
-	creditCompanyGrantViewFieldZeroedOutDate         = big.NewInt(1 << 29)
-	creditCompanyGrantViewFieldZeroedOutReason       = big.NewInt(1 << 30)
+	creditCompanyGrantViewFieldCurrency              = big.NewInt(1 << 8)
+	creditCompanyGrantViewFieldExhaustedAt           = big.NewInt(1 << 9)
+	creditCompanyGrantViewFieldExpiresAt             = big.NewInt(1 << 10)
+	creditCompanyGrantViewFieldExpiryType            = big.NewInt(1 << 11)
+	creditCompanyGrantViewFieldExpiryUnit            = big.NewInt(1 << 12)
+	creditCompanyGrantViewFieldExpiryUnitCount       = big.NewInt(1 << 13)
+	creditCompanyGrantViewFieldGrantReason           = big.NewInt(1 << 14)
+	creditCompanyGrantViewFieldID                    = big.NewInt(1 << 15)
+	creditCompanyGrantViewFieldPlanID                = big.NewInt(1 << 16)
+	creditCompanyGrantViewFieldPlanName              = big.NewInt(1 << 17)
+	creditCompanyGrantViewFieldPluralName            = big.NewInt(1 << 18)
+	creditCompanyGrantViewFieldPrice                 = big.NewInt(1 << 19)
+	creditCompanyGrantViewFieldQuantity              = big.NewInt(1 << 20)
+	creditCompanyGrantViewFieldQuantityRemaining     = big.NewInt(1 << 21)
+	creditCompanyGrantViewFieldQuantityUsed          = big.NewInt(1 << 22)
+	creditCompanyGrantViewFieldRenewalEnabled        = big.NewInt(1 << 23)
+	creditCompanyGrantViewFieldRenewalPeriod         = big.NewInt(1 << 24)
+	creditCompanyGrantViewFieldSingularName          = big.NewInt(1 << 25)
+	creditCompanyGrantViewFieldSourceLabel           = big.NewInt(1 << 26)
+	creditCompanyGrantViewFieldTransfers             = big.NewInt(1 << 27)
+	creditCompanyGrantViewFieldUpdatedAt             = big.NewInt(1 << 28)
+	creditCompanyGrantViewFieldValidFrom             = big.NewInt(1 << 29)
+	creditCompanyGrantViewFieldZeroedOutDate         = big.NewInt(1 << 30)
+	creditCompanyGrantViewFieldZeroedOutReason       = big.NewInt(1 << 31)
 )
 
 type CreditCompanyGrantView struct {
@@ -2411,18 +2601,19 @@ type CreditCompanyGrantView struct {
 	CreditDescription     string                              `json:"credit_description" url:"credit_description"`
 	CreditIcon            *string                             `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
 	CreditName            string                              `json:"credit_name" url:"credit_name"`
+	Currency              *string                             `json:"currency,omitempty" url:"currency,omitempty"`
 	ExhaustedAt           *time.Time                          `json:"exhausted_at,omitempty" url:"exhausted_at,omitempty"`
 	ExpiresAt             *time.Time                          `json:"expires_at,omitempty" url:"expires_at,omitempty"`
 	ExpiryType            *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
 	ExpiryUnit            *BillingCreditExpiryUnit            `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount       *int                                `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ExpiryUnitCount       *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	GrantReason           BillingCreditGrantReason            `json:"grant_reason" url:"grant_reason"`
 	ID                    string                              `json:"id" url:"id"`
 	PlanID                *string                             `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	PlanName              *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
 	PluralName            *string                             `json:"plural_name,omitempty" url:"plural_name,omitempty"`
 	Price                 *BillingProductPriceResponseData    `json:"price,omitempty" url:"price,omitempty"`
-	Quantity              int                                 `json:"quantity" url:"quantity"`
+	Quantity              int64                               `json:"quantity" url:"quantity"`
 	QuantityRemaining     float64                             `json:"quantity_remaining" url:"quantity_remaining"`
 	QuantityUsed          float64                             `json:"quantity_used" url:"quantity_used"`
 	RenewalEnabled        bool                                `json:"renewal_enabled" url:"renewal_enabled"`
@@ -2498,6 +2689,13 @@ func (c *CreditCompanyGrantView) GetCreditName() string {
 	return c.CreditName
 }
 
+func (c *CreditCompanyGrantView) GetCurrency() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Currency
+}
+
 func (c *CreditCompanyGrantView) GetExhaustedAt() *time.Time {
 	if c == nil {
 		return nil
@@ -2526,7 +2724,7 @@ func (c *CreditCompanyGrantView) GetExpiryUnit() *BillingCreditExpiryUnit {
 	return c.ExpiryUnit
 }
 
-func (c *CreditCompanyGrantView) GetExpiryUnitCount() *int {
+func (c *CreditCompanyGrantView) GetExpiryUnitCount() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -2575,7 +2773,7 @@ func (c *CreditCompanyGrantView) GetPrice() *BillingProductPriceResponseData {
 	return c.Price
 }
 
-func (c *CreditCompanyGrantView) GetQuantity() int {
+func (c *CreditCompanyGrantView) GetQuantity() int64 {
 	if c == nil {
 		return 0
 	}
@@ -2660,6 +2858,9 @@ func (c *CreditCompanyGrantView) GetZeroedOutReason() *BillingCreditGrantZeroedO
 }
 
 func (c *CreditCompanyGrantView) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -2726,6 +2927,13 @@ func (c *CreditCompanyGrantView) SetCreditName(creditName string) {
 	c.require(creditCompanyGrantViewFieldCreditName)
 }
 
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetCurrency(currency *string) {
+	c.Currency = currency
+	c.require(creditCompanyGrantViewFieldCurrency)
+}
+
 // SetExhaustedAt sets the ExhaustedAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreditCompanyGrantView) SetExhaustedAt(exhaustedAt *time.Time) {
@@ -2756,7 +2964,7 @@ func (c *CreditCompanyGrantView) SetExpiryUnit(expiryUnit *BillingCreditExpiryUn
 
 // SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCompanyGrantView) SetExpiryUnitCount(expiryUnitCount *int) {
+func (c *CreditCompanyGrantView) SetExpiryUnitCount(expiryUnitCount *int64) {
 	c.ExpiryUnitCount = expiryUnitCount
 	c.require(creditCompanyGrantViewFieldExpiryUnitCount)
 }
@@ -2805,7 +3013,7 @@ func (c *CreditCompanyGrantView) SetPrice(price *BillingProductPriceResponseData
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCompanyGrantView) SetQuantity(quantity int) {
+func (c *CreditCompanyGrantView) SetQuantity(quantity int64) {
 	c.Quantity = quantity
 	c.require(creditCompanyGrantViewFieldQuantity)
 }
@@ -2943,6 +3151,9 @@ func (c *CreditCompanyGrantView) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditCompanyGrantView) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3021,6 +3232,9 @@ func (c *CreditTransferView) GetRelatedGrantID() string {
 }
 
 func (c *CreditTransferView) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3109,6 +3323,9 @@ func (c *CreditTransferView) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditTransferView) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3169,6 +3386,9 @@ func (s *StripeEmbedInfo) GetSetupIntentClientSecret() *string {
 }
 
 func (s *StripeEmbedInfo) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
 	return s.extraProperties
 }
 
@@ -3235,6 +3455,9 @@ func (s *StripeEmbedInfo) MarshalJSON() ([]byte, error) {
 }
 
 func (s *StripeEmbedInfo) String() string {
+	if s == nil {
+		return "<nil>"
+	}
 	if len(s.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
@@ -3255,9 +3478,9 @@ var (
 
 type CountComponentsParams struct {
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -3267,14 +3490,14 @@ type CountComponentsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountComponentsParams) GetLimit() *int {
+func (c *CountComponentsParams) GetLimit() *int64 {
 	if c == nil {
 		return nil
 	}
 	return c.Limit
 }
 
-func (c *CountComponentsParams) GetOffset() *int {
+func (c *CountComponentsParams) GetOffset() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -3289,6 +3512,9 @@ func (c *CountComponentsParams) GetQ() *string {
 }
 
 func (c *CountComponentsParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3301,14 +3527,14 @@ func (c *CountComponentsParams) require(field *big.Int) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountComponentsParams) SetLimit(limit *int) {
+func (c *CountComponentsParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countComponentsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountComponentsParams) SetOffset(offset *int) {
+func (c *CountComponentsParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countComponentsParamsFieldOffset)
 }
@@ -3348,6 +3574,9 @@ func (c *CountComponentsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountComponentsParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3391,6 +3620,9 @@ func (c *CountComponentsResponse) GetParams() *CountComponentsParams {
 }
 
 func (c *CountComponentsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3443,6 +3675,9 @@ func (c *CountComponentsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountComponentsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3462,7 +3697,7 @@ var (
 type CreateComponentResponse struct {
 	Data *ComponentResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3478,7 +3713,7 @@ func (c *CreateComponentResponse) GetData() *ComponentResponseData {
 	return c.Data
 }
 
-func (c *CreateComponentResponse) GetParams() map[string]interface{} {
+func (c *CreateComponentResponse) GetParams() map[string]any {
 	if c == nil {
 		return nil
 	}
@@ -3486,6 +3721,9 @@ func (c *CreateComponentResponse) GetParams() map[string]interface{} {
 }
 
 func (c *CreateComponentResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
 	return c.extraProperties
 }
 
@@ -3505,7 +3743,7 @@ func (c *CreateComponentResponse) SetData(data *ComponentResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateComponentResponse) SetParams(params map[string]interface{}) {
+func (c *CreateComponentResponse) SetParams(params map[string]any) {
 	c.Params = params
 	c.require(createComponentResponseFieldParams)
 }
@@ -3538,6 +3776,9 @@ func (c *CreateComponentResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateComponentResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -3557,7 +3798,7 @@ var (
 type DeleteComponentResponse struct {
 	Data *DeleteResponse `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3573,7 +3814,7 @@ func (d *DeleteComponentResponse) GetData() *DeleteResponse {
 	return d.Data
 }
 
-func (d *DeleteComponentResponse) GetParams() map[string]interface{} {
+func (d *DeleteComponentResponse) GetParams() map[string]any {
 	if d == nil {
 		return nil
 	}
@@ -3581,6 +3822,9 @@ func (d *DeleteComponentResponse) GetParams() map[string]interface{} {
 }
 
 func (d *DeleteComponentResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
 	return d.extraProperties
 }
 
@@ -3600,7 +3844,7 @@ func (d *DeleteComponentResponse) SetData(data *DeleteResponse) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DeleteComponentResponse) SetParams(params map[string]interface{}) {
+func (d *DeleteComponentResponse) SetParams(params map[string]any) {
 	d.Params = params
 	d.require(deleteComponentResponseFieldParams)
 }
@@ -3633,6 +3877,9 @@ func (d *DeleteComponentResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteComponentResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -3652,7 +3899,7 @@ var (
 type GetComponentResponse struct {
 	Data *ComponentResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3668,7 +3915,7 @@ func (g *GetComponentResponse) GetData() *ComponentResponseData {
 	return g.Data
 }
 
-func (g *GetComponentResponse) GetParams() map[string]interface{} {
+func (g *GetComponentResponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
@@ -3676,6 +3923,9 @@ func (g *GetComponentResponse) GetParams() map[string]interface{} {
 }
 
 func (g *GetComponentResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
 	return g.extraProperties
 }
 
@@ -3695,7 +3945,7 @@ func (g *GetComponentResponse) SetData(data *ComponentResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetComponentResponse) SetParams(params map[string]interface{}) {
+func (g *GetComponentResponse) SetParams(params map[string]any) {
 	g.Params = params
 	g.require(getComponentResponseFieldParams)
 }
@@ -3728,6 +3978,9 @@ func (g *GetComponentResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetComponentResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
@@ -3748,9 +4001,9 @@ var (
 
 type ListComponentsParams struct {
 	// Page limit (default 100)
-	Limit *int `json:"limit,omitempty" url:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset *int    `json:"offset,omitempty" url:"offset,omitempty"`
+	Offset *int64  `json:"offset,omitempty" url:"offset,omitempty"`
 	Q      *string `json:"q,omitempty" url:"q,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -3760,14 +4013,14 @@ type ListComponentsParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListComponentsParams) GetLimit() *int {
+func (l *ListComponentsParams) GetLimit() *int64 {
 	if l == nil {
 		return nil
 	}
 	return l.Limit
 }
 
-func (l *ListComponentsParams) GetOffset() *int {
+func (l *ListComponentsParams) GetOffset() *int64 {
 	if l == nil {
 		return nil
 	}
@@ -3782,6 +4035,9 @@ func (l *ListComponentsParams) GetQ() *string {
 }
 
 func (l *ListComponentsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -3794,14 +4050,14 @@ func (l *ListComponentsParams) require(field *big.Int) {
 
 // SetLimit sets the Limit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListComponentsParams) SetLimit(limit *int) {
+func (l *ListComponentsParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listComponentsParamsFieldLimit)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListComponentsParams) SetOffset(offset *int) {
+func (l *ListComponentsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listComponentsParamsFieldOffset)
 }
@@ -3841,6 +4097,9 @@ func (l *ListComponentsParams) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListComponentsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -3884,6 +4143,9 @@ func (l *ListComponentsResponse) GetParams() *ListComponentsParams {
 }
 
 func (l *ListComponentsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
 	return l.extraProperties
 }
 
@@ -3936,6 +4198,9 @@ func (l *ListComponentsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListComponentsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
 	if len(l.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
 			return value
@@ -3979,6 +4244,9 @@ func (p *PreviewComponentDataParams) GetComponentID() *string {
 }
 
 func (p *PreviewComponentDataParams) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -4031,6 +4299,9 @@ func (p *PreviewComponentDataParams) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PreviewComponentDataParams) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -4074,6 +4345,9 @@ func (p *PreviewComponentDataResponse) GetParams() *PreviewComponentDataParams {
 }
 
 func (p *PreviewComponentDataResponse) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
 	return p.extraProperties
 }
 
@@ -4126,6 +4400,9 @@ func (p *PreviewComponentDataResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PreviewComponentDataResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
 	if len(p.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
 			return value
@@ -4145,7 +4422,7 @@ var (
 type UpdateComponentResponse struct {
 	Data *ComponentResponseData `json:"data" url:"data"`
 	// Input parameters
-	Params map[string]interface{} `json:"params" url:"params"`
+	Params map[string]any `json:"params" url:"params"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4161,7 +4438,7 @@ func (u *UpdateComponentResponse) GetData() *ComponentResponseData {
 	return u.Data
 }
 
-func (u *UpdateComponentResponse) GetParams() map[string]interface{} {
+func (u *UpdateComponentResponse) GetParams() map[string]any {
 	if u == nil {
 		return nil
 	}
@@ -4169,6 +4446,9 @@ func (u *UpdateComponentResponse) GetParams() map[string]interface{} {
 }
 
 func (u *UpdateComponentResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
 	return u.extraProperties
 }
 
@@ -4188,7 +4468,7 @@ func (u *UpdateComponentResponse) SetData(data *ComponentResponseData) {
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateComponentResponse) SetParams(params map[string]interface{}) {
+func (u *UpdateComponentResponse) SetParams(params map[string]any) {
 	u.Params = params
 	u.require(updateComponentResponseFieldParams)
 }
@@ -4221,6 +4501,9 @@ func (u *UpdateComponentResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateComponentResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -4282,4 +4565,25 @@ func (u *UpdateComponentRequestBody) SetName(name *string) {
 func (u *UpdateComponentRequestBody) SetState(state *ComponentState) {
 	u.State = state
 	u.require(updateComponentRequestBodyFieldState)
+}
+
+func (u *UpdateComponentRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateComponentRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateComponentRequestBody(body)
+	return nil
+}
+
+func (u *UpdateComponentRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateComponentRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

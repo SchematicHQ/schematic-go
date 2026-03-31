@@ -4,11 +4,12 @@ package companies
 
 import (
 	context "context"
+	http "net/http"
+
 	schematichq "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
 	internal "github.com/schematichq/schematic-go/internal"
 	option "github.com/schematichq/schematic-go/option"
-	http "net/http"
 )
 
 type RawClient struct {

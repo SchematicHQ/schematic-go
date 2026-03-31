@@ -15,9 +15,9 @@ func TestToRulesEngineEntitlement(t *testing.T) {
 	})
 
 	t.Run("all fields populated", func(t *testing.T) {
-		allocation := 100
-		softLimit := 200
-		usage := 50
+		allocation := int64(100)
+		softLimit := int64(200)
+		usage := int64(50)
 		eventName := "api-calls"
 		metricPeriod := schematicgo.FeatureEntitlementMetricPeriodCurrentMonth
 		monthReset := schematicgo.FeatureEntitlementMonthResetBillingCycle

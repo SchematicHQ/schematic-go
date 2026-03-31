@@ -16,9 +16,11 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -303,11 +305,26 @@ func getMapFromBody(body map[string]any, key string) map[string]string {
 
 // --- Server ---
 
-func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+func findPort(start int) int {
+	for port := start; port < start+100; port++ {
+		ln, err := net.Listen("tcp", ":"+strconv.Itoa(port))
+		if err != nil {
+			fmt.Printf("Port %d in use, trying %d...\n", port, port+1)
+			continue
+		}
+		ln.Close()
+		return port
 	}
+	log.Fatalf("no available port found in range %d-%d", start, start+100)
+	return 0
+}
+
+func main() {
+	startPort := 8080
+	if p := os.Getenv("PORT"); p != "" {
+		startPort, _ = strconv.Atoi(p)
+	}
+	port := strconv.Itoa(findPort(startPort))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", handleHealth)

@@ -112,6 +112,10 @@ func handleConfigure(w http.ResponseWriter, r *http.Request) {
 		opts = append(opts, option.WithBaseURL(baseURL))
 	}
 
+	if captureURL := getConfigString("eventCaptureBaseUrl"); captureURL != "" {
+		opts = append(opts, core.WithEventCaptureBaseURL(captureURL))
+	}
+
 	// Flag defaults
 	if rawDefaults, ok := config["flagDefaults"].(map[string]any); ok {
 		defaults := make(map[string]bool, len(rawDefaults))

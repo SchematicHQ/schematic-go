@@ -5584,6 +5584,14 @@ func TestSettersDatastreamCompanyPlan(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetTrialStatus", func(t *testing.T) {
+		obj := &DatastreamCompanyPlan{}
+		var fernTestValueTrialStatus *TrialStatus
+		obj.SetTrialStatus(fernTestValueTrialStatus)
+		assert.Equal(t, fernTestValueTrialStatus, obj.TrialStatus)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 }
 
 func TestGettersDatastreamCompanyPlan(t *testing.T) {
@@ -5666,6 +5674,39 @@ func TestGettersDatastreamCompanyPlan(t *testing.T) {
 		_ = obj.GetTrialEndDate() // Should return zero value
 	})
 
+	t.Run("GetTrialStatus", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &DatastreamCompanyPlan{}
+		var expected *TrialStatus
+		obj.TrialStatus = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetTrialStatus(), "getter should return the property value")
+	})
+
+	t.Run("GetTrialStatus_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &DatastreamCompanyPlan{}
+		obj.TrialStatus = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetTrialStatus(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetTrialStatus_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *DatastreamCompanyPlan
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetTrialStatus() // Should return zero value
+	})
+
 }
 
 func TestSettersMarkExplicitDatastreamCompanyPlan(t *testing.T) {
@@ -5739,6 +5780,37 @@ func TestSettersMarkExplicitDatastreamCompanyPlan(t *testing.T) {
 
 		// Act
 		obj.SetTrialEndDate(fernTestValueTrialEndDate)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetTrialStatus_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &DatastreamCompanyPlan{}
+		var fernTestValueTrialStatus *TrialStatus
+
+		// Act
+		obj.SetTrialStatus(fernTestValueTrialStatus)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -13302,6 +13374,42 @@ func TestEnumCreateOrUpdateRuleRequestBodyRuleType(t *testing.T) {
 
 	t.Run("Ptr", func(t *testing.T) {
 		val, err := NewCreateOrUpdateRuleRequestBodyRuleTypeFromString("global_override")
+		assert.NoError(t, err)
+		ptr := val.Ptr()
+		assert.NotNil(t, ptr)
+		assert.Equal(t, val, *ptr)
+	})
+}
+
+func TestEnumTrialStatus(t *testing.T) {
+	t.Run("NewFromString_active", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTrialStatusFromString("active")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TrialStatus("active"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_converted", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTrialStatusFromString("converted")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TrialStatus("converted"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_expired", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTrialStatusFromString("expired")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TrialStatus("expired"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_Invalid", func(t *testing.T) {
+		_, err := NewTrialStatusFromString("invalid_value_that_does_not_exist")
+		assert.Error(t, err)
+	})
+
+	t.Run("Ptr", func(t *testing.T) {
+		val, err := NewTrialStatusFromString("active")
 		assert.NoError(t, err)
 		ptr := val.Ptr()
 		assert.NotNil(t, ptr)

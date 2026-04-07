@@ -243,6 +243,14 @@ func TestSettersCreateEntitlementInBundleRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCurrencyPrices", func(t *testing.T) {
+		obj := &CreateEntitlementInBundleRequestBody{}
+		var fernTestValueCurrencyPrices []*CurrencyPriceRequestBody
+		obj.SetCurrencyPrices(fernTestValueCurrencyPrices)
+		assert.Equal(t, fernTestValueCurrencyPrices, obj.CurrencyPrices)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetFeatureID", func(t *testing.T) {
 		obj := &CreateEntitlementInBundleRequestBody{}
 		var fernTestValueFeatureID string
@@ -560,6 +568,39 @@ func TestGettersCreateEntitlementInBundleRequestBody(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCurrency() // Should return zero value
+	})
+
+	t.Run("GetCurrencyPrices", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEntitlementInBundleRequestBody{}
+		var expected []*CurrencyPriceRequestBody
+		obj.CurrencyPrices = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCurrencyPrices(), "getter should return the property value")
+	})
+
+	t.Run("GetCurrencyPrices_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEntitlementInBundleRequestBody{}
+		obj.CurrencyPrices = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetCurrencyPrices(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetCurrencyPrices_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreateEntitlementInBundleRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCurrencyPrices() // Should return zero value
 	})
 
 	t.Run("GetFeatureID", func(t *testing.T) {
@@ -1395,6 +1436,37 @@ func TestSettersMarkExplicitCreateEntitlementInBundleRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetCurrencyPrices_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEntitlementInBundleRequestBody{}
+		var fernTestValueCurrencyPrices []*CurrencyPriceRequestBody
+
+		// Act
+		obj.SetCurrencyPrices(fernTestValueCurrencyPrices)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

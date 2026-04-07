@@ -1237,11 +1237,11 @@ var (
 )
 
 type ListPlanChangesRequest struct {
-	Action         *string   `json:"-" url:"action,omitempty"`
-	BasePlanAction *string   `json:"-" url:"base_plan_action,omitempty"`
-	CompanyID      *string   `json:"-" url:"company_id,omitempty"`
-	CompanyIDs     []*string `json:"-" url:"company_ids,omitempty"`
-	PlanIDs        []*string `json:"-" url:"plan_ids,omitempty"`
+	Action         *PlanChangeAction         `json:"-" url:"action,omitempty"`
+	BasePlanAction *PlanChangeBasePlanAction `json:"-" url:"base_plan_action,omitempty"`
+	CompanyID      *string                   `json:"-" url:"company_id,omitempty"`
+	CompanyIDs     []*string                 `json:"-" url:"company_ids,omitempty"`
+	PlanIDs        []*string                 `json:"-" url:"plan_ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1260,14 +1260,14 @@ func (l *ListPlanChangesRequest) require(field *big.Int) {
 
 // SetAction sets the Action field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesRequest) SetAction(action *string) {
+func (l *ListPlanChangesRequest) SetAction(action *PlanChangeAction) {
 	l.Action = action
 	l.require(listPlanChangesRequestFieldAction)
 }
 
 // SetBasePlanAction sets the BasePlanAction field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesRequest) SetBasePlanAction(basePlanAction *string) {
+func (l *ListPlanChangesRequest) SetBasePlanAction(basePlanAction *PlanChangeBasePlanAction) {
 	l.BasePlanAction = basePlanAction
 	l.require(listPlanChangesRequestFieldBasePlanAction)
 }
@@ -8962,10 +8962,10 @@ var (
 )
 
 type ListPlanChangesParams struct {
-	Action         *string  `json:"action,omitempty" url:"action,omitempty"`
-	BasePlanAction *string  `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
-	CompanyID      *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
-	CompanyIDs     []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	Action         *PlanChangeAction         `json:"action,omitempty" url:"action,omitempty"`
+	BasePlanAction *PlanChangeBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
+	CompanyID      *string                   `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyIDs     []string                  `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -8979,14 +8979,14 @@ type ListPlanChangesParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListPlanChangesParams) GetAction() *string {
+func (l *ListPlanChangesParams) GetAction() *PlanChangeAction {
 	if l == nil {
 		return nil
 	}
 	return l.Action
 }
 
-func (l *ListPlanChangesParams) GetBasePlanAction() *string {
+func (l *ListPlanChangesParams) GetBasePlanAction() *PlanChangeBasePlanAction {
 	if l == nil {
 		return nil
 	}
@@ -9044,14 +9044,14 @@ func (l *ListPlanChangesParams) require(field *big.Int) {
 
 // SetAction sets the Action field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesParams) SetAction(action *string) {
+func (l *ListPlanChangesParams) SetAction(action *PlanChangeAction) {
 	l.Action = action
 	l.require(listPlanChangesParamsFieldAction)
 }
 
 // SetBasePlanAction sets the BasePlanAction field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesParams) SetBasePlanAction(basePlanAction *string) {
+func (l *ListPlanChangesParams) SetBasePlanAction(basePlanAction *PlanChangeBasePlanAction) {
 	l.BasePlanAction = basePlanAction
 	l.require(listPlanChangesParamsFieldBasePlanAction)
 }

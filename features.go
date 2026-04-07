@@ -2253,12 +2253,14 @@ var (
 	datastreamCompanyPlanFieldID           = big.NewInt(1 << 0)
 	datastreamCompanyPlanFieldName         = big.NewInt(1 << 1)
 	datastreamCompanyPlanFieldTrialEndDate = big.NewInt(1 << 2)
+	datastreamCompanyPlanFieldTrialStatus  = big.NewInt(1 << 3)
 )
 
 type DatastreamCompanyPlan struct {
-	ID           string     `json:"id" url:"id"`
-	Name         string     `json:"name" url:"name"`
-	TrialEndDate *time.Time `json:"trial_end_date,omitempty" url:"trial_end_date,omitempty"`
+	ID           string       `json:"id" url:"id"`
+	Name         string       `json:"name" url:"name"`
+	TrialEndDate *time.Time   `json:"trial_end_date,omitempty" url:"trial_end_date,omitempty"`
+	TrialStatus  *TrialStatus `json:"trial_status,omitempty" url:"trial_status,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2286,6 +2288,13 @@ func (d *DatastreamCompanyPlan) GetTrialEndDate() *time.Time {
 		return nil
 	}
 	return d.TrialEndDate
+}
+
+func (d *DatastreamCompanyPlan) GetTrialStatus() *TrialStatus {
+	if d == nil {
+		return nil
+	}
+	return d.TrialStatus
 }
 
 func (d *DatastreamCompanyPlan) GetExtraProperties() map[string]interface{} {
@@ -2321,6 +2330,13 @@ func (d *DatastreamCompanyPlan) SetName(name string) {
 func (d *DatastreamCompanyPlan) SetTrialEndDate(trialEndDate *time.Time) {
 	d.TrialEndDate = trialEndDate
 	d.require(datastreamCompanyPlanFieldTrialEndDate)
+}
+
+// SetTrialStatus sets the TrialStatus field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DatastreamCompanyPlan) SetTrialStatus(trialStatus *TrialStatus) {
+	d.TrialStatus = trialStatus
+	d.require(datastreamCompanyPlanFieldTrialStatus)
 }
 
 func (d *DatastreamCompanyPlan) UnmarshalJSON(data []byte) error {
@@ -2704,6 +2720,31 @@ func (r *RulesDetailResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", r)
+}
+
+type TrialStatus string
+
+const (
+	TrialStatusActive    TrialStatus = "active"
+	TrialStatusConverted TrialStatus = "converted"
+	TrialStatusExpired   TrialStatus = "expired"
+)
+
+func NewTrialStatusFromString(s string) (TrialStatus, error) {
+	switch s {
+	case "active":
+		return TrialStatusActive, nil
+	case "converted":
+		return TrialStatusConverted, nil
+	case "expired":
+		return TrialStatusExpired, nil
+	}
+	var t TrialStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TrialStatus) Ptr() *TrialStatus {
+	return &t
 }
 
 var (

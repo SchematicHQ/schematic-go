@@ -3808,7 +3808,7 @@ func TestSettersMarkExplicitListEntityTraitDefinitionsRequest(t *testing.T) {
 func TestSettersListPlanChangesRequest(t *testing.T) {
 	t.Run("SetAction", func(t *testing.T) {
 		obj := &ListPlanChangesRequest{}
-		var fernTestValueAction *string
+		var fernTestValueAction *PlanChangeAction
 		obj.SetAction(fernTestValueAction)
 		assert.Equal(t, fernTestValueAction, obj.Action)
 		assert.NotNil(t, obj.explicitFields)
@@ -3816,7 +3816,7 @@ func TestSettersListPlanChangesRequest(t *testing.T) {
 
 	t.Run("SetBasePlanAction", func(t *testing.T) {
 		obj := &ListPlanChangesRequest{}
-		var fernTestValueBasePlanAction *string
+		var fernTestValueBasePlanAction *PlanChangeBasePlanAction
 		obj.SetBasePlanAction(fernTestValueBasePlanAction)
 		assert.Equal(t, fernTestValueBasePlanAction, obj.BasePlanAction)
 		assert.NotNil(t, obj.explicitFields)
@@ -3869,7 +3869,7 @@ func TestSettersMarkExplicitListPlanChangesRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesRequest{}
-		var fernTestValueAction *string
+		var fernTestValueAction *PlanChangeAction
 
 		// Act
 		obj.SetAction(fernTestValueAction)
@@ -3900,7 +3900,7 @@ func TestSettersMarkExplicitListPlanChangesRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesRequest{}
-		var fernTestValueBasePlanAction *string
+		var fernTestValueBasePlanAction *PlanChangeBasePlanAction
 
 		// Act
 		obj.SetBasePlanAction(fernTestValueBasePlanAction)
@@ -20926,7 +20926,7 @@ func TestSettersMarkExplicitListEntityTraitDefinitionsResponse(t *testing.T) {
 func TestSettersListPlanChangesParams(t *testing.T) {
 	t.Run("SetAction", func(t *testing.T) {
 		obj := &ListPlanChangesParams{}
-		var fernTestValueAction *string
+		var fernTestValueAction *PlanChangeAction
 		obj.SetAction(fernTestValueAction)
 		assert.Equal(t, fernTestValueAction, obj.Action)
 		assert.NotNil(t, obj.explicitFields)
@@ -20934,7 +20934,7 @@ func TestSettersListPlanChangesParams(t *testing.T) {
 
 	t.Run("SetBasePlanAction", func(t *testing.T) {
 		obj := &ListPlanChangesParams{}
-		var fernTestValueBasePlanAction *string
+		var fernTestValueBasePlanAction *PlanChangeBasePlanAction
 		obj.SetBasePlanAction(fernTestValueBasePlanAction)
 		assert.Equal(t, fernTestValueBasePlanAction, obj.BasePlanAction)
 		assert.NotNil(t, obj.explicitFields)
@@ -20987,7 +20987,7 @@ func TestGettersListPlanChangesParams(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesParams{}
-		var expected *string
+		var expected *PlanChangeAction
 		obj.Action = expected
 
 		// Act & Assert
@@ -21020,7 +21020,7 @@ func TestGettersListPlanChangesParams(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesParams{}
-		var expected *string
+		var expected *PlanChangeBasePlanAction
 		obj.BasePlanAction = expected
 
 		// Act & Assert
@@ -21221,7 +21221,7 @@ func TestSettersMarkExplicitListPlanChangesParams(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesParams{}
-		var fernTestValueAction *string
+		var fernTestValueAction *PlanChangeAction
 
 		// Act
 		obj.SetAction(fernTestValueAction)
@@ -21252,7 +21252,7 @@ func TestSettersMarkExplicitListPlanChangesParams(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesParams{}
-		var fernTestValueBasePlanAction *string
+		var fernTestValueBasePlanAction *PlanChangeBasePlanAction
 
 		// Act
 		obj.SetBasePlanAction(fernTestValueBasePlanAction)

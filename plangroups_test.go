@@ -5411,7 +5411,7 @@ func TestSettersPlanGroupPlanDetailResponseData(t *testing.T) {
 
 	t.Run("SetIcon", func(t *testing.T) {
 		obj := &PlanGroupPlanDetailResponseData{}
-		var fernTestValueIcon string
+		var fernTestValueIcon PlanIcon
 		obj.SetIcon(fernTestValueIcon)
 		assert.Equal(t, fernTestValueIcon, obj.Icon)
 		assert.NotNil(t, obj.explicitFields)
@@ -5948,7 +5948,7 @@ func TestGettersPlanGroupPlanDetailResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &PlanGroupPlanDetailResponseData{}
-		var expected string
+		var expected PlanIcon
 		obj.Icon = expected
 
 		// Act & Assert
@@ -6790,7 +6790,7 @@ func TestSettersMarkExplicitPlanGroupPlanDetailResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &PlanGroupPlanDetailResponseData{}
-		var fernTestValueIcon string
+		var fernTestValueIcon PlanIcon
 
 		// Act
 		obj.SetIcon(fernTestValueIcon)

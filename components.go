@@ -983,7 +983,7 @@ type CompanyPlanDetailResponseData struct {
 	DraftVersion         *PlanVersionResponseData          `json:"draft_version,omitempty" url:"draft_version,omitempty"`
 	Entitlements         []*PlanEntitlementResponseData    `json:"entitlements" url:"entitlements"`
 	Features             []*FeatureDetailResponseData      `json:"features" url:"features"`
-	Icon                 string                            `json:"icon" url:"icon"`
+	Icon                 PlanIcon                          `json:"icon" url:"icon"`
 	ID                   string                            `json:"id" url:"id"`
 	IncludedCreditGrants []*PlanCreditGrantView            `json:"included_credit_grants" url:"included_credit_grants"`
 	InvalidReason        *CompanyPlanInvalidReason         `json:"invalid_reason,omitempty" url:"invalid_reason,omitempty"`
@@ -1128,7 +1128,7 @@ func (c *CompanyPlanDetailResponseData) GetFeatures() []*FeatureDetailResponseDa
 	return c.Features
 }
 
-func (c *CompanyPlanDetailResponseData) GetIcon() string {
+func (c *CompanyPlanDetailResponseData) GetIcon() PlanIcon {
 	if c == nil {
 		return ""
 	}
@@ -1389,7 +1389,7 @@ func (c *CompanyPlanDetailResponseData) SetFeatures(features []*FeatureDetailRes
 
 // SetIcon sets the Icon field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanDetailResponseData) SetIcon(icon string) {
+func (c *CompanyPlanDetailResponseData) SetIcon(icon PlanIcon) {
 	c.Icon = icon
 	c.require(companyPlanDetailResponseDataFieldIcon)
 }

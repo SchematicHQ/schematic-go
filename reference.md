@@ -4618,7 +4618,7 @@ request := &schematichq.CreateCompanyCreditGrant{
         CompanyID: "company_id",
         CreditID: "credit_id",
         Quantity: int64(1000000),
-        Reason: schematichq.BillingCreditGrantReasonBillingCreditAutoTopup,
+        Reason: schematichq.BillingCreditGrantReasonAdjustment,
     }
 client.Credits.GrantBillingCreditsToCompany(
         context.TODO(),
@@ -5468,6 +5468,50 @@ client.Credits.CreateBillingPlanCreditGrant(
 <dd>
 
 **request:** `*schematichq.CreateBillingPlanCreditGrantRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.GetSingleBillingPlanCreditGrant(PlanGrantID) -> *schematichq.GetSingleBillingPlanCreditGrantResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Credits.GetSingleBillingPlanCreditGrant(
+        context.TODO(),
+        "plan_grant_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planGrantID:** `string` — plan_grant_id
     
 </dd>
 </dl>
@@ -8124,12 +8168,8 @@ client.Companies.GetEntityTraitValues(
 
 ```go
 request := &schematichq.ListPlanChangesRequest{
-        Action: schematichq.String(
-            "action",
-        ),
-        BasePlanAction: schematichq.String(
-            "base_plan_action",
-        ),
+        Action: schematichq.PlanChangeActionCheckout.Ptr(),
+        BasePlanAction: schematichq.PlanChangeBasePlanActionFallback.Ptr(),
         CompanyID: schematichq.String(
             "company_id",
         ),
@@ -8159,7 +8199,7 @@ client.Companies.ListPlanChanges(
 <dl>
 <dd>
 
-**action:** `*string` 
+**action:** `*schematichq.PlanChangeAction` 
     
 </dd>
 </dl>
@@ -8167,7 +8207,7 @@ client.Companies.ListPlanChanges(
 <dl>
 <dd>
 
-**basePlanAction:** `*string` 
+**basePlanAction:** `*schematichq.PlanChangeBasePlanAction` 
     
 </dd>
 </dl>
@@ -10756,6 +10796,14 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
+**currencyPrices:** `[]*schematichq.CurrencyPriceRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **featureID:** `string` 
     
 </dd>
@@ -11057,6 +11105,14 @@ client.Entitlements.UpdatePlanEntitlement(
 <dd>
 
 **currency:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**currencyPrices:** `[]*schematichq.CurrencyPriceRequestBody` 
     
 </dd>
 </dl>
@@ -12020,6 +12076,166 @@ client.Plans.UpsertBillingProductPlan(
 <dd>
 
 **request:** `*schematichq.UpsertBillingProductRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Plans.ListBillingProductMatchCompanies() -> *schematichq.ListBillingProductMatchCompaniesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListBillingProductMatchCompaniesRequest{
+        PlanID: "plan_id",
+        Q: schematichq.String(
+            "q",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Plans.ListBillingProductMatchCompanies(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planID:** `string` — The plan ID to find billing product match companies for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `*string` — Search for companies by name, keys or string traits
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Plans.CountBillingProductMatchCompanies() -> *schematichq.CountBillingProductMatchCompaniesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountBillingProductMatchCompaniesRequest{
+        PlanID: "plan_id",
+        Q: schematichq.String(
+            "q",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Plans.CountBillingProductMatchCompanies(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planID:** `string` — The plan ID to find billing product match companies for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `*string` — Search for companies by name, keys or string traits
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>

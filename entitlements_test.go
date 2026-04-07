@@ -1951,6 +1951,14 @@ func TestSettersCreatePlanEntitlementRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCurrencyPrices", func(t *testing.T) {
+		obj := &CreatePlanEntitlementRequestBody{}
+		var fernTestValueCurrencyPrices []*CurrencyPriceRequestBody
+		obj.SetCurrencyPrices(fernTestValueCurrencyPrices)
+		assert.Equal(t, fernTestValueCurrencyPrices, obj.CurrencyPrices)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetFeatureID", func(t *testing.T) {
 		obj := &CreatePlanEntitlementRequestBody{}
 		var fernTestValueFeatureID string
@@ -2239,6 +2247,37 @@ func TestSettersMarkExplicitCreatePlanEntitlementRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetCurrencyPrices_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreatePlanEntitlementRequestBody{}
+		var fernTestValueCurrencyPrices []*CurrencyPriceRequestBody
+
+		// Act
+		obj.SetCurrencyPrices(fernTestValueCurrencyPrices)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -19758,6 +19797,14 @@ func TestSettersUpdatePlanEntitlementRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCurrencyPrices", func(t *testing.T) {
+		obj := &UpdatePlanEntitlementRequestBody{}
+		var fernTestValueCurrencyPrices []*CurrencyPriceRequestBody
+		obj.SetCurrencyPrices(fernTestValueCurrencyPrices)
+		assert.Equal(t, fernTestValueCurrencyPrices, obj.CurrencyPrices)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetMetricPeriod", func(t *testing.T) {
 		obj := &UpdatePlanEntitlementRequestBody{}
 		var fernTestValueMetricPeriod *UpdatePlanEntitlementRequestBodyMetricPeriod
@@ -20022,6 +20069,37 @@ func TestSettersMarkExplicitUpdatePlanEntitlementRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetCurrencyPrices_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdatePlanEntitlementRequestBody{}
+		var fernTestValueCurrencyPrices []*CurrencyPriceRequestBody
+
+		// Act
+		obj.SetCurrencyPrices(fernTestValueCurrencyPrices)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

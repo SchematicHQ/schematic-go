@@ -1054,6 +1054,51 @@ func (r *RawClient) CreateBillingPlanCreditGrant(
 	}, nil
 }
 
+func (r *RawClient) GetSingleBillingPlanCreditGrant(
+	ctx context.Context,
+	// plan_grant_id
+	planGrantID string,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.GetSingleBillingPlanCreditGrantResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/billing/credits/plan-grants/%v",
+		planGrantID,
+	)
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	var response *schematichq.GetSingleBillingPlanCreditGrantResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.GetSingleBillingPlanCreditGrantResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
 func (r *RawClient) UpdateBillingPlanCreditGrant(
 	ctx context.Context,
 	// plan_grant_id

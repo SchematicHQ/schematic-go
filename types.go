@@ -1219,6 +1219,7 @@ func (b BillingCreditExpiryUnit) Ptr() *BillingCreditExpiryUnit {
 type BillingCreditGrantReason string
 
 const (
+	BillingCreditGrantReasonAdjustment             BillingCreditGrantReason = "adjustment"
 	BillingCreditGrantReasonBillingCreditAutoTopup BillingCreditGrantReason = "billing_credit_auto_topup"
 	BillingCreditGrantReasonFree                   BillingCreditGrantReason = "free"
 	BillingCreditGrantReasonPlan                   BillingCreditGrantReason = "plan"
@@ -1227,6 +1228,8 @@ const (
 
 func NewBillingCreditGrantReasonFromString(s string) (BillingCreditGrantReason, error) {
 	switch s {
+	case "adjustment":
+		return BillingCreditGrantReasonAdjustment, nil
 	case "billing_credit_auto_topup":
 		return BillingCreditGrantReasonBillingCreditAutoTopup, nil
 	case "free":
@@ -2096,26 +2099,27 @@ var (
 	billingPlanCreditGrantResponseDataFieldAutoTopupExpiryType       = big.NewInt(1 << 3)
 	billingPlanCreditGrantResponseDataFieldAutoTopupExpiryUnit       = big.NewInt(1 << 4)
 	billingPlanCreditGrantResponseDataFieldAutoTopupExpiryUnitCount  = big.NewInt(1 << 5)
-	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdPercent = big.NewInt(1 << 6)
-	billingPlanCreditGrantResponseDataFieldCreatedAt                 = big.NewInt(1 << 7)
-	billingPlanCreditGrantResponseDataFieldCredit                    = big.NewInt(1 << 8)
-	billingPlanCreditGrantResponseDataFieldCreditAmount              = big.NewInt(1 << 9)
-	billingPlanCreditGrantResponseDataFieldCreditID                  = big.NewInt(1 << 10)
-	billingPlanCreditGrantResponseDataFieldCreditName                = big.NewInt(1 << 11)
-	billingPlanCreditGrantResponseDataFieldCreditPluralName          = big.NewInt(1 << 12)
-	billingPlanCreditGrantResponseDataFieldCreditSingularName        = big.NewInt(1 << 13)
-	billingPlanCreditGrantResponseDataFieldExpiryType                = big.NewInt(1 << 14)
-	billingPlanCreditGrantResponseDataFieldExpiryUnit                = big.NewInt(1 << 15)
-	billingPlanCreditGrantResponseDataFieldExpiryUnitCount           = big.NewInt(1 << 16)
-	billingPlanCreditGrantResponseDataFieldID                        = big.NewInt(1 << 17)
-	billingPlanCreditGrantResponseDataFieldPlan                      = big.NewInt(1 << 18)
-	billingPlanCreditGrantResponseDataFieldPlanID                    = big.NewInt(1 << 19)
-	billingPlanCreditGrantResponseDataFieldPlanName                  = big.NewInt(1 << 20)
-	billingPlanCreditGrantResponseDataFieldPlanVersionID             = big.NewInt(1 << 21)
-	billingPlanCreditGrantResponseDataFieldResetCadence              = big.NewInt(1 << 22)
-	billingPlanCreditGrantResponseDataFieldResetStart                = big.NewInt(1 << 23)
-	billingPlanCreditGrantResponseDataFieldResetType                 = big.NewInt(1 << 24)
-	billingPlanCreditGrantResponseDataFieldUpdatedAt                 = big.NewInt(1 << 25)
+	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdCredits = big.NewInt(1 << 6)
+	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdPercent = big.NewInt(1 << 7)
+	billingPlanCreditGrantResponseDataFieldCreatedAt                 = big.NewInt(1 << 8)
+	billingPlanCreditGrantResponseDataFieldCredit                    = big.NewInt(1 << 9)
+	billingPlanCreditGrantResponseDataFieldCreditAmount              = big.NewInt(1 << 10)
+	billingPlanCreditGrantResponseDataFieldCreditID                  = big.NewInt(1 << 11)
+	billingPlanCreditGrantResponseDataFieldCreditName                = big.NewInt(1 << 12)
+	billingPlanCreditGrantResponseDataFieldCreditPluralName          = big.NewInt(1 << 13)
+	billingPlanCreditGrantResponseDataFieldCreditSingularName        = big.NewInt(1 << 14)
+	billingPlanCreditGrantResponseDataFieldExpiryType                = big.NewInt(1 << 15)
+	billingPlanCreditGrantResponseDataFieldExpiryUnit                = big.NewInt(1 << 16)
+	billingPlanCreditGrantResponseDataFieldExpiryUnitCount           = big.NewInt(1 << 17)
+	billingPlanCreditGrantResponseDataFieldID                        = big.NewInt(1 << 18)
+	billingPlanCreditGrantResponseDataFieldPlan                      = big.NewInt(1 << 19)
+	billingPlanCreditGrantResponseDataFieldPlanID                    = big.NewInt(1 << 20)
+	billingPlanCreditGrantResponseDataFieldPlanName                  = big.NewInt(1 << 21)
+	billingPlanCreditGrantResponseDataFieldPlanVersionID             = big.NewInt(1 << 22)
+	billingPlanCreditGrantResponseDataFieldResetCadence              = big.NewInt(1 << 23)
+	billingPlanCreditGrantResponseDataFieldResetStart                = big.NewInt(1 << 24)
+	billingPlanCreditGrantResponseDataFieldResetType                 = big.NewInt(1 << 25)
+	billingPlanCreditGrantResponseDataFieldUpdatedAt                 = big.NewInt(1 << 26)
 )
 
 type BillingPlanCreditGrantResponseData struct {
@@ -2125,6 +2129,7 @@ type BillingPlanCreditGrantResponseData struct {
 	AutoTopupExpiryType       *BillingCreditExpiryType   `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
 	AutoTopupExpiryUnit       *BillingCreditExpiryUnit   `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
 	AutoTopupExpiryUnitCount  *int64                     `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
+	AutoTopupThresholdCredits *int64                     `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64                     `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
 	CreatedAt                 time.Time                  `json:"created_at" url:"created_at"`
 	Credit                    *BillingCreditResponseData `json:"credit,omitempty" url:"credit,omitempty"`
@@ -2197,6 +2202,13 @@ func (b *BillingPlanCreditGrantResponseData) GetAutoTopupExpiryUnitCount() *int6
 		return nil
 	}
 	return b.AutoTopupExpiryUnitCount
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetAutoTopupThresholdCredits() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.AutoTopupThresholdCredits
 }
 
 func (b *BillingPlanCreditGrantResponseData) GetAutoTopupThresholdPercent() *int64 {
@@ -2393,6 +2405,13 @@ func (b *BillingPlanCreditGrantResponseData) SetAutoTopupExpiryUnit(autoTopupExp
 func (b *BillingPlanCreditGrantResponseData) SetAutoTopupExpiryUnitCount(autoTopupExpiryUnitCount *int64) {
 	b.AutoTopupExpiryUnitCount = autoTopupExpiryUnitCount
 	b.require(billingPlanCreditGrantResponseDataFieldAutoTopupExpiryUnitCount)
+}
+
+// SetAutoTopupThresholdCredits sets the AutoTopupThresholdCredits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetAutoTopupThresholdCredits(autoTopupThresholdCredits *int64) {
+	b.AutoTopupThresholdCredits = autoTopupThresholdCredits
+	b.require(billingPlanCreditGrantResponseDataFieldAutoTopupThresholdCredits)
 }
 
 // SetAutoTopupThresholdPercent sets the AutoTopupThresholdPercent field and marks it as non-optional;
@@ -11145,17 +11164,18 @@ var (
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryType       = big.NewInt(1 << 4)
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnit       = big.NewInt(1 << 5)
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount  = big.NewInt(1 << 6)
-	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 7)
-	createBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 8)
-	createBillingPlanCreditGrantRequestBodyFieldCreditID                  = big.NewInt(1 << 9)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 10)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 11)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 12)
-	createBillingPlanCreditGrantRequestBodyFieldPlanID                    = big.NewInt(1 << 13)
-	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID             = big.NewInt(1 << 14)
-	createBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 15)
-	createBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 16)
-	createBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 17)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits = big.NewInt(1 << 7)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 8)
+	createBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 9)
+	createBillingPlanCreditGrantRequestBodyFieldCreditID                  = big.NewInt(1 << 10)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 11)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 12)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 13)
+	createBillingPlanCreditGrantRequestBodyFieldPlanID                    = big.NewInt(1 << 14)
+	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID             = big.NewInt(1 << 15)
+	createBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 16)
+	createBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 17)
+	createBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 18)
 )
 
 type CreateBillingPlanCreditGrantRequestBody struct {
@@ -11166,6 +11186,7 @@ type CreateBillingPlanCreditGrantRequestBody struct {
 	AutoTopupExpiryType       *BillingCreditExpiryType           `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
 	AutoTopupExpiryUnit       *BillingCreditExpiryUnit           `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
 	AutoTopupExpiryUnitCount  *int64                             `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
+	AutoTopupThresholdCredits *int64                             `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64                             `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
 	CreditAmount              int64                              `json:"credit_amount" url:"credit_amount"`
 	CreditID                  string                             `json:"credit_id" url:"credit_id"`
@@ -11225,6 +11246,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupExpiryUnitCount() 
 		return nil
 	}
 	return c.AutoTopupExpiryUnitCount
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdCredits() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.AutoTopupThresholdCredits
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent() *int64 {
@@ -11365,6 +11393,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnit(autoTop
 func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnitCount(autoTopupExpiryUnitCount *int64) {
 	c.AutoTopupExpiryUnitCount = autoTopupExpiryUnitCount
 	c.require(createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount)
+}
+
+// SetAutoTopupThresholdCredits sets the AutoTopupThresholdCredits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdCredits(autoTopupThresholdCredits *int64) {
+	c.AutoTopupThresholdCredits = autoTopupThresholdCredits
+	c.require(createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits)
 }
 
 // SetAutoTopupThresholdPercent sets the AutoTopupThresholdPercent field and marks it as non-optional;
@@ -11756,10 +11791,10 @@ var (
 )
 
 type CreatePlanRequestBody struct {
-	Description string   `json:"description" url:"description"`
-	Icon        *string  `json:"icon,omitempty" url:"icon,omitempty"`
-	Name        string   `json:"name" url:"name"`
-	PlanType    PlanType `json:"plan_type" url:"plan_type"`
+	Description string    `json:"description" url:"description"`
+	Icon        *PlanIcon `json:"icon,omitempty" url:"icon,omitempty"`
+	Name        string    `json:"name" url:"name"`
+	PlanType    PlanType  `json:"plan_type" url:"plan_type"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -11775,7 +11810,7 @@ func (c *CreatePlanRequestBody) GetDescription() string {
 	return c.Description
 }
 
-func (c *CreatePlanRequestBody) GetIcon() *string {
+func (c *CreatePlanRequestBody) GetIcon() *PlanIcon {
 	if c == nil {
 		return nil
 	}
@@ -11819,7 +11854,7 @@ func (c *CreatePlanRequestBody) SetDescription(description string) {
 
 // SetIcon sets the Icon field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanRequestBody) SetIcon(icon *string) {
+func (c *CreatePlanRequestBody) SetIcon(icon *PlanIcon) {
 	c.Icon = icon
 	c.require(createPlanRequestBodyFieldIcon)
 }
@@ -13120,6 +13155,186 @@ func (c *CreditsAutoTopupRetryFailure) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditsAutoTopupRetryFailure) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	currencyPriceRequestBodyFieldCurrency                = big.NewInt(1 << 0)
+	currencyPriceRequestBodyFieldMonthlyPriceTiers       = big.NewInt(1 << 1)
+	currencyPriceRequestBodyFieldMonthlyUnitPrice        = big.NewInt(1 << 2)
+	currencyPriceRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 3)
+	currencyPriceRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 4)
+	currencyPriceRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 5)
+	currencyPriceRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 6)
+)
+
+type CurrencyPriceRequestBody struct {
+	Currency                string                        `json:"currency" url:"currency"`
+	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
+	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
+	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
+	YearlyPriceTiers        []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
+	YearlyUnitPrice         *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
+	YearlyUnitPriceDecimal  *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CurrencyPriceRequestBody) GetCurrency() string {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CurrencyPriceRequestBody) GetMonthlyPriceTiers() []*CreatePriceTierRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.MonthlyPriceTiers
+}
+
+func (c *CurrencyPriceRequestBody) GetMonthlyUnitPrice() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.MonthlyUnitPrice
+}
+
+func (c *CurrencyPriceRequestBody) GetMonthlyUnitPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MonthlyUnitPriceDecimal
+}
+
+func (c *CurrencyPriceRequestBody) GetYearlyPriceTiers() []*CreatePriceTierRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.YearlyPriceTiers
+}
+
+func (c *CurrencyPriceRequestBody) GetYearlyUnitPrice() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.YearlyUnitPrice
+}
+
+func (c *CurrencyPriceRequestBody) GetYearlyUnitPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.YearlyUnitPriceDecimal
+}
+
+func (c *CurrencyPriceRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CurrencyPriceRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetCurrency(currency string) {
+	c.Currency = currency
+	c.require(currencyPriceRequestBodyFieldCurrency)
+}
+
+// SetMonthlyPriceTiers sets the MonthlyPriceTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetMonthlyPriceTiers(monthlyPriceTiers []*CreatePriceTierRequestBody) {
+	c.MonthlyPriceTiers = monthlyPriceTiers
+	c.require(currencyPriceRequestBodyFieldMonthlyPriceTiers)
+}
+
+// SetMonthlyUnitPrice sets the MonthlyUnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int64) {
+	c.MonthlyUnitPrice = monthlyUnitPrice
+	c.require(currencyPriceRequestBodyFieldMonthlyUnitPrice)
+}
+
+// SetMonthlyUnitPriceDecimal sets the MonthlyUnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetMonthlyUnitPriceDecimal(monthlyUnitPriceDecimal *string) {
+	c.MonthlyUnitPriceDecimal = monthlyUnitPriceDecimal
+	c.require(currencyPriceRequestBodyFieldMonthlyUnitPriceDecimal)
+}
+
+// SetYearlyPriceTiers sets the YearlyPriceTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetYearlyPriceTiers(yearlyPriceTiers []*CreatePriceTierRequestBody) {
+	c.YearlyPriceTiers = yearlyPriceTiers
+	c.require(currencyPriceRequestBodyFieldYearlyPriceTiers)
+}
+
+// SetYearlyUnitPrice sets the YearlyUnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetYearlyUnitPrice(yearlyUnitPrice *int64) {
+	c.YearlyUnitPrice = yearlyUnitPrice
+	c.require(currencyPriceRequestBodyFieldYearlyUnitPrice)
+}
+
+// SetYearlyUnitPriceDecimal sets the YearlyUnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetYearlyUnitPriceDecimal(yearlyUnitPriceDecimal *string) {
+	c.YearlyUnitPriceDecimal = yearlyUnitPriceDecimal
+	c.require(currencyPriceRequestBodyFieldYearlyUnitPriceDecimal)
+}
+
+func (c *CurrencyPriceRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CurrencyPriceRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CurrencyPriceRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CurrencyPriceRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CurrencyPriceRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CurrencyPriceRequestBody) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -19965,27 +20180,28 @@ var (
 	planCreditGrantViewFieldBillingCreditAutoTopupExpiryType       = big.NewInt(1 << 3)
 	planCreditGrantViewFieldBillingCreditAutoTopupExpiryUnit       = big.NewInt(1 << 4)
 	planCreditGrantViewFieldBillingCreditAutoTopupExpiryUnitCount  = big.NewInt(1 << 5)
-	planCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent = big.NewInt(1 << 6)
-	planCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 7)
-	planCreditGrantViewFieldCredit                                 = big.NewInt(1 << 8)
-	planCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 9)
-	planCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 10)
-	planCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 11)
-	planCreditGrantViewFieldCreditID                               = big.NewInt(1 << 12)
-	planCreditGrantViewFieldCreditName                             = big.NewInt(1 << 13)
-	planCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 14)
-	planCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 15)
-	planCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 16)
-	planCreditGrantViewFieldID                                     = big.NewInt(1 << 17)
-	planCreditGrantViewFieldPlan                                   = big.NewInt(1 << 18)
-	planCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 19)
-	planCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 20)
-	planCreditGrantViewFieldPluralName                             = big.NewInt(1 << 21)
-	planCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 22)
-	planCreditGrantViewFieldResetStart                             = big.NewInt(1 << 23)
-	planCreditGrantViewFieldResetType                              = big.NewInt(1 << 24)
-	planCreditGrantViewFieldSingularName                           = big.NewInt(1 << 25)
-	planCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 26)
+	planCreditGrantViewFieldBillingCreditAutoTopupThresholdCredits = big.NewInt(1 << 6)
+	planCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent = big.NewInt(1 << 7)
+	planCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 8)
+	planCreditGrantViewFieldCredit                                 = big.NewInt(1 << 9)
+	planCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 10)
+	planCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 11)
+	planCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 12)
+	planCreditGrantViewFieldCreditID                               = big.NewInt(1 << 13)
+	planCreditGrantViewFieldCreditName                             = big.NewInt(1 << 14)
+	planCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 15)
+	planCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 16)
+	planCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 17)
+	planCreditGrantViewFieldID                                     = big.NewInt(1 << 18)
+	planCreditGrantViewFieldPlan                                   = big.NewInt(1 << 19)
+	planCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 20)
+	planCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 21)
+	planCreditGrantViewFieldPluralName                             = big.NewInt(1 << 22)
+	planCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 23)
+	planCreditGrantViewFieldResetStart                             = big.NewInt(1 << 24)
+	planCreditGrantViewFieldResetType                              = big.NewInt(1 << 25)
+	planCreditGrantViewFieldSingularName                           = big.NewInt(1 << 26)
+	planCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 27)
 )
 
 type PlanCreditGrantView struct {
@@ -19995,6 +20211,7 @@ type PlanCreditGrantView struct {
 	BillingCreditAutoTopupExpiryType       *BillingCreditExpiryType `json:"billing_credit_auto_topup_expiry_type,omitempty" url:"billing_credit_auto_topup_expiry_type,omitempty"`
 	BillingCreditAutoTopupExpiryUnit       *BillingCreditExpiryUnit `json:"billing_credit_auto_topup_expiry_unit,omitempty" url:"billing_credit_auto_topup_expiry_unit,omitempty"`
 	BillingCreditAutoTopupExpiryUnitCount  *int64                   `json:"billing_credit_auto_topup_expiry_unit_count,omitempty" url:"billing_credit_auto_topup_expiry_unit_count,omitempty"`
+	BillingCreditAutoTopupThresholdCredits *int64                   `json:"billing_credit_auto_topup_threshold_credits,omitempty" url:"billing_credit_auto_topup_threshold_credits,omitempty"`
 	BillingCreditAutoTopupThresholdPercent *int64                   `json:"billing_credit_auto_topup_threshold_percent,omitempty" url:"billing_credit_auto_topup_threshold_percent,omitempty"`
 	CreatedAt                              time.Time                `json:"created_at" url:"created_at"`
 	Credit                                 *BillingCreditView       `json:"credit,omitempty" url:"credit,omitempty"`
@@ -20069,6 +20286,13 @@ func (p *PlanCreditGrantView) GetBillingCreditAutoTopupExpiryUnitCount() *int64 
 		return nil
 	}
 	return p.BillingCreditAutoTopupExpiryUnitCount
+}
+
+func (p *PlanCreditGrantView) GetBillingCreditAutoTopupThresholdCredits() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.BillingCreditAutoTopupThresholdCredits
 }
 
 func (p *PlanCreditGrantView) GetBillingCreditAutoTopupThresholdPercent() *int64 {
@@ -20272,6 +20496,13 @@ func (p *PlanCreditGrantView) SetBillingCreditAutoTopupExpiryUnit(billingCreditA
 func (p *PlanCreditGrantView) SetBillingCreditAutoTopupExpiryUnitCount(billingCreditAutoTopupExpiryUnitCount *int64) {
 	p.BillingCreditAutoTopupExpiryUnitCount = billingCreditAutoTopupExpiryUnitCount
 	p.require(planCreditGrantViewFieldBillingCreditAutoTopupExpiryUnitCount)
+}
+
+// SetBillingCreditAutoTopupThresholdCredits sets the BillingCreditAutoTopupThresholdCredits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantView) SetBillingCreditAutoTopupThresholdCredits(billingCreditAutoTopupThresholdCredits *int64) {
+	p.BillingCreditAutoTopupThresholdCredits = billingCreditAutoTopupThresholdCredits
+	p.require(planCreditGrantViewFieldBillingCreditAutoTopupThresholdCredits)
 }
 
 // SetBillingCreditAutoTopupThresholdPercent sets the BillingCreditAutoTopupThresholdPercent field and marks it as non-optional;
@@ -20779,7 +21010,7 @@ type PlanDetailResponseData struct {
 	Description          string                                `json:"description" url:"description"`
 	DraftVersion         *PlanVersionResponseData              `json:"draft_version,omitempty" url:"draft_version,omitempty"`
 	Features             []*FeatureDetailResponseData          `json:"features" url:"features"`
-	Icon                 string                                `json:"icon" url:"icon"`
+	Icon                 PlanIcon                              `json:"icon" url:"icon"`
 	ID                   string                                `json:"id" url:"id"`
 	IncludedCreditGrants []*BillingPlanCreditGrantResponseData `json:"included_credit_grants,omitempty" url:"included_credit_grants,omitempty"`
 	IsDefault            bool                                  `json:"is_default" url:"is_default"`
@@ -20878,7 +21109,7 @@ func (p *PlanDetailResponseData) GetFeatures() []*FeatureDetailResponseData {
 	return p.Features
 }
 
-func (p *PlanDetailResponseData) GetIcon() string {
+func (p *PlanDetailResponseData) GetIcon() PlanIcon {
 	if p == nil {
 		return ""
 	}
@@ -21069,7 +21300,7 @@ func (p *PlanDetailResponseData) SetFeatures(features []*FeatureDetailResponseDa
 
 // SetIcon sets the Icon field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanDetailResponseData) SetIcon(icon string) {
+func (p *PlanDetailResponseData) SetIcon(icon PlanIcon) {
 	p.Icon = icon
 	p.require(planDetailResponseDataFieldIcon)
 }
@@ -21715,6 +21946,97 @@ func (p *PlanEntitlementResponseData) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+type PlanIcon string
+
+const (
+	PlanIconAmber     PlanIcon = "amber"
+	PlanIconBlue      PlanIcon = "blue"
+	PlanIconBlueGray  PlanIcon = "blueGray"
+	PlanIconBlueGreen PlanIcon = "blueGreen"
+	PlanIconCyan      PlanIcon = "cyan"
+	PlanIconEmerald   PlanIcon = "emerald"
+	PlanIconFuchsia   PlanIcon = "fuchsia"
+	PlanIconGray      PlanIcon = "gray"
+	PlanIconGreen     PlanIcon = "green"
+	PlanIconIndigo    PlanIcon = "indigo"
+	PlanIconLightBlue PlanIcon = "lightBlue"
+	PlanIconLime      PlanIcon = "lime"
+	PlanIconOrange    PlanIcon = "orange"
+	PlanIconPink      PlanIcon = "pink"
+	PlanIconPurple    PlanIcon = "purple"
+	PlanIconRed       PlanIcon = "red"
+	PlanIconRedOrange PlanIcon = "redOrange"
+	PlanIconRose      PlanIcon = "rose"
+	PlanIconSky       PlanIcon = "sky"
+	PlanIconSlate     PlanIcon = "slate"
+	PlanIconTeal      PlanIcon = "teal"
+	PlanIconTrueGray  PlanIcon = "trueGray"
+	PlanIconViolet    PlanIcon = "violet"
+	PlanIconWarmGray  PlanIcon = "warmGray"
+	PlanIconYellow    PlanIcon = "yellow"
+)
+
+func NewPlanIconFromString(s string) (PlanIcon, error) {
+	switch s {
+	case "amber":
+		return PlanIconAmber, nil
+	case "blue":
+		return PlanIconBlue, nil
+	case "blueGray":
+		return PlanIconBlueGray, nil
+	case "blueGreen":
+		return PlanIconBlueGreen, nil
+	case "cyan":
+		return PlanIconCyan, nil
+	case "emerald":
+		return PlanIconEmerald, nil
+	case "fuchsia":
+		return PlanIconFuchsia, nil
+	case "gray":
+		return PlanIconGray, nil
+	case "green":
+		return PlanIconGreen, nil
+	case "indigo":
+		return PlanIconIndigo, nil
+	case "lightBlue":
+		return PlanIconLightBlue, nil
+	case "lime":
+		return PlanIconLime, nil
+	case "orange":
+		return PlanIconOrange, nil
+	case "pink":
+		return PlanIconPink, nil
+	case "purple":
+		return PlanIconPurple, nil
+	case "red":
+		return PlanIconRed, nil
+	case "redOrange":
+		return PlanIconRedOrange, nil
+	case "rose":
+		return PlanIconRose, nil
+	case "sky":
+		return PlanIconSky, nil
+	case "slate":
+		return PlanIconSlate, nil
+	case "teal":
+		return PlanIconTeal, nil
+	case "trueGray":
+		return PlanIconTrueGray, nil
+	case "violet":
+		return PlanIconViolet, nil
+	case "warmGray":
+		return PlanIconWarmGray, nil
+	case "yellow":
+		return PlanIconYellow, nil
+	}
+	var t PlanIcon
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanIcon) Ptr() *PlanIcon {
+	return &p
+}
+
 var (
 	planResponseDataFieldAudienceType = big.NewInt(1 << 0)
 	planResponseDataFieldCreatedAt    = big.NewInt(1 << 1)
@@ -21730,7 +22052,7 @@ type PlanResponseData struct {
 	AudienceType *string   `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	CreatedAt    time.Time `json:"created_at" url:"created_at"`
 	Description  string    `json:"description" url:"description"`
-	Icon         string    `json:"icon" url:"icon"`
+	Icon         PlanIcon  `json:"icon" url:"icon"`
 	ID           string    `json:"id" url:"id"`
 	Name         string    `json:"name" url:"name"`
 	PlanType     PlanType  `json:"plan_type" url:"plan_type"`
@@ -21764,7 +22086,7 @@ func (p *PlanResponseData) GetDescription() string {
 	return p.Description
 }
 
-func (p *PlanResponseData) GetIcon() string {
+func (p *PlanResponseData) GetIcon() PlanIcon {
 	if p == nil {
 		return ""
 	}
@@ -21836,7 +22158,7 @@ func (p *PlanResponseData) SetDescription(description string) {
 
 // SetIcon sets the Icon field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanResponseData) SetIcon(icon string) {
+func (p *PlanResponseData) SetIcon(icon PlanIcon) {
 	p.Icon = icon
 	p.require(planResponseDataFieldIcon)
 }
@@ -22209,7 +22531,7 @@ type PlanVersionResponseData struct {
 	CreatedAt      time.Time         `json:"created_at" url:"created_at"`
 	Description    string            `json:"description" url:"description"`
 	EnvironmentID  string            `json:"environment_id" url:"environment_id"`
-	Icon           string            `json:"icon" url:"icon"`
+	Icon           PlanIcon          `json:"icon" url:"icon"`
 	ID             string            `json:"id" url:"id"`
 	Name           string            `json:"name" url:"name"`
 	OriginalPlanID *string           `json:"original_plan_id,omitempty" url:"original_plan_id,omitempty"`
@@ -22246,7 +22568,7 @@ func (p *PlanVersionResponseData) GetEnvironmentID() string {
 	return p.EnvironmentID
 }
 
-func (p *PlanVersionResponseData) GetIcon() string {
+func (p *PlanVersionResponseData) GetIcon() PlanIcon {
 	if p == nil {
 		return ""
 	}
@@ -22339,7 +22661,7 @@ func (p *PlanVersionResponseData) SetEnvironmentID(environmentID string) {
 
 // SetIcon sets the Icon field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanVersionResponseData) SetIcon(icon string) {
+func (p *PlanVersionResponseData) SetIcon(icon PlanIcon) {
 	p.Icon = icon
 	p.require(planVersionResponseDataFieldIcon)
 }
@@ -28436,14 +28758,15 @@ var (
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryType       = big.NewInt(1 << 4)
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnit       = big.NewInt(1 << 5)
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount  = big.NewInt(1 << 6)
-	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 7)
-	updateBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 8)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 9)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 10)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 11)
-	updateBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 12)
-	updateBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 13)
-	updateBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 14)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits = big.NewInt(1 << 7)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 8)
+	updateBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 9)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 10)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 11)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 12)
+	updateBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 13)
+	updateBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 14)
+	updateBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 15)
 )
 
 type UpdateBillingPlanCreditGrantRequestBody struct {
@@ -28454,6 +28777,7 @@ type UpdateBillingPlanCreditGrantRequestBody struct {
 	AutoTopupExpiryType       *BillingCreditExpiryType           `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
 	AutoTopupExpiryUnit       *BillingCreditExpiryUnit           `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
 	AutoTopupExpiryUnitCount  *int64                             `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
+	AutoTopupThresholdCredits *int64                             `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64                             `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
 	CreditAmount              *int64                             `json:"credit_amount,omitempty" url:"credit_amount,omitempty"`
 	ExpiryType                *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
@@ -28510,6 +28834,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupExpiryUnitCount() 
 		return nil
 	}
 	return u.AutoTopupExpiryUnitCount
+}
+
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdCredits() *int64 {
+	if u == nil {
+		return nil
+	}
+	return u.AutoTopupThresholdCredits
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent() *int64 {
@@ -28629,6 +28960,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnit(autoTop
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupExpiryUnitCount(autoTopupExpiryUnitCount *int64) {
 	u.AutoTopupExpiryUnitCount = autoTopupExpiryUnitCount
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount)
+}
+
+// SetAutoTopupThresholdCredits sets the AutoTopupThresholdCredits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdCredits(autoTopupThresholdCredits *int64) {
+	u.AutoTopupThresholdCredits = autoTopupThresholdCredits
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits)
 }
 
 // SetAutoTopupThresholdPercent sets the AutoTopupThresholdPercent field and marks it as non-optional;
@@ -28982,9 +29320,9 @@ var (
 )
 
 type UpdatePlanRequestBody struct {
-	Description *string `json:"description,omitempty" url:"description,omitempty"`
-	Icon        *string `json:"icon,omitempty" url:"icon,omitempty"`
-	Name        string  `json:"name" url:"name"`
+	Description *string   `json:"description,omitempty" url:"description,omitempty"`
+	Icon        *PlanIcon `json:"icon,omitempty" url:"icon,omitempty"`
+	Name        string    `json:"name" url:"name"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -29000,7 +29338,7 @@ func (u *UpdatePlanRequestBody) GetDescription() *string {
 	return u.Description
 }
 
-func (u *UpdatePlanRequestBody) GetIcon() *string {
+func (u *UpdatePlanRequestBody) GetIcon() *PlanIcon {
 	if u == nil {
 		return nil
 	}
@@ -29037,7 +29375,7 @@ func (u *UpdatePlanRequestBody) SetDescription(description *string) {
 
 // SetIcon sets the Icon field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanRequestBody) SetIcon(icon *string) {
+func (u *UpdatePlanRequestBody) SetIcon(icon *PlanIcon) {
 	u.Icon = icon
 	u.require(updatePlanRequestBodyFieldIcon)
 }
@@ -29812,25 +30150,27 @@ var (
 	usageBasedEntitlementRequestBodyFieldBillingProductID        = big.NewInt(1 << 0)
 	usageBasedEntitlementRequestBodyFieldBillingThreshold        = big.NewInt(1 << 1)
 	usageBasedEntitlementRequestBodyFieldCurrency                = big.NewInt(1 << 2)
-	usageBasedEntitlementRequestBodyFieldMonthlyMeteredPriceID   = big.NewInt(1 << 3)
-	usageBasedEntitlementRequestBodyFieldMonthlyPriceTiers       = big.NewInt(1 << 4)
-	usageBasedEntitlementRequestBodyFieldMonthlyUnitPrice        = big.NewInt(1 << 5)
-	usageBasedEntitlementRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 6)
-	usageBasedEntitlementRequestBodyFieldOverageBillingProductID = big.NewInt(1 << 7)
-	usageBasedEntitlementRequestBodyFieldPriceBehavior           = big.NewInt(1 << 8)
-	usageBasedEntitlementRequestBodyFieldPriceTiers              = big.NewInt(1 << 9)
-	usageBasedEntitlementRequestBodyFieldSoftLimit               = big.NewInt(1 << 10)
-	usageBasedEntitlementRequestBodyFieldTierMode                = big.NewInt(1 << 11)
-	usageBasedEntitlementRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 12)
-	usageBasedEntitlementRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 13)
-	usageBasedEntitlementRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 14)
-	usageBasedEntitlementRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 15)
+	usageBasedEntitlementRequestBodyFieldCurrencyPrices          = big.NewInt(1 << 3)
+	usageBasedEntitlementRequestBodyFieldMonthlyMeteredPriceID   = big.NewInt(1 << 4)
+	usageBasedEntitlementRequestBodyFieldMonthlyPriceTiers       = big.NewInt(1 << 5)
+	usageBasedEntitlementRequestBodyFieldMonthlyUnitPrice        = big.NewInt(1 << 6)
+	usageBasedEntitlementRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 7)
+	usageBasedEntitlementRequestBodyFieldOverageBillingProductID = big.NewInt(1 << 8)
+	usageBasedEntitlementRequestBodyFieldPriceBehavior           = big.NewInt(1 << 9)
+	usageBasedEntitlementRequestBodyFieldPriceTiers              = big.NewInt(1 << 10)
+	usageBasedEntitlementRequestBodyFieldSoftLimit               = big.NewInt(1 << 11)
+	usageBasedEntitlementRequestBodyFieldTierMode                = big.NewInt(1 << 12)
+	usageBasedEntitlementRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 13)
+	usageBasedEntitlementRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 14)
+	usageBasedEntitlementRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 15)
+	usageBasedEntitlementRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 16)
 )
 
 type UsageBasedEntitlementRequestBody struct {
 	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
 	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
 	Currency                *string                       `json:"currency,omitempty" url:"currency,omitempty"`
+	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
 	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"monthly_metered_price_id,omitempty"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
@@ -29872,6 +30212,13 @@ func (u *UsageBasedEntitlementRequestBody) GetCurrency() *string {
 		return nil
 	}
 	return u.Currency
+}
+
+func (u *UsageBasedEntitlementRequestBody) GetCurrencyPrices() []*CurrencyPriceRequestBody {
+	if u == nil {
+		return nil
+	}
+	return u.CurrencyPrices
 }
 
 func (u *UsageBasedEntitlementRequestBody) GetMonthlyMeteredPriceID() *string {
@@ -29998,6 +30345,13 @@ func (u *UsageBasedEntitlementRequestBody) SetBillingThreshold(billingThreshold 
 func (u *UsageBasedEntitlementRequestBody) SetCurrency(currency *string) {
 	u.Currency = currency
 	u.require(usageBasedEntitlementRequestBodyFieldCurrency)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageBasedEntitlementRequestBody) SetCurrencyPrices(currencyPrices []*CurrencyPriceRequestBody) {
+	u.CurrencyPrices = currencyPrices
+	u.require(usageBasedEntitlementRequestBodyFieldCurrencyPrices)
 }
 
 // SetMonthlyMeteredPriceID sets the MonthlyMeteredPriceID field and marks it as non-optional;

@@ -316,7 +316,7 @@ func findPort(start int) int {
 			fmt.Printf("Port %d in use, trying %d...\n", port, port+1)
 			continue
 		}
-		ln.Close()
+		_ = ln.Close()
 		return port
 	}
 	log.Fatalf("no available port found in range %d-%d", start, start+100)

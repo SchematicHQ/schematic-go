@@ -19,6 +19,14 @@ func TestSettersCountCompaniesRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetHasScheduledDowngrade", func(t *testing.T) {
+		obj := &CountCompaniesRequest{}
+		var fernTestValueHasScheduledDowngrade *bool
+		obj.SetHasScheduledDowngrade(fernTestValueHasScheduledDowngrade)
+		assert.Equal(t, fernTestValueHasScheduledDowngrade, obj.HasScheduledDowngrade)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetIDs", func(t *testing.T) {
 		obj := &CountCompaniesRequest{}
 		var fernTestValueIDs []*string
@@ -166,6 +174,37 @@ func TestSettersMarkExplicitCountCompaniesRequest(t *testing.T) {
 
 		// Act
 		obj.SetCreditTypeIDs(fernTestValueCreditTypeIDs)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetHasScheduledDowngrade_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountCompaniesRequest{}
+		var fernTestValueHasScheduledDowngrade *bool
+
+		// Act
+		obj.SetHasScheduledDowngrade(fernTestValueHasScheduledDowngrade)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -2464,6 +2503,14 @@ func TestSettersListCompaniesRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetHasScheduledDowngrade", func(t *testing.T) {
+		obj := &ListCompaniesRequest{}
+		var fernTestValueHasScheduledDowngrade *bool
+		obj.SetHasScheduledDowngrade(fernTestValueHasScheduledDowngrade)
+		assert.Equal(t, fernTestValueHasScheduledDowngrade, obj.HasScheduledDowngrade)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetIDs", func(t *testing.T) {
 		obj := &ListCompaniesRequest{}
 		var fernTestValueIDs []*string
@@ -2611,6 +2658,37 @@ func TestSettersMarkExplicitListCompaniesRequest(t *testing.T) {
 
 		// Act
 		obj.SetCreditTypeIDs(fernTestValueCreditTypeIDs)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetHasScheduledDowngrade_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListCompaniesRequest{}
+		var fernTestValueHasScheduledDowngrade *bool
+
+		// Act
+		obj.SetHasScheduledDowngrade(fernTestValueHasScheduledDowngrade)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -3808,7 +3886,7 @@ func TestSettersMarkExplicitListEntityTraitDefinitionsRequest(t *testing.T) {
 func TestSettersListPlanChangesRequest(t *testing.T) {
 	t.Run("SetAction", func(t *testing.T) {
 		obj := &ListPlanChangesRequest{}
-		var fernTestValueAction *string
+		var fernTestValueAction *PlanChangeAction
 		obj.SetAction(fernTestValueAction)
 		assert.Equal(t, fernTestValueAction, obj.Action)
 		assert.NotNil(t, obj.explicitFields)
@@ -3816,7 +3894,7 @@ func TestSettersListPlanChangesRequest(t *testing.T) {
 
 	t.Run("SetBasePlanAction", func(t *testing.T) {
 		obj := &ListPlanChangesRequest{}
-		var fernTestValueBasePlanAction *string
+		var fernTestValueBasePlanAction *PlanChangeBasePlanAction
 		obj.SetBasePlanAction(fernTestValueBasePlanAction)
 		assert.Equal(t, fernTestValueBasePlanAction, obj.BasePlanAction)
 		assert.NotNil(t, obj.explicitFields)
@@ -3869,7 +3947,7 @@ func TestSettersMarkExplicitListPlanChangesRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesRequest{}
-		var fernTestValueAction *string
+		var fernTestValueAction *PlanChangeAction
 
 		// Act
 		obj.SetAction(fernTestValueAction)
@@ -3900,7 +3978,7 @@ func TestSettersMarkExplicitListPlanChangesRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesRequest{}
-		var fernTestValueBasePlanAction *string
+		var fernTestValueBasePlanAction *PlanChangeBasePlanAction
 
 		// Act
 		obj.SetBasePlanAction(fernTestValueBasePlanAction)
@@ -10501,6 +10579,14 @@ func TestSettersCountCompaniesParams(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetHasScheduledDowngrade", func(t *testing.T) {
+		obj := &CountCompaniesParams{}
+		var fernTestValueHasScheduledDowngrade *bool
+		obj.SetHasScheduledDowngrade(fernTestValueHasScheduledDowngrade)
+		assert.Equal(t, fernTestValueHasScheduledDowngrade, obj.HasScheduledDowngrade)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetIDs", func(t *testing.T) {
 		obj := &CountCompaniesParams{}
 		var fernTestValueIDs []string
@@ -10671,6 +10757,39 @@ func TestGettersCountCompaniesParams(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCreditTypeIDs() // Should return zero value
+	})
+
+	t.Run("GetHasScheduledDowngrade", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountCompaniesParams{}
+		var expected *bool
+		obj.HasScheduledDowngrade = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetHasScheduledDowngrade(), "getter should return the property value")
+	})
+
+	t.Run("GetHasScheduledDowngrade_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountCompaniesParams{}
+		obj.HasScheduledDowngrade = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetHasScheduledDowngrade(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetHasScheduledDowngrade_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CountCompaniesParams
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetHasScheduledDowngrade() // Should return zero value
 	})
 
 	t.Run("GetIDs", func(t *testing.T) {
@@ -11245,6 +11364,37 @@ func TestSettersMarkExplicitCountCompaniesParams(t *testing.T) {
 
 		// Act
 		obj.SetCreditTypeIDs(fernTestValueCreditTypeIDs)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetHasScheduledDowngrade_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountCompaniesParams{}
+		var fernTestValueHasScheduledDowngrade *bool
+
+		// Act
+		obj.SetHasScheduledDowngrade(fernTestValueHasScheduledDowngrade)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -17836,6 +17986,14 @@ func TestSettersListCompaniesParams(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetHasScheduledDowngrade", func(t *testing.T) {
+		obj := &ListCompaniesParams{}
+		var fernTestValueHasScheduledDowngrade *bool
+		obj.SetHasScheduledDowngrade(fernTestValueHasScheduledDowngrade)
+		assert.Equal(t, fernTestValueHasScheduledDowngrade, obj.HasScheduledDowngrade)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetIDs", func(t *testing.T) {
 		obj := &ListCompaniesParams{}
 		var fernTestValueIDs []string
@@ -18006,6 +18164,39 @@ func TestGettersListCompaniesParams(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCreditTypeIDs() // Should return zero value
+	})
+
+	t.Run("GetHasScheduledDowngrade", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListCompaniesParams{}
+		var expected *bool
+		obj.HasScheduledDowngrade = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetHasScheduledDowngrade(), "getter should return the property value")
+	})
+
+	t.Run("GetHasScheduledDowngrade_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListCompaniesParams{}
+		obj.HasScheduledDowngrade = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetHasScheduledDowngrade(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetHasScheduledDowngrade_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ListCompaniesParams
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetHasScheduledDowngrade() // Should return zero value
 	})
 
 	t.Run("GetIDs", func(t *testing.T) {
@@ -18580,6 +18771,37 @@ func TestSettersMarkExplicitListCompaniesParams(t *testing.T) {
 
 		// Act
 		obj.SetCreditTypeIDs(fernTestValueCreditTypeIDs)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetHasScheduledDowngrade_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListCompaniesParams{}
+		var fernTestValueHasScheduledDowngrade *bool
+
+		// Act
+		obj.SetHasScheduledDowngrade(fernTestValueHasScheduledDowngrade)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -20926,7 +21148,7 @@ func TestSettersMarkExplicitListEntityTraitDefinitionsResponse(t *testing.T) {
 func TestSettersListPlanChangesParams(t *testing.T) {
 	t.Run("SetAction", func(t *testing.T) {
 		obj := &ListPlanChangesParams{}
-		var fernTestValueAction *string
+		var fernTestValueAction *PlanChangeAction
 		obj.SetAction(fernTestValueAction)
 		assert.Equal(t, fernTestValueAction, obj.Action)
 		assert.NotNil(t, obj.explicitFields)
@@ -20934,7 +21156,7 @@ func TestSettersListPlanChangesParams(t *testing.T) {
 
 	t.Run("SetBasePlanAction", func(t *testing.T) {
 		obj := &ListPlanChangesParams{}
-		var fernTestValueBasePlanAction *string
+		var fernTestValueBasePlanAction *PlanChangeBasePlanAction
 		obj.SetBasePlanAction(fernTestValueBasePlanAction)
 		assert.Equal(t, fernTestValueBasePlanAction, obj.BasePlanAction)
 		assert.NotNil(t, obj.explicitFields)
@@ -20987,7 +21209,7 @@ func TestGettersListPlanChangesParams(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesParams{}
-		var expected *string
+		var expected *PlanChangeAction
 		obj.Action = expected
 
 		// Act & Assert
@@ -21020,7 +21242,7 @@ func TestGettersListPlanChangesParams(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesParams{}
-		var expected *string
+		var expected *PlanChangeBasePlanAction
 		obj.BasePlanAction = expected
 
 		// Act & Assert
@@ -21221,7 +21443,7 @@ func TestSettersMarkExplicitListPlanChangesParams(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesParams{}
-		var fernTestValueAction *string
+		var fernTestValueAction *PlanChangeAction
 
 		// Act
 		obj.SetAction(fernTestValueAction)
@@ -21252,7 +21474,7 @@ func TestSettersMarkExplicitListPlanChangesParams(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListPlanChangesParams{}
-		var fernTestValueBasePlanAction *string
+		var fernTestValueBasePlanAction *PlanChangeBasePlanAction
 
 		// Act
 		obj.SetBasePlanAction(fernTestValueBasePlanAction)

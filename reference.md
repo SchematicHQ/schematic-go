@@ -88,6 +88,129 @@ client.DeletePlanAudiencesPlanAudienceID(
 </details>
 
 ## accounts
+<details><summary><code>client.Accounts.ListAccountMembers() -> *schematichq.ListAccountMembersResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListAccountMembersRequest{
+        Q: schematichq.String(
+            "q",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Accounts.ListAccountMembers(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**ids:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `*string` — Search filter
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Accounts.GetAccountMember(AccountMemberID) -> *schematichq.GetAccountMemberResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Accounts.GetAccountMember(
+        context.TODO(),
+        "account_member_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**accountMemberID:** `string` — account_member_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Accounts.ListAPIKeys() -> *schematichq.ListAPIKeysResponse</code></summary>
 <dl>
 <dd>
@@ -1395,7 +1518,7 @@ request := &schematichq.ListCustomersWithSubscriptionsRequest{
         Name: schematichq.String(
             "name",
         ),
-        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -1494,7 +1617,7 @@ request := &schematichq.CountCustomersRequest{
         Name: schematichq.String(
             "name",
         ),
-        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -2211,7 +2334,7 @@ request := &schematichq.ListBillingPricesRequest{
         ProductID: schematichq.String(
             "product_id",
         ),
-        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -2629,7 +2752,7 @@ request := &schematichq.ListBillingProductPricesRequest{
         ProductID: schematichq.String(
             "product_id",
         ),
-        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -2941,7 +3064,7 @@ request := &schematichq.ListBillingProductsRequest{
             "name",
         ),
         PriceUsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
-        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -3104,7 +3227,7 @@ request := &schematichq.CountBillingProductsRequest{
             "name",
         ),
         PriceUsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
-        ProviderType: schematichq.BillingProviderTypeSchematic.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -4618,7 +4741,7 @@ request := &schematichq.CreateCompanyCreditGrant{
         CompanyID: "company_id",
         CreditID: "credit_id",
         Quantity: int64(1000000),
-        Reason: schematichq.BillingCreditGrantReasonBillingCreditAutoTopup,
+        Reason: schematichq.BillingCreditGrantReasonAdjustment,
     }
 client.Credits.GrantBillingCreditsToCompany(
         context.TODO(),
@@ -5468,6 +5591,50 @@ client.Credits.CreateBillingPlanCreditGrant(
 <dd>
 
 **request:** `*schematichq.CreateBillingPlanCreditGrantRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.GetSingleBillingPlanCreditGrant(PlanGrantID) -> *schematichq.GetSingleBillingPlanCreditGrantResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Credits.GetSingleBillingPlanCreditGrant(
+        context.TODO(),
+        "plan_grant_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planGrantID:** `string` — plan_grant_id
     
 </dd>
 </dl>
@@ -6399,6 +6566,9 @@ client.Checkout.UpdateCustomerSubscriptionTrialEnd(
 
 ```go
 request := &schematichq.ListCompaniesRequest{
+        HasScheduledDowngrade: schematichq.Bool(
+            true,
+        ),
         MonetizedSubscriptions: schematichq.Bool(
             true,
         ),
@@ -6457,6 +6627,14 @@ client.Companies.ListCompanies(
 <dd>
 
 **creditTypeIDs:** `*string` — Filter companies by one or more credit type IDs (each ID starts with bcrd_)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**hasScheduledDowngrade:** `*bool` — Filter companies that have a pending scheduled downgrade
     
 </dd>
 </dl>
@@ -6780,6 +6958,9 @@ client.Companies.DeleteCompany(
 
 ```go
 request := &schematichq.CountCompaniesRequest{
+        HasScheduledDowngrade: schematichq.Bool(
+            true,
+        ),
         MonetizedSubscriptions: schematichq.Bool(
             true,
         ),
@@ -6838,6 +7019,14 @@ client.Companies.CountCompanies(
 <dd>
 
 **creditTypeIDs:** `*string` — Filter companies by one or more credit type IDs (each ID starts with bcrd_)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**hasScheduledDowngrade:** `*bool` — Filter companies that have a pending scheduled downgrade
     
 </dd>
 </dl>
@@ -8124,12 +8313,8 @@ client.Companies.GetEntityTraitValues(
 
 ```go
 request := &schematichq.ListPlanChangesRequest{
-        Action: schematichq.String(
-            "action",
-        ),
-        BasePlanAction: schematichq.String(
-            "base_plan_action",
-        ),
+        Action: schematichq.PlanChangeActionCheckout.Ptr(),
+        BasePlanAction: schematichq.PlanChangeBasePlanActionFallback.Ptr(),
         CompanyID: schematichq.String(
             "company_id",
         ),
@@ -8159,7 +8344,7 @@ client.Companies.ListPlanChanges(
 <dl>
 <dd>
 
-**action:** `*string` 
+**action:** `*schematichq.PlanChangeAction` 
     
 </dd>
 </dl>
@@ -8167,7 +8352,7 @@ client.Companies.ListPlanChanges(
 <dl>
 <dd>
 
-**basePlanAction:** `*string` 
+**basePlanAction:** `*schematichq.PlanChangeBasePlanAction` 
     
 </dd>
 </dl>
@@ -10756,6 +10941,14 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
+**currencyPrices:** `[]*schematichq.CurrencyPriceRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **featureID:** `string` 
     
 </dd>
@@ -11064,6 +11257,14 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
+**currencyPrices:** `[]*schematichq.CurrencyPriceRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **metricPeriod:** `*schematichq.UpdatePlanEntitlementRequestBodyMetricPeriod` 
     
 </dd>
@@ -11261,6 +11462,289 @@ client.Entitlements.DeletePlanEntitlement(
 <dd>
 
 **planEntitlementID:** `string` — plan_entitlement_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Entitlements.UpsertPlanEntitlementForBillingProduct(request) -> *schematichq.UpsertPlanEntitlementForBillingProductResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreateBillingLinkedPlanEntitlementRequestBody{
+        BillingProvider: schematichq.BillingProviderTypeOrb,
+        ExternalResourceID: "external_resource_id",
+        FeatureID: "feature_id",
+        PlanID: "plan_id",
+        ValueType: schematichq.EntitlementValueTypeBoolean,
+    }
+client.Entitlements.UpsertPlanEntitlementForBillingProduct(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProductID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**billingProvider:** `*schematichq.BillingProviderType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**billingThreshold:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditConsumptionRate:** `*float64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**currency:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**currencyPrices:** `[]*schematichq.CurrencyPriceRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**externalResourceID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**metricPeriod:** `*schematichq.CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**metricPeriodMonthReset:** `*schematichq.CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**monthlyMeteredPriceID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**monthlyPriceTiers:** `[]*schematichq.CreatePriceTierRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**monthlyUnitPrice:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**monthlyUnitPriceDecimal:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**overageBillingProductID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**priceBehavior:** `*schematichq.EntitlementPriceBehavior` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**priceTiers:** `[]*schematichq.CreatePriceTierRequestBody` — Use MonthlyPriceTiers or YearlyPriceTiers instead
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**softLimit:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**tierMode:** `*schematichq.BillingTiersMode` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**valueBool:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**valueCreditID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**valueNumeric:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**valueTraitID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**valueType:** `*schematichq.EntitlementValueType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**yearlyMeteredPriceID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**yearlyPriceTiers:** `[]*schematichq.CreatePriceTierRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**yearlyUnitPrice:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**yearlyUnitPriceDecimal:** `*string` 
     
 </dd>
 </dl>
@@ -12020,6 +12504,257 @@ client.Plans.UpsertBillingProductPlan(
 <dd>
 
 **request:** `*schematichq.UpsertBillingProductRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Plans.UpsertPlanForBillingProduct(request) -> *schematichq.UpsertPlanForBillingProductResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreateBillingLinkedPlanRequestBody{
+        BillingProvider: schematichq.BillingProviderTypeOrb,
+        Description: "description",
+        ExternalResourceID: "external_resource_id",
+        Name: "name",
+        PlanType: schematichq.PlanTypePlan,
+    }
+client.Plans.UpsertPlanForBillingProduct(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProvider:** `*schematichq.BillingProviderType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**description:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**externalResourceID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**icon:** `*schematichq.PlanIcon` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planType:** `*schematichq.PlanType` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Plans.ListBillingProductMatchCompanies() -> *schematichq.ListBillingProductMatchCompaniesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListBillingProductMatchCompaniesRequest{
+        PlanID: "plan_id",
+        Q: schematichq.String(
+            "q",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Plans.ListBillingProductMatchCompanies(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planID:** `string` — The plan ID to find billing product match companies for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `*string` — Search for companies by name, keys or string traits
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Plans.CountBillingProductMatchCompanies() -> *schematichq.CountBillingProductMatchCompaniesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountBillingProductMatchCompaniesRequest{
+        PlanID: "plan_id",
+        Q: schematichq.String(
+            "q",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Plans.CountBillingProductMatchCompanies(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planID:** `string` — The plan ID to find billing product match companies for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `*string` — Search for companies by name, keys or string traits
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -13314,20 +14049,20 @@ client.Events.GetSegmentIntegrationStatus(
 
 ```go
 request := &schematichq.ListFeaturesRequest{
+        BooleanRequireEvent: schematichq.Bool(
+            true,
+        ),
+        PlanVersionID: schematichq.String(
+            "plan_version_id",
+        ),
         Q: schematichq.String(
             "q",
         ),
         WithoutCompanyOverrideFor: schematichq.String(
             "without_company_override_for",
         ),
-        PlanVersionID: schematichq.String(
-            "plan_version_id",
-        ),
         WithoutPlanEntitlementFor: schematichq.String(
             "without_plan_entitlement_for",
-        ),
-        BooleanRequireEvent: schematichq.Bool(
-            true,
         ),
         Limit: schematichq.Int64(
             int64(1000000),
@@ -13355,7 +14090,31 @@ client.Features.ListFeatures(
 <dl>
 <dd>
 
+**booleanRequireEvent:** `*bool` — Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureType:** `*schematichq.FeatureType` — Filter by one or more feature types (boolean, event, trait)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **ids:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionID:** `*string` — Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
     
 </dd>
 </dl>
@@ -13379,31 +14138,7 @@ client.Features.ListFeatures(
 <dl>
 <dd>
 
-**planVersionID:** `*string` — Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **withoutPlanEntitlementFor:** `*string` — Filter out features that already have a plan entitlement for the specified plan ID
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**featureType:** `*schematichq.FeatureType` — Filter by one or more feature types (boolean, event, trait)
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**booleanRequireEvent:** `*bool` — Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
     
 </dd>
 </dl>
@@ -13782,6 +14517,153 @@ client.Features.DeleteFeature(
 </dl>
 </details>
 
+<details><summary><code>client.Features.UpsertFeatureForBillingProduct(request) -> *schematichq.UpsertFeatureForBillingProductResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreateBillingLinkedFeatureRequestBody{
+        BillingProvider: schematichq.BillingProviderTypeOrb,
+        Description: "description",
+        ExternalResourceID: "external_resource_id",
+        FeatureType: schematichq.FeatureTypeBoolean,
+        Name: "name",
+    }
+client.Features.UpsertFeatureForBillingProduct(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProvider:** `*schematichq.BillingProviderType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**description:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**eventSubtype:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**externalResourceID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureType:** `*schematichq.FeatureType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**flag:** `*schematichq.CreateOrUpdateFlagRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**icon:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**lifecyclePhase:** `*schematichq.FeatureLifecyclePhase` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**maintainerID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**pluralName:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**singularName:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**traitID:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Features.CountFeatures() -> *schematichq.CountFeaturesResponse</code></summary>
 <dl>
 <dd>
@@ -13796,20 +14678,20 @@ client.Features.DeleteFeature(
 
 ```go
 request := &schematichq.CountFeaturesRequest{
+        BooleanRequireEvent: schematichq.Bool(
+            true,
+        ),
+        PlanVersionID: schematichq.String(
+            "plan_version_id",
+        ),
         Q: schematichq.String(
             "q",
         ),
         WithoutCompanyOverrideFor: schematichq.String(
             "without_company_override_for",
         ),
-        PlanVersionID: schematichq.String(
-            "plan_version_id",
-        ),
         WithoutPlanEntitlementFor: schematichq.String(
             "without_plan_entitlement_for",
-        ),
-        BooleanRequireEvent: schematichq.Bool(
-            true,
         ),
         Limit: schematichq.Int64(
             int64(1000000),
@@ -13837,7 +14719,31 @@ client.Features.CountFeatures(
 <dl>
 <dd>
 
+**booleanRequireEvent:** `*bool` — Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureType:** `*schematichq.FeatureType` — Filter by one or more feature types (boolean, event, trait)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **ids:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionID:** `*string` — Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
     
 </dd>
 </dl>
@@ -13861,31 +14767,7 @@ client.Features.CountFeatures(
 <dl>
 <dd>
 
-**planVersionID:** `*string` — Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **withoutPlanEntitlementFor:** `*string` — Filter out features that already have a plan entitlement for the specified plan ID
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**featureType:** `*schematichq.FeatureType` — Filter by one or more feature types (boolean, event, trait)
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**booleanRequireEvent:** `*bool` — Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
     
 </dd>
 </dl>

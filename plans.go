@@ -10,6 +10,62 @@ import (
 )
 
 var (
+	countBillingProductMatchCompaniesRequestFieldPlanID = big.NewInt(1 << 0)
+	countBillingProductMatchCompaniesRequestFieldQ      = big.NewInt(1 << 1)
+	countBillingProductMatchCompaniesRequestFieldLimit  = big.NewInt(1 << 2)
+	countBillingProductMatchCompaniesRequestFieldOffset = big.NewInt(1 << 3)
+)
+
+type CountBillingProductMatchCompaniesRequest struct {
+	// The plan ID to find billing product match companies for
+	PlanID string `json:"-" url:"plan_id"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"-" url:"q,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CountBillingProductMatchCompaniesRequest) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesRequest) SetPlanID(planID string) {
+	c.PlanID = planID
+	c.require(countBillingProductMatchCompaniesRequestFieldPlanID)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesRequest) SetQ(q *string) {
+	c.Q = q
+	c.require(countBillingProductMatchCompaniesRequestFieldQ)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesRequest) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countBillingProductMatchCompaniesRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesRequest) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countBillingProductMatchCompaniesRequestFieldOffset)
+}
+
+var (
 	countPlansRequestFieldCompanyID             = big.NewInt(1 << 0)
 	countPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 1)
 	countPlansRequestFieldForInitialPlan        = big.NewInt(1 << 2)
@@ -201,6 +257,62 @@ func (g *GetPlanRequest) require(field *big.Int) {
 func (g *GetPlanRequest) SetPlanVersionID(planVersionID *string) {
 	g.PlanVersionID = planVersionID
 	g.require(getPlanRequestFieldPlanVersionID)
+}
+
+var (
+	listBillingProductMatchCompaniesRequestFieldPlanID = big.NewInt(1 << 0)
+	listBillingProductMatchCompaniesRequestFieldQ      = big.NewInt(1 << 1)
+	listBillingProductMatchCompaniesRequestFieldLimit  = big.NewInt(1 << 2)
+	listBillingProductMatchCompaniesRequestFieldOffset = big.NewInt(1 << 3)
+)
+
+type ListBillingProductMatchCompaniesRequest struct {
+	// The plan ID to find billing product match companies for
+	PlanID string `json:"-" url:"plan_id"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"-" url:"q,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListBillingProductMatchCompaniesRequest) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesRequest) SetPlanID(planID string) {
+	l.PlanID = planID
+	l.require(listBillingProductMatchCompaniesRequestFieldPlanID)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesRequest) SetQ(q *string) {
+	l.Q = q
+	l.require(listBillingProductMatchCompaniesRequestFieldQ)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listBillingProductMatchCompaniesRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listBillingProductMatchCompaniesRequestFieldOffset)
 }
 
 var (
@@ -565,6 +677,244 @@ func (p *PlanIssueResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+// Input parameters
+var (
+	countBillingProductMatchCompaniesParamsFieldLimit  = big.NewInt(1 << 0)
+	countBillingProductMatchCompaniesParamsFieldOffset = big.NewInt(1 << 1)
+	countBillingProductMatchCompaniesParamsFieldPlanID = big.NewInt(1 << 2)
+	countBillingProductMatchCompaniesParamsFieldQ      = big.NewInt(1 << 3)
+)
+
+type CountBillingProductMatchCompaniesParams struct {
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// The plan ID to find billing product match companies for
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountBillingProductMatchCompaniesParams) GetLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountBillingProductMatchCompaniesParams) GetOffset() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountBillingProductMatchCompaniesParams) GetPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanID
+}
+
+func (c *CountBillingProductMatchCompaniesParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountBillingProductMatchCompaniesParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountBillingProductMatchCompaniesParams) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesParams) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countBillingProductMatchCompaniesParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesParams) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countBillingProductMatchCompaniesParamsFieldOffset)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesParams) SetPlanID(planID *string) {
+	c.PlanID = planID
+	c.require(countBillingProductMatchCompaniesParamsFieldPlanID)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesParams) SetQ(q *string) {
+	c.Q = q
+	c.require(countBillingProductMatchCompaniesParamsFieldQ)
+}
+
+func (c *CountBillingProductMatchCompaniesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountBillingProductMatchCompaniesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountBillingProductMatchCompaniesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountBillingProductMatchCompaniesParams) MarshalJSON() ([]byte, error) {
+	type embed CountBillingProductMatchCompaniesParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountBillingProductMatchCompaniesParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	countBillingProductMatchCompaniesResponseFieldData   = big.NewInt(1 << 0)
+	countBillingProductMatchCompaniesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CountBillingProductMatchCompaniesResponse struct {
+	Data *CountResponse `json:"data" url:"data"`
+	// Input parameters
+	Params *CountBillingProductMatchCompaniesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountBillingProductMatchCompaniesResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountBillingProductMatchCompaniesResponse) GetParams() *CountBillingProductMatchCompaniesParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountBillingProductMatchCompaniesResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountBillingProductMatchCompaniesResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesResponse) SetData(data *CountResponse) {
+	c.Data = data
+	c.require(countBillingProductMatchCompaniesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductMatchCompaniesResponse) SetParams(params *CountBillingProductMatchCompaniesParams) {
+	c.Params = params
+	c.require(countBillingProductMatchCompaniesResponseFieldParams)
+}
+
+func (c *CountBillingProductMatchCompaniesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountBillingProductMatchCompaniesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountBillingProductMatchCompaniesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountBillingProductMatchCompaniesResponse) MarshalJSON() ([]byte, error) {
+	type embed CountBillingProductMatchCompaniesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountBillingProductMatchCompaniesResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 // Input parameters
@@ -1528,6 +1878,244 @@ func (g *GetPlanResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+var (
+	listBillingProductMatchCompaniesParamsFieldLimit  = big.NewInt(1 << 0)
+	listBillingProductMatchCompaniesParamsFieldOffset = big.NewInt(1 << 1)
+	listBillingProductMatchCompaniesParamsFieldPlanID = big.NewInt(1 << 2)
+	listBillingProductMatchCompaniesParamsFieldQ      = big.NewInt(1 << 3)
+)
+
+type ListBillingProductMatchCompaniesParams struct {
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// The plan ID to find billing product match companies for
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Search for companies by name, keys or string traits
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListBillingProductMatchCompaniesParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListBillingProductMatchCompaniesParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListBillingProductMatchCompaniesParams) GetPlanID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanID
+}
+
+func (l *ListBillingProductMatchCompaniesParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListBillingProductMatchCompaniesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListBillingProductMatchCompaniesParams) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listBillingProductMatchCompaniesParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listBillingProductMatchCompaniesParamsFieldOffset)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesParams) SetPlanID(planID *string) {
+	l.PlanID = planID
+	l.require(listBillingProductMatchCompaniesParamsFieldPlanID)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesParams) SetQ(q *string) {
+	l.Q = q
+	l.require(listBillingProductMatchCompaniesParamsFieldQ)
+}
+
+func (l *ListBillingProductMatchCompaniesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListBillingProductMatchCompaniesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListBillingProductMatchCompaniesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListBillingProductMatchCompaniesParams) MarshalJSON() ([]byte, error) {
+	type embed ListBillingProductMatchCompaniesParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListBillingProductMatchCompaniesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listBillingProductMatchCompaniesResponseFieldData   = big.NewInt(1 << 0)
+	listBillingProductMatchCompaniesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListBillingProductMatchCompaniesResponse struct {
+	Data []*CompanyDetailResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListBillingProductMatchCompaniesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListBillingProductMatchCompaniesResponse) GetData() []*CompanyDetailResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListBillingProductMatchCompaniesResponse) GetParams() *ListBillingProductMatchCompaniesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListBillingProductMatchCompaniesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListBillingProductMatchCompaniesResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesResponse) SetData(data []*CompanyDetailResponseData) {
+	l.Data = data
+	l.require(listBillingProductMatchCompaniesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductMatchCompaniesResponse) SetParams(params *ListBillingProductMatchCompaniesParams) {
+	l.Params = params
+	l.require(listBillingProductMatchCompaniesResponseFieldParams)
+}
+
+func (l *ListBillingProductMatchCompaniesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListBillingProductMatchCompaniesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListBillingProductMatchCompaniesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListBillingProductMatchCompaniesResponse) MarshalJSON() ([]byte, error) {
+	type embed ListBillingProductMatchCompaniesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListBillingProductMatchCompaniesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 // Input parameters
@@ -2525,6 +3113,107 @@ func (u *UpsertBillingProductPlanResponse) String() string {
 }
 
 var (
+	upsertPlanForBillingProductResponseFieldData   = big.NewInt(1 << 0)
+	upsertPlanForBillingProductResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type UpsertPlanForBillingProductResponse struct {
+	Data *PlanDetailResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertPlanForBillingProductResponse) GetData() *PlanDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertPlanForBillingProductResponse) GetParams() map[string]any {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpsertPlanForBillingProductResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpsertPlanForBillingProductResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertPlanForBillingProductResponse) SetData(data *PlanDetailResponseData) {
+	u.Data = data
+	u.require(upsertPlanForBillingProductResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertPlanForBillingProductResponse) SetParams(params map[string]any) {
+	u.Params = params
+	u.require(upsertPlanForBillingProductResponseFieldParams)
+}
+
+func (u *UpsertPlanForBillingProductResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpsertPlanForBillingProductResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpsertPlanForBillingProductResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpsertPlanForBillingProductResponse) MarshalJSON() ([]byte, error) {
+	type embed UpsertPlanForBillingProductResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpsertPlanForBillingProductResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
 	updateCompanyPlansRequestBodyFieldAddOnIDs   = big.NewInt(1 << 0)
 	updateCompanyPlansRequestBodyFieldBasePlanID = big.NewInt(1 << 1)
 )
@@ -2576,5 +3265,96 @@ func (u *UpdateCompanyPlansRequestBody) MarshalJSON() ([]byte, error) {
 		embed: embed(*u),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	createBillingLinkedPlanRequestBodyFieldBillingProvider    = big.NewInt(1 << 0)
+	createBillingLinkedPlanRequestBodyFieldDescription        = big.NewInt(1 << 1)
+	createBillingLinkedPlanRequestBodyFieldExternalResourceID = big.NewInt(1 << 2)
+	createBillingLinkedPlanRequestBodyFieldIcon               = big.NewInt(1 << 3)
+	createBillingLinkedPlanRequestBodyFieldName               = big.NewInt(1 << 4)
+	createBillingLinkedPlanRequestBodyFieldPlanType           = big.NewInt(1 << 5)
+)
+
+type CreateBillingLinkedPlanRequestBody struct {
+	BillingProvider    BillingProviderType `json:"billing_provider" url:"-"`
+	Description        string              `json:"description" url:"-"`
+	ExternalResourceID string              `json:"external_resource_id" url:"-"`
+	Icon               *PlanIcon           `json:"icon,omitempty" url:"-"`
+	Name               string              `json:"name" url:"-"`
+	PlanType           PlanType            `json:"plan_type" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CreateBillingLinkedPlanRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingProvider sets the BillingProvider field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanRequestBody) SetBillingProvider(billingProvider BillingProviderType) {
+	c.BillingProvider = billingProvider
+	c.require(createBillingLinkedPlanRequestBodyFieldBillingProvider)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanRequestBody) SetDescription(description string) {
+	c.Description = description
+	c.require(createBillingLinkedPlanRequestBodyFieldDescription)
+}
+
+// SetExternalResourceID sets the ExternalResourceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanRequestBody) SetExternalResourceID(externalResourceID string) {
+	c.ExternalResourceID = externalResourceID
+	c.require(createBillingLinkedPlanRequestBodyFieldExternalResourceID)
+}
+
+// SetIcon sets the Icon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanRequestBody) SetIcon(icon *PlanIcon) {
+	c.Icon = icon
+	c.require(createBillingLinkedPlanRequestBodyFieldIcon)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanRequestBody) SetName(name string) {
+	c.Name = name
+	c.require(createBillingLinkedPlanRequestBodyFieldName)
+}
+
+// SetPlanType sets the PlanType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanRequestBody) SetPlanType(planType PlanType) {
+	c.PlanType = planType
+	c.require(createBillingLinkedPlanRequestBodyFieldPlanType)
+}
+
+func (c *CreateBillingLinkedPlanRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateBillingLinkedPlanRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateBillingLinkedPlanRequestBody(body)
+	return nil
+}
+
+func (c *CreateBillingLinkedPlanRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateBillingLinkedPlanRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)
 }

@@ -398,6 +398,23 @@ func (c *Client) CreateBillingPlanCreditGrant(
 	return response.Body, nil
 }
 
+func (c *Client) GetSingleBillingPlanCreditGrant(
+	ctx context.Context,
+	// plan_grant_id
+	planGrantID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetSingleBillingPlanCreditGrantResponse, error) {
+	response, err := c.WithRawResponse.GetSingleBillingPlanCreditGrant(
+		ctx,
+		planGrantID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) UpdateBillingPlanCreditGrant(
 	ctx context.Context,
 	// plan_grant_id

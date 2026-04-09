@@ -33,6 +33,39 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+func (c *Client) ListAccountMembers(
+	ctx context.Context,
+	request *schematichq.ListAccountMembersRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListAccountMembersResponse, error) {
+	response, err := c.WithRawResponse.ListAccountMembers(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) GetAccountMember(
+	ctx context.Context,
+	// account_member_id
+	accountMemberID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetAccountMemberResponse, error) {
+	response, err := c.WithRawResponse.GetAccountMember(
+		ctx,
+		accountMemberID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) ListAPIKeys(
 	ctx context.Context,
 	request *schematichq.ListAPIKeysRequest,

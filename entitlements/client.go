@@ -331,6 +331,22 @@ func (c *Client) DeletePlanEntitlement(
 	return response.Body, nil
 }
 
+func (c *Client) UpsertPlanEntitlementForBillingProduct(
+	ctx context.Context,
+	request *schematichq.CreateBillingLinkedPlanEntitlementRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpsertPlanEntitlementForBillingProductResponse, error) {
+	response, err := c.WithRawResponse.UpsertPlanEntitlementForBillingProduct(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CountPlanEntitlements(
 	ctx context.Context,
 	request *schematichq.CountPlanEntitlementsRequest,

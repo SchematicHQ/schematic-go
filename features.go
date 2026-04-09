@@ -57,31 +57,31 @@ func (c *CheckFlagsBulkRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	countFeaturesRequestFieldIDs                       = big.NewInt(1 << 0)
-	countFeaturesRequestFieldQ                         = big.NewInt(1 << 1)
-	countFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 2)
+	countFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 0)
+	countFeaturesRequestFieldFeatureType               = big.NewInt(1 << 1)
+	countFeaturesRequestFieldIDs                       = big.NewInt(1 << 2)
 	countFeaturesRequestFieldPlanVersionID             = big.NewInt(1 << 3)
-	countFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 4)
-	countFeaturesRequestFieldFeatureType               = big.NewInt(1 << 5)
-	countFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 6)
+	countFeaturesRequestFieldQ                         = big.NewInt(1 << 4)
+	countFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 5)
+	countFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 6)
 	countFeaturesRequestFieldLimit                     = big.NewInt(1 << 7)
 	countFeaturesRequestFieldOffset                    = big.NewInt(1 << 8)
 )
 
 type CountFeaturesRequest struct {
-	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
+	BooleanRequireEvent *bool `json:"-" url:"boolean_require_event,omitempty"`
+	// Filter by one or more feature types (boolean, event, trait)
+	FeatureType []*FeatureType `json:"-" url:"feature_type,omitempty"`
+	IDs         []*string      `json:"-" url:"ids,omitempty"`
+	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
 	Q *string `json:"-" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
-	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
-	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
-	// Filter by one or more feature types (boolean, event, trait)
-	FeatureType []*FeatureType `json:"-" url:"feature_type,omitempty"`
-	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
-	BooleanRequireEvent *bool `json:"-" url:"boolean_require_event,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -98,11 +98,32 @@ func (c *CountFeaturesRequest) require(field *big.Int) {
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
+// SetBooleanRequireEvent sets the BooleanRequireEvent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountFeaturesRequest) SetBooleanRequireEvent(booleanRequireEvent *bool) {
+	c.BooleanRequireEvent = booleanRequireEvent
+	c.require(countFeaturesRequestFieldBooleanRequireEvent)
+}
+
+// SetFeatureType sets the FeatureType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountFeaturesRequest) SetFeatureType(featureType []*FeatureType) {
+	c.FeatureType = featureType
+	c.require(countFeaturesRequestFieldFeatureType)
+}
+
 // SetIDs sets the IDs field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountFeaturesRequest) SetIDs(ids []*string) {
 	c.IDs = ids
 	c.require(countFeaturesRequestFieldIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountFeaturesRequest) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(countFeaturesRequestFieldPlanVersionID)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -119,32 +140,11 @@ func (c *CountFeaturesRequest) SetWithoutCompanyOverrideFor(withoutCompanyOverri
 	c.require(countFeaturesRequestFieldWithoutCompanyOverrideFor)
 }
 
-// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeaturesRequest) SetPlanVersionID(planVersionID *string) {
-	c.PlanVersionID = planVersionID
-	c.require(countFeaturesRequestFieldPlanVersionID)
-}
-
 // SetWithoutPlanEntitlementFor sets the WithoutPlanEntitlementFor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountFeaturesRequest) SetWithoutPlanEntitlementFor(withoutPlanEntitlementFor *string) {
 	c.WithoutPlanEntitlementFor = withoutPlanEntitlementFor
 	c.require(countFeaturesRequestFieldWithoutPlanEntitlementFor)
-}
-
-// SetFeatureType sets the FeatureType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeaturesRequest) SetFeatureType(featureType []*FeatureType) {
-	c.FeatureType = featureType
-	c.require(countFeaturesRequestFieldFeatureType)
-}
-
-// SetBooleanRequireEvent sets the BooleanRequireEvent field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountFeaturesRequest) SetBooleanRequireEvent(booleanRequireEvent *bool) {
-	c.BooleanRequireEvent = booleanRequireEvent
-	c.require(countFeaturesRequestFieldBooleanRequireEvent)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -362,31 +362,31 @@ func (c *CreateFeatureRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	listFeaturesRequestFieldIDs                       = big.NewInt(1 << 0)
-	listFeaturesRequestFieldQ                         = big.NewInt(1 << 1)
-	listFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 2)
+	listFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 0)
+	listFeaturesRequestFieldFeatureType               = big.NewInt(1 << 1)
+	listFeaturesRequestFieldIDs                       = big.NewInt(1 << 2)
 	listFeaturesRequestFieldPlanVersionID             = big.NewInt(1 << 3)
-	listFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 4)
-	listFeaturesRequestFieldFeatureType               = big.NewInt(1 << 5)
-	listFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 6)
+	listFeaturesRequestFieldQ                         = big.NewInt(1 << 4)
+	listFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 5)
+	listFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 6)
 	listFeaturesRequestFieldLimit                     = big.NewInt(1 << 7)
 	listFeaturesRequestFieldOffset                    = big.NewInt(1 << 8)
 )
 
 type ListFeaturesRequest struct {
-	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
+	BooleanRequireEvent *bool `json:"-" url:"boolean_require_event,omitempty"`
+	// Filter by one or more feature types (boolean, event, trait)
+	FeatureType []*FeatureType `json:"-" url:"feature_type,omitempty"`
+	IDs         []*string      `json:"-" url:"ids,omitempty"`
+	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
 	Q *string `json:"-" url:"q,omitempty"`
 	// Filter out features that already have a company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
-	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
-	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
-	// Filter by one or more feature types (boolean, event, trait)
-	FeatureType []*FeatureType `json:"-" url:"feature_type,omitempty"`
-	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
-	BooleanRequireEvent *bool `json:"-" url:"boolean_require_event,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -403,11 +403,32 @@ func (l *ListFeaturesRequest) require(field *big.Int) {
 	l.explicitFields.Or(l.explicitFields, field)
 }
 
+// SetBooleanRequireEvent sets the BooleanRequireEvent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeaturesRequest) SetBooleanRequireEvent(booleanRequireEvent *bool) {
+	l.BooleanRequireEvent = booleanRequireEvent
+	l.require(listFeaturesRequestFieldBooleanRequireEvent)
+}
+
+// SetFeatureType sets the FeatureType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeaturesRequest) SetFeatureType(featureType []*FeatureType) {
+	l.FeatureType = featureType
+	l.require(listFeaturesRequestFieldFeatureType)
+}
+
 // SetIDs sets the IDs field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListFeaturesRequest) SetIDs(ids []*string) {
 	l.IDs = ids
 	l.require(listFeaturesRequestFieldIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeaturesRequest) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listFeaturesRequestFieldPlanVersionID)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -424,32 +445,11 @@ func (l *ListFeaturesRequest) SetWithoutCompanyOverrideFor(withoutCompanyOverrid
 	l.require(listFeaturesRequestFieldWithoutCompanyOverrideFor)
 }
 
-// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeaturesRequest) SetPlanVersionID(planVersionID *string) {
-	l.PlanVersionID = planVersionID
-	l.require(listFeaturesRequestFieldPlanVersionID)
-}
-
 // SetWithoutPlanEntitlementFor sets the WithoutPlanEntitlementFor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListFeaturesRequest) SetWithoutPlanEntitlementFor(withoutPlanEntitlementFor *string) {
 	l.WithoutPlanEntitlementFor = withoutPlanEntitlementFor
 	l.require(listFeaturesRequestFieldWithoutPlanEntitlementFor)
-}
-
-// SetFeatureType sets the FeatureType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeaturesRequest) SetFeatureType(featureType []*FeatureType) {
-	l.FeatureType = featureType
-	l.require(listFeaturesRequestFieldFeatureType)
-}
-
-// SetBooleanRequireEvent sets the BooleanRequireEvent field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListFeaturesRequest) SetBooleanRequireEvent(booleanRequireEvent *bool) {
-	l.BooleanRequireEvent = booleanRequireEvent
-	l.require(listFeaturesRequestFieldBooleanRequireEvent)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -2253,12 +2253,14 @@ var (
 	datastreamCompanyPlanFieldID           = big.NewInt(1 << 0)
 	datastreamCompanyPlanFieldName         = big.NewInt(1 << 1)
 	datastreamCompanyPlanFieldTrialEndDate = big.NewInt(1 << 2)
+	datastreamCompanyPlanFieldTrialStatus  = big.NewInt(1 << 3)
 )
 
 type DatastreamCompanyPlan struct {
-	ID           string     `json:"id" url:"id"`
-	Name         string     `json:"name" url:"name"`
-	TrialEndDate *time.Time `json:"trial_end_date,omitempty" url:"trial_end_date,omitempty"`
+	ID           string       `json:"id" url:"id"`
+	Name         string       `json:"name" url:"name"`
+	TrialEndDate *time.Time   `json:"trial_end_date,omitempty" url:"trial_end_date,omitempty"`
+	TrialStatus  *TrialStatus `json:"trial_status,omitempty" url:"trial_status,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2286,6 +2288,13 @@ func (d *DatastreamCompanyPlan) GetTrialEndDate() *time.Time {
 		return nil
 	}
 	return d.TrialEndDate
+}
+
+func (d *DatastreamCompanyPlan) GetTrialStatus() *TrialStatus {
+	if d == nil {
+		return nil
+	}
+	return d.TrialStatus
 }
 
 func (d *DatastreamCompanyPlan) GetExtraProperties() map[string]interface{} {
@@ -2321,6 +2330,13 @@ func (d *DatastreamCompanyPlan) SetName(name string) {
 func (d *DatastreamCompanyPlan) SetTrialEndDate(trialEndDate *time.Time) {
 	d.TrialEndDate = trialEndDate
 	d.require(datastreamCompanyPlanFieldTrialEndDate)
+}
+
+// SetTrialStatus sets the TrialStatus field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DatastreamCompanyPlan) SetTrialStatus(trialStatus *TrialStatus) {
+	d.TrialStatus = trialStatus
+	d.require(datastreamCompanyPlanFieldTrialStatus)
 }
 
 func (d *DatastreamCompanyPlan) UnmarshalJSON(data []byte) error {
@@ -2704,6 +2720,31 @@ func (r *RulesDetailResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", r)
+}
+
+type TrialStatus string
+
+const (
+	TrialStatusActive    TrialStatus = "active"
+	TrialStatusConverted TrialStatus = "converted"
+	TrialStatusExpired   TrialStatus = "expired"
+)
+
+func NewTrialStatusFromString(s string) (TrialStatus, error) {
+	switch s {
+	case "active":
+		return TrialStatusActive, nil
+	case "converted":
+		return TrialStatusConverted, nil
+	case "expired":
+		return TrialStatusExpired, nil
+	}
+	var t TrialStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TrialStatus) Ptr() *TrialStatus {
+	return &t
 }
 
 var (
@@ -5069,6 +5110,107 @@ func (u *UpdateFlagRulesResponse) String() string {
 }
 
 var (
+	upsertFeatureForBillingProductResponseFieldData   = big.NewInt(1 << 0)
+	upsertFeatureForBillingProductResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type UpsertFeatureForBillingProductResponse struct {
+	Data *FeatureDetailResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertFeatureForBillingProductResponse) GetData() *FeatureDetailResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertFeatureForBillingProductResponse) GetParams() map[string]any {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpsertFeatureForBillingProductResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpsertFeatureForBillingProductResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertFeatureForBillingProductResponse) SetData(data *FeatureDetailResponseData) {
+	u.Data = data
+	u.require(upsertFeatureForBillingProductResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertFeatureForBillingProductResponse) SetParams(params map[string]any) {
+	u.Params = params
+	u.require(upsertFeatureForBillingProductResponseFieldParams)
+}
+
+func (u *UpsertFeatureForBillingProductResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpsertFeatureForBillingProductResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpsertFeatureForBillingProductResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpsertFeatureForBillingProductResponse) MarshalJSON() ([]byte, error) {
+	type embed UpsertFeatureForBillingProductResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpsertFeatureForBillingProductResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
 	updateFeatureRequestBodyFieldDescription    = big.NewInt(1 << 0)
 	updateFeatureRequestBodyFieldEventSubtype   = big.NewInt(1 << 1)
 	updateFeatureRequestBodyFieldFeatureType    = big.NewInt(1 << 2)
@@ -5247,5 +5389,159 @@ func (u *UpdateFlagRulesRequestBody) MarshalJSON() ([]byte, error) {
 		embed: embed(*u),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	createBillingLinkedFeatureRequestBodyFieldBillingProvider    = big.NewInt(1 << 0)
+	createBillingLinkedFeatureRequestBodyFieldDescription        = big.NewInt(1 << 1)
+	createBillingLinkedFeatureRequestBodyFieldEventSubtype       = big.NewInt(1 << 2)
+	createBillingLinkedFeatureRequestBodyFieldExternalResourceID = big.NewInt(1 << 3)
+	createBillingLinkedFeatureRequestBodyFieldFeatureType        = big.NewInt(1 << 4)
+	createBillingLinkedFeatureRequestBodyFieldFlag               = big.NewInt(1 << 5)
+	createBillingLinkedFeatureRequestBodyFieldIcon               = big.NewInt(1 << 6)
+	createBillingLinkedFeatureRequestBodyFieldLifecyclePhase     = big.NewInt(1 << 7)
+	createBillingLinkedFeatureRequestBodyFieldMaintainerID       = big.NewInt(1 << 8)
+	createBillingLinkedFeatureRequestBodyFieldName               = big.NewInt(1 << 9)
+	createBillingLinkedFeatureRequestBodyFieldPluralName         = big.NewInt(1 << 10)
+	createBillingLinkedFeatureRequestBodyFieldSingularName       = big.NewInt(1 << 11)
+	createBillingLinkedFeatureRequestBodyFieldTraitID            = big.NewInt(1 << 12)
+)
+
+type CreateBillingLinkedFeatureRequestBody struct {
+	BillingProvider    BillingProviderType            `json:"billing_provider" url:"-"`
+	Description        string                         `json:"description" url:"-"`
+	EventSubtype       *string                        `json:"event_subtype,omitempty" url:"-"`
+	ExternalResourceID string                         `json:"external_resource_id" url:"-"`
+	FeatureType        FeatureType                    `json:"feature_type" url:"-"`
+	Flag               *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
+	Icon               *string                        `json:"icon,omitempty" url:"-"`
+	LifecyclePhase     *FeatureLifecyclePhase         `json:"lifecycle_phase,omitempty" url:"-"`
+	MaintainerID       *string                        `json:"maintainer_id,omitempty" url:"-"`
+	Name               string                         `json:"name" url:"-"`
+	PluralName         *string                        `json:"plural_name,omitempty" url:"-"`
+	SingularName       *string                        `json:"singular_name,omitempty" url:"-"`
+	TraitID            *string                        `json:"trait_id,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CreateBillingLinkedFeatureRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingProvider sets the BillingProvider field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetBillingProvider(billingProvider BillingProviderType) {
+	c.BillingProvider = billingProvider
+	c.require(createBillingLinkedFeatureRequestBodyFieldBillingProvider)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetDescription(description string) {
+	c.Description = description
+	c.require(createBillingLinkedFeatureRequestBodyFieldDescription)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetEventSubtype(eventSubtype *string) {
+	c.EventSubtype = eventSubtype
+	c.require(createBillingLinkedFeatureRequestBodyFieldEventSubtype)
+}
+
+// SetExternalResourceID sets the ExternalResourceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetExternalResourceID(externalResourceID string) {
+	c.ExternalResourceID = externalResourceID
+	c.require(createBillingLinkedFeatureRequestBodyFieldExternalResourceID)
+}
+
+// SetFeatureType sets the FeatureType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetFeatureType(featureType FeatureType) {
+	c.FeatureType = featureType
+	c.require(createBillingLinkedFeatureRequestBodyFieldFeatureType)
+}
+
+// SetFlag sets the Flag field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetFlag(flag *CreateOrUpdateFlagRequestBody) {
+	c.Flag = flag
+	c.require(createBillingLinkedFeatureRequestBodyFieldFlag)
+}
+
+// SetIcon sets the Icon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetIcon(icon *string) {
+	c.Icon = icon
+	c.require(createBillingLinkedFeatureRequestBodyFieldIcon)
+}
+
+// SetLifecyclePhase sets the LifecyclePhase field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetLifecyclePhase(lifecyclePhase *FeatureLifecyclePhase) {
+	c.LifecyclePhase = lifecyclePhase
+	c.require(createBillingLinkedFeatureRequestBodyFieldLifecyclePhase)
+}
+
+// SetMaintainerID sets the MaintainerID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetMaintainerID(maintainerID *string) {
+	c.MaintainerID = maintainerID
+	c.require(createBillingLinkedFeatureRequestBodyFieldMaintainerID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetName(name string) {
+	c.Name = name
+	c.require(createBillingLinkedFeatureRequestBodyFieldName)
+}
+
+// SetPluralName sets the PluralName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetPluralName(pluralName *string) {
+	c.PluralName = pluralName
+	c.require(createBillingLinkedFeatureRequestBodyFieldPluralName)
+}
+
+// SetSingularName sets the SingularName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetSingularName(singularName *string) {
+	c.SingularName = singularName
+	c.require(createBillingLinkedFeatureRequestBodyFieldSingularName)
+}
+
+// SetTraitID sets the TraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetTraitID(traitID *string) {
+	c.TraitID = traitID
+	c.require(createBillingLinkedFeatureRequestBodyFieldTraitID)
+}
+
+func (c *CreateBillingLinkedFeatureRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateBillingLinkedFeatureRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateBillingLinkedFeatureRequestBody(body)
+	return nil
+}
+
+func (c *CreateBillingLinkedFeatureRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateBillingLinkedFeatureRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)
 }

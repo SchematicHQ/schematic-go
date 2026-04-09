@@ -158,6 +158,54 @@ func (c *Client) UpsertBillingProductPlan(
 	return response.Body, nil
 }
 
+func (c *Client) UpsertPlanForBillingProduct(
+	ctx context.Context,
+	request *schematichq.CreateBillingLinkedPlanRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpsertPlanForBillingProductResponse, error) {
+	response, err := c.WithRawResponse.UpsertPlanForBillingProduct(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) ListBillingProductMatchCompanies(
+	ctx context.Context,
+	request *schematichq.ListBillingProductMatchCompaniesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListBillingProductMatchCompaniesResponse, error) {
+	response, err := c.WithRawResponse.ListBillingProductMatchCompanies(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) CountBillingProductMatchCompanies(
+	ctx context.Context,
+	request *schematichq.CountBillingProductMatchCompaniesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CountBillingProductMatchCompaniesResponse, error) {
+	response, err := c.WithRawResponse.CountBillingProductMatchCompanies(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CountPlans(
 	ctx context.Context,
 	request *schematichq.CountPlansRequest,

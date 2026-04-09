@@ -12,28 +12,31 @@ import (
 
 var (
 	countCompaniesRequestFieldCreditTypeIDs             = big.NewInt(1 << 0)
-	countCompaniesRequestFieldIDs                       = big.NewInt(1 << 1)
-	countCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 2)
-	countCompaniesRequestFieldPlanID                    = big.NewInt(1 << 3)
-	countCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 4)
-	countCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 5)
-	countCompaniesRequestFieldQ                         = big.NewInt(1 << 6)
-	countCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 7)
-	countCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 8)
-	countCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 9)
-	countCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 10)
-	countCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 11)
-	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 12)
-	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 13)
-	countCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 14)
-	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 15)
-	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 16)
-	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 17)
+	countCompaniesRequestFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
+	countCompaniesRequestFieldIDs                       = big.NewInt(1 << 2)
+	countCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 3)
+	countCompaniesRequestFieldPlanID                    = big.NewInt(1 << 4)
+	countCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 5)
+	countCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 6)
+	countCompaniesRequestFieldQ                         = big.NewInt(1 << 7)
+	countCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 8)
+	countCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 9)
+	countCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 10)
+	countCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 11)
+	countCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 12)
+	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 13)
+	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 14)
+	countCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 15)
+	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 16)
+	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 17)
+	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 18)
 )
 
 type CountCompaniesRequest struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
+	// Filter companies that have a pending scheduled downgrade
+	HasScheduledDowngrade *bool `json:"-" url:"has_scheduled_downgrade,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
 	// Filter companies that have monetized subscriptions
@@ -85,6 +88,13 @@ func (c *CountCompaniesRequest) require(field *big.Int) {
 func (c *CountCompaniesRequest) SetCreditTypeIDs(creditTypeIDs []*string) {
 	c.CreditTypeIDs = creditTypeIDs
 	c.require(countCompaniesRequestFieldCreditTypeIDs)
+}
+
+// SetHasScheduledDowngrade sets the HasScheduledDowngrade field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetHasScheduledDowngrade(hasScheduledDowngrade *bool) {
+	c.HasScheduledDowngrade = hasScheduledDowngrade
+	c.require(countCompaniesRequestFieldHasScheduledDowngrade)
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -834,28 +844,31 @@ func (c *CreateEntityTraitDefinitionRequestBody) MarshalJSON() ([]byte, error) {
 
 var (
 	listCompaniesRequestFieldCreditTypeIDs             = big.NewInt(1 << 0)
-	listCompaniesRequestFieldIDs                       = big.NewInt(1 << 1)
-	listCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 2)
-	listCompaniesRequestFieldPlanID                    = big.NewInt(1 << 3)
-	listCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 4)
-	listCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 5)
-	listCompaniesRequestFieldQ                         = big.NewInt(1 << 6)
-	listCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 7)
-	listCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 8)
-	listCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 9)
-	listCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 10)
-	listCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 11)
-	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 12)
-	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 13)
-	listCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 14)
-	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 15)
-	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 16)
-	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 17)
+	listCompaniesRequestFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
+	listCompaniesRequestFieldIDs                       = big.NewInt(1 << 2)
+	listCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 3)
+	listCompaniesRequestFieldPlanID                    = big.NewInt(1 << 4)
+	listCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 5)
+	listCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 6)
+	listCompaniesRequestFieldQ                         = big.NewInt(1 << 7)
+	listCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 8)
+	listCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 9)
+	listCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 10)
+	listCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 11)
+	listCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 12)
+	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 13)
+	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 14)
+	listCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 15)
+	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 16)
+	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 17)
+	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 18)
 )
 
 type ListCompaniesRequest struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
+	// Filter companies that have a pending scheduled downgrade
+	HasScheduledDowngrade *bool `json:"-" url:"has_scheduled_downgrade,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
 	// Filter companies that have monetized subscriptions
@@ -907,6 +920,13 @@ func (l *ListCompaniesRequest) require(field *big.Int) {
 func (l *ListCompaniesRequest) SetCreditTypeIDs(creditTypeIDs []*string) {
 	l.CreditTypeIDs = creditTypeIDs
 	l.require(listCompaniesRequestFieldCreditTypeIDs)
+}
+
+// SetHasScheduledDowngrade sets the HasScheduledDowngrade field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetHasScheduledDowngrade(hasScheduledDowngrade *bool) {
+	l.HasScheduledDowngrade = hasScheduledDowngrade
+	l.require(listCompaniesRequestFieldHasScheduledDowngrade)
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -1237,11 +1257,11 @@ var (
 )
 
 type ListPlanChangesRequest struct {
-	Action         *string   `json:"-" url:"action,omitempty"`
-	BasePlanAction *string   `json:"-" url:"base_plan_action,omitempty"`
-	CompanyID      *string   `json:"-" url:"company_id,omitempty"`
-	CompanyIDs     []*string `json:"-" url:"company_ids,omitempty"`
-	PlanIDs        []*string `json:"-" url:"plan_ids,omitempty"`
+	Action         *PlanChangeAction         `json:"-" url:"action,omitempty"`
+	BasePlanAction *PlanChangeBasePlanAction `json:"-" url:"base_plan_action,omitempty"`
+	CompanyID      *string                   `json:"-" url:"company_id,omitempty"`
+	CompanyIDs     []*string                 `json:"-" url:"company_ids,omitempty"`
+	PlanIDs        []*string                 `json:"-" url:"plan_ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1260,14 +1280,14 @@ func (l *ListPlanChangesRequest) require(field *big.Int) {
 
 // SetAction sets the Action field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesRequest) SetAction(action *string) {
+func (l *ListPlanChangesRequest) SetAction(action *PlanChangeAction) {
 	l.Action = action
 	l.require(listPlanChangesRequestFieldAction)
 }
 
 // SetBasePlanAction sets the BasePlanAction field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesRequest) SetBasePlanAction(basePlanAction *string) {
+func (l *ListPlanChangesRequest) SetBasePlanAction(basePlanAction *PlanChangeBasePlanAction) {
 	l.BasePlanAction = basePlanAction
 	l.require(listPlanChangesRequestFieldBasePlanAction)
 }
@@ -3964,28 +3984,31 @@ func (u *UserDetailResponseData) String() string {
 // Input parameters
 var (
 	countCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 0)
-	countCompaniesParamsFieldIDs                       = big.NewInt(1 << 1)
-	countCompaniesParamsFieldLimit                     = big.NewInt(1 << 2)
-	countCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 3)
-	countCompaniesParamsFieldOffset                    = big.NewInt(1 << 4)
-	countCompaniesParamsFieldPlanID                    = big.NewInt(1 << 5)
-	countCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 6)
-	countCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 7)
-	countCompaniesParamsFieldQ                         = big.NewInt(1 << 8)
-	countCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 9)
-	countCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 10)
-	countCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 11)
-	countCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 12)
-	countCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 13)
-	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 14)
-	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 15)
-	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 16)
-	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 17)
+	countCompaniesParamsFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
+	countCompaniesParamsFieldIDs                       = big.NewInt(1 << 2)
+	countCompaniesParamsFieldLimit                     = big.NewInt(1 << 3)
+	countCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 4)
+	countCompaniesParamsFieldOffset                    = big.NewInt(1 << 5)
+	countCompaniesParamsFieldPlanID                    = big.NewInt(1 << 6)
+	countCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 7)
+	countCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 8)
+	countCompaniesParamsFieldQ                         = big.NewInt(1 << 9)
+	countCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 10)
+	countCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 11)
+	countCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 12)
+	countCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 13)
+	countCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 14)
+	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 15)
+	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 16)
+	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 17)
+	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 18)
 )
 
 type CountCompaniesParams struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
+	// Filter companies that have a pending scheduled downgrade
+	HasScheduledDowngrade *bool `json:"has_scheduled_downgrade,omitempty" url:"has_scheduled_downgrade,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -4033,6 +4056,13 @@ func (c *CountCompaniesParams) GetCreditTypeIDs() []string {
 		return nil
 	}
 	return c.CreditTypeIDs
+}
+
+func (c *CountCompaniesParams) GetHasScheduledDowngrade() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.HasScheduledDowngrade
 }
 
 func (c *CountCompaniesParams) GetIDs() []string {
@@ -4173,6 +4203,13 @@ func (c *CountCompaniesParams) require(field *big.Int) {
 func (c *CountCompaniesParams) SetCreditTypeIDs(creditTypeIDs []string) {
 	c.CreditTypeIDs = creditTypeIDs
 	c.require(countCompaniesParamsFieldCreditTypeIDs)
+}
+
+// SetHasScheduledDowngrade sets the HasScheduledDowngrade field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetHasScheduledDowngrade(hasScheduledDowngrade *bool) {
+	c.HasScheduledDowngrade = hasScheduledDowngrade
+	c.require(countCompaniesParamsFieldHasScheduledDowngrade)
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -7705,28 +7742,31 @@ func (g *GetUserResponse) String() string {
 // Input parameters
 var (
 	listCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 0)
-	listCompaniesParamsFieldIDs                       = big.NewInt(1 << 1)
-	listCompaniesParamsFieldLimit                     = big.NewInt(1 << 2)
-	listCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 3)
-	listCompaniesParamsFieldOffset                    = big.NewInt(1 << 4)
-	listCompaniesParamsFieldPlanID                    = big.NewInt(1 << 5)
-	listCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 6)
-	listCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 7)
-	listCompaniesParamsFieldQ                         = big.NewInt(1 << 8)
-	listCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 9)
-	listCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 10)
-	listCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 11)
-	listCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 12)
-	listCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 13)
-	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 14)
-	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 15)
-	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 16)
-	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 17)
+	listCompaniesParamsFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
+	listCompaniesParamsFieldIDs                       = big.NewInt(1 << 2)
+	listCompaniesParamsFieldLimit                     = big.NewInt(1 << 3)
+	listCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 4)
+	listCompaniesParamsFieldOffset                    = big.NewInt(1 << 5)
+	listCompaniesParamsFieldPlanID                    = big.NewInt(1 << 6)
+	listCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 7)
+	listCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 8)
+	listCompaniesParamsFieldQ                         = big.NewInt(1 << 9)
+	listCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 10)
+	listCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 11)
+	listCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 12)
+	listCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 13)
+	listCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 14)
+	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 15)
+	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 16)
+	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 17)
+	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 18)
 )
 
 type ListCompaniesParams struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
+	// Filter companies that have a pending scheduled downgrade
+	HasScheduledDowngrade *bool `json:"has_scheduled_downgrade,omitempty" url:"has_scheduled_downgrade,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -7774,6 +7814,13 @@ func (l *ListCompaniesParams) GetCreditTypeIDs() []string {
 		return nil
 	}
 	return l.CreditTypeIDs
+}
+
+func (l *ListCompaniesParams) GetHasScheduledDowngrade() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.HasScheduledDowngrade
 }
 
 func (l *ListCompaniesParams) GetIDs() []string {
@@ -7914,6 +7961,13 @@ func (l *ListCompaniesParams) require(field *big.Int) {
 func (l *ListCompaniesParams) SetCreditTypeIDs(creditTypeIDs []string) {
 	l.CreditTypeIDs = creditTypeIDs
 	l.require(listCompaniesParamsFieldCreditTypeIDs)
+}
+
+// SetHasScheduledDowngrade sets the HasScheduledDowngrade field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetHasScheduledDowngrade(hasScheduledDowngrade *bool) {
+	l.HasScheduledDowngrade = hasScheduledDowngrade
+	l.require(listCompaniesParamsFieldHasScheduledDowngrade)
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -8962,10 +9016,10 @@ var (
 )
 
 type ListPlanChangesParams struct {
-	Action         *string  `json:"action,omitempty" url:"action,omitempty"`
-	BasePlanAction *string  `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
-	CompanyID      *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
-	CompanyIDs     []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	Action         *PlanChangeAction         `json:"action,omitempty" url:"action,omitempty"`
+	BasePlanAction *PlanChangeBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
+	CompanyID      *string                   `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyIDs     []string                  `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -8979,14 +9033,14 @@ type ListPlanChangesParams struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *ListPlanChangesParams) GetAction() *string {
+func (l *ListPlanChangesParams) GetAction() *PlanChangeAction {
 	if l == nil {
 		return nil
 	}
 	return l.Action
 }
 
-func (l *ListPlanChangesParams) GetBasePlanAction() *string {
+func (l *ListPlanChangesParams) GetBasePlanAction() *PlanChangeBasePlanAction {
 	if l == nil {
 		return nil
 	}
@@ -9044,14 +9098,14 @@ func (l *ListPlanChangesParams) require(field *big.Int) {
 
 // SetAction sets the Action field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesParams) SetAction(action *string) {
+func (l *ListPlanChangesParams) SetAction(action *PlanChangeAction) {
 	l.Action = action
 	l.require(listPlanChangesParamsFieldAction)
 }
 
 // SetBasePlanAction sets the BasePlanAction field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListPlanChangesParams) SetBasePlanAction(basePlanAction *string) {
+func (l *ListPlanChangesParams) SetBasePlanAction(basePlanAction *PlanChangeBasePlanAction) {
 	l.BasePlanAction = basePlanAction
 	l.require(listPlanChangesParamsFieldBasePlanAction)
 }

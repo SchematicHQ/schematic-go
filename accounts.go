@@ -274,6 +274,61 @@ func (c *CreateEnvironmentRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
+	listAccountMembersRequestFieldIDs    = big.NewInt(1 << 0)
+	listAccountMembersRequestFieldQ      = big.NewInt(1 << 1)
+	listAccountMembersRequestFieldLimit  = big.NewInt(1 << 2)
+	listAccountMembersRequestFieldOffset = big.NewInt(1 << 3)
+)
+
+type ListAccountMembersRequest struct {
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Search filter
+	Q *string `json:"-" url:"q,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListAccountMembersRequest) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetIDs sets the IDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersRequest) SetIDs(ids []*string) {
+	l.IDs = ids
+	l.require(listAccountMembersRequestFieldIDs)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersRequest) SetQ(q *string) {
+	l.Q = q
+	l.require(listAccountMembersRequestFieldQ)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listAccountMembersRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listAccountMembersRequestFieldOffset)
+}
+
+var (
 	listAPIKeysRequestFieldEnvironmentID      = big.NewInt(1 << 0)
 	listAPIKeysRequestFieldRequireEnvironment = big.NewInt(1 << 1)
 	listAPIKeysRequestFieldLimit              = big.NewInt(1 << 2)
@@ -451,6 +506,297 @@ func (l *ListEnvironmentsRequest) SetLimit(limit *int64) {
 func (l *ListEnvironmentsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEnvironmentsRequestFieldOffset)
+}
+
+type AccountMemberPermission string
+
+const (
+	AccountMemberPermissionBillingCreditsEdit   AccountMemberPermission = "billing_credits_edit"
+	AccountMemberPermissionCompaniesEdit        AccountMemberPermission = "companies_edit"
+	AccountMemberPermissionCompanyUsersEdit     AccountMemberPermission = "company_users_edit"
+	AccountMemberPermissionComponentsEdit       AccountMemberPermission = "components_edit"
+	AccountMemberPermissionDataExportsEdit      AccountMemberPermission = "data_exports_edit"
+	AccountMemberPermissionFeaturesEdit         AccountMemberPermission = "features_edit"
+	AccountMemberPermissionFlagRulesEdit        AccountMemberPermission = "flag_rules_edit"
+	AccountMemberPermissionFlagsEdit            AccountMemberPermission = "flags_edit"
+	AccountMemberPermissionOverridesEdit        AccountMemberPermission = "overrides_edit"
+	AccountMemberPermissionPlanBillingEdit      AccountMemberPermission = "plan_billing_edit"
+	AccountMemberPermissionPlanEntitlementsEdit AccountMemberPermission = "plan_entitlements_edit"
+	AccountMemberPermissionPlanVersionsEdit     AccountMemberPermission = "plan_versions_edit"
+	AccountMemberPermissionPlansEdit            AccountMemberPermission = "plans_edit"
+	AccountMemberPermissionWebhooksEdit         AccountMemberPermission = "webhooks_edit"
+	AccountMemberPermissionWebhooksRevealSecret AccountMemberPermission = "webhooks_reveal_secret"
+)
+
+func NewAccountMemberPermissionFromString(s string) (AccountMemberPermission, error) {
+	switch s {
+	case "billing_credits_edit":
+		return AccountMemberPermissionBillingCreditsEdit, nil
+	case "companies_edit":
+		return AccountMemberPermissionCompaniesEdit, nil
+	case "company_users_edit":
+		return AccountMemberPermissionCompanyUsersEdit, nil
+	case "components_edit":
+		return AccountMemberPermissionComponentsEdit, nil
+	case "data_exports_edit":
+		return AccountMemberPermissionDataExportsEdit, nil
+	case "features_edit":
+		return AccountMemberPermissionFeaturesEdit, nil
+	case "flag_rules_edit":
+		return AccountMemberPermissionFlagRulesEdit, nil
+	case "flags_edit":
+		return AccountMemberPermissionFlagsEdit, nil
+	case "overrides_edit":
+		return AccountMemberPermissionOverridesEdit, nil
+	case "plan_billing_edit":
+		return AccountMemberPermissionPlanBillingEdit, nil
+	case "plan_entitlements_edit":
+		return AccountMemberPermissionPlanEntitlementsEdit, nil
+	case "plan_versions_edit":
+		return AccountMemberPermissionPlanVersionsEdit, nil
+	case "plans_edit":
+		return AccountMemberPermissionPlansEdit, nil
+	case "webhooks_edit":
+		return AccountMemberPermissionWebhooksEdit, nil
+	case "webhooks_reveal_secret":
+		return AccountMemberPermissionWebhooksRevealSecret, nil
+	}
+	var t AccountMemberPermission
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AccountMemberPermission) Ptr() *AccountMemberPermission {
+	return &a
+}
+
+var (
+	accountMemberResponseDataFieldCreatedAt   = big.NewInt(1 << 0)
+	accountMemberResponseDataFieldEmail       = big.NewInt(1 << 1)
+	accountMemberResponseDataFieldID          = big.NewInt(1 << 2)
+	accountMemberResponseDataFieldImageURL    = big.NewInt(1 << 3)
+	accountMemberResponseDataFieldName        = big.NewInt(1 << 4)
+	accountMemberResponseDataFieldPermissions = big.NewInt(1 << 5)
+	accountMemberResponseDataFieldRole        = big.NewInt(1 << 6)
+	accountMemberResponseDataFieldUpdatedAt   = big.NewInt(1 << 7)
+)
+
+type AccountMemberResponseData struct {
+	CreatedAt   time.Time                            `json:"created_at" url:"created_at"`
+	Email       *string                              `json:"email,omitempty" url:"email,omitempty"`
+	ID          string                               `json:"id" url:"id"`
+	ImageURL    *string                              `json:"image_url,omitempty" url:"image_url,omitempty"`
+	Name        *string                              `json:"name,omitempty" url:"name,omitempty"`
+	Permissions map[string][]AccountMemberPermission `json:"permissions" url:"permissions"`
+	Role        *AccountMemberRole                   `json:"role,omitempty" url:"role,omitempty"`
+	UpdatedAt   time.Time                            `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AccountMemberResponseData) GetCreatedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.CreatedAt
+}
+
+func (a *AccountMemberResponseData) GetEmail() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Email
+}
+
+func (a *AccountMemberResponseData) GetID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ID
+}
+
+func (a *AccountMemberResponseData) GetImageURL() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ImageURL
+}
+
+func (a *AccountMemberResponseData) GetName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Name
+}
+
+func (a *AccountMemberResponseData) GetPermissions() map[string][]AccountMemberPermission {
+	if a == nil {
+		return nil
+	}
+	return a.Permissions
+}
+
+func (a *AccountMemberResponseData) GetRole() *AccountMemberRole {
+	if a == nil {
+		return nil
+	}
+	return a.Role
+}
+
+func (a *AccountMemberResponseData) GetUpdatedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.UpdatedAt
+}
+
+func (a *AccountMemberResponseData) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AccountMemberResponseData) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetCreatedAt(createdAt time.Time) {
+	a.CreatedAt = createdAt
+	a.require(accountMemberResponseDataFieldCreatedAt)
+}
+
+// SetEmail sets the Email field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetEmail(email *string) {
+	a.Email = email
+	a.require(accountMemberResponseDataFieldEmail)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetID(id string) {
+	a.ID = id
+	a.require(accountMemberResponseDataFieldID)
+}
+
+// SetImageURL sets the ImageURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetImageURL(imageURL *string) {
+	a.ImageURL = imageURL
+	a.require(accountMemberResponseDataFieldImageURL)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetName(name *string) {
+	a.Name = name
+	a.require(accountMemberResponseDataFieldName)
+}
+
+// SetPermissions sets the Permissions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetPermissions(permissions map[string][]AccountMemberPermission) {
+	a.Permissions = permissions
+	a.require(accountMemberResponseDataFieldPermissions)
+}
+
+// SetRole sets the Role field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetRole(role *AccountMemberRole) {
+	a.Role = role
+	a.require(accountMemberResponseDataFieldRole)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetUpdatedAt(updatedAt time.Time) {
+	a.UpdatedAt = updatedAt
+	a.require(accountMemberResponseDataFieldUpdatedAt)
+}
+
+func (a *AccountMemberResponseData) UnmarshalJSON(data []byte) error {
+	type embed AccountMemberResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = AccountMemberResponseData(unmarshaler.embed)
+	a.CreatedAt = unmarshaler.CreatedAt.Time()
+	a.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AccountMemberResponseData) MarshalJSON() ([]byte, error) {
+	type embed AccountMemberResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*a),
+		CreatedAt: internal.NewDateTime(a.CreatedAt),
+		UpdatedAt: internal.NewDateTime(a.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AccountMemberResponseData) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AccountMemberRole string
+
+const (
+	AccountMemberRoleAdmin  AccountMemberRole = "admin"
+	AccountMemberRoleMember AccountMemberRole = "member"
+)
+
+func NewAccountMemberRoleFromString(s string) (AccountMemberRole, error) {
+	switch s {
+	case "admin":
+		return AccountMemberRoleAdmin, nil
+	case "member":
+		return AccountMemberRoleMember, nil
+	}
+	var t AccountMemberRole
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AccountMemberRole) Ptr() *AccountMemberRole {
+	return &a
 }
 
 var (
@@ -2659,6 +3005,107 @@ func (d *DeleteEnvironmentResponse) String() string {
 }
 
 var (
+	getAccountMemberResponseFieldData   = big.NewInt(1 << 0)
+	getAccountMemberResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetAccountMemberResponse struct {
+	Data *AccountMemberResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetAccountMemberResponse) GetData() *AccountMemberResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetAccountMemberResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetAccountMemberResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetAccountMemberResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetAccountMemberResponse) SetData(data *AccountMemberResponseData) {
+	g.Data = data
+	g.require(getAccountMemberResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetAccountMemberResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getAccountMemberResponseFieldParams)
+}
+
+func (g *GetAccountMemberResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetAccountMemberResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetAccountMemberResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetAccountMemberResponse) MarshalJSON() ([]byte, error) {
+	type embed GetAccountMemberResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetAccountMemberResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
 	getAPIKeyResponseFieldData   = big.NewInt(1 << 0)
 	getAPIKeyResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -3060,6 +3507,243 @@ func (g *GetWhoAmIResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+var (
+	listAccountMembersParamsFieldIDs    = big.NewInt(1 << 0)
+	listAccountMembersParamsFieldLimit  = big.NewInt(1 << 1)
+	listAccountMembersParamsFieldOffset = big.NewInt(1 << 2)
+	listAccountMembersParamsFieldQ      = big.NewInt(1 << 3)
+)
+
+type ListAccountMembersParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search filter
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListAccountMembersParams) GetIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.IDs
+}
+
+func (l *ListAccountMembersParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListAccountMembersParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListAccountMembersParams) GetQ() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Q
+}
+
+func (l *ListAccountMembersParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListAccountMembersParams) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetIDs sets the IDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersParams) SetIDs(ids []string) {
+	l.IDs = ids
+	l.require(listAccountMembersParamsFieldIDs)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listAccountMembersParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listAccountMembersParamsFieldOffset)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersParams) SetQ(q *string) {
+	l.Q = q
+	l.require(listAccountMembersParamsFieldQ)
+}
+
+func (l *ListAccountMembersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListAccountMembersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListAccountMembersParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListAccountMembersParams) MarshalJSON() ([]byte, error) {
+	type embed ListAccountMembersParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListAccountMembersParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listAccountMembersResponseFieldData   = big.NewInt(1 << 0)
+	listAccountMembersResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListAccountMembersResponse struct {
+	Data []*AccountMemberResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListAccountMembersParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListAccountMembersResponse) GetData() []*AccountMemberResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListAccountMembersResponse) GetParams() *ListAccountMembersParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListAccountMembersResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListAccountMembersResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersResponse) SetData(data []*AccountMemberResponseData) {
+	l.Data = data
+	l.require(listAccountMembersResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersResponse) SetParams(params *ListAccountMembersParams) {
+	l.Params = params
+	l.require(listAccountMembersResponseFieldParams)
+}
+
+func (l *ListAccountMembersResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListAccountMembersResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListAccountMembersResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListAccountMembersResponse) MarshalJSON() ([]byte, error) {
+	type embed ListAccountMembersResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListAccountMembersResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 // Input parameters

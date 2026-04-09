@@ -8,17 +8,15 @@ import (
 	"github.com/schematichq/rulesengine"
 )
 
-// PartialCompany merges a partial JSON update into an existing Company.
-// It copies the existing company by value, then applies only the fields
-// present in partialJSON. The "id" field must be present.
+// PartialCompany merges a partial JSON update into an existing Company and
+// returns the result. The original is not mutated. Each key in partialJSON
+// names a Company JSON field; the SDK dispatches per-field merge semantics:
+// maps shallow-merge, keyed collections upsert by their natural key, and
+// scalar fields replace.
 func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) (*rulesengine.Company, error) {
 	var fields map[string]json.RawMessage
 	if err := json.Unmarshal(partialJSON, &fields); err != nil {
 		return nil, fmt.Errorf("unmarshal partial company fields: %w", err)
-	}
-
-	if _, ok := fields["id"]; !ok {
-		return nil, fmt.Errorf("partial company message missing required field: id")
 	}
 
 	merged := DeepCopyCompany(existing)
@@ -42,18 +40,18 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
 		case "billing_product_ids":
-			var bpIDs []string
-			if err := json.Unmarshal(raw, &bpIDs); err != nil {
+			var ids []string
+			if err := json.Unmarshal(raw, &ids); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
-			merged.BillingProductIDs = bpIDs
+			merged.BillingProductIDs = ids
 		case "credit_balances":
 			var cb map[string]float64
 			if err := json.Unmarshal(raw, &cb); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
 			if merged.CreditBalances == nil {
-				merged.CreditBalances = make(map[string]float64)
+				merged.CreditBalances = make(map[string]float64, len(cb))
 			}
 			maps.Copy(merged.CreditBalances, cb)
 		case "entitlements":
@@ -68,7 +66,7 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
 			if merged.Keys == nil {
-				merged.Keys = make(map[string]string)
+				merged.Keys = make(map[string]string, len(keys))
 			}
 			maps.Copy(merged.Keys, keys)
 		case "metrics":
@@ -78,17 +76,17 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 			}
 			merged.Metrics = upsertMetrics(merged.Metrics, incoming)
 		case "plan_ids":
-			var planIDs []string
-			if err := json.Unmarshal(raw, &planIDs); err != nil {
+			var ids []string
+			if err := json.Unmarshal(raw, &ids); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
-			merged.PlanIDs = planIDs
+			merged.PlanIDs = ids
 		case "plan_version_ids":
-			var pvIDs []string
-			if err := json.Unmarshal(raw, &pvIDs); err != nil {
+			var ids []string
+			if err := json.Unmarshal(raw, &ids); err != nil {
 				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
 			}
-			merged.PlanVersionIDs = pvIDs
+			merged.PlanVersionIDs = ids
 		case "rules":
 			var rules []*rulesengine.Rule
 			if err := json.Unmarshal(raw, &rules); err != nil {
@@ -194,8 +192,8 @@ func DeepCopyCompany(c *rulesengine.Company) *rulesengine.Company {
 		BillingProductIDs: append([]string{}, c.BillingProductIDs...),
 		PlanIDs:           append([]string{}, c.PlanIDs...),
 		PlanVersionIDs:    append([]string{}, c.PlanVersionIDs...),
-		Entitlements:      c.Entitlements,
-		Rules:             c.Rules,
+		Entitlements:      append([]*rulesengine.FeatureEntitlement{}, c.Entitlements...),
+		Rules:             append([]*rulesengine.Rule{}, c.Rules...),
 		Keys:              make(map[string]string),
 		Metrics:           make([]*rulesengine.CompanyMetric, 0, len(c.Metrics)),
 		Traits:            make([]*rulesengine.Trait, 0, len(c.Traits)),
@@ -312,3 +310,4 @@ func upsertMetrics(existing, incoming rulesengine.CompanyMetricCollection) rules
 
 	return result
 }
+

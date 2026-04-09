@@ -288,6 +288,10 @@ func (c *DataStreamClient) notifyPendingCompanyRequests(_ context.Context, keys 
 }
 
 func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
+	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
+		return c.handlePartialCompanyMessage(ctx, resp)
+	}
+
 	var company *rulesengine.Company
 	err := json.Unmarshal(resp.Data, &company)
 	if err != nil {
@@ -302,40 +306,6 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 		c.companyMu.Lock()
 		c.companyCache.deleteEntity(ctx, company, c.logger)
 		c.companyMu.Unlock()
-		return nil
-	}
-
-	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
-		id, err := ExtractIDFromJSON(resp.Data)
-		if err != nil {
-			return fmt.Errorf("failed to extract company ID from partial message: %v", err)
-		}
-
-		c.companyMu.Lock()
-		existing, found := c.companyCache.primaryCache.Get(ctx, c.companyCache.idCacheKey(id))
-		if !found || existing == nil {
-			c.companyMu.Unlock()
-			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial company '%s', skipping", id))
-			return nil
-		}
-		merged, mergeErr := PartialCompany(existing, resp.Data)
-		if mergeErr != nil {
-			c.companyMu.Unlock()
-			return fmt.Errorf("failed to merge partial company: %v", mergeErr)
-		}
-		company = merged
-		cacheResults, cacheErr := c.cacheCompanyForKeys(ctx, company)
-		c.companyMu.Unlock()
-
-		if cacheErr != nil {
-			return cacheErr
-		}
-		for cacheKey, err := range cacheResults {
-			if err != nil {
-				c.logger.Warn(ctx, fmt.Sprintf("Cache error for company key '%s': %v", cacheKey, err))
-			}
-		}
-		c.notifyPendingCompanyRequests(ctx, company.Keys, company)
 		return nil
 	}
 
@@ -357,6 +327,42 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 	// Notify pending requests with the company data
 	c.notifyPendingCompanyRequests(ctx, company.Keys, company)
 
+	return nil
+}
+
+func (c *DataStreamClient) handlePartialCompanyMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
+	if resp.EntityID == nil || *resp.EntityID == "" {
+		return fmt.Errorf("partial company message missing entity_id")
+	}
+
+	id := *resp.EntityID
+
+	c.companyMu.Lock()
+	existing, found := c.companyCache.primaryCache.Get(ctx, c.companyCache.idCacheKey(id))
+	if !found || existing == nil {
+		c.companyMu.Unlock()
+		c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial company '%s', skipping", id))
+		return nil
+	}
+
+	merged, err := PartialCompany(existing, resp.Data)
+	if err != nil {
+		c.companyMu.Unlock()
+		return fmt.Errorf("failed to merge partial company: %v", err)
+	}
+
+	cacheResults, cacheErr := c.cacheCompanyForKeys(ctx, merged)
+	c.companyMu.Unlock()
+
+	if cacheErr != nil {
+		return cacheErr
+	}
+	for cacheKey, err := range cacheResults {
+		if err != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Cache error for company key '%s': %v", cacheKey, err))
+		}
+	}
+	c.notifyPendingCompanyRequests(ctx, merged.Keys, merged)
 	return nil
 }
 

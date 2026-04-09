@@ -6843,6 +6843,107 @@ func (g *GetSingleBillingCreditResponse) String() string {
 }
 
 var (
+	getSingleBillingPlanCreditGrantResponseFieldData   = big.NewInt(1 << 0)
+	getSingleBillingPlanCreditGrantResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetSingleBillingPlanCreditGrantResponse struct {
+	Data *BillingPlanCreditGrantResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetSingleBillingPlanCreditGrantResponse) GetData() *BillingPlanCreditGrantResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetSingleBillingPlanCreditGrantResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetSingleBillingPlanCreditGrantResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetSingleBillingPlanCreditGrantResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetSingleBillingPlanCreditGrantResponse) SetData(data *BillingPlanCreditGrantResponseData) {
+	g.Data = data
+	g.require(getSingleBillingPlanCreditGrantResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetSingleBillingPlanCreditGrantResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getSingleBillingPlanCreditGrantResponseFieldParams)
+}
+
+func (g *GetSingleBillingPlanCreditGrantResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetSingleBillingPlanCreditGrantResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetSingleBillingPlanCreditGrantResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetSingleBillingPlanCreditGrantResponse) MarshalJSON() ([]byte, error) {
+	type embed GetSingleBillingPlanCreditGrantResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetSingleBillingPlanCreditGrantResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
 	grantBillingCreditsToCompanyResponseFieldData   = big.NewInt(1 << 0)
 	grantBillingCreditsToCompanyResponseFieldParams = big.NewInt(1 << 1)
 )

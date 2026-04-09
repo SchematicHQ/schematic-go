@@ -96,29 +96,30 @@ var (
 	createEntitlementInBundleRequestBodyFieldBillingThreshold        = big.NewInt(1 << 1)
 	createEntitlementInBundleRequestBodyFieldCreditConsumptionRate   = big.NewInt(1 << 2)
 	createEntitlementInBundleRequestBodyFieldCurrency                = big.NewInt(1 << 3)
-	createEntitlementInBundleRequestBodyFieldFeatureID               = big.NewInt(1 << 4)
-	createEntitlementInBundleRequestBodyFieldMetricPeriod            = big.NewInt(1 << 5)
-	createEntitlementInBundleRequestBodyFieldMetricPeriodMonthReset  = big.NewInt(1 << 6)
-	createEntitlementInBundleRequestBodyFieldMonthlyMeteredPriceID   = big.NewInt(1 << 7)
-	createEntitlementInBundleRequestBodyFieldMonthlyPriceTiers       = big.NewInt(1 << 8)
-	createEntitlementInBundleRequestBodyFieldMonthlyUnitPrice        = big.NewInt(1 << 9)
-	createEntitlementInBundleRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 10)
-	createEntitlementInBundleRequestBodyFieldOverageBillingProductID = big.NewInt(1 << 11)
-	createEntitlementInBundleRequestBodyFieldPlanID                  = big.NewInt(1 << 12)
-	createEntitlementInBundleRequestBodyFieldPlanVersionID           = big.NewInt(1 << 13)
-	createEntitlementInBundleRequestBodyFieldPriceBehavior           = big.NewInt(1 << 14)
-	createEntitlementInBundleRequestBodyFieldPriceTiers              = big.NewInt(1 << 15)
-	createEntitlementInBundleRequestBodyFieldSoftLimit               = big.NewInt(1 << 16)
-	createEntitlementInBundleRequestBodyFieldTierMode                = big.NewInt(1 << 17)
-	createEntitlementInBundleRequestBodyFieldValueBool               = big.NewInt(1 << 18)
-	createEntitlementInBundleRequestBodyFieldValueCreditID           = big.NewInt(1 << 19)
-	createEntitlementInBundleRequestBodyFieldValueNumeric            = big.NewInt(1 << 20)
-	createEntitlementInBundleRequestBodyFieldValueTraitID            = big.NewInt(1 << 21)
-	createEntitlementInBundleRequestBodyFieldValueType               = big.NewInt(1 << 22)
-	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 23)
-	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 24)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 25)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 26)
+	createEntitlementInBundleRequestBodyFieldCurrencyPrices          = big.NewInt(1 << 4)
+	createEntitlementInBundleRequestBodyFieldFeatureID               = big.NewInt(1 << 5)
+	createEntitlementInBundleRequestBodyFieldMetricPeriod            = big.NewInt(1 << 6)
+	createEntitlementInBundleRequestBodyFieldMetricPeriodMonthReset  = big.NewInt(1 << 7)
+	createEntitlementInBundleRequestBodyFieldMonthlyMeteredPriceID   = big.NewInt(1 << 8)
+	createEntitlementInBundleRequestBodyFieldMonthlyPriceTiers       = big.NewInt(1 << 9)
+	createEntitlementInBundleRequestBodyFieldMonthlyUnitPrice        = big.NewInt(1 << 10)
+	createEntitlementInBundleRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 11)
+	createEntitlementInBundleRequestBodyFieldOverageBillingProductID = big.NewInt(1 << 12)
+	createEntitlementInBundleRequestBodyFieldPlanID                  = big.NewInt(1 << 13)
+	createEntitlementInBundleRequestBodyFieldPlanVersionID           = big.NewInt(1 << 14)
+	createEntitlementInBundleRequestBodyFieldPriceBehavior           = big.NewInt(1 << 15)
+	createEntitlementInBundleRequestBodyFieldPriceTiers              = big.NewInt(1 << 16)
+	createEntitlementInBundleRequestBodyFieldSoftLimit               = big.NewInt(1 << 17)
+	createEntitlementInBundleRequestBodyFieldTierMode                = big.NewInt(1 << 18)
+	createEntitlementInBundleRequestBodyFieldValueBool               = big.NewInt(1 << 19)
+	createEntitlementInBundleRequestBodyFieldValueCreditID           = big.NewInt(1 << 20)
+	createEntitlementInBundleRequestBodyFieldValueNumeric            = big.NewInt(1 << 21)
+	createEntitlementInBundleRequestBodyFieldValueTraitID            = big.NewInt(1 << 22)
+	createEntitlementInBundleRequestBodyFieldValueType               = big.NewInt(1 << 23)
+	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 24)
+	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 25)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 26)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 27)
 )
 
 type CreateEntitlementInBundleRequestBody struct {
@@ -126,6 +127,7 @@ type CreateEntitlementInBundleRequestBody struct {
 	BillingThreshold        *int64                                                      `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
 	CreditConsumptionRate   *float64                                                    `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
 	Currency                *string                                                     `json:"currency,omitempty" url:"currency,omitempty"`
+	CurrencyPrices          []*CurrencyPriceRequestBody                                 `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
 	FeatureID               string                                                      `json:"feature_id" url:"feature_id"`
 	MetricPeriod            *CreateEntitlementInBundleRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset  *CreateEntitlementInBundleRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
@@ -184,6 +186,13 @@ func (c *CreateEntitlementInBundleRequestBody) GetCurrency() *string {
 		return nil
 	}
 	return c.Currency
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetCurrencyPrices() []*CurrencyPriceRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.CurrencyPrices
 }
 
 func (c *CreateEntitlementInBundleRequestBody) GetFeatureID() string {
@@ -387,6 +396,13 @@ func (c *CreateEntitlementInBundleRequestBody) SetCreditConsumptionRate(creditCo
 func (c *CreateEntitlementInBundleRequestBody) SetCurrency(currency *string) {
 	c.Currency = currency
 	c.require(createEntitlementInBundleRequestBodyFieldCurrency)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetCurrencyPrices(currencyPrices []*CurrencyPriceRequestBody) {
+	c.CurrencyPrices = currencyPrices
+	c.require(createEntitlementInBundleRequestBodyFieldCurrencyPrices)
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;

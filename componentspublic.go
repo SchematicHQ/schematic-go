@@ -11,69 +11,71 @@ import (
 )
 
 var (
-	planViewPublicResponseDataFieldActiveVersion        = big.NewInt(1 << 0)
-	planViewPublicResponseDataFieldAudienceType         = big.NewInt(1 << 1)
-	planViewPublicResponseDataFieldBillingProduct       = big.NewInt(1 << 2)
-	planViewPublicResponseDataFieldChargeType           = big.NewInt(1 << 3)
-	planViewPublicResponseDataFieldCompanyCount         = big.NewInt(1 << 4)
-	planViewPublicResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 5)
-	planViewPublicResponseDataFieldControlledBy         = big.NewInt(1 << 6)
-	planViewPublicResponseDataFieldCreatedAt            = big.NewInt(1 << 7)
-	planViewPublicResponseDataFieldCurrencyPrices       = big.NewInt(1 << 8)
-	planViewPublicResponseDataFieldCustom               = big.NewInt(1 << 9)
-	planViewPublicResponseDataFieldCustomPlanConfig     = big.NewInt(1 << 10)
-	planViewPublicResponseDataFieldDescription          = big.NewInt(1 << 11)
-	planViewPublicResponseDataFieldDraftVersion         = big.NewInt(1 << 12)
-	planViewPublicResponseDataFieldEntitlements         = big.NewInt(1 << 13)
-	planViewPublicResponseDataFieldFeatures             = big.NewInt(1 << 14)
-	planViewPublicResponseDataFieldIcon                 = big.NewInt(1 << 15)
-	planViewPublicResponseDataFieldID                   = big.NewInt(1 << 16)
-	planViewPublicResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 17)
-	planViewPublicResponseDataFieldIsCustom             = big.NewInt(1 << 18)
-	planViewPublicResponseDataFieldIsDefault            = big.NewInt(1 << 19)
-	planViewPublicResponseDataFieldIsFree               = big.NewInt(1 << 20)
-	planViewPublicResponseDataFieldIsTrialable          = big.NewInt(1 << 21)
-	planViewPublicResponseDataFieldMonthlyPrice         = big.NewInt(1 << 22)
-	planViewPublicResponseDataFieldName                 = big.NewInt(1 << 23)
-	planViewPublicResponseDataFieldOneTimePrice         = big.NewInt(1 << 24)
-	planViewPublicResponseDataFieldPlanType             = big.NewInt(1 << 25)
-	planViewPublicResponseDataFieldTrialDays            = big.NewInt(1 << 26)
-	planViewPublicResponseDataFieldUpdatedAt            = big.NewInt(1 << 27)
-	planViewPublicResponseDataFieldVersions             = big.NewInt(1 << 28)
-	planViewPublicResponseDataFieldYearlyPrice          = big.NewInt(1 << 29)
+	planViewPublicResponseDataFieldActiveVersion         = big.NewInt(1 << 0)
+	planViewPublicResponseDataFieldAudienceType          = big.NewInt(1 << 1)
+	planViewPublicResponseDataFieldBillingLinkedResource = big.NewInt(1 << 2)
+	planViewPublicResponseDataFieldBillingProduct        = big.NewInt(1 << 3)
+	planViewPublicResponseDataFieldChargeType            = big.NewInt(1 << 4)
+	planViewPublicResponseDataFieldCompanyCount          = big.NewInt(1 << 5)
+	planViewPublicResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 6)
+	planViewPublicResponseDataFieldControlledBy          = big.NewInt(1 << 7)
+	planViewPublicResponseDataFieldCreatedAt             = big.NewInt(1 << 8)
+	planViewPublicResponseDataFieldCurrencyPrices        = big.NewInt(1 << 9)
+	planViewPublicResponseDataFieldCustom                = big.NewInt(1 << 10)
+	planViewPublicResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 11)
+	planViewPublicResponseDataFieldDescription           = big.NewInt(1 << 12)
+	planViewPublicResponseDataFieldDraftVersion          = big.NewInt(1 << 13)
+	planViewPublicResponseDataFieldEntitlements          = big.NewInt(1 << 14)
+	planViewPublicResponseDataFieldFeatures              = big.NewInt(1 << 15)
+	planViewPublicResponseDataFieldIcon                  = big.NewInt(1 << 16)
+	planViewPublicResponseDataFieldID                    = big.NewInt(1 << 17)
+	planViewPublicResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 18)
+	planViewPublicResponseDataFieldIsCustom              = big.NewInt(1 << 19)
+	planViewPublicResponseDataFieldIsDefault             = big.NewInt(1 << 20)
+	planViewPublicResponseDataFieldIsFree                = big.NewInt(1 << 21)
+	planViewPublicResponseDataFieldIsTrialable           = big.NewInt(1 << 22)
+	planViewPublicResponseDataFieldMonthlyPrice          = big.NewInt(1 << 23)
+	planViewPublicResponseDataFieldName                  = big.NewInt(1 << 24)
+	planViewPublicResponseDataFieldOneTimePrice          = big.NewInt(1 << 25)
+	planViewPublicResponseDataFieldPlanType              = big.NewInt(1 << 26)
+	planViewPublicResponseDataFieldTrialDays             = big.NewInt(1 << 27)
+	planViewPublicResponseDataFieldUpdatedAt             = big.NewInt(1 << 28)
+	planViewPublicResponseDataFieldVersions              = big.NewInt(1 << 29)
+	planViewPublicResponseDataFieldYearlyPrice           = big.NewInt(1 << 30)
 )
 
 type PlanViewPublicResponseData struct {
-	ActiveVersion        *PlanVersionResponseData          `json:"active_version,omitempty" url:"active_version,omitempty"`
-	AudienceType         *string                           `json:"audience_type,omitempty" url:"audience_type,omitempty"`
-	BillingProduct       *BillingProductDetailResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
-	ChargeType           ChargeType                        `json:"charge_type" url:"charge_type"`
-	CompanyCount         int64                             `json:"company_count" url:"company_count"`
-	CompatiblePlanIDs    []string                          `json:"compatible_plan_ids" url:"compatible_plan_ids"`
-	ControlledBy         PlanControlledByType              `json:"controlled_by" url:"controlled_by"`
-	CreatedAt            time.Time                         `json:"created_at" url:"created_at"`
-	CurrencyPrices       []*PlanCurrencyPricesResponseData `json:"currency_prices" url:"currency_prices"`
-	Custom               bool                              `json:"custom" url:"custom"`
-	CustomPlanConfig     *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
-	Description          string                            `json:"description" url:"description"`
-	DraftVersion         *PlanVersionResponseData          `json:"draft_version,omitempty" url:"draft_version,omitempty"`
-	Entitlements         []*PlanEntitlementResponseData    `json:"entitlements" url:"entitlements"`
-	Features             []*FeatureDetailResponseData      `json:"features" url:"features"`
-	Icon                 string                            `json:"icon" url:"icon"`
-	ID                   string                            `json:"id" url:"id"`
-	IncludedCreditGrants []*PlanCreditGrantView            `json:"included_credit_grants" url:"included_credit_grants"`
-	IsCustom             bool                              `json:"is_custom" url:"is_custom"`
-	IsDefault            bool                              `json:"is_default" url:"is_default"`
-	IsFree               bool                              `json:"is_free" url:"is_free"`
-	IsTrialable          bool                              `json:"is_trialable" url:"is_trialable"`
-	MonthlyPrice         *BillingPriceResponseData         `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	Name                 string                            `json:"name" url:"name"`
-	OneTimePrice         *BillingPriceResponseData         `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
-	PlanType             PlanType                          `json:"plan_type" url:"plan_type"`
-	TrialDays            *int64                            `json:"trial_days,omitempty" url:"trial_days,omitempty"`
-	UpdatedAt            time.Time                         `json:"updated_at" url:"updated_at"`
-	Versions             []*PlanVersionResponseData        `json:"versions" url:"versions"`
-	YearlyPrice          *BillingPriceResponseData         `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+	ActiveVersion         *PlanVersionResponseData           `json:"active_version,omitempty" url:"active_version,omitempty"`
+	AudienceType          *string                            `json:"audience_type,omitempty" url:"audience_type,omitempty"`
+	BillingLinkedResource *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
+	BillingProduct        *BillingProductDetailResponseData  `json:"billing_product,omitempty" url:"billing_product,omitempty"`
+	ChargeType            ChargeType                         `json:"charge_type" url:"charge_type"`
+	CompanyCount          int64                              `json:"company_count" url:"company_count"`
+	CompatiblePlanIDs     []string                           `json:"compatible_plan_ids" url:"compatible_plan_ids"`
+	ControlledBy          BillingProviderType                `json:"controlled_by" url:"controlled_by"`
+	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
+	CurrencyPrices        []*PlanCurrencyPricesResponseData  `json:"currency_prices" url:"currency_prices"`
+	Custom                bool                               `json:"custom" url:"custom"`
+	CustomPlanConfig      *CustomPlanConfig                  `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
+	Description           string                             `json:"description" url:"description"`
+	DraftVersion          *PlanVersionResponseData           `json:"draft_version,omitempty" url:"draft_version,omitempty"`
+	Entitlements          []*PlanEntitlementResponseData     `json:"entitlements" url:"entitlements"`
+	Features              []*FeatureDetailResponseData       `json:"features" url:"features"`
+	Icon                  PlanIcon                           `json:"icon" url:"icon"`
+	ID                    string                             `json:"id" url:"id"`
+	IncludedCreditGrants  []*PlanCreditGrantView             `json:"included_credit_grants" url:"included_credit_grants"`
+	IsCustom              bool                               `json:"is_custom" url:"is_custom"`
+	IsDefault             bool                               `json:"is_default" url:"is_default"`
+	IsFree                bool                               `json:"is_free" url:"is_free"`
+	IsTrialable           bool                               `json:"is_trialable" url:"is_trialable"`
+	MonthlyPrice          *BillingPriceResponseData          `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	Name                  string                             `json:"name" url:"name"`
+	OneTimePrice          *BillingPriceResponseData          `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	PlanType              PlanType                           `json:"plan_type" url:"plan_type"`
+	TrialDays             *int64                             `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	UpdatedAt             time.Time                          `json:"updated_at" url:"updated_at"`
+	Versions              []*PlanVersionResponseData         `json:"versions" url:"versions"`
+	YearlyPrice           *BillingPriceResponseData          `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -94,6 +96,13 @@ func (p *PlanViewPublicResponseData) GetAudienceType() *string {
 		return nil
 	}
 	return p.AudienceType
+}
+
+func (p *PlanViewPublicResponseData) GetBillingLinkedResource() *BillingLinkedResourceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.BillingLinkedResource
 }
 
 func (p *PlanViewPublicResponseData) GetBillingProduct() *BillingProductDetailResponseData {
@@ -124,7 +133,7 @@ func (p *PlanViewPublicResponseData) GetCompatiblePlanIDs() []string {
 	return p.CompatiblePlanIDs
 }
 
-func (p *PlanViewPublicResponseData) GetControlledBy() PlanControlledByType {
+func (p *PlanViewPublicResponseData) GetControlledBy() BillingProviderType {
 	if p == nil {
 		return ""
 	}
@@ -187,7 +196,7 @@ func (p *PlanViewPublicResponseData) GetFeatures() []*FeatureDetailResponseData 
 	return p.Features
 }
 
-func (p *PlanViewPublicResponseData) GetIcon() string {
+func (p *PlanViewPublicResponseData) GetIcon() PlanIcon {
 	if p == nil {
 		return ""
 	}
@@ -320,6 +329,13 @@ func (p *PlanViewPublicResponseData) SetAudienceType(audienceType *string) {
 	p.require(planViewPublicResponseDataFieldAudienceType)
 }
 
+// SetBillingLinkedResource sets the BillingLinkedResource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanViewPublicResponseData) SetBillingLinkedResource(billingLinkedResource *BillingLinkedResourceResponseData) {
+	p.BillingLinkedResource = billingLinkedResource
+	p.require(planViewPublicResponseDataFieldBillingLinkedResource)
+}
+
 // SetBillingProduct sets the BillingProduct field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanViewPublicResponseData) SetBillingProduct(billingProduct *BillingProductDetailResponseData) {
@@ -350,7 +366,7 @@ func (p *PlanViewPublicResponseData) SetCompatiblePlanIDs(compatiblePlanIDs []st
 
 // SetControlledBy sets the ControlledBy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanViewPublicResponseData) SetControlledBy(controlledBy PlanControlledByType) {
+func (p *PlanViewPublicResponseData) SetControlledBy(controlledBy BillingProviderType) {
 	p.ControlledBy = controlledBy
 	p.require(planViewPublicResponseDataFieldControlledBy)
 }
@@ -413,7 +429,7 @@ func (p *PlanViewPublicResponseData) SetFeatures(features []*FeatureDetailRespon
 
 // SetIcon sets the Icon field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanViewPublicResponseData) SetIcon(icon string) {
+func (p *PlanViewPublicResponseData) SetIcon(icon PlanIcon) {
 	p.Icon = icon
 	p.require(planViewPublicResponseDataFieldIcon)
 }

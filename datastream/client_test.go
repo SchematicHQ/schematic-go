@@ -18,6 +18,7 @@ import (
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/datastream"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // MockLogger implements the core.Logger interface for testing
@@ -923,3 +924,228 @@ func TestCompanyDeleteCleansUpAllLookupKeys(t *testing.T) {
 	_, exists = localCompanyCache.Get(ctx, idKey)
 	assert.False(t, exists, "Company should be deleted from cache after delete message")
 }
+
+// TestDataStreamResp_PartialTypeFieldRoundTrips verifies that the SDK's wire
+// envelope correctly parses the partial_type field. The data payload is now
+// the producer's raw shape (no id, no field-name wrapper); SDK consumers
+// dispatch on partial_type to know how to merge it.
+func TestDataStreamResp_PartialTypeFieldRoundTrips(t *testing.T) {
+	tests := []struct {
+		name        string
+		wireJSON    string
+		wantPartial *schematicdatastreamws.PartialType
+	}{
+		{
+			name: "credit balances partial",
+			wireJSON: `{
+				"message_type": "partial",
+				"entity_type": "rulesengine.Company",
+				"entity_id": "comp_abc",
+				"partial_type": "rulesengine.CreditBalances",
+				"data": {"credit_xyz": 42.5}
+			}`,
+			wantPartial: ptr(schematicdatastreamws.PartialTypeCreditBalances),
+		},
+		{
+			name: "company metric partial",
+			wireJSON: `{
+				"message_type": "partial",
+				"entity_type": "rulesengine.Company",
+				"entity_id": "comp_abc",
+				"partial_type": "rulesengine.CompanyMetric",
+				"data": {"event_subtype": "track", "period": "current_month", "month_reset": "first_of_month", "value": 7}
+			}`,
+			wantPartial: ptr(schematicdatastreamws.PartialTypeCompanyMetric),
+		},
+		{
+			name: "full company message has no partial_type",
+			wireJSON: `{
+				"message_type": "full",
+				"entity_type": "rulesengine.Company",
+				"entity_id": "comp_abc",
+				"data": {"id": "comp_abc"}
+			}`,
+			wantPartial: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var resp schematicdatastreamws.DataStreamResp
+			err := json.Unmarshal([]byte(tt.wireJSON), &resp)
+			assert.NoError(t, err)
+
+			if tt.wantPartial == nil {
+				assert.Nil(t, resp.PartialType)
+			} else {
+				assert.NotNil(t, resp.PartialType)
+				assert.Equal(t, *tt.wantPartial, *resp.PartialType)
+			}
+		})
+	}
+}
+
+// TestPartialCompanyMessage_MergesIntoCachedCompany is the end-to-end check
+// that the SDK correctly handles a partial company message off the wire:
+// the cached company should be looked up by top-level entity_id, the raw
+// producer payload should be merged according to partial_type, and the
+// merged company should be written back to the cache.
+func TestPartialCompanyMessage_MergesIntoCachedCompany(t *testing.T) {
+	server, _, outgoingMessages := setupMockWebSocketServer()
+	defer server.Close()
+	defer close(outgoingMessages)
+
+	logger := NewMockLogger()
+	localCompanyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
+
+	options := &core.DatastreamOptions{CacheTTL: 5 * time.Minute}
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+	clientOptions.CompanyCache = localCompanyCache
+
+	client := datastream.NewDataStreamClient(clientOptions, options)
+	client.Start()
+	defer client.Close()
+
+	// Wait for connection.
+	time.Sleep(300 * time.Millisecond)
+
+	// Seed the cache with a full company so the partial has something to merge into.
+	const companyID = "company-id-1"
+	full := &rulesengine.Company{
+		ID:            companyID,
+		AccountID:     "acc-1",
+		EnvironmentID: "env-1",
+		Keys:          map[string]string{"company_id": "ext-1"},
+		CreditBalances: map[string]float64{
+			"credit-existing": 100.0,
+		},
+		Metrics: []*rulesengine.CompanyMetric{
+			{
+				CompanyID:    companyID,
+				EventSubtype: "track",
+				Period:       rulesengine.MetricPeriodCurrentMonth,
+				MonthReset:   rulesengine.MetricPeriodMonthResetFirst,
+				Value:        10,
+			},
+		},
+	}
+	fullData, err := json.Marshal(full)
+	require.NoError(t, err)
+	fullResp, err := json.Marshal(schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeCompany),
+		Data:        fullData,
+		MessageType: schematicdatastreamws.MessageTypeFull,
+	})
+	require.NoError(t, err)
+	outgoingMessages <- string(fullResp)
+	time.Sleep(200 * time.Millisecond)
+
+	ctx := context.Background()
+	idKey := fmt.Sprintf("schematic:company:%s:%s", rulesengine.VersionKey, companyID)
+	cached, exists := localCompanyCache.Get(ctx, idKey)
+	require.True(t, exists, "company should be cached after full message")
+	require.NotNil(t, cached)
+	require.Equal(t, 100.0, cached.CreditBalances["credit-existing"])
+
+	// Send a partial credit-balances message in the new wire shape:
+	// raw producer payload, no id field, top-level entity_id, partial_type tag.
+	creditPartial, err := json.Marshal(schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeCompany),
+		EntityID:    ptr(companyID),
+		PartialType: ptr(schematicdatastreamws.PartialTypeCreditBalances),
+		Data:        json.RawMessage(`{"credit-new": 42.5, "credit-existing": 200.0}`),
+		MessageType: schematicdatastreamws.MessageTypePartial,
+	})
+	require.NoError(t, err)
+	outgoingMessages <- string(creditPartial)
+	time.Sleep(200 * time.Millisecond)
+
+	merged, exists := localCompanyCache.Get(ctx, idKey)
+	require.True(t, exists)
+	require.NotNil(t, merged)
+	assert.Equal(t, 200.0, merged.CreditBalances["credit-existing"], "existing balance should be overwritten")
+	assert.Equal(t, 42.5, merged.CreditBalances["credit-new"], "new balance should be added")
+	// Other fields untouched.
+	assert.Equal(t, "acc-1", merged.AccountID)
+	assert.Len(t, merged.Metrics, 1)
+
+	// Now a partial metric update — the same metric key should be replaced.
+	metricPartial, err := json.Marshal(schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeCompany),
+		EntityID:    ptr(companyID),
+		PartialType: ptr(schematicdatastreamws.PartialTypeCompanyMetric),
+		Data:        json.RawMessage(`{"company_id":"company-id-1","event_subtype":"track","period":"current_month","month_reset":"first_of_month","value":99}`),
+		MessageType: schematicdatastreamws.MessageTypePartial,
+	})
+	require.NoError(t, err)
+	outgoingMessages <- string(metricPartial)
+	time.Sleep(200 * time.Millisecond)
+
+	mergedAgain, exists := localCompanyCache.Get(ctx, idKey)
+	require.True(t, exists)
+	require.NotNil(t, mergedAgain)
+	require.Len(t, mergedAgain.Metrics, 1, "metric upsert should replace existing metric, not append")
+	assert.EqualValues(t, 99, mergedAgain.Metrics[0].Value)
+	// Credit balances from the previous partial should still be present.
+	assert.Equal(t, 200.0, mergedAgain.CreditBalances["credit-existing"])
+	assert.Equal(t, 42.5, mergedAgain.CreditBalances["credit-new"])
+}
+
+// TestPartialCompanyMessage_LegacyFallback verifies that the SDK can still
+// process partial company messages from an older API version that doesn't
+// send the partial_type tag and ships the entire refetched company in the
+// data field. This is the rollout-window backward-compat path.
+func TestPartialCompanyMessage_LegacyFallback(t *testing.T) {
+	server, _, outgoingMessages := setupMockWebSocketServer()
+	defer server.Close()
+	defer close(outgoingMessages)
+
+	logger := NewMockLogger()
+	localCompanyCache := cache.NewLocalCache[*rulesengine.Company](100, time.Minute)
+
+	options := &core.DatastreamOptions{CacheTTL: 5 * time.Minute}
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+	clientOptions.CompanyCache = localCompanyCache
+
+	client := datastream.NewDataStreamClient(clientOptions, options)
+	client.Start()
+	defer client.Close()
+
+	time.Sleep(300 * time.Millisecond)
+
+	// Legacy partial: no partial_type, data is the entire refetched company.
+	const companyID = "company-id-legacy"
+	full := &rulesengine.Company{
+		ID:            companyID,
+		AccountID:     "acc-1",
+		EnvironmentID: "env-1",
+		Keys:          map[string]string{"company_id": "ext-legacy"},
+		CreditBalances: map[string]float64{
+			"credit-existing": 100.0,
+			"credit-new":      42.5,
+		},
+	}
+	fullData, err := json.Marshal(full)
+	require.NoError(t, err)
+	legacyResp, err := json.Marshal(schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeCompany),
+		EntityID:    ptr(companyID),
+		Data:        fullData,
+		MessageType: schematicdatastreamws.MessageTypePartial,
+		// PartialType intentionally omitted — this is the legacy shape.
+	})
+	require.NoError(t, err)
+	outgoingMessages <- string(legacyResp)
+	time.Sleep(200 * time.Millisecond)
+
+	ctx := context.Background()
+	idKey := fmt.Sprintf("schematic:company:%s:%s", rulesengine.VersionKey, companyID)
+	cached, exists := localCompanyCache.Get(ctx, idKey)
+	require.True(t, exists, "company should be cached after legacy partial message")
+	require.NotNil(t, cached)
+	assert.Equal(t, "acc-1", cached.AccountID)
+	assert.Equal(t, 100.0, cached.CreditBalances["credit-existing"])
+	assert.Equal(t, 42.5, cached.CreditBalances["credit-new"])
+}
+
+func ptr[T any](v T) *T { return &v }

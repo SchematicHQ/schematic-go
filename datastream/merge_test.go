@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/schematichq/rulesengine"
+	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -43,149 +44,104 @@ func baseUser() *rulesengine.User {
 	}
 }
 
-func TestPartialCompany_OnlyTraits(t *testing.T) {
+func TestApplyPartialCompany_AddsCreditBalance(t *testing.T) {
 	existing := baseCompany()
-	partial := json.RawMessage(`{"id":"co-1","traits":[{"value":"Startup","trait_definition":{"id":"plan"}}]}`)
+	data := json.RawMessage(`{"credit-2":200.0}`)
 
-	merged, err := PartialCompany(existing, partial)
+	merged, err := ApplyPartialCompany(existing, schematicdatastreamws.PartialTypeCreditBalances, data)
 	require.NoError(t, err)
 
-	assert.Len(t, merged.Traits, 1)
-	assert.Equal(t, "Startup", merged.Traits[0].Value)
-
-	assert.Equal(t, "acc-1", merged.AccountID)
-	assert.Equal(t, "env-1", merged.EnvironmentID)
-	assert.Equal(t, map[string]string{"domain": "example.com"}, merged.Keys)
-	assert.Equal(t, []string{"bp-1"}, merged.BillingProductIDs)
-	assert.NotNil(t, merged.BasePlanID)
-	assert.Equal(t, "plan-1", *merged.BasePlanID)
-}
-
-func TestPartialCompany_MergesKeys(t *testing.T) {
-	existing := baseCompany()
-	partial := json.RawMessage(`{"id":"co-1","keys":{"slug":"new-slug"}}`)
-
-	merged, err := PartialCompany(existing, partial)
-	require.NoError(t, err)
-
-	// New key added, existing key preserved
-	assert.Equal(t, map[string]string{"domain": "example.com", "slug": "new-slug"}, merged.Keys)
-	assert.Len(t, merged.Traits, 1)
-}
-
-func TestPartialCompany_MergesCreditBalances(t *testing.T) {
-	existing := baseCompany()
-	partial := json.RawMessage(`{"id":"co-1","credit_balances":{"credit-2":200.0}}`)
-
-	merged, err := PartialCompany(existing, partial)
-	require.NoError(t, err)
-
-	// New balance added, existing balance preserved
+	// New balance added, existing balance preserved.
 	assert.Equal(t, map[string]float64{"credit-1": 100.0, "credit-2": 200.0}, merged.CreditBalances)
+	// Other fields untouched.
+	assert.Equal(t, "acc-1", merged.AccountID)
+	assert.Equal(t, map[string]string{"domain": "example.com"}, merged.Keys)
 }
 
-func TestPartialCompany_OverwritesCreditBalance(t *testing.T) {
+func TestApplyPartialCompany_OverwritesCreditBalance(t *testing.T) {
 	existing := baseCompany()
-	partial := json.RawMessage(`{"id":"co-1","credit_balances":{"credit-1":50.0}}`)
+	data := json.RawMessage(`{"credit-1":50.0}`)
 
-	merged, err := PartialCompany(existing, partial)
+	merged, err := ApplyPartialCompany(existing, schematicdatastreamws.PartialTypeCreditBalances, data)
 	require.NoError(t, err)
 
-	// Existing balance updated
+	// Existing balance overwritten; map shape is "merge" so other keys would
+	// remain — here there's only one key in the existing map so it ends up
+	// looking like a replace.
 	assert.Equal(t, map[string]float64{"credit-1": 50.0}, merged.CreditBalances)
 }
 
-func TestPartialCompany_UpsertsMetrics(t *testing.T) {
+func TestApplyPartialCompany_CreditBalances_NilExistingMap(t *testing.T) {
+	existing := baseCompany()
+	existing.CreditBalances = nil
+	data := json.RawMessage(`{"credit-1":42.5}`)
+
+	merged, err := ApplyPartialCompany(existing, schematicdatastreamws.PartialTypeCreditBalances, data)
+	require.NoError(t, err)
+
+	assert.Equal(t, map[string]float64{"credit-1": 42.5}, merged.CreditBalances)
+}
+
+func TestApplyPartialCompany_UpsertsMetric(t *testing.T) {
 	existing := baseCompany()
 	existing.Metrics = rulesengine.CompanyMetricCollection{
 		{EventSubtype: "event-a", Period: "all_time", MonthReset: "first_of_month", Value: 10},
 		{EventSubtype: "event-b", Period: "current_month", MonthReset: "first_of_month", Value: 5},
 	}
-	// Update event-a, add event-c
-	partial := json.RawMessage(`{"id":"co-1","metrics":[
-		{"event_subtype":"event-a","period":"all_time","month_reset":"first_of_month","value":42},
-		{"event_subtype":"event-c","period":"current_day","month_reset":"billing_cycle","value":1}
-	]}`)
+	// Update event-a in place.
+	data := json.RawMessage(`{"event_subtype":"event-a","period":"all_time","month_reset":"first_of_month","value":42}`)
 
-	merged, err := PartialCompany(existing, partial)
+	merged, err := ApplyPartialCompany(existing, schematicdatastreamws.PartialTypeCompanyMetric, data)
 	require.NoError(t, err)
 
-	require.Len(t, merged.Metrics, 3)
-	// event-a updated in place
+	require.Len(t, merged.Metrics, 2)
 	assert.Equal(t, "event-a", merged.Metrics[0].EventSubtype)
 	assert.EqualValues(t, 42, merged.Metrics[0].Value)
-	// event-b unchanged
 	assert.Equal(t, "event-b", merged.Metrics[1].EventSubtype)
 	assert.EqualValues(t, 5, merged.Metrics[1].Value)
-	// event-c appended
-	assert.Equal(t, "event-c", merged.Metrics[2].EventSubtype)
-	assert.EqualValues(t, 1, merged.Metrics[2].Value)
 
-	// Original not mutated
+	// Original not mutated.
 	assert.EqualValues(t, 10, existing.Metrics[0].Value)
 }
 
-func TestPartialCompany_EmptyEntitlements(t *testing.T) {
+func TestApplyPartialCompany_AppendsNewMetric(t *testing.T) {
 	existing := baseCompany()
-	partial := json.RawMessage(`{"id":"co-1","entitlements":[]}`)
+	existing.Metrics = rulesengine.CompanyMetricCollection{
+		{EventSubtype: "event-a", Period: "all_time", MonthReset: "first_of_month", Value: 10},
+	}
+	data := json.RawMessage(`{"event_subtype":"event-c","period":"current_day","month_reset":"billing_cycle","value":1}`)
 
-	merged, err := PartialCompany(existing, partial)
+	merged, err := ApplyPartialCompany(existing, schematicdatastreamws.PartialTypeCompanyMetric, data)
 	require.NoError(t, err)
 
-	assert.Empty(t, merged.Entitlements)
-	assert.Equal(t, "acc-1", merged.AccountID)
+	require.Len(t, merged.Metrics, 2)
+	assert.Equal(t, "event-a", merged.Metrics[0].EventSubtype)
+	assert.Equal(t, "event-c", merged.Metrics[1].EventSubtype)
+	assert.EqualValues(t, 1, merged.Metrics[1].Value)
 }
 
-func TestPartialCompany_NullBasePlanID(t *testing.T) {
+func TestApplyPartialCompany_UnknownPartialType(t *testing.T) {
 	existing := baseCompany()
-	partial := json.RawMessage(`{"id":"co-1","base_plan_id":null}`)
+	data := json.RawMessage(`{}`)
 
-	merged, err := PartialCompany(existing, partial)
-	require.NoError(t, err)
-
-	assert.Nil(t, merged.BasePlanID)
-	assert.Equal(t, []string{"bp-1"}, merged.BillingProductIDs)
+	_, err := ApplyPartialCompany(existing, schematicdatastreamws.PartialType("rulesengine.SomethingNew"), data)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "unknown partial_type")
 }
 
-func TestPartialCompany_MissingID(t *testing.T) {
+func TestApplyPartialCompany_DoesNotMutateOriginal(t *testing.T) {
 	existing := baseCompany()
-	partial := json.RawMessage(`{"traits":[]}`)
-
-	_, err := PartialCompany(existing, partial)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "missing required field: id")
-}
-
-func TestPartialCompany_DoesNotMutateOriginal(t *testing.T) {
-	existing := baseCompany()
-	origKeys := make(map[string]string)
-	for k, v := range existing.Keys {
-		origKeys[k] = v
+	origBalances := map[string]float64{}
+	for k, v := range existing.CreditBalances {
+		origBalances[k] = v
 	}
 
-	partial := json.RawMessage(`{"id":"co-1","keys":{"slug":"new-slug"},"traits":[]}`)
-
-	merged, err := PartialCompany(existing, partial)
+	data := json.RawMessage(`{"credit-1":999.0,"credit-2":50.0}`)
+	merged, err := ApplyPartialCompany(existing, schematicdatastreamws.PartialTypeCreditBalances, data)
 	require.NoError(t, err)
 
-	assert.Equal(t, origKeys, existing.Keys)
-	assert.Len(t, existing.Traits, 1)
-
-	assert.Equal(t, map[string]string{"domain": "example.com", "slug": "new-slug"}, merged.Keys)
-	assert.Empty(t, merged.Traits)
-}
-
-func TestPartialCompany_Rules(t *testing.T) {
-	existing := baseCompany()
-	existing.Rules = []*rulesengine.Rule{{ID: "rule-old"}}
-	partial := json.RawMessage(`{"id":"co-1","rules":[{"id":"rule-new"}]}`)
-
-	merged, err := PartialCompany(existing, partial)
-	require.NoError(t, err)
-
-	require.Len(t, merged.Rules, 1)
-	assert.Equal(t, "rule-new", merged.Rules[0].ID)
-	assert.Equal(t, "rule-old", existing.Rules[0].ID)
+	assert.Equal(t, origBalances, existing.CreditBalances)
+	assert.Equal(t, map[string]float64{"credit-1": 999.0, "credit-2": 50.0}, merged.CreditBalances)
 }
 
 func TestPartialUser_OnlyTraits(t *testing.T) {
@@ -238,93 +194,6 @@ func TestPartialUser_DoesNotMutateOriginal(t *testing.T) {
 
 	assert.Equal(t, map[string]string{"email": "user@example.com", "slug": "new"}, merged.Keys)
 	assert.Empty(t, merged.Traits)
-}
-
-func TestPartialCompany_FullEntityPartialMessage(t *testing.T) {
-	existing := baseCompany()
-	existing.Metrics = rulesengine.CompanyMetricCollection{
-		{EventSubtype: "event-a", Period: "all_time", MonthReset: "first_of_month", Value: 10},
-	}
-	existing.Rules = []*rulesengine.Rule{{ID: "rule-1"}}
-
-	// Partial message that happens to contain every field (full entity replacement)
-	partial := json.RawMessage(`{
-		"id": "co-1",
-		"account_id": "acc-2",
-		"environment_id": "env-2",
-		"base_plan_id": "plan-99",
-		"billing_product_ids": ["bp-10", "bp-20"],
-		"credit_balances": {"credit-1": 999.0, "credit-new": 50.0},
-		"entitlements": [
-			{"feature_id": "feat-new", "feature_key": "feature-new"},
-			{"feature_id": "feat-2", "feature_key": "feature-two"}
-		],
-		"keys": {"domain": "new.com", "slug": "new-slug"},
-		"metrics": [
-			{"event_subtype": "event-a", "period": "all_time", "month_reset": "first_of_month", "value": 42},
-			{"event_subtype": "event-new", "period": "current_day", "month_reset": "billing_cycle", "value": 7}
-		],
-		"plan_ids": ["plan-99", "plan-100"],
-		"plan_version_ids": ["pv-99"],
-		"rules": [{"id": "rule-new-1"}, {"id": "rule-new-2"}],
-		"subscription": {"id": "sub-new"},
-		"traits": [
-			{"value": "Startup", "trait_definition": {"id": "tier"}},
-			{"value": "Annual", "trait_definition": {"id": "billing"}}
-		]
-	}`)
-
-	merged, err := PartialCompany(existing, partial)
-	require.NoError(t, err)
-
-	// Every field from the partial message should be present
-	assert.Equal(t, "co-1", merged.ID)
-	assert.Equal(t, "acc-2", merged.AccountID)
-	assert.Equal(t, "env-2", merged.EnvironmentID)
-
-	require.NotNil(t, merged.BasePlanID)
-	assert.Equal(t, "plan-99", *merged.BasePlanID)
-
-	assert.Equal(t, []string{"bp-10", "bp-20"}, merged.BillingProductIDs)
-
-	// Credit balances merge: existing credit-1 overwritten, credit-new added
-	assert.Equal(t, map[string]float64{"credit-1": 999.0, "credit-new": 50.0}, merged.CreditBalances)
-
-	require.Len(t, merged.Entitlements, 2)
-	assert.Equal(t, "feat-new", merged.Entitlements[0].FeatureID)
-	assert.Equal(t, "feature-new", merged.Entitlements[0].FeatureKey)
-	assert.Equal(t, "feat-2", merged.Entitlements[1].FeatureID)
-	assert.Equal(t, "feature-two", merged.Entitlements[1].FeatureKey)
-
-	// Keys merge: domain overwritten, slug added
-	assert.Equal(t, map[string]string{"domain": "new.com", "slug": "new-slug"}, merged.Keys)
-
-	// Metrics upsert: event-a updated, event-new appended
-	require.Len(t, merged.Metrics, 2)
-	assert.Equal(t, "event-a", merged.Metrics[0].EventSubtype)
-	assert.EqualValues(t, 42, merged.Metrics[0].Value)
-	assert.Equal(t, "event-new", merged.Metrics[1].EventSubtype)
-	assert.EqualValues(t, 7, merged.Metrics[1].Value)
-
-	assert.Equal(t, []string{"plan-99", "plan-100"}, merged.PlanIDs)
-	assert.Equal(t, []string{"pv-99"}, merged.PlanVersionIDs)
-
-	require.Len(t, merged.Rules, 2)
-	assert.Equal(t, "rule-new-1", merged.Rules[0].ID)
-	assert.Equal(t, "rule-new-2", merged.Rules[1].ID)
-
-	require.NotNil(t, merged.Subscription)
-	assert.Equal(t, "sub-new", merged.Subscription.ID)
-
-	require.Len(t, merged.Traits, 2)
-	assert.Equal(t, "Startup", merged.Traits[0].Value)
-	assert.Equal(t, "Annual", merged.Traits[1].Value)
-
-	// Original not mutated
-	assert.Equal(t, "acc-1", existing.AccountID)
-	assert.Equal(t, "plan-1", *existing.BasePlanID)
-	assert.Equal(t, map[string]string{"domain": "example.com"}, existing.Keys)
-	assert.EqualValues(t, 10, existing.Metrics[0].Value)
 }
 
 func TestPartialUser_FullEntityPartialMessage(t *testing.T) {

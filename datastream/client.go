@@ -288,7 +288,7 @@ func (c *DataStreamClient) notifyPendingCompanyRequests(_ context.Context, keys 
 }
 
 func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
-	if resp.MessageType == schematicdatastreamws.MessageTypePartial && resp.PartialType != nil {
+	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
 		return c.handlePartialCompanyMessage(ctx, resp)
 	}
 
@@ -345,10 +345,10 @@ func (c *DataStreamClient) handlePartialCompanyMessage(ctx context.Context, resp
 		return nil
 	}
 
-	merged, err := ApplyPartialCompany(existing, *resp.PartialType, resp.Data)
+	merged, err := PartialCompany(existing, resp.Data)
 	if err != nil {
 		c.companyMu.Unlock()
-		return fmt.Errorf("failed to apply partial company: %v", err)
+		return fmt.Errorf("failed to merge partial company: %v", err)
 	}
 
 	cacheResults, cacheErr := c.cacheCompanyForKeys(ctx, merged)

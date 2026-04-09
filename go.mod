@@ -20,8 +20,3 @@ require (
 	go.uber.org/atomic v1.11.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-// Local development: pick up the unreleased partial_type field on
-// DataStreamResp. Remove once schematic-datastream-ws cuts a release that
-// includes the field and bump the require above.
-replace github.com/schematichq/schematic-datastream-ws => ../schematic-datastream-ws

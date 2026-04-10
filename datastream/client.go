@@ -390,6 +390,10 @@ func (c *DataStreamClient) notifyPendingUserRequests(_ context.Context, keys map
 }
 
 func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
+	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
+		return c.handlePartialUserMessage(ctx, resp)
+	}
+
 	var user *rulesengine.User
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
@@ -407,37 +411,6 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 		return nil
 	}
 
-	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
-		id, err := ExtractIDFromJSON(resp.Data)
-		if err != nil {
-			return fmt.Errorf("failed to extract user ID from partial message: %v", err)
-		}
-
-		c.userMu.Lock()
-		existing, found := c.userCache.primaryCache.Get(ctx, c.userCache.idCacheKey(id))
-		if !found || existing == nil {
-			c.userMu.Unlock()
-			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial user '%s', skipping", id))
-			return nil
-		}
-		merged, mergeErr := PartialUser(existing, resp.Data)
-		if mergeErr != nil {
-			c.userMu.Unlock()
-			return fmt.Errorf("failed to merge partial user: %v", mergeErr)
-		}
-		user = merged
-		cacheResults := c.cacheUserForKeys(ctx, user)
-		c.userMu.Unlock()
-
-		for cacheKey, err := range cacheResults {
-			if err != nil {
-				c.logger.Warn(ctx, fmt.Sprintf("Cache error for user key '%s': %v", cacheKey, err))
-			}
-		}
-		c.notifyPendingUserRequests(ctx, user.Keys, user)
-		return nil
-	}
-
 	c.userMu.Lock()
 	cacheResults := c.cacheUserForKeys(ctx, user)
 	c.userMu.Unlock()
@@ -452,6 +425,39 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 	// Notify pending requests with the user data
 	c.notifyPendingUserRequests(ctx, user.Keys, user)
 
+	return nil
+}
+
+func (c *DataStreamClient) handlePartialUserMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
+	if resp.EntityID == nil || *resp.EntityID == "" {
+		return fmt.Errorf("partial user message missing entity_id")
+	}
+
+	id := *resp.EntityID
+
+	c.userMu.Lock()
+	existing, found := c.userCache.primaryCache.Get(ctx, c.userCache.idCacheKey(id))
+	if !found || existing == nil {
+		c.userMu.Unlock()
+		c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial user '%s', skipping", id))
+		return nil
+	}
+
+	merged, err := PartialUser(existing, resp.Data)
+	if err != nil {
+		c.userMu.Unlock()
+		return fmt.Errorf("failed to merge partial user: %v", err)
+	}
+
+	cacheResults := c.cacheUserForKeys(ctx, merged)
+	c.userMu.Unlock()
+
+	for cacheKey, cacheErr := range cacheResults {
+		if cacheErr != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Cache error for user key '%s': %v", cacheKey, cacheErr))
+		}
+	}
+	c.notifyPendingUserRequests(ctx, merged.Keys, merged)
 	return nil
 }
 

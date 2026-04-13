@@ -109,17 +109,12 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 	return merged, nil
 }
 
-// PartialUser merges a partial JSON update into an existing User.
-// It copies the existing user by value, then applies only the fields
-// present in partialJSON. The "id" field must be present.
+// PartialUser merges a partial JSON update into an existing User and returns
+// the result. The original is not mutated.
 func PartialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rulesengine.User, error) {
 	var fields map[string]json.RawMessage
 	if err := json.Unmarshal(partialJSON, &fields); err != nil {
 		return nil, fmt.Errorf("unmarshal partial user fields: %w", err)
-	}
-
-	if _, ok := fields["id"]; !ok {
-		return nil, fmt.Errorf("partial user message missing required field: id")
 	}
 
 	merged := DeepCopyUser(existing)
@@ -163,20 +158,6 @@ func PartialUser(existing *rulesengine.User, partialJSON json.RawMessage) (*rule
 	}
 
 	return merged, nil
-}
-
-// ExtractIDFromJSON extracts the "id" field from a raw JSON message.
-func ExtractIDFromJSON(data json.RawMessage) (string, error) {
-	var partial struct {
-		ID string `json:"id"`
-	}
-	if err := json.Unmarshal(data, &partial); err != nil {
-		return "", fmt.Errorf("unmarshal id from partial message: %w", err)
-	}
-	if partial.ID == "" {
-		return "", fmt.Errorf("partial message missing required field: id")
-	}
-	return partial.ID, nil
 }
 
 // DeepCopyCompany creates a complete deep copy of a Company struct and all its nested fields.

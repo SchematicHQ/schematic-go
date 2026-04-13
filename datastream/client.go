@@ -218,8 +218,11 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 	c.flagsCacheProvider.DeleteMissing(ctx, cacheKeys)
 	c.flagsMu.Unlock()
 
-	if c.pendingFlagRequest != nil {
-		c.pendingFlagRequest <- true
+	c.pendingFlagReqMu.Lock()
+	ch := c.pendingFlagRequest
+	c.pendingFlagReqMu.Unlock()
+	if ch != nil {
+		ch <- true
 	}
 
 	return nil
@@ -237,8 +240,11 @@ func (c *DataStreamClient) handleFlagMessage(ctx context.Context, resp *schemati
 	defer func() {
 		c.flagsMu.Unlock()
 
-		if c.pendingFlagRequest != nil {
-			c.pendingFlagRequest <- true
+		c.pendingFlagReqMu.Lock()
+		ch := c.pendingFlagRequest
+		c.pendingFlagReqMu.Unlock()
+		if ch != nil {
+			ch <- true
 		}
 	}()
 
@@ -390,6 +396,10 @@ func (c *DataStreamClient) notifyPendingUserRequests(_ context.Context, keys map
 }
 
 func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
+	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
+		return c.handlePartialUserMessage(ctx, resp)
+	}
+
 	var user *rulesengine.User
 	err := json.Unmarshal(resp.Data, &user)
 	if err != nil {
@@ -407,37 +417,6 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 		return nil
 	}
 
-	if resp.MessageType == schematicdatastreamws.MessageTypePartial {
-		id, err := ExtractIDFromJSON(resp.Data)
-		if err != nil {
-			return fmt.Errorf("failed to extract user ID from partial message: %v", err)
-		}
-
-		c.userMu.Lock()
-		existing, found := c.userCache.primaryCache.Get(ctx, c.userCache.idCacheKey(id))
-		if !found || existing == nil {
-			c.userMu.Unlock()
-			c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial user '%s', skipping", id))
-			return nil
-		}
-		merged, mergeErr := PartialUser(existing, resp.Data)
-		if mergeErr != nil {
-			c.userMu.Unlock()
-			return fmt.Errorf("failed to merge partial user: %v", mergeErr)
-		}
-		user = merged
-		cacheResults := c.cacheUserForKeys(ctx, user)
-		c.userMu.Unlock()
-
-		for cacheKey, err := range cacheResults {
-			if err != nil {
-				c.logger.Warn(ctx, fmt.Sprintf("Cache error for user key '%s': %v", cacheKey, err))
-			}
-		}
-		c.notifyPendingUserRequests(ctx, user.Keys, user)
-		return nil
-	}
-
 	c.userMu.Lock()
 	cacheResults := c.cacheUserForKeys(ctx, user)
 	c.userMu.Unlock()
@@ -452,6 +431,39 @@ func (c *DataStreamClient) handleUserMessage(ctx context.Context, resp *schemati
 	// Notify pending requests with the user data
 	c.notifyPendingUserRequests(ctx, user.Keys, user)
 
+	return nil
+}
+
+func (c *DataStreamClient) handlePartialUserMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
+	if resp.EntityID == nil || *resp.EntityID == "" {
+		return fmt.Errorf("partial user message missing entity_id")
+	}
+
+	id := *resp.EntityID
+
+	c.userMu.Lock()
+	existing, found := c.userCache.primaryCache.Get(ctx, c.userCache.idCacheKey(id))
+	if !found || existing == nil {
+		c.userMu.Unlock()
+		c.logger.Warn(ctx, fmt.Sprintf("Cache miss for partial user '%s', skipping", id))
+		return nil
+	}
+
+	merged, err := PartialUser(existing, resp.Data)
+	if err != nil {
+		c.userMu.Unlock()
+		return fmt.Errorf("failed to merge partial user: %v", err)
+	}
+
+	cacheResults := c.cacheUserForKeys(ctx, merged)
+	c.userMu.Unlock()
+
+	for cacheKey, cacheErr := range cacheResults {
+		if cacheErr != nil {
+			c.logger.Warn(ctx, fmt.Sprintf("Cache error for user key '%s': %v", cacheKey, cacheErr))
+		}
+	}
+	c.notifyPendingUserRequests(ctx, merged.Keys, merged)
 	return nil
 }
 
@@ -564,16 +576,19 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 
 func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
 	// Check if there is already a pending request for flags
+	c.pendingFlagReqMu.Lock()
 	if c.pendingFlagRequest != nil {
+		c.pendingFlagReqMu.Unlock()
 		return nil
 	}
 
 	waitCh := make(chan bool, 1)
-	c.pendingFlagReqMu.Lock()
 	c.pendingFlagRequest = waitCh
 	c.pendingFlagReqMu.Unlock()
 	defer func() {
+		c.pendingFlagReqMu.Lock()
 		c.pendingFlagRequest = nil
+		c.pendingFlagReqMu.Unlock()
 		close(waitCh)
 	}()
 
@@ -591,7 +606,6 @@ func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
 	case <-time.After(resourceTimeout):
 		return fmt.Errorf("timeout while waiting for flags data")
 	case <-ctx.Done():
-		c.pendingFlagRequest = nil
 		return ctx.Err()
 	}
 	return nil
@@ -603,9 +617,9 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 		return company, nil
 	}
 
-	waitCh := make(chan *rulesengine.Company, 1) // Register the wait channel for each key
+	waitCh := make(chan *rulesengine.Company, 1)
 	cacheKeys := []string{}
-	c.companyMu.Lock()
+	c.pendingCompReqMu.Lock()
 	shouldSendRequest := true
 	for key, value := range keys {
 		cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
@@ -613,9 +627,11 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 		if existingChannels, ok := c.pendingCompanyRequests[cacheKey]; ok {
 			c.pendingCompanyRequests[cacheKey] = append(existingChannels, waitCh)
 			shouldSendRequest = false // Someone else already requested this
+		} else {
+			c.pendingCompanyRequests[cacheKey] = []chan *rulesengine.Company{waitCh}
 		}
 	}
-	c.companyMu.Unlock()
+	c.pendingCompReqMu.Unlock()
 
 	if shouldSendRequest {
 		req := &schematicdatastreamws.DataStreamReq{
@@ -625,15 +641,9 @@ func (c *DataStreamClient) getCompany(ctx context.Context, keys map[string]strin
 
 		err := c.sendWebSocketMessage(ctx, req)
 		if err != nil {
+			c.cleanupPendingCompanyRequests(cacheKeys, waitCh)
 			return nil, err
 		}
-
-		c.pendingCompReqMu.Lock()
-		for key, value := range keys {
-			cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixCompany, key, value)
-			c.pendingCompanyRequests[cacheKey] = []chan *rulesengine.Company{waitCh}
-		}
-		c.pendingCompReqMu.Unlock()
 	}
 
 	var err error
@@ -658,16 +668,18 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 		return user, nil
 	}
 
-	waitCh := make(chan *rulesengine.User, 1) // Register the wait channel for each key
+	waitCh := make(chan *rulesengine.User, 1)
 	cacheKeys := []string{}
 	c.pendingUserReqMu.Lock()
 	shouldSendRequest := true
 	for key, value := range keys {
-		cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value) // If there are already pending requests for this key, just add our channel
+		cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
 		cacheKeys = append(cacheKeys, cacheKey)
 		if existingChannels, ok := c.pendingUserRequests[cacheKey]; ok {
 			c.pendingUserRequests[cacheKey] = append(existingChannels, waitCh)
 			shouldSendRequest = false // Someone else already requested this
+		} else {
+			c.pendingUserRequests[cacheKey] = []chan *rulesengine.User{waitCh}
 		}
 	}
 	c.pendingUserReqMu.Unlock()
@@ -680,15 +692,9 @@ func (c *DataStreamClient) getUser(ctx context.Context, keys map[string]string) 
 
 		err := c.sendWebSocketMessage(ctx, req)
 		if err != nil {
+			c.cleanupPendingUserRequests(cacheKeys, waitCh)
 			return nil, err
 		}
-
-		c.pendingUserReqMu.Lock()
-		for key, value := range keys {
-			cacheKey := c.resourceKeyToCacheKey(cacheKeyPrefixUser, key, value)
-			c.pendingUserRequests[cacheKey] = []chan *rulesengine.User{waitCh}
-		}
-		c.pendingUserReqMu.Unlock()
 	}
 
 	var err error

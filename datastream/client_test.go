@@ -287,12 +287,16 @@ func TestCheckFlagCompany(t *testing.T) {
 	// Test checking a flag that exists and is true
 	result, err := client.CheckFlag(ctx, evalCtx, "test-flag-1")
 	assert.NoError(t, err, "CheckFlag should not return an error for existing flag")
-	assert.True(t, result.Value, "Flag value should be true")
+	if assert.NotNil(t, result, "CheckFlag should return a non-nil result") {
+		assert.True(t, result.Value, "Flag value should be true")
+	}
 
 	// Test checking a flag that exists and is false
 	result, err = client.CheckFlag(ctx, evalCtx, "test-flag-2")
 	assert.NoError(t, err, "CheckFlag should not return an error for existing flag")
-	assert.False(t, result.Value, "Flag value should be false")
+	if assert.NotNil(t, result, "CheckFlag should return a non-nil result") {
+		assert.False(t, result.Value, "Flag value should be false")
+	}
 
 	// Test checking a non-existent flag
 	result, err = client.CheckFlag(ctx, evalCtx, "non-existent-flag")
@@ -342,12 +346,16 @@ func TestCheckFlagUser(t *testing.T) {
 	// Test checking a flag that exists and is true
 	result, err := client.CheckFlag(ctx, evalCtx, "test-flag-1")
 	assert.NoError(t, err, "CheckFlag should not return an error for existing flag")
-	assert.True(t, result.Value, "Flag value should be true")
+	if assert.NotNil(t, result, "CheckFlag should return a non-nil result") {
+		assert.True(t, result.Value, "Flag value should be true")
+	}
 
 	// Test checking a flag that exists and is false
 	result, err = client.CheckFlag(ctx, evalCtx, "test-flag-2")
 	assert.NoError(t, err, "CheckFlag should not return an error for existing flag")
-	assert.False(t, result.Value, "Flag value should be false")
+	if assert.NotNil(t, result, "CheckFlag should return a non-nil result") {
+		assert.False(t, result.Value, "Flag value should be false")
+	}
 
 	// Test checking a non-existent flag
 	result, err = client.CheckFlag(ctx, evalCtx, "non-existent-flag")

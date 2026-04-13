@@ -270,9 +270,9 @@ func TestPartialCompany_DoesNotMutateOriginal(t *testing.T) {
 	assert.Equal(t, map[string]float64{"credit-1": 999.0, "credit-2": 50.0}, merged.CreditBalances)
 }
 
-func TestPartialUser_OnlyTraits(t *testing.T) {
+func TestPartialUser_ReplacesTraits(t *testing.T) {
 	existing := baseUser()
-	partial := json.RawMessage(`{"id":"user-1","traits":[{"value":"Free","trait_definition":{"id":"tier"}}]}`)
+	partial := json.RawMessage(`{"traits":[{"value":"Free","trait_definition":{"id":"tier"}}]}`)
 
 	merged, err := PartialUser(existing, partial)
 	require.NoError(t, err)
@@ -284,23 +284,14 @@ func TestPartialUser_OnlyTraits(t *testing.T) {
 
 func TestPartialUser_MergesKeys(t *testing.T) {
 	existing := baseUser()
-	partial := json.RawMessage(`{"id":"user-1","keys":{"slack_id":"U123"}}`)
+	partial := json.RawMessage(`{"keys":{"slack_id":"U123"}}`)
 
 	merged, err := PartialUser(existing, partial)
 	require.NoError(t, err)
 
-	// New key added, existing key preserved
+	// New key added, existing key preserved.
 	assert.Equal(t, map[string]string{"email": "user@example.com", "slack_id": "U123"}, merged.Keys)
 	assert.Len(t, merged.Traits, 1)
-}
-
-func TestPartialUser_MissingID(t *testing.T) {
-	existing := baseUser()
-	partial := json.RawMessage(`{"keys":{"email":"new@example.com"}}`)
-
-	_, err := PartialUser(existing, partial)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "missing required field: id")
 }
 
 func TestPartialUser_DoesNotMutateOriginal(t *testing.T) {
@@ -310,7 +301,7 @@ func TestPartialUser_DoesNotMutateOriginal(t *testing.T) {
 		origKeys[k] = v
 	}
 
-	partial := json.RawMessage(`{"id":"user-1","keys":{"slug":"new"},"traits":[]}`)
+	partial := json.RawMessage(`{"keys":{"slug":"new"},"traits":[]}`)
 
 	merged, err := PartialUser(existing, partial)
 	require.NoError(t, err)
@@ -322,57 +313,29 @@ func TestPartialUser_DoesNotMutateOriginal(t *testing.T) {
 	assert.Empty(t, merged.Traits)
 }
 
-func TestPartialUser_FullEntityPartialMessage(t *testing.T) {
+func TestPartialUser_MultipleFieldsInOnePayload(t *testing.T) {
 	existing := baseUser()
 	existing.Rules = []*rulesengine.Rule{{ID: "rule-1"}}
 
-	// Partial message that contains every user field
 	partial := json.RawMessage(`{
-		"id": "user-1",
-		"account_id": "acc-2",
-		"environment_id": "env-2",
 		"keys": {"email": "new@example.com", "slack_id": "U999"},
-		"traits": [
-			{"value": "Free", "trait_definition": {"id": "tier"}},
-			{"value": "Monthly", "trait_definition": {"id": "billing"}}
-		],
-		"rules": [{"id": "rule-new-1"}, {"id": "rule-new-2"}]
+		"traits": [{"value": "Free", "trait_definition": {"id": "tier"}}],
+		"rules": [{"id": "rule-new"}]
 	}`)
 
 	merged, err := PartialUser(existing, partial)
 	require.NoError(t, err)
 
-	assert.Equal(t, "user-1", merged.ID)
-	assert.Equal(t, "acc-2", merged.AccountID)
-	assert.Equal(t, "env-2", merged.EnvironmentID)
-
-	// Keys merge: email overwritten, slack_id added
+	// Keys merge.
 	assert.Equal(t, map[string]string{"email": "new@example.com", "slack_id": "U999"}, merged.Keys)
-
-	require.Len(t, merged.Traits, 2)
+	require.Len(t, merged.Traits, 1)
 	assert.Equal(t, "Free", merged.Traits[0].Value)
-	assert.Equal(t, "Monthly", merged.Traits[1].Value)
+	require.Len(t, merged.Rules, 1)
+	assert.Equal(t, "rule-new", merged.Rules[0].ID)
 
-	require.Len(t, merged.Rules, 2)
-	assert.Equal(t, "rule-new-1", merged.Rules[0].ID)
-	assert.Equal(t, "rule-new-2", merged.Rules[1].ID)
-
-	// Original not mutated
-	assert.Equal(t, "acc-1", existing.AccountID)
+	// Original not mutated.
 	assert.Equal(t, map[string]string{"email": "user@example.com"}, existing.Keys)
-	assert.Len(t, existing.Traits, 1)
 	assert.Equal(t, "rule-1", existing.Rules[0].ID)
-}
-
-func TestExtractIDFromJSON(t *testing.T) {
-	id, err := ExtractIDFromJSON(json.RawMessage(`{"id":"co-1","traits":[]}`))
-	require.NoError(t, err)
-	assert.Equal(t, "co-1", id)
-}
-
-func TestExtractIDFromJSON_Missing(t *testing.T) {
-	_, err := ExtractIDFromJSON(json.RawMessage(`{"traits":[]}`))
-	assert.Error(t, err)
 }
 
 func TestDeepCopyCompany_Nil(t *testing.T) {

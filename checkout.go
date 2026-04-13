@@ -601,15 +601,16 @@ var (
 	checkoutSubscriptionFieldExpiredAt                        = big.NewInt(1 << 10)
 	checkoutSubscriptionFieldID                               = big.NewInt(1 << 11)
 	checkoutSubscriptionFieldInterval                         = big.NewInt(1 << 12)
-	checkoutSubscriptionFieldMetadata                         = big.NewInt(1 << 13)
-	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 14)
-	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 15)
-	checkoutSubscriptionFieldProviderType                     = big.NewInt(1 << 16)
-	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 17)
-	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 18)
-	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 19)
-	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 20)
-	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 21)
+	checkoutSubscriptionFieldInvoiceURL                       = big.NewInt(1 << 13)
+	checkoutSubscriptionFieldMetadata                         = big.NewInt(1 << 14)
+	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 15)
+	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 16)
+	checkoutSubscriptionFieldProviderType                     = big.NewInt(1 << 17)
+	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 18)
+	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 19)
+	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 20)
+	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 21)
+	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 22)
 )
 
 type CheckoutSubscription struct {
@@ -626,6 +627,7 @@ type CheckoutSubscription struct {
 	ExpiredAt                        *time.Time                          `json:"expired_at,omitempty" url:"expired_at,omitempty"`
 	ID                               string                              `json:"id" url:"id"`
 	Interval                         string                              `json:"interval" url:"interval"`
+	InvoiceURL                       *string                             `json:"invoice_url,omitempty" url:"invoice_url,omitempty"`
 	Metadata                         map[string]any                      `json:"metadata,omitempty" url:"metadata,omitempty"`
 	PeriodEnd                        int64                               `json:"period_end" url:"period_end"`
 	PeriodStart                      int64                               `json:"period_start" url:"period_start"`
@@ -732,6 +734,13 @@ func (c *CheckoutSubscription) GetInterval() string {
 		return ""
 	}
 	return c.Interval
+}
+
+func (c *CheckoutSubscription) GetInvoiceURL() *string {
+	if c == nil {
+		return nil
+	}
+	return c.InvoiceURL
 }
 
 func (c *CheckoutSubscription) GetMetadata() map[string]any {
@@ -900,6 +909,13 @@ func (c *CheckoutSubscription) SetID(id string) {
 func (c *CheckoutSubscription) SetInterval(interval string) {
 	c.Interval = interval
 	c.require(checkoutSubscriptionFieldInterval)
+}
+
+// SetInvoiceURL sets the InvoiceURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutSubscription) SetInvoiceURL(invoiceURL *string) {
+	c.InvoiceURL = invoiceURL
+	c.require(checkoutSubscriptionFieldInvoiceURL)
 }
 
 // SetMetadata sets the Metadata field and marks it as non-optional;
@@ -2635,106 +2651,6 @@ func (u *UpdateCreditBundleRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateCreditBundleRequestBody) String() string {
-	if u == nil {
-		return "<nil>"
-	}
-	if len(u.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(u); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", u)
-}
-
-var (
-	updatePayInAdvanceRequestBodyFieldPriceID  = big.NewInt(1 << 0)
-	updatePayInAdvanceRequestBodyFieldQuantity = big.NewInt(1 << 1)
-)
-
-type UpdatePayInAdvanceRequestBody struct {
-	PriceID  string `json:"price_id" url:"price_id"`
-	Quantity int64  `json:"quantity" url:"quantity"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (u *UpdatePayInAdvanceRequestBody) GetPriceID() string {
-	if u == nil {
-		return ""
-	}
-	return u.PriceID
-}
-
-func (u *UpdatePayInAdvanceRequestBody) GetQuantity() int64 {
-	if u == nil {
-		return 0
-	}
-	return u.Quantity
-}
-
-func (u *UpdatePayInAdvanceRequestBody) GetExtraProperties() map[string]interface{} {
-	if u == nil {
-		return nil
-	}
-	return u.extraProperties
-}
-
-func (u *UpdatePayInAdvanceRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
-	}
-	u.explicitFields.Or(u.explicitFields, field)
-}
-
-// SetPriceID sets the PriceID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePayInAdvanceRequestBody) SetPriceID(priceID string) {
-	u.PriceID = priceID
-	u.require(updatePayInAdvanceRequestBodyFieldPriceID)
-}
-
-// SetQuantity sets the Quantity field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePayInAdvanceRequestBody) SetQuantity(quantity int64) {
-	u.Quantity = quantity
-	u.require(updatePayInAdvanceRequestBodyFieldQuantity)
-}
-
-func (u *UpdatePayInAdvanceRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler UpdatePayInAdvanceRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*u = UpdatePayInAdvanceRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *u)
-	if err != nil {
-		return err
-	}
-	u.extraProperties = extraProperties
-	u.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (u *UpdatePayInAdvanceRequestBody) MarshalJSON() ([]byte, error) {
-	type embed UpdatePayInAdvanceRequestBody
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*u),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (u *UpdatePayInAdvanceRequestBody) String() string {
 	if u == nil {
 		return "<nil>"
 	}

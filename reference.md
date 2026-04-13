@@ -12075,6 +12075,87 @@ client.Plans.UpdateCompanyPlans(
 </dl>
 </details>
 
+<details><summary><code>client.Plans.CreateCustomPlan(request) -> *schematichq.CreateCustomPlanResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreateCustomPlanRequestBody{
+        CompanyID: "company_id",
+        Description: "description",
+        Name: "name",
+    }
+client.Plans.CreateCustomPlan(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**copiedFromPlanID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**description:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**icon:** `*schematichq.PlanIcon` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Plans.ListPlans() -> *schematichq.ListPlansResponse</code></summary>
 <dl>
 <dd>
@@ -12110,6 +12191,9 @@ request := &schematichq.ListPlansRequest{
         PlanType: schematichq.PlanTypePlan.Ptr(),
         Q: schematichq.String(
             "q",
+        ),
+        ScopedToCompanyID: schematichq.String(
+            "scoped_to_company_id",
         ),
         WithoutEntitlementFor: schematichq.String(
             "without_entitlement_for",
@@ -12208,6 +12292,14 @@ client.Plans.ListPlans(
 <dd>
 
 **q:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scopedToCompanyID:** `*string` — Filter plans scoped to a specific company (custom plans)
     
 </dd>
 </dl>
@@ -12802,6 +12894,9 @@ request := &schematichq.CountPlansRequest{
         Q: schematichq.String(
             "q",
         ),
+        ScopedToCompanyID: schematichq.String(
+            "scoped_to_company_id",
+        ),
         WithoutEntitlementFor: schematichq.String(
             "without_entitlement_for",
         ),
@@ -12899,6 +12994,14 @@ client.Plans.CountPlans(
 <dd>
 
 **q:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scopedToCompanyID:** `*string` — Filter plans scoped to a specific company (custom plans)
     
 </dd>
 </dl>
@@ -13076,6 +13179,12 @@ request := &schematichq.PublishPlanVersionRequestBody{
             "excluded_company_ids",
         },
         MigrationStrategy: schematichq.PlanVersionMigrationStrategyImmediate,
+        PayInAdvance: []*schematichq.UpdatePayInAdvanceRequestBody{
+            &schematichq.UpdatePayInAdvanceRequestBody{
+                PriceID: "price_id",
+                Quantity: int64(1000000),
+            },
+        },
     }
 client.Plans.PublishPlanVersion(
         context.TODO(),
@@ -13105,6 +13214,30 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
+**activationStrategy:** `*schematichq.CustomPlanActivationStrategy` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customerEmail:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**daysUntilDue:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **excludedCompanyIDs:** `[]string` 
     
 </dd>
@@ -13114,6 +13247,14 @@ client.Plans.PublishPlanVersion(
 <dd>
 
 **migrationStrategy:** `*schematichq.PlanVersionMigrationStrategy` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**payInAdvance:** `[]*schematichq.UpdatePayInAdvanceRequestBody` 
     
 </dd>
 </dl>

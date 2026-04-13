@@ -52,6 +52,22 @@ func (c *Client) UpdateCompanyPlans(
 	return response.Body, nil
 }
 
+func (c *Client) CreateCustomPlan(
+	ctx context.Context,
+	request *schematichq.CreateCustomPlanRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.CreateCustomPlanResponse, error) {
+	response, err := c.WithRawResponse.CreateCustomPlan(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) ListPlans(
 	ctx context.Context,
 	request *schematichq.ListPlansRequest,

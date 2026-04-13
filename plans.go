@@ -75,10 +75,11 @@ var (
 	countPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 6)
 	countPlansRequestFieldPlanType              = big.NewInt(1 << 7)
 	countPlansRequestFieldQ                     = big.NewInt(1 << 8)
-	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 9)
-	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 10)
-	countPlansRequestFieldLimit                 = big.NewInt(1 << 11)
-	countPlansRequestFieldOffset                = big.NewInt(1 << 12)
+	countPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 9)
+	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 10)
+	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 11)
+	countPlansRequestFieldLimit                 = big.NewInt(1 << 12)
+	countPlansRequestFieldOffset                = big.NewInt(1 << 13)
 )
 
 type CountPlansRequest struct {
@@ -97,6 +98,8 @@ type CountPlansRequest struct {
 	// Filter by plan type
 	PlanType *PlanType `json:"-" url:"plan_type,omitempty"`
 	Q        *string   `json:"-" url:"q,omitempty"`
+	// Filter plans scoped to a specific company (custom plans)
+	ScopedToCompanyID *string `json:"-" url:"scoped_to_company_id,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
@@ -180,6 +183,13 @@ func (c *CountPlansRequest) SetQ(q *string) {
 	c.require(countPlansRequestFieldQ)
 }
 
+// SetScopedToCompanyID sets the ScopedToCompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansRequest) SetScopedToCompanyID(scopedToCompanyID *string) {
+	c.ScopedToCompanyID = scopedToCompanyID
+	c.require(countPlansRequestFieldScopedToCompanyID)
+}
+
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountPlansRequest) SetWithoutEntitlementFor(withoutEntitlementFor *string) {
@@ -206,6 +216,88 @@ func (c *CountPlansRequest) SetLimit(limit *int64) {
 func (c *CountPlansRequest) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countPlansRequestFieldOffset)
+}
+
+var (
+	createCustomPlanRequestBodyFieldCompanyID        = big.NewInt(1 << 0)
+	createCustomPlanRequestBodyFieldCopiedFromPlanID = big.NewInt(1 << 1)
+	createCustomPlanRequestBodyFieldDescription      = big.NewInt(1 << 2)
+	createCustomPlanRequestBodyFieldIcon             = big.NewInt(1 << 3)
+	createCustomPlanRequestBodyFieldName             = big.NewInt(1 << 4)
+)
+
+type CreateCustomPlanRequestBody struct {
+	CompanyID        string    `json:"company_id" url:"-"`
+	CopiedFromPlanID *string   `json:"copied_from_plan_id,omitempty" url:"-"`
+	Description      string    `json:"description" url:"-"`
+	Icon             *PlanIcon `json:"icon,omitempty" url:"-"`
+	Name             string    `json:"name" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CreateCustomPlanRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanRequestBody) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(createCustomPlanRequestBodyFieldCompanyID)
+}
+
+// SetCopiedFromPlanID sets the CopiedFromPlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanRequestBody) SetCopiedFromPlanID(copiedFromPlanID *string) {
+	c.CopiedFromPlanID = copiedFromPlanID
+	c.require(createCustomPlanRequestBodyFieldCopiedFromPlanID)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanRequestBody) SetDescription(description string) {
+	c.Description = description
+	c.require(createCustomPlanRequestBodyFieldDescription)
+}
+
+// SetIcon sets the Icon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanRequestBody) SetIcon(icon *PlanIcon) {
+	c.Icon = icon
+	c.require(createCustomPlanRequestBodyFieldIcon)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanRequestBody) SetName(name string) {
+	c.Name = name
+	c.require(createCustomPlanRequestBodyFieldName)
+}
+
+func (c *CreateCustomPlanRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCustomPlanRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateCustomPlanRequestBody(body)
+	return nil
+}
+
+func (c *CreateCustomPlanRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateCustomPlanRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -359,10 +451,11 @@ var (
 	listPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 6)
 	listPlansRequestFieldPlanType              = big.NewInt(1 << 7)
 	listPlansRequestFieldQ                     = big.NewInt(1 << 8)
-	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 9)
-	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 10)
-	listPlansRequestFieldLimit                 = big.NewInt(1 << 11)
-	listPlansRequestFieldOffset                = big.NewInt(1 << 12)
+	listPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 9)
+	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 10)
+	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 11)
+	listPlansRequestFieldLimit                 = big.NewInt(1 << 12)
+	listPlansRequestFieldOffset                = big.NewInt(1 << 13)
 )
 
 type ListPlansRequest struct {
@@ -381,6 +474,8 @@ type ListPlansRequest struct {
 	// Filter by plan type
 	PlanType *PlanType `json:"-" url:"plan_type,omitempty"`
 	Q        *string   `json:"-" url:"q,omitempty"`
+	// Filter plans scoped to a specific company (custom plans)
+	ScopedToCompanyID *string `json:"-" url:"scoped_to_company_id,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
@@ -464,6 +559,13 @@ func (l *ListPlansRequest) SetQ(q *string) {
 	l.require(listPlansRequestFieldQ)
 }
 
+// SetScopedToCompanyID sets the ScopedToCompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansRequest) SetScopedToCompanyID(scopedToCompanyID *string) {
+	l.ScopedToCompanyID = scopedToCompanyID
+	l.require(listPlansRequestFieldScopedToCompanyID)
+}
+
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListPlansRequest) SetWithoutEntitlementFor(withoutEntitlementFor *string) {
@@ -493,13 +595,21 @@ func (l *ListPlansRequest) SetOffset(offset *int64) {
 }
 
 var (
-	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 0)
-	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 1)
+	publishPlanVersionRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
+	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 1)
+	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 2)
+	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 3)
+	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 4)
+	publishPlanVersionRequestBodyFieldPayInAdvance       = big.NewInt(1 << 5)
 )
 
 type PublishPlanVersionRequestBody struct {
-	ExcludedCompanyIDs []string                     `json:"excluded_company_ids" url:"-"`
-	MigrationStrategy  PlanVersionMigrationStrategy `json:"migration_strategy" url:"-"`
+	ActivationStrategy *CustomPlanActivationStrategy    `json:"activation_strategy,omitempty" url:"-"`
+	CustomerEmail      *string                          `json:"customer_email,omitempty" url:"-"`
+	DaysUntilDue       *int64                           `json:"days_until_due,omitempty" url:"-"`
+	ExcludedCompanyIDs []string                         `json:"excluded_company_ids" url:"-"`
+	MigrationStrategy  PlanVersionMigrationStrategy     `json:"migration_strategy" url:"-"`
+	PayInAdvance       []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -510,6 +620,27 @@ func (p *PublishPlanVersionRequestBody) require(field *big.Int) {
 		p.explicitFields = big.NewInt(0)
 	}
 	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetActivationStrategy sets the ActivationStrategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetActivationStrategy(activationStrategy *CustomPlanActivationStrategy) {
+	p.ActivationStrategy = activationStrategy
+	p.require(publishPlanVersionRequestBodyFieldActivationStrategy)
+}
+
+// SetCustomerEmail sets the CustomerEmail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetCustomerEmail(customerEmail *string) {
+	p.CustomerEmail = customerEmail
+	p.require(publishPlanVersionRequestBodyFieldCustomerEmail)
+}
+
+// SetDaysUntilDue sets the DaysUntilDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetDaysUntilDue(daysUntilDue *int64) {
+	p.DaysUntilDue = daysUntilDue
+	p.require(publishPlanVersionRequestBodyFieldDaysUntilDue)
 }
 
 // SetExcludedCompanyIDs sets the ExcludedCompanyIDs field and marks it as non-optional;
@@ -524,6 +655,13 @@ func (p *PublishPlanVersionRequestBody) SetExcludedCompanyIDs(excludedCompanyIDs
 func (p *PublishPlanVersionRequestBody) SetMigrationStrategy(migrationStrategy PlanVersionMigrationStrategy) {
 	p.MigrationStrategy = migrationStrategy
 	p.require(publishPlanVersionRequestBodyFieldMigrationStrategy)
+}
+
+// SetPayInAdvance sets the PayInAdvance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetPayInAdvance(payInAdvance []*UpdatePayInAdvanceRequestBody) {
+	p.PayInAdvance = payInAdvance
+	p.require(publishPlanVersionRequestBodyFieldPayInAdvance)
 }
 
 func (p *PublishPlanVersionRequestBody) UnmarshalJSON(data []byte) error {
@@ -930,8 +1068,9 @@ var (
 	countPlansParamsFieldOffset                = big.NewInt(1 << 8)
 	countPlansParamsFieldPlanType              = big.NewInt(1 << 9)
 	countPlansParamsFieldQ                     = big.NewInt(1 << 10)
-	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 11)
-	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 12)
+	countPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 11)
+	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 12)
+	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 13)
 )
 
 type CountPlansParams struct {
@@ -954,6 +1093,8 @@ type CountPlansParams struct {
 	// Filter by plan type
 	PlanType *PlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
 	Q        *string   `json:"q,omitempty" url:"q,omitempty"`
+	// Filter plans scoped to a specific company (custom plans)
+	ScopedToCompanyID *string `json:"scoped_to_company_id,omitempty" url:"scoped_to_company_id,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
@@ -1041,6 +1182,13 @@ func (c *CountPlansParams) GetQ() *string {
 		return nil
 	}
 	return c.Q
+}
+
+func (c *CountPlansParams) GetScopedToCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ScopedToCompanyID
 }
 
 func (c *CountPlansParams) GetWithoutEntitlementFor() *string {
@@ -1146,6 +1294,13 @@ func (c *CountPlansParams) SetPlanType(planType *PlanType) {
 func (c *CountPlansParams) SetQ(q *string) {
 	c.Q = q
 	c.require(countPlansParamsFieldQ)
+}
+
+// SetScopedToCompanyID sets the ScopedToCompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansParams) SetScopedToCompanyID(scopedToCompanyID *string) {
+	c.ScopedToCompanyID = scopedToCompanyID
+	c.require(countPlansParamsFieldScopedToCompanyID)
 }
 
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
@@ -1291,6 +1446,107 @@ func (c *CountPlansResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountPlansResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	createCustomPlanResponseFieldData   = big.NewInt(1 << 0)
+	createCustomPlanResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CreateCustomPlanResponse struct {
+	Data *PlanDetailResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateCustomPlanResponse) GetData() *PlanDetailResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateCustomPlanResponse) GetParams() map[string]any {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CreateCustomPlanResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateCustomPlanResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanResponse) SetData(data *PlanDetailResponseData) {
+	c.Data = data
+	c.require(createCustomPlanResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanResponse) SetParams(params map[string]any) {
+	c.Params = params
+	c.require(createCustomPlanResponseFieldParams)
+}
+
+func (c *CreateCustomPlanResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCustomPlanResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateCustomPlanResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateCustomPlanResponse) MarshalJSON() ([]byte, error) {
+	type embed CreateCustomPlanResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateCustomPlanResponse) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -2333,8 +2589,9 @@ var (
 	listPlansParamsFieldOffset                = big.NewInt(1 << 8)
 	listPlansParamsFieldPlanType              = big.NewInt(1 << 9)
 	listPlansParamsFieldQ                     = big.NewInt(1 << 10)
-	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 11)
-	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 12)
+	listPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 11)
+	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 12)
+	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 13)
 )
 
 type ListPlansParams struct {
@@ -2357,6 +2614,8 @@ type ListPlansParams struct {
 	// Filter by plan type
 	PlanType *PlanType `json:"plan_type,omitempty" url:"plan_type,omitempty"`
 	Q        *string   `json:"q,omitempty" url:"q,omitempty"`
+	// Filter plans scoped to a specific company (custom plans)
+	ScopedToCompanyID *string `json:"scoped_to_company_id,omitempty" url:"scoped_to_company_id,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
@@ -2444,6 +2703,13 @@ func (l *ListPlansParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListPlansParams) GetScopedToCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.ScopedToCompanyID
 }
 
 func (l *ListPlansParams) GetWithoutEntitlementFor() *string {
@@ -2549,6 +2815,13 @@ func (l *ListPlansParams) SetPlanType(planType *PlanType) {
 func (l *ListPlansParams) SetQ(q *string) {
 	l.Q = q
 	l.require(listPlansParamsFieldQ)
+}
+
+// SetScopedToCompanyID sets the ScopedToCompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansParams) SetScopedToCompanyID(scopedToCompanyID *string) {
+	l.ScopedToCompanyID = scopedToCompanyID
+	l.require(listPlansParamsFieldScopedToCompanyID)
 }
 
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;

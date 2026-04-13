@@ -1908,30 +1908,33 @@ var (
 	planGroupPlanDetailResponseDataFieldBillingProduct        = big.NewInt(1 << 3)
 	planGroupPlanDetailResponseDataFieldChargeType            = big.NewInt(1 << 4)
 	planGroupPlanDetailResponseDataFieldCompanyCount          = big.NewInt(1 << 5)
-	planGroupPlanDetailResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 6)
-	planGroupPlanDetailResponseDataFieldControlledBy          = big.NewInt(1 << 7)
-	planGroupPlanDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 8)
-	planGroupPlanDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 9)
-	planGroupPlanDetailResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 10)
-	planGroupPlanDetailResponseDataFieldDescription           = big.NewInt(1 << 11)
-	planGroupPlanDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 12)
-	planGroupPlanDetailResponseDataFieldEntitlements          = big.NewInt(1 << 13)
-	planGroupPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 14)
-	planGroupPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 15)
-	planGroupPlanDetailResponseDataFieldID                    = big.NewInt(1 << 16)
-	planGroupPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 17)
-	planGroupPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 18)
-	planGroupPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 19)
-	planGroupPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 20)
-	planGroupPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 21)
-	planGroupPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 22)
-	planGroupPlanDetailResponseDataFieldName                  = big.NewInt(1 << 23)
-	planGroupPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 24)
-	planGroupPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 25)
-	planGroupPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 26)
-	planGroupPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 27)
-	planGroupPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 28)
-	planGroupPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 29)
+	planGroupPlanDetailResponseDataFieldCompanyID             = big.NewInt(1 << 6)
+	planGroupPlanDetailResponseDataFieldCompanyName           = big.NewInt(1 << 7)
+	planGroupPlanDetailResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 8)
+	planGroupPlanDetailResponseDataFieldControlledBy          = big.NewInt(1 << 9)
+	planGroupPlanDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 10)
+	planGroupPlanDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 11)
+	planGroupPlanDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 12)
+	planGroupPlanDetailResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 13)
+	planGroupPlanDetailResponseDataFieldDescription           = big.NewInt(1 << 14)
+	planGroupPlanDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 15)
+	planGroupPlanDetailResponseDataFieldEntitlements          = big.NewInt(1 << 16)
+	planGroupPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 17)
+	planGroupPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 18)
+	planGroupPlanDetailResponseDataFieldID                    = big.NewInt(1 << 19)
+	planGroupPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 20)
+	planGroupPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 21)
+	planGroupPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 22)
+	planGroupPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 23)
+	planGroupPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 24)
+	planGroupPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 25)
+	planGroupPlanDetailResponseDataFieldName                  = big.NewInt(1 << 26)
+	planGroupPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 27)
+	planGroupPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 28)
+	planGroupPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 29)
+	planGroupPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 30)
+	planGroupPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 31)
+	planGroupPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 32)
 )
 
 type PlanGroupPlanDetailResponseData struct {
@@ -1941,8 +1944,11 @@ type PlanGroupPlanDetailResponseData struct {
 	BillingProduct        *BillingProductDetailResponseData     `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	ChargeType            ChargeType                            `json:"charge_type" url:"charge_type"`
 	CompanyCount          int64                                 `json:"company_count" url:"company_count"`
+	CompanyID             *string                               `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyName           *string                               `json:"company_name,omitempty" url:"company_name,omitempty"`
 	CompatiblePlanIDs     []string                              `json:"compatible_plan_ids" url:"compatible_plan_ids"`
-	ControlledBy          BillingProviderType                   `json:"controlled_by" url:"controlled_by"`
+	ControlledBy          string                                `json:"controlled_by" url:"controlled_by"`
+	CopiedFromPlanID      *string                               `json:"copied_from_plan_id,omitempty" url:"copied_from_plan_id,omitempty"`
 	CreatedAt             time.Time                             `json:"created_at" url:"created_at"`
 	CurrencyPrices        []*PlanCurrencyPricesResponseData     `json:"currency_prices" url:"currency_prices"`
 	CustomPlanConfig      *CustomPlanViewConfigResponseData     `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
@@ -2015,6 +2021,20 @@ func (p *PlanGroupPlanDetailResponseData) GetCompanyCount() int64 {
 	return p.CompanyCount
 }
 
+func (p *PlanGroupPlanDetailResponseData) GetCompanyID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CompanyID
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetCompanyName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CompanyName
+}
+
 func (p *PlanGroupPlanDetailResponseData) GetCompatiblePlanIDs() []string {
 	if p == nil {
 		return nil
@@ -2022,11 +2042,18 @@ func (p *PlanGroupPlanDetailResponseData) GetCompatiblePlanIDs() []string {
 	return p.CompatiblePlanIDs
 }
 
-func (p *PlanGroupPlanDetailResponseData) GetControlledBy() BillingProviderType {
+func (p *PlanGroupPlanDetailResponseData) GetControlledBy() string {
 	if p == nil {
 		return ""
 	}
 	return p.ControlledBy
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetCopiedFromPlanID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CopiedFromPlanID
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetCreatedAt() time.Time {
@@ -2239,6 +2266,20 @@ func (p *PlanGroupPlanDetailResponseData) SetCompanyCount(companyCount int64) {
 	p.require(planGroupPlanDetailResponseDataFieldCompanyCount)
 }
 
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanDetailResponseData) SetCompanyID(companyID *string) {
+	p.CompanyID = companyID
+	p.require(planGroupPlanDetailResponseDataFieldCompanyID)
+}
+
+// SetCompanyName sets the CompanyName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanDetailResponseData) SetCompanyName(companyName *string) {
+	p.CompanyName = companyName
+	p.require(planGroupPlanDetailResponseDataFieldCompanyName)
+}
+
 // SetCompatiblePlanIDs sets the CompatiblePlanIDs field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanGroupPlanDetailResponseData) SetCompatiblePlanIDs(compatiblePlanIDs []string) {
@@ -2248,9 +2289,16 @@ func (p *PlanGroupPlanDetailResponseData) SetCompatiblePlanIDs(compatiblePlanIDs
 
 // SetControlledBy sets the ControlledBy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanGroupPlanDetailResponseData) SetControlledBy(controlledBy BillingProviderType) {
+func (p *PlanGroupPlanDetailResponseData) SetControlledBy(controlledBy string) {
 	p.ControlledBy = controlledBy
 	p.require(planGroupPlanDetailResponseDataFieldControlledBy)
+}
+
+// SetCopiedFromPlanID sets the CopiedFromPlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanDetailResponseData) SetCopiedFromPlanID(copiedFromPlanID *string) {
+	p.CopiedFromPlanID = copiedFromPlanID
+	p.require(planGroupPlanDetailResponseDataFieldCopiedFromPlanID)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;

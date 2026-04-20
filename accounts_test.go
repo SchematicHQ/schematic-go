@@ -4683,9 +4683,9 @@ func TestSettersMarkExplicitQuickstartResp(t *testing.T) {
 
 }
 
-func TestSettersWhoAmIResponseData(t *testing.T) {
+func TestSettersWhoAmIresponseData(t *testing.T) {
 	t.Run("SetAccountID", func(t *testing.T) {
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueAccountID string
 		obj.SetAccountID(fernTestValueAccountID)
 		assert.Equal(t, fernTestValueAccountID, obj.AccountID)
@@ -4693,7 +4693,7 @@ func TestSettersWhoAmIResponseData(t *testing.T) {
 	})
 
 	t.Run("SetAccountName", func(t *testing.T) {
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueAccountName string
 		obj.SetAccountName(fernTestValueAccountName)
 		assert.Equal(t, fernTestValueAccountName, obj.AccountName)
@@ -4701,7 +4701,7 @@ func TestSettersWhoAmIResponseData(t *testing.T) {
 	})
 
 	t.Run("SetActorType", func(t *testing.T) {
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueActorType ActorType
 		obj.SetActorType(fernTestValueActorType)
 		assert.Equal(t, fernTestValueActorType, obj.ActorType)
@@ -4709,7 +4709,7 @@ func TestSettersWhoAmIResponseData(t *testing.T) {
 	})
 
 	t.Run("SetAPIKeyID", func(t *testing.T) {
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueAPIKeyID *string
 		obj.SetAPIKeyID(fernTestValueAPIKeyID)
 		assert.Equal(t, fernTestValueAPIKeyID, obj.APIKeyID)
@@ -4717,7 +4717,7 @@ func TestSettersWhoAmIResponseData(t *testing.T) {
 	})
 
 	t.Run("SetEnvironmentID", func(t *testing.T) {
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueEnvironmentID *string
 		obj.SetEnvironmentID(fernTestValueEnvironmentID)
 		assert.Equal(t, fernTestValueEnvironmentID, obj.EnvironmentID)
@@ -4725,7 +4725,7 @@ func TestSettersWhoAmIResponseData(t *testing.T) {
 	})
 
 	t.Run("SetEnvironments", func(t *testing.T) {
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueEnvironments []*EnvironmentResponseData
 		obj.SetEnvironments(fernTestValueEnvironments)
 		assert.Equal(t, fernTestValueEnvironments, obj.Environments)
@@ -4733,7 +4733,7 @@ func TestSettersWhoAmIResponseData(t *testing.T) {
 	})
 
 	t.Run("SetStripeUserID", func(t *testing.T) {
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueStripeUserID *string
 		obj.SetStripeUserID(fernTestValueStripeUserID)
 		assert.Equal(t, fernTestValueStripeUserID, obj.StripeUserID)
@@ -4741,7 +4741,7 @@ func TestSettersWhoAmIResponseData(t *testing.T) {
 	})
 
 	t.Run("SetUserID", func(t *testing.T) {
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueUserID *string
 		obj.SetUserID(fernTestValueUserID)
 		assert.Equal(t, fernTestValueUserID, obj.UserID)
@@ -4749,7 +4749,7 @@ func TestSettersWhoAmIResponseData(t *testing.T) {
 	})
 
 	t.Run("SetUserName", func(t *testing.T) {
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueUserName *string
 		obj.SetUserName(fernTestValueUserName)
 		assert.Equal(t, fernTestValueUserName, obj.UserName)
@@ -4758,11 +4758,11 @@ func TestSettersWhoAmIResponseData(t *testing.T) {
 
 }
 
-func TestGettersWhoAmIResponseData(t *testing.T) {
+func TestGettersWhoAmIresponseData(t *testing.T) {
 	t.Run("GetAccountID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var expected string
 		obj.AccountID = expected
 
@@ -4772,7 +4772,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetAccountID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -4785,7 +4785,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetAccountName", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var expected string
 		obj.AccountName = expected
 
@@ -4795,7 +4795,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetAccountName_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -4808,7 +4808,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetActorType", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var expected ActorType
 		obj.ActorType = expected
 
@@ -4818,7 +4818,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetActorType_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -4831,7 +4831,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetAPIKeyID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var expected *string
 		obj.APIKeyID = expected
 
@@ -4842,7 +4842,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetAPIKeyID_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		obj.APIKeyID = nil
 
 		// Act & Assert
@@ -4851,7 +4851,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetAPIKeyID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -4864,7 +4864,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetEnvironmentID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var expected *string
 		obj.EnvironmentID = expected
 
@@ -4875,7 +4875,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetEnvironmentID_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		obj.EnvironmentID = nil
 
 		// Act & Assert
@@ -4884,7 +4884,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetEnvironmentID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -4897,7 +4897,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetEnvironments", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var expected []*EnvironmentResponseData
 		obj.Environments = expected
 
@@ -4908,7 +4908,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetEnvironments_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		obj.Environments = nil
 
 		// Act & Assert
@@ -4917,7 +4917,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetEnvironments_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -4930,7 +4930,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetStripeUserID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var expected *string
 		obj.StripeUserID = expected
 
@@ -4941,7 +4941,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetStripeUserID_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		obj.StripeUserID = nil
 
 		// Act & Assert
@@ -4950,7 +4950,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetStripeUserID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -4963,7 +4963,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetUserID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var expected *string
 		obj.UserID = expected
 
@@ -4974,7 +4974,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetUserID_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		obj.UserID = nil
 
 		// Act & Assert
@@ -4983,7 +4983,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetUserID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -4996,7 +4996,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetUserName", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var expected *string
 		obj.UserName = expected
 
@@ -5007,7 +5007,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 	t.Run("GetUserName_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		obj.UserName = nil
 
 		// Act & Assert
@@ -5016,7 +5016,7 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetUserName_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -5028,11 +5028,11 @@ func TestGettersWhoAmIResponseData(t *testing.T) {
 
 }
 
-func TestSettersMarkExplicitWhoAmIResponseData(t *testing.T) {
+func TestSettersMarkExplicitWhoAmIresponseData(t *testing.T) {
 	t.Run("SetAccountID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueAccountID string
 
 		// Act
@@ -5063,7 +5063,7 @@ func TestSettersMarkExplicitWhoAmIResponseData(t *testing.T) {
 	t.Run("SetAccountName_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueAccountName string
 
 		// Act
@@ -5094,7 +5094,7 @@ func TestSettersMarkExplicitWhoAmIResponseData(t *testing.T) {
 	t.Run("SetActorType_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueActorType ActorType
 
 		// Act
@@ -5125,7 +5125,7 @@ func TestSettersMarkExplicitWhoAmIResponseData(t *testing.T) {
 	t.Run("SetAPIKeyID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueAPIKeyID *string
 
 		// Act
@@ -5156,7 +5156,7 @@ func TestSettersMarkExplicitWhoAmIResponseData(t *testing.T) {
 	t.Run("SetEnvironmentID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueEnvironmentID *string
 
 		// Act
@@ -5187,7 +5187,7 @@ func TestSettersMarkExplicitWhoAmIResponseData(t *testing.T) {
 	t.Run("SetEnvironments_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueEnvironments []*EnvironmentResponseData
 
 		// Act
@@ -5218,7 +5218,7 @@ func TestSettersMarkExplicitWhoAmIResponseData(t *testing.T) {
 	t.Run("SetStripeUserID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueStripeUserID *string
 
 		// Act
@@ -5249,7 +5249,7 @@ func TestSettersMarkExplicitWhoAmIResponseData(t *testing.T) {
 	t.Run("SetUserID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueUserID *string
 
 		// Act
@@ -5280,7 +5280,7 @@ func TestSettersMarkExplicitWhoAmIResponseData(t *testing.T) {
 	t.Run("SetUserName_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		var fernTestValueUserName *string
 
 		// Act
@@ -7650,17 +7650,17 @@ func TestSettersMarkExplicitGetEnvironmentResponse(t *testing.T) {
 
 }
 
-func TestSettersGetWhoAmIResponse(t *testing.T) {
+func TestSettersGetWhoAmIresponse(t *testing.T) {
 	t.Run("SetData", func(t *testing.T) {
-		obj := &GetWhoAmIResponse{}
-		var fernTestValueData *WhoAmIResponseData
+		obj := &GetWhoAmIresponse{}
+		var fernTestValueData *WhoAmIresponseData
 		obj.SetData(fernTestValueData)
 		assert.Equal(t, fernTestValueData, obj.Data)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
 	t.Run("SetParams", func(t *testing.T) {
-		obj := &GetWhoAmIResponse{}
+		obj := &GetWhoAmIresponse{}
 		var fernTestValueParams map[string]any
 		obj.SetParams(fernTestValueParams)
 		assert.Equal(t, fernTestValueParams, obj.Params)
@@ -7669,12 +7669,12 @@ func TestSettersGetWhoAmIResponse(t *testing.T) {
 
 }
 
-func TestGettersGetWhoAmIResponse(t *testing.T) {
+func TestGettersGetWhoAmIresponse(t *testing.T) {
 	t.Run("GetData", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &GetWhoAmIResponse{}
-		var expected *WhoAmIResponseData
+		obj := &GetWhoAmIresponse{}
+		var expected *WhoAmIresponseData
 		obj.Data = expected
 
 		// Act & Assert
@@ -7684,7 +7684,7 @@ func TestGettersGetWhoAmIResponse(t *testing.T) {
 	t.Run("GetData_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &GetWhoAmIResponse{}
+		obj := &GetWhoAmIresponse{}
 		obj.Data = nil
 
 		// Act & Assert
@@ -7693,7 +7693,7 @@ func TestGettersGetWhoAmIResponse(t *testing.T) {
 
 	t.Run("GetData_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *GetWhoAmIResponse
+		var obj *GetWhoAmIresponse
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -7706,7 +7706,7 @@ func TestGettersGetWhoAmIResponse(t *testing.T) {
 	t.Run("GetParams", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &GetWhoAmIResponse{}
+		obj := &GetWhoAmIresponse{}
 		var expected map[string]any
 		obj.Params = expected
 
@@ -7717,7 +7717,7 @@ func TestGettersGetWhoAmIResponse(t *testing.T) {
 	t.Run("GetParams_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &GetWhoAmIResponse{}
+		obj := &GetWhoAmIresponse{}
 		obj.Params = nil
 
 		// Act & Assert
@@ -7726,7 +7726,7 @@ func TestGettersGetWhoAmIResponse(t *testing.T) {
 
 	t.Run("GetParams_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *GetWhoAmIResponse
+		var obj *GetWhoAmIresponse
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -7738,12 +7738,12 @@ func TestGettersGetWhoAmIResponse(t *testing.T) {
 
 }
 
-func TestSettersMarkExplicitGetWhoAmIResponse(t *testing.T) {
+func TestSettersMarkExplicitGetWhoAmIresponse(t *testing.T) {
 	t.Run("SetData_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &GetWhoAmIResponse{}
-		var fernTestValueData *WhoAmIResponseData
+		obj := &GetWhoAmIresponse{}
+		var fernTestValueData *WhoAmIresponseData
 
 		// Act
 		obj.SetData(fernTestValueData)
@@ -7773,7 +7773,7 @@ func TestSettersMarkExplicitGetWhoAmIResponse(t *testing.T) {
 	t.Run("SetParams_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &GetWhoAmIResponse{}
+		obj := &GetWhoAmIresponse{}
 		var fernTestValueParams map[string]any
 
 		// Act
@@ -10935,11 +10935,11 @@ func TestJSONMarshalingGetEnvironmentResponse(t *testing.T) {
 	})
 }
 
-func TestJSONMarshalingGetWhoAmIResponse(t *testing.T) {
+func TestJSONMarshalingGetWhoAmIresponse(t *testing.T) {
 	t.Run("MarshalUnmarshal", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &GetWhoAmIResponse{}
+		obj := &GetWhoAmIresponse{}
 
 		// Act - Marshal to JSON
 		data, err := json.Marshal(obj)
@@ -10948,21 +10948,21 @@ func TestJSONMarshalingGetWhoAmIResponse(t *testing.T) {
 		assert.NotEmpty(t, data, "marshaled data should not be empty")
 
 		// Unmarshal back and verify round-trip
-		var unmarshaled GetWhoAmIResponse
+		var unmarshaled GetWhoAmIresponse
 		err = json.Unmarshal(data, &unmarshaled)
 		assert.NoError(t, err, "round-trip unmarshal should succeed")
 	})
 
 	t.Run("UnmarshalInvalidJSON", func(t *testing.T) {
 		t.Parallel()
-		var obj GetWhoAmIResponse
+		var obj GetWhoAmIresponse
 		err := json.Unmarshal([]byte(`{invalid json}`), &obj)
 		assert.Error(t, err, "unmarshaling invalid JSON should return an error")
 	})
 
 	t.Run("UnmarshalEmptyObject", func(t *testing.T) {
 		t.Parallel()
-		var obj GetWhoAmIResponse
+		var obj GetWhoAmIresponse
 		err := json.Unmarshal([]byte(`{}`), &obj)
 		assert.NoError(t, err, "unmarshaling empty object should succeed")
 	})
@@ -11364,11 +11364,11 @@ func TestJSONMarshalingUpdateEnvironmentResponse(t *testing.T) {
 	})
 }
 
-func TestJSONMarshalingWhoAmIResponseData(t *testing.T) {
+func TestJSONMarshalingWhoAmIresponseData(t *testing.T) {
 	t.Run("MarshalUnmarshal", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 
 		// Act - Marshal to JSON
 		data, err := json.Marshal(obj)
@@ -11377,21 +11377,21 @@ func TestJSONMarshalingWhoAmIResponseData(t *testing.T) {
 		assert.NotEmpty(t, data, "marshaled data should not be empty")
 
 		// Unmarshal back and verify round-trip
-		var unmarshaled WhoAmIResponseData
+		var unmarshaled WhoAmIresponseData
 		err = json.Unmarshal(data, &unmarshaled)
 		assert.NoError(t, err, "round-trip unmarshal should succeed")
 	})
 
 	t.Run("UnmarshalInvalidJSON", func(t *testing.T) {
 		t.Parallel()
-		var obj WhoAmIResponseData
+		var obj WhoAmIresponseData
 		err := json.Unmarshal([]byte(`{invalid json}`), &obj)
 		assert.Error(t, err, "unmarshaling invalid JSON should return an error")
 	})
 
 	t.Run("UnmarshalEmptyObject", func(t *testing.T) {
 		t.Parallel()
-		var obj WhoAmIResponseData
+		var obj WhoAmIresponseData
 		err := json.Unmarshal([]byte(`{}`), &obj)
 		assert.NoError(t, err, "unmarshaling empty object should succeed")
 	})
@@ -11669,17 +11669,17 @@ func TestStringGetEnvironmentResponse(t *testing.T) {
 	})
 }
 
-func TestStringGetWhoAmIResponse(t *testing.T) {
+func TestStringGetWhoAmIresponse(t *testing.T) {
 	t.Run("StringMethod", func(t *testing.T) {
 		t.Parallel()
-		obj := &GetWhoAmIResponse{}
+		obj := &GetWhoAmIresponse{}
 		result := obj.String()
 		assert.NotEmpty(t, result, "String() should return a non-empty representation")
 	})
 
 	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *GetWhoAmIResponse
+		var obj *GetWhoAmIresponse
 		result := obj.String()
 		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
 	})
@@ -11877,17 +11877,17 @@ func TestStringUpdateEnvironmentResponse(t *testing.T) {
 	})
 }
 
-func TestStringWhoAmIResponseData(t *testing.T) {
+func TestStringWhoAmIresponseData(t *testing.T) {
 	t.Run("StringMethod", func(t *testing.T) {
 		t.Parallel()
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		result := obj.String()
 		assert.NotEmpty(t, result, "String() should return a non-empty representation")
 	})
 
 	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		result := obj.String()
 		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
 	})
@@ -12469,10 +12469,10 @@ func TestExtraPropertiesGetEnvironmentResponse(t *testing.T) {
 	})
 }
 
-func TestExtraPropertiesGetWhoAmIResponse(t *testing.T) {
+func TestExtraPropertiesGetWhoAmIresponse(t *testing.T) {
 	t.Run("GetExtraProperties", func(t *testing.T) {
 		t.Parallel()
-		obj := &GetWhoAmIResponse{}
+		obj := &GetWhoAmIresponse{}
 		// Should not panic when calling GetExtraProperties()
 		defer func() {
 			if r := recover(); r != nil {
@@ -12486,7 +12486,7 @@ func TestExtraPropertiesGetWhoAmIResponse(t *testing.T) {
 
 	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *GetWhoAmIResponse
+		var obj *GetWhoAmIresponse
 		extraProps := obj.GetExtraProperties()
 		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
 	})
@@ -12768,10 +12768,10 @@ func TestExtraPropertiesUpdateEnvironmentResponse(t *testing.T) {
 	})
 }
 
-func TestExtraPropertiesWhoAmIResponseData(t *testing.T) {
+func TestExtraPropertiesWhoAmIresponseData(t *testing.T) {
 	t.Run("GetExtraProperties", func(t *testing.T) {
 		t.Parallel()
-		obj := &WhoAmIResponseData{}
+		obj := &WhoAmIresponseData{}
 		// Should not panic when calling GetExtraProperties()
 		defer func() {
 			if r := recover(); r != nil {
@@ -12785,7 +12785,7 @@ func TestExtraPropertiesWhoAmIResponseData(t *testing.T) {
 
 	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *WhoAmIResponseData
+		var obj *WhoAmIresponseData
 		extraProps := obj.GetExtraProperties()
 		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
 	})

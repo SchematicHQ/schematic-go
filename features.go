@@ -1728,6 +1728,7 @@ const (
 	CreateOrUpdateConditionRequestBodyConditionTypeTrait          CreateOrUpdateConditionRequestBodyConditionType = "trait"
 	CreateOrUpdateConditionRequestBodyConditionTypeUser           CreateOrUpdateConditionRequestBodyConditionType = "user"
 	CreateOrUpdateConditionRequestBodyConditionTypePlan           CreateOrUpdateConditionRequestBodyConditionType = "plan"
+	CreateOrUpdateConditionRequestBodyConditionTypePlanVersion    CreateOrUpdateConditionRequestBodyConditionType = "plan_version"
 	CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct CreateOrUpdateConditionRequestBodyConditionType = "billing_product"
 	CreateOrUpdateConditionRequestBodyConditionTypeBasePlan       CreateOrUpdateConditionRequestBodyConditionType = "base_plan"
 )
@@ -1744,6 +1745,8 @@ func NewCreateOrUpdateConditionRequestBodyConditionTypeFromString(s string) (Cre
 		return CreateOrUpdateConditionRequestBodyConditionTypeUser, nil
 	case "plan":
 		return CreateOrUpdateConditionRequestBodyConditionTypePlan, nil
+	case "plan_version":
+		return CreateOrUpdateConditionRequestBodyConditionTypePlanVersion, nil
 	case "billing_product":
 		return CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct, nil
 	case "base_plan":

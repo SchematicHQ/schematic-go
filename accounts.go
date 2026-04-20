@@ -1857,18 +1857,18 @@ func (q *QuickstartResp) String() string {
 }
 
 var (
-	whoAmIResponseDataFieldAccountID     = big.NewInt(1 << 0)
-	whoAmIResponseDataFieldAccountName   = big.NewInt(1 << 1)
-	whoAmIResponseDataFieldActorType     = big.NewInt(1 << 2)
-	whoAmIResponseDataFieldAPIKeyID      = big.NewInt(1 << 3)
-	whoAmIResponseDataFieldEnvironmentID = big.NewInt(1 << 4)
-	whoAmIResponseDataFieldEnvironments  = big.NewInt(1 << 5)
-	whoAmIResponseDataFieldStripeUserID  = big.NewInt(1 << 6)
-	whoAmIResponseDataFieldUserID        = big.NewInt(1 << 7)
-	whoAmIResponseDataFieldUserName      = big.NewInt(1 << 8)
+	whoAmIresponseDataFieldAccountID     = big.NewInt(1 << 0)
+	whoAmIresponseDataFieldAccountName   = big.NewInt(1 << 1)
+	whoAmIresponseDataFieldActorType     = big.NewInt(1 << 2)
+	whoAmIresponseDataFieldAPIKeyID      = big.NewInt(1 << 3)
+	whoAmIresponseDataFieldEnvironmentID = big.NewInt(1 << 4)
+	whoAmIresponseDataFieldEnvironments  = big.NewInt(1 << 5)
+	whoAmIresponseDataFieldStripeUserID  = big.NewInt(1 << 6)
+	whoAmIresponseDataFieldUserID        = big.NewInt(1 << 7)
+	whoAmIresponseDataFieldUserName      = big.NewInt(1 << 8)
 )
 
-type WhoAmIResponseData struct {
+type WhoAmIresponseData struct {
 	AccountID     string                     `json:"account_id" url:"account_id"`
 	AccountName   string                     `json:"account_name" url:"account_name"`
 	ActorType     ActorType                  `json:"actor_type" url:"actor_type"`
@@ -1886,77 +1886,77 @@ type WhoAmIResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (w *WhoAmIResponseData) GetAccountID() string {
+func (w *WhoAmIresponseData) GetAccountID() string {
 	if w == nil {
 		return ""
 	}
 	return w.AccountID
 }
 
-func (w *WhoAmIResponseData) GetAccountName() string {
+func (w *WhoAmIresponseData) GetAccountName() string {
 	if w == nil {
 		return ""
 	}
 	return w.AccountName
 }
 
-func (w *WhoAmIResponseData) GetActorType() ActorType {
+func (w *WhoAmIresponseData) GetActorType() ActorType {
 	if w == nil {
 		return ""
 	}
 	return w.ActorType
 }
 
-func (w *WhoAmIResponseData) GetAPIKeyID() *string {
+func (w *WhoAmIresponseData) GetAPIKeyID() *string {
 	if w == nil {
 		return nil
 	}
 	return w.APIKeyID
 }
 
-func (w *WhoAmIResponseData) GetEnvironmentID() *string {
+func (w *WhoAmIresponseData) GetEnvironmentID() *string {
 	if w == nil {
 		return nil
 	}
 	return w.EnvironmentID
 }
 
-func (w *WhoAmIResponseData) GetEnvironments() []*EnvironmentResponseData {
+func (w *WhoAmIresponseData) GetEnvironments() []*EnvironmentResponseData {
 	if w == nil {
 		return nil
 	}
 	return w.Environments
 }
 
-func (w *WhoAmIResponseData) GetStripeUserID() *string {
+func (w *WhoAmIresponseData) GetStripeUserID() *string {
 	if w == nil {
 		return nil
 	}
 	return w.StripeUserID
 }
 
-func (w *WhoAmIResponseData) GetUserID() *string {
+func (w *WhoAmIresponseData) GetUserID() *string {
 	if w == nil {
 		return nil
 	}
 	return w.UserID
 }
 
-func (w *WhoAmIResponseData) GetUserName() *string {
+func (w *WhoAmIresponseData) GetUserName() *string {
 	if w == nil {
 		return nil
 	}
 	return w.UserName
 }
 
-func (w *WhoAmIResponseData) GetExtraProperties() map[string]interface{} {
+func (w *WhoAmIresponseData) GetExtraProperties() map[string]interface{} {
 	if w == nil {
 		return nil
 	}
 	return w.extraProperties
 }
 
-func (w *WhoAmIResponseData) require(field *big.Int) {
+func (w *WhoAmIresponseData) require(field *big.Int) {
 	if w.explicitFields == nil {
 		w.explicitFields = big.NewInt(0)
 	}
@@ -1965,74 +1965,74 @@ func (w *WhoAmIResponseData) require(field *big.Int) {
 
 // SetAccountID sets the AccountID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetAccountID(accountID string) {
+func (w *WhoAmIresponseData) SetAccountID(accountID string) {
 	w.AccountID = accountID
-	w.require(whoAmIResponseDataFieldAccountID)
+	w.require(whoAmIresponseDataFieldAccountID)
 }
 
 // SetAccountName sets the AccountName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetAccountName(accountName string) {
+func (w *WhoAmIresponseData) SetAccountName(accountName string) {
 	w.AccountName = accountName
-	w.require(whoAmIResponseDataFieldAccountName)
+	w.require(whoAmIresponseDataFieldAccountName)
 }
 
 // SetActorType sets the ActorType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetActorType(actorType ActorType) {
+func (w *WhoAmIresponseData) SetActorType(actorType ActorType) {
 	w.ActorType = actorType
-	w.require(whoAmIResponseDataFieldActorType)
+	w.require(whoAmIresponseDataFieldActorType)
 }
 
 // SetAPIKeyID sets the APIKeyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetAPIKeyID(apiKeyID *string) {
+func (w *WhoAmIresponseData) SetAPIKeyID(apiKeyID *string) {
 	w.APIKeyID = apiKeyID
-	w.require(whoAmIResponseDataFieldAPIKeyID)
+	w.require(whoAmIresponseDataFieldAPIKeyID)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetEnvironmentID(environmentID *string) {
+func (w *WhoAmIresponseData) SetEnvironmentID(environmentID *string) {
 	w.EnvironmentID = environmentID
-	w.require(whoAmIResponseDataFieldEnvironmentID)
+	w.require(whoAmIresponseDataFieldEnvironmentID)
 }
 
 // SetEnvironments sets the Environments field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetEnvironments(environments []*EnvironmentResponseData) {
+func (w *WhoAmIresponseData) SetEnvironments(environments []*EnvironmentResponseData) {
 	w.Environments = environments
-	w.require(whoAmIResponseDataFieldEnvironments)
+	w.require(whoAmIresponseDataFieldEnvironments)
 }
 
 // SetStripeUserID sets the StripeUserID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetStripeUserID(stripeUserID *string) {
+func (w *WhoAmIresponseData) SetStripeUserID(stripeUserID *string) {
 	w.StripeUserID = stripeUserID
-	w.require(whoAmIResponseDataFieldStripeUserID)
+	w.require(whoAmIresponseDataFieldStripeUserID)
 }
 
 // SetUserID sets the UserID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetUserID(userID *string) {
+func (w *WhoAmIresponseData) SetUserID(userID *string) {
 	w.UserID = userID
-	w.require(whoAmIResponseDataFieldUserID)
+	w.require(whoAmIresponseDataFieldUserID)
 }
 
 // SetUserName sets the UserName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (w *WhoAmIResponseData) SetUserName(userName *string) {
+func (w *WhoAmIresponseData) SetUserName(userName *string) {
 	w.UserName = userName
-	w.require(whoAmIResponseDataFieldUserName)
+	w.require(whoAmIresponseDataFieldUserName)
 }
 
-func (w *WhoAmIResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler WhoAmIResponseData
+func (w *WhoAmIresponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler WhoAmIresponseData
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*w = WhoAmIResponseData(value)
+	*w = WhoAmIresponseData(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *w)
 	if err != nil {
 		return err
@@ -2042,8 +2042,8 @@ func (w *WhoAmIResponseData) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (w *WhoAmIResponseData) MarshalJSON() ([]byte, error) {
-	type embed WhoAmIResponseData
+func (w *WhoAmIresponseData) MarshalJSON() ([]byte, error) {
+	type embed WhoAmIresponseData
 	var marshaler = struct {
 		embed
 	}{
@@ -2053,7 +2053,7 @@ func (w *WhoAmIResponseData) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-func (w *WhoAmIResponseData) String() string {
+func (w *WhoAmIresponseData) String() string {
 	if w == nil {
 		return "<nil>"
 	}
@@ -3409,12 +3409,12 @@ func (g *GetEnvironmentResponse) String() string {
 }
 
 var (
-	getWhoAmIResponseFieldData   = big.NewInt(1 << 0)
-	getWhoAmIResponseFieldParams = big.NewInt(1 << 1)
+	getWhoAmIresponseFieldData   = big.NewInt(1 << 0)
+	getWhoAmIresponseFieldParams = big.NewInt(1 << 1)
 )
 
-type GetWhoAmIResponse struct {
-	Data *WhoAmIResponseData `json:"data" url:"data"`
+type GetWhoAmIresponse struct {
+	Data *WhoAmIresponseData `json:"data" url:"data"`
 	// Input parameters
 	Params map[string]any `json:"params" url:"params"`
 
@@ -3425,28 +3425,28 @@ type GetWhoAmIResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (g *GetWhoAmIResponse) GetData() *WhoAmIResponseData {
+func (g *GetWhoAmIresponse) GetData() *WhoAmIresponseData {
 	if g == nil {
 		return nil
 	}
 	return g.Data
 }
 
-func (g *GetWhoAmIResponse) GetParams() map[string]any {
+func (g *GetWhoAmIresponse) GetParams() map[string]any {
 	if g == nil {
 		return nil
 	}
 	return g.Params
 }
 
-func (g *GetWhoAmIResponse) GetExtraProperties() map[string]interface{} {
+func (g *GetWhoAmIresponse) GetExtraProperties() map[string]interface{} {
 	if g == nil {
 		return nil
 	}
 	return g.extraProperties
 }
 
-func (g *GetWhoAmIResponse) require(field *big.Int) {
+func (g *GetWhoAmIresponse) require(field *big.Int) {
 	if g.explicitFields == nil {
 		g.explicitFields = big.NewInt(0)
 	}
@@ -3455,25 +3455,25 @@ func (g *GetWhoAmIResponse) require(field *big.Int) {
 
 // SetData sets the Data field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetWhoAmIResponse) SetData(data *WhoAmIResponseData) {
+func (g *GetWhoAmIresponse) SetData(data *WhoAmIresponseData) {
 	g.Data = data
-	g.require(getWhoAmIResponseFieldData)
+	g.require(getWhoAmIresponseFieldData)
 }
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetWhoAmIResponse) SetParams(params map[string]any) {
+func (g *GetWhoAmIresponse) SetParams(params map[string]any) {
 	g.Params = params
-	g.require(getWhoAmIResponseFieldParams)
+	g.require(getWhoAmIresponseFieldParams)
 }
 
-func (g *GetWhoAmIResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler GetWhoAmIResponse
+func (g *GetWhoAmIresponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetWhoAmIresponse
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*g = GetWhoAmIResponse(value)
+	*g = GetWhoAmIresponse(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
@@ -3483,8 +3483,8 @@ func (g *GetWhoAmIResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (g *GetWhoAmIResponse) MarshalJSON() ([]byte, error) {
-	type embed GetWhoAmIResponse
+func (g *GetWhoAmIresponse) MarshalJSON() ([]byte, error) {
+	type embed GetWhoAmIresponse
 	var marshaler = struct {
 		embed
 	}{
@@ -3494,7 +3494,7 @@ func (g *GetWhoAmIResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-func (g *GetWhoAmIResponse) String() string {
+func (g *GetWhoAmIresponse) String() string {
 	if g == nil {
 		return "<nil>"
 	}

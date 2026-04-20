@@ -13875,6 +13875,13 @@ func TestEnumCreateOrUpdateConditionRequestBodyConditionType(t *testing.T) {
 		assert.Equal(t, CreateOrUpdateConditionRequestBodyConditionType("plan"), val, "enum value should match expected wire value")
 	})
 
+	t.Run("NewFromString_plan_version", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("plan_version")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, CreateOrUpdateConditionRequestBodyConditionType("plan_version"), val, "enum value should match expected wire value")
+	})
+
 	t.Run("NewFromString_billing_product", func(t *testing.T) {
 		t.Parallel()
 		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("billing_product")

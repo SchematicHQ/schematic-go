@@ -1,5 +1,5 @@
 {
-  "cliVersion": "4.43.1",
+  "cliVersion": "4.76.1",
   "generatorName": "fernapi/fern-go-sdk",
   "generatorVersion": "1.33.6",
   "generatorConfig": {
@@ -11,6 +11,6 @@
     },
     "packageName": "schematichq"
   },
-  "originGitCommit": "10e2d70ce14eeb219f99e22f9d2a4166de36bc97",
-  "sdkVersion": "v1.4.6"
+  "originGitCommit": "3984203f8f49616dfdae68590f4b291c18ca1151",
+  "sdkVersion": "v1.4.7"
 }

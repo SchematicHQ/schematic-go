@@ -13774,6 +13774,7 @@ type CustomPlanBillingStatus string
 
 const (
 	CustomPlanBillingStatusActive  CustomPlanBillingStatus = "active"
+	CustomPlanBillingStatusExpired CustomPlanBillingStatus = "expired"
 	CustomPlanBillingStatusPaid    CustomPlanBillingStatus = "paid"
 	CustomPlanBillingStatusPending CustomPlanBillingStatus = "pending"
 )
@@ -13782,6 +13783,8 @@ func NewCustomPlanBillingStatusFromString(s string) (CustomPlanBillingStatus, er
 	switch s {
 	case "active":
 		return CustomPlanBillingStatusActive, nil
+	case "expired":
+		return CustomPlanBillingStatusExpired, nil
 	case "paid":
 		return CustomPlanBillingStatusPaid, nil
 	case "pending":
@@ -32185,6 +32188,106 @@ func (w *WebhookEventResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (w *WebhookEventResponseData) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+var (
+	webhookURLFieldType = big.NewInt(1 << 0)
+	webhookURLFieldURL  = big.NewInt(1 << 1)
+)
+
+type WebhookURL struct {
+	Type IntegrationType `json:"type" url:"type"`
+	URL  string          `json:"url" url:"url"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhookURL) GetType() IntegrationType {
+	if w == nil {
+		return ""
+	}
+	return w.Type
+}
+
+func (w *WebhookURL) GetURL() string {
+	if w == nil {
+		return ""
+	}
+	return w.URL
+}
+
+func (w *WebhookURL) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WebhookURL) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhookURL) SetType(type_ IntegrationType) {
+	w.Type = type_
+	w.require(webhookURLFieldType)
+}
+
+// SetURL sets the URL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhookURL) SetURL(url string) {
+	w.URL = url
+	w.require(webhookURLFieldURL)
+}
+
+func (w *WebhookURL) UnmarshalJSON(data []byte) error {
+	type unmarshaler WebhookURL
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WebhookURL(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhookURL) MarshalJSON() ([]byte, error) {
+	type embed WebhookURL
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*w),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WebhookURL) String() string {
 	if w == nil {
 		return "<nil>"
 	}

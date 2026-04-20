@@ -18,6 +18,7 @@ import (
 	entitlements "github.com/schematichq/schematic-go/entitlements"
 	events "github.com/schematichq/schematic-go/events"
 	features "github.com/schematichq/schematic-go/features"
+	integrationsapi "github.com/schematichq/schematic-go/integrationsapi"
 	internal "github.com/schematichq/schematic-go/internal"
 	option "github.com/schematichq/schematic-go/option"
 	planbundle "github.com/schematichq/schematic-go/planbundle"
@@ -41,6 +42,7 @@ type Client struct {
 	Dataexports       *dataexports.Client
 	Events            *events.Client
 	Features          *features.Client
+	Integrationsapi   *integrationsapi.Client
 	Planbundle        *planbundle.Client
 	Plangroups        *plangroups.Client
 	Planmigrations    *planmigrations.Client
@@ -68,6 +70,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Dataexports:       dataexports.NewClient(options),
 		Events:            events.NewClient(options),
 		Features:          features.NewClient(options),
+		Integrationsapi:   integrationsapi.NewClient(options),
 		Planbundle:        planbundle.NewClient(options),
 		Plangroups:        plangroups.NewClient(options),
 		Planmigrations:    planmigrations.NewClient(options),

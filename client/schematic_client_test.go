@@ -681,6 +681,244 @@ func TestCheckFlagOfflineModeNoDefault(t *testing.T) {
 	assert.False(t, resp)
 }
 
+func TestCheckFlags_Offline_ReturnsDefaults(t *testing.T) {
+	client := schematicclient.NewSchematicClient(
+		option.WithOfflineMode(),
+		option.WithDefaultFlagValues(map[string]bool{"flag-a": true, "flag-b": false}),
+	)
+	defer client.Close()
+
+	resp := client.CheckFlags(context.Background(), &schematicgo.CheckFlagRequestBody{}, []string{"flag-a", "flag-b", "flag-c"})
+	assert.Len(t, resp, 3)
+	assert.Equal(t, "flag-a", resp[0].FlagKey)
+	assert.True(t, resp[0].Value)
+	assert.Equal(t, "offline mode", resp[0].Reason)
+	assert.Equal(t, "flag-b", resp[1].FlagKey)
+	assert.False(t, resp[1].Value)
+	assert.Equal(t, "flag-c", resp[2].FlagKey)
+	assert.False(t, resp[2].Value)
+}
+
+func TestCheckFlags_Offline_NoKeys_ReturnsEmpty(t *testing.T) {
+	client := schematicclient.NewSchematicClient(option.WithOfflineMode())
+	defer client.Close()
+
+	resp := client.CheckFlags(context.Background(), &schematicgo.CheckFlagRequestBody{}, nil)
+	assert.NotNil(t, resp)
+	assert.Len(t, resp, 0)
+}
+
+func TestCheckFlags_NoKeys_HitsAPIReturnsAll(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+	)
+	defer client.Close()
+
+	responseBody := &schematicgo.CheckFlagsResponse{
+		Data: &schematicgo.CheckFlagsResponseData{
+			Flags: []*schematicgo.CheckFlagResponseData{
+				{Flag: "flag-a", Value: true, Reason: "match"},
+				{Flag: "flag-b", Value: false, Reason: "no match"},
+			},
+		},
+	}
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(func(req *http.Request) (*http.Response, error) {
+		assert.Contains(t, req.URL.Path, "/flags/check")
+		return &http.Response{
+			Status:     "200",
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(data)),
+		}, nil
+	})
+
+	resp := client.CheckFlags(context.Background(), &schematicgo.CheckFlagRequestBody{
+		Company: map[string]string{"id": "comp-1"},
+	}, nil)
+	assert.Len(t, resp, 2)
+	assert.Equal(t, "flag-a", resp[0].FlagKey)
+	assert.True(t, resp[0].Value)
+	assert.Equal(t, "flag-b", resp[1].FlagKey)
+	assert.False(t, resp[1].Value)
+}
+
+func TestCheckFlags_Keys_AllCached_SkipsAPI(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+	)
+	defer client.Close()
+
+	responseBody := &schematicgo.CheckFlagsResponse{
+		Data: &schematicgo.CheckFlagsResponseData{
+			Flags: []*schematicgo.CheckFlagResponseData{
+				{Flag: "flag-a", Value: true, Reason: "match"},
+				{Flag: "flag-b", Value: false, Reason: "no match"},
+			},
+		},
+	}
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	// First call populates the cache (exactly one API call expected across both calls).
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil).Times(1)
+
+	evalCtx := &schematicgo.CheckFlagRequestBody{Company: map[string]string{"id": "comp-1"}}
+	keys := []string{"flag-a", "flag-b"}
+
+	resp := client.CheckFlags(context.Background(), evalCtx, keys)
+	assert.Len(t, resp, 2)
+
+	// Wait for async cache writes to complete.
+	time.Sleep(10 * time.Millisecond)
+
+	// Second call should be served entirely from cache.
+	resp2 := client.CheckFlags(context.Background(), evalCtx, keys)
+	assert.Len(t, resp2, 2)
+	assert.Equal(t, "flag-a", resp2[0].FlagKey)
+	assert.True(t, resp2[0].Value)
+	assert.Equal(t, "flag-b", resp2[1].FlagKey)
+	assert.False(t, resp2[1].Value)
+}
+
+func TestCheckFlags_Keys_CacheMiss_RefreshesAllFromAPI(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+	)
+	defer client.Close()
+
+	responseBody := &schematicgo.CheckFlagsResponse{
+		Data: &schematicgo.CheckFlagsResponseData{
+			Flags: []*schematicgo.CheckFlagResponseData{
+				{Flag: "flag-a", Value: true, Reason: "match"},
+				{Flag: "flag-b", Value: false, Reason: "no match"},
+			},
+		},
+	}
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	// Partial cache hit should still trigger one API call for the full set.
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil).Times(1)
+
+	evalCtx := &schematicgo.CheckFlagRequestBody{Company: map[string]string{"id": "comp-1"}}
+	resp := client.CheckFlags(context.Background(), evalCtx, []string{"flag-a", "flag-b"})
+	assert.Len(t, resp, 2)
+	assert.True(t, resp[0].Value)
+	assert.False(t, resp[1].Value)
+}
+
+func TestCheckFlags_Keys_MissingFromAPI_UsesDefault(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+	)
+	defer client.Close()
+	client.SetFlagDefault("missing-flag", true)
+
+	responseBody := &schematicgo.CheckFlagsResponse{
+		Data: &schematicgo.CheckFlagsResponseData{
+			Flags: []*schematicgo.CheckFlagResponseData{
+				{Flag: "flag-a", Value: true, Reason: "match"},
+			},
+		},
+	}
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil)
+
+	resp := client.CheckFlags(context.Background(), &schematicgo.CheckFlagRequestBody{}, []string{"flag-a", "missing-flag"})
+	assert.Len(t, resp, 2)
+	assert.Equal(t, "flag-a", resp[0].FlagKey)
+	assert.True(t, resp[0].Value)
+	assert.Equal(t, "missing-flag", resp[1].FlagKey)
+	assert.True(t, resp[1].Value) // from default
+	assert.Equal(t, "flag not found", resp[1].Reason)
+}
+
+func TestCheckFlags_Keys_APIError_ReturnsDefaults(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+	)
+	defer client.Close()
+	client.SetFlagDefault("flag-a", true)
+
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(nil, fmt.Errorf("network error"))
+
+	resp := client.CheckFlags(context.Background(), &schematicgo.CheckFlagRequestBody{}, []string{"flag-a", "flag-b"})
+	assert.Len(t, resp, 2)
+	assert.Equal(t, "flag-a", resp[0].FlagKey)
+	assert.True(t, resp[0].Value) // from default
+	assert.Equal(t, "error", resp[0].Reason)
+	assert.Equal(t, "flag-b", resp[1].FlagKey)
+	assert.False(t, resp[1].Value)
+	assert.Equal(t, "error", resp[1].Reason)
+}
+
+func TestCheckFlags_DatastreamFallbackToAPI(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+	responseBody := &schematicgo.CheckFlagsResponse{
+		Data: &schematicgo.CheckFlagsResponseData{
+			Flags: []*schematicgo.CheckFlagResponseData{
+				{Flag: "flag-a", Value: true, Reason: "match"},
+			},
+		},
+	}
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil)
+
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithBaseURL("https://invalid.example.com"),
+		option.WithDatastream(),
+	)
+	defer client.Close()
+
+	// Give the datastream client a moment to fail its connection attempt.
+	time.Sleep(50 * time.Millisecond)
+
+	resp := client.CheckFlags(context.Background(), &schematicgo.CheckFlagRequestBody{
+		Company: map[string]string{"id": "test-company"},
+	}, []string{"flag-a"})
+	assert.Len(t, resp, 1)
+	assert.True(t, resp[0].Value)
+}
+
 func TestCheckFlagWithEntitlement_ReasonStrings(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)

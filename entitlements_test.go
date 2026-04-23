@@ -1479,7 +1479,7 @@ func TestSettersCreateCompanyOverrideRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriod", func(t *testing.T) {
 		obj := &CreateCompanyOverrideRequestBody{}
-		var fernTestValueMetricPeriod *CreateCompanyOverrideRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
 		assert.Equal(t, fernTestValueMetricPeriod, obj.MetricPeriod)
 		assert.NotNil(t, obj.explicitFields)
@@ -1487,7 +1487,7 @@ func TestSettersCreateCompanyOverrideRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriodMonthReset", func(t *testing.T) {
 		obj := &CreateCompanyOverrideRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
 		assert.Equal(t, fernTestValueMetricPeriodMonthReset, obj.MetricPeriodMonthReset)
 		assert.NotNil(t, obj.explicitFields)
@@ -1672,7 +1672,7 @@ func TestSettersMarkExplicitCreateCompanyOverrideRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateCompanyOverrideRequestBody{}
-		var fernTestValueMetricPeriod *CreateCompanyOverrideRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 
 		// Act
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
@@ -1703,7 +1703,7 @@ func TestSettersMarkExplicitCreateCompanyOverrideRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateCompanyOverrideRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 
 		// Act
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
@@ -1969,7 +1969,7 @@ func TestSettersCreatePlanEntitlementRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriod", func(t *testing.T) {
 		obj := &CreatePlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriod *CreatePlanEntitlementRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
 		assert.Equal(t, fernTestValueMetricPeriod, obj.MetricPeriod)
 		assert.NotNil(t, obj.explicitFields)
@@ -1977,7 +1977,7 @@ func TestSettersCreatePlanEntitlementRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriodMonthReset", func(t *testing.T) {
 		obj := &CreatePlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
 		assert.Equal(t, fernTestValueMetricPeriodMonthReset, obj.MetricPeriodMonthReset)
 		assert.NotNil(t, obj.explicitFields)
@@ -2336,7 +2336,7 @@ func TestSettersMarkExplicitCreatePlanEntitlementRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreatePlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriod *CreatePlanEntitlementRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 
 		// Act
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
@@ -2367,7 +2367,7 @@ func TestSettersMarkExplicitCreatePlanEntitlementRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreatePlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 
 		// Act
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
@@ -5761,7 +5761,7 @@ func TestSettersFeatureCompanyResponseData(t *testing.T) {
 
 	t.Run("SetFeature", func(t *testing.T) {
 		obj := &FeatureCompanyResponseData{}
-		var fernTestValueFeature *FeatureDetailResponseData
+		var fernTestValueFeature *FeatureInPlanResponseData
 		obj.SetFeature(fernTestValueFeature)
 		assert.Equal(t, fernTestValueFeature, obj.Feature)
 		assert.NotNil(t, obj.explicitFields)
@@ -5793,7 +5793,7 @@ func TestSettersFeatureCompanyResponseData(t *testing.T) {
 
 	t.Run("SetMonthReset", func(t *testing.T) {
 		obj := &FeatureCompanyResponseData{}
-		var fernTestValueMonthReset *string
+		var fernTestValueMonthReset *MetricPeriodMonthReset
 		obj.SetMonthReset(fernTestValueMonthReset)
 		assert.Equal(t, fernTestValueMonthReset, obj.MonthReset)
 		assert.NotNil(t, obj.explicitFields)
@@ -5825,7 +5825,7 @@ func TestSettersFeatureCompanyResponseData(t *testing.T) {
 
 	t.Run("SetPeriod", func(t *testing.T) {
 		obj := &FeatureCompanyResponseData{}
-		var fernTestValuePeriod *string
+		var fernTestValuePeriod *MetricPeriod
 		obj.SetPeriod(fernTestValuePeriod)
 		assert.Equal(t, fernTestValuePeriod, obj.Period)
 		assert.NotNil(t, obj.explicitFields)
@@ -6539,7 +6539,7 @@ func TestGettersFeatureCompanyResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyResponseData{}
-		var expected *FeatureDetailResponseData
+		var expected *FeatureInPlanResponseData
 		obj.Feature = expected
 
 		// Act & Assert
@@ -6671,7 +6671,7 @@ func TestGettersFeatureCompanyResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyResponseData{}
-		var expected *string
+		var expected *MetricPeriodMonthReset
 		obj.MonthReset = expected
 
 		// Act & Assert
@@ -6803,7 +6803,7 @@ func TestGettersFeatureCompanyResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyResponseData{}
-		var expected *string
+		var expected *MetricPeriod
 		obj.Period = expected
 
 		// Act & Assert
@@ -7688,7 +7688,7 @@ func TestSettersMarkExplicitFeatureCompanyResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyResponseData{}
-		var fernTestValueFeature *FeatureDetailResponseData
+		var fernTestValueFeature *FeatureInPlanResponseData
 
 		// Act
 		obj.SetFeature(fernTestValueFeature)
@@ -7812,7 +7812,7 @@ func TestSettersMarkExplicitFeatureCompanyResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyResponseData{}
-		var fernTestValueMonthReset *string
+		var fernTestValueMonthReset *MetricPeriodMonthReset
 
 		// Act
 		obj.SetMonthReset(fernTestValueMonthReset)
@@ -7936,7 +7936,7 @@ func TestSettersMarkExplicitFeatureCompanyResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyResponseData{}
-		var fernTestValuePeriod *string
+		var fernTestValuePeriod *MetricPeriod
 
 		// Act
 		obj.SetPeriod(fernTestValuePeriod)
@@ -8218,7 +8218,7 @@ func TestSettersFeatureCompanyUserResponseData(t *testing.T) {
 
 	t.Run("SetMonthReset", func(t *testing.T) {
 		obj := &FeatureCompanyUserResponseData{}
-		var fernTestValueMonthReset *string
+		var fernTestValueMonthReset *MetricPeriodMonthReset
 		obj.SetMonthReset(fernTestValueMonthReset)
 		assert.Equal(t, fernTestValueMonthReset, obj.MonthReset)
 		assert.NotNil(t, obj.explicitFields)
@@ -8226,7 +8226,7 @@ func TestSettersFeatureCompanyUserResponseData(t *testing.T) {
 
 	t.Run("SetPeriod", func(t *testing.T) {
 		obj := &FeatureCompanyUserResponseData{}
-		var fernTestValuePeriod *string
+		var fernTestValuePeriod *MetricPeriod
 		obj.SetPeriod(fernTestValuePeriod)
 		assert.Equal(t, fernTestValuePeriod, obj.Period)
 		assert.NotNil(t, obj.explicitFields)
@@ -8487,7 +8487,7 @@ func TestGettersFeatureCompanyUserResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyUserResponseData{}
-		var expected *string
+		var expected *MetricPeriodMonthReset
 		obj.MonthReset = expected
 
 		// Act & Assert
@@ -8520,7 +8520,7 @@ func TestGettersFeatureCompanyUserResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyUserResponseData{}
-		var expected *string
+		var expected *MetricPeriod
 		obj.Period = expected
 
 		// Act & Assert
@@ -8903,7 +8903,7 @@ func TestSettersMarkExplicitFeatureCompanyUserResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyUserResponseData{}
-		var fernTestValueMonthReset *string
+		var fernTestValueMonthReset *MetricPeriodMonthReset
 
 		// Act
 		obj.SetMonthReset(fernTestValueMonthReset)
@@ -8934,7 +8934,7 @@ func TestSettersMarkExplicitFeatureCompanyUserResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FeatureCompanyUserResponseData{}
-		var fernTestValuePeriod *string
+		var fernTestValuePeriod *MetricPeriod
 
 		// Act
 		obj.SetPeriod(fernTestValuePeriod)
@@ -19540,7 +19540,7 @@ func TestSettersUpdateCompanyOverrideRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriod", func(t *testing.T) {
 		obj := &UpdateCompanyOverrideRequestBody{}
-		var fernTestValueMetricPeriod *UpdateCompanyOverrideRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
 		assert.Equal(t, fernTestValueMetricPeriod, obj.MetricPeriod)
 		assert.NotNil(t, obj.explicitFields)
@@ -19548,7 +19548,7 @@ func TestSettersUpdateCompanyOverrideRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriodMonthReset", func(t *testing.T) {
 		obj := &UpdateCompanyOverrideRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
 		assert.Equal(t, fernTestValueMetricPeriodMonthReset, obj.MetricPeriodMonthReset)
 		assert.NotNil(t, obj.explicitFields)
@@ -19671,7 +19671,7 @@ func TestSettersMarkExplicitUpdateCompanyOverrideRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &UpdateCompanyOverrideRequestBody{}
-		var fernTestValueMetricPeriod *UpdateCompanyOverrideRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 
 		// Act
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
@@ -19702,7 +19702,7 @@ func TestSettersMarkExplicitUpdateCompanyOverrideRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &UpdateCompanyOverrideRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 
 		// Act
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
@@ -19960,7 +19960,7 @@ func TestSettersUpdatePlanEntitlementRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriod", func(t *testing.T) {
 		obj := &UpdatePlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriod *UpdatePlanEntitlementRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
 		assert.Equal(t, fernTestValueMetricPeriod, obj.MetricPeriod)
 		assert.NotNil(t, obj.explicitFields)
@@ -19968,7 +19968,7 @@ func TestSettersUpdatePlanEntitlementRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriodMonthReset", func(t *testing.T) {
 		obj := &UpdatePlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
 		assert.Equal(t, fernTestValueMetricPeriodMonthReset, obj.MetricPeriodMonthReset)
 		assert.NotNil(t, obj.explicitFields)
@@ -20280,7 +20280,7 @@ func TestSettersMarkExplicitUpdatePlanEntitlementRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &UpdatePlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriod *UpdatePlanEntitlementRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 
 		// Act
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
@@ -20311,7 +20311,7 @@ func TestSettersMarkExplicitUpdatePlanEntitlementRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &UpdatePlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 
 		// Act
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
@@ -20965,7 +20965,7 @@ func TestSettersCreateBillingLinkedPlanEntitlementRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriod", func(t *testing.T) {
 		obj := &CreateBillingLinkedPlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriod *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
 		assert.Equal(t, fernTestValueMetricPeriod, obj.MetricPeriod)
 		assert.NotNil(t, obj.explicitFields)
@@ -20973,7 +20973,7 @@ func TestSettersCreateBillingLinkedPlanEntitlementRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriodMonthReset", func(t *testing.T) {
 		obj := &CreateBillingLinkedPlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
 		assert.Equal(t, fernTestValueMetricPeriodMonthReset, obj.MetricPeriodMonthReset)
 		assert.NotNil(t, obj.explicitFields)
@@ -21394,7 +21394,7 @@ func TestSettersMarkExplicitCreateBillingLinkedPlanEntitlementRequestBody(t *tes
 		t.Parallel()
 		// Arrange
 		obj := &CreateBillingLinkedPlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriod *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 
 		// Act
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
@@ -21425,7 +21425,7 @@ func TestSettersMarkExplicitCreateBillingLinkedPlanEntitlementRequestBody(t *tes
 		t.Parallel()
 		// Arrange
 		obj := &CreateBillingLinkedPlanEntitlementRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 
 		// Act
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
@@ -24181,222 +24181,6 @@ func TestStringUsageTimeSeriesPointResponseData(t *testing.T) {
 	})
 }
 
-func TestEnumCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod(t *testing.T) {
-	t.Run("NewFromString_all_time", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod("all_time"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodFromString("current_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod("current_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_week", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodFromString("current_week")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod("current_week"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_day", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodFromString("current_day")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod("current_day"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset(t *testing.T) {
-	t.Run("NewFromString_first_of_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset("first_of_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_billing_cycle", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthResetFromString("billing_cycle")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset("billing_cycle"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthResetFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumCreateCompanyOverrideRequestBodyMetricPeriod(t *testing.T) {
-	t.Run("NewFromString_all_time", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateCompanyOverrideRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateCompanyOverrideRequestBodyMetricPeriod("all_time"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateCompanyOverrideRequestBodyMetricPeriodFromString("current_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateCompanyOverrideRequestBodyMetricPeriod("current_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_week", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateCompanyOverrideRequestBodyMetricPeriodFromString("current_week")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateCompanyOverrideRequestBodyMetricPeriod("current_week"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_day", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateCompanyOverrideRequestBodyMetricPeriodFromString("current_day")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateCompanyOverrideRequestBodyMetricPeriod("current_day"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreateCompanyOverrideRequestBodyMetricPeriodFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreateCompanyOverrideRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumCreateCompanyOverrideRequestBodyMetricPeriodMonthReset(t *testing.T) {
-	t.Run("NewFromString_first_of_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateCompanyOverrideRequestBodyMetricPeriodMonthReset("first_of_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_billing_cycle", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString("billing_cycle")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateCompanyOverrideRequestBodyMetricPeriodMonthReset("billing_cycle"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumCreatePlanEntitlementRequestBodyMetricPeriod(t *testing.T) {
-	t.Run("NewFromString_all_time", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreatePlanEntitlementRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreatePlanEntitlementRequestBodyMetricPeriod("all_time"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreatePlanEntitlementRequestBodyMetricPeriodFromString("current_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreatePlanEntitlementRequestBodyMetricPeriod("current_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_week", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreatePlanEntitlementRequestBodyMetricPeriodFromString("current_week")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreatePlanEntitlementRequestBodyMetricPeriod("current_week"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_day", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreatePlanEntitlementRequestBodyMetricPeriodFromString("current_day")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreatePlanEntitlementRequestBodyMetricPeriod("current_day"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreatePlanEntitlementRequestBodyMetricPeriodFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreatePlanEntitlementRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumCreatePlanEntitlementRequestBodyMetricPeriodMonthReset(t *testing.T) {
-	t.Run("NewFromString_first_of_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreatePlanEntitlementRequestBodyMetricPeriodMonthReset("first_of_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_billing_cycle", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString("billing_cycle")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreatePlanEntitlementRequestBodyMetricPeriodMonthReset("billing_cycle"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
 func TestEnumTimeSeriesGranularity(t *testing.T) {
 	t.Run("NewFromString_daily", func(t *testing.T) {
 		t.Parallel()
@@ -24433,150 +24217,6 @@ func TestEnumTimeSeriesGranularity(t *testing.T) {
 
 	t.Run("Ptr", func(t *testing.T) {
 		val, err := NewTimeSeriesGranularityFromString("daily")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumUpdateCompanyOverrideRequestBodyMetricPeriod(t *testing.T) {
-	t.Run("NewFromString_all_time", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdateCompanyOverrideRequestBodyMetricPeriod("all_time"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString("current_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdateCompanyOverrideRequestBodyMetricPeriod("current_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_week", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString("current_week")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdateCompanyOverrideRequestBodyMetricPeriod("current_week"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_day", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString("current_day")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdateCompanyOverrideRequestBodyMetricPeriod("current_day"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumUpdateCompanyOverrideRequestBodyMetricPeriodMonthReset(t *testing.T) {
-	t.Run("NewFromString_first_of_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset("first_of_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_billing_cycle", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString("billing_cycle")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset("billing_cycle"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewUpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumUpdatePlanEntitlementRequestBodyMetricPeriod(t *testing.T) {
-	t.Run("NewFromString_all_time", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdatePlanEntitlementRequestBodyMetricPeriod("all_time"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString("current_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdatePlanEntitlementRequestBodyMetricPeriod("current_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_week", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString("current_week")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdatePlanEntitlementRequestBodyMetricPeriod("current_week"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_day", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString("current_day")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdatePlanEntitlementRequestBodyMetricPeriod("current_day"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumUpdatePlanEntitlementRequestBodyMetricPeriodMonthReset(t *testing.T) {
-	t.Run("NewFromString_first_of_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset("first_of_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_billing_cycle", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString("billing_cycle")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset("billing_cycle"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewUpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString("first_of_month")
 		assert.NoError(t, err)
 		ptr := val.Ptr()
 		assert.NotNil(t, ptr)

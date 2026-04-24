@@ -215,7 +215,7 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 		cacheKeys = append(cacheKeys, cacheKey)
 	}
 
-	c.flagsCacheProvider.DeleteMissing(ctx, cacheKeys)
+	c.flagsCacheProvider.DeleteMissing(ctx, cacheKeys, c.flagCacheScanPattern())
 	c.flagsMu.Unlock()
 
 	c.pendingFlagReqMu.Lock()
@@ -757,6 +757,14 @@ func (c *DataStreamClient) cacheVersion() string {
 
 func (c *DataStreamClient) flagCacheKey(key string) string {
 	return fmt.Sprintf("%s:%s:%s:%s", cacheKeyPrefix, cacheKeyPrefixFlags, c.cacheVersion(), strings.ToLower(key))
+}
+
+// flagCacheScanPattern returns a Redis-style glob scoped to flag keys for the
+// current cache version. Passed to CacheProvider.DeleteMissing so a full-flag
+// sync only clears this cache's own slice of the keyspace and leaves sibling
+// caches (companies, users, other versions) untouched.
+func (c *DataStreamClient) flagCacheScanPattern() string {
+	return fmt.Sprintf("%s:%s:%s:*", cacheKeyPrefix, cacheKeyPrefixFlags, c.cacheVersion())
 }
 
 func (c *DataStreamClient) resourceKeyToCacheKey(resourceType string, key string, value string) string {

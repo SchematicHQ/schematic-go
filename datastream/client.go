@@ -87,6 +87,7 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 			MessageHandler:         client.handleWebSocketMessage,
 			ConnectionReadyHandler: client.handleConnectionReady,
 			Logger:                 client.logger,
+			ExtraHeaders:           datastreamHandshakeHeaders(),
 		})
 		if err != nil {
 			panic(fmt.Sprintf("failed to create WebSocket client: %v", err))
@@ -765,6 +766,20 @@ func (c *DataStreamClient) flagCacheKey(key string) string {
 // caches (companies, users, other versions) untouched.
 func (c *DataStreamClient) flagCacheScanPattern() string {
 	return fmt.Sprintf("%s:%s:%s:*", cacheKeyPrefix, cacheKeyPrefixFlags, c.cacheVersion())
+}
+
+// datastreamHandshakeHeaders returns the HTTP headers attached to the DataStream
+// WebSocket handshake so the backend can distinguish direct-SDK connections
+// from the schematic-datastream-replicator and correlate them to a release.
+//
+// The mode header is explicit rather than inferred from the client name so the
+// backend can filter on it without parsing client identifiers.
+func datastreamHandshakeHeaders() http.Header {
+	h := http.Header{}
+	h.Set("X-Schematic-Datastream-Mode", "direct")
+	h.Set("X-Schematic-Client", schematicgo.SDKName)
+	h.Set("X-Schematic-Client-Version", schematicgo.SDKVersion())
+	return h
 }
 
 func (c *DataStreamClient) resourceKeyToCacheKey(resourceType string, key string, value string) string {

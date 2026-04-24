@@ -432,22 +432,6 @@ func (c *Client) ListPlanTraits(
 	return response.Body, nil
 }
 
-func (c *Client) CreatePlanTrait(
-	ctx context.Context,
-	request *schematichq.CreatePlanTraitRequestBody,
-	opts ...option.RequestOption,
-) (*schematichq.CreatePlanTraitResponse, error) {
-	response, err := c.WithRawResponse.CreatePlanTrait(
-		ctx,
-		request,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
 func (c *Client) GetPlanTrait(
 	ctx context.Context,
 	// plan_trait_id
@@ -455,42 +439,6 @@ func (c *Client) GetPlanTrait(
 	opts ...option.RequestOption,
 ) (*schematichq.GetPlanTraitResponse, error) {
 	response, err := c.WithRawResponse.GetPlanTrait(
-		ctx,
-		planTraitID,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
-func (c *Client) UpdatePlanTrait(
-	ctx context.Context,
-	// plan_trait_id
-	planTraitID string,
-	request *schematichq.UpdatePlanTraitRequestBody,
-	opts ...option.RequestOption,
-) (*schematichq.UpdatePlanTraitResponse, error) {
-	response, err := c.WithRawResponse.UpdatePlanTrait(
-		ctx,
-		planTraitID,
-		request,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
-func (c *Client) DeletePlanTrait(
-	ctx context.Context,
-	// plan_trait_id
-	planTraitID string,
-	opts ...option.RequestOption,
-) (*schematichq.DeletePlanTraitResponse, error) {
-	response, err := c.WithRawResponse.DeletePlanTrait(
 		ctx,
 		planTraitID,
 		opts...,

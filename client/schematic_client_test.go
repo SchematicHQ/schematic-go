@@ -324,8 +324,8 @@ func TestCheckFlagWithEntitlement_APIResponse(t *testing.T) {
 	usage := int64(50)
 	softLimit := int64(200)
 	eventName := "api-calls"
-	metricPeriod := schematicgo.FeatureEntitlementMetricPeriodCurrentMonth
-	monthReset := schematicgo.FeatureEntitlementMonthResetBillingCycle
+	metricPeriod := schematicgo.MetricPeriodCurrentMonth
+	monthReset := schematicgo.MetricPeriodMonthResetBillingCycle
 	creditID := "cred-123"
 	creditTotal := 1000.0
 	creditUsed := 250.0
@@ -334,7 +334,7 @@ func TestCheckFlagWithEntitlement_APIResponse(t *testing.T) {
 	flagID := "flag-456"
 	ruleID := "rule-789"
 	userID := "user-321"
-	ruleType := "plan_entitlement"
+	ruleType := schematicgo.RuleTypePlanEntitlement
 
 	responseBody := &schematicgo.CheckFlagResponse{
 		Data: &schematicgo.CheckFlagResponseData{
@@ -447,7 +447,7 @@ func TestCheckFlagWithEntitlement_CacheHitPreservesEntitlement(t *testing.T) {
 	flagID := "flag-456"
 	ruleID := "rule-789"
 	userID := "user-321"
-	ruleType := "plan_entitlement"
+	ruleType := schematicgo.RuleTypePlanEntitlement
 	allocation := int64(100)
 
 	responseBody := &schematicgo.CheckFlagResponse{
@@ -694,7 +694,7 @@ func TestCheckFlagWithEntitlement_ReasonStrings(t *testing.T) {
 	companyID := "comp-123"
 	flagID := "flag-456"
 	ruleID := "rule-789"
-	ruleType := "override"
+	ruleType := schematicgo.RuleTypeCompanyOverride
 
 	responseBody := &schematicgo.CheckFlagResponse{
 		Data: &schematicgo.CheckFlagResponseData{
@@ -726,6 +726,6 @@ func TestCheckFlagWithEntitlement_ReasonStrings(t *testing.T) {
 	assert.Equal(t, "comp-123", *resp.CompanyID)
 	assert.Equal(t, "flag-456", *resp.FlagID)
 	assert.Equal(t, "rule-789", *resp.RuleID)
-	assert.Equal(t, rulesengine.RuleType("override"), *resp.RuleType)
+	assert.Equal(t, rulesengine.RuleType("company_override"), *resp.RuleType)
 	assert.Nil(t, resp.Entitlement)
 }

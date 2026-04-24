@@ -457,18 +457,18 @@ var (
 )
 
 type CreateCompanyOverrideRequestBody struct {
-	CompanyID              string                                                  `json:"company_id" url:"-"`
-	CreditConsumptionRate  *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
-	ExpirationDate         *time.Time                                              `json:"expiration_date,omitempty" url:"-"`
-	FeatureID              string                                                  `json:"feature_id" url:"-"`
-	MetricPeriod           *CreateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
-	Note                   *string                                                 `json:"note,omitempty" url:"-"`
-	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int64                                                  `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              EntitlementValueType                                    `json:"value_type" url:"-"`
+	CompanyID              string                  `json:"company_id" url:"-"`
+	CreditConsumptionRate  *float64                `json:"credit_consumption_rate,omitempty" url:"-"`
+	ExpirationDate         *time.Time              `json:"expiration_date,omitempty" url:"-"`
+	FeatureID              string                  `json:"feature_id" url:"-"`
+	MetricPeriod           *MetricPeriod           `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	Note                   *string                 `json:"note,omitempty" url:"-"`
+	ValueBool              *bool                   `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                 `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric           *int64                  `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                 `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              EntitlementValueType    `json:"value_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -511,14 +511,14 @@ func (c *CreateCompanyOverrideRequestBody) SetFeatureID(featureID string) {
 
 // SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyOverrideRequestBody) SetMetricPeriod(metricPeriod *CreateCompanyOverrideRequestBodyMetricPeriod) {
+func (c *CreateCompanyOverrideRequestBody) SetMetricPeriod(metricPeriod *MetricPeriod) {
 	c.MetricPeriod = metricPeriod
 	c.require(createCompanyOverrideRequestBodyFieldMetricPeriod)
 }
 
 // SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCompanyOverrideRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset) {
+func (c *CreateCompanyOverrideRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	c.MetricPeriodMonthReset = metricPeriodMonthReset
 	c.require(createCompanyOverrideRequestBodyFieldMetricPeriodMonthReset)
 }
@@ -620,22 +620,22 @@ var (
 )
 
 type CreatePlanEntitlementRequestBody struct {
-	BillingProductID        *string                                                 `json:"billing_product_id,omitempty" url:"-"`
-	BillingThreshold        *int64                                                  `json:"billing_threshold,omitempty" url:"-"`
-	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
-	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
-	CurrencyPrices          []*CurrencyPriceRequestBody                             `json:"currency_prices,omitempty" url:"-"`
-	FeatureID               string                                                  `json:"feature_id" url:"-"`
-	MetricPeriod            *CreatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset  *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
-	MonthlyMeteredPriceID   *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
-	MonthlyPriceTiers       []*CreatePriceTierRequestBody                           `json:"monthly_price_tiers,omitempty" url:"-"`
-	MonthlyUnitPrice        *int64                                                  `json:"monthly_unit_price,omitempty" url:"-"`
-	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
-	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
-	PlanID                  string                                                  `json:"plan_id" url:"-"`
-	PlanVersionID           *string                                                 `json:"plan_version_id,omitempty" url:"-"`
-	PriceBehavior           *EntitlementPriceBehavior                               `json:"price_behavior,omitempty" url:"-"`
+	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"-"`
+	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"-"`
+	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"-"`
+	Currency                *string                       `json:"currency,omitempty" url:"-"`
+	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"-"`
+	FeatureID               string                        `json:"feature_id" url:"-"`
+	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset  *MetricPeriodMonthReset       `json:"metric_period_month_reset,omitempty" url:"-"`
+	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"-"`
+	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"-"`
+	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"-"`
+	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"-"`
+	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"-"`
+	PlanID                  string                        `json:"plan_id" url:"-"`
+	PlanVersionID           *string                       `json:"plan_version_id,omitempty" url:"-"`
+	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
 	SoftLimit              *int64                        `json:"soft_limit,omitempty" url:"-"`
@@ -705,14 +705,14 @@ func (c *CreatePlanEntitlementRequestBody) SetFeatureID(featureID string) {
 
 // SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetMetricPeriod(metricPeriod *CreatePlanEntitlementRequestBodyMetricPeriod) {
+func (c *CreatePlanEntitlementRequestBody) SetMetricPeriod(metricPeriod *MetricPeriod) {
 	c.MetricPeriod = metricPeriod
 	c.require(createPlanEntitlementRequestBodyFieldMetricPeriod)
 }
 
 // SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset) {
+func (c *CreatePlanEntitlementRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	c.MetricPeriodMonthReset = metricPeriodMonthReset
 	c.require(createPlanEntitlementRequestBodyFieldMetricPeriodMonthReset)
 }
@@ -1835,7 +1835,7 @@ type FeatureCompanyResponseData struct {
 	// Source of the entitlement (plan or company_override)
 	EntitlementSource *string                    `json:"entitlement_source,omitempty" url:"entitlement_source,omitempty"`
 	EntitlementType   EntitlementType            `json:"entitlement_type" url:"entitlement_type"`
-	Feature           *FeatureDetailResponseData `json:"feature,omitempty" url:"feature,omitempty"`
+	Feature           *FeatureInPlanResponseData `json:"feature,omitempty" url:"feature,omitempty"`
 	// Whether a valid allocation exists
 	HasValidAllocation *bool `json:"has_valid_allocation,omitempty" url:"has_valid_allocation,omitempty"`
 	// Whether this is an unlimited allocation
@@ -1843,14 +1843,14 @@ type FeatureCompanyResponseData struct {
 	// The time at which the metric will reset.
 	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
 	// If the period is current_month, when the month resets.
-	MonthReset             *string           `json:"month_reset,omitempty" url:"month_reset,omitempty"`
-	MonthlyUsageBasedPrice *BillingPriceView `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
+	MonthReset             *MetricPeriodMonthReset `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	MonthlyUsageBasedPrice *BillingPriceView       `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
 	// Amount of usage exceeding soft limit (overage pricing only)
 	Overuse *int64 `json:"overuse,omitempty" url:"overuse,omitempty"`
 	// Percentage of allocation consumed (0-100+)
 	PercentUsed *float64 `json:"percent_used,omitempty" url:"percent_used,omitempty"`
 	// The period over which usage is measured.
-	Period          *string                      `json:"period,omitempty" url:"period,omitempty"`
+	Period          *MetricPeriod                `json:"period,omitempty" url:"period,omitempty"`
 	Plan            *PlanResponseData            `json:"plan,omitempty" url:"plan,omitempty"`
 	PlanEntitlement *PlanEntitlementResponseData `json:"plan_entitlement,omitempty" url:"plan_entitlement,omitempty"`
 	PriceBehavior   *EntitlementPriceBehavior    `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
@@ -2014,7 +2014,7 @@ func (f *FeatureCompanyResponseData) GetEntitlementType() EntitlementType {
 	return f.EntitlementType
 }
 
-func (f *FeatureCompanyResponseData) GetFeature() *FeatureDetailResponseData {
+func (f *FeatureCompanyResponseData) GetFeature() *FeatureInPlanResponseData {
 	if f == nil {
 		return nil
 	}
@@ -2042,7 +2042,7 @@ func (f *FeatureCompanyResponseData) GetMetricResetAt() *time.Time {
 	return f.MetricResetAt
 }
 
-func (f *FeatureCompanyResponseData) GetMonthReset() *string {
+func (f *FeatureCompanyResponseData) GetMonthReset() *MetricPeriodMonthReset {
 	if f == nil {
 		return nil
 	}
@@ -2070,7 +2070,7 @@ func (f *FeatureCompanyResponseData) GetPercentUsed() *float64 {
 	return f.PercentUsed
 }
 
-func (f *FeatureCompanyResponseData) GetPeriod() *string {
+func (f *FeatureCompanyResponseData) GetPeriod() *MetricPeriod {
 	if f == nil {
 		return nil
 	}
@@ -2282,7 +2282,7 @@ func (f *FeatureCompanyResponseData) SetEntitlementType(entitlementType Entitlem
 
 // SetFeature sets the Feature field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetFeature(feature *FeatureDetailResponseData) {
+func (f *FeatureCompanyResponseData) SetFeature(feature *FeatureInPlanResponseData) {
 	f.Feature = feature
 	f.require(featureCompanyResponseDataFieldFeature)
 }
@@ -2310,7 +2310,7 @@ func (f *FeatureCompanyResponseData) SetMetricResetAt(metricResetAt *time.Time) 
 
 // SetMonthReset sets the MonthReset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetMonthReset(monthReset *string) {
+func (f *FeatureCompanyResponseData) SetMonthReset(monthReset *MetricPeriodMonthReset) {
 	f.MonthReset = monthReset
 	f.require(featureCompanyResponseDataFieldMonthReset)
 }
@@ -2338,7 +2338,7 @@ func (f *FeatureCompanyResponseData) SetPercentUsed(percentUsed *float64) {
 
 // SetPeriod sets the Period field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyResponseData) SetPeriod(period *string) {
+func (f *FeatureCompanyResponseData) SetPeriod(period *MetricPeriod) {
 	f.Period = period
 	f.require(featureCompanyResponseDataFieldPeriod)
 }
@@ -2469,9 +2469,9 @@ type FeatureCompanyUserResponseData struct {
 	// The time at which the metric will resets.
 	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
 	// If the period is current_month, when the month resets.
-	MonthReset *string `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	MonthReset *MetricPeriodMonthReset `json:"month_reset,omitempty" url:"month_reset,omitempty"`
 	// The period over which usage is measured.
-	Period *string           `json:"period,omitempty" url:"period,omitempty"`
+	Period *MetricPeriod     `json:"period,omitempty" url:"period,omitempty"`
 	Plan   *PlanResponseData `json:"plan,omitempty" url:"plan,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured.
 	Usage *int64            `json:"usage,omitempty" url:"usage,omitempty"`
@@ -2540,14 +2540,14 @@ func (f *FeatureCompanyUserResponseData) GetMetricResetAt() *time.Time {
 	return f.MetricResetAt
 }
 
-func (f *FeatureCompanyUserResponseData) GetMonthReset() *string {
+func (f *FeatureCompanyUserResponseData) GetMonthReset() *MetricPeriodMonthReset {
 	if f == nil {
 		return nil
 	}
 	return f.MonthReset
 }
 
-func (f *FeatureCompanyUserResponseData) GetPeriod() *string {
+func (f *FeatureCompanyUserResponseData) GetPeriod() *MetricPeriod {
 	if f == nil {
 		return nil
 	}
@@ -2647,14 +2647,14 @@ func (f *FeatureCompanyUserResponseData) SetMetricResetAt(metricResetAt *time.Ti
 
 // SetMonthReset sets the MonthReset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyUserResponseData) SetMonthReset(monthReset *string) {
+func (f *FeatureCompanyUserResponseData) SetMonthReset(monthReset *MetricPeriodMonthReset) {
 	f.MonthReset = monthReset
 	f.require(featureCompanyUserResponseDataFieldMonthReset)
 }
 
 // SetPeriod sets the Period field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureCompanyUserResponseData) SetPeriod(period *string) {
+func (f *FeatureCompanyUserResponseData) SetPeriod(period *MetricPeriod) {
 	f.Period = period
 	f.require(featureCompanyUserResponseDataFieldPeriod)
 }
@@ -4895,106 +4895,6 @@ func (c *CountPlanEntitlementsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-type CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod string
-
-const (
-	CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodAllTime      CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod = "all_time"
-	CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodCurrentMonth CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod = "current_month"
-	CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodCurrentWeek  CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod = "current_week"
-	CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodCurrentDay   CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod = "current_day"
-)
-
-func NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodFromString(s string) (CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod, error) {
-	switch s {
-	case "all_time":
-		return CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodAllTime, nil
-	case "current_month":
-		return CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodCurrentMonth, nil
-	case "current_week":
-		return CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodCurrentWeek, nil
-	case "current_day":
-		return CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodCurrentDay, nil
-	}
-	var t CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod) Ptr() *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod {
-	return &c
-}
-
-type CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset string
-
-const (
-	CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset = "first_of_month"
-	CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset = "billing_cycle"
-)
-
-func NewCreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthResetFromString(s string) (CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset, error) {
-	switch s {
-	case "first_of_month":
-		return CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
-	case "billing_cycle":
-		return CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle, nil
-	}
-	var t CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset) Ptr() *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset {
-	return &c
-}
-
-type CreateCompanyOverrideRequestBodyMetricPeriod string
-
-const (
-	CreateCompanyOverrideRequestBodyMetricPeriodAllTime      CreateCompanyOverrideRequestBodyMetricPeriod = "all_time"
-	CreateCompanyOverrideRequestBodyMetricPeriodCurrentMonth CreateCompanyOverrideRequestBodyMetricPeriod = "current_month"
-	CreateCompanyOverrideRequestBodyMetricPeriodCurrentWeek  CreateCompanyOverrideRequestBodyMetricPeriod = "current_week"
-	CreateCompanyOverrideRequestBodyMetricPeriodCurrentDay   CreateCompanyOverrideRequestBodyMetricPeriod = "current_day"
-)
-
-func NewCreateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (CreateCompanyOverrideRequestBodyMetricPeriod, error) {
-	switch s {
-	case "all_time":
-		return CreateCompanyOverrideRequestBodyMetricPeriodAllTime, nil
-	case "current_month":
-		return CreateCompanyOverrideRequestBodyMetricPeriodCurrentMonth, nil
-	case "current_week":
-		return CreateCompanyOverrideRequestBodyMetricPeriodCurrentWeek, nil
-	case "current_day":
-		return CreateCompanyOverrideRequestBodyMetricPeriodCurrentDay, nil
-	}
-	var t CreateCompanyOverrideRequestBodyMetricPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateCompanyOverrideRequestBodyMetricPeriod) Ptr() *CreateCompanyOverrideRequestBodyMetricPeriod {
-	return &c
-}
-
-type CreateCompanyOverrideRequestBodyMetricPeriodMonthReset string
-
-const (
-	CreateCompanyOverrideRequestBodyMetricPeriodMonthResetFirstOfMonth CreateCompanyOverrideRequestBodyMetricPeriodMonthReset = "first_of_month"
-	CreateCompanyOverrideRequestBodyMetricPeriodMonthResetBillingCycle CreateCompanyOverrideRequestBodyMetricPeriodMonthReset = "billing_cycle"
-)
-
-func NewCreateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString(s string) (CreateCompanyOverrideRequestBodyMetricPeriodMonthReset, error) {
-	switch s {
-	case "first_of_month":
-		return CreateCompanyOverrideRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
-	case "billing_cycle":
-		return CreateCompanyOverrideRequestBodyMetricPeriodMonthResetBillingCycle, nil
-	}
-	var t CreateCompanyOverrideRequestBodyMetricPeriodMonthReset
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateCompanyOverrideRequestBodyMetricPeriodMonthReset) Ptr() *CreateCompanyOverrideRequestBodyMetricPeriodMonthReset {
-	return &c
-}
-
 var (
 	createCompanyOverrideResponseFieldData   = big.NewInt(1 << 0)
 	createCompanyOverrideResponseFieldParams = big.NewInt(1 << 1)
@@ -5094,56 +4994,6 @@ func (c *CreateCompanyOverrideResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CreatePlanEntitlementRequestBodyMetricPeriod string
-
-const (
-	CreatePlanEntitlementRequestBodyMetricPeriodAllTime      CreatePlanEntitlementRequestBodyMetricPeriod = "all_time"
-	CreatePlanEntitlementRequestBodyMetricPeriodCurrentMonth CreatePlanEntitlementRequestBodyMetricPeriod = "current_month"
-	CreatePlanEntitlementRequestBodyMetricPeriodCurrentWeek  CreatePlanEntitlementRequestBodyMetricPeriod = "current_week"
-	CreatePlanEntitlementRequestBodyMetricPeriodCurrentDay   CreatePlanEntitlementRequestBodyMetricPeriod = "current_day"
-)
-
-func NewCreatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (CreatePlanEntitlementRequestBodyMetricPeriod, error) {
-	switch s {
-	case "all_time":
-		return CreatePlanEntitlementRequestBodyMetricPeriodAllTime, nil
-	case "current_month":
-		return CreatePlanEntitlementRequestBodyMetricPeriodCurrentMonth, nil
-	case "current_week":
-		return CreatePlanEntitlementRequestBodyMetricPeriodCurrentWeek, nil
-	case "current_day":
-		return CreatePlanEntitlementRequestBodyMetricPeriodCurrentDay, nil
-	}
-	var t CreatePlanEntitlementRequestBodyMetricPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreatePlanEntitlementRequestBodyMetricPeriod) Ptr() *CreatePlanEntitlementRequestBodyMetricPeriod {
-	return &c
-}
-
-type CreatePlanEntitlementRequestBodyMetricPeriodMonthReset string
-
-const (
-	CreatePlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth CreatePlanEntitlementRequestBodyMetricPeriodMonthReset = "first_of_month"
-	CreatePlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle CreatePlanEntitlementRequestBodyMetricPeriodMonthReset = "billing_cycle"
-)
-
-func NewCreatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString(s string) (CreatePlanEntitlementRequestBodyMetricPeriodMonthReset, error) {
-	switch s {
-	case "first_of_month":
-		return CreatePlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
-	case "billing_cycle":
-		return CreatePlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle, nil
-	}
-	var t CreatePlanEntitlementRequestBodyMetricPeriodMonthReset
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreatePlanEntitlementRequestBodyMetricPeriodMonthReset) Ptr() *CreatePlanEntitlementRequestBodyMetricPeriodMonthReset {
-	return &c
 }
 
 var (
@@ -7653,56 +7503,6 @@ func (l *ListPlanEntitlementsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-type UpdateCompanyOverrideRequestBodyMetricPeriod string
-
-const (
-	UpdateCompanyOverrideRequestBodyMetricPeriodAllTime      UpdateCompanyOverrideRequestBodyMetricPeriod = "all_time"
-	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentMonth UpdateCompanyOverrideRequestBodyMetricPeriod = "current_month"
-	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentWeek  UpdateCompanyOverrideRequestBodyMetricPeriod = "current_week"
-	UpdateCompanyOverrideRequestBodyMetricPeriodCurrentDay   UpdateCompanyOverrideRequestBodyMetricPeriod = "current_day"
-)
-
-func NewUpdateCompanyOverrideRequestBodyMetricPeriodFromString(s string) (UpdateCompanyOverrideRequestBodyMetricPeriod, error) {
-	switch s {
-	case "all_time":
-		return UpdateCompanyOverrideRequestBodyMetricPeriodAllTime, nil
-	case "current_month":
-		return UpdateCompanyOverrideRequestBodyMetricPeriodCurrentMonth, nil
-	case "current_week":
-		return UpdateCompanyOverrideRequestBodyMetricPeriodCurrentWeek, nil
-	case "current_day":
-		return UpdateCompanyOverrideRequestBodyMetricPeriodCurrentDay, nil
-	}
-	var t UpdateCompanyOverrideRequestBodyMetricPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateCompanyOverrideRequestBodyMetricPeriod) Ptr() *UpdateCompanyOverrideRequestBodyMetricPeriod {
-	return &u
-}
-
-type UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset string
-
-const (
-	UpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFirstOfMonth UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset = "first_of_month"
-	UpdateCompanyOverrideRequestBodyMetricPeriodMonthResetBillingCycle UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset = "billing_cycle"
-)
-
-func NewUpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFromString(s string) (UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset, error) {
-	switch s {
-	case "first_of_month":
-		return UpdateCompanyOverrideRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
-	case "billing_cycle":
-		return UpdateCompanyOverrideRequestBodyMetricPeriodMonthResetBillingCycle, nil
-	}
-	var t UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset) Ptr() *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset {
-	return &u
-}
-
 var (
 	updateCompanyOverrideResponseFieldData   = big.NewInt(1 << 0)
 	updateCompanyOverrideResponseFieldParams = big.NewInt(1 << 1)
@@ -7802,56 +7602,6 @@ func (u *UpdateCompanyOverrideResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
-}
-
-type UpdatePlanEntitlementRequestBodyMetricPeriod string
-
-const (
-	UpdatePlanEntitlementRequestBodyMetricPeriodAllTime      UpdatePlanEntitlementRequestBodyMetricPeriod = "all_time"
-	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentMonth UpdatePlanEntitlementRequestBodyMetricPeriod = "current_month"
-	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentWeek  UpdatePlanEntitlementRequestBodyMetricPeriod = "current_week"
-	UpdatePlanEntitlementRequestBodyMetricPeriodCurrentDay   UpdatePlanEntitlementRequestBodyMetricPeriod = "current_day"
-)
-
-func NewUpdatePlanEntitlementRequestBodyMetricPeriodFromString(s string) (UpdatePlanEntitlementRequestBodyMetricPeriod, error) {
-	switch s {
-	case "all_time":
-		return UpdatePlanEntitlementRequestBodyMetricPeriodAllTime, nil
-	case "current_month":
-		return UpdatePlanEntitlementRequestBodyMetricPeriodCurrentMonth, nil
-	case "current_week":
-		return UpdatePlanEntitlementRequestBodyMetricPeriodCurrentWeek, nil
-	case "current_day":
-		return UpdatePlanEntitlementRequestBodyMetricPeriodCurrentDay, nil
-	}
-	var t UpdatePlanEntitlementRequestBodyMetricPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdatePlanEntitlementRequestBodyMetricPeriod) Ptr() *UpdatePlanEntitlementRequestBodyMetricPeriod {
-	return &u
-}
-
-type UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset string
-
-const (
-	UpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset = "first_of_month"
-	UpdatePlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset = "billing_cycle"
-)
-
-func NewUpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFromString(s string) (UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset, error) {
-	switch s {
-	case "first_of_month":
-		return UpdatePlanEntitlementRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
-	case "billing_cycle":
-		return UpdatePlanEntitlementRequestBodyMetricPeriodMonthResetBillingCycle, nil
-	}
-	var t UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (u UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset) Ptr() *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset {
-	return &u
 }
 
 var (
@@ -8070,16 +7820,16 @@ var (
 )
 
 type UpdateCompanyOverrideRequestBody struct {
-	CreditConsumptionRate  *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
-	ExpirationDate         *time.Time                                              `json:"expiration_date,omitempty" url:"-"`
-	MetricPeriod           *UpdateCompanyOverrideRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
-	Note                   *string                                                 `json:"note,omitempty" url:"-"`
-	ValueBool              *bool                                                   `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID          *string                                                 `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int64                                                  `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID           *string                                                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              EntitlementValueType                                    `json:"value_type" url:"-"`
+	CreditConsumptionRate  *float64                `json:"credit_consumption_rate,omitempty" url:"-"`
+	ExpirationDate         *time.Time              `json:"expiration_date,omitempty" url:"-"`
+	MetricPeriod           *MetricPeriod           `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
+	Note                   *string                 `json:"note,omitempty" url:"-"`
+	ValueBool              *bool                   `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                 `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric           *int64                  `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                 `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              EntitlementValueType    `json:"value_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -8108,14 +7858,14 @@ func (u *UpdateCompanyOverrideRequestBody) SetExpirationDate(expirationDate *tim
 
 // SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCompanyOverrideRequestBody) SetMetricPeriod(metricPeriod *UpdateCompanyOverrideRequestBodyMetricPeriod) {
+func (u *UpdateCompanyOverrideRequestBody) SetMetricPeriod(metricPeriod *MetricPeriod) {
 	u.MetricPeriod = metricPeriod
 	u.require(updateCompanyOverrideRequestBodyFieldMetricPeriod)
 }
 
 // SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateCompanyOverrideRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *UpdateCompanyOverrideRequestBodyMetricPeriodMonthReset) {
+func (u *UpdateCompanyOverrideRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	u.MetricPeriodMonthReset = metricPeriodMonthReset
 	u.require(updateCompanyOverrideRequestBodyFieldMetricPeriodMonthReset)
 }
@@ -8214,19 +7964,19 @@ var (
 )
 
 type UpdatePlanEntitlementRequestBody struct {
-	BillingProductID        *string                                                 `json:"billing_product_id,omitempty" url:"-"`
-	BillingThreshold        *int64                                                  `json:"billing_threshold,omitempty" url:"-"`
-	CreditConsumptionRate   *float64                                                `json:"credit_consumption_rate,omitempty" url:"-"`
-	Currency                *string                                                 `json:"currency,omitempty" url:"-"`
-	CurrencyPrices          []*CurrencyPriceRequestBody                             `json:"currency_prices,omitempty" url:"-"`
-	MetricPeriod            *UpdatePlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset  *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
-	MonthlyMeteredPriceID   *string                                                 `json:"monthly_metered_price_id,omitempty" url:"-"`
-	MonthlyPriceTiers       []*CreatePriceTierRequestBody                           `json:"monthly_price_tiers,omitempty" url:"-"`
-	MonthlyUnitPrice        *int64                                                  `json:"monthly_unit_price,omitempty" url:"-"`
-	MonthlyUnitPriceDecimal *string                                                 `json:"monthly_unit_price_decimal,omitempty" url:"-"`
-	OverageBillingProductID *string                                                 `json:"overage_billing_product_id,omitempty" url:"-"`
-	PriceBehavior           *EntitlementPriceBehavior                               `json:"price_behavior,omitempty" url:"-"`
+	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"-"`
+	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"-"`
+	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"-"`
+	Currency                *string                       `json:"currency,omitempty" url:"-"`
+	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"-"`
+	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset  *MetricPeriodMonthReset       `json:"metric_period_month_reset,omitempty" url:"-"`
+	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"-"`
+	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"-"`
+	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"-"`
+	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"-"`
+	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"-"`
+	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
 	SoftLimit              *int64                        `json:"soft_limit,omitempty" url:"-"`
@@ -8289,14 +8039,14 @@ func (u *UpdatePlanEntitlementRequestBody) SetCurrencyPrices(currencyPrices []*C
 
 // SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetMetricPeriod(metricPeriod *UpdatePlanEntitlementRequestBodyMetricPeriod) {
+func (u *UpdatePlanEntitlementRequestBody) SetMetricPeriod(metricPeriod *MetricPeriod) {
 	u.MetricPeriod = metricPeriod
 	u.require(updatePlanEntitlementRequestBodyFieldMetricPeriod)
 }
 
 // SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *UpdatePlanEntitlementRequestBodyMetricPeriodMonthReset) {
+func (u *UpdatePlanEntitlementRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	u.MetricPeriodMonthReset = metricPeriodMonthReset
 	u.require(updatePlanEntitlementRequestBodyFieldMetricPeriodMonthReset)
 }
@@ -8482,24 +8232,24 @@ var (
 )
 
 type CreateBillingLinkedPlanEntitlementRequestBody struct {
-	BillingProductID        *string                                                              `json:"billing_product_id,omitempty" url:"-"`
-	BillingProvider         BillingProviderType                                                  `json:"billing_provider" url:"-"`
-	BillingThreshold        *int64                                                               `json:"billing_threshold,omitempty" url:"-"`
-	CreditConsumptionRate   *float64                                                             `json:"credit_consumption_rate,omitempty" url:"-"`
-	Currency                *string                                                              `json:"currency,omitempty" url:"-"`
-	CurrencyPrices          []*CurrencyPriceRequestBody                                          `json:"currency_prices,omitempty" url:"-"`
-	ExternalResourceID      string                                                               `json:"external_resource_id" url:"-"`
-	FeatureID               string                                                               `json:"feature_id" url:"-"`
-	MetricPeriod            *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod           `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset  *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
-	MonthlyMeteredPriceID   *string                                                              `json:"monthly_metered_price_id,omitempty" url:"-"`
-	MonthlyPriceTiers       []*CreatePriceTierRequestBody                                        `json:"monthly_price_tiers,omitempty" url:"-"`
-	MonthlyUnitPrice        *int64                                                               `json:"monthly_unit_price,omitempty" url:"-"`
-	MonthlyUnitPriceDecimal *string                                                              `json:"monthly_unit_price_decimal,omitempty" url:"-"`
-	OverageBillingProductID *string                                                              `json:"overage_billing_product_id,omitempty" url:"-"`
-	PlanID                  string                                                               `json:"plan_id" url:"-"`
-	PlanVersionID           *string                                                              `json:"plan_version_id,omitempty" url:"-"`
-	PriceBehavior           *EntitlementPriceBehavior                                            `json:"price_behavior,omitempty" url:"-"`
+	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"-"`
+	BillingProvider         BillingProviderType           `json:"billing_provider" url:"-"`
+	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"-"`
+	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"-"`
+	Currency                *string                       `json:"currency,omitempty" url:"-"`
+	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"-"`
+	ExternalResourceID      string                        `json:"external_resource_id" url:"-"`
+	FeatureID               string                        `json:"feature_id" url:"-"`
+	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset  *MetricPeriodMonthReset       `json:"metric_period_month_reset,omitempty" url:"-"`
+	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"-"`
+	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"-"`
+	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"-"`
+	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"-"`
+	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"-"`
+	PlanID                  string                        `json:"plan_id" url:"-"`
+	PlanVersionID           *string                       `json:"plan_version_id,omitempty" url:"-"`
+	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
 	SoftLimit              *int64                        `json:"soft_limit,omitempty" url:"-"`
@@ -8583,14 +8333,14 @@ func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetFeatureID(featureID s
 
 // SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetMetricPeriod(metricPeriod *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriod) {
+func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetMetricPeriod(metricPeriod *MetricPeriod) {
 	c.MetricPeriod = metricPeriod
 	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldMetricPeriod)
 }
 
 // SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *CreateBillingLinkedPlanEntitlementRequestBodyMetricPeriodMonthReset) {
+func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	c.MetricPeriodMonthReset = metricPeriodMonthReset
 	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldMetricPeriodMonthReset)
 }

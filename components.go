@@ -599,15 +599,16 @@ var (
 	billingProductPriceResponseDataFieldInterval          = big.NewInt(1 << 4)
 	billingProductPriceResponseDataFieldIsActive          = big.NewInt(1 << 5)
 	billingProductPriceResponseDataFieldMeterID           = big.NewInt(1 << 6)
-	billingProductPriceResponseDataFieldPackageSize       = big.NewInt(1 << 7)
-	billingProductPriceResponseDataFieldPrice             = big.NewInt(1 << 8)
-	billingProductPriceResponseDataFieldPriceDecimal      = big.NewInt(1 << 9)
-	billingProductPriceResponseDataFieldPriceExternalID   = big.NewInt(1 << 10)
-	billingProductPriceResponseDataFieldProductExternalID = big.NewInt(1 << 11)
-	billingProductPriceResponseDataFieldProviderType      = big.NewInt(1 << 12)
-	billingProductPriceResponseDataFieldTiersMode         = big.NewInt(1 << 13)
-	billingProductPriceResponseDataFieldUpdatedAt         = big.NewInt(1 << 14)
-	billingProductPriceResponseDataFieldUsageType         = big.NewInt(1 << 15)
+	billingProductPriceResponseDataFieldNickname          = big.NewInt(1 << 7)
+	billingProductPriceResponseDataFieldPackageSize       = big.NewInt(1 << 8)
+	billingProductPriceResponseDataFieldPrice             = big.NewInt(1 << 9)
+	billingProductPriceResponseDataFieldPriceDecimal      = big.NewInt(1 << 10)
+	billingProductPriceResponseDataFieldPriceExternalID   = big.NewInt(1 << 11)
+	billingProductPriceResponseDataFieldProductExternalID = big.NewInt(1 << 12)
+	billingProductPriceResponseDataFieldProviderType      = big.NewInt(1 << 13)
+	billingProductPriceResponseDataFieldTiersMode         = big.NewInt(1 << 14)
+	billingProductPriceResponseDataFieldUpdatedAt         = big.NewInt(1 << 15)
+	billingProductPriceResponseDataFieldUsageType         = big.NewInt(1 << 16)
 )
 
 type BillingProductPriceResponseData struct {
@@ -618,6 +619,7 @@ type BillingProductPriceResponseData struct {
 	Interval          BillingProductPriceInterval `json:"interval" url:"interval"`
 	IsActive          bool                        `json:"is_active" url:"is_active"`
 	MeterID           *string                     `json:"meter_id,omitempty" url:"meter_id,omitempty"`
+	Nickname          *string                     `json:"nickname,omitempty" url:"nickname,omitempty"`
 	PackageSize       int64                       `json:"package_size" url:"package_size"`
 	Price             int64                       `json:"price" url:"price"`
 	PriceDecimal      *string                     `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
@@ -682,6 +684,13 @@ func (b *BillingProductPriceResponseData) GetMeterID() *string {
 		return nil
 	}
 	return b.MeterID
+}
+
+func (b *BillingProductPriceResponseData) GetNickname() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Nickname
 }
 
 func (b *BillingProductPriceResponseData) GetPackageSize() int64 {
@@ -808,6 +817,13 @@ func (b *BillingProductPriceResponseData) SetIsActive(isActive bool) {
 func (b *BillingProductPriceResponseData) SetMeterID(meterID *string) {
 	b.MeterID = meterID
 	b.require(billingProductPriceResponseDataFieldMeterID)
+}
+
+// SetNickname sets the Nickname field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductPriceResponseData) SetNickname(nickname *string) {
+	b.Nickname = nickname
+	b.require(billingProductPriceResponseDataFieldNickname)
 }
 
 // SetPackageSize sets the PackageSize field and marks it as non-optional;
@@ -980,7 +996,7 @@ type CompanyPlanDetailResponseData struct {
 	CompanyID             *string                            `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CompanyName           *string                            `json:"company_name,omitempty" url:"company_name,omitempty"`
 	CompatiblePlanIDs     []string                           `json:"compatible_plan_ids" url:"compatible_plan_ids"`
-	ControlledBy          string                             `json:"controlled_by" url:"controlled_by"`
+	ControlledBy          BillingProviderType                `json:"controlled_by" url:"controlled_by"`
 	CopiedFromPlanID      *string                            `json:"copied_from_plan_id,omitempty" url:"copied_from_plan_id,omitempty"`
 	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
 	CurrencyPrices        []*PlanCurrencyPricesResponseData  `json:"currency_prices" url:"currency_prices"`
@@ -990,7 +1006,7 @@ type CompanyPlanDetailResponseData struct {
 	Description           string                             `json:"description" url:"description"`
 	DraftVersion          *PlanVersionResponseData           `json:"draft_version,omitempty" url:"draft_version,omitempty"`
 	Entitlements          []*PlanEntitlementResponseData     `json:"entitlements" url:"entitlements"`
-	Features              []*FeatureDetailResponseData       `json:"features" url:"features"`
+	Features              []*FeatureInPlanResponseData       `json:"features" url:"features"`
 	Icon                  PlanIcon                           `json:"icon" url:"icon"`
 	ID                    string                             `json:"id" url:"id"`
 	IncludedCreditGrants  []*PlanCreditGrantView             `json:"included_credit_grants" url:"included_credit_grants"`
@@ -1087,7 +1103,7 @@ func (c *CompanyPlanDetailResponseData) GetCompatiblePlanIDs() []string {
 	return c.CompatiblePlanIDs
 }
 
-func (c *CompanyPlanDetailResponseData) GetControlledBy() string {
+func (c *CompanyPlanDetailResponseData) GetControlledBy() BillingProviderType {
 	if c == nil {
 		return ""
 	}
@@ -1157,7 +1173,7 @@ func (c *CompanyPlanDetailResponseData) GetEntitlements() []*PlanEntitlementResp
 	return c.Entitlements
 }
 
-func (c *CompanyPlanDetailResponseData) GetFeatures() []*FeatureDetailResponseData {
+func (c *CompanyPlanDetailResponseData) GetFeatures() []*FeatureInPlanResponseData {
 	if c == nil {
 		return nil
 	}
@@ -1376,7 +1392,7 @@ func (c *CompanyPlanDetailResponseData) SetCompatiblePlanIDs(compatiblePlanIDs [
 
 // SetControlledBy sets the ControlledBy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanDetailResponseData) SetControlledBy(controlledBy string) {
+func (c *CompanyPlanDetailResponseData) SetControlledBy(controlledBy BillingProviderType) {
 	c.ControlledBy = controlledBy
 	c.require(companyPlanDetailResponseDataFieldControlledBy)
 }
@@ -1446,7 +1462,7 @@ func (c *CompanyPlanDetailResponseData) SetEntitlements(entitlements []*PlanEnti
 
 // SetFeatures sets the Features field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanDetailResponseData) SetFeatures(features []*FeatureDetailResponseData) {
+func (c *CompanyPlanDetailResponseData) SetFeatures(features []*FeatureInPlanResponseData) {
 	c.Features = features
 	c.require(companyPlanDetailResponseDataFieldFeatures)
 }

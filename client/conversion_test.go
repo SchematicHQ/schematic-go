@@ -19,8 +19,8 @@ func TestToRulesEngineEntitlement(t *testing.T) {
 		softLimit := int64(200)
 		usage := int64(50)
 		eventName := "api-calls"
-		metricPeriod := schematicgo.FeatureEntitlementMetricPeriodCurrentMonth
-		monthReset := schematicgo.FeatureEntitlementMonthResetBillingCycle
+		metricPeriod := schematicgo.MetricPeriodCurrentMonth
+		monthReset := schematicgo.MetricPeriodMonthResetBillingCycle
 		resetAt := time.Now().UTC()
 		creditID := "cred-123"
 		creditTotal := 1000.0
@@ -94,7 +94,7 @@ func TestToRulesEngineRuleType(t *testing.T) {
 	})
 
 	t.Run("valid input", func(t *testing.T) {
-		s := "plan_entitlement"
+		s := schematicgo.RuleTypePlanEntitlement
 		result := toRulesEngineRuleType(&s)
 		assert.Equal(t, rulesengine.RuleType("plan_entitlement"), *result)
 	})

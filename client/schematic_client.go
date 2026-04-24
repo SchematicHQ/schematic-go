@@ -288,12 +288,12 @@ func toRulesEngineEntitlement(e *schematicgo.FeatureEntitlement) *rulesengine.Fe
 	return result
 }
 
-// toRulesEngineRuleType converts a string pointer to a rulesengine.RuleType pointer.
-func toRulesEngineRuleType(s *string) *rulesengine.RuleType {
+// toRulesEngineRuleType converts a schematicgo.RuleType pointer to a rulesengine.RuleType pointer.
+func toRulesEngineRuleType(s *schematicgo.RuleType) *rulesengine.RuleType {
 	if s == nil {
 		return nil
 	}
-	v := rulesengine.RuleType(*s)
+	v := rulesengine.RuleType(string(*s))
 	return &v
 }
 

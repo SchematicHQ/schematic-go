@@ -508,321 +508,32 @@ func (l *ListEnvironmentsRequest) SetOffset(offset *int64) {
 	l.require(listEnvironmentsRequestFieldOffset)
 }
 
-type AccountMemberPermission string
-
-const (
-	AccountMemberPermissionBillingCreditsEdit   AccountMemberPermission = "billing_credits_edit"
-	AccountMemberPermissionCompaniesEdit        AccountMemberPermission = "companies_edit"
-	AccountMemberPermissionCompanyUsersEdit     AccountMemberPermission = "company_users_edit"
-	AccountMemberPermissionComponentsEdit       AccountMemberPermission = "components_edit"
-	AccountMemberPermissionDataExportsEdit      AccountMemberPermission = "data_exports_edit"
-	AccountMemberPermissionFeaturesEdit         AccountMemberPermission = "features_edit"
-	AccountMemberPermissionFlagRulesEdit        AccountMemberPermission = "flag_rules_edit"
-	AccountMemberPermissionFlagsEdit            AccountMemberPermission = "flags_edit"
-	AccountMemberPermissionOverridesEdit        AccountMemberPermission = "overrides_edit"
-	AccountMemberPermissionPlanBillingEdit      AccountMemberPermission = "plan_billing_edit"
-	AccountMemberPermissionPlanEntitlementsEdit AccountMemberPermission = "plan_entitlements_edit"
-	AccountMemberPermissionPlanVersionsEdit     AccountMemberPermission = "plan_versions_edit"
-	AccountMemberPermissionPlansEdit            AccountMemberPermission = "plans_edit"
-	AccountMemberPermissionWebhooksEdit         AccountMemberPermission = "webhooks_edit"
-	AccountMemberPermissionWebhooksRevealSecret AccountMemberPermission = "webhooks_reveal_secret"
-)
-
-func NewAccountMemberPermissionFromString(s string) (AccountMemberPermission, error) {
-	switch s {
-	case "billing_credits_edit":
-		return AccountMemberPermissionBillingCreditsEdit, nil
-	case "companies_edit":
-		return AccountMemberPermissionCompaniesEdit, nil
-	case "company_users_edit":
-		return AccountMemberPermissionCompanyUsersEdit, nil
-	case "components_edit":
-		return AccountMemberPermissionComponentsEdit, nil
-	case "data_exports_edit":
-		return AccountMemberPermissionDataExportsEdit, nil
-	case "features_edit":
-		return AccountMemberPermissionFeaturesEdit, nil
-	case "flag_rules_edit":
-		return AccountMemberPermissionFlagRulesEdit, nil
-	case "flags_edit":
-		return AccountMemberPermissionFlagsEdit, nil
-	case "overrides_edit":
-		return AccountMemberPermissionOverridesEdit, nil
-	case "plan_billing_edit":
-		return AccountMemberPermissionPlanBillingEdit, nil
-	case "plan_entitlements_edit":
-		return AccountMemberPermissionPlanEntitlementsEdit, nil
-	case "plan_versions_edit":
-		return AccountMemberPermissionPlanVersionsEdit, nil
-	case "plans_edit":
-		return AccountMemberPermissionPlansEdit, nil
-	case "webhooks_edit":
-		return AccountMemberPermissionWebhooksEdit, nil
-	case "webhooks_reveal_secret":
-		return AccountMemberPermissionWebhooksRevealSecret, nil
-	}
-	var t AccountMemberPermission
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (a AccountMemberPermission) Ptr() *AccountMemberPermission {
-	return &a
-}
-
-var (
-	accountMemberResponseDataFieldCreatedAt   = big.NewInt(1 << 0)
-	accountMemberResponseDataFieldEmail       = big.NewInt(1 << 1)
-	accountMemberResponseDataFieldID          = big.NewInt(1 << 2)
-	accountMemberResponseDataFieldImageURL    = big.NewInt(1 << 3)
-	accountMemberResponseDataFieldName        = big.NewInt(1 << 4)
-	accountMemberResponseDataFieldPermissions = big.NewInt(1 << 5)
-	accountMemberResponseDataFieldRole        = big.NewInt(1 << 6)
-	accountMemberResponseDataFieldUpdatedAt   = big.NewInt(1 << 7)
-)
-
-type AccountMemberResponseData struct {
-	CreatedAt   time.Time                            `json:"created_at" url:"created_at"`
-	Email       *string                              `json:"email,omitempty" url:"email,omitempty"`
-	ID          string                               `json:"id" url:"id"`
-	ImageURL    *string                              `json:"image_url,omitempty" url:"image_url,omitempty"`
-	Name        *string                              `json:"name,omitempty" url:"name,omitempty"`
-	Permissions map[string][]AccountMemberPermission `json:"permissions" url:"permissions"`
-	Role        *AccountMemberRole                   `json:"role,omitempty" url:"role,omitempty"`
-	UpdatedAt   time.Time                            `json:"updated_at" url:"updated_at"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (a *AccountMemberResponseData) GetCreatedAt() time.Time {
-	if a == nil {
-		return time.Time{}
-	}
-	return a.CreatedAt
-}
-
-func (a *AccountMemberResponseData) GetEmail() *string {
-	if a == nil {
-		return nil
-	}
-	return a.Email
-}
-
-func (a *AccountMemberResponseData) GetID() string {
-	if a == nil {
-		return ""
-	}
-	return a.ID
-}
-
-func (a *AccountMemberResponseData) GetImageURL() *string {
-	if a == nil {
-		return nil
-	}
-	return a.ImageURL
-}
-
-func (a *AccountMemberResponseData) GetName() *string {
-	if a == nil {
-		return nil
-	}
-	return a.Name
-}
-
-func (a *AccountMemberResponseData) GetPermissions() map[string][]AccountMemberPermission {
-	if a == nil {
-		return nil
-	}
-	return a.Permissions
-}
-
-func (a *AccountMemberResponseData) GetRole() *AccountMemberRole {
-	if a == nil {
-		return nil
-	}
-	return a.Role
-}
-
-func (a *AccountMemberResponseData) GetUpdatedAt() time.Time {
-	if a == nil {
-		return time.Time{}
-	}
-	return a.UpdatedAt
-}
-
-func (a *AccountMemberResponseData) GetExtraProperties() map[string]interface{} {
-	if a == nil {
-		return nil
-	}
-	return a.extraProperties
-}
-
-func (a *AccountMemberResponseData) require(field *big.Int) {
-	if a.explicitFields == nil {
-		a.explicitFields = big.NewInt(0)
-	}
-	a.explicitFields.Or(a.explicitFields, field)
-}
-
-// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AccountMemberResponseData) SetCreatedAt(createdAt time.Time) {
-	a.CreatedAt = createdAt
-	a.require(accountMemberResponseDataFieldCreatedAt)
-}
-
-// SetEmail sets the Email field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AccountMemberResponseData) SetEmail(email *string) {
-	a.Email = email
-	a.require(accountMemberResponseDataFieldEmail)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AccountMemberResponseData) SetID(id string) {
-	a.ID = id
-	a.require(accountMemberResponseDataFieldID)
-}
-
-// SetImageURL sets the ImageURL field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AccountMemberResponseData) SetImageURL(imageURL *string) {
-	a.ImageURL = imageURL
-	a.require(accountMemberResponseDataFieldImageURL)
-}
-
-// SetName sets the Name field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AccountMemberResponseData) SetName(name *string) {
-	a.Name = name
-	a.require(accountMemberResponseDataFieldName)
-}
-
-// SetPermissions sets the Permissions field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AccountMemberResponseData) SetPermissions(permissions map[string][]AccountMemberPermission) {
-	a.Permissions = permissions
-	a.require(accountMemberResponseDataFieldPermissions)
-}
-
-// SetRole sets the Role field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AccountMemberResponseData) SetRole(role *AccountMemberRole) {
-	a.Role = role
-	a.require(accountMemberResponseDataFieldRole)
-}
-
-// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (a *AccountMemberResponseData) SetUpdatedAt(updatedAt time.Time) {
-	a.UpdatedAt = updatedAt
-	a.require(accountMemberResponseDataFieldUpdatedAt)
-}
-
-func (a *AccountMemberResponseData) UnmarshalJSON(data []byte) error {
-	type embed AccountMemberResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*a),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*a = AccountMemberResponseData(unmarshaler.embed)
-	a.CreatedAt = unmarshaler.CreatedAt.Time()
-	a.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *a)
-	if err != nil {
-		return err
-	}
-	a.extraProperties = extraProperties
-	a.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (a *AccountMemberResponseData) MarshalJSON() ([]byte, error) {
-	type embed AccountMemberResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*a),
-		CreatedAt: internal.NewDateTime(a.CreatedAt),
-		UpdatedAt: internal.NewDateTime(a.UpdatedAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (a *AccountMemberResponseData) String() string {
-	if a == nil {
-		return "<nil>"
-	}
-	if len(a.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(a); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", a)
-}
-
-type AccountMemberRole string
-
-const (
-	AccountMemberRoleAdmin  AccountMemberRole = "admin"
-	AccountMemberRoleMember AccountMemberRole = "member"
-)
-
-func NewAccountMemberRoleFromString(s string) (AccountMemberRole, error) {
-	switch s {
-	case "admin":
-		return AccountMemberRoleAdmin, nil
-	case "member":
-		return AccountMemberRoleMember, nil
-	}
-	var t AccountMemberRole
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (a AccountMemberRole) Ptr() *AccountMemberRole {
-	return &a
-}
-
 var (
 	aPIKeyCreateResponseDataFieldCreatedAt     = big.NewInt(1 << 0)
 	aPIKeyCreateResponseDataFieldDescription   = big.NewInt(1 << 1)
-	aPIKeyCreateResponseDataFieldEnvironmentID = big.NewInt(1 << 2)
-	aPIKeyCreateResponseDataFieldID            = big.NewInt(1 << 3)
-	aPIKeyCreateResponseDataFieldLastUsedAt    = big.NewInt(1 << 4)
-	aPIKeyCreateResponseDataFieldName          = big.NewInt(1 << 5)
-	aPIKeyCreateResponseDataFieldReadonly      = big.NewInt(1 << 6)
-	aPIKeyCreateResponseDataFieldScopes        = big.NewInt(1 << 7)
-	aPIKeyCreateResponseDataFieldSecret        = big.NewInt(1 << 8)
-	aPIKeyCreateResponseDataFieldUpdatedAt     = big.NewInt(1 << 9)
+	aPIKeyCreateResponseDataFieldEnvironment   = big.NewInt(1 << 2)
+	aPIKeyCreateResponseDataFieldEnvironmentID = big.NewInt(1 << 3)
+	aPIKeyCreateResponseDataFieldID            = big.NewInt(1 << 4)
+	aPIKeyCreateResponseDataFieldLastUsedAt    = big.NewInt(1 << 5)
+	aPIKeyCreateResponseDataFieldName          = big.NewInt(1 << 6)
+	aPIKeyCreateResponseDataFieldReadonly      = big.NewInt(1 << 7)
+	aPIKeyCreateResponseDataFieldScopes        = big.NewInt(1 << 8)
+	aPIKeyCreateResponseDataFieldSecret        = big.NewInt(1 << 9)
+	aPIKeyCreateResponseDataFieldUpdatedAt     = big.NewInt(1 << 10)
 )
 
 type APIKeyCreateResponseData struct {
-	CreatedAt     time.Time     `json:"created_at" url:"created_at"`
-	Description   *string       `json:"description,omitempty" url:"description,omitempty"`
-	EnvironmentID *string       `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID            string        `json:"id" url:"id"`
-	LastUsedAt    *time.Time    `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
-	Name          string        `json:"name" url:"name"`
-	Readonly      bool          `json:"readonly" url:"readonly"`
-	Scopes        []APIKeyScope `json:"scopes" url:"scopes"`
-	Secret        string        `json:"secret" url:"secret"`
-	UpdatedAt     time.Time     `json:"updated_at" url:"updated_at"`
+	CreatedAt     time.Time                `json:"created_at" url:"created_at"`
+	Description   *string                  `json:"description,omitempty" url:"description,omitempty"`
+	Environment   *EnvironmentResponseData `json:"environment,omitempty" url:"environment,omitempty"`
+	EnvironmentID *string                  `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID            string                   `json:"id" url:"id"`
+	LastUsedAt    *time.Time               `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
+	Name          string                   `json:"name" url:"name"`
+	Readonly      bool                     `json:"readonly" url:"readonly"`
+	Scopes        []APIKeyScope            `json:"scopes" url:"scopes"`
+	Secret        string                   `json:"secret" url:"secret"`
+	UpdatedAt     time.Time                `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -843,6 +554,13 @@ func (a *APIKeyCreateResponseData) GetDescription() *string {
 		return nil
 	}
 	return a.Description
+}
+
+func (a *APIKeyCreateResponseData) GetEnvironment() *EnvironmentResponseData {
+	if a == nil {
+		return nil
+	}
+	return a.Environment
 }
 
 func (a *APIKeyCreateResponseData) GetEnvironmentID() *string {
@@ -927,6 +645,13 @@ func (a *APIKeyCreateResponseData) SetCreatedAt(createdAt time.Time) {
 func (a *APIKeyCreateResponseData) SetDescription(description *string) {
 	a.Description = description
 	a.require(aPIKeyCreateResponseDataFieldDescription)
+}
+
+// SetEnvironment sets the Environment field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *APIKeyCreateResponseData) SetEnvironment(environment *EnvironmentResponseData) {
+	a.Environment = environment
+	a.require(aPIKeyCreateResponseDataFieldEnvironment)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -1047,42 +772,44 @@ var (
 	auditLogResponseDataFieldActorType         = big.NewInt(1 << 0)
 	auditLogResponseDataFieldAPIKeyID          = big.NewInt(1 << 1)
 	auditLogResponseDataFieldEndedAt           = big.NewInt(1 << 2)
-	auditLogResponseDataFieldEnvironmentID     = big.NewInt(1 << 3)
-	auditLogResponseDataFieldID                = big.NewInt(1 << 4)
-	auditLogResponseDataFieldMethod            = big.NewInt(1 << 5)
-	auditLogResponseDataFieldReqBody           = big.NewInt(1 << 6)
-	auditLogResponseDataFieldResourceID        = big.NewInt(1 << 7)
-	auditLogResponseDataFieldResourceIDString  = big.NewInt(1 << 8)
-	auditLogResponseDataFieldResourceName      = big.NewInt(1 << 9)
-	auditLogResponseDataFieldResourceType      = big.NewInt(1 << 10)
-	auditLogResponseDataFieldRespBody          = big.NewInt(1 << 11)
-	auditLogResponseDataFieldRespCode          = big.NewInt(1 << 12)
-	auditLogResponseDataFieldSecondaryResource = big.NewInt(1 << 13)
-	auditLogResponseDataFieldStartedAt         = big.NewInt(1 << 14)
-	auditLogResponseDataFieldURL               = big.NewInt(1 << 15)
-	auditLogResponseDataFieldUserID            = big.NewInt(1 << 16)
-	auditLogResponseDataFieldUserName          = big.NewInt(1 << 17)
+	auditLogResponseDataFieldEnvironment       = big.NewInt(1 << 3)
+	auditLogResponseDataFieldEnvironmentID     = big.NewInt(1 << 4)
+	auditLogResponseDataFieldID                = big.NewInt(1 << 5)
+	auditLogResponseDataFieldMethod            = big.NewInt(1 << 6)
+	auditLogResponseDataFieldReqBody           = big.NewInt(1 << 7)
+	auditLogResponseDataFieldResourceID        = big.NewInt(1 << 8)
+	auditLogResponseDataFieldResourceIDString  = big.NewInt(1 << 9)
+	auditLogResponseDataFieldResourceName      = big.NewInt(1 << 10)
+	auditLogResponseDataFieldResourceType      = big.NewInt(1 << 11)
+	auditLogResponseDataFieldRespBody          = big.NewInt(1 << 12)
+	auditLogResponseDataFieldRespCode          = big.NewInt(1 << 13)
+	auditLogResponseDataFieldSecondaryResource = big.NewInt(1 << 14)
+	auditLogResponseDataFieldStartedAt         = big.NewInt(1 << 15)
+	auditLogResponseDataFieldURL               = big.NewInt(1 << 16)
+	auditLogResponseDataFieldUserID            = big.NewInt(1 << 17)
+	auditLogResponseDataFieldUserName          = big.NewInt(1 << 18)
 )
 
 type AuditLogResponseData struct {
-	ActorType         ActorType  `json:"actor_type" url:"actor_type"`
-	APIKeyID          *string    `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
-	EndedAt           *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
-	EnvironmentID     *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID                string     `json:"id" url:"id"`
-	Method            string     `json:"method" url:"method"`
-	ReqBody           *string    `json:"req_body,omitempty" url:"req_body,omitempty"`
-	ResourceID        *int64     `json:"resource_id,omitempty" url:"resource_id,omitempty"`
-	ResourceIDString  *string    `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
-	ResourceName      *string    `json:"resource_name,omitempty" url:"resource_name,omitempty"`
-	ResourceType      *string    `json:"resource_type,omitempty" url:"resource_type,omitempty"`
-	RespBody          *string    `json:"resp_body,omitempty" url:"resp_body,omitempty"`
-	RespCode          *int64     `json:"resp_code,omitempty" url:"resp_code,omitempty"`
-	SecondaryResource *string    `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
-	StartedAt         time.Time  `json:"started_at" url:"started_at"`
-	URL               string     `json:"url" url:"url"`
-	UserID            *string    `json:"user_id,omitempty" url:"user_id,omitempty"`
-	UserName          *string    `json:"user_name,omitempty" url:"user_name,omitempty"`
+	ActorType         ActorType                `json:"actor_type" url:"actor_type"`
+	APIKeyID          *string                  `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
+	EndedAt           *time.Time               `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	Environment       *EnvironmentResponseData `json:"environment,omitempty" url:"environment,omitempty"`
+	EnvironmentID     *string                  `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID                string                   `json:"id" url:"id"`
+	Method            string                   `json:"method" url:"method"`
+	ReqBody           *string                  `json:"req_body,omitempty" url:"req_body,omitempty"`
+	ResourceID        *int64                   `json:"resource_id,omitempty" url:"resource_id,omitempty"`
+	ResourceIDString  *string                  `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
+	ResourceName      *string                  `json:"resource_name,omitempty" url:"resource_name,omitempty"`
+	ResourceType      *string                  `json:"resource_type,omitempty" url:"resource_type,omitempty"`
+	RespBody          *string                  `json:"resp_body,omitempty" url:"resp_body,omitempty"`
+	RespCode          *int64                   `json:"resp_code,omitempty" url:"resp_code,omitempty"`
+	SecondaryResource *string                  `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
+	StartedAt         time.Time                `json:"started_at" url:"started_at"`
+	URL               string                   `json:"url" url:"url"`
+	UserID            *string                  `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserName          *string                  `json:"user_name,omitempty" url:"user_name,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1110,6 +837,13 @@ func (a *AuditLogResponseData) GetEndedAt() *time.Time {
 		return nil
 	}
 	return a.EndedAt
+}
+
+func (a *AuditLogResponseData) GetEnvironment() *EnvironmentResponseData {
+	if a == nil {
+		return nil
+	}
+	return a.Environment
 }
 
 func (a *AuditLogResponseData) GetEnvironmentID() *string {
@@ -1250,6 +984,13 @@ func (a *AuditLogResponseData) SetAPIKeyID(apiKeyID *string) {
 func (a *AuditLogResponseData) SetEndedAt(endedAt *time.Time) {
 	a.EndedAt = endedAt
 	a.require(auditLogResponseDataFieldEndedAt)
+}
+
+// SetEnvironment sets the Environment field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogResponseData) SetEnvironment(environment *EnvironmentResponseData) {
+	a.Environment = environment
+	a.require(auditLogResponseDataFieldEnvironment)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -1585,191 +1326,6 @@ func (e *EnvironmentDetailResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
-}
-
-var (
-	environmentResponseDataFieldCreatedAt       = big.NewInt(1 << 0)
-	environmentResponseDataFieldEnvironmentType = big.NewInt(1 << 1)
-	environmentResponseDataFieldID              = big.NewInt(1 << 2)
-	environmentResponseDataFieldName            = big.NewInt(1 << 3)
-	environmentResponseDataFieldUpdatedAt       = big.NewInt(1 << 4)
-)
-
-type EnvironmentResponseData struct {
-	CreatedAt       time.Time       `json:"created_at" url:"created_at"`
-	EnvironmentType EnvironmentType `json:"environment_type" url:"environment_type"`
-	ID              string          `json:"id" url:"id"`
-	Name            string          `json:"name" url:"name"`
-	UpdatedAt       time.Time       `json:"updated_at" url:"updated_at"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (e *EnvironmentResponseData) GetCreatedAt() time.Time {
-	if e == nil {
-		return time.Time{}
-	}
-	return e.CreatedAt
-}
-
-func (e *EnvironmentResponseData) GetEnvironmentType() EnvironmentType {
-	if e == nil {
-		return ""
-	}
-	return e.EnvironmentType
-}
-
-func (e *EnvironmentResponseData) GetID() string {
-	if e == nil {
-		return ""
-	}
-	return e.ID
-}
-
-func (e *EnvironmentResponseData) GetName() string {
-	if e == nil {
-		return ""
-	}
-	return e.Name
-}
-
-func (e *EnvironmentResponseData) GetUpdatedAt() time.Time {
-	if e == nil {
-		return time.Time{}
-	}
-	return e.UpdatedAt
-}
-
-func (e *EnvironmentResponseData) GetExtraProperties() map[string]interface{} {
-	if e == nil {
-		return nil
-	}
-	return e.extraProperties
-}
-
-func (e *EnvironmentResponseData) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
-	}
-	e.explicitFields.Or(e.explicitFields, field)
-}
-
-// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EnvironmentResponseData) SetCreatedAt(createdAt time.Time) {
-	e.CreatedAt = createdAt
-	e.require(environmentResponseDataFieldCreatedAt)
-}
-
-// SetEnvironmentType sets the EnvironmentType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EnvironmentResponseData) SetEnvironmentType(environmentType EnvironmentType) {
-	e.EnvironmentType = environmentType
-	e.require(environmentResponseDataFieldEnvironmentType)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EnvironmentResponseData) SetID(id string) {
-	e.ID = id
-	e.require(environmentResponseDataFieldID)
-}
-
-// SetName sets the Name field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EnvironmentResponseData) SetName(name string) {
-	e.Name = name
-	e.require(environmentResponseDataFieldName)
-}
-
-// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EnvironmentResponseData) SetUpdatedAt(updatedAt time.Time) {
-	e.UpdatedAt = updatedAt
-	e.require(environmentResponseDataFieldUpdatedAt)
-}
-
-func (e *EnvironmentResponseData) UnmarshalJSON(data []byte) error {
-	type embed EnvironmentResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*e),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*e = EnvironmentResponseData(unmarshaler.embed)
-	e.CreatedAt = unmarshaler.CreatedAt.Time()
-	e.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *e)
-	if err != nil {
-		return err
-	}
-	e.extraProperties = extraProperties
-	e.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (e *EnvironmentResponseData) MarshalJSON() ([]byte, error) {
-	type embed EnvironmentResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*e),
-		CreatedAt: internal.NewDateTime(e.CreatedAt),
-		UpdatedAt: internal.NewDateTime(e.UpdatedAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, e.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (e *EnvironmentResponseData) String() string {
-	if e == nil {
-		return "<nil>"
-	}
-	if len(e.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(e); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", e)
-}
-
-type EnvironmentType string
-
-const (
-	EnvironmentTypeDevelopment EnvironmentType = "development"
-	EnvironmentTypeProduction  EnvironmentType = "production"
-	EnvironmentTypeStaging     EnvironmentType = "staging"
-)
-
-func NewEnvironmentTypeFromString(s string) (EnvironmentType, error) {
-	switch s {
-	case "development":
-		return EnvironmentTypeDevelopment, nil
-	case "production":
-		return EnvironmentTypeProduction, nil
-	case "staging":
-		return EnvironmentTypeStaging, nil
-	}
-	var t EnvironmentType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (e EnvironmentType) Ptr() *EnvironmentType {
-	return &e
 }
 
 var (

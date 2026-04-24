@@ -1797,6 +1797,14 @@ func TestSettersBillingProductPriceResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetNickname", func(t *testing.T) {
+		obj := &BillingProductPriceResponseData{}
+		var fernTestValueNickname *string
+		obj.SetNickname(fernTestValueNickname)
+		assert.Equal(t, fernTestValueNickname, obj.Nickname)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetPackageSize", func(t *testing.T) {
 		obj := &BillingProductPriceResponseData{}
 		var fernTestValuePackageSize int64
@@ -2041,6 +2049,39 @@ func TestGettersBillingProductPriceResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetMeterID() // Should return zero value
+	})
+
+	t.Run("GetNickname", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &BillingProductPriceResponseData{}
+		var expected *string
+		obj.Nickname = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetNickname(), "getter should return the property value")
+	})
+
+	t.Run("GetNickname_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &BillingProductPriceResponseData{}
+		obj.Nickname = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetNickname(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetNickname_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *BillingProductPriceResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetNickname() // Should return zero value
 	})
 
 	t.Run("GetPackageSize", func(t *testing.T) {
@@ -2490,6 +2531,37 @@ func TestSettersMarkExplicitBillingProductPriceResponseData(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetNickname_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &BillingProductPriceResponseData{}
+		var fernTestValueNickname *string
+
+		// Act
+		obj.SetNickname(fernTestValueNickname)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetPackageSize_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -2854,7 +2926,7 @@ func TestSettersCompanyPlanDetailResponseData(t *testing.T) {
 
 	t.Run("SetControlledBy", func(t *testing.T) {
 		obj := &CompanyPlanDetailResponseData{}
-		var fernTestValueControlledBy string
+		var fernTestValueControlledBy BillingProviderType
 		obj.SetControlledBy(fernTestValueControlledBy)
 		assert.Equal(t, fernTestValueControlledBy, obj.ControlledBy)
 		assert.NotNil(t, obj.explicitFields)
@@ -2934,7 +3006,7 @@ func TestSettersCompanyPlanDetailResponseData(t *testing.T) {
 
 	t.Run("SetFeatures", func(t *testing.T) {
 		obj := &CompanyPlanDetailResponseData{}
-		var fernTestValueFeatures []*FeatureDetailResponseData
+		var fernTestValueFeatures []*FeatureInPlanResponseData
 		obj.SetFeatures(fernTestValueFeatures)
 		assert.Equal(t, fernTestValueFeatures, obj.Features)
 		assert.NotNil(t, obj.explicitFields)
@@ -3391,7 +3463,7 @@ func TestGettersCompanyPlanDetailResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CompanyPlanDetailResponseData{}
-		var expected string
+		var expected BillingProviderType
 		obj.ControlledBy = expected
 
 		// Act & Assert
@@ -3671,7 +3743,7 @@ func TestGettersCompanyPlanDetailResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CompanyPlanDetailResponseData{}
-		var expected []*FeatureDetailResponseData
+		var expected []*FeatureInPlanResponseData
 		obj.Features = expected
 
 		// Act & Assert
@@ -4511,7 +4583,7 @@ func TestSettersMarkExplicitCompanyPlanDetailResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CompanyPlanDetailResponseData{}
-		var fernTestValueControlledBy string
+		var fernTestValueControlledBy BillingProviderType
 
 		// Act
 		obj.SetControlledBy(fernTestValueControlledBy)
@@ -4821,7 +4893,7 @@ func TestSettersMarkExplicitCompanyPlanDetailResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CompanyPlanDetailResponseData{}
-		var fernTestValueFeatures []*FeatureDetailResponseData
+		var fernTestValueFeatures []*FeatureInPlanResponseData
 
 		// Act
 		obj.SetFeatures(fernTestValueFeatures)

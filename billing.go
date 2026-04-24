@@ -7419,13 +7419,15 @@ var (
 	createMeterRequestBodyFieldEventName       = big.NewInt(1 << 1)
 	createMeterRequestBodyFieldEventPayloadKey = big.NewInt(1 << 2)
 	createMeterRequestBodyFieldExternalID      = big.NewInt(1 << 3)
+	createMeterRequestBodyFieldProviderType    = big.NewInt(1 << 4)
 )
 
 type CreateMeterRequestBody struct {
-	DisplayName     string `json:"display_name" url:"-"`
-	EventName       string `json:"event_name" url:"-"`
-	EventPayloadKey string `json:"event_payload_key" url:"-"`
-	ExternalID      string `json:"external_id" url:"-"`
+	DisplayName     string               `json:"display_name" url:"-"`
+	EventName       string               `json:"event_name" url:"-"`
+	EventPayloadKey string               `json:"event_payload_key" url:"-"`
+	ExternalID      string               `json:"external_id" url:"-"`
+	ProviderType    *BillingProviderType `json:"provider_type,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7466,6 +7468,13 @@ func (c *CreateMeterRequestBody) SetExternalID(externalID string) {
 	c.require(createMeterRequestBodyFieldExternalID)
 }
 
+// SetProviderType sets the ProviderType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMeterRequestBody) SetProviderType(providerType *BillingProviderType) {
+	c.ProviderType = providerType
+	c.require(createMeterRequestBodyFieldProviderType)
+}
+
 func (c *CreateMeterRequestBody) UnmarshalJSON(data []byte) error {
 	type unmarshaler CreateMeterRequestBody
 	var body unmarshaler
@@ -7494,15 +7503,16 @@ var (
 	createBillingPriceRequestBodyFieldInterval          = big.NewInt(1 << 3)
 	createBillingPriceRequestBodyFieldIsActive          = big.NewInt(1 << 4)
 	createBillingPriceRequestBodyFieldMeterID           = big.NewInt(1 << 5)
-	createBillingPriceRequestBodyFieldPackageSize       = big.NewInt(1 << 6)
-	createBillingPriceRequestBodyFieldPrice             = big.NewInt(1 << 7)
-	createBillingPriceRequestBodyFieldPriceDecimal      = big.NewInt(1 << 8)
-	createBillingPriceRequestBodyFieldPriceExternalID   = big.NewInt(1 << 9)
-	createBillingPriceRequestBodyFieldPriceTiers        = big.NewInt(1 << 10)
-	createBillingPriceRequestBodyFieldProductExternalID = big.NewInt(1 << 11)
-	createBillingPriceRequestBodyFieldProviderType      = big.NewInt(1 << 12)
-	createBillingPriceRequestBodyFieldTiersMode         = big.NewInt(1 << 13)
-	createBillingPriceRequestBodyFieldUsageType         = big.NewInt(1 << 14)
+	createBillingPriceRequestBodyFieldNickname          = big.NewInt(1 << 6)
+	createBillingPriceRequestBodyFieldPackageSize       = big.NewInt(1 << 7)
+	createBillingPriceRequestBodyFieldPrice             = big.NewInt(1 << 8)
+	createBillingPriceRequestBodyFieldPriceDecimal      = big.NewInt(1 << 9)
+	createBillingPriceRequestBodyFieldPriceExternalID   = big.NewInt(1 << 10)
+	createBillingPriceRequestBodyFieldPriceTiers        = big.NewInt(1 << 11)
+	createBillingPriceRequestBodyFieldProductExternalID = big.NewInt(1 << 12)
+	createBillingPriceRequestBodyFieldProviderType      = big.NewInt(1 << 13)
+	createBillingPriceRequestBodyFieldTiersMode         = big.NewInt(1 << 14)
+	createBillingPriceRequestBodyFieldUsageType         = big.NewInt(1 << 15)
 )
 
 type CreateBillingPriceRequestBody struct {
@@ -7512,6 +7522,7 @@ type CreateBillingPriceRequestBody struct {
 	Interval          string                               `json:"interval" url:"-"`
 	IsActive          bool                                 `json:"is_active" url:"-"`
 	MeterID           *string                              `json:"meter_id,omitempty" url:"-"`
+	Nickname          *string                              `json:"nickname,omitempty" url:"-"`
 	PackageSize       *int64                               `json:"package_size,omitempty" url:"-"`
 	Price             int64                                `json:"price" url:"-"`
 	PriceDecimal      *string                              `json:"price_decimal,omitempty" url:"-"`
@@ -7573,6 +7584,13 @@ func (c *CreateBillingPriceRequestBody) SetIsActive(isActive bool) {
 func (c *CreateBillingPriceRequestBody) SetMeterID(meterID *string) {
 	c.MeterID = meterID
 	c.require(createBillingPriceRequestBodyFieldMeterID)
+}
+
+// SetNickname sets the Nickname field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPriceRequestBody) SetNickname(nickname *string) {
+	c.Nickname = nickname
+	c.require(createBillingPriceRequestBodyFieldNickname)
 }
 
 // SetPackageSize sets the PackageSize field and marks it as non-optional;
@@ -7756,11 +7774,12 @@ var (
 	createBillingSubscriptionRequestBodyFieldPeriodEnd                      = big.NewInt(1 << 11)
 	createBillingSubscriptionRequestBodyFieldPeriodStart                    = big.NewInt(1 << 12)
 	createBillingSubscriptionRequestBodyFieldProductExternalIDs             = big.NewInt(1 << 13)
-	createBillingSubscriptionRequestBodyFieldStatus                         = big.NewInt(1 << 14)
-	createBillingSubscriptionRequestBodyFieldSubscriptionExternalID         = big.NewInt(1 << 15)
-	createBillingSubscriptionRequestBodyFieldTotalPrice                     = big.NewInt(1 << 16)
-	createBillingSubscriptionRequestBodyFieldTrialEnd                       = big.NewInt(1 << 17)
-	createBillingSubscriptionRequestBodyFieldTrialEndSetting                = big.NewInt(1 << 18)
+	createBillingSubscriptionRequestBodyFieldProviderType                   = big.NewInt(1 << 14)
+	createBillingSubscriptionRequestBodyFieldStatus                         = big.NewInt(1 << 15)
+	createBillingSubscriptionRequestBodyFieldSubscriptionExternalID         = big.NewInt(1 << 16)
+	createBillingSubscriptionRequestBodyFieldTotalPrice                     = big.NewInt(1 << 17)
+	createBillingSubscriptionRequestBodyFieldTrialEnd                       = big.NewInt(1 << 18)
+	createBillingSubscriptionRequestBodyFieldTrialEndSetting                = big.NewInt(1 << 19)
 )
 
 type CreateBillingSubscriptionRequestBody struct {
@@ -7778,6 +7797,7 @@ type CreateBillingSubscriptionRequestBody struct {
 	PeriodEnd                      *int64                              `json:"period_end,omitempty" url:"-"`
 	PeriodStart                    *int64                              `json:"period_start,omitempty" url:"-"`
 	ProductExternalIDs             []*BillingProductPricing            `json:"product_external_ids" url:"-"`
+	ProviderType                   *BillingProviderType                `json:"provider_type,omitempty" url:"-"`
 	Status                         *string                             `json:"status,omitempty" url:"-"`
 	SubscriptionExternalID         string                              `json:"subscription_external_id" url:"-"`
 	TotalPrice                     int64                               `json:"total_price" url:"-"`
@@ -7891,6 +7911,13 @@ func (c *CreateBillingSubscriptionRequestBody) SetPeriodStart(periodStart *int64
 func (c *CreateBillingSubscriptionRequestBody) SetProductExternalIDs(productExternalIDs []*BillingProductPricing) {
 	c.ProductExternalIDs = productExternalIDs
 	c.require(createBillingSubscriptionRequestBodyFieldProductExternalIDs)
+}
+
+// SetProviderType sets the ProviderType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingSubscriptionRequestBody) SetProviderType(providerType *BillingProviderType) {
+	c.ProviderType = providerType
+	c.require(createBillingSubscriptionRequestBodyFieldProviderType)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;

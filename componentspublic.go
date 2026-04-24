@@ -57,7 +57,7 @@ type PlanViewPublicResponseData struct {
 	CompanyID             *string                            `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CompanyName           *string                            `json:"company_name,omitempty" url:"company_name,omitempty"`
 	CompatiblePlanIDs     []string                           `json:"compatible_plan_ids" url:"compatible_plan_ids"`
-	ControlledBy          string                             `json:"controlled_by" url:"controlled_by"`
+	ControlledBy          BillingProviderType                `json:"controlled_by" url:"controlled_by"`
 	CopiedFromPlanID      *string                            `json:"copied_from_plan_id,omitempty" url:"copied_from_plan_id,omitempty"`
 	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
 	CurrencyPrices        []*PlanCurrencyPricesResponseData  `json:"currency_prices" url:"currency_prices"`
@@ -66,7 +66,7 @@ type PlanViewPublicResponseData struct {
 	Description           string                             `json:"description" url:"description"`
 	DraftVersion          *PlanVersionResponseData           `json:"draft_version,omitempty" url:"draft_version,omitempty"`
 	Entitlements          []*PlanEntitlementResponseData     `json:"entitlements" url:"entitlements"`
-	Features              []*FeatureDetailResponseData       `json:"features" url:"features"`
+	Features              []*FeatureInPlanResponseData       `json:"features" url:"features"`
 	Icon                  PlanIcon                           `json:"icon" url:"icon"`
 	ID                    string                             `json:"id" url:"id"`
 	IncludedCreditGrants  []*PlanCreditGrantView             `json:"included_credit_grants" url:"included_credit_grants"`
@@ -153,7 +153,7 @@ func (p *PlanViewPublicResponseData) GetCompatiblePlanIDs() []string {
 	return p.CompatiblePlanIDs
 }
 
-func (p *PlanViewPublicResponseData) GetControlledBy() string {
+func (p *PlanViewPublicResponseData) GetControlledBy() BillingProviderType {
 	if p == nil {
 		return ""
 	}
@@ -216,7 +216,7 @@ func (p *PlanViewPublicResponseData) GetEntitlements() []*PlanEntitlementRespons
 	return p.Entitlements
 }
 
-func (p *PlanViewPublicResponseData) GetFeatures() []*FeatureDetailResponseData {
+func (p *PlanViewPublicResponseData) GetFeatures() []*FeatureInPlanResponseData {
 	if p == nil {
 		return nil
 	}
@@ -407,7 +407,7 @@ func (p *PlanViewPublicResponseData) SetCompatiblePlanIDs(compatiblePlanIDs []st
 
 // SetControlledBy sets the ControlledBy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanViewPublicResponseData) SetControlledBy(controlledBy string) {
+func (p *PlanViewPublicResponseData) SetControlledBy(controlledBy BillingProviderType) {
 	p.ControlledBy = controlledBy
 	p.require(planViewPublicResponseDataFieldControlledBy)
 }
@@ -470,7 +470,7 @@ func (p *PlanViewPublicResponseData) SetEntitlements(entitlements []*PlanEntitle
 
 // SetFeatures sets the Features field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanViewPublicResponseData) SetFeatures(features []*FeatureDetailResponseData) {
+func (p *PlanViewPublicResponseData) SetFeatures(features []*FeatureInPlanResponseData) {
 	p.Features = features
 	p.require(planViewPublicResponseDataFieldFeatures)
 }

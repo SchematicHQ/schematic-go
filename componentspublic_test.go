@@ -85,7 +85,7 @@ func TestSettersPlanViewPublicResponseData(t *testing.T) {
 
 	t.Run("SetControlledBy", func(t *testing.T) {
 		obj := &PlanViewPublicResponseData{}
-		var fernTestValueControlledBy string
+		var fernTestValueControlledBy BillingProviderType
 		obj.SetControlledBy(fernTestValueControlledBy)
 		assert.Equal(t, fernTestValueControlledBy, obj.ControlledBy)
 		assert.NotNil(t, obj.explicitFields)
@@ -157,7 +157,7 @@ func TestSettersPlanViewPublicResponseData(t *testing.T) {
 
 	t.Run("SetFeatures", func(t *testing.T) {
 		obj := &PlanViewPublicResponseData{}
-		var fernTestValueFeatures []*FeatureDetailResponseData
+		var fernTestValueFeatures []*FeatureInPlanResponseData
 		obj.SetFeatures(fernTestValueFeatures)
 		assert.Equal(t, fernTestValueFeatures, obj.Features)
 		assert.NotNil(t, obj.explicitFields)
@@ -567,7 +567,7 @@ func TestGettersPlanViewPublicResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &PlanViewPublicResponseData{}
-		var expected string
+		var expected BillingProviderType
 		obj.ControlledBy = expected
 
 		// Act & Assert
@@ -824,7 +824,7 @@ func TestGettersPlanViewPublicResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &PlanViewPublicResponseData{}
-		var expected []*FeatureDetailResponseData
+		var expected []*FeatureInPlanResponseData
 		obj.Features = expected
 
 		// Act & Assert
@@ -1544,7 +1544,7 @@ func TestSettersMarkExplicitPlanViewPublicResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &PlanViewPublicResponseData{}
-		var fernTestValueControlledBy string
+		var fernTestValueControlledBy BillingProviderType
 
 		// Act
 		obj.SetControlledBy(fernTestValueControlledBy)
@@ -1823,7 +1823,7 @@ func TestSettersMarkExplicitPlanViewPublicResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &PlanViewPublicResponseData{}
-		var fernTestValueFeatures []*FeatureDetailResponseData
+		var fernTestValueFeatures []*FeatureInPlanResponseData
 
 		// Act
 		obj.SetFeatures(fernTestValueFeatures)

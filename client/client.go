@@ -3,8 +3,6 @@
 package client
 
 import (
-	context "context"
-
 	accesstokens "github.com/schematichq/schematic-go/accesstokens"
 	accounts "github.com/schematichq/schematic-go/accounts"
 	billing "github.com/schematichq/schematic-go/billing"
@@ -18,6 +16,7 @@ import (
 	entitlements "github.com/schematichq/schematic-go/entitlements"
 	events "github.com/schematichq/schematic-go/events"
 	features "github.com/schematichq/schematic-go/features"
+	integrationsapi "github.com/schematichq/schematic-go/integrationsapi"
 	internal "github.com/schematichq/schematic-go/internal"
 	option "github.com/schematichq/schematic-go/option"
 	planbundle "github.com/schematichq/schematic-go/planbundle"
@@ -29,7 +28,6 @@ import (
 )
 
 type Client struct {
-	WithRawResponse   *RawClient
 	Accounts          *accounts.Client
 	Billing           *billing.Client
 	Credits           *credits.Client
@@ -41,6 +39,7 @@ type Client struct {
 	Dataexports       *dataexports.Client
 	Events            *events.Client
 	Features          *features.Client
+	Integrationsapi   *integrationsapi.Client
 	Planbundle        *planbundle.Client
 	Plangroups        *plangroups.Client
 	Planmigrations    *planmigrations.Client
@@ -68,6 +67,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Dataexports:       dataexports.NewClient(options),
 		Events:            events.NewClient(options),
 		Features:          features.NewClient(options),
+		Integrationsapi:   integrationsapi.NewClient(options),
 		Planbundle:        planbundle.NewClient(options),
 		Plangroups:        plangroups.NewClient(options),
 		Planmigrations:    planmigrations.NewClient(options),
@@ -75,7 +75,6 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Scheduledcheckout: scheduledcheckout.NewClient(options),
 		Accesstokens:      accesstokens.NewClient(options),
 		Webhooks:          webhooks.NewClient(options),
-		WithRawResponse:   NewRawClient(options),
 		options:           options,
 		baseURL:           options.BaseURL,
 		caller: internal.NewCaller(
@@ -85,36 +84,4 @@ func NewClient(opts ...option.RequestOption) *Client {
 			},
 		),
 	}
-}
-
-func (c *Client) PutPlanAudiencesPlanAudienceID(
-	ctx context.Context,
-	planAudienceID string,
-	opts ...option.RequestOption,
-) error {
-	_, err := c.WithRawResponse.PutPlanAudiencesPlanAudienceID(
-		ctx,
-		planAudienceID,
-		opts...,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) DeletePlanAudiencesPlanAudienceID(
-	ctx context.Context,
-	planAudienceID string,
-	opts ...option.RequestOption,
-) error {
-	_, err := c.WithRawResponse.DeletePlanAudiencesPlanAudienceID(
-		ctx,
-		planAudienceID,
-		opts...,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
 }

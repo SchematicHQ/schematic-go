@@ -226,31 +226,31 @@ func (c *CountFlagsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	createFeatureRequestBodyFieldDescription    = big.NewInt(1 << 0)
-	createFeatureRequestBodyFieldEventSubtype   = big.NewInt(1 << 1)
-	createFeatureRequestBodyFieldFeatureType    = big.NewInt(1 << 2)
-	createFeatureRequestBodyFieldFlag           = big.NewInt(1 << 3)
-	createFeatureRequestBodyFieldIcon           = big.NewInt(1 << 4)
-	createFeatureRequestBodyFieldLifecyclePhase = big.NewInt(1 << 5)
-	createFeatureRequestBodyFieldMaintainerID   = big.NewInt(1 << 6)
-	createFeatureRequestBodyFieldName           = big.NewInt(1 << 7)
-	createFeatureRequestBodyFieldPluralName     = big.NewInt(1 << 8)
-	createFeatureRequestBodyFieldSingularName   = big.NewInt(1 << 9)
-	createFeatureRequestBodyFieldTraitID        = big.NewInt(1 << 10)
+	createFeatureRequestBodyFieldDescription               = big.NewInt(1 << 0)
+	createFeatureRequestBodyFieldEventSubtype              = big.NewInt(1 << 1)
+	createFeatureRequestBodyFieldFeatureType               = big.NewInt(1 << 2)
+	createFeatureRequestBodyFieldFlag                      = big.NewInt(1 << 3)
+	createFeatureRequestBodyFieldIcon                      = big.NewInt(1 << 4)
+	createFeatureRequestBodyFieldLifecyclePhase            = big.NewInt(1 << 5)
+	createFeatureRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 6)
+	createFeatureRequestBodyFieldName                      = big.NewInt(1 << 7)
+	createFeatureRequestBodyFieldPluralName                = big.NewInt(1 << 8)
+	createFeatureRequestBodyFieldSingularName              = big.NewInt(1 << 9)
+	createFeatureRequestBodyFieldTraitID                   = big.NewInt(1 << 10)
 )
 
 type CreateFeatureRequestBody struct {
-	Description    string                         `json:"description" url:"-"`
-	EventSubtype   *string                        `json:"event_subtype,omitempty" url:"-"`
-	FeatureType    FeatureType                    `json:"feature_type" url:"-"`
-	Flag           *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
-	Icon           *string                        `json:"icon,omitempty" url:"-"`
-	LifecyclePhase *FeatureLifecyclePhase         `json:"lifecycle_phase,omitempty" url:"-"`
-	MaintainerID   *string                        `json:"maintainer_id,omitempty" url:"-"`
-	Name           string                         `json:"name" url:"-"`
-	PluralName     *string                        `json:"plural_name,omitempty" url:"-"`
-	SingularName   *string                        `json:"singular_name,omitempty" url:"-"`
-	TraitID        *string                        `json:"trait_id,omitempty" url:"-"`
+	Description               string                         `json:"description" url:"-"`
+	EventSubtype              *string                        `json:"event_subtype,omitempty" url:"-"`
+	FeatureType               FeatureType                    `json:"feature_type" url:"-"`
+	Flag                      *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
+	Icon                      *string                        `json:"icon,omitempty" url:"-"`
+	LifecyclePhase            *FeatureLifecyclePhase         `json:"lifecycle_phase,omitempty" url:"-"`
+	MaintainerAccountMemberID *string                        `json:"maintainer_account_member_id,omitempty" url:"-"`
+	Name                      string                         `json:"name" url:"-"`
+	PluralName                *string                        `json:"plural_name,omitempty" url:"-"`
+	SingularName              *string                        `json:"singular_name,omitempty" url:"-"`
+	TraitID                   *string                        `json:"trait_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -305,11 +305,11 @@ func (c *CreateFeatureRequestBody) SetLifecyclePhase(lifecyclePhase *FeatureLife
 	c.require(createFeatureRequestBodyFieldLifecyclePhase)
 }
 
-// SetMaintainerID sets the MaintainerID field and marks it as non-optional;
+// SetMaintainerAccountMemberID sets the MaintainerAccountMemberID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateFeatureRequestBody) SetMaintainerID(maintainerID *string) {
-	c.MaintainerID = maintainerID
-	c.require(createFeatureRequestBodyFieldMaintainerID)
+func (c *CreateFeatureRequestBody) SetMaintainerAccountMemberID(maintainerAccountMemberID *string) {
+	c.MaintainerAccountMemberID = maintainerAccountMemberID
+	c.require(createFeatureRequestBodyFieldMaintainerAccountMemberID)
 }
 
 // SetName sets the Name field and marks it as non-optional;
@@ -662,7 +662,7 @@ type CheckFlagResponseData struct {
 	// Deprecated: Use Entitlement.EventName instead.
 	FeatureUsageEvent *string `json:"feature_usage_event,omitempty" url:"feature_usage_event,omitempty"`
 	// Deprecated: Use Entitlement.MetricPeriod instead.
-	FeatureUsagePeriod *string `json:"feature_usage_period,omitempty" url:"feature_usage_period,omitempty"`
+	FeatureUsagePeriod *MetricPeriod `json:"feature_usage_period,omitempty" url:"feature_usage_period,omitempty"`
 	// Deprecated: Use Entitlement.MetricResetAt instead.
 	FeatureUsageResetAt *time.Time `json:"feature_usage_reset_at,omitempty" url:"feature_usage_reset_at,omitempty"`
 	// The key used to check the flag
@@ -674,7 +674,7 @@ type CheckFlagResponseData struct {
 	// If a rule was found, its ID
 	RuleID *string `json:"rule_id,omitempty" url:"rule_id,omitempty"`
 	// If a rule was found, its type
-	RuleType *string `json:"rule_type,omitempty" url:"rule_type,omitempty"`
+	RuleType *RuleType `json:"rule_type,omitempty" url:"rule_type,omitempty"`
 	// If user keys were provided and matched a user, its ID
 	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
 	// A boolean flag check result; for feature entitlements, this represents whether further consumption of the feature is permitted
@@ -729,7 +729,7 @@ func (c *CheckFlagResponseData) GetFeatureUsageEvent() *string {
 	return c.FeatureUsageEvent
 }
 
-func (c *CheckFlagResponseData) GetFeatureUsagePeriod() *string {
+func (c *CheckFlagResponseData) GetFeatureUsagePeriod() *MetricPeriod {
 	if c == nil {
 		return nil
 	}
@@ -771,7 +771,7 @@ func (c *CheckFlagResponseData) GetRuleID() *string {
 	return c.RuleID
 }
 
-func (c *CheckFlagResponseData) GetRuleType() *string {
+func (c *CheckFlagResponseData) GetRuleType() *RuleType {
 	if c == nil {
 		return nil
 	}
@@ -850,7 +850,7 @@ func (c *CheckFlagResponseData) SetFeatureUsageEvent(featureUsageEvent *string) 
 
 // SetFeatureUsagePeriod sets the FeatureUsagePeriod field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CheckFlagResponseData) SetFeatureUsagePeriod(featureUsagePeriod *string) {
+func (c *CheckFlagResponseData) SetFeatureUsagePeriod(featureUsagePeriod *MetricPeriod) {
 	c.FeatureUsagePeriod = featureUsagePeriod
 	c.require(checkFlagResponseDataFieldFeatureUsagePeriod)
 }
@@ -892,7 +892,7 @@ func (c *CheckFlagResponseData) SetRuleID(ruleID *string) {
 
 // SetRuleType sets the RuleType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CheckFlagResponseData) SetRuleType(ruleType *string) {
+func (c *CheckFlagResponseData) SetRuleType(ruleType *RuleType) {
 	c.RuleType = ruleType
 	c.require(checkFlagResponseDataFieldRuleType)
 }
@@ -1146,23 +1146,23 @@ func (c *CheckFlagsResponseData) String() string {
 }
 
 var (
-	createFlagRequestBodyFieldDefaultValue = big.NewInt(1 << 0)
-	createFlagRequestBodyFieldDescription  = big.NewInt(1 << 1)
-	createFlagRequestBodyFieldFeatureID    = big.NewInt(1 << 2)
-	createFlagRequestBodyFieldFlagType     = big.NewInt(1 << 3)
-	createFlagRequestBodyFieldKey          = big.NewInt(1 << 4)
-	createFlagRequestBodyFieldMaintainerID = big.NewInt(1 << 5)
-	createFlagRequestBodyFieldName         = big.NewInt(1 << 6)
+	createFlagRequestBodyFieldDefaultValue              = big.NewInt(1 << 0)
+	createFlagRequestBodyFieldDescription               = big.NewInt(1 << 1)
+	createFlagRequestBodyFieldFeatureID                 = big.NewInt(1 << 2)
+	createFlagRequestBodyFieldFlagType                  = big.NewInt(1 << 3)
+	createFlagRequestBodyFieldKey                       = big.NewInt(1 << 4)
+	createFlagRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 5)
+	createFlagRequestBodyFieldName                      = big.NewInt(1 << 6)
 )
 
 type CreateFlagRequestBody struct {
-	DefaultValue bool     `json:"default_value" url:"default_value"`
-	Description  string   `json:"description" url:"description"`
-	FeatureID    *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	FlagType     FlagType `json:"flag_type" url:"flag_type"`
-	Key          string   `json:"key" url:"key"`
-	MaintainerID *string  `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
-	Name         string   `json:"name" url:"name"`
+	DefaultValue              bool     `json:"default_value" url:"default_value"`
+	Description               string   `json:"description" url:"description"`
+	FeatureID                 *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FlagType                  FlagType `json:"flag_type" url:"flag_type"`
+	Key                       string   `json:"key" url:"key"`
+	MaintainerAccountMemberID *string  `json:"maintainer_account_member_id,omitempty" url:"maintainer_account_member_id,omitempty"`
+	Name                      string   `json:"name" url:"name"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1199,11 +1199,11 @@ func (c *CreateFlagRequestBody) GetKey() string {
 	return c.Key
 }
 
-func (c *CreateFlagRequestBody) GetMaintainerID() *string {
+func (c *CreateFlagRequestBody) GetMaintainerAccountMemberID() *string {
 	if c == nil {
 		return nil
 	}
-	return c.MaintainerID
+	return c.MaintainerAccountMemberID
 }
 
 func (c *CreateFlagRequestBody) GetName() string {
@@ -1262,11 +1262,11 @@ func (c *CreateFlagRequestBody) SetKey(key string) {
 	c.require(createFlagRequestBodyFieldKey)
 }
 
-// SetMaintainerID sets the MaintainerID field and marks it as non-optional;
+// SetMaintainerAccountMemberID sets the MaintainerAccountMemberID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateFlagRequestBody) SetMaintainerID(maintainerID *string) {
-	c.MaintainerID = maintainerID
-	c.require(createFlagRequestBodyFieldMaintainerID)
+func (c *CreateFlagRequestBody) SetMaintainerAccountMemberID(maintainerAccountMemberID *string) {
+	c.MaintainerAccountMemberID = maintainerAccountMemberID
+	c.require(createFlagRequestBodyFieldMaintainerAccountMemberID)
 }
 
 // SetName sets the Name field and marks it as non-optional;
@@ -1452,8 +1452,8 @@ var (
 
 type CreateOrUpdateConditionRequestBody struct {
 	// Optionally provide a trait ID to compare a metric or trait value against instead of a value
-	ComparisonTraitID *string                                         `json:"comparison_trait_id,omitempty" url:"comparison_trait_id,omitempty"`
-	ConditionType     CreateOrUpdateConditionRequestBodyConditionType `json:"condition_type" url:"condition_type"`
+	ComparisonTraitID *string       `json:"comparison_trait_id,omitempty" url:"comparison_trait_id,omitempty"`
+	ConditionType     ConditionType `json:"condition_type" url:"condition_type"`
 	// Cost of credit to use to measure this condition
 	CreditCost *float64 `json:"credit_cost,omitempty" url:"credit_cost,omitempty"`
 	// ID of credit to use to measure this condition
@@ -1462,12 +1462,12 @@ type CreateOrUpdateConditionRequestBody struct {
 	EventSubtype *string `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
 	ID           *string `json:"id,omitempty" url:"id,omitempty"`
 	// Period of time over which to measure the track event metric
-	MetricPeriod *CreateOrUpdateConditionRequestBodyMetricPeriod `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriod *MetricPeriod `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	// When metric_period=current_month, specify whether the month restarts based on the calendar month or the billing period
-	MetricPeriodMonthReset *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	// Value to compare the track event metric against
-	MetricValue *int64                                     `json:"metric_value,omitempty" url:"metric_value,omitempty"`
-	Operator    CreateOrUpdateConditionRequestBodyOperator `json:"operator" url:"operator"`
+	MetricValue *int64             `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	Operator    ComparableOperator `json:"operator" url:"operator"`
 	// List of resource IDs (companies, users, or plans) targeted by this condition
 	ResourceIDs []string `json:"resource_ids" url:"resource_ids"`
 	// ID of trait to use to measure this condition
@@ -1489,7 +1489,7 @@ func (c *CreateOrUpdateConditionRequestBody) GetComparisonTraitID() *string {
 	return c.ComparisonTraitID
 }
 
-func (c *CreateOrUpdateConditionRequestBody) GetConditionType() CreateOrUpdateConditionRequestBodyConditionType {
+func (c *CreateOrUpdateConditionRequestBody) GetConditionType() ConditionType {
 	if c == nil {
 		return ""
 	}
@@ -1524,14 +1524,14 @@ func (c *CreateOrUpdateConditionRequestBody) GetID() *string {
 	return c.ID
 }
 
-func (c *CreateOrUpdateConditionRequestBody) GetMetricPeriod() *CreateOrUpdateConditionRequestBodyMetricPeriod {
+func (c *CreateOrUpdateConditionRequestBody) GetMetricPeriod() *MetricPeriod {
 	if c == nil {
 		return nil
 	}
 	return c.MetricPeriod
 }
 
-func (c *CreateOrUpdateConditionRequestBody) GetMetricPeriodMonthReset() *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset {
+func (c *CreateOrUpdateConditionRequestBody) GetMetricPeriodMonthReset() *MetricPeriodMonthReset {
 	if c == nil {
 		return nil
 	}
@@ -1545,7 +1545,7 @@ func (c *CreateOrUpdateConditionRequestBody) GetMetricValue() *int64 {
 	return c.MetricValue
 }
 
-func (c *CreateOrUpdateConditionRequestBody) GetOperator() CreateOrUpdateConditionRequestBodyOperator {
+func (c *CreateOrUpdateConditionRequestBody) GetOperator() ComparableOperator {
 	if c == nil {
 		return ""
 	}
@@ -1596,7 +1596,7 @@ func (c *CreateOrUpdateConditionRequestBody) SetComparisonTraitID(comparisonTrai
 
 // SetConditionType sets the ConditionType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateOrUpdateConditionRequestBody) SetConditionType(conditionType CreateOrUpdateConditionRequestBodyConditionType) {
+func (c *CreateOrUpdateConditionRequestBody) SetConditionType(conditionType ConditionType) {
 	c.ConditionType = conditionType
 	c.require(createOrUpdateConditionRequestBodyFieldConditionType)
 }
@@ -1631,14 +1631,14 @@ func (c *CreateOrUpdateConditionRequestBody) SetID(id *string) {
 
 // SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateOrUpdateConditionRequestBody) SetMetricPeriod(metricPeriod *CreateOrUpdateConditionRequestBodyMetricPeriod) {
+func (c *CreateOrUpdateConditionRequestBody) SetMetricPeriod(metricPeriod *MetricPeriod) {
 	c.MetricPeriod = metricPeriod
 	c.require(createOrUpdateConditionRequestBodyFieldMetricPeriod)
 }
 
 // SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateOrUpdateConditionRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset) {
+func (c *CreateOrUpdateConditionRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	c.MetricPeriodMonthReset = metricPeriodMonthReset
 	c.require(createOrUpdateConditionRequestBodyFieldMetricPeriodMonthReset)
 }
@@ -1652,7 +1652,7 @@ func (c *CreateOrUpdateConditionRequestBody) SetMetricValue(metricValue *int64) 
 
 // SetOperator sets the Operator field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateOrUpdateConditionRequestBody) SetOperator(operator CreateOrUpdateConditionRequestBodyOperator) {
+func (c *CreateOrUpdateConditionRequestBody) SetOperator(operator ComparableOperator) {
 	c.Operator = operator
 	c.require(createOrUpdateConditionRequestBodyFieldOperator)
 }
@@ -1720,155 +1720,26 @@ func (c *CreateOrUpdateConditionRequestBody) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-type CreateOrUpdateConditionRequestBodyConditionType string
-
-const (
-	CreateOrUpdateConditionRequestBodyConditionTypeCompany        CreateOrUpdateConditionRequestBodyConditionType = "company"
-	CreateOrUpdateConditionRequestBodyConditionTypeMetric         CreateOrUpdateConditionRequestBodyConditionType = "metric"
-	CreateOrUpdateConditionRequestBodyConditionTypeTrait          CreateOrUpdateConditionRequestBodyConditionType = "trait"
-	CreateOrUpdateConditionRequestBodyConditionTypeUser           CreateOrUpdateConditionRequestBodyConditionType = "user"
-	CreateOrUpdateConditionRequestBodyConditionTypePlan           CreateOrUpdateConditionRequestBodyConditionType = "plan"
-	CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct CreateOrUpdateConditionRequestBodyConditionType = "billing_product"
-	CreateOrUpdateConditionRequestBodyConditionTypeBasePlan       CreateOrUpdateConditionRequestBodyConditionType = "base_plan"
-)
-
-func NewCreateOrUpdateConditionRequestBodyConditionTypeFromString(s string) (CreateOrUpdateConditionRequestBodyConditionType, error) {
-	switch s {
-	case "company":
-		return CreateOrUpdateConditionRequestBodyConditionTypeCompany, nil
-	case "metric":
-		return CreateOrUpdateConditionRequestBodyConditionTypeMetric, nil
-	case "trait":
-		return CreateOrUpdateConditionRequestBodyConditionTypeTrait, nil
-	case "user":
-		return CreateOrUpdateConditionRequestBodyConditionTypeUser, nil
-	case "plan":
-		return CreateOrUpdateConditionRequestBodyConditionTypePlan, nil
-	case "billing_product":
-		return CreateOrUpdateConditionRequestBodyConditionTypeBillingProduct, nil
-	case "base_plan":
-		return CreateOrUpdateConditionRequestBodyConditionTypeBasePlan, nil
-	}
-	var t CreateOrUpdateConditionRequestBodyConditionType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateOrUpdateConditionRequestBodyConditionType) Ptr() *CreateOrUpdateConditionRequestBodyConditionType {
-	return &c
-}
-
-// Period of time over which to measure the track event metric
-type CreateOrUpdateConditionRequestBodyMetricPeriod string
-
-const (
-	CreateOrUpdateConditionRequestBodyMetricPeriodAllTime      CreateOrUpdateConditionRequestBodyMetricPeriod = "all_time"
-	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentMonth CreateOrUpdateConditionRequestBodyMetricPeriod = "current_month"
-	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentWeek  CreateOrUpdateConditionRequestBodyMetricPeriod = "current_week"
-	CreateOrUpdateConditionRequestBodyMetricPeriodCurrentDay   CreateOrUpdateConditionRequestBodyMetricPeriod = "current_day"
-)
-
-func NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString(s string) (CreateOrUpdateConditionRequestBodyMetricPeriod, error) {
-	switch s {
-	case "all_time":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodAllTime, nil
-	case "current_month":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentMonth, nil
-	case "current_week":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentWeek, nil
-	case "current_day":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodCurrentDay, nil
-	}
-	var t CreateOrUpdateConditionRequestBodyMetricPeriod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateOrUpdateConditionRequestBodyMetricPeriod) Ptr() *CreateOrUpdateConditionRequestBodyMetricPeriod {
-	return &c
-}
-
-// When metric_period=current_month, specify whether the month restarts based on the calendar month or the billing period
-type CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset string
-
-const (
-	CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFirstOfMonth CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset = "first_of_month"
-	CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetBillingCycle CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset = "billing_cycle"
-)
-
-func NewCreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFromString(s string) (CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset, error) {
-	switch s {
-	case "first_of_month":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFirstOfMonth, nil
-	case "billing_cycle":
-		return CreateOrUpdateConditionRequestBodyMetricPeriodMonthResetBillingCycle, nil
-	}
-	var t CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset) Ptr() *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset {
-	return &c
-}
-
-type CreateOrUpdateConditionRequestBodyOperator string
-
-const (
-	CreateOrUpdateConditionRequestBodyOperatorEq       CreateOrUpdateConditionRequestBodyOperator = "eq"
-	CreateOrUpdateConditionRequestBodyOperatorNe       CreateOrUpdateConditionRequestBodyOperator = "ne"
-	CreateOrUpdateConditionRequestBodyOperatorGt       CreateOrUpdateConditionRequestBodyOperator = "gt"
-	CreateOrUpdateConditionRequestBodyOperatorGte      CreateOrUpdateConditionRequestBodyOperator = "gte"
-	CreateOrUpdateConditionRequestBodyOperatorLt       CreateOrUpdateConditionRequestBodyOperator = "lt"
-	CreateOrUpdateConditionRequestBodyOperatorLte      CreateOrUpdateConditionRequestBodyOperator = "lte"
-	CreateOrUpdateConditionRequestBodyOperatorIsEmpty  CreateOrUpdateConditionRequestBodyOperator = "is_empty"
-	CreateOrUpdateConditionRequestBodyOperatorNotEmpty CreateOrUpdateConditionRequestBodyOperator = "not_empty"
-)
-
-func NewCreateOrUpdateConditionRequestBodyOperatorFromString(s string) (CreateOrUpdateConditionRequestBodyOperator, error) {
-	switch s {
-	case "eq":
-		return CreateOrUpdateConditionRequestBodyOperatorEq, nil
-	case "ne":
-		return CreateOrUpdateConditionRequestBodyOperatorNe, nil
-	case "gt":
-		return CreateOrUpdateConditionRequestBodyOperatorGt, nil
-	case "gte":
-		return CreateOrUpdateConditionRequestBodyOperatorGte, nil
-	case "lt":
-		return CreateOrUpdateConditionRequestBodyOperatorLt, nil
-	case "lte":
-		return CreateOrUpdateConditionRequestBodyOperatorLte, nil
-	case "is_empty":
-		return CreateOrUpdateConditionRequestBodyOperatorIsEmpty, nil
-	case "not_empty":
-		return CreateOrUpdateConditionRequestBodyOperatorNotEmpty, nil
-	}
-	var t CreateOrUpdateConditionRequestBodyOperator
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateOrUpdateConditionRequestBodyOperator) Ptr() *CreateOrUpdateConditionRequestBodyOperator {
-	return &c
-}
-
 var (
-	createOrUpdateFlagRequestBodyFieldDefaultValue = big.NewInt(1 << 0)
-	createOrUpdateFlagRequestBodyFieldDescription  = big.NewInt(1 << 1)
-	createOrUpdateFlagRequestBodyFieldFeatureID    = big.NewInt(1 << 2)
-	createOrUpdateFlagRequestBodyFieldFlagType     = big.NewInt(1 << 3)
-	createOrUpdateFlagRequestBodyFieldID           = big.NewInt(1 << 4)
-	createOrUpdateFlagRequestBodyFieldKey          = big.NewInt(1 << 5)
-	createOrUpdateFlagRequestBodyFieldMaintainerID = big.NewInt(1 << 6)
-	createOrUpdateFlagRequestBodyFieldName         = big.NewInt(1 << 7)
+	createOrUpdateFlagRequestBodyFieldDefaultValue              = big.NewInt(1 << 0)
+	createOrUpdateFlagRequestBodyFieldDescription               = big.NewInt(1 << 1)
+	createOrUpdateFlagRequestBodyFieldFeatureID                 = big.NewInt(1 << 2)
+	createOrUpdateFlagRequestBodyFieldFlagType                  = big.NewInt(1 << 3)
+	createOrUpdateFlagRequestBodyFieldID                        = big.NewInt(1 << 4)
+	createOrUpdateFlagRequestBodyFieldKey                       = big.NewInt(1 << 5)
+	createOrUpdateFlagRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 6)
+	createOrUpdateFlagRequestBodyFieldName                      = big.NewInt(1 << 7)
 )
 
 type CreateOrUpdateFlagRequestBody struct {
-	DefaultValue bool     `json:"default_value" url:"default_value"`
-	Description  string   `json:"description" url:"description"`
-	FeatureID    *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	FlagType     FlagType `json:"flag_type" url:"flag_type"`
-	ID           *string  `json:"id,omitempty" url:"id,omitempty"`
-	Key          string   `json:"key" url:"key"`
-	MaintainerID *string  `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
-	Name         string   `json:"name" url:"name"`
+	DefaultValue              bool     `json:"default_value" url:"default_value"`
+	Description               string   `json:"description" url:"description"`
+	FeatureID                 *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FlagType                  FlagType `json:"flag_type" url:"flag_type"`
+	ID                        *string  `json:"id,omitempty" url:"id,omitempty"`
+	Key                       string   `json:"key" url:"key"`
+	MaintainerAccountMemberID *string  `json:"maintainer_account_member_id,omitempty" url:"maintainer_account_member_id,omitempty"`
+	Name                      string   `json:"name" url:"name"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1912,11 +1783,11 @@ func (c *CreateOrUpdateFlagRequestBody) GetKey() string {
 	return c.Key
 }
 
-func (c *CreateOrUpdateFlagRequestBody) GetMaintainerID() *string {
+func (c *CreateOrUpdateFlagRequestBody) GetMaintainerAccountMemberID() *string {
 	if c == nil {
 		return nil
 	}
-	return c.MaintainerID
+	return c.MaintainerAccountMemberID
 }
 
 func (c *CreateOrUpdateFlagRequestBody) GetName() string {
@@ -1982,11 +1853,11 @@ func (c *CreateOrUpdateFlagRequestBody) SetKey(key string) {
 	c.require(createOrUpdateFlagRequestBodyFieldKey)
 }
 
-// SetMaintainerID sets the MaintainerID field and marks it as non-optional;
+// SetMaintainerAccountMemberID sets the MaintainerAccountMemberID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateOrUpdateFlagRequestBody) SetMaintainerID(maintainerID *string) {
-	c.MaintainerID = maintainerID
-	c.require(createOrUpdateFlagRequestBodyFieldMaintainerID)
+func (c *CreateOrUpdateFlagRequestBody) SetMaintainerAccountMemberID(maintainerAccountMemberID *string) {
+	c.MaintainerAccountMemberID = maintainerAccountMemberID
+	c.require(createOrUpdateFlagRequestBodyFieldMaintainerAccountMemberID)
 }
 
 // SetName sets the Name field and marks it as non-optional;
@@ -2054,7 +1925,7 @@ type CreateOrUpdateRuleRequestBody struct {
 	ID              *string                                    `json:"id,omitempty" url:"id,omitempty"`
 	Name            string                                     `json:"name" url:"name"`
 	Priority        int64                                      `json:"priority" url:"priority"`
-	RuleType        *CreateOrUpdateRuleRequestBodyRuleType     `json:"rule_type,omitempty" url:"rule_type,omitempty"`
+	RuleType        *RuleType                                  `json:"rule_type,omitempty" url:"rule_type,omitempty"`
 	Value           bool                                       `json:"value" url:"value"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -2099,7 +1970,7 @@ func (c *CreateOrUpdateRuleRequestBody) GetPriority() int64 {
 	return c.Priority
 }
 
-func (c *CreateOrUpdateRuleRequestBody) GetRuleType() *CreateOrUpdateRuleRequestBodyRuleType {
+func (c *CreateOrUpdateRuleRequestBody) GetRuleType() *RuleType {
 	if c == nil {
 		return nil
 	}
@@ -2164,7 +2035,7 @@ func (c *CreateOrUpdateRuleRequestBody) SetPriority(priority int64) {
 
 // SetRuleType sets the RuleType field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateOrUpdateRuleRequestBody) SetRuleType(ruleType *CreateOrUpdateRuleRequestBodyRuleType) {
+func (c *CreateOrUpdateRuleRequestBody) SetRuleType(ruleType *RuleType) {
 	c.RuleType = ruleType
 	c.require(createOrUpdateRuleRequestBodyFieldRuleType)
 }
@@ -2216,37 +2087,6 @@ func (c *CreateOrUpdateRuleRequestBody) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
-}
-
-type CreateOrUpdateRuleRequestBodyRuleType string
-
-const (
-	CreateOrUpdateRuleRequestBodyRuleTypeGlobalOverride  CreateOrUpdateRuleRequestBodyRuleType = "global_override"
-	CreateOrUpdateRuleRequestBodyRuleTypeCompanyOverride CreateOrUpdateRuleRequestBodyRuleType = "company_override"
-	CreateOrUpdateRuleRequestBodyRuleTypePlanEntitlement CreateOrUpdateRuleRequestBodyRuleType = "plan_entitlement"
-	CreateOrUpdateRuleRequestBodyRuleTypeStandard        CreateOrUpdateRuleRequestBodyRuleType = "standard"
-	CreateOrUpdateRuleRequestBodyRuleTypeDefault         CreateOrUpdateRuleRequestBodyRuleType = "default"
-)
-
-func NewCreateOrUpdateRuleRequestBodyRuleTypeFromString(s string) (CreateOrUpdateRuleRequestBodyRuleType, error) {
-	switch s {
-	case "global_override":
-		return CreateOrUpdateRuleRequestBodyRuleTypeGlobalOverride, nil
-	case "company_override":
-		return CreateOrUpdateRuleRequestBodyRuleTypeCompanyOverride, nil
-	case "plan_entitlement":
-		return CreateOrUpdateRuleRequestBodyRuleTypePlanEntitlement, nil
-	case "standard":
-		return CreateOrUpdateRuleRequestBodyRuleTypeStandard, nil
-	case "default":
-		return CreateOrUpdateRuleRequestBodyRuleTypeDefault, nil
-	}
-	var t CreateOrUpdateRuleRequestBodyRuleType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreateOrUpdateRuleRequestBodyRuleType) Ptr() *CreateOrUpdateRuleRequestBodyRuleType {
-	return &c
 }
 
 var (
@@ -2390,29 +2230,29 @@ func (d *DatastreamCompanyPlan) String() string {
 }
 
 var (
-	flagResponseDataFieldCreatedAt    = big.NewInt(1 << 0)
-	flagResponseDataFieldDefaultValue = big.NewInt(1 << 1)
-	flagResponseDataFieldDescription  = big.NewInt(1 << 2)
-	flagResponseDataFieldFeatureID    = big.NewInt(1 << 3)
-	flagResponseDataFieldFlagType     = big.NewInt(1 << 4)
-	flagResponseDataFieldID           = big.NewInt(1 << 5)
-	flagResponseDataFieldKey          = big.NewInt(1 << 6)
-	flagResponseDataFieldMaintainerID = big.NewInt(1 << 7)
-	flagResponseDataFieldName         = big.NewInt(1 << 8)
-	flagResponseDataFieldUpdatedAt    = big.NewInt(1 << 9)
+	flagResponseDataFieldCreatedAt                 = big.NewInt(1 << 0)
+	flagResponseDataFieldDefaultValue              = big.NewInt(1 << 1)
+	flagResponseDataFieldDescription               = big.NewInt(1 << 2)
+	flagResponseDataFieldFeatureID                 = big.NewInt(1 << 3)
+	flagResponseDataFieldFlagType                  = big.NewInt(1 << 4)
+	flagResponseDataFieldID                        = big.NewInt(1 << 5)
+	flagResponseDataFieldKey                       = big.NewInt(1 << 6)
+	flagResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 7)
+	flagResponseDataFieldName                      = big.NewInt(1 << 8)
+	flagResponseDataFieldUpdatedAt                 = big.NewInt(1 << 9)
 )
 
 type FlagResponseData struct {
-	CreatedAt    time.Time `json:"created_at" url:"created_at"`
-	DefaultValue bool      `json:"default_value" url:"default_value"`
-	Description  string    `json:"description" url:"description"`
-	FeatureID    *string   `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	FlagType     FlagType  `json:"flag_type" url:"flag_type"`
-	ID           string    `json:"id" url:"id"`
-	Key          string    `json:"key" url:"key"`
-	MaintainerID *string   `json:"maintainer_id,omitempty" url:"maintainer_id,omitempty"`
-	Name         string    `json:"name" url:"name"`
-	UpdatedAt    time.Time `json:"updated_at" url:"updated_at"`
+	CreatedAt                 time.Time `json:"created_at" url:"created_at"`
+	DefaultValue              bool      `json:"default_value" url:"default_value"`
+	Description               string    `json:"description" url:"description"`
+	FeatureID                 *string   `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FlagType                  FlagType  `json:"flag_type" url:"flag_type"`
+	ID                        string    `json:"id" url:"id"`
+	Key                       string    `json:"key" url:"key"`
+	MaintainerAccountMemberID *string   `json:"maintainer_account_member_id,omitempty" url:"maintainer_account_member_id,omitempty"`
+	Name                      string    `json:"name" url:"name"`
+	UpdatedAt                 time.Time `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2463,11 +2303,11 @@ func (f *FlagResponseData) GetKey() string {
 	return f.Key
 }
 
-func (f *FlagResponseData) GetMaintainerID() *string {
+func (f *FlagResponseData) GetMaintainerAccountMemberID() *string {
 	if f == nil {
 		return nil
 	}
-	return f.MaintainerID
+	return f.MaintainerAccountMemberID
 }
 
 func (f *FlagResponseData) GetName() string {
@@ -2547,11 +2387,11 @@ func (f *FlagResponseData) SetKey(key string) {
 	f.require(flagResponseDataFieldKey)
 }
 
-// SetMaintainerID sets the MaintainerID field and marks it as non-optional;
+// SetMaintainerAccountMemberID sets the MaintainerAccountMemberID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FlagResponseData) SetMaintainerID(maintainerID *string) {
-	f.MaintainerID = maintainerID
-	f.require(flagResponseDataFieldMaintainerID)
+func (f *FlagResponseData) SetMaintainerAccountMemberID(maintainerAccountMemberID *string) {
+	f.MaintainerAccountMemberID = maintainerAccountMemberID
+	f.require(flagResponseDataFieldMaintainerAccountMemberID)
 }
 
 // SetName sets the Name field and marks it as non-optional;
@@ -5211,31 +5051,31 @@ func (u *UpsertFeatureForBillingProductResponse) String() string {
 }
 
 var (
-	updateFeatureRequestBodyFieldDescription    = big.NewInt(1 << 0)
-	updateFeatureRequestBodyFieldEventSubtype   = big.NewInt(1 << 1)
-	updateFeatureRequestBodyFieldFeatureType    = big.NewInt(1 << 2)
-	updateFeatureRequestBodyFieldFlag           = big.NewInt(1 << 3)
-	updateFeatureRequestBodyFieldIcon           = big.NewInt(1 << 4)
-	updateFeatureRequestBodyFieldLifecyclePhase = big.NewInt(1 << 5)
-	updateFeatureRequestBodyFieldMaintainerID   = big.NewInt(1 << 6)
-	updateFeatureRequestBodyFieldName           = big.NewInt(1 << 7)
-	updateFeatureRequestBodyFieldPluralName     = big.NewInt(1 << 8)
-	updateFeatureRequestBodyFieldSingularName   = big.NewInt(1 << 9)
-	updateFeatureRequestBodyFieldTraitID        = big.NewInt(1 << 10)
+	updateFeatureRequestBodyFieldDescription               = big.NewInt(1 << 0)
+	updateFeatureRequestBodyFieldEventSubtype              = big.NewInt(1 << 1)
+	updateFeatureRequestBodyFieldFeatureType               = big.NewInt(1 << 2)
+	updateFeatureRequestBodyFieldFlag                      = big.NewInt(1 << 3)
+	updateFeatureRequestBodyFieldIcon                      = big.NewInt(1 << 4)
+	updateFeatureRequestBodyFieldLifecyclePhase            = big.NewInt(1 << 5)
+	updateFeatureRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 6)
+	updateFeatureRequestBodyFieldName                      = big.NewInt(1 << 7)
+	updateFeatureRequestBodyFieldPluralName                = big.NewInt(1 << 8)
+	updateFeatureRequestBodyFieldSingularName              = big.NewInt(1 << 9)
+	updateFeatureRequestBodyFieldTraitID                   = big.NewInt(1 << 10)
 )
 
 type UpdateFeatureRequestBody struct {
-	Description    *string                        `json:"description,omitempty" url:"-"`
-	EventSubtype   *string                        `json:"event_subtype,omitempty" url:"-"`
-	FeatureType    *FeatureType                   `json:"feature_type,omitempty" url:"-"`
-	Flag           *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
-	Icon           *string                        `json:"icon,omitempty" url:"-"`
-	LifecyclePhase *FeatureLifecyclePhase         `json:"lifecycle_phase,omitempty" url:"-"`
-	MaintainerID   *string                        `json:"maintainer_id,omitempty" url:"-"`
-	Name           *string                        `json:"name,omitempty" url:"-"`
-	PluralName     *string                        `json:"plural_name,omitempty" url:"-"`
-	SingularName   *string                        `json:"singular_name,omitempty" url:"-"`
-	TraitID        *string                        `json:"trait_id,omitempty" url:"-"`
+	Description               *string                        `json:"description,omitempty" url:"-"`
+	EventSubtype              *string                        `json:"event_subtype,omitempty" url:"-"`
+	FeatureType               *FeatureType                   `json:"feature_type,omitempty" url:"-"`
+	Flag                      *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
+	Icon                      *string                        `json:"icon,omitempty" url:"-"`
+	LifecyclePhase            *FeatureLifecyclePhase         `json:"lifecycle_phase,omitempty" url:"-"`
+	MaintainerAccountMemberID *string                        `json:"maintainer_account_member_id,omitempty" url:"-"`
+	Name                      *string                        `json:"name,omitempty" url:"-"`
+	PluralName                *string                        `json:"plural_name,omitempty" url:"-"`
+	SingularName              *string                        `json:"singular_name,omitempty" url:"-"`
+	TraitID                   *string                        `json:"trait_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5290,11 +5130,11 @@ func (u *UpdateFeatureRequestBody) SetLifecyclePhase(lifecyclePhase *FeatureLife
 	u.require(updateFeatureRequestBodyFieldLifecyclePhase)
 }
 
-// SetMaintainerID sets the MaintainerID field and marks it as non-optional;
+// SetMaintainerAccountMemberID sets the MaintainerAccountMemberID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdateFeatureRequestBody) SetMaintainerID(maintainerID *string) {
-	u.MaintainerID = maintainerID
-	u.require(updateFeatureRequestBodyFieldMaintainerID)
+func (u *UpdateFeatureRequestBody) SetMaintainerAccountMemberID(maintainerAccountMemberID *string) {
+	u.MaintainerAccountMemberID = maintainerAccountMemberID
+	u.require(updateFeatureRequestBodyFieldMaintainerAccountMemberID)
 }
 
 // SetName sets the Name field and marks it as non-optional;
@@ -5393,35 +5233,35 @@ func (u *UpdateFlagRulesRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	createBillingLinkedFeatureRequestBodyFieldBillingProvider    = big.NewInt(1 << 0)
-	createBillingLinkedFeatureRequestBodyFieldDescription        = big.NewInt(1 << 1)
-	createBillingLinkedFeatureRequestBodyFieldEventSubtype       = big.NewInt(1 << 2)
-	createBillingLinkedFeatureRequestBodyFieldExternalResourceID = big.NewInt(1 << 3)
-	createBillingLinkedFeatureRequestBodyFieldFeatureType        = big.NewInt(1 << 4)
-	createBillingLinkedFeatureRequestBodyFieldFlag               = big.NewInt(1 << 5)
-	createBillingLinkedFeatureRequestBodyFieldIcon               = big.NewInt(1 << 6)
-	createBillingLinkedFeatureRequestBodyFieldLifecyclePhase     = big.NewInt(1 << 7)
-	createBillingLinkedFeatureRequestBodyFieldMaintainerID       = big.NewInt(1 << 8)
-	createBillingLinkedFeatureRequestBodyFieldName               = big.NewInt(1 << 9)
-	createBillingLinkedFeatureRequestBodyFieldPluralName         = big.NewInt(1 << 10)
-	createBillingLinkedFeatureRequestBodyFieldSingularName       = big.NewInt(1 << 11)
-	createBillingLinkedFeatureRequestBodyFieldTraitID            = big.NewInt(1 << 12)
+	createBillingLinkedFeatureRequestBodyFieldBillingProvider           = big.NewInt(1 << 0)
+	createBillingLinkedFeatureRequestBodyFieldDescription               = big.NewInt(1 << 1)
+	createBillingLinkedFeatureRequestBodyFieldEventSubtype              = big.NewInt(1 << 2)
+	createBillingLinkedFeatureRequestBodyFieldExternalResourceID        = big.NewInt(1 << 3)
+	createBillingLinkedFeatureRequestBodyFieldFeatureType               = big.NewInt(1 << 4)
+	createBillingLinkedFeatureRequestBodyFieldFlag                      = big.NewInt(1 << 5)
+	createBillingLinkedFeatureRequestBodyFieldIcon                      = big.NewInt(1 << 6)
+	createBillingLinkedFeatureRequestBodyFieldLifecyclePhase            = big.NewInt(1 << 7)
+	createBillingLinkedFeatureRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 8)
+	createBillingLinkedFeatureRequestBodyFieldName                      = big.NewInt(1 << 9)
+	createBillingLinkedFeatureRequestBodyFieldPluralName                = big.NewInt(1 << 10)
+	createBillingLinkedFeatureRequestBodyFieldSingularName              = big.NewInt(1 << 11)
+	createBillingLinkedFeatureRequestBodyFieldTraitID                   = big.NewInt(1 << 12)
 )
 
 type CreateBillingLinkedFeatureRequestBody struct {
-	BillingProvider    BillingProviderType            `json:"billing_provider" url:"-"`
-	Description        string                         `json:"description" url:"-"`
-	EventSubtype       *string                        `json:"event_subtype,omitempty" url:"-"`
-	ExternalResourceID string                         `json:"external_resource_id" url:"-"`
-	FeatureType        FeatureType                    `json:"feature_type" url:"-"`
-	Flag               *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
-	Icon               *string                        `json:"icon,omitempty" url:"-"`
-	LifecyclePhase     *FeatureLifecyclePhase         `json:"lifecycle_phase,omitempty" url:"-"`
-	MaintainerID       *string                        `json:"maintainer_id,omitempty" url:"-"`
-	Name               string                         `json:"name" url:"-"`
-	PluralName         *string                        `json:"plural_name,omitempty" url:"-"`
-	SingularName       *string                        `json:"singular_name,omitempty" url:"-"`
-	TraitID            *string                        `json:"trait_id,omitempty" url:"-"`
+	BillingProvider           BillingProviderType            `json:"billing_provider" url:"-"`
+	Description               string                         `json:"description" url:"-"`
+	EventSubtype              *string                        `json:"event_subtype,omitempty" url:"-"`
+	ExternalResourceID        string                         `json:"external_resource_id" url:"-"`
+	FeatureType               FeatureType                    `json:"feature_type" url:"-"`
+	Flag                      *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
+	Icon                      *string                        `json:"icon,omitempty" url:"-"`
+	LifecyclePhase            *FeatureLifecyclePhase         `json:"lifecycle_phase,omitempty" url:"-"`
+	MaintainerAccountMemberID *string                        `json:"maintainer_account_member_id,omitempty" url:"-"`
+	Name                      string                         `json:"name" url:"-"`
+	PluralName                *string                        `json:"plural_name,omitempty" url:"-"`
+	SingularName              *string                        `json:"singular_name,omitempty" url:"-"`
+	TraitID                   *string                        `json:"trait_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5490,11 +5330,11 @@ func (c *CreateBillingLinkedFeatureRequestBody) SetLifecyclePhase(lifecyclePhase
 	c.require(createBillingLinkedFeatureRequestBodyFieldLifecyclePhase)
 }
 
-// SetMaintainerID sets the MaintainerID field and marks it as non-optional;
+// SetMaintainerAccountMemberID sets the MaintainerAccountMemberID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingLinkedFeatureRequestBody) SetMaintainerID(maintainerID *string) {
-	c.MaintainerID = maintainerID
-	c.require(createBillingLinkedFeatureRequestBodyFieldMaintainerID)
+func (c *CreateBillingLinkedFeatureRequestBody) SetMaintainerAccountMemberID(maintainerAccountMemberID *string) {
+	c.MaintainerAccountMemberID = maintainerAccountMemberID
+	c.require(createBillingLinkedFeatureRequestBodyFieldMaintainerAccountMemberID)
 }
 
 // SetName sets the Name field and marks it as non-optional;

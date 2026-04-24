@@ -662,11 +662,11 @@ func TestSettersCreateFeatureRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
-	t.Run("SetMaintainerID", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID", func(t *testing.T) {
 		obj := &CreateFeatureRequestBody{}
-		var fernTestValueMaintainerID *string
-		obj.SetMaintainerID(fernTestValueMaintainerID)
-		assert.Equal(t, fernTestValueMaintainerID, obj.MaintainerID)
+		var fernTestValueMaintainerAccountMemberID *string
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
+		assert.Equal(t, fernTestValueMaintainerAccountMemberID, obj.MaintainerAccountMemberID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -891,14 +891,14 @@ func TestSettersMarkExplicitCreateFeatureRequestBody(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
-	t.Run("SetMaintainerID_MarksExplicit", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateFeatureRequestBody{}
-		var fernTestValueMaintainerID *string
+		var fernTestValueMaintainerAccountMemberID *string
 
 		// Act
-		obj.SetMaintainerID(fernTestValueMaintainerID)
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -1810,7 +1810,7 @@ func TestSettersCheckFlagResponseData(t *testing.T) {
 
 	t.Run("SetFeatureUsagePeriod", func(t *testing.T) {
 		obj := &CheckFlagResponseData{}
-		var fernTestValueFeatureUsagePeriod *string
+		var fernTestValueFeatureUsagePeriod *MetricPeriod
 		obj.SetFeatureUsagePeriod(fernTestValueFeatureUsagePeriod)
 		assert.Equal(t, fernTestValueFeatureUsagePeriod, obj.FeatureUsagePeriod)
 		assert.NotNil(t, obj.explicitFields)
@@ -1858,7 +1858,7 @@ func TestSettersCheckFlagResponseData(t *testing.T) {
 
 	t.Run("SetRuleType", func(t *testing.T) {
 		obj := &CheckFlagResponseData{}
-		var fernTestValueRuleType *string
+		var fernTestValueRuleType *RuleType
 		obj.SetRuleType(fernTestValueRuleType)
 		assert.Equal(t, fernTestValueRuleType, obj.RuleType)
 		assert.NotNil(t, obj.explicitFields)
@@ -2085,7 +2085,7 @@ func TestGettersCheckFlagResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CheckFlagResponseData{}
-		var expected *string
+		var expected *MetricPeriod
 		obj.FeatureUsagePeriod = expected
 
 		// Act & Assert
@@ -2263,7 +2263,7 @@ func TestGettersCheckFlagResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CheckFlagResponseData{}
-		var expected *string
+		var expected *RuleType
 		obj.RuleType = expected
 
 		// Act & Assert
@@ -2541,7 +2541,7 @@ func TestSettersMarkExplicitCheckFlagResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CheckFlagResponseData{}
-		var fernTestValueFeatureUsagePeriod *string
+		var fernTestValueFeatureUsagePeriod *MetricPeriod
 
 		// Act
 		obj.SetFeatureUsagePeriod(fernTestValueFeatureUsagePeriod)
@@ -2727,7 +2727,7 @@ func TestSettersMarkExplicitCheckFlagResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CheckFlagResponseData{}
-		var fernTestValueRuleType *string
+		var fernTestValueRuleType *RuleType
 
 		// Act
 		obj.SetRuleType(fernTestValueRuleType)
@@ -3085,11 +3085,11 @@ func TestSettersCreateFlagRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
-	t.Run("SetMaintainerID", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID", func(t *testing.T) {
 		obj := &CreateFlagRequestBody{}
-		var fernTestValueMaintainerID *string
-		obj.SetMaintainerID(fernTestValueMaintainerID)
-		assert.Equal(t, fernTestValueMaintainerID, obj.MaintainerID)
+		var fernTestValueMaintainerAccountMemberID *string
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
+		assert.Equal(t, fernTestValueMaintainerAccountMemberID, obj.MaintainerAccountMemberID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -3206,28 +3206,28 @@ func TestGettersCreateFlagRequestBody(t *testing.T) {
 		_ = obj.GetKey() // Should return zero value
 	})
 
-	t.Run("GetMaintainerID", func(t *testing.T) {
+	t.Run("GetMaintainerAccountMemberID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateFlagRequestBody{}
 		var expected *string
-		obj.MaintainerID = expected
+		obj.MaintainerAccountMemberID = expected
 
 		// Act & Assert
-		assert.Equal(t, expected, obj.GetMaintainerID(), "getter should return the property value")
+		assert.Equal(t, expected, obj.GetMaintainerAccountMemberID(), "getter should return the property value")
 	})
 
-	t.Run("GetMaintainerID_NilValue", func(t *testing.T) {
+	t.Run("GetMaintainerAccountMemberID_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateFlagRequestBody{}
-		obj.MaintainerID = nil
+		obj.MaintainerAccountMemberID = nil
 
 		// Act & Assert
-		assert.Nil(t, obj.GetMaintainerID(), "getter should return nil when property is nil")
+		assert.Nil(t, obj.GetMaintainerAccountMemberID(), "getter should return nil when property is nil")
 	})
 
-	t.Run("GetMaintainerID_NilReceiver", func(t *testing.T) {
+	t.Run("GetMaintainerAccountMemberID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *CreateFlagRequestBody
 		// Should not panic - getters should handle nil receiver gracefully
@@ -3236,7 +3236,7 @@ func TestGettersCreateFlagRequestBody(t *testing.T) {
 				t.Errorf("Getter panicked on nil receiver: %v", r)
 			}
 		}()
-		_ = obj.GetMaintainerID() // Should return zero value
+		_ = obj.GetMaintainerAccountMemberID() // Should return zero value
 	})
 
 	t.Run("GetName", func(t *testing.T) {
@@ -3389,14 +3389,14 @@ func TestSettersMarkExplicitCreateFlagRequestBody(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
-	t.Run("SetMaintainerID_MarksExplicit", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateFlagRequestBody{}
-		var fernTestValueMaintainerID *string
+		var fernTestValueMaintainerAccountMemberID *string
 
 		// Act
-		obj.SetMaintainerID(fernTestValueMaintainerID)
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -3689,7 +3689,7 @@ func TestSettersCreateOrUpdateConditionRequestBody(t *testing.T) {
 
 	t.Run("SetConditionType", func(t *testing.T) {
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var fernTestValueConditionType CreateOrUpdateConditionRequestBodyConditionType
+		var fernTestValueConditionType ConditionType
 		obj.SetConditionType(fernTestValueConditionType)
 		assert.Equal(t, fernTestValueConditionType, obj.ConditionType)
 		assert.NotNil(t, obj.explicitFields)
@@ -3729,7 +3729,7 @@ func TestSettersCreateOrUpdateConditionRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriod", func(t *testing.T) {
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var fernTestValueMetricPeriod *CreateOrUpdateConditionRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
 		assert.Equal(t, fernTestValueMetricPeriod, obj.MetricPeriod)
 		assert.NotNil(t, obj.explicitFields)
@@ -3737,7 +3737,7 @@ func TestSettersCreateOrUpdateConditionRequestBody(t *testing.T) {
 
 	t.Run("SetMetricPeriodMonthReset", func(t *testing.T) {
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
 		assert.Equal(t, fernTestValueMetricPeriodMonthReset, obj.MetricPeriodMonthReset)
 		assert.NotNil(t, obj.explicitFields)
@@ -3753,7 +3753,7 @@ func TestSettersCreateOrUpdateConditionRequestBody(t *testing.T) {
 
 	t.Run("SetOperator", func(t *testing.T) {
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var fernTestValueOperator CreateOrUpdateConditionRequestBodyOperator
+		var fernTestValueOperator ComparableOperator
 		obj.SetOperator(fernTestValueOperator)
 		assert.Equal(t, fernTestValueOperator, obj.Operator)
 		assert.NotNil(t, obj.explicitFields)
@@ -3823,7 +3823,7 @@ func TestGettersCreateOrUpdateConditionRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var expected CreateOrUpdateConditionRequestBodyConditionType
+		var expected ConditionType
 		obj.ConditionType = expected
 
 		// Act & Assert
@@ -3978,7 +3978,7 @@ func TestGettersCreateOrUpdateConditionRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var expected *CreateOrUpdateConditionRequestBodyMetricPeriod
+		var expected *MetricPeriod
 		obj.MetricPeriod = expected
 
 		// Act & Assert
@@ -4011,7 +4011,7 @@ func TestGettersCreateOrUpdateConditionRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var expected *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset
+		var expected *MetricPeriodMonthReset
 		obj.MetricPeriodMonthReset = expected
 
 		// Act & Assert
@@ -4077,7 +4077,7 @@ func TestGettersCreateOrUpdateConditionRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var expected CreateOrUpdateConditionRequestBodyOperator
+		var expected ComparableOperator
 		obj.Operator = expected
 
 		// Act & Assert
@@ -4233,7 +4233,7 @@ func TestSettersMarkExplicitCreateOrUpdateConditionRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var fernTestValueConditionType CreateOrUpdateConditionRequestBodyConditionType
+		var fernTestValueConditionType ConditionType
 
 		// Act
 		obj.SetConditionType(fernTestValueConditionType)
@@ -4388,7 +4388,7 @@ func TestSettersMarkExplicitCreateOrUpdateConditionRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var fernTestValueMetricPeriod *CreateOrUpdateConditionRequestBodyMetricPeriod
+		var fernTestValueMetricPeriod *MetricPeriod
 
 		// Act
 		obj.SetMetricPeriod(fernTestValueMetricPeriod)
@@ -4419,7 +4419,7 @@ func TestSettersMarkExplicitCreateOrUpdateConditionRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var fernTestValueMetricPeriodMonthReset *CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset
+		var fernTestValueMetricPeriodMonthReset *MetricPeriodMonthReset
 
 		// Act
 		obj.SetMetricPeriodMonthReset(fernTestValueMetricPeriodMonthReset)
@@ -4481,7 +4481,7 @@ func TestSettersMarkExplicitCreateOrUpdateConditionRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateConditionRequestBody{}
-		var fernTestValueOperator CreateOrUpdateConditionRequestBodyOperator
+		var fernTestValueOperator ComparableOperator
 
 		// Act
 		obj.SetOperator(fernTestValueOperator)
@@ -4644,11 +4644,11 @@ func TestSettersCreateOrUpdateFlagRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
-	t.Run("SetMaintainerID", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID", func(t *testing.T) {
 		obj := &CreateOrUpdateFlagRequestBody{}
-		var fernTestValueMaintainerID *string
-		obj.SetMaintainerID(fernTestValueMaintainerID)
-		assert.Equal(t, fernTestValueMaintainerID, obj.MaintainerID)
+		var fernTestValueMaintainerAccountMemberID *string
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
+		assert.Equal(t, fernTestValueMaintainerAccountMemberID, obj.MaintainerAccountMemberID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -4798,28 +4798,28 @@ func TestGettersCreateOrUpdateFlagRequestBody(t *testing.T) {
 		_ = obj.GetKey() // Should return zero value
 	})
 
-	t.Run("GetMaintainerID", func(t *testing.T) {
+	t.Run("GetMaintainerAccountMemberID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateFlagRequestBody{}
 		var expected *string
-		obj.MaintainerID = expected
+		obj.MaintainerAccountMemberID = expected
 
 		// Act & Assert
-		assert.Equal(t, expected, obj.GetMaintainerID(), "getter should return the property value")
+		assert.Equal(t, expected, obj.GetMaintainerAccountMemberID(), "getter should return the property value")
 	})
 
-	t.Run("GetMaintainerID_NilValue", func(t *testing.T) {
+	t.Run("GetMaintainerAccountMemberID_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateFlagRequestBody{}
-		obj.MaintainerID = nil
+		obj.MaintainerAccountMemberID = nil
 
 		// Act & Assert
-		assert.Nil(t, obj.GetMaintainerID(), "getter should return nil when property is nil")
+		assert.Nil(t, obj.GetMaintainerAccountMemberID(), "getter should return nil when property is nil")
 	})
 
-	t.Run("GetMaintainerID_NilReceiver", func(t *testing.T) {
+	t.Run("GetMaintainerAccountMemberID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *CreateOrUpdateFlagRequestBody
 		// Should not panic - getters should handle nil receiver gracefully
@@ -4828,7 +4828,7 @@ func TestGettersCreateOrUpdateFlagRequestBody(t *testing.T) {
 				t.Errorf("Getter panicked on nil receiver: %v", r)
 			}
 		}()
-		_ = obj.GetMaintainerID() // Should return zero value
+		_ = obj.GetMaintainerAccountMemberID() // Should return zero value
 	})
 
 	t.Run("GetName", func(t *testing.T) {
@@ -5012,14 +5012,14 @@ func TestSettersMarkExplicitCreateOrUpdateFlagRequestBody(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
-	t.Run("SetMaintainerID_MarksExplicit", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateFlagRequestBody{}
-		var fernTestValueMaintainerID *string
+		var fernTestValueMaintainerAccountMemberID *string
 
 		// Act
-		obj.SetMaintainerID(fernTestValueMaintainerID)
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -5119,7 +5119,7 @@ func TestSettersCreateOrUpdateRuleRequestBody(t *testing.T) {
 
 	t.Run("SetRuleType", func(t *testing.T) {
 		obj := &CreateOrUpdateRuleRequestBody{}
-		var fernTestValueRuleType *CreateOrUpdateRuleRequestBodyRuleType
+		var fernTestValueRuleType *RuleType
 		obj.SetRuleType(fernTestValueRuleType)
 		assert.Equal(t, fernTestValueRuleType, obj.RuleType)
 		assert.NotNil(t, obj.explicitFields)
@@ -5285,7 +5285,7 @@ func TestGettersCreateOrUpdateRuleRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateRuleRequestBody{}
-		var expected *CreateOrUpdateRuleRequestBodyRuleType
+		var expected *RuleType
 		obj.RuleType = expected
 
 		// Act & Assert
@@ -5499,7 +5499,7 @@ func TestSettersMarkExplicitCreateOrUpdateRuleRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateOrUpdateRuleRequestBody{}
-		var fernTestValueRuleType *CreateOrUpdateRuleRequestBodyRuleType
+		var fernTestValueRuleType *RuleType
 
 		// Act
 		obj.SetRuleType(fernTestValueRuleType)
@@ -5885,11 +5885,11 @@ func TestSettersFlagResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
-	t.Run("SetMaintainerID", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID", func(t *testing.T) {
 		obj := &FlagResponseData{}
-		var fernTestValueMaintainerID *string
-		obj.SetMaintainerID(fernTestValueMaintainerID)
-		assert.Equal(t, fernTestValueMaintainerID, obj.MaintainerID)
+		var fernTestValueMaintainerAccountMemberID *string
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
+		assert.Equal(t, fernTestValueMaintainerAccountMemberID, obj.MaintainerAccountMemberID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -6060,28 +6060,28 @@ func TestGettersFlagResponseData(t *testing.T) {
 		_ = obj.GetKey() // Should return zero value
 	})
 
-	t.Run("GetMaintainerID", func(t *testing.T) {
+	t.Run("GetMaintainerAccountMemberID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FlagResponseData{}
 		var expected *string
-		obj.MaintainerID = expected
+		obj.MaintainerAccountMemberID = expected
 
 		// Act & Assert
-		assert.Equal(t, expected, obj.GetMaintainerID(), "getter should return the property value")
+		assert.Equal(t, expected, obj.GetMaintainerAccountMemberID(), "getter should return the property value")
 	})
 
-	t.Run("GetMaintainerID_NilValue", func(t *testing.T) {
+	t.Run("GetMaintainerAccountMemberID_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FlagResponseData{}
-		obj.MaintainerID = nil
+		obj.MaintainerAccountMemberID = nil
 
 		// Act & Assert
-		assert.Nil(t, obj.GetMaintainerID(), "getter should return nil when property is nil")
+		assert.Nil(t, obj.GetMaintainerAccountMemberID(), "getter should return nil when property is nil")
 	})
 
-	t.Run("GetMaintainerID_NilReceiver", func(t *testing.T) {
+	t.Run("GetMaintainerAccountMemberID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *FlagResponseData
 		// Should not panic - getters should handle nil receiver gracefully
@@ -6090,7 +6090,7 @@ func TestGettersFlagResponseData(t *testing.T) {
 				t.Errorf("Getter panicked on nil receiver: %v", r)
 			}
 		}()
-		_ = obj.GetMaintainerID() // Should return zero value
+		_ = obj.GetMaintainerAccountMemberID() // Should return zero value
 	})
 
 	t.Run("GetName", func(t *testing.T) {
@@ -6328,14 +6328,14 @@ func TestSettersMarkExplicitFlagResponseData(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
-	t.Run("SetMaintainerID_MarksExplicit", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &FlagResponseData{}
-		var fernTestValueMaintainerID *string
+		var fernTestValueMaintainerAccountMemberID *string
 
 		// Act
-		obj.SetMaintainerID(fernTestValueMaintainerID)
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -11278,11 +11278,11 @@ func TestSettersUpdateFeatureRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
-	t.Run("SetMaintainerID", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID", func(t *testing.T) {
 		obj := &UpdateFeatureRequestBody{}
-		var fernTestValueMaintainerID *string
-		obj.SetMaintainerID(fernTestValueMaintainerID)
-		assert.Equal(t, fernTestValueMaintainerID, obj.MaintainerID)
+		var fernTestValueMaintainerAccountMemberID *string
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
+		assert.Equal(t, fernTestValueMaintainerAccountMemberID, obj.MaintainerAccountMemberID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -11507,14 +11507,14 @@ func TestSettersMarkExplicitUpdateFeatureRequestBody(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
-	t.Run("SetMaintainerID_MarksExplicit", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &UpdateFeatureRequestBody{}
-		var fernTestValueMaintainerID *string
+		var fernTestValueMaintainerAccountMemberID *string
 
 		// Act
-		obj.SetMaintainerID(fernTestValueMaintainerID)
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -11774,11 +11774,11 @@ func TestSettersCreateBillingLinkedFeatureRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
-	t.Run("SetMaintainerID", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID", func(t *testing.T) {
 		obj := &CreateBillingLinkedFeatureRequestBody{}
-		var fernTestValueMaintainerID *string
-		obj.SetMaintainerID(fernTestValueMaintainerID)
-		assert.Equal(t, fernTestValueMaintainerID, obj.MaintainerID)
+		var fernTestValueMaintainerAccountMemberID *string
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
+		assert.Equal(t, fernTestValueMaintainerAccountMemberID, obj.MaintainerAccountMemberID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -12065,14 +12065,14 @@ func TestSettersMarkExplicitCreateBillingLinkedFeatureRequestBody(t *testing.T) 
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
-	t.Run("SetMaintainerID_MarksExplicit", func(t *testing.T) {
+	t.Run("SetMaintainerAccountMemberID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateBillingLinkedFeatureRequestBody{}
-		var fernTestValueMaintainerID *string
+		var fernTestValueMaintainerAccountMemberID *string
 
 		// Act
-		obj.SetMaintainerID(fernTestValueMaintainerID)
+		obj.SetMaintainerAccountMemberID(fernTestValueMaintainerAccountMemberID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -13836,263 +13836,6 @@ func TestStringUpsertFeatureForBillingProductResponse(t *testing.T) {
 		var obj *UpsertFeatureForBillingProductResponse
 		result := obj.String()
 		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
-	})
-}
-
-func TestEnumCreateOrUpdateConditionRequestBodyConditionType(t *testing.T) {
-	t.Run("NewFromString_company", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("company")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyConditionType("company"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_metric", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("metric")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyConditionType("metric"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_trait", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("trait")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyConditionType("trait"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_user", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("user")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyConditionType("user"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_plan", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("plan")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyConditionType("plan"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_billing_product", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("billing_product")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyConditionType("billing_product"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_base_plan", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("base_plan")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyConditionType("base_plan"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreateOrUpdateConditionRequestBodyConditionTypeFromString("company")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumCreateOrUpdateConditionRequestBodyMetricPeriod(t *testing.T) {
-	t.Run("NewFromString_all_time", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyMetricPeriod("all_time"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString("current_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyMetricPeriod("current_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_week", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString("current_week")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyMetricPeriod("current_week"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_current_day", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString("current_day")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyMetricPeriod("current_day"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodFromString("all_time")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumCreateOrUpdateConditionRequestBodyMetricPeriodMonthReset(t *testing.T) {
-	t.Run("NewFromString_first_of_month", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset("first_of_month"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_billing_cycle", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFromString("billing_cycle")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyMetricPeriodMonthReset("billing_cycle"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreateOrUpdateConditionRequestBodyMetricPeriodMonthResetFromString("first_of_month")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumCreateOrUpdateConditionRequestBodyOperator(t *testing.T) {
-	t.Run("NewFromString_eq", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("eq")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyOperator("eq"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_ne", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("ne")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyOperator("ne"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_gt", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("gt")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyOperator("gt"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_gte", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("gte")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyOperator("gte"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_lt", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("lt")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyOperator("lt"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_lte", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("lte")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyOperator("lte"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_is_empty", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("is_empty")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyOperator("is_empty"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_not_empty", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("not_empty")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateConditionRequestBodyOperator("not_empty"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreateOrUpdateConditionRequestBodyOperatorFromString("eq")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
-func TestEnumCreateOrUpdateRuleRequestBodyRuleType(t *testing.T) {
-	t.Run("NewFromString_global_override", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateRuleRequestBodyRuleTypeFromString("global_override")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateRuleRequestBodyRuleType("global_override"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_company_override", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateRuleRequestBodyRuleTypeFromString("company_override")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateRuleRequestBodyRuleType("company_override"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_plan_entitlement", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateRuleRequestBodyRuleTypeFromString("plan_entitlement")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateRuleRequestBodyRuleType("plan_entitlement"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_standard", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateRuleRequestBodyRuleTypeFromString("standard")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateRuleRequestBodyRuleType("standard"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_default", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewCreateOrUpdateRuleRequestBodyRuleTypeFromString("default")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, CreateOrUpdateRuleRequestBodyRuleType("default"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewCreateOrUpdateRuleRequestBodyRuleTypeFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewCreateOrUpdateRuleRequestBodyRuleTypeFromString("global_override")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
 	})
 }
 

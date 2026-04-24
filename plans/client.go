@@ -52,6 +52,41 @@ func (c *Client) UpdateCompanyPlans(
 	return response.Body, nil
 }
 
+func (c *Client) ListCustomPlanBillings(
+	ctx context.Context,
+	request *schematichq.ListCustomPlanBillingsRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListCustomPlanBillingsResponse, error) {
+	response, err := c.WithRawResponse.ListCustomPlanBillings(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) RetryCustomPlanBilling(
+	ctx context.Context,
+	// custom_plan_billing_id
+	customPlanBillingID string,
+	request *schematichq.RetryCustomPlanBillingRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.RetryCustomPlanBillingResponse, error) {
+	response, err := c.WithRawResponse.RetryCustomPlanBilling(
+		ctx,
+		customPlanBillingID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CreateCustomPlan(
 	ctx context.Context,
 	request *schematichq.CreateCustomPlanRequestBody,

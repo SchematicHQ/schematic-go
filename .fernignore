@@ -26,6 +26,7 @@ core/request_option.go
 core/custom_options.go
 core/logger.go
 custom_types.go
+custom_types_test.go
 client/conversion_test.go
 client/schematic_client.go
 client/schematic_client_test.go

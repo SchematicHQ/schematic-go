@@ -175,7 +175,7 @@ func TestLocalCache_DeleteMissing(t *testing.T) {
 
 	// Test DeleteMissing with a list that includes key1 but not others
 	t.Run("delete missing keys", func(t *testing.T) {
-		cache.DeleteMissing(ctx, []string{"key1"})
+		cache.DeleteMissing(ctx, []string{"key1"}, "")
 
 		// key1 should still exist
 		val, found := cache.Get(ctx, "key1")
@@ -206,7 +206,7 @@ func TestLocalCache_DeleteMissing(t *testing.T) {
 		_ = cache.Set(ctx, "key1", "value1", nil)
 		_ = cache.Set(ctx, "key2", "value2", nil)
 
-		cache.DeleteMissing(ctx, []string{})
+		cache.DeleteMissing(ctx, []string{}, "")
 
 		// All keys should be deleted
 		_, found := cache.Get(ctx, "key1")
@@ -228,7 +228,7 @@ func TestLocalCache_DeleteMissing(t *testing.T) {
 		defer emptyCache.Stop()
 
 		// This should work without panic
-		emptyCache.DeleteMissing(ctx, []string{"key"})
+		emptyCache.DeleteMissing(ctx, []string{"key"}, "")
 	})
 
 	// Test DeleteMissing on zero-size cache
@@ -236,7 +236,7 @@ func TestLocalCache_DeleteMissing(t *testing.T) {
 		zeroCache := NewLocalCache[string](0, 5*time.Second)
 		defer zeroCache.Stop()
 
-		zeroCache.DeleteMissing(ctx, []string{"key"})
+		zeroCache.DeleteMissing(ctx, []string{"key"}, "")
 		// No assertion needed; we just want to make sure it doesn't panic
 	})
 }
@@ -416,7 +416,7 @@ func TestLocalCache_NilSafety(t *testing.T) {
 	})
 
 	t.Run("nil safety - deletemissing", func(t *testing.T) {
-		nilCache.DeleteMissing(ctx, []string{"key"})
+		nilCache.DeleteMissing(ctx, []string{"key"}, "")
 		// No assertion needed; we just want to make sure it doesn't panic
 	})
 
@@ -618,7 +618,7 @@ func TestLocalCache_DeleteMissingSimple(t *testing.T) {
 	_ = cache.Set(ctx, "key3", "value3", nil)
 
 	// Delete keys not in the provided list
-	cache.DeleteMissing(ctx, []string{"key1"})
+	cache.DeleteMissing(ctx, []string{"key1"}, "")
 
 	// key1 should still exist
 	val, found := cache.Get(ctx, "key1")

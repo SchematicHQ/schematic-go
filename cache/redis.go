@@ -3,7 +3,6 @@ package cache
 import (
 	"context"
 	"encoding/json"
-	"strings"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -71,59 +70,44 @@ func (r *redisCache[T]) Delete(ctx context.Context, key string) error {
 	return r.client.Del(ctx, key).Err()
 }
 
-// DeleteMissing deletes all keys with a specific prefix that are not in the provided array of keys.
-func (r *redisCache[T]) DeleteMissing(ctx context.Context, keys []string) {
-	// If no keys provided, nothing to compare against
-	if len(keys) == 0 {
+// DeleteMissing scans Redis under scanPattern and deletes every matching key
+// that is not present in keysToKeep. An empty scanPattern is a no-op: the
+// caller must provide an explicit scope so unrelated sibling caches aren't
+// wiped from a shared Redis keyspace.
+func (r *redisCache[T]) DeleteMissing(ctx context.Context, keysToKeep []string, scanPattern string) {
+	if scanPattern == "" {
+		return
+	}
+	if len(keysToKeep) == 0 {
 		return
 	}
 
-	// Create a map for O(1) lookup
-	keysMap := make(map[string]struct{}, len(keys))
-	for _, k := range keys {
-		keysMap[k] = struct{}{}
+	keepSet := make(map[string]struct{}, len(keysToKeep))
+	for _, k := range keysToKeep {
+		keepSet[k] = struct{}{}
 	}
 
-	// Extract the prefix from the first key to scan for similar keys
-	// Assuming keys follow a pattern like "prefix:*"
-	var prefix string
-	if len(keys) > 0 {
-		parts := strings.Split(keys[0], ":")
-		if len(parts) > 1 {
-			prefix = parts[0] + ":"
-		}
-	}
-
-	if prefix == "" {
-		return
-	}
-
-	// Use SCAN to iterate over all keys with the prefix
 	var cursor uint64
-	var err error
 	var keysToDelete []string
-
 	for {
 		var batch []string
-		batch, cursor, err = r.client.Scan(ctx, cursor, prefix+"*", 100).Result()
+		var err error
+		batch, cursor, err = r.client.Scan(ctx, cursor, scanPattern, 100).Result()
 		if err != nil {
 			return
 		}
 
-		// Add keys not in the provided array to the delete list
-		for _, existingKey := range batch {
-			if _, exists := keysMap[existingKey]; !exists {
-				keysToDelete = append(keysToDelete, existingKey)
+		for _, existing := range batch {
+			if _, keep := keepSet[existing]; !keep {
+				keysToDelete = append(keysToDelete, existing)
 			}
 		}
 
-		// If cursor is 0, we've completed scanning
 		if cursor == 0 {
 			break
 		}
 	}
 
-	// Delete keys in batches to avoid overloading Redis
 	if len(keysToDelete) > 0 {
 		const batchSize = 100
 		for i := 0; i < len(keysToDelete); i += batchSize {
@@ -131,8 +115,7 @@ func (r *redisCache[T]) DeleteMissing(ctx context.Context, keys []string) {
 			if end > len(keysToDelete) {
 				end = len(keysToDelete)
 			}
-			batch := keysToDelete[i:end]
-			r.client.Del(ctx, batch...)
+			r.client.Del(ctx, keysToDelete[i:end]...)
 		}
 	}
 }

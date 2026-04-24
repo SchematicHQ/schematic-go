@@ -151,6 +151,196 @@ func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx 
 	return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
 }
 
+// CheckFlags evaluates multiple flags for the given context.
+//
+// When keys is empty or nil, all flags for the context are returned via the
+// bulk /flags/check endpoint (cache is bypassed for this shape).
+//
+// When keys are provided:
+//   - In offline mode, each key resolves to its configured default.
+//   - If datastream is enabled and connected, all keys are evaluated locally;
+//     any failure causes a fallback to the API for the entire batch.
+//   - Otherwise, cached values are returned only when every requested key is
+//     present in the cache. Any miss triggers a single API call to refresh all
+//     keys, guaranteeing the returned values come from a consistent evaluation.
+//
+// On error, defaults are returned for each requested key with Reason set.
+// Results are returned in the same order as keys; entries for keys missing
+// from the API response use the configured default.
+func (c *SchematicClient) CheckFlags(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, keys []string) (results []*CheckFlagResponse) {
+	results = c.flagDefaultsFor(keys, "error")
+	defer func() {
+		if r := recover(); r != nil {
+			c.logger.Error(ctx, fmt.Sprintf("Panic occurred while checking flags %v", r))
+		}
+	}()
+
+	if evalCtx == nil {
+		evalCtx = &schematicgo.CheckFlagRequestBody{}
+	}
+
+	if c.isOffline {
+		return c.flagDefaultsFor(keys, "offline mode")
+	}
+
+	// Datastream path: evaluate all keys locally if possible.
+	if c.useDataStream() && len(keys) > 0 {
+		if dsResults, ok := c.checkFlagsViaDataStream(ctx, evalCtx, keys); ok {
+			return dsResults
+		}
+		c.logger.Debug(ctx, "Datastream check_flags failed for one or more keys, falling back to API")
+	}
+
+	return c.checkFlagsAPI(ctx, evalCtx, keys)
+}
+
+// flagDefaultsFor returns a slice of CheckFlagResponse, one per requested key,
+// populated from SetFlagDefault values with the given reason. An empty keys
+// slice yields an empty (non-nil) slice.
+func (c *SchematicClient) flagDefaultsFor(keys []string, reason string) []*CheckFlagResponse {
+	results := make([]*CheckFlagResponse, 0, len(keys))
+	for _, key := range keys {
+		results = append(results, &CheckFlagResponse{
+			FlagKey: key,
+			Value:   c.getFlagDefault(key),
+			Reason:  reason,
+		})
+	}
+	return results
+}
+
+// checkFlagsViaDataStream evaluates all keys via the local datastream cache.
+// Returns (results, true) if every key was evaluated successfully; otherwise
+// (nil, false) to signal the caller should fall back to the API.
+func (c *SchematicClient) checkFlagsViaDataStream(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, keys []string) ([]*CheckFlagResponse, bool) {
+	results := make([]*CheckFlagResponse, 0, len(keys))
+	for _, key := range keys {
+		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, key)
+		if err != nil {
+			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed for '%s' (%v), falling back to API", key, err))
+			return nil, false
+		}
+		checkFlagResp := toCheckFlagResponse(resp)
+		if checkFlagResp == nil {
+			return nil, false
+		}
+
+		results = append(results, checkFlagResp)
+	}
+	return results, true
+}
+
+func (c *SchematicClient) checkFlagsAPI(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, keys []string) []*CheckFlagResponse {
+	// No keys: return the full set of flags for the context directly from the API.
+	if len(keys) == 0 {
+		resp, err := c.Features.CheckFlags(ctx, evalCtx)
+		if err != nil {
+			c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
+			return []*CheckFlagResponse{}
+		}
+		if resp == nil || resp.Data == nil {
+			return []*CheckFlagResponse{}
+		}
+		results := make([]*CheckFlagResponse, 0, len(resp.Data.Flags))
+		for _, f := range resp.Data.Flags {
+			results = append(results, flagResponseDataToCheckFlagResponse(f))
+		}
+		return results
+	}
+
+	// Check cache for all requested keys; return cached results only if every key hits.
+	cachedResults := make(map[string]*CheckFlagResponse, len(keys))
+	allCached := true
+	for _, key := range keys {
+		cacheKey := flags.FlagCheckCacheKey(evalCtx, key)
+		found := false
+		for _, provider := range c.flagCheckCacheProviders {
+			if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
+				copy := *cached
+				cachedResults[key] = &copy
+				found = true
+				break
+			}
+		}
+		if !found {
+			allCached = false
+		}
+	}
+
+	if allCached {
+		results := make([]*CheckFlagResponse, 0, len(keys))
+		for _, key := range keys {
+			results = append(results, cachedResults[key])
+		}
+		return results
+	}
+
+	// Any cache miss — refresh all keys from the API for a consistent snapshot.
+	resp, err := c.Features.CheckFlags(ctx, evalCtx)
+	if err != nil {
+		c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
+		return c.flagDefaultsFor(keys, "error")
+	}
+
+	apiResults := make(map[string]*CheckFlagResponse)
+	if resp != nil && resp.Data != nil {
+		for _, f := range resp.Data.Flags {
+			apiResults[f.Flag] = flagResponseDataToCheckFlagResponse(f)
+		}
+	}
+
+	// Cache all fresh values asynchronously; keyed per flag+context.
+	toCache := make(map[string]*CheckFlagResponse, len(apiResults))
+	for flagKey, result := range apiResults {
+		cacheKey := flags.FlagCheckCacheKey(evalCtx, flagKey)
+		copy := *result
+		toCache[cacheKey] = &copy
+	}
+	go func() {
+		for cacheKey, value := range toCache {
+			for _, provider := range c.flagCheckCacheProviders {
+				if err := provider.Set(ctx, cacheKey, value, nil); err != nil {
+					c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
+				}
+			}
+		}
+	}()
+
+	results := make([]*CheckFlagResponse, 0, len(keys))
+	for _, key := range keys {
+		if api, ok := apiResults[key]; ok {
+			results = append(results, api)
+			continue
+		}
+		results = append(results, &CheckFlagResponse{
+			FlagKey: key,
+			Value:   c.getFlagDefault(key),
+			Reason:  "flag not found",
+		})
+	}
+	return results
+}
+
+// flagResponseDataToCheckFlagResponse adapts the bulk endpoint's flag entry to
+// the Go SDK's response type. Deprecated FeatureAllocation/FeatureUsage* fields
+// on the source are intentionally dropped.
+func flagResponseDataToCheckFlagResponse(f *schematicgo.CheckFlagResponseData) *CheckFlagResponse {
+	if f == nil {
+		return nil
+	}
+	return &CheckFlagResponse{
+		CompanyID:   f.CompanyID,
+		Entitlement: toRulesEngineEntitlement(f.Entitlement),
+		FlagID:      f.FlagID,
+		FlagKey:     f.Flag,
+		Reason:      f.Reason,
+		RuleID:      f.RuleID,
+		RuleType:    toRulesEngineRuleType(f.RuleType),
+		UserID:      f.UserID,
+		Value:       f.Value,
+	}
+}
+
 func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (result *CheckFlagResponse) {
 	defer func() {
 		if r := recover(); r != nil {

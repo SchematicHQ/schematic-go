@@ -100324,6 +100324,49 @@ func TestEnumSortDirection(t *testing.T) {
 	})
 }
 
+func TestEnumTimeSeriesGranularity(t *testing.T) {
+	t.Run("NewFromString_daily", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTimeSeriesGranularityFromString("daily")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TimeSeriesGranularity("daily"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_hourly", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTimeSeriesGranularityFromString("hourly")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TimeSeriesGranularity("hourly"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_monthly", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTimeSeriesGranularityFromString("monthly")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TimeSeriesGranularity("monthly"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_weekly", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTimeSeriesGranularityFromString("weekly")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TimeSeriesGranularity("weekly"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_Invalid", func(t *testing.T) {
+		_, err := NewTimeSeriesGranularityFromString("invalid_value_that_does_not_exist")
+		assert.Error(t, err)
+	})
+
+	t.Run("Ptr", func(t *testing.T) {
+		val, err := NewTimeSeriesGranularityFromString("daily")
+		assert.NoError(t, err)
+		ptr := val.Ptr()
+		assert.NotNil(t, ptr)
+		assert.Equal(t, val, *ptr)
+	})
+}
+
 func TestEnumTraitDefinitionComparableType(t *testing.T) {
 	t.Run("NewFromString_bool", func(t *testing.T) {
 		t.Parallel()

@@ -4037,6 +4037,53 @@ client.Credits.SoftDeleteBillingCredit(
 </dl>
 </details>
 
+<details><summary><code>client.Credits.ListCompanyCreditBalances() -> *schematichq.ListCompanyCreditBalancesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListCompanyCreditBalancesRequest{
+        CompanyID: "company_id",
+    }
+client.Credits.ListCompanyCreditBalances(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Credits.ListCreditBundles() -> *schematichq.ListCreditBundlesResponse</code></summary>
 <dl>
 <dd>
@@ -15849,6 +15896,360 @@ client.Features.CountFlags(
 <dd>
 
 **offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## insights
+<details><summary><code>client.Insights.GetActivity() -> *schematichq.GetActivityResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetActivityRequest{
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Insights.GetActivity(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**limit:** `*int64` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Insights.GetEnvironmentFeatureUsageTimeSeries() -> *schematichq.GetEnvironmentFeatureUsageTimeSeriesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetEnvironmentFeatureUsageTimeSeriesRequest{
+        EndTime: schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+        FeatureID: "feature_id",
+        Granularity: schematichq.TimeSeriesGranularityDaily.Ptr(),
+        StartTime: schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    }
+client.Insights.GetEnvironmentFeatureUsageTimeSeries(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**endTime:** `time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**granularity:** `*schematichq.TimeSeriesGranularity` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `time.Time` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Insights.GetPlanGrowth() -> *schematichq.GetPlanGrowthResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetPlanGrowthRequest{
+        Months: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Insights.GetPlanGrowth(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**months:** `*int64` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Insights.GetSummary() -> *schematichq.GetSummaryResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Insights.GetSummary(
+        context.TODO(),
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Insights.GetTopFeaturesByUsage() -> *schematichq.GetTopFeaturesByUsageResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetTopFeaturesByUsageRequest{
+        EndTime: schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        StartTime: schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    }
+client.Insights.GetTopFeaturesByUsage(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**endTime:** `time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `time.Time` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Insights.GetEnvironmentTraitUsageTimeSeries() -> *schematichq.GetEnvironmentTraitUsageTimeSeriesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetEnvironmentTraitUsageTimeSeriesRequest{
+        EndTime: schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+        FeatureID: "feature_id",
+        Granularity: schematichq.TimeSeriesGranularityDaily.Ptr(),
+        StartTime: schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    }
+client.Insights.GetEnvironmentTraitUsageTimeSeries(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**endTime:** `time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**granularity:** `*schematichq.TimeSeriesGranularity` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `time.Time` 
     
 </dd>
 </dl>

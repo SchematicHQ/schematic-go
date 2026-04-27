@@ -118,6 +118,22 @@ func (c *Client) SoftDeleteBillingCredit(
 	return response.Body, nil
 }
 
+func (c *Client) ListCompanyCreditBalances(
+	ctx context.Context,
+	request *schematichq.ListCompanyCreditBalancesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListCompanyCreditBalancesResponse, error) {
+	response, err := c.WithRawResponse.ListCompanyCreditBalances(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) ListCreditBundles(
 	ctx context.Context,
 	request *schematichq.ListCreditBundlesRequest,

@@ -1211,6 +1211,31 @@ func (l *ListBillingPlanCreditGrantsRequest) SetOffset(offset *int64) {
 }
 
 var (
+	listCompanyCreditBalancesRequestFieldCompanyID = big.NewInt(1 << 0)
+)
+
+type ListCompanyCreditBalancesRequest struct {
+	CompanyID string `json:"-" url:"company_id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListCompanyCreditBalancesRequest) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyCreditBalancesRequest) SetCompanyID(companyID string) {
+	l.CompanyID = companyID
+	l.require(listCompanyCreditBalancesRequestFieldCompanyID)
+}
+
+var (
 	listCompanyGrantsRequestFieldCompanyID = big.NewInt(1 << 0)
 	listCompanyGrantsRequestFieldOrder     = big.NewInt(1 << 1)
 	listCompanyGrantsRequestFieldDir       = big.NewInt(1 << 2)
@@ -2127,6 +2152,138 @@ func (b *BillingCreditLedgerResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	companyCreditBalanceResponseDataFieldCreditID  = big.NewInt(1 << 0)
+	companyCreditBalanceResponseDataFieldRemaining = big.NewInt(1 << 1)
+	companyCreditBalanceResponseDataFieldSource    = big.NewInt(1 << 2)
+	companyCreditBalanceResponseDataFieldTotal     = big.NewInt(1 << 3)
+)
+
+type CompanyCreditBalanceResponseData struct {
+	CreditID  string              `json:"credit_id" url:"credit_id"`
+	Remaining float64             `json:"remaining" url:"remaining"`
+	Source    BillingProviderType `json:"source" url:"source"`
+	Total     *float64            `json:"total,omitempty" url:"total,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyCreditBalanceResponseData) GetCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditID
+}
+
+func (c *CompanyCreditBalanceResponseData) GetRemaining() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Remaining
+}
+
+func (c *CompanyCreditBalanceResponseData) GetSource() BillingProviderType {
+	if c == nil {
+		return ""
+	}
+	return c.Source
+}
+
+func (c *CompanyCreditBalanceResponseData) GetTotal() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.Total
+}
+
+func (c *CompanyCreditBalanceResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyCreditBalanceResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalanceResponseData) SetCreditID(creditID string) {
+	c.CreditID = creditID
+	c.require(companyCreditBalanceResponseDataFieldCreditID)
+}
+
+// SetRemaining sets the Remaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalanceResponseData) SetRemaining(remaining float64) {
+	c.Remaining = remaining
+	c.require(companyCreditBalanceResponseDataFieldRemaining)
+}
+
+// SetSource sets the Source field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalanceResponseData) SetSource(source BillingProviderType) {
+	c.Source = source
+	c.require(companyCreditBalanceResponseDataFieldSource)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalanceResponseData) SetTotal(total *float64) {
+	c.Total = total
+	c.require(companyCreditBalanceResponseDataFieldTotal)
+}
+
+func (c *CompanyCreditBalanceResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CompanyCreditBalanceResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CompanyCreditBalanceResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyCreditBalanceResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyCreditBalanceResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyCreditBalanceResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 var (
@@ -7550,6 +7707,192 @@ func (l *ListBillingPlanCreditGrantsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListBillingPlanCreditGrantsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+var (
+	listCompanyCreditBalancesParamsFieldCompanyID = big.NewInt(1 << 0)
+)
+
+type ListCompanyCreditBalancesParams struct {
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyCreditBalancesParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListCompanyCreditBalancesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListCompanyCreditBalancesParams) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyCreditBalancesParams) SetCompanyID(companyID *string) {
+	l.CompanyID = companyID
+	l.require(listCompanyCreditBalancesParamsFieldCompanyID)
+}
+
+func (l *ListCompanyCreditBalancesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompanyCreditBalancesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompanyCreditBalancesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompanyCreditBalancesParams) MarshalJSON() ([]byte, error) {
+	type embed ListCompanyCreditBalancesParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCompanyCreditBalancesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listCompanyCreditBalancesResponseFieldData   = big.NewInt(1 << 0)
+	listCompanyCreditBalancesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListCompanyCreditBalancesResponse struct {
+	Data []*CompanyCreditBalanceResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListCompanyCreditBalancesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyCreditBalancesResponse) GetData() []*CompanyCreditBalanceResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCompanyCreditBalancesResponse) GetParams() *ListCompanyCreditBalancesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListCompanyCreditBalancesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListCompanyCreditBalancesResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyCreditBalancesResponse) SetData(data []*CompanyCreditBalanceResponseData) {
+	l.Data = data
+	l.require(listCompanyCreditBalancesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyCreditBalancesResponse) SetParams(params *ListCompanyCreditBalancesParams) {
+	l.Params = params
+	l.require(listCompanyCreditBalancesResponseFieldParams)
+}
+
+func (l *ListCompanyCreditBalancesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompanyCreditBalancesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompanyCreditBalancesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompanyCreditBalancesResponse) MarshalJSON() ([]byte, error) {
+	type embed ListCompanyCreditBalancesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCompanyCreditBalancesResponse) String() string {
 	if l == nil {
 		return "<nil>"
 	}

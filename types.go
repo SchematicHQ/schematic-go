@@ -30043,6 +30043,34 @@ func (t *TemporaryAccessTokenResponseData) String() string {
 	return fmt.Sprintf("%#v", t)
 }
 
+type TimeSeriesGranularity string
+
+const (
+	TimeSeriesGranularityDaily   TimeSeriesGranularity = "daily"
+	TimeSeriesGranularityHourly  TimeSeriesGranularity = "hourly"
+	TimeSeriesGranularityMonthly TimeSeriesGranularity = "monthly"
+	TimeSeriesGranularityWeekly  TimeSeriesGranularity = "weekly"
+)
+
+func NewTimeSeriesGranularityFromString(s string) (TimeSeriesGranularity, error) {
+	switch s {
+	case "daily":
+		return TimeSeriesGranularityDaily, nil
+	case "hourly":
+		return TimeSeriesGranularityHourly, nil
+	case "monthly":
+		return TimeSeriesGranularityMonthly, nil
+	case "weekly":
+		return TimeSeriesGranularityWeekly, nil
+	}
+	var t TimeSeriesGranularity
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TimeSeriesGranularity) Ptr() *TimeSeriesGranularity {
+	return &t
+}
+
 var (
 	traitDefinitionFieldComparableType = big.NewInt(1 << 0)
 	traitDefinitionFieldEntityType     = big.NewInt(1 << 1)

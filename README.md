@@ -361,6 +361,41 @@ func main() {
 }
 ```
 
+### Checking multiple flags
+
+When you need to evaluate several flags for the same company/user context, `CheckFlags` returns the full result for each requested flag in a single call. Pass `nil` or an empty slice for `keys` to retrieve every flag defined for the context.
+
+```go
+import (
+  "context"
+  "fmt"
+  "os"
+
+  option "github.com/schematichq/schematic-go/option"
+  schematicclient "github.com/schematichq/schematic-go/client"
+  schematicgo "github.com/schematichq/schematic-go"
+)
+
+func main() {
+  apiKey := os.Getenv("SCHEMATIC_API_KEY")
+  client := schematicclient.NewSchematicClient(option.WithAPIKey(apiKey))
+  defer client.Close()
+
+  evaluationCtx := &schematicgo.CheckFlagRequestBody{
+    Company: map[string]string{
+      "id": "your-company-id",
+    },
+  }
+
+  results := client.CheckFlags(context.Background(), evaluationCtx, []string{"feature-flag-1", "feature-flag-2"})
+  for _, r := range results {
+    fmt.Printf("%s: %v (%s)\n", r.FlagKey, r.Value, r.Reason)
+  }
+}
+```
+
+Results are returned in the same order as the requested keys. When any requested key is a cache miss, `CheckFlags` refreshes the full set from the API so every returned value comes from a consistent evaluation. If DataStream is enabled and connected, keys are evaluated locally — any failure causes a transparent fallback to the API. In offline mode, each key resolves to its configured default.
+
 ### Other API operations
 
 The Schematic API supports many operations beyond these, accessible via `client.API()`. See the [API submodule readme](https://github.com/SchematicHQ/schematic-go/tree/main/api#readme) for a full list and documentation of supported operations.

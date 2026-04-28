@@ -160,30 +160,28 @@ func (c *localCache[T]) Delete(ctx context.Context, key string) error {
 	return nil
 }
 
-func (c *localCache[T]) DeleteMissing(ctx context.Context, keys []string) {
+// DeleteMissing removes every entry not present in keysToKeep. The local cache
+// owns its keyspace, so scanPattern is ignored.
+func (c *localCache[T]) DeleteMissing(ctx context.Context, keysToKeep []string, _ string) {
 	if c == nil || c.maxSize == 0 || c.cache == nil {
 		return
 	}
 
-	// Normalize nil slice to empty slice to avoid issues
-	if keys == nil {
-		keys = []string{}
+	if keysToKeep == nil {
+		keysToKeep = []string{}
 	}
 
-	// Create a list of keys to delete to avoid modifying while iterating
 	var keysToDelete []string
 	c.mu.RLock()
 	for key := range c.cache {
-		found := slices.Contains(keys, key) // Check if the key is in the keys slice
-		if !found {
+		if !slices.Contains(keysToKeep, key) {
 			keysToDelete = append(keysToDelete, key)
 		}
 	}
 	c.mu.RUnlock()
 
-	// Delete the keys that weren't found in the provided list
 	for _, key := range keysToDelete {
-		_ = c.Delete(ctx, key) // Use the provided context
+		_ = c.Delete(ctx, key)
 	}
 }
 

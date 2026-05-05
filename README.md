@@ -1,4 +1,4 @@
-# Schematic Go
+# Schematic Go SDK
 
 ## Installation and Setup
 

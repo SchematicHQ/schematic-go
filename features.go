@@ -60,12 +60,13 @@ var (
 	countFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 0)
 	countFeaturesRequestFieldFeatureType               = big.NewInt(1 << 1)
 	countFeaturesRequestFieldIDs                       = big.NewInt(1 << 2)
-	countFeaturesRequestFieldPlanVersionID             = big.NewInt(1 << 3)
-	countFeaturesRequestFieldQ                         = big.NewInt(1 << 4)
-	countFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 5)
-	countFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 6)
-	countFeaturesRequestFieldLimit                     = big.NewInt(1 << 7)
-	countFeaturesRequestFieldOffset                    = big.NewInt(1 << 8)
+	countFeaturesRequestFieldManagedBy                 = big.NewInt(1 << 3)
+	countFeaturesRequestFieldPlanVersionID             = big.NewInt(1 << 4)
+	countFeaturesRequestFieldQ                         = big.NewInt(1 << 5)
+	countFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 6)
+	countFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 7)
+	countFeaturesRequestFieldLimit                     = big.NewInt(1 << 8)
+	countFeaturesRequestFieldOffset                    = big.NewInt(1 << 9)
 )
 
 type CountFeaturesRequest struct {
@@ -74,6 +75,8 @@ type CountFeaturesRequest struct {
 	// Filter by one or more feature types (boolean, event, trait)
 	FeatureType []*FeatureType `json:"-" url:"feature_type,omitempty"`
 	IDs         []*string      `json:"-" url:"ids,omitempty"`
+	// Filter for features managed by a billing provider, or by Schematic (no billing provider)
+	ManagedBy *BillingProviderType `json:"-" url:"managed_by,omitempty"`
 	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
 	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
@@ -117,6 +120,13 @@ func (c *CountFeaturesRequest) SetFeatureType(featureType []*FeatureType) {
 func (c *CountFeaturesRequest) SetIDs(ids []*string) {
 	c.IDs = ids
 	c.require(countFeaturesRequestFieldIDs)
+}
+
+// SetManagedBy sets the ManagedBy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountFeaturesRequest) SetManagedBy(managedBy *BillingProviderType) {
+	c.ManagedBy = managedBy
+	c.require(countFeaturesRequestFieldManagedBy)
 }
 
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
@@ -365,12 +375,13 @@ var (
 	listFeaturesRequestFieldBooleanRequireEvent       = big.NewInt(1 << 0)
 	listFeaturesRequestFieldFeatureType               = big.NewInt(1 << 1)
 	listFeaturesRequestFieldIDs                       = big.NewInt(1 << 2)
-	listFeaturesRequestFieldPlanVersionID             = big.NewInt(1 << 3)
-	listFeaturesRequestFieldQ                         = big.NewInt(1 << 4)
-	listFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 5)
-	listFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 6)
-	listFeaturesRequestFieldLimit                     = big.NewInt(1 << 7)
-	listFeaturesRequestFieldOffset                    = big.NewInt(1 << 8)
+	listFeaturesRequestFieldManagedBy                 = big.NewInt(1 << 3)
+	listFeaturesRequestFieldPlanVersionID             = big.NewInt(1 << 4)
+	listFeaturesRequestFieldQ                         = big.NewInt(1 << 5)
+	listFeaturesRequestFieldWithoutCompanyOverrideFor = big.NewInt(1 << 6)
+	listFeaturesRequestFieldWithoutPlanEntitlementFor = big.NewInt(1 << 7)
+	listFeaturesRequestFieldLimit                     = big.NewInt(1 << 8)
+	listFeaturesRequestFieldOffset                    = big.NewInt(1 << 9)
 )
 
 type ListFeaturesRequest struct {
@@ -379,6 +390,8 @@ type ListFeaturesRequest struct {
 	// Filter by one or more feature types (boolean, event, trait)
 	FeatureType []*FeatureType `json:"-" url:"feature_type,omitempty"`
 	IDs         []*string      `json:"-" url:"ids,omitempty"`
+	// Filter for features managed by a billing provider, or by Schematic (no billing provider)
+	ManagedBy *BillingProviderType `json:"-" url:"managed_by,omitempty"`
 	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
 	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
@@ -422,6 +435,13 @@ func (l *ListFeaturesRequest) SetFeatureType(featureType []*FeatureType) {
 func (l *ListFeaturesRequest) SetIDs(ids []*string) {
 	l.IDs = ids
 	l.require(listFeaturesRequestFieldIDs)
+}
+
+// SetManagedBy sets the ManagedBy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeaturesRequest) SetManagedBy(managedBy *BillingProviderType) {
+	l.ManagedBy = managedBy
+	l.require(listFeaturesRequestFieldManagedBy)
 }
 
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
@@ -2896,11 +2916,12 @@ var (
 	countFeaturesParamsFieldFeatureType               = big.NewInt(1 << 1)
 	countFeaturesParamsFieldIDs                       = big.NewInt(1 << 2)
 	countFeaturesParamsFieldLimit                     = big.NewInt(1 << 3)
-	countFeaturesParamsFieldOffset                    = big.NewInt(1 << 4)
-	countFeaturesParamsFieldPlanVersionID             = big.NewInt(1 << 5)
-	countFeaturesParamsFieldQ                         = big.NewInt(1 << 6)
-	countFeaturesParamsFieldWithoutCompanyOverrideFor = big.NewInt(1 << 7)
-	countFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 8)
+	countFeaturesParamsFieldManagedBy                 = big.NewInt(1 << 4)
+	countFeaturesParamsFieldOffset                    = big.NewInt(1 << 5)
+	countFeaturesParamsFieldPlanVersionID             = big.NewInt(1 << 6)
+	countFeaturesParamsFieldQ                         = big.NewInt(1 << 7)
+	countFeaturesParamsFieldWithoutCompanyOverrideFor = big.NewInt(1 << 8)
+	countFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 9)
 )
 
 type CountFeaturesParams struct {
@@ -2911,6 +2932,8 @@ type CountFeaturesParams struct {
 	IDs         []string      `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Filter for features managed by a billing provider, or by Schematic (no billing provider)
+	ManagedBy *BillingProviderType `json:"managed_by,omitempty" url:"managed_by,omitempty"`
 	// Page offset (default 0)
 	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
@@ -2955,6 +2978,13 @@ func (c *CountFeaturesParams) GetLimit() *int64 {
 		return nil
 	}
 	return c.Limit
+}
+
+func (c *CountFeaturesParams) GetManagedBy() *BillingProviderType {
+	if c == nil {
+		return nil
+	}
+	return c.ManagedBy
 }
 
 func (c *CountFeaturesParams) GetOffset() *int64 {
@@ -3032,6 +3062,13 @@ func (c *CountFeaturesParams) SetIDs(ids []string) {
 func (c *CountFeaturesParams) SetLimit(limit *int64) {
 	c.Limit = limit
 	c.require(countFeaturesParamsFieldLimit)
+}
+
+// SetManagedBy sets the ManagedBy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountFeaturesParams) SetManagedBy(managedBy *BillingProviderType) {
+	c.ManagedBy = managedBy
+	c.require(countFeaturesParamsFieldManagedBy)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;
@@ -4077,11 +4114,12 @@ var (
 	listFeaturesParamsFieldFeatureType               = big.NewInt(1 << 1)
 	listFeaturesParamsFieldIDs                       = big.NewInt(1 << 2)
 	listFeaturesParamsFieldLimit                     = big.NewInt(1 << 3)
-	listFeaturesParamsFieldOffset                    = big.NewInt(1 << 4)
-	listFeaturesParamsFieldPlanVersionID             = big.NewInt(1 << 5)
-	listFeaturesParamsFieldQ                         = big.NewInt(1 << 6)
-	listFeaturesParamsFieldWithoutCompanyOverrideFor = big.NewInt(1 << 7)
-	listFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 8)
+	listFeaturesParamsFieldManagedBy                 = big.NewInt(1 << 4)
+	listFeaturesParamsFieldOffset                    = big.NewInt(1 << 5)
+	listFeaturesParamsFieldPlanVersionID             = big.NewInt(1 << 6)
+	listFeaturesParamsFieldQ                         = big.NewInt(1 << 7)
+	listFeaturesParamsFieldWithoutCompanyOverrideFor = big.NewInt(1 << 8)
+	listFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 9)
 )
 
 type ListFeaturesParams struct {
@@ -4092,6 +4130,8 @@ type ListFeaturesParams struct {
 	IDs         []string      `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Filter for features managed by a billing provider, or by Schematic (no billing provider)
+	ManagedBy *BillingProviderType `json:"managed_by,omitempty" url:"managed_by,omitempty"`
 	// Page offset (default 0)
 	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Filter by plan version ID when used with without_plan_entitlement_for; if not provided, the latest published version is used
@@ -4136,6 +4176,13 @@ func (l *ListFeaturesParams) GetLimit() *int64 {
 		return nil
 	}
 	return l.Limit
+}
+
+func (l *ListFeaturesParams) GetManagedBy() *BillingProviderType {
+	if l == nil {
+		return nil
+	}
+	return l.ManagedBy
 }
 
 func (l *ListFeaturesParams) GetOffset() *int64 {
@@ -4213,6 +4260,13 @@ func (l *ListFeaturesParams) SetIDs(ids []string) {
 func (l *ListFeaturesParams) SetLimit(limit *int64) {
 	l.Limit = limit
 	l.require(listFeaturesParamsFieldLimit)
+}
+
+// SetManagedBy sets the ManagedBy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeaturesParams) SetManagedBy(managedBy *BillingProviderType) {
+	l.ManagedBy = managedBy
+	l.require(listFeaturesParamsFieldManagedBy)
 }
 
 // SetOffset sets the Offset field and marks it as non-optional;

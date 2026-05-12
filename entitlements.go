@@ -1665,11 +1665,13 @@ func (c *CreditUsage) String() string {
 
 var (
 	duplicatePlanEntitlementsResponseResponseDataFieldData    = big.NewInt(1 << 0)
-	duplicatePlanEntitlementsResponseResponseDataFieldSkipped = big.NewInt(1 << 1)
+	duplicatePlanEntitlementsResponseResponseDataFieldIssues  = big.NewInt(1 << 1)
+	duplicatePlanEntitlementsResponseResponseDataFieldSkipped = big.NewInt(1 << 2)
 )
 
 type DuplicatePlanEntitlementsResponseResponseData struct {
 	Data    []*PlanEntitlementResponseData    `json:"data" url:"data"`
+	Issues  []*PlanIssueResponseData          `json:"issues" url:"issues"`
 	Skipped []*SkippedEntitlementResponseData `json:"skipped" url:"skipped"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -1684,6 +1686,13 @@ func (d *DuplicatePlanEntitlementsResponseResponseData) GetData() []*PlanEntitle
 		return nil
 	}
 	return d.Data
+}
+
+func (d *DuplicatePlanEntitlementsResponseResponseData) GetIssues() []*PlanIssueResponseData {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
 }
 
 func (d *DuplicatePlanEntitlementsResponseResponseData) GetSkipped() []*SkippedEntitlementResponseData {
@@ -1712,6 +1721,13 @@ func (d *DuplicatePlanEntitlementsResponseResponseData) require(field *big.Int) 
 func (d *DuplicatePlanEntitlementsResponseResponseData) SetData(data []*PlanEntitlementResponseData) {
 	d.Data = data
 	d.require(duplicatePlanEntitlementsResponseResponseDataFieldData)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DuplicatePlanEntitlementsResponseResponseData) SetIssues(issues []*PlanIssueResponseData) {
+	d.Issues = issues
+	d.require(duplicatePlanEntitlementsResponseResponseDataFieldIssues)
 }
 
 // SetSkipped sets the Skipped field and marks it as non-optional;

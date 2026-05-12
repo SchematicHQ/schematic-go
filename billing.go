@@ -11,18 +11,19 @@ import (
 )
 
 var (
-	countBillingProductsRequestFieldIDs                 = big.NewInt(1 << 0)
-	countBillingProductsRequestFieldIsActive            = big.NewInt(1 << 1)
-	countBillingProductsRequestFieldName                = big.NewInt(1 << 2)
-	countBillingProductsRequestFieldPriceUsageType      = big.NewInt(1 << 3)
-	countBillingProductsRequestFieldProviderType        = big.NewInt(1 << 4)
-	countBillingProductsRequestFieldQ                   = big.NewInt(1 << 5)
-	countBillingProductsRequestFieldWithOneTimeCharges  = big.NewInt(1 << 6)
-	countBillingProductsRequestFieldWithPricesOnly      = big.NewInt(1 << 7)
-	countBillingProductsRequestFieldWithZeroPrice       = big.NewInt(1 << 8)
-	countBillingProductsRequestFieldWithoutLinkedToPlan = big.NewInt(1 << 9)
-	countBillingProductsRequestFieldLimit               = big.NewInt(1 << 10)
-	countBillingProductsRequestFieldOffset              = big.NewInt(1 << 11)
+	countBillingProductsRequestFieldIDs                  = big.NewInt(1 << 0)
+	countBillingProductsRequestFieldIsActive             = big.NewInt(1 << 1)
+	countBillingProductsRequestFieldName                 = big.NewInt(1 << 2)
+	countBillingProductsRequestFieldPriceUsageType       = big.NewInt(1 << 3)
+	countBillingProductsRequestFieldProviderType         = big.NewInt(1 << 4)
+	countBillingProductsRequestFieldQ                    = big.NewInt(1 << 5)
+	countBillingProductsRequestFieldRecurringChargesOnly = big.NewInt(1 << 6)
+	countBillingProductsRequestFieldWithOneTimeCharges   = big.NewInt(1 << 7)
+	countBillingProductsRequestFieldWithPricesOnly       = big.NewInt(1 << 8)
+	countBillingProductsRequestFieldWithZeroPrice        = big.NewInt(1 << 9)
+	countBillingProductsRequestFieldWithoutLinkedToPlan  = big.NewInt(1 << 10)
+	countBillingProductsRequestFieldLimit                = big.NewInt(1 << 11)
+	countBillingProductsRequestFieldOffset               = big.NewInt(1 << 12)
 )
 
 type CountBillingProductsRequest struct {
@@ -33,6 +34,8 @@ type CountBillingProductsRequest struct {
 	PriceUsageType *BillingPriceUsageType `json:"-" url:"price_usage_type,omitempty"`
 	ProviderType   *BillingProviderType   `json:"-" url:"provider_type,omitempty"`
 	Q              *string                `json:"-" url:"q,omitempty"`
+	// Filter to products that have at least one recurring price
+	RecurringChargesOnly *bool `json:"-" url:"recurring_charges_only,omitempty"`
 	// Filter products that are one time charges
 	WithOneTimeCharges *bool `json:"-" url:"with_one_time_charges,omitempty"`
 	// Filter products that have prices
@@ -97,6 +100,13 @@ func (c *CountBillingProductsRequest) SetProviderType(providerType *BillingProvi
 func (c *CountBillingProductsRequest) SetQ(q *string) {
 	c.Q = q
 	c.require(countBillingProductsRequestFieldQ)
+}
+
+// SetRecurringChargesOnly sets the RecurringChargesOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductsRequest) SetRecurringChargesOnly(recurringChargesOnly *bool) {
+	c.RecurringChargesOnly = recurringChargesOnly
+	c.require(countBillingProductsRequestFieldRecurringChargesOnly)
 }
 
 // SetWithOneTimeCharges sets the WithOneTimeCharges field and marks it as non-optional;
@@ -548,18 +558,19 @@ func (l *ListBillingProductPricesRequest) SetOffset(offset *int64) {
 }
 
 var (
-	listBillingProductsRequestFieldIDs                 = big.NewInt(1 << 0)
-	listBillingProductsRequestFieldIsActive            = big.NewInt(1 << 1)
-	listBillingProductsRequestFieldName                = big.NewInt(1 << 2)
-	listBillingProductsRequestFieldPriceUsageType      = big.NewInt(1 << 3)
-	listBillingProductsRequestFieldProviderType        = big.NewInt(1 << 4)
-	listBillingProductsRequestFieldQ                   = big.NewInt(1 << 5)
-	listBillingProductsRequestFieldWithOneTimeCharges  = big.NewInt(1 << 6)
-	listBillingProductsRequestFieldWithPricesOnly      = big.NewInt(1 << 7)
-	listBillingProductsRequestFieldWithZeroPrice       = big.NewInt(1 << 8)
-	listBillingProductsRequestFieldWithoutLinkedToPlan = big.NewInt(1 << 9)
-	listBillingProductsRequestFieldLimit               = big.NewInt(1 << 10)
-	listBillingProductsRequestFieldOffset              = big.NewInt(1 << 11)
+	listBillingProductsRequestFieldIDs                  = big.NewInt(1 << 0)
+	listBillingProductsRequestFieldIsActive             = big.NewInt(1 << 1)
+	listBillingProductsRequestFieldName                 = big.NewInt(1 << 2)
+	listBillingProductsRequestFieldPriceUsageType       = big.NewInt(1 << 3)
+	listBillingProductsRequestFieldProviderType         = big.NewInt(1 << 4)
+	listBillingProductsRequestFieldQ                    = big.NewInt(1 << 5)
+	listBillingProductsRequestFieldRecurringChargesOnly = big.NewInt(1 << 6)
+	listBillingProductsRequestFieldWithOneTimeCharges   = big.NewInt(1 << 7)
+	listBillingProductsRequestFieldWithPricesOnly       = big.NewInt(1 << 8)
+	listBillingProductsRequestFieldWithZeroPrice        = big.NewInt(1 << 9)
+	listBillingProductsRequestFieldWithoutLinkedToPlan  = big.NewInt(1 << 10)
+	listBillingProductsRequestFieldLimit                = big.NewInt(1 << 11)
+	listBillingProductsRequestFieldOffset               = big.NewInt(1 << 12)
 )
 
 type ListBillingProductsRequest struct {
@@ -570,6 +581,8 @@ type ListBillingProductsRequest struct {
 	PriceUsageType *BillingPriceUsageType `json:"-" url:"price_usage_type,omitempty"`
 	ProviderType   *BillingProviderType   `json:"-" url:"provider_type,omitempty"`
 	Q              *string                `json:"-" url:"q,omitempty"`
+	// Filter to products that have at least one recurring price
+	RecurringChargesOnly *bool `json:"-" url:"recurring_charges_only,omitempty"`
 	// Filter products that are one time charges
 	WithOneTimeCharges *bool `json:"-" url:"with_one_time_charges,omitempty"`
 	// Filter products that have prices
@@ -634,6 +647,13 @@ func (l *ListBillingProductsRequest) SetProviderType(providerType *BillingProvid
 func (l *ListBillingProductsRequest) SetQ(q *string) {
 	l.Q = q
 	l.require(listBillingProductsRequestFieldQ)
+}
+
+// SetRecurringChargesOnly sets the RecurringChargesOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductsRequest) SetRecurringChargesOnly(recurringChargesOnly *bool) {
+	l.RecurringChargesOnly = recurringChargesOnly
+	l.require(listBillingProductsRequestFieldRecurringChargesOnly)
 }
 
 // SetWithOneTimeCharges sets the WithOneTimeCharges field and marks it as non-optional;
@@ -3104,18 +3124,19 @@ func (c *CreateBillingPriceTierRequestBody) String() string {
 
 // Input parameters
 var (
-	countBillingProductsParamsFieldIDs                 = big.NewInt(1 << 0)
-	countBillingProductsParamsFieldIsActive            = big.NewInt(1 << 1)
-	countBillingProductsParamsFieldLimit               = big.NewInt(1 << 2)
-	countBillingProductsParamsFieldName                = big.NewInt(1 << 3)
-	countBillingProductsParamsFieldOffset              = big.NewInt(1 << 4)
-	countBillingProductsParamsFieldPriceUsageType      = big.NewInt(1 << 5)
-	countBillingProductsParamsFieldProviderType        = big.NewInt(1 << 6)
-	countBillingProductsParamsFieldQ                   = big.NewInt(1 << 7)
-	countBillingProductsParamsFieldWithOneTimeCharges  = big.NewInt(1 << 8)
-	countBillingProductsParamsFieldWithPricesOnly      = big.NewInt(1 << 9)
-	countBillingProductsParamsFieldWithZeroPrice       = big.NewInt(1 << 10)
-	countBillingProductsParamsFieldWithoutLinkedToPlan = big.NewInt(1 << 11)
+	countBillingProductsParamsFieldIDs                  = big.NewInt(1 << 0)
+	countBillingProductsParamsFieldIsActive             = big.NewInt(1 << 1)
+	countBillingProductsParamsFieldLimit                = big.NewInt(1 << 2)
+	countBillingProductsParamsFieldName                 = big.NewInt(1 << 3)
+	countBillingProductsParamsFieldOffset               = big.NewInt(1 << 4)
+	countBillingProductsParamsFieldPriceUsageType       = big.NewInt(1 << 5)
+	countBillingProductsParamsFieldProviderType         = big.NewInt(1 << 6)
+	countBillingProductsParamsFieldQ                    = big.NewInt(1 << 7)
+	countBillingProductsParamsFieldRecurringChargesOnly = big.NewInt(1 << 8)
+	countBillingProductsParamsFieldWithOneTimeCharges   = big.NewInt(1 << 9)
+	countBillingProductsParamsFieldWithPricesOnly       = big.NewInt(1 << 10)
+	countBillingProductsParamsFieldWithZeroPrice        = big.NewInt(1 << 11)
+	countBillingProductsParamsFieldWithoutLinkedToPlan  = big.NewInt(1 << 12)
 )
 
 type CountBillingProductsParams struct {
@@ -3130,6 +3151,8 @@ type CountBillingProductsParams struct {
 	PriceUsageType *BillingPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
 	ProviderType   *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
 	Q              *string                `json:"q,omitempty" url:"q,omitempty"`
+	// Filter to products that have at least one recurring price
+	RecurringChargesOnly *bool `json:"recurring_charges_only,omitempty" url:"recurring_charges_only,omitempty"`
 	// Filter products that are one time charges
 	WithOneTimeCharges *bool `json:"with_one_time_charges,omitempty" url:"with_one_time_charges,omitempty"`
 	// Filter products that have prices
@@ -3200,6 +3223,13 @@ func (c *CountBillingProductsParams) GetQ() *string {
 		return nil
 	}
 	return c.Q
+}
+
+func (c *CountBillingProductsParams) GetRecurringChargesOnly() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.RecurringChargesOnly
 }
 
 func (c *CountBillingProductsParams) GetWithOneTimeCharges() *bool {
@@ -3298,6 +3328,13 @@ func (c *CountBillingProductsParams) SetProviderType(providerType *BillingProvid
 func (c *CountBillingProductsParams) SetQ(q *string) {
 	c.Q = q
 	c.require(countBillingProductsParamsFieldQ)
+}
+
+// SetRecurringChargesOnly sets the RecurringChargesOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountBillingProductsParams) SetRecurringChargesOnly(recurringChargesOnly *bool) {
+	c.RecurringChargesOnly = recurringChargesOnly
+	c.require(countBillingProductsParamsFieldRecurringChargesOnly)
 }
 
 // SetWithOneTimeCharges sets the WithOneTimeCharges field and marks it as non-optional;
@@ -4809,18 +4846,19 @@ func (l *ListBillingProductPricesResponse) String() string {
 
 // Input parameters
 var (
-	listBillingProductsParamsFieldIDs                 = big.NewInt(1 << 0)
-	listBillingProductsParamsFieldIsActive            = big.NewInt(1 << 1)
-	listBillingProductsParamsFieldLimit               = big.NewInt(1 << 2)
-	listBillingProductsParamsFieldName                = big.NewInt(1 << 3)
-	listBillingProductsParamsFieldOffset              = big.NewInt(1 << 4)
-	listBillingProductsParamsFieldPriceUsageType      = big.NewInt(1 << 5)
-	listBillingProductsParamsFieldProviderType        = big.NewInt(1 << 6)
-	listBillingProductsParamsFieldQ                   = big.NewInt(1 << 7)
-	listBillingProductsParamsFieldWithOneTimeCharges  = big.NewInt(1 << 8)
-	listBillingProductsParamsFieldWithPricesOnly      = big.NewInt(1 << 9)
-	listBillingProductsParamsFieldWithZeroPrice       = big.NewInt(1 << 10)
-	listBillingProductsParamsFieldWithoutLinkedToPlan = big.NewInt(1 << 11)
+	listBillingProductsParamsFieldIDs                  = big.NewInt(1 << 0)
+	listBillingProductsParamsFieldIsActive             = big.NewInt(1 << 1)
+	listBillingProductsParamsFieldLimit                = big.NewInt(1 << 2)
+	listBillingProductsParamsFieldName                 = big.NewInt(1 << 3)
+	listBillingProductsParamsFieldOffset               = big.NewInt(1 << 4)
+	listBillingProductsParamsFieldPriceUsageType       = big.NewInt(1 << 5)
+	listBillingProductsParamsFieldProviderType         = big.NewInt(1 << 6)
+	listBillingProductsParamsFieldQ                    = big.NewInt(1 << 7)
+	listBillingProductsParamsFieldRecurringChargesOnly = big.NewInt(1 << 8)
+	listBillingProductsParamsFieldWithOneTimeCharges   = big.NewInt(1 << 9)
+	listBillingProductsParamsFieldWithPricesOnly       = big.NewInt(1 << 10)
+	listBillingProductsParamsFieldWithZeroPrice        = big.NewInt(1 << 11)
+	listBillingProductsParamsFieldWithoutLinkedToPlan  = big.NewInt(1 << 12)
 )
 
 type ListBillingProductsParams struct {
@@ -4835,6 +4873,8 @@ type ListBillingProductsParams struct {
 	PriceUsageType *BillingPriceUsageType `json:"price_usage_type,omitempty" url:"price_usage_type,omitempty"`
 	ProviderType   *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
 	Q              *string                `json:"q,omitempty" url:"q,omitempty"`
+	// Filter to products that have at least one recurring price
+	RecurringChargesOnly *bool `json:"recurring_charges_only,omitempty" url:"recurring_charges_only,omitempty"`
 	// Filter products that are one time charges
 	WithOneTimeCharges *bool `json:"with_one_time_charges,omitempty" url:"with_one_time_charges,omitempty"`
 	// Filter products that have prices
@@ -4905,6 +4945,13 @@ func (l *ListBillingProductsParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListBillingProductsParams) GetRecurringChargesOnly() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.RecurringChargesOnly
 }
 
 func (l *ListBillingProductsParams) GetWithOneTimeCharges() *bool {
@@ -5003,6 +5050,13 @@ func (l *ListBillingProductsParams) SetProviderType(providerType *BillingProvide
 func (l *ListBillingProductsParams) SetQ(q *string) {
 	l.Q = q
 	l.require(listBillingProductsParamsFieldQ)
+}
+
+// SetRecurringChargesOnly sets the RecurringChargesOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductsParams) SetRecurringChargesOnly(recurringChargesOnly *bool) {
+	l.RecurringChargesOnly = recurringChargesOnly
+	l.require(listBillingProductsParamsFieldRecurringChargesOnly)
 }
 
 // SetWithOneTimeCharges sets the WithOneTimeCharges field and marks it as non-optional;

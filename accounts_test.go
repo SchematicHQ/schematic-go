@@ -1464,6 +1464,14 @@ func TestSettersAPIKeyCreateResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetIntegration", func(t *testing.T) {
+		obj := &APIKeyCreateResponseData{}
+		var fernTestValueIntegration *APIKeyIntegrationResponseData
+		obj.SetIntegration(fernTestValueIntegration)
+		assert.Equal(t, fernTestValueIntegration, obj.Integration)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetLastUsedAt", func(t *testing.T) {
 		obj := &APIKeyCreateResponseData{}
 		var fernTestValueLastUsedAt *time.Time
@@ -1658,6 +1666,39 @@ func TestGettersAPIKeyCreateResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetID() // Should return zero value
+	})
+
+	t.Run("GetIntegration", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &APIKeyCreateResponseData{}
+		var expected *APIKeyIntegrationResponseData
+		obj.Integration = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetIntegration(), "getter should return the property value")
+	})
+
+	t.Run("GetIntegration_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &APIKeyCreateResponseData{}
+		obj.Integration = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetIntegration(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetIntegration_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *APIKeyCreateResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetIntegration() // Should return zero value
 	})
 
 	t.Run("GetLastUsedAt", func(t *testing.T) {
@@ -1976,6 +2017,37 @@ func TestSettersMarkExplicitAPIKeyCreateResponseData(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetIntegration_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &APIKeyCreateResponseData{}
+		var fernTestValueIntegration *APIKeyIntegrationResponseData
+
+		// Act
+		obj.SetIntegration(fernTestValueIntegration)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetLastUsedAt_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -2173,6 +2245,14 @@ func TestSettersAuditLogResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetAPIKey", func(t *testing.T) {
+		obj := &AuditLogResponseData{}
+		var fernTestValueAPIKey *APIKeyResponseData
+		obj.SetAPIKey(fernTestValueAPIKey)
+		assert.Equal(t, fernTestValueAPIKey, obj.APIKey)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetAPIKeyID", func(t *testing.T) {
 		obj := &AuditLogResponseData{}
 		var fernTestValueAPIKeyID *string
@@ -2341,6 +2421,39 @@ func TestGettersAuditLogResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetActorType() // Should return zero value
+	})
+
+	t.Run("GetAPIKey", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		var expected *APIKeyResponseData
+		obj.APIKey = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAPIKey(), "getter should return the property value")
+	})
+
+	t.Run("GetAPIKey_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		obj.APIKey = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAPIKey(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetAPIKey_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *AuditLogResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAPIKey() // Should return zero value
 	})
 
 	t.Run("GetAPIKeyID", func(t *testing.T) {
@@ -2908,6 +3021,37 @@ func TestSettersMarkExplicitAuditLogResponseData(t *testing.T) {
 
 		// Act
 		obj.SetActorType(fernTestValueActorType)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetAPIKey_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		var fernTestValueAPIKey *APIKeyResponseData
+
+		// Act
+		obj.SetAPIKey(fernTestValueAPIKey)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

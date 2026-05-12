@@ -514,26 +514,28 @@ var (
 	aPIKeyCreateResponseDataFieldEnvironment   = big.NewInt(1 << 2)
 	aPIKeyCreateResponseDataFieldEnvironmentID = big.NewInt(1 << 3)
 	aPIKeyCreateResponseDataFieldID            = big.NewInt(1 << 4)
-	aPIKeyCreateResponseDataFieldLastUsedAt    = big.NewInt(1 << 5)
-	aPIKeyCreateResponseDataFieldName          = big.NewInt(1 << 6)
-	aPIKeyCreateResponseDataFieldReadonly      = big.NewInt(1 << 7)
-	aPIKeyCreateResponseDataFieldScopes        = big.NewInt(1 << 8)
-	aPIKeyCreateResponseDataFieldSecret        = big.NewInt(1 << 9)
-	aPIKeyCreateResponseDataFieldUpdatedAt     = big.NewInt(1 << 10)
+	aPIKeyCreateResponseDataFieldIntegration   = big.NewInt(1 << 5)
+	aPIKeyCreateResponseDataFieldLastUsedAt    = big.NewInt(1 << 6)
+	aPIKeyCreateResponseDataFieldName          = big.NewInt(1 << 7)
+	aPIKeyCreateResponseDataFieldReadonly      = big.NewInt(1 << 8)
+	aPIKeyCreateResponseDataFieldScopes        = big.NewInt(1 << 9)
+	aPIKeyCreateResponseDataFieldSecret        = big.NewInt(1 << 10)
+	aPIKeyCreateResponseDataFieldUpdatedAt     = big.NewInt(1 << 11)
 )
 
 type APIKeyCreateResponseData struct {
-	CreatedAt     time.Time                `json:"created_at" url:"created_at"`
-	Description   *string                  `json:"description,omitempty" url:"description,omitempty"`
-	Environment   *EnvironmentResponseData `json:"environment,omitempty" url:"environment,omitempty"`
-	EnvironmentID *string                  `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID            string                   `json:"id" url:"id"`
-	LastUsedAt    *time.Time               `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
-	Name          string                   `json:"name" url:"name"`
-	Readonly      bool                     `json:"readonly" url:"readonly"`
-	Scopes        []APIKeyScope            `json:"scopes" url:"scopes"`
-	Secret        string                   `json:"secret" url:"secret"`
-	UpdatedAt     time.Time                `json:"updated_at" url:"updated_at"`
+	CreatedAt     time.Time                      `json:"created_at" url:"created_at"`
+	Description   *string                        `json:"description,omitempty" url:"description,omitempty"`
+	Environment   *EnvironmentResponseData       `json:"environment,omitempty" url:"environment,omitempty"`
+	EnvironmentID *string                        `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID            string                         `json:"id" url:"id"`
+	Integration   *APIKeyIntegrationResponseData `json:"integration,omitempty" url:"integration,omitempty"`
+	LastUsedAt    *time.Time                     `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
+	Name          string                         `json:"name" url:"name"`
+	Readonly      bool                           `json:"readonly" url:"readonly"`
+	Scopes        []APIKeyScope                  `json:"scopes" url:"scopes"`
+	Secret        string                         `json:"secret" url:"secret"`
+	UpdatedAt     time.Time                      `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -575,6 +577,13 @@ func (a *APIKeyCreateResponseData) GetID() string {
 		return ""
 	}
 	return a.ID
+}
+
+func (a *APIKeyCreateResponseData) GetIntegration() *APIKeyIntegrationResponseData {
+	if a == nil {
+		return nil
+	}
+	return a.Integration
 }
 
 func (a *APIKeyCreateResponseData) GetLastUsedAt() *time.Time {
@@ -666,6 +675,13 @@ func (a *APIKeyCreateResponseData) SetEnvironmentID(environmentID *string) {
 func (a *APIKeyCreateResponseData) SetID(id string) {
 	a.ID = id
 	a.require(aPIKeyCreateResponseDataFieldID)
+}
+
+// SetIntegration sets the Integration field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *APIKeyCreateResponseData) SetIntegration(integration *APIKeyIntegrationResponseData) {
+	a.Integration = integration
+	a.require(aPIKeyCreateResponseDataFieldIntegration)
 }
 
 // SetLastUsedAt sets the LastUsedAt field and marks it as non-optional;
@@ -770,28 +786,30 @@ func (a *APIKeyCreateResponseData) String() string {
 
 var (
 	auditLogResponseDataFieldActorType         = big.NewInt(1 << 0)
-	auditLogResponseDataFieldAPIKeyID          = big.NewInt(1 << 1)
-	auditLogResponseDataFieldEndedAt           = big.NewInt(1 << 2)
-	auditLogResponseDataFieldEnvironment       = big.NewInt(1 << 3)
-	auditLogResponseDataFieldEnvironmentID     = big.NewInt(1 << 4)
-	auditLogResponseDataFieldID                = big.NewInt(1 << 5)
-	auditLogResponseDataFieldMethod            = big.NewInt(1 << 6)
-	auditLogResponseDataFieldReqBody           = big.NewInt(1 << 7)
-	auditLogResponseDataFieldResourceID        = big.NewInt(1 << 8)
-	auditLogResponseDataFieldResourceIDString  = big.NewInt(1 << 9)
-	auditLogResponseDataFieldResourceName      = big.NewInt(1 << 10)
-	auditLogResponseDataFieldResourceType      = big.NewInt(1 << 11)
-	auditLogResponseDataFieldRespBody          = big.NewInt(1 << 12)
-	auditLogResponseDataFieldRespCode          = big.NewInt(1 << 13)
-	auditLogResponseDataFieldSecondaryResource = big.NewInt(1 << 14)
-	auditLogResponseDataFieldStartedAt         = big.NewInt(1 << 15)
-	auditLogResponseDataFieldURL               = big.NewInt(1 << 16)
-	auditLogResponseDataFieldUserID            = big.NewInt(1 << 17)
-	auditLogResponseDataFieldUserName          = big.NewInt(1 << 18)
+	auditLogResponseDataFieldAPIKey            = big.NewInt(1 << 1)
+	auditLogResponseDataFieldAPIKeyID          = big.NewInt(1 << 2)
+	auditLogResponseDataFieldEndedAt           = big.NewInt(1 << 3)
+	auditLogResponseDataFieldEnvironment       = big.NewInt(1 << 4)
+	auditLogResponseDataFieldEnvironmentID     = big.NewInt(1 << 5)
+	auditLogResponseDataFieldID                = big.NewInt(1 << 6)
+	auditLogResponseDataFieldMethod            = big.NewInt(1 << 7)
+	auditLogResponseDataFieldReqBody           = big.NewInt(1 << 8)
+	auditLogResponseDataFieldResourceID        = big.NewInt(1 << 9)
+	auditLogResponseDataFieldResourceIDString  = big.NewInt(1 << 10)
+	auditLogResponseDataFieldResourceName      = big.NewInt(1 << 11)
+	auditLogResponseDataFieldResourceType      = big.NewInt(1 << 12)
+	auditLogResponseDataFieldRespBody          = big.NewInt(1 << 13)
+	auditLogResponseDataFieldRespCode          = big.NewInt(1 << 14)
+	auditLogResponseDataFieldSecondaryResource = big.NewInt(1 << 15)
+	auditLogResponseDataFieldStartedAt         = big.NewInt(1 << 16)
+	auditLogResponseDataFieldURL               = big.NewInt(1 << 17)
+	auditLogResponseDataFieldUserID            = big.NewInt(1 << 18)
+	auditLogResponseDataFieldUserName          = big.NewInt(1 << 19)
 )
 
 type AuditLogResponseData struct {
 	ActorType         ActorType                `json:"actor_type" url:"actor_type"`
+	APIKey            *APIKeyResponseData      `json:"api_key,omitempty" url:"api_key,omitempty"`
 	APIKeyID          *string                  `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
 	EndedAt           *time.Time               `json:"ended_at,omitempty" url:"ended_at,omitempty"`
 	Environment       *EnvironmentResponseData `json:"environment,omitempty" url:"environment,omitempty"`
@@ -823,6 +841,13 @@ func (a *AuditLogResponseData) GetActorType() ActorType {
 		return ""
 	}
 	return a.ActorType
+}
+
+func (a *AuditLogResponseData) GetAPIKey() *APIKeyResponseData {
+	if a == nil {
+		return nil
+	}
+	return a.APIKey
 }
 
 func (a *AuditLogResponseData) GetAPIKeyID() *string {
@@ -970,6 +995,13 @@ func (a *AuditLogResponseData) require(field *big.Int) {
 func (a *AuditLogResponseData) SetActorType(actorType ActorType) {
 	a.ActorType = actorType
 	a.require(auditLogResponseDataFieldActorType)
+}
+
+// SetAPIKey sets the APIKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogResponseData) SetAPIKey(apiKey *APIKeyResponseData) {
+	a.APIKey = apiKey
+	a.require(auditLogResponseDataFieldAPIKey)
 }
 
 // SetAPIKeyID sets the APIKeyID field and marks it as non-optional;

@@ -226,6 +226,14 @@ func TestSettersChangeSubscriptionInternalRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetAutoTopupOverrides", func(t *testing.T) {
+		obj := &ChangeSubscriptionInternalRequestBody{}
+		var fernTestValueAutoTopupOverrides []*UpdateAutoTopupOverrideRequestBody
+		obj.SetAutoTopupOverrides(fernTestValueAutoTopupOverrides)
+		assert.Equal(t, fernTestValueAutoTopupOverrides, obj.AutoTopupOverrides)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCompanyID", func(t *testing.T) {
 		obj := &ChangeSubscriptionInternalRequestBody{}
 		var fernTestValueCompanyID string
@@ -332,6 +340,39 @@ func TestGettersChangeSubscriptionInternalRequestBody(t *testing.T) {
 			}
 		}()
 		_ = obj.GetAddOnIDs() // Should return zero value
+	})
+
+	t.Run("GetAutoTopupOverrides", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ChangeSubscriptionInternalRequestBody{}
+		var expected []*UpdateAutoTopupOverrideRequestBody
+		obj.AutoTopupOverrides = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAutoTopupOverrides(), "getter should return the property value")
+	})
+
+	t.Run("GetAutoTopupOverrides_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ChangeSubscriptionInternalRequestBody{}
+		obj.AutoTopupOverrides = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAutoTopupOverrides(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetAutoTopupOverrides_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ChangeSubscriptionInternalRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAutoTopupOverrides() // Should return zero value
 	})
 
 	t.Run("GetCompanyID", func(t *testing.T) {
@@ -602,6 +643,37 @@ func TestSettersMarkExplicitChangeSubscriptionInternalRequestBody(t *testing.T) 
 
 		// Act
 		obj.SetAddOnIDs(fernTestValueAddOnIDs)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetAutoTopupOverrides_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ChangeSubscriptionInternalRequestBody{}
+		var fernTestValueAutoTopupOverrides []*UpdateAutoTopupOverrideRequestBody
+
+		// Act
+		obj.SetAutoTopupOverrides(fernTestValueAutoTopupOverrides)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -6921,6 +6993,293 @@ func TestSettersMarkExplicitUpdateAddOnRequestBody(t *testing.T) {
 
 }
 
+func TestSettersUpdateAutoTopupOverrideRequestBody(t *testing.T) {
+	t.Run("SetAutoTopupAmount", func(t *testing.T) {
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var fernTestValueAutoTopupAmount *int64
+		obj.SetAutoTopupAmount(fernTestValueAutoTopupAmount)
+		assert.Equal(t, fernTestValueAutoTopupAmount, obj.AutoTopupAmount)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetAutoTopupEnabled", func(t *testing.T) {
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var fernTestValueAutoTopupEnabled *bool
+		obj.SetAutoTopupEnabled(fernTestValueAutoTopupEnabled)
+		assert.Equal(t, fernTestValueAutoTopupEnabled, obj.AutoTopupEnabled)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetAutoTopupThresholdCredits", func(t *testing.T) {
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var fernTestValueAutoTopupThresholdCredits *int64
+		obj.SetAutoTopupThresholdCredits(fernTestValueAutoTopupThresholdCredits)
+		assert.Equal(t, fernTestValueAutoTopupThresholdCredits, obj.AutoTopupThresholdCredits)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetPlanCreditGrantID", func(t *testing.T) {
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var fernTestValuePlanCreditGrantID string
+		obj.SetPlanCreditGrantID(fernTestValuePlanCreditGrantID)
+		assert.Equal(t, fernTestValuePlanCreditGrantID, obj.PlanCreditGrantID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+}
+
+func TestGettersUpdateAutoTopupOverrideRequestBody(t *testing.T) {
+	t.Run("GetAutoTopupAmount", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var expected *int64
+		obj.AutoTopupAmount = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAutoTopupAmount(), "getter should return the property value")
+	})
+
+	t.Run("GetAutoTopupAmount_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		obj.AutoTopupAmount = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAutoTopupAmount(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetAutoTopupAmount_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UpdateAutoTopupOverrideRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAutoTopupAmount() // Should return zero value
+	})
+
+	t.Run("GetAutoTopupEnabled", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var expected *bool
+		obj.AutoTopupEnabled = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAutoTopupEnabled(), "getter should return the property value")
+	})
+
+	t.Run("GetAutoTopupEnabled_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		obj.AutoTopupEnabled = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAutoTopupEnabled(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetAutoTopupEnabled_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UpdateAutoTopupOverrideRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAutoTopupEnabled() // Should return zero value
+	})
+
+	t.Run("GetAutoTopupThresholdCredits", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var expected *int64
+		obj.AutoTopupThresholdCredits = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAutoTopupThresholdCredits(), "getter should return the property value")
+	})
+
+	t.Run("GetAutoTopupThresholdCredits_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		obj.AutoTopupThresholdCredits = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAutoTopupThresholdCredits(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetAutoTopupThresholdCredits_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UpdateAutoTopupOverrideRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAutoTopupThresholdCredits() // Should return zero value
+	})
+
+	t.Run("GetPlanCreditGrantID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var expected string
+		obj.PlanCreditGrantID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetPlanCreditGrantID(), "getter should return the property value")
+	})
+
+	t.Run("GetPlanCreditGrantID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UpdateAutoTopupOverrideRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetPlanCreditGrantID() // Should return zero value
+	})
+
+}
+
+func TestSettersMarkExplicitUpdateAutoTopupOverrideRequestBody(t *testing.T) {
+	t.Run("SetAutoTopupAmount_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var fernTestValueAutoTopupAmount *int64
+
+		// Act
+		obj.SetAutoTopupAmount(fernTestValueAutoTopupAmount)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetAutoTopupEnabled_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var fernTestValueAutoTopupEnabled *bool
+
+		// Act
+		obj.SetAutoTopupEnabled(fernTestValueAutoTopupEnabled)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetAutoTopupThresholdCredits_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var fernTestValueAutoTopupThresholdCredits *int64
+
+		// Act
+		obj.SetAutoTopupThresholdCredits(fernTestValueAutoTopupThresholdCredits)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetPlanCreditGrantID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		var fernTestValuePlanCreditGrantID string
+
+		// Act
+		obj.SetPlanCreditGrantID(fernTestValuePlanCreditGrantID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+}
+
 func TestSettersUpdateCreditBundleRequestBody(t *testing.T) {
 	t.Run("SetBundleID", func(t *testing.T) {
 		obj := &UpdateCreditBundleRequestBody{}
@@ -8764,6 +9123,39 @@ func TestJSONMarshalingUpdateAddOnRequestBody(t *testing.T) {
 	})
 }
 
+func TestJSONMarshalingUpdateAutoTopupOverrideRequestBody(t *testing.T) {
+	t.Run("MarshalUnmarshal", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+
+		// Act - Marshal to JSON
+		data, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed")
+		assert.NotNil(t, data, "marshaled data should not be nil")
+		assert.NotEmpty(t, data, "marshaled data should not be empty")
+
+		// Unmarshal back and verify round-trip
+		var unmarshaled UpdateAutoTopupOverrideRequestBody
+		err = json.Unmarshal(data, &unmarshaled)
+		assert.NoError(t, err, "round-trip unmarshal should succeed")
+	})
+
+	t.Run("UnmarshalInvalidJSON", func(t *testing.T) {
+		t.Parallel()
+		var obj UpdateAutoTopupOverrideRequestBody
+		err := json.Unmarshal([]byte(`{invalid json}`), &obj)
+		assert.Error(t, err, "unmarshaling invalid JSON should return an error")
+	})
+
+	t.Run("UnmarshalEmptyObject", func(t *testing.T) {
+		t.Parallel()
+		var obj UpdateAutoTopupOverrideRequestBody
+		err := json.Unmarshal([]byte(`{}`), &obj)
+		assert.NoError(t, err, "unmarshaling empty object should succeed")
+	})
+}
+
 func TestJSONMarshalingUpdateCreditBundleRequestBody(t *testing.T) {
 	t.Run("MarshalUnmarshal", func(t *testing.T) {
 		t.Parallel()
@@ -9113,6 +9505,22 @@ func TestStringUpdateAddOnRequestBody(t *testing.T) {
 	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *UpdateAddOnRequestBody
+		result := obj.String()
+		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
+	})
+}
+
+func TestStringUpdateAutoTopupOverrideRequestBody(t *testing.T) {
+	t.Run("StringMethod", func(t *testing.T) {
+		t.Parallel()
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		result := obj.String()
+		assert.NotEmpty(t, result, "String() should return a non-empty representation")
+	})
+
+	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UpdateAutoTopupOverrideRequestBody
 		result := obj.String()
 		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
 	})
@@ -9559,6 +9967,29 @@ func TestExtraPropertiesUpdateAddOnRequestBody(t *testing.T) {
 	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *UpdateAddOnRequestBody
+		extraProps := obj.GetExtraProperties()
+		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
+	})
+}
+
+func TestExtraPropertiesUpdateAutoTopupOverrideRequestBody(t *testing.T) {
+	t.Run("GetExtraProperties", func(t *testing.T) {
+		t.Parallel()
+		obj := &UpdateAutoTopupOverrideRequestBody{}
+		// Should not panic when calling GetExtraProperties()
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("GetExtraProperties() panicked: %v", r)
+			}
+		}()
+		extraProps := obj.GetExtraProperties()
+		// Result can be nil or an empty/non-empty map
+		_ = extraProps
+	})
+
+	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UpdateAutoTopupOverrideRequestBody
 		extraProps := obj.GetExtraProperties()
 		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
 	})

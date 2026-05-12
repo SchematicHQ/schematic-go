@@ -3041,6 +3041,9 @@ request := &schematichq.ListBillingProductsRequest{
         Q: schematichq.String(
             "q",
         ),
+        RecurringChargesOnly: schematichq.Bool(
+            true,
+        ),
         WithOneTimeCharges: schematichq.Bool(
             true,
         ),
@@ -3120,6 +3123,14 @@ client.Billing.ListBillingProducts(
 <dd>
 
 **q:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**recurringChargesOnly:** `*bool` — Filter to products that have at least one recurring price
     
 </dd>
 </dl>
@@ -3209,6 +3220,9 @@ request := &schematichq.CountBillingProductsRequest{
         Q: schematichq.String(
             "q",
         ),
+        RecurringChargesOnly: schematichq.Bool(
+            true,
+        ),
         WithOneTimeCharges: schematichq.Bool(
             true,
         ),
@@ -3288,6 +3302,14 @@ client.Billing.CountBillingProducts(
 <dd>
 
 **q:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**recurringChargesOnly:** `*bool` — Filter to products that have at least one recurring price
     
 </dd>
 </dl>
@@ -5538,6 +5560,11 @@ request := &schematichq.ListBillingPlanCreditGrantsRequest{
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
+        PlanVersionIDs: []*string{
+            schematichq.String(
+                "plan_version_ids",
+            ),
+        },
         Limit: schematichq.Int64(
             int64(1000000),
         ),
@@ -5597,6 +5624,14 @@ client.Credits.ListBillingPlanCreditGrants(
 <dd>
 
 **planVersionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionIDs:** `*string` 
     
 </dd>
 </dl>
@@ -5867,6 +5902,11 @@ request := &schematichq.CountBillingPlanCreditGrantsRequest{
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
+        PlanVersionIDs: []*string{
+            schematichq.String(
+                "plan_version_ids",
+            ),
+        },
         Limit: schematichq.Int64(
             int64(1000000),
         ),
@@ -5926,6 +5966,14 @@ client.Credits.CountBillingPlanCreditGrants(
 <dd>
 
 **planVersionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionIDs:** `*string` 
     
 </dd>
 </dl>
@@ -6218,6 +6266,11 @@ request := &schematichq.ChangeSubscriptionInternalRequestBody{
                 PriceID: "price_id",
             },
         },
+        AutoTopupOverrides: []*schematichq.UpdateAutoTopupOverrideRequestBody{
+            &schematichq.UpdateAutoTopupOverrideRequestBody{
+                PlanCreditGrantID: "plan_credit_grant_id",
+            },
+        },
         CompanyID: "company_id",
         CreditBundles: []*schematichq.UpdateCreditBundleRequestBody{
             &schematichq.UpdateCreditBundleRequestBody{
@@ -6339,6 +6392,11 @@ request := &schematichq.ChangeSubscriptionInternalRequestBody{
             &schematichq.UpdateAddOnRequestBody{
                 AddOnID: "add_on_id",
                 PriceID: "price_id",
+            },
+        },
+        AutoTopupOverrides: []*schematichq.UpdateAutoTopupOverrideRequestBody{
+            &schematichq.UpdateAutoTopupOverrideRequestBody{
+                PlanCreditGrantID: "plan_credit_grant_id",
             },
         },
         CompanyID: "company_id",
@@ -12463,6 +12521,9 @@ request := &schematichq.ListPlansRequest{
         CompanyID: schematichq.String(
             "company_id",
         ),
+        CompanyScopedOnly: schematichq.Bool(
+            true,
+        ),
         ExcludeCompanyScoped: schematichq.Bool(
             true,
         ),
@@ -12526,6 +12587,14 @@ client.Plans.ListPlans(
 <dd>
 
 **companyID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyScopedOnly:** `*bool` — Only return plans that are scoped to a company (custom plans assigned to a company)
     
 </dd>
 </dl>
@@ -12976,6 +13045,14 @@ client.Plans.UpsertPlanForBillingProduct(
 <dl>
 <dd>
 
+**externalResourceVersion:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **icon:** `*schematichq.PlanIcon` 
     
 </dd>
@@ -13181,6 +13258,9 @@ request := &schematichq.CountPlansRequest{
         CompanyID: schematichq.String(
             "company_id",
         ),
+        CompanyScopedOnly: schematichq.Bool(
+            true,
+        ),
         ExcludeCompanyScoped: schematichq.Bool(
             true,
         ),
@@ -13244,6 +13324,14 @@ client.Plans.CountPlans(
 <dd>
 
 **companyID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyScopedOnly:** `*bool` — Only return plans that are scoped to a company (custom plans assigned to a company)
     
 </dd>
 </dl>
@@ -14297,6 +14385,9 @@ request := &schematichq.ListEventsRequest{
         FlagID: schematichq.String(
             "flag_id",
         ),
+        IdempotencyKey: schematichq.String(
+            "idempotency_key",
+        ),
         UserID: schematichq.String(
             "user_id",
         ),
@@ -14351,6 +14442,14 @@ client.Events.ListEvents(
 <dd>
 
 **flagID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotencyKey:** `*string` 
     
 </dd>
 </dl>
@@ -14531,6 +14630,7 @@ request := &schematichq.ListFeaturesRequest{
                 "ids",
             ),
         },
+        ManagedBy: schematichq.BillingProviderTypeOrb.Ptr(),
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
@@ -14586,6 +14686,14 @@ client.Features.ListFeatures(
 <dd>
 
 **ids:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**managedBy:** `*schematichq.BillingProviderType` — Filter for features managed by a billing provider, or by Schematic (no billing provider)
     
 </dd>
 </dl>
@@ -15168,6 +15276,7 @@ request := &schematichq.CountFeaturesRequest{
                 "ids",
             ),
         },
+        ManagedBy: schematichq.BillingProviderTypeOrb.Ptr(),
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
@@ -15223,6 +15332,14 @@ client.Features.CountFeatures(
 <dd>
 
 **ids:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**managedBy:** `*schematichq.BillingProviderType` — Filter for features managed by a billing provider, or by Schematic (no billing provider)
     
 </dd>
 </dl>
@@ -16262,6 +16379,163 @@ client.Insights.GetEnvironmentTraitUsageTimeSeries(
 </details>
 
 ## integrationsapi
+<details><summary><code>client.Integrationsapi.RunIntegration(IntegrationID) -> *schematichq.RunIntegrationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Integrationsapi.RunIntegration(
+        context.TODO(),
+        "integration_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**integrationID:** `string` — integration_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.ListIntegrations() -> *schematichq.ListIntegrationsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListIntegrationsRequest{
+        BillingOnly: schematichq.Bool(
+            true,
+        ),
+        ExcludeIDs: []*string{
+            schematichq.String(
+                "exclude_ids",
+            ),
+        },
+        ID: schematichq.String(
+            "id",
+        ),
+        State: schematichq.IntegrationStateActive.Ptr(),
+        Type: schematichq.IntegrationTypeClerk.Ptr(),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Integrationsapi.ListIntegrations(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingOnly:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**excludeIDs:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**id:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**state:** `*schematichq.IntegrationState` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type_:** `*schematichq.IntegrationType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Integrationsapi.GetIntegrationWebhookURL(Type) -> *schematichq.GetIntegrationWebhookURLResponse</code></summary>
 <dl>
 <dd>
@@ -16295,6 +16569,141 @@ client.Integrationsapi.GetIntegrationWebhookURL(
 <dd>
 
 **type_:** `string` — type
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.StartDataImport(request) -> *schematichq.StartDataImportResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.StartDataImportRequestBody{
+        IntegrationID: "integration_id",
+    }
+client.Integrationsapi.StartDataImport(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyMatchingCriteria:** `*schematichq.CompanyMatchingCriteria` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyMatchingField:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**integrationID:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.LoadSampleDataSetV2() -> *schematichq.LoadSampleDataSetV2Response</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Integrationsapi.LoadSampleDataSetV2(
+        context.TODO(),
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.UninstallIntegration(IntegrationID) -> *schematichq.UninstallIntegrationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Integrationsapi.UninstallIntegration(
+        context.TODO(),
+        "integration_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**integrationID:** `string` — integration_id
     
 </dd>
 </dl>

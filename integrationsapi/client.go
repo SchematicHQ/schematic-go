@@ -33,6 +33,39 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+func (c *Client) RunIntegration(
+	ctx context.Context,
+	// integration_id
+	integrationID string,
+	opts ...option.RequestOption,
+) (*schematichq.RunIntegrationResponse, error) {
+	response, err := c.WithRawResponse.RunIntegration(
+		ctx,
+		integrationID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) ListIntegrations(
+	ctx context.Context,
+	request *schematichq.ListIntegrationsRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListIntegrationsResponse, error) {
+	response, err := c.WithRawResponse.ListIntegrations(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) GetIntegrationWebhookURL(
 	ctx context.Context,
 	// type
@@ -42,6 +75,53 @@ func (c *Client) GetIntegrationWebhookURL(
 	response, err := c.WithRawResponse.GetIntegrationWebhookURL(
 		ctx,
 		type_,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) StartDataImport(
+	ctx context.Context,
+	request *schematichq.StartDataImportRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.StartDataImportResponse, error) {
+	response, err := c.WithRawResponse.StartDataImport(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) LoadSampleDataSetV2(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.LoadSampleDataSetV2Response, error) {
+	response, err := c.WithRawResponse.LoadSampleDataSetV2(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) UninstallIntegration(
+	ctx context.Context,
+	// integration_id
+	integrationID string,
+	opts ...option.RequestOption,
+) (*schematichq.UninstallIntegrationResponse, error) {
+	response, err := c.WithRawResponse.UninstallIntegration(
+		ctx,
+		integrationID,
 		opts...,
 	)
 	if err != nil {

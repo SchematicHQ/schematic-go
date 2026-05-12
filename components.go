@@ -228,7 +228,7 @@ type BillingCreditBundleView struct {
 	CreditIcon        *string                          `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
 	CreditID          string                           `json:"credit_id" url:"credit_id"`
 	CreditName        string                           `json:"credit_name" url:"credit_name"`
-	CurrencyPrices    []*CreditBundleCurrencyPrice     `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
+	CurrencyPrices    []*CreditBundleCurrencyPrice     `json:"currency_prices" url:"currency_prices"`
 	ExpiryType        BillingCreditExpiryType          `json:"expiry_type" url:"expiry_type"`
 	ExpiryUnit        BillingCreditExpiryUnit          `json:"expiry_unit" url:"expiry_unit"`
 	ExpiryUnitCount   *int64                           `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`

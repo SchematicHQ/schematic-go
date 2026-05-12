@@ -132,29 +132,31 @@ func (c *CheckoutDataRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	changeSubscriptionInternalRequestBodyFieldAddOnIDs         = big.NewInt(1 << 0)
-	changeSubscriptionInternalRequestBodyFieldCompanyID        = big.NewInt(1 << 1)
-	changeSubscriptionInternalRequestBodyFieldCouponExternalID = big.NewInt(1 << 2)
-	changeSubscriptionInternalRequestBodyFieldCreditBundles    = big.NewInt(1 << 3)
-	changeSubscriptionInternalRequestBodyFieldNewPlanID        = big.NewInt(1 << 4)
-	changeSubscriptionInternalRequestBodyFieldNewPriceID       = big.NewInt(1 << 5)
-	changeSubscriptionInternalRequestBodyFieldPayInAdvance     = big.NewInt(1 << 6)
-	changeSubscriptionInternalRequestBodyFieldPaymentMethodID  = big.NewInt(1 << 7)
-	changeSubscriptionInternalRequestBodyFieldPromoCode        = big.NewInt(1 << 8)
-	changeSubscriptionInternalRequestBodyFieldSkipTrial        = big.NewInt(1 << 9)
+	changeSubscriptionInternalRequestBodyFieldAddOnIDs           = big.NewInt(1 << 0)
+	changeSubscriptionInternalRequestBodyFieldAutoTopupOverrides = big.NewInt(1 << 1)
+	changeSubscriptionInternalRequestBodyFieldCompanyID          = big.NewInt(1 << 2)
+	changeSubscriptionInternalRequestBodyFieldCouponExternalID   = big.NewInt(1 << 3)
+	changeSubscriptionInternalRequestBodyFieldCreditBundles      = big.NewInt(1 << 4)
+	changeSubscriptionInternalRequestBodyFieldNewPlanID          = big.NewInt(1 << 5)
+	changeSubscriptionInternalRequestBodyFieldNewPriceID         = big.NewInt(1 << 6)
+	changeSubscriptionInternalRequestBodyFieldPayInAdvance       = big.NewInt(1 << 7)
+	changeSubscriptionInternalRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 8)
+	changeSubscriptionInternalRequestBodyFieldPromoCode          = big.NewInt(1 << 9)
+	changeSubscriptionInternalRequestBodyFieldSkipTrial          = big.NewInt(1 << 10)
 )
 
 type ChangeSubscriptionInternalRequestBody struct {
-	AddOnIDs         []*UpdateAddOnRequestBody        `json:"add_on_ids" url:"add_on_ids"`
-	CompanyID        string                           `json:"company_id" url:"company_id"`
-	CouponExternalID *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
-	CreditBundles    []*UpdateCreditBundleRequestBody `json:"credit_bundles" url:"credit_bundles"`
-	NewPlanID        string                           `json:"new_plan_id" url:"new_plan_id"`
-	NewPriceID       string                           `json:"new_price_id" url:"new_price_id"`
-	PayInAdvance     []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance" url:"pay_in_advance"`
-	PaymentMethodID  *string                          `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
-	PromoCode        *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
-	SkipTrial        bool                             `json:"skip_trial" url:"skip_trial"`
+	AddOnIDs           []*UpdateAddOnRequestBody             `json:"add_on_ids" url:"add_on_ids"`
+	AutoTopupOverrides []*UpdateAutoTopupOverrideRequestBody `json:"auto_topup_overrides" url:"auto_topup_overrides"`
+	CompanyID          string                                `json:"company_id" url:"company_id"`
+	CouponExternalID   *string                               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
+	CreditBundles      []*UpdateCreditBundleRequestBody      `json:"credit_bundles" url:"credit_bundles"`
+	NewPlanID          string                                `json:"new_plan_id" url:"new_plan_id"`
+	NewPriceID         string                                `json:"new_price_id" url:"new_price_id"`
+	PayInAdvance       []*UpdatePayInAdvanceRequestBody      `json:"pay_in_advance" url:"pay_in_advance"`
+	PaymentMethodID    *string                               `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
+	PromoCode          *string                               `json:"promo_code,omitempty" url:"promo_code,omitempty"`
+	SkipTrial          bool                                  `json:"skip_trial" url:"skip_trial"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -168,6 +170,13 @@ func (c *ChangeSubscriptionInternalRequestBody) GetAddOnIDs() []*UpdateAddOnRequ
 		return nil
 	}
 	return c.AddOnIDs
+}
+
+func (c *ChangeSubscriptionInternalRequestBody) GetAutoTopupOverrides() []*UpdateAutoTopupOverrideRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.AutoTopupOverrides
 }
 
 func (c *ChangeSubscriptionInternalRequestBody) GetCompanyID() string {
@@ -252,6 +261,13 @@ func (c *ChangeSubscriptionInternalRequestBody) require(field *big.Int) {
 func (c *ChangeSubscriptionInternalRequestBody) SetAddOnIDs(addOnIDs []*UpdateAddOnRequestBody) {
 	c.AddOnIDs = addOnIDs
 	c.require(changeSubscriptionInternalRequestBodyFieldAddOnIDs)
+}
+
+// SetAutoTopupOverrides sets the AutoTopupOverrides field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ChangeSubscriptionInternalRequestBody) SetAutoTopupOverrides(autoTopupOverrides []*UpdateAutoTopupOverrideRequestBody) {
+	c.AutoTopupOverrides = autoTopupOverrides
+	c.require(changeSubscriptionInternalRequestBodyFieldAutoTopupOverrides)
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -2551,6 +2567,138 @@ func (u *UpdateAddOnRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateAddOnRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateAutoTopupOverrideRequestBodyFieldAutoTopupAmount           = big.NewInt(1 << 0)
+	updateAutoTopupOverrideRequestBodyFieldAutoTopupEnabled          = big.NewInt(1 << 1)
+	updateAutoTopupOverrideRequestBodyFieldAutoTopupThresholdCredits = big.NewInt(1 << 2)
+	updateAutoTopupOverrideRequestBodyFieldPlanCreditGrantID         = big.NewInt(1 << 3)
+)
+
+type UpdateAutoTopupOverrideRequestBody struct {
+	AutoTopupAmount           *int64 `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
+	AutoTopupEnabled          *bool  `json:"auto_topup_enabled,omitempty" url:"auto_topup_enabled,omitempty"`
+	AutoTopupThresholdCredits *int64 `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
+	PlanCreditGrantID         string `json:"plan_credit_grant_id" url:"plan_credit_grant_id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAutoTopupOverrideRequestBody) GetAutoTopupAmount() *int64 {
+	if u == nil {
+		return nil
+	}
+	return u.AutoTopupAmount
+}
+
+func (u *UpdateAutoTopupOverrideRequestBody) GetAutoTopupEnabled() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.AutoTopupEnabled
+}
+
+func (u *UpdateAutoTopupOverrideRequestBody) GetAutoTopupThresholdCredits() *int64 {
+	if u == nil {
+		return nil
+	}
+	return u.AutoTopupThresholdCredits
+}
+
+func (u *UpdateAutoTopupOverrideRequestBody) GetPlanCreditGrantID() string {
+	if u == nil {
+		return ""
+	}
+	return u.PlanCreditGrantID
+}
+
+func (u *UpdateAutoTopupOverrideRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAutoTopupOverrideRequestBody) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetAutoTopupAmount sets the AutoTopupAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAutoTopupOverrideRequestBody) SetAutoTopupAmount(autoTopupAmount *int64) {
+	u.AutoTopupAmount = autoTopupAmount
+	u.require(updateAutoTopupOverrideRequestBodyFieldAutoTopupAmount)
+}
+
+// SetAutoTopupEnabled sets the AutoTopupEnabled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAutoTopupOverrideRequestBody) SetAutoTopupEnabled(autoTopupEnabled *bool) {
+	u.AutoTopupEnabled = autoTopupEnabled
+	u.require(updateAutoTopupOverrideRequestBodyFieldAutoTopupEnabled)
+}
+
+// SetAutoTopupThresholdCredits sets the AutoTopupThresholdCredits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAutoTopupOverrideRequestBody) SetAutoTopupThresholdCredits(autoTopupThresholdCredits *int64) {
+	u.AutoTopupThresholdCredits = autoTopupThresholdCredits
+	u.require(updateAutoTopupOverrideRequestBodyFieldAutoTopupThresholdCredits)
+}
+
+// SetPlanCreditGrantID sets the PlanCreditGrantID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAutoTopupOverrideRequestBody) SetPlanCreditGrantID(planCreditGrantID string) {
+	u.PlanCreditGrantID = planCreditGrantID
+	u.require(updateAutoTopupOverrideRequestBodyFieldPlanCreditGrantID)
+}
+
+func (u *UpdateAutoTopupOverrideRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAutoTopupOverrideRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAutoTopupOverrideRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAutoTopupOverrideRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateAutoTopupOverrideRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAutoTopupOverrideRequestBody) String() string {
 	if u == nil {
 		return "<nil>"
 	}

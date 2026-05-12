@@ -7,34 +7,533 @@ import (
 	fmt "fmt"
 	internal "github.com/schematichq/schematic-go/internal"
 	big "math/big"
+	time "time"
 )
 
-type IntegrationType string
+var (
+	listIntegrationsRequestFieldBillingOnly = big.NewInt(1 << 0)
+	listIntegrationsRequestFieldExcludeIDs  = big.NewInt(1 << 1)
+	listIntegrationsRequestFieldID          = big.NewInt(1 << 2)
+	listIntegrationsRequestFieldState       = big.NewInt(1 << 3)
+	listIntegrationsRequestFieldType        = big.NewInt(1 << 4)
+	listIntegrationsRequestFieldLimit       = big.NewInt(1 << 5)
+	listIntegrationsRequestFieldOffset      = big.NewInt(1 << 6)
+)
+
+type ListIntegrationsRequest struct {
+	BillingOnly *bool             `json:"-" url:"billing_only,omitempty"`
+	ExcludeIDs  []*string         `json:"-" url:"exclude_ids,omitempty"`
+	ID          *string           `json:"-" url:"id,omitempty"`
+	State       *IntegrationState `json:"-" url:"state,omitempty"`
+	Type        *IntegrationType  `json:"-" url:"type,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListIntegrationsRequest) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetBillingOnly sets the BillingOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsRequest) SetBillingOnly(billingOnly *bool) {
+	l.BillingOnly = billingOnly
+	l.require(listIntegrationsRequestFieldBillingOnly)
+}
+
+// SetExcludeIDs sets the ExcludeIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsRequest) SetExcludeIDs(excludeIDs []*string) {
+	l.ExcludeIDs = excludeIDs
+	l.require(listIntegrationsRequestFieldExcludeIDs)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsRequest) SetID(id *string) {
+	l.ID = id
+	l.require(listIntegrationsRequestFieldID)
+}
+
+// SetState sets the State field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsRequest) SetState(state *IntegrationState) {
+	l.State = state
+	l.require(listIntegrationsRequestFieldState)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsRequest) SetType(type_ *IntegrationType) {
+	l.Type = type_
+	l.require(listIntegrationsRequestFieldType)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listIntegrationsRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listIntegrationsRequestFieldOffset)
+}
+
+var (
+	startDataImportRequestBodyFieldCompanyMatchingCriteria = big.NewInt(1 << 0)
+	startDataImportRequestBodyFieldCompanyMatchingField    = big.NewInt(1 << 1)
+	startDataImportRequestBodyFieldIntegrationID           = big.NewInt(1 << 2)
+)
+
+type StartDataImportRequestBody struct {
+	CompanyMatchingCriteria *CompanyMatchingCriteria `json:"company_matching_criteria,omitempty" url:"-"`
+	CompanyMatchingField    *string                  `json:"company_matching_field,omitempty" url:"-"`
+	IntegrationID           string                   `json:"integration_id" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (s *StartDataImportRequestBody) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetCompanyMatchingCriteria sets the CompanyMatchingCriteria field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartDataImportRequestBody) SetCompanyMatchingCriteria(companyMatchingCriteria *CompanyMatchingCriteria) {
+	s.CompanyMatchingCriteria = companyMatchingCriteria
+	s.require(startDataImportRequestBodyFieldCompanyMatchingCriteria)
+}
+
+// SetCompanyMatchingField sets the CompanyMatchingField field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartDataImportRequestBody) SetCompanyMatchingField(companyMatchingField *string) {
+	s.CompanyMatchingField = companyMatchingField
+	s.require(startDataImportRequestBodyFieldCompanyMatchingField)
+}
+
+// SetIntegrationID sets the IntegrationID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartDataImportRequestBody) SetIntegrationID(integrationID string) {
+	s.IntegrationID = integrationID
+	s.require(startDataImportRequestBodyFieldIntegrationID)
+}
+
+func (s *StartDataImportRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler StartDataImportRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*s = StartDataImportRequestBody(body)
+	return nil
+}
+
+func (s *StartDataImportRequestBody) MarshalJSON() ([]byte, error) {
+	type embed StartDataImportRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	clerkIntegrationConfigFieldFirstEventsReceived = big.NewInt(1 << 0)
+	clerkIntegrationConfigFieldWebhookURL          = big.NewInt(1 << 1)
+)
+
+type ClerkIntegrationConfig struct {
+	// Whether Schematic has received the first webhook event from Clerk after install
+	FirstEventsReceived *bool `json:"first_events_received,omitempty" url:"first_events_received,omitempty"`
+	// URL configured on the Clerk webhook endpoint that delivers events to Schematic
+	WebhookURL *string `json:"webhook_url,omitempty" url:"webhook_url,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *ClerkIntegrationConfig) GetFirstEventsReceived() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.FirstEventsReceived
+}
+
+func (c *ClerkIntegrationConfig) GetWebhookURL() *string {
+	if c == nil {
+		return nil
+	}
+	return c.WebhookURL
+}
+
+func (c *ClerkIntegrationConfig) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *ClerkIntegrationConfig) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetFirstEventsReceived sets the FirstEventsReceived field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ClerkIntegrationConfig) SetFirstEventsReceived(firstEventsReceived *bool) {
+	c.FirstEventsReceived = firstEventsReceived
+	c.require(clerkIntegrationConfigFieldFirstEventsReceived)
+}
+
+// SetWebhookURL sets the WebhookURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ClerkIntegrationConfig) SetWebhookURL(webhookURL *string) {
+	c.WebhookURL = webhookURL
+	c.require(clerkIntegrationConfigFieldWebhookURL)
+}
+
+func (c *ClerkIntegrationConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler ClerkIntegrationConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = ClerkIntegrationConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ClerkIntegrationConfig) MarshalJSON() ([]byte, error) {
+	type embed ClerkIntegrationConfig
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *ClerkIntegrationConfig) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CompanyMatchingCriteria string
 
 const (
-	IntegrationTypeClerk   IntegrationType = "clerk"
-	IntegrationTypeOrb     IntegrationType = "orb"
-	IntegrationTypeStripe  IntegrationType = "stripe"
-	IntegrationTypeUnknown IntegrationType = "unknown"
+	CompanyMatchingCriteriaBillingMetaObject CompanyMatchingCriteria = "billing_meta_object"
+	CompanyMatchingCriteriaManualUpsert      CompanyMatchingCriteria = "manual_upsert"
 )
 
-func NewIntegrationTypeFromString(s string) (IntegrationType, error) {
+func NewCompanyMatchingCriteriaFromString(s string) (CompanyMatchingCriteria, error) {
 	switch s {
-	case "clerk":
-		return IntegrationTypeClerk, nil
-	case "orb":
-		return IntegrationTypeOrb, nil
-	case "stripe":
-		return IntegrationTypeStripe, nil
-	case "unknown":
-		return IntegrationTypeUnknown, nil
+	case "billing_meta_object":
+		return CompanyMatchingCriteriaBillingMetaObject, nil
+	case "manual_upsert":
+		return CompanyMatchingCriteriaManualUpsert, nil
 	}
-	var t IntegrationType
+	var t CompanyMatchingCriteria
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (i IntegrationType) Ptr() *IntegrationType {
-	return &i
+func (c CompanyMatchingCriteria) Ptr() *CompanyMatchingCriteria {
+	return &c
+}
+
+var (
+	integrationCapabilitiesFieldAuthorPlans = big.NewInt(1 << 0)
+	integrationCapabilitiesFieldCheckout    = big.NewInt(1 << 1)
+	integrationCapabilitiesFieldEditBilling = big.NewInt(1 << 2)
+)
+
+type IntegrationCapabilities struct {
+	AuthorPlans bool `json:"author_plans" url:"author_plans"`
+	Checkout    bool `json:"checkout" url:"checkout"`
+	EditBilling bool `json:"edit_billing" url:"edit_billing"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *IntegrationCapabilities) GetAuthorPlans() bool {
+	if i == nil {
+		return false
+	}
+	return i.AuthorPlans
+}
+
+func (i *IntegrationCapabilities) GetCheckout() bool {
+	if i == nil {
+		return false
+	}
+	return i.Checkout
+}
+
+func (i *IntegrationCapabilities) GetEditBilling() bool {
+	if i == nil {
+		return false
+	}
+	return i.EditBilling
+}
+
+func (i *IntegrationCapabilities) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *IntegrationCapabilities) require(field *big.Int) {
+	if i.explicitFields == nil {
+		i.explicitFields = big.NewInt(0)
+	}
+	i.explicitFields.Or(i.explicitFields, field)
+}
+
+// SetAuthorPlans sets the AuthorPlans field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationCapabilities) SetAuthorPlans(authorPlans bool) {
+	i.AuthorPlans = authorPlans
+	i.require(integrationCapabilitiesFieldAuthorPlans)
+}
+
+// SetCheckout sets the Checkout field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationCapabilities) SetCheckout(checkout bool) {
+	i.Checkout = checkout
+	i.require(integrationCapabilitiesFieldCheckout)
+}
+
+// SetEditBilling sets the EditBilling field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationCapabilities) SetEditBilling(editBilling bool) {
+	i.EditBilling = editBilling
+	i.require(integrationCapabilitiesFieldEditBilling)
+}
+
+func (i *IntegrationCapabilities) UnmarshalJSON(data []byte) error {
+	type unmarshaler IntegrationCapabilities
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = IntegrationCapabilities(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IntegrationCapabilities) MarshalJSON() ([]byte, error) {
+	type embed IntegrationCapabilities
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *IntegrationCapabilities) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+type IntegrationConfig struct {
+	Type   string
+	Clerk  *ClerkIntegrationConfig
+	Orb    *OrbIntegrationConfig
+	Stripe *StripeIntegrationConfig
+}
+
+func (i *IntegrationConfig) GetType() string {
+	if i == nil {
+		return ""
+	}
+	return i.Type
+}
+
+func (i *IntegrationConfig) GetClerk() *ClerkIntegrationConfig {
+	if i == nil {
+		return nil
+	}
+	return i.Clerk
+}
+
+func (i *IntegrationConfig) GetOrb() *OrbIntegrationConfig {
+	if i == nil {
+		return nil
+	}
+	return i.Orb
+}
+
+func (i *IntegrationConfig) GetStripe() *StripeIntegrationConfig {
+	if i == nil {
+		return nil
+	}
+	return i.Stripe
+}
+
+func (i *IntegrationConfig) UnmarshalJSON(data []byte) error {
+	var unmarshaler struct {
+		Type string `json:"type"`
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	i.Type = unmarshaler.Type
+	if unmarshaler.Type == "" {
+		return fmt.Errorf("%T did not include discriminant type", i)
+	}
+	switch unmarshaler.Type {
+	case "clerk":
+		value := new(ClerkIntegrationConfig)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		i.Clerk = value
+	case "orb":
+		value := new(OrbIntegrationConfig)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		i.Orb = value
+	case "stripe":
+		value := new(StripeIntegrationConfig)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		i.Stripe = value
+	}
+	return nil
+}
+
+func (i IntegrationConfig) MarshalJSON() ([]byte, error) {
+	if err := i.validate(); err != nil {
+		return nil, err
+	}
+	if i.Clerk != nil {
+		return internal.MarshalJSONWithExtraProperty(i.Clerk, "type", "clerk")
+	}
+	if i.Orb != nil {
+		return internal.MarshalJSONWithExtraProperty(i.Orb, "type", "orb")
+	}
+	if i.Stripe != nil {
+		return internal.MarshalJSONWithExtraProperty(i.Stripe, "type", "stripe")
+	}
+	return nil, fmt.Errorf("type %T does not define a non-empty union type", i)
+}
+
+type IntegrationConfigVisitor interface {
+	VisitClerk(*ClerkIntegrationConfig) error
+	VisitOrb(*OrbIntegrationConfig) error
+	VisitStripe(*StripeIntegrationConfig) error
+}
+
+func (i *IntegrationConfig) Accept(visitor IntegrationConfigVisitor) error {
+	if i.Clerk != nil {
+		return visitor.VisitClerk(i.Clerk)
+	}
+	if i.Orb != nil {
+		return visitor.VisitOrb(i.Orb)
+	}
+	if i.Stripe != nil {
+		return visitor.VisitStripe(i.Stripe)
+	}
+	return fmt.Errorf("type %T does not define a non-empty union type", i)
+}
+
+func (i *IntegrationConfig) validate() error {
+	if i == nil {
+		return fmt.Errorf("type %T is nil", i)
+	}
+	var fields []string
+	if i.Clerk != nil {
+		fields = append(fields, "clerk")
+	}
+	if i.Orb != nil {
+		fields = append(fields, "orb")
+	}
+	if i.Stripe != nil {
+		fields = append(fields, "stripe")
+	}
+	if len(fields) == 0 {
+		if i.Type != "" {
+			return fmt.Errorf("type %T defines a discriminant set to %q but the field is not set", i, i.Type)
+		}
+		return fmt.Errorf("type %T is empty", i)
+	}
+	if len(fields) > 1 {
+		return fmt.Errorf("type %T defines values for %s, but only one value is allowed", i, fields)
+	}
+	if i.Type != "" {
+		field := fields[0]
+		if i.Type != field {
+			return fmt.Errorf(
+				"type %T defines a discriminant set to %q, but it does not match the %T field; either remove or update the discriminant to match",
+				i,
+				i.Type,
+				i,
+			)
+		}
+	}
+	return nil
 }
 
 var (
@@ -138,6 +637,702 @@ func (i *IntegrationWebhookURLResponseData) String() string {
 }
 
 var (
+	integrationsDataSetResponseDataFieldKeys = big.NewInt(1 << 0)
+)
+
+type IntegrationsDataSetResponseData struct {
+	Keys []string `json:"keys" url:"keys"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *IntegrationsDataSetResponseData) GetKeys() []string {
+	if i == nil {
+		return nil
+	}
+	return i.Keys
+}
+
+func (i *IntegrationsDataSetResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *IntegrationsDataSetResponseData) require(field *big.Int) {
+	if i.explicitFields == nil {
+		i.explicitFields = big.NewInt(0)
+	}
+	i.explicitFields.Or(i.explicitFields, field)
+}
+
+// SetKeys sets the Keys field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsDataSetResponseData) SetKeys(keys []string) {
+	i.Keys = keys
+	i.require(integrationsDataSetResponseDataFieldKeys)
+}
+
+func (i *IntegrationsDataSetResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler IntegrationsDataSetResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = IntegrationsDataSetResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IntegrationsDataSetResponseData) MarshalJSON() ([]byte, error) {
+	type embed IntegrationsDataSetResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *IntegrationsDataSetResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+var (
+	integrationsListResponseDataFieldCapabilities     = big.NewInt(1 << 0)
+	integrationsListResponseDataFieldConfig           = big.NewInt(1 << 1)
+	integrationsListResponseDataFieldID               = big.NewInt(1 << 2)
+	integrationsListResponseDataFieldIsAppInstall     = big.NewInt(1 << 3)
+	integrationsListResponseDataFieldIsConnectInstall = big.NewInt(1 << 4)
+	integrationsListResponseDataFieldState            = big.NewInt(1 << 5)
+	integrationsListResponseDataFieldType             = big.NewInt(1 << 6)
+)
+
+type IntegrationsListResponseData struct {
+	Capabilities     *IntegrationCapabilities `json:"capabilities" url:"capabilities"`
+	Config           *IntegrationConfig       `json:"config,omitempty" url:"config,omitempty"`
+	ID               string                   `json:"id" url:"id"`
+	IsAppInstall     bool                     `json:"is_app_install" url:"is_app_install"`
+	IsConnectInstall bool                     `json:"is_connect_install" url:"is_connect_install"`
+	State            IntegrationState         `json:"state" url:"state"`
+	Type             IntegrationType          `json:"type" url:"type"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *IntegrationsListResponseData) GetCapabilities() *IntegrationCapabilities {
+	if i == nil {
+		return nil
+	}
+	return i.Capabilities
+}
+
+func (i *IntegrationsListResponseData) GetConfig() *IntegrationConfig {
+	if i == nil {
+		return nil
+	}
+	return i.Config
+}
+
+func (i *IntegrationsListResponseData) GetID() string {
+	if i == nil {
+		return ""
+	}
+	return i.ID
+}
+
+func (i *IntegrationsListResponseData) GetIsAppInstall() bool {
+	if i == nil {
+		return false
+	}
+	return i.IsAppInstall
+}
+
+func (i *IntegrationsListResponseData) GetIsConnectInstall() bool {
+	if i == nil {
+		return false
+	}
+	return i.IsConnectInstall
+}
+
+func (i *IntegrationsListResponseData) GetState() IntegrationState {
+	if i == nil {
+		return ""
+	}
+	return i.State
+}
+
+func (i *IntegrationsListResponseData) GetType() IntegrationType {
+	if i == nil {
+		return ""
+	}
+	return i.Type
+}
+
+func (i *IntegrationsListResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *IntegrationsListResponseData) require(field *big.Int) {
+	if i.explicitFields == nil {
+		i.explicitFields = big.NewInt(0)
+	}
+	i.explicitFields.Or(i.explicitFields, field)
+}
+
+// SetCapabilities sets the Capabilities field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsListResponseData) SetCapabilities(capabilities *IntegrationCapabilities) {
+	i.Capabilities = capabilities
+	i.require(integrationsListResponseDataFieldCapabilities)
+}
+
+// SetConfig sets the Config field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsListResponseData) SetConfig(config *IntegrationConfig) {
+	i.Config = config
+	i.require(integrationsListResponseDataFieldConfig)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsListResponseData) SetID(id string) {
+	i.ID = id
+	i.require(integrationsListResponseDataFieldID)
+}
+
+// SetIsAppInstall sets the IsAppInstall field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsListResponseData) SetIsAppInstall(isAppInstall bool) {
+	i.IsAppInstall = isAppInstall
+	i.require(integrationsListResponseDataFieldIsAppInstall)
+}
+
+// SetIsConnectInstall sets the IsConnectInstall field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsListResponseData) SetIsConnectInstall(isConnectInstall bool) {
+	i.IsConnectInstall = isConnectInstall
+	i.require(integrationsListResponseDataFieldIsConnectInstall)
+}
+
+// SetState sets the State field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsListResponseData) SetState(state IntegrationState) {
+	i.State = state
+	i.require(integrationsListResponseDataFieldState)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsListResponseData) SetType(type_ IntegrationType) {
+	i.Type = type_
+	i.require(integrationsListResponseDataFieldType)
+}
+
+func (i *IntegrationsListResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler IntegrationsListResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = IntegrationsListResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IntegrationsListResponseData) MarshalJSON() ([]byte, error) {
+	type embed IntegrationsListResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *IntegrationsListResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+var (
+	integrationsResponseDataFieldCreatedAt = big.NewInt(1 << 0)
+	integrationsResponseDataFieldID        = big.NewInt(1 << 1)
+	integrationsResponseDataFieldState     = big.NewInt(1 << 2)
+	integrationsResponseDataFieldType      = big.NewInt(1 << 3)
+	integrationsResponseDataFieldUpdatedAt = big.NewInt(1 << 4)
+)
+
+type IntegrationsResponseData struct {
+	CreatedAt time.Time        `json:"created_at" url:"created_at"`
+	ID        string           `json:"id" url:"id"`
+	State     IntegrationState `json:"state" url:"state"`
+	Type      IntegrationType  `json:"type" url:"type"`
+	UpdatedAt time.Time        `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *IntegrationsResponseData) GetCreatedAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.CreatedAt
+}
+
+func (i *IntegrationsResponseData) GetID() string {
+	if i == nil {
+		return ""
+	}
+	return i.ID
+}
+
+func (i *IntegrationsResponseData) GetState() IntegrationState {
+	if i == nil {
+		return ""
+	}
+	return i.State
+}
+
+func (i *IntegrationsResponseData) GetType() IntegrationType {
+	if i == nil {
+		return ""
+	}
+	return i.Type
+}
+
+func (i *IntegrationsResponseData) GetUpdatedAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.UpdatedAt
+}
+
+func (i *IntegrationsResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *IntegrationsResponseData) require(field *big.Int) {
+	if i.explicitFields == nil {
+		i.explicitFields = big.NewInt(0)
+	}
+	i.explicitFields.Or(i.explicitFields, field)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsResponseData) SetCreatedAt(createdAt time.Time) {
+	i.CreatedAt = createdAt
+	i.require(integrationsResponseDataFieldCreatedAt)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsResponseData) SetID(id string) {
+	i.ID = id
+	i.require(integrationsResponseDataFieldID)
+}
+
+// SetState sets the State field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsResponseData) SetState(state IntegrationState) {
+	i.State = state
+	i.require(integrationsResponseDataFieldState)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsResponseData) SetType(type_ IntegrationType) {
+	i.Type = type_
+	i.require(integrationsResponseDataFieldType)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsResponseData) SetUpdatedAt(updatedAt time.Time) {
+	i.UpdatedAt = updatedAt
+	i.require(integrationsResponseDataFieldUpdatedAt)
+}
+
+func (i *IntegrationsResponseData) UnmarshalJSON(data []byte) error {
+	type embed IntegrationsResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*i),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*i = IntegrationsResponseData(unmarshaler.embed)
+	i.CreatedAt = unmarshaler.CreatedAt.Time()
+	i.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IntegrationsResponseData) MarshalJSON() ([]byte, error) {
+	type embed IntegrationsResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*i),
+		CreatedAt: internal.NewDateTime(i.CreatedAt),
+		UpdatedAt: internal.NewDateTime(i.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *IntegrationsResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+var (
+	orbIntegrationConfigFieldExternalCustomerIDKey = big.NewInt(1 << 0)
+)
+
+type OrbIntegrationConfig struct {
+	// Schematic company key used to store Orb's external_customer_id; when unset, defaults to orb_external_customer_id
+	ExternalCustomerIDKey *string `json:"external_customer_id_key,omitempty" url:"external_customer_id_key,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (o *OrbIntegrationConfig) GetExternalCustomerIDKey() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ExternalCustomerIDKey
+}
+
+func (o *OrbIntegrationConfig) GetExtraProperties() map[string]interface{} {
+	if o == nil {
+		return nil
+	}
+	return o.extraProperties
+}
+
+func (o *OrbIntegrationConfig) require(field *big.Int) {
+	if o.explicitFields == nil {
+		o.explicitFields = big.NewInt(0)
+	}
+	o.explicitFields.Or(o.explicitFields, field)
+}
+
+// SetExternalCustomerIDKey sets the ExternalCustomerIDKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OrbIntegrationConfig) SetExternalCustomerIDKey(externalCustomerIDKey *string) {
+	o.ExternalCustomerIDKey = externalCustomerIDKey
+	o.require(orbIntegrationConfigFieldExternalCustomerIDKey)
+}
+
+func (o *OrbIntegrationConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler OrbIntegrationConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*o = OrbIntegrationConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+	o.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *OrbIntegrationConfig) MarshalJSON() ([]byte, error) {
+	type embed OrbIntegrationConfig
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*o),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, o.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (o *OrbIntegrationConfig) String() string {
+	if o == nil {
+		return "<nil>"
+	}
+	if len(o.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(o.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
+}
+
+var (
+	stripeIntegrationConfigFieldAccountID         = big.NewInt(1 << 0)
+	stripeIntegrationConfigFieldAccountName       = big.NewInt(1 << 1)
+	stripeIntegrationConfigFieldCompanyUpdateOnly = big.NewInt(1 << 2)
+	stripeIntegrationConfigFieldIsSandbox         = big.NewInt(1 << 3)
+	stripeIntegrationConfigFieldLiveMode          = big.NewInt(1 << 4)
+	stripeIntegrationConfigFieldOnboardURL        = big.NewInt(1 << 5)
+	stripeIntegrationConfigFieldVersion           = big.NewInt(1 << 6)
+)
+
+type StripeIntegrationConfig struct {
+	// Connected Stripe account ID (acct_*)
+	AccountID *string `json:"account_id,omitempty" url:"account_id,omitempty"`
+	// Display name of the connected Stripe account
+	AccountName *string `json:"account_name,omitempty" url:"account_name,omitempty"`
+	// When importing Stripe customers, only update existing companies, do not create new companies
+	CompanyUpdateOnly *bool `json:"company_update_only,omitempty" url:"company_update_only,omitempty"`
+	// Whether the integration is connected to a Stripe sandbox account
+	IsSandbox bool `json:"is_sandbox" url:"is_sandbox"`
+	// Whether the integration is connected to a live Stripe account
+	LiveMode bool `json:"live_mode" url:"live_mode"`
+	// Onboarding URL returned during the v2 (Connect) install flow before activation
+	OnboardURL *string `json:"onboard_url,omitempty" url:"onboard_url,omitempty"`
+	// Stripe integration config version (1 = legacy API key install, 2 = Connect/App install)
+	Version int `json:"version" url:"version"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StripeIntegrationConfig) GetAccountID() *string {
+	if s == nil {
+		return nil
+	}
+	return s.AccountID
+}
+
+func (s *StripeIntegrationConfig) GetAccountName() *string {
+	if s == nil {
+		return nil
+	}
+	return s.AccountName
+}
+
+func (s *StripeIntegrationConfig) GetCompanyUpdateOnly() *bool {
+	if s == nil {
+		return nil
+	}
+	return s.CompanyUpdateOnly
+}
+
+func (s *StripeIntegrationConfig) GetIsSandbox() bool {
+	if s == nil {
+		return false
+	}
+	return s.IsSandbox
+}
+
+func (s *StripeIntegrationConfig) GetLiveMode() bool {
+	if s == nil {
+		return false
+	}
+	return s.LiveMode
+}
+
+func (s *StripeIntegrationConfig) GetOnboardURL() *string {
+	if s == nil {
+		return nil
+	}
+	return s.OnboardURL
+}
+
+func (s *StripeIntegrationConfig) GetVersion() int {
+	if s == nil {
+		return 0
+	}
+	return s.Version
+}
+
+func (s *StripeIntegrationConfig) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StripeIntegrationConfig) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetAccountID(accountID *string) {
+	s.AccountID = accountID
+	s.require(stripeIntegrationConfigFieldAccountID)
+}
+
+// SetAccountName sets the AccountName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetAccountName(accountName *string) {
+	s.AccountName = accountName
+	s.require(stripeIntegrationConfigFieldAccountName)
+}
+
+// SetCompanyUpdateOnly sets the CompanyUpdateOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetCompanyUpdateOnly(companyUpdateOnly *bool) {
+	s.CompanyUpdateOnly = companyUpdateOnly
+	s.require(stripeIntegrationConfigFieldCompanyUpdateOnly)
+}
+
+// SetIsSandbox sets the IsSandbox field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetIsSandbox(isSandbox bool) {
+	s.IsSandbox = isSandbox
+	s.require(stripeIntegrationConfigFieldIsSandbox)
+}
+
+// SetLiveMode sets the LiveMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetLiveMode(liveMode bool) {
+	s.LiveMode = liveMode
+	s.require(stripeIntegrationConfigFieldLiveMode)
+}
+
+// SetOnboardURL sets the OnboardURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetOnboardURL(onboardURL *string) {
+	s.OnboardURL = onboardURL
+	s.require(stripeIntegrationConfigFieldOnboardURL)
+}
+
+// SetVersion sets the Version field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetVersion(version int) {
+	s.Version = version
+	s.require(stripeIntegrationConfigFieldVersion)
+}
+
+func (s *StripeIntegrationConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler StripeIntegrationConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StripeIntegrationConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StripeIntegrationConfig) MarshalJSON() ([]byte, error) {
+	type embed StripeIntegrationConfig
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StripeIntegrationConfig) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+var (
 	getIntegrationWebhookURLResponseFieldData   = big.NewInt(1 << 0)
 	getIntegrationWebhookURLResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -236,4 +1431,692 @@ func (g *GetIntegrationWebhookURLResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+var (
+	listIntegrationsParamsFieldBillingOnly = big.NewInt(1 << 0)
+	listIntegrationsParamsFieldExcludeIDs  = big.NewInt(1 << 1)
+	listIntegrationsParamsFieldID          = big.NewInt(1 << 2)
+	listIntegrationsParamsFieldLimit       = big.NewInt(1 << 3)
+	listIntegrationsParamsFieldOffset      = big.NewInt(1 << 4)
+	listIntegrationsParamsFieldState       = big.NewInt(1 << 5)
+	listIntegrationsParamsFieldType        = big.NewInt(1 << 6)
+)
+
+type ListIntegrationsParams struct {
+	BillingOnly *bool    `json:"billing_only,omitempty" url:"billing_only,omitempty"`
+	ExcludeIDs  []string `json:"exclude_ids,omitempty" url:"exclude_ids,omitempty"`
+	ID          *string  `json:"id,omitempty" url:"id,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64            `json:"offset,omitempty" url:"offset,omitempty"`
+	State  *IntegrationState `json:"state,omitempty" url:"state,omitempty"`
+	Type   *IntegrationType  `json:"type,omitempty" url:"type,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListIntegrationsParams) GetBillingOnly() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.BillingOnly
+}
+
+func (l *ListIntegrationsParams) GetExcludeIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.ExcludeIDs
+}
+
+func (l *ListIntegrationsParams) GetID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.ID
+}
+
+func (l *ListIntegrationsParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListIntegrationsParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListIntegrationsParams) GetState() *IntegrationState {
+	if l == nil {
+		return nil
+	}
+	return l.State
+}
+
+func (l *ListIntegrationsParams) GetType() *IntegrationType {
+	if l == nil {
+		return nil
+	}
+	return l.Type
+}
+
+func (l *ListIntegrationsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListIntegrationsParams) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetBillingOnly sets the BillingOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsParams) SetBillingOnly(billingOnly *bool) {
+	l.BillingOnly = billingOnly
+	l.require(listIntegrationsParamsFieldBillingOnly)
+}
+
+// SetExcludeIDs sets the ExcludeIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsParams) SetExcludeIDs(excludeIDs []string) {
+	l.ExcludeIDs = excludeIDs
+	l.require(listIntegrationsParamsFieldExcludeIDs)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsParams) SetID(id *string) {
+	l.ID = id
+	l.require(listIntegrationsParamsFieldID)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listIntegrationsParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listIntegrationsParamsFieldOffset)
+}
+
+// SetState sets the State field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsParams) SetState(state *IntegrationState) {
+	l.State = state
+	l.require(listIntegrationsParamsFieldState)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsParams) SetType(type_ *IntegrationType) {
+	l.Type = type_
+	l.require(listIntegrationsParamsFieldType)
+}
+
+func (l *ListIntegrationsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListIntegrationsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListIntegrationsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListIntegrationsParams) MarshalJSON() ([]byte, error) {
+	type embed ListIntegrationsParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListIntegrationsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listIntegrationsResponseFieldData   = big.NewInt(1 << 0)
+	listIntegrationsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListIntegrationsResponse struct {
+	Data []*IntegrationsListResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListIntegrationsParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListIntegrationsResponse) GetData() []*IntegrationsListResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListIntegrationsResponse) GetParams() *ListIntegrationsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListIntegrationsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListIntegrationsResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsResponse) SetData(data []*IntegrationsListResponseData) {
+	l.Data = data
+	l.require(listIntegrationsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListIntegrationsResponse) SetParams(params *ListIntegrationsParams) {
+	l.Params = params
+	l.require(listIntegrationsResponseFieldParams)
+}
+
+func (l *ListIntegrationsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListIntegrationsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListIntegrationsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListIntegrationsResponse) MarshalJSON() ([]byte, error) {
+	type embed ListIntegrationsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListIntegrationsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	loadSampleDataSetV2ResponseFieldData   = big.NewInt(1 << 0)
+	loadSampleDataSetV2ResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type LoadSampleDataSetV2Response struct {
+	Data *IntegrationsDataSetResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *LoadSampleDataSetV2Response) GetData() *IntegrationsDataSetResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *LoadSampleDataSetV2Response) GetParams() map[string]any {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *LoadSampleDataSetV2Response) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *LoadSampleDataSetV2Response) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LoadSampleDataSetV2Response) SetData(data *IntegrationsDataSetResponseData) {
+	l.Data = data
+	l.require(loadSampleDataSetV2ResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LoadSampleDataSetV2Response) SetParams(params map[string]any) {
+	l.Params = params
+	l.require(loadSampleDataSetV2ResponseFieldParams)
+}
+
+func (l *LoadSampleDataSetV2Response) UnmarshalJSON(data []byte) error {
+	type unmarshaler LoadSampleDataSetV2Response
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = LoadSampleDataSetV2Response(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *LoadSampleDataSetV2Response) MarshalJSON() ([]byte, error) {
+	type embed LoadSampleDataSetV2Response
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *LoadSampleDataSetV2Response) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	runIntegrationResponseFieldData   = big.NewInt(1 << 0)
+	runIntegrationResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type RunIntegrationResponse struct {
+	Data *IntegrationsResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RunIntegrationResponse) GetData() *IntegrationsResponseData {
+	if r == nil {
+		return nil
+	}
+	return r.Data
+}
+
+func (r *RunIntegrationResponse) GetParams() map[string]any {
+	if r == nil {
+		return nil
+	}
+	return r.Params
+}
+
+func (r *RunIntegrationResponse) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RunIntegrationResponse) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RunIntegrationResponse) SetData(data *IntegrationsResponseData) {
+	r.Data = data
+	r.require(runIntegrationResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RunIntegrationResponse) SetParams(params map[string]any) {
+	r.Params = params
+	r.require(runIntegrationResponseFieldParams)
+}
+
+func (r *RunIntegrationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler RunIntegrationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RunIntegrationResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RunIntegrationResponse) MarshalJSON() ([]byte, error) {
+	type embed RunIntegrationResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RunIntegrationResponse) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+var (
+	startDataImportResponseFieldData   = big.NewInt(1 << 0)
+	startDataImportResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type StartDataImportResponse struct {
+	Data *IntegrationsResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StartDataImportResponse) GetData() *IntegrationsResponseData {
+	if s == nil {
+		return nil
+	}
+	return s.Data
+}
+
+func (s *StartDataImportResponse) GetParams() map[string]any {
+	if s == nil {
+		return nil
+	}
+	return s.Params
+}
+
+func (s *StartDataImportResponse) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StartDataImportResponse) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartDataImportResponse) SetData(data *IntegrationsResponseData) {
+	s.Data = data
+	s.require(startDataImportResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartDataImportResponse) SetParams(params map[string]any) {
+	s.Params = params
+	s.require(startDataImportResponseFieldParams)
+}
+
+func (s *StartDataImportResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler StartDataImportResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StartDataImportResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StartDataImportResponse) MarshalJSON() ([]byte, error) {
+	type embed StartDataImportResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StartDataImportResponse) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+var (
+	uninstallIntegrationResponseFieldData   = big.NewInt(1 << 0)
+	uninstallIntegrationResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type UninstallIntegrationResponse struct {
+	Data *DeleteResponse `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UninstallIntegrationResponse) GetData() *DeleteResponse {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UninstallIntegrationResponse) GetParams() map[string]any {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UninstallIntegrationResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UninstallIntegrationResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UninstallIntegrationResponse) SetData(data *DeleteResponse) {
+	u.Data = data
+	u.require(uninstallIntegrationResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UninstallIntegrationResponse) SetParams(params map[string]any) {
+	u.Params = params
+	u.require(uninstallIntegrationResponseFieldParams)
+}
+
+func (u *UninstallIntegrationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UninstallIntegrationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UninstallIntegrationResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UninstallIntegrationResponse) MarshalJSON() ([]byte, error) {
+	type embed UninstallIntegrationResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UninstallIntegrationResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }

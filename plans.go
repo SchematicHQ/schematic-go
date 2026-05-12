@@ -67,24 +67,27 @@ func (c *CountBillingProductMatchCompaniesRequest) SetOffset(offset *int64) {
 
 var (
 	countPlansRequestFieldCompanyID             = big.NewInt(1 << 0)
-	countPlansRequestFieldExcludeCompanyScoped  = big.NewInt(1 << 1)
-	countPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 2)
-	countPlansRequestFieldForInitialPlan        = big.NewInt(1 << 3)
-	countPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 4)
-	countPlansRequestFieldHasProductID          = big.NewInt(1 << 5)
-	countPlansRequestFieldIDs                   = big.NewInt(1 << 6)
-	countPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 7)
-	countPlansRequestFieldPlanType              = big.NewInt(1 << 8)
-	countPlansRequestFieldQ                     = big.NewInt(1 << 9)
-	countPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 10)
-	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 11)
-	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 12)
-	countPlansRequestFieldLimit                 = big.NewInt(1 << 13)
-	countPlansRequestFieldOffset                = big.NewInt(1 << 14)
+	countPlansRequestFieldCompanyScopedOnly     = big.NewInt(1 << 1)
+	countPlansRequestFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
+	countPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 3)
+	countPlansRequestFieldForInitialPlan        = big.NewInt(1 << 4)
+	countPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 5)
+	countPlansRequestFieldHasProductID          = big.NewInt(1 << 6)
+	countPlansRequestFieldIDs                   = big.NewInt(1 << 7)
+	countPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 8)
+	countPlansRequestFieldPlanType              = big.NewInt(1 << 9)
+	countPlansRequestFieldQ                     = big.NewInt(1 << 10)
+	countPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 11)
+	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 12)
+	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 13)
+	countPlansRequestFieldLimit                 = big.NewInt(1 << 14)
+	countPlansRequestFieldOffset                = big.NewInt(1 << 15)
 )
 
 type CountPlansRequest struct {
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Only return plans that are scoped to a company (custom plans assigned to a company)
+	CompanyScopedOnly *bool `json:"-" url:"company_scoped_only,omitempty"`
 	// Exclude plans that are scoped to a company (custom plans assigned to a company)
 	ExcludeCompanyScoped *bool `json:"-" url:"exclude_company_scoped,omitempty"`
 	// Filter for plans valid as fallback plans (not linked to billing)
@@ -128,6 +131,13 @@ func (c *CountPlansRequest) require(field *big.Int) {
 func (c *CountPlansRequest) SetCompanyID(companyID *string) {
 	c.CompanyID = companyID
 	c.require(countPlansRequestFieldCompanyID)
+}
+
+// SetCompanyScopedOnly sets the CompanyScopedOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansRequest) SetCompanyScopedOnly(companyScopedOnly *bool) {
+	c.CompanyScopedOnly = companyScopedOnly
+	c.require(countPlansRequestFieldCompanyScopedOnly)
 }
 
 // SetExcludeCompanyScoped sets the ExcludeCompanyScoped field and marks it as non-optional;
@@ -529,24 +539,27 @@ func (l *ListPlanIssuesRequest) SetPlanVersionID(planVersionID *string) {
 
 var (
 	listPlansRequestFieldCompanyID             = big.NewInt(1 << 0)
-	listPlansRequestFieldExcludeCompanyScoped  = big.NewInt(1 << 1)
-	listPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 2)
-	listPlansRequestFieldForInitialPlan        = big.NewInt(1 << 3)
-	listPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 4)
-	listPlansRequestFieldHasProductID          = big.NewInt(1 << 5)
-	listPlansRequestFieldIDs                   = big.NewInt(1 << 6)
-	listPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 7)
-	listPlansRequestFieldPlanType              = big.NewInt(1 << 8)
-	listPlansRequestFieldQ                     = big.NewInt(1 << 9)
-	listPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 10)
-	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 11)
-	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 12)
-	listPlansRequestFieldLimit                 = big.NewInt(1 << 13)
-	listPlansRequestFieldOffset                = big.NewInt(1 << 14)
+	listPlansRequestFieldCompanyScopedOnly     = big.NewInt(1 << 1)
+	listPlansRequestFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
+	listPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 3)
+	listPlansRequestFieldForInitialPlan        = big.NewInt(1 << 4)
+	listPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 5)
+	listPlansRequestFieldHasProductID          = big.NewInt(1 << 6)
+	listPlansRequestFieldIDs                   = big.NewInt(1 << 7)
+	listPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 8)
+	listPlansRequestFieldPlanType              = big.NewInt(1 << 9)
+	listPlansRequestFieldQ                     = big.NewInt(1 << 10)
+	listPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 11)
+	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 12)
+	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 13)
+	listPlansRequestFieldLimit                 = big.NewInt(1 << 14)
+	listPlansRequestFieldOffset                = big.NewInt(1 << 15)
 )
 
 type ListPlansRequest struct {
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	// Only return plans that are scoped to a company (custom plans assigned to a company)
+	CompanyScopedOnly *bool `json:"-" url:"company_scoped_only,omitempty"`
 	// Exclude plans that are scoped to a company (custom plans assigned to a company)
 	ExcludeCompanyScoped *bool `json:"-" url:"exclude_company_scoped,omitempty"`
 	// Filter for plans valid as fallback plans (not linked to billing)
@@ -590,6 +603,13 @@ func (l *ListPlansRequest) require(field *big.Int) {
 func (l *ListPlansRequest) SetCompanyID(companyID *string) {
 	l.CompanyID = companyID
 	l.require(listPlansRequestFieldCompanyID)
+}
+
+// SetCompanyScopedOnly sets the CompanyScopedOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansRequest) SetCompanyScopedOnly(companyScopedOnly *bool) {
+	l.CompanyScopedOnly = companyScopedOnly
+	l.require(listPlansRequestFieldCompanyScopedOnly)
 }
 
 // SetExcludeCompanyScoped sets the ExcludeCompanyScoped field and marks it as non-optional;
@@ -854,138 +874,6 @@ func (r *RetryCustomPlanBillingRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-var (
-	planIssueResponseDataFieldCode        = big.NewInt(1 << 0)
-	planIssueResponseDataFieldDescription = big.NewInt(1 << 1)
-	planIssueResponseDataFieldDetail      = big.NewInt(1 << 2)
-	planIssueResponseDataFieldID          = big.NewInt(1 << 3)
-)
-
-type PlanIssueResponseData struct {
-	Code        string  `json:"code" url:"code"`
-	Description string  `json:"description" url:"description"`
-	Detail      *string `json:"detail,omitempty" url:"detail,omitempty"`
-	ID          *string `json:"id,omitempty" url:"id,omitempty"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (p *PlanIssueResponseData) GetCode() string {
-	if p == nil {
-		return ""
-	}
-	return p.Code
-}
-
-func (p *PlanIssueResponseData) GetDescription() string {
-	if p == nil {
-		return ""
-	}
-	return p.Description
-}
-
-func (p *PlanIssueResponseData) GetDetail() *string {
-	if p == nil {
-		return nil
-	}
-	return p.Detail
-}
-
-func (p *PlanIssueResponseData) GetID() *string {
-	if p == nil {
-		return nil
-	}
-	return p.ID
-}
-
-func (p *PlanIssueResponseData) GetExtraProperties() map[string]interface{} {
-	if p == nil {
-		return nil
-	}
-	return p.extraProperties
-}
-
-func (p *PlanIssueResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
-	}
-	p.explicitFields.Or(p.explicitFields, field)
-}
-
-// SetCode sets the Code field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanIssueResponseData) SetCode(code string) {
-	p.Code = code
-	p.require(planIssueResponseDataFieldCode)
-}
-
-// SetDescription sets the Description field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanIssueResponseData) SetDescription(description string) {
-	p.Description = description
-	p.require(planIssueResponseDataFieldDescription)
-}
-
-// SetDetail sets the Detail field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanIssueResponseData) SetDetail(detail *string) {
-	p.Detail = detail
-	p.require(planIssueResponseDataFieldDetail)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanIssueResponseData) SetID(id *string) {
-	p.ID = id
-	p.require(planIssueResponseDataFieldID)
-}
-
-func (p *PlanIssueResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler PlanIssueResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*p = PlanIssueResponseData(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *p)
-	if err != nil {
-		return err
-	}
-	p.extraProperties = extraProperties
-	p.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (p *PlanIssueResponseData) MarshalJSON() ([]byte, error) {
-	type embed PlanIssueResponseData
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*p),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (p *PlanIssueResponseData) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	if len(p.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(p); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", p)
-}
-
 // Input parameters
 var (
 	countBillingProductMatchCompaniesParamsFieldLimit  = big.NewInt(1 << 0)
@@ -1227,24 +1115,27 @@ func (c *CountBillingProductMatchCompaniesResponse) String() string {
 // Input parameters
 var (
 	countPlansParamsFieldCompanyID             = big.NewInt(1 << 0)
-	countPlansParamsFieldExcludeCompanyScoped  = big.NewInt(1 << 1)
-	countPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 2)
-	countPlansParamsFieldForInitialPlan        = big.NewInt(1 << 3)
-	countPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 4)
-	countPlansParamsFieldHasProductID          = big.NewInt(1 << 5)
-	countPlansParamsFieldIDs                   = big.NewInt(1 << 6)
-	countPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 7)
-	countPlansParamsFieldLimit                 = big.NewInt(1 << 8)
-	countPlansParamsFieldOffset                = big.NewInt(1 << 9)
-	countPlansParamsFieldPlanType              = big.NewInt(1 << 10)
-	countPlansParamsFieldQ                     = big.NewInt(1 << 11)
-	countPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 12)
-	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 13)
-	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 14)
+	countPlansParamsFieldCompanyScopedOnly     = big.NewInt(1 << 1)
+	countPlansParamsFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
+	countPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 3)
+	countPlansParamsFieldForInitialPlan        = big.NewInt(1 << 4)
+	countPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 5)
+	countPlansParamsFieldHasProductID          = big.NewInt(1 << 6)
+	countPlansParamsFieldIDs                   = big.NewInt(1 << 7)
+	countPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 8)
+	countPlansParamsFieldLimit                 = big.NewInt(1 << 9)
+	countPlansParamsFieldOffset                = big.NewInt(1 << 10)
+	countPlansParamsFieldPlanType              = big.NewInt(1 << 11)
+	countPlansParamsFieldQ                     = big.NewInt(1 << 12)
+	countPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 13)
+	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 14)
+	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 15)
 )
 
 type CountPlansParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Only return plans that are scoped to a company (custom plans assigned to a company)
+	CompanyScopedOnly *bool `json:"company_scoped_only,omitempty" url:"company_scoped_only,omitempty"`
 	// Exclude plans that are scoped to a company (custom plans assigned to a company)
 	ExcludeCompanyScoped *bool `json:"exclude_company_scoped,omitempty" url:"exclude_company_scoped,omitempty"`
 	// Filter for plans valid as fallback plans (not linked to billing)
@@ -1284,6 +1175,13 @@ func (c *CountPlansParams) GetCompanyID() *string {
 		return nil
 	}
 	return c.CompanyID
+}
+
+func (c *CountPlansParams) GetCompanyScopedOnly() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyScopedOnly
 }
 
 func (c *CountPlansParams) GetExcludeCompanyScoped() *bool {
@@ -1403,6 +1301,13 @@ func (c *CountPlansParams) require(field *big.Int) {
 func (c *CountPlansParams) SetCompanyID(companyID *string) {
 	c.CompanyID = companyID
 	c.require(countPlansParamsFieldCompanyID)
+}
+
+// SetCompanyScopedOnly sets the CompanyScopedOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansParams) SetCompanyScopedOnly(companyScopedOnly *bool) {
+	c.CompanyScopedOnly = companyScopedOnly
+	c.require(countPlansParamsFieldCompanyScopedOnly)
 }
 
 // SetExcludeCompanyScoped sets the ExcludeCompanyScoped field and marks it as non-optional;
@@ -3037,24 +2942,27 @@ func (l *ListPlanIssuesResponse) String() string {
 // Input parameters
 var (
 	listPlansParamsFieldCompanyID             = big.NewInt(1 << 0)
-	listPlansParamsFieldExcludeCompanyScoped  = big.NewInt(1 << 1)
-	listPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 2)
-	listPlansParamsFieldForInitialPlan        = big.NewInt(1 << 3)
-	listPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 4)
-	listPlansParamsFieldHasProductID          = big.NewInt(1 << 5)
-	listPlansParamsFieldIDs                   = big.NewInt(1 << 6)
-	listPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 7)
-	listPlansParamsFieldLimit                 = big.NewInt(1 << 8)
-	listPlansParamsFieldOffset                = big.NewInt(1 << 9)
-	listPlansParamsFieldPlanType              = big.NewInt(1 << 10)
-	listPlansParamsFieldQ                     = big.NewInt(1 << 11)
-	listPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 12)
-	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 13)
-	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 14)
+	listPlansParamsFieldCompanyScopedOnly     = big.NewInt(1 << 1)
+	listPlansParamsFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
+	listPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 3)
+	listPlansParamsFieldForInitialPlan        = big.NewInt(1 << 4)
+	listPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 5)
+	listPlansParamsFieldHasProductID          = big.NewInt(1 << 6)
+	listPlansParamsFieldIDs                   = big.NewInt(1 << 7)
+	listPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 8)
+	listPlansParamsFieldLimit                 = big.NewInt(1 << 9)
+	listPlansParamsFieldOffset                = big.NewInt(1 << 10)
+	listPlansParamsFieldPlanType              = big.NewInt(1 << 11)
+	listPlansParamsFieldQ                     = big.NewInt(1 << 12)
+	listPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 13)
+	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 14)
+	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 15)
 )
 
 type ListPlansParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Only return plans that are scoped to a company (custom plans assigned to a company)
+	CompanyScopedOnly *bool `json:"company_scoped_only,omitempty" url:"company_scoped_only,omitempty"`
 	// Exclude plans that are scoped to a company (custom plans assigned to a company)
 	ExcludeCompanyScoped *bool `json:"exclude_company_scoped,omitempty" url:"exclude_company_scoped,omitempty"`
 	// Filter for plans valid as fallback plans (not linked to billing)
@@ -3094,6 +3002,13 @@ func (l *ListPlansParams) GetCompanyID() *string {
 		return nil
 	}
 	return l.CompanyID
+}
+
+func (l *ListPlansParams) GetCompanyScopedOnly() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyScopedOnly
 }
 
 func (l *ListPlansParams) GetExcludeCompanyScoped() *bool {
@@ -3213,6 +3128,13 @@ func (l *ListPlansParams) require(field *big.Int) {
 func (l *ListPlansParams) SetCompanyID(companyID *string) {
 	l.CompanyID = companyID
 	l.require(listPlansParamsFieldCompanyID)
+}
+
+// SetCompanyScopedOnly sets the CompanyScopedOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansParams) SetCompanyScopedOnly(companyScopedOnly *bool) {
+	l.CompanyScopedOnly = companyScopedOnly
+	l.require(listPlansParamsFieldCompanyScopedOnly)
 }
 
 // SetExcludeCompanyScoped sets the ExcludeCompanyScoped field and marks it as non-optional;
@@ -4118,21 +4040,23 @@ func (u *UpdateCompanyPlansRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	createBillingLinkedPlanRequestBodyFieldBillingProvider    = big.NewInt(1 << 0)
-	createBillingLinkedPlanRequestBodyFieldDescription        = big.NewInt(1 << 1)
-	createBillingLinkedPlanRequestBodyFieldExternalResourceID = big.NewInt(1 << 2)
-	createBillingLinkedPlanRequestBodyFieldIcon               = big.NewInt(1 << 3)
-	createBillingLinkedPlanRequestBodyFieldName               = big.NewInt(1 << 4)
-	createBillingLinkedPlanRequestBodyFieldPlanType           = big.NewInt(1 << 5)
+	createBillingLinkedPlanRequestBodyFieldBillingProvider         = big.NewInt(1 << 0)
+	createBillingLinkedPlanRequestBodyFieldDescription             = big.NewInt(1 << 1)
+	createBillingLinkedPlanRequestBodyFieldExternalResourceID      = big.NewInt(1 << 2)
+	createBillingLinkedPlanRequestBodyFieldExternalResourceVersion = big.NewInt(1 << 3)
+	createBillingLinkedPlanRequestBodyFieldIcon                    = big.NewInt(1 << 4)
+	createBillingLinkedPlanRequestBodyFieldName                    = big.NewInt(1 << 5)
+	createBillingLinkedPlanRequestBodyFieldPlanType                = big.NewInt(1 << 6)
 )
 
 type CreateBillingLinkedPlanRequestBody struct {
-	BillingProvider    BillingProviderType `json:"billing_provider" url:"-"`
-	Description        string              `json:"description" url:"-"`
-	ExternalResourceID string              `json:"external_resource_id" url:"-"`
-	Icon               *PlanIcon           `json:"icon,omitempty" url:"-"`
-	Name               string              `json:"name" url:"-"`
-	PlanType           PlanType            `json:"plan_type" url:"-"`
+	BillingProvider         BillingProviderType `json:"billing_provider" url:"-"`
+	Description             string              `json:"description" url:"-"`
+	ExternalResourceID      string              `json:"external_resource_id" url:"-"`
+	ExternalResourceVersion *string             `json:"external_resource_version,omitempty" url:"-"`
+	Icon                    *PlanIcon           `json:"icon,omitempty" url:"-"`
+	Name                    string              `json:"name" url:"-"`
+	PlanType                PlanType            `json:"plan_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4164,6 +4088,13 @@ func (c *CreateBillingLinkedPlanRequestBody) SetDescription(description string) 
 func (c *CreateBillingLinkedPlanRequestBody) SetExternalResourceID(externalResourceID string) {
 	c.ExternalResourceID = externalResourceID
 	c.require(createBillingLinkedPlanRequestBodyFieldExternalResourceID)
+}
+
+// SetExternalResourceVersion sets the ExternalResourceVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanRequestBody) SetExternalResourceVersion(externalResourceVersion *string) {
+	c.ExternalResourceVersion = externalResourceVersion
+	c.require(createBillingLinkedPlanRequestBodyFieldExternalResourceVersion)
 }
 
 // SetIcon sets the Icon field and marks it as non-optional;

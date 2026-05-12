@@ -59,6 +59,14 @@ func TestSettersCountBillingProductsRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetRecurringChargesOnly", func(t *testing.T) {
+		obj := &CountBillingProductsRequest{}
+		var fernTestValueRecurringChargesOnly *bool
+		obj.SetRecurringChargesOnly(fernTestValueRecurringChargesOnly)
+		assert.Equal(t, fernTestValueRecurringChargesOnly, obj.RecurringChargesOnly)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetWithOneTimeCharges", func(t *testing.T) {
 		obj := &CountBillingProductsRequest{}
 		var fernTestValueWithOneTimeCharges *bool
@@ -273,6 +281,37 @@ func TestSettersMarkExplicitCountBillingProductsRequest(t *testing.T) {
 
 		// Act
 		obj.SetQ(fernTestValueQ)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetRecurringChargesOnly_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountBillingProductsRequest{}
+		var fernTestValueRecurringChargesOnly *bool
+
+		// Act
+		obj.SetRecurringChargesOnly(fernTestValueRecurringChargesOnly)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -2033,6 +2072,14 @@ func TestSettersListBillingProductsRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetRecurringChargesOnly", func(t *testing.T) {
+		obj := &ListBillingProductsRequest{}
+		var fernTestValueRecurringChargesOnly *bool
+		obj.SetRecurringChargesOnly(fernTestValueRecurringChargesOnly)
+		assert.Equal(t, fernTestValueRecurringChargesOnly, obj.RecurringChargesOnly)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetWithOneTimeCharges", func(t *testing.T) {
 		obj := &ListBillingProductsRequest{}
 		var fernTestValueWithOneTimeCharges *bool
@@ -2247,6 +2294,37 @@ func TestSettersMarkExplicitListBillingProductsRequest(t *testing.T) {
 
 		// Act
 		obj.SetQ(fernTestValueQ)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetRecurringChargesOnly_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListBillingProductsRequest{}
+		var fernTestValueRecurringChargesOnly *bool
+
+		// Act
+		obj.SetRecurringChargesOnly(fernTestValueRecurringChargesOnly)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -9494,6 +9572,14 @@ func TestSettersCountBillingProductsParams(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetRecurringChargesOnly", func(t *testing.T) {
+		obj := &CountBillingProductsParams{}
+		var fernTestValueRecurringChargesOnly *bool
+		obj.SetRecurringChargesOnly(fernTestValueRecurringChargesOnly)
+		assert.Equal(t, fernTestValueRecurringChargesOnly, obj.RecurringChargesOnly)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetWithOneTimeCharges", func(t *testing.T) {
 		obj := &CountBillingProductsParams{}
 		var fernTestValueWithOneTimeCharges *bool
@@ -9791,6 +9877,39 @@ func TestGettersCountBillingProductsParams(t *testing.T) {
 			}
 		}()
 		_ = obj.GetQ() // Should return zero value
+	})
+
+	t.Run("GetRecurringChargesOnly", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountBillingProductsParams{}
+		var expected *bool
+		obj.RecurringChargesOnly = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetRecurringChargesOnly(), "getter should return the property value")
+	})
+
+	t.Run("GetRecurringChargesOnly_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountBillingProductsParams{}
+		obj.RecurringChargesOnly = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetRecurringChargesOnly(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetRecurringChargesOnly_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CountBillingProductsParams
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetRecurringChargesOnly() // Should return zero value
 	})
 
 	t.Run("GetWithOneTimeCharges", func(t *testing.T) {
@@ -10153,6 +10272,37 @@ func TestSettersMarkExplicitCountBillingProductsParams(t *testing.T) {
 
 		// Act
 		obj.SetQ(fernTestValueQ)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetRecurringChargesOnly_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountBillingProductsParams{}
+		var fernTestValueRecurringChargesOnly *bool
+
+		// Act
+		obj.SetRecurringChargesOnly(fernTestValueRecurringChargesOnly)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -14048,6 +14198,14 @@ func TestSettersListBillingProductsParams(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetRecurringChargesOnly", func(t *testing.T) {
+		obj := &ListBillingProductsParams{}
+		var fernTestValueRecurringChargesOnly *bool
+		obj.SetRecurringChargesOnly(fernTestValueRecurringChargesOnly)
+		assert.Equal(t, fernTestValueRecurringChargesOnly, obj.RecurringChargesOnly)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetWithOneTimeCharges", func(t *testing.T) {
 		obj := &ListBillingProductsParams{}
 		var fernTestValueWithOneTimeCharges *bool
@@ -14345,6 +14503,39 @@ func TestGettersListBillingProductsParams(t *testing.T) {
 			}
 		}()
 		_ = obj.GetQ() // Should return zero value
+	})
+
+	t.Run("GetRecurringChargesOnly", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListBillingProductsParams{}
+		var expected *bool
+		obj.RecurringChargesOnly = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetRecurringChargesOnly(), "getter should return the property value")
+	})
+
+	t.Run("GetRecurringChargesOnly_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListBillingProductsParams{}
+		obj.RecurringChargesOnly = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetRecurringChargesOnly(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetRecurringChargesOnly_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ListBillingProductsParams
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetRecurringChargesOnly() // Should return zero value
 	})
 
 	t.Run("GetWithOneTimeCharges", func(t *testing.T) {
@@ -14707,6 +14898,37 @@ func TestSettersMarkExplicitListBillingProductsParams(t *testing.T) {
 
 		// Act
 		obj.SetQ(fernTestValueQ)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetRecurringChargesOnly_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListBillingProductsParams{}
+		var fernTestValueRecurringChargesOnly *bool
+
+		// Act
+		obj.SetRecurringChargesOnly(fernTestValueRecurringChargesOnly)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

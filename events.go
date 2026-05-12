@@ -111,21 +111,23 @@ func (g *GetEventSummariesRequest) SetOffset(offset *int64) {
 }
 
 var (
-	listEventsRequestFieldCompanyID    = big.NewInt(1 << 0)
-	listEventsRequestFieldEventSubtype = big.NewInt(1 << 1)
-	listEventsRequestFieldEventTypes   = big.NewInt(1 << 2)
-	listEventsRequestFieldFlagID       = big.NewInt(1 << 3)
-	listEventsRequestFieldUserID       = big.NewInt(1 << 4)
-	listEventsRequestFieldLimit        = big.NewInt(1 << 5)
-	listEventsRequestFieldOffset       = big.NewInt(1 << 6)
+	listEventsRequestFieldCompanyID      = big.NewInt(1 << 0)
+	listEventsRequestFieldEventSubtype   = big.NewInt(1 << 1)
+	listEventsRequestFieldEventTypes     = big.NewInt(1 << 2)
+	listEventsRequestFieldFlagID         = big.NewInt(1 << 3)
+	listEventsRequestFieldIdempotencyKey = big.NewInt(1 << 4)
+	listEventsRequestFieldUserID         = big.NewInt(1 << 5)
+	listEventsRequestFieldLimit          = big.NewInt(1 << 6)
+	listEventsRequestFieldOffset         = big.NewInt(1 << 7)
 )
 
 type ListEventsRequest struct {
-	CompanyID    *string      `json:"-" url:"company_id,omitempty"`
-	EventSubtype *string      `json:"-" url:"event_subtype,omitempty"`
-	EventTypes   []*EventType `json:"-" url:"event_types,omitempty"`
-	FlagID       *string      `json:"-" url:"flag_id,omitempty"`
-	UserID       *string      `json:"-" url:"user_id,omitempty"`
+	CompanyID      *string      `json:"-" url:"company_id,omitempty"`
+	EventSubtype   *string      `json:"-" url:"event_subtype,omitempty"`
+	EventTypes     []*EventType `json:"-" url:"event_types,omitempty"`
+	FlagID         *string      `json:"-" url:"flag_id,omitempty"`
+	IdempotencyKey *string      `json:"-" url:"idempotency_key,omitempty"`
+	UserID         *string      `json:"-" url:"user_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -170,6 +172,13 @@ func (l *ListEventsRequest) SetFlagID(flagID *string) {
 	l.require(listEventsRequestFieldFlagID)
 }
 
+// SetIdempotencyKey sets the IdempotencyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListEventsRequest) SetIdempotencyKey(idempotencyKey *string) {
+	l.IdempotencyKey = idempotencyKey
+	l.require(listEventsRequestFieldIdempotencyKey)
+}
+
 // SetUserID sets the UserID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListEventsRequest) SetUserID(userID *string) {
@@ -192,15 +201,18 @@ func (l *ListEventsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	createEventRequestBodyFieldBody      = big.NewInt(1 << 0)
-	createEventRequestBodyFieldEventType = big.NewInt(1 << 1)
-	createEventRequestBodyFieldSentAt    = big.NewInt(1 << 2)
+	createEventRequestBodyFieldBody           = big.NewInt(1 << 0)
+	createEventRequestBodyFieldEventType      = big.NewInt(1 << 1)
+	createEventRequestBodyFieldIdempotencyKey = big.NewInt(1 << 2)
+	createEventRequestBodyFieldSentAt         = big.NewInt(1 << 3)
 )
 
 type CreateEventRequestBody struct {
 	Body *EventBody `json:"body,omitempty" url:"body,omitempty"`
 	// Either 'identify' or 'track'
 	EventType EventType `json:"event_type" url:"event_type"`
+	// Optional client-supplied key. Duplicate events with the same key (scoped to the environment) are dropped for 24h.
+	IdempotencyKey *string `json:"idempotency_key,omitempty" url:"idempotency_key,omitempty"`
 	// Optionally provide a timestamp at which the event was sent to Schematic
 	SentAt *time.Time `json:"sent_at,omitempty" url:"sent_at,omitempty"`
 
@@ -223,6 +235,13 @@ func (c *CreateEventRequestBody) GetEventType() EventType {
 		return ""
 	}
 	return c.EventType
+}
+
+func (c *CreateEventRequestBody) GetIdempotencyKey() *string {
+	if c == nil {
+		return nil
+	}
+	return c.IdempotencyKey
 }
 
 func (c *CreateEventRequestBody) GetSentAt() *time.Time {
@@ -258,6 +277,13 @@ func (c *CreateEventRequestBody) SetBody(body *EventBody) {
 func (c *CreateEventRequestBody) SetEventType(eventType EventType) {
 	c.EventType = eventType
 	c.require(createEventRequestBodyFieldEventType)
+}
+
+// SetIdempotencyKey sets the IdempotencyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEventRequestBody) SetIdempotencyKey(idempotencyKey *string) {
+	c.IdempotencyKey = idempotencyKey
+	c.require(createEventRequestBodyFieldIdempotencyKey)
 }
 
 // SetSentAt sets the SentAt field and marks it as non-optional;
@@ -1048,53 +1074,57 @@ func (e *EventBodyTrack) String() string {
 }
 
 var (
-	eventDetailResponseDataFieldAPIKey        = big.NewInt(1 << 0)
-	eventDetailResponseDataFieldBody          = big.NewInt(1 << 1)
-	eventDetailResponseDataFieldBodyPreview   = big.NewInt(1 << 2)
-	eventDetailResponseDataFieldCapturedAt    = big.NewInt(1 << 3)
-	eventDetailResponseDataFieldCompany       = big.NewInt(1 << 4)
-	eventDetailResponseDataFieldCompanyID     = big.NewInt(1 << 5)
-	eventDetailResponseDataFieldEnrichedAt    = big.NewInt(1 << 6)
-	eventDetailResponseDataFieldEnvironmentID = big.NewInt(1 << 7)
-	eventDetailResponseDataFieldErrorMessage  = big.NewInt(1 << 8)
-	eventDetailResponseDataFieldFeatureIDs    = big.NewInt(1 << 9)
-	eventDetailResponseDataFieldFeatures      = big.NewInt(1 << 10)
-	eventDetailResponseDataFieldID            = big.NewInt(1 << 11)
-	eventDetailResponseDataFieldLoadedAt      = big.NewInt(1 << 12)
-	eventDetailResponseDataFieldProcessedAt   = big.NewInt(1 << 13)
-	eventDetailResponseDataFieldQuantity      = big.NewInt(1 << 14)
-	eventDetailResponseDataFieldSentAt        = big.NewInt(1 << 15)
-	eventDetailResponseDataFieldStatus        = big.NewInt(1 << 16)
-	eventDetailResponseDataFieldSubtype       = big.NewInt(1 << 17)
-	eventDetailResponseDataFieldType          = big.NewInt(1 << 18)
-	eventDetailResponseDataFieldUpdatedAt     = big.NewInt(1 << 19)
-	eventDetailResponseDataFieldUser          = big.NewInt(1 << 20)
-	eventDetailResponseDataFieldUserID        = big.NewInt(1 << 21)
+	eventDetailResponseDataFieldAPIKey         = big.NewInt(1 << 0)
+	eventDetailResponseDataFieldAPIKeyView     = big.NewInt(1 << 1)
+	eventDetailResponseDataFieldBody           = big.NewInt(1 << 2)
+	eventDetailResponseDataFieldBodyPreview    = big.NewInt(1 << 3)
+	eventDetailResponseDataFieldCapturedAt     = big.NewInt(1 << 4)
+	eventDetailResponseDataFieldCompany        = big.NewInt(1 << 5)
+	eventDetailResponseDataFieldCompanyID      = big.NewInt(1 << 6)
+	eventDetailResponseDataFieldEnrichedAt     = big.NewInt(1 << 7)
+	eventDetailResponseDataFieldEnvironmentID  = big.NewInt(1 << 8)
+	eventDetailResponseDataFieldErrorMessage   = big.NewInt(1 << 9)
+	eventDetailResponseDataFieldFeatureIDs     = big.NewInt(1 << 10)
+	eventDetailResponseDataFieldFeatures       = big.NewInt(1 << 11)
+	eventDetailResponseDataFieldID             = big.NewInt(1 << 12)
+	eventDetailResponseDataFieldIdempotencyKey = big.NewInt(1 << 13)
+	eventDetailResponseDataFieldLoadedAt       = big.NewInt(1 << 14)
+	eventDetailResponseDataFieldProcessedAt    = big.NewInt(1 << 15)
+	eventDetailResponseDataFieldQuantity       = big.NewInt(1 << 16)
+	eventDetailResponseDataFieldSentAt         = big.NewInt(1 << 17)
+	eventDetailResponseDataFieldStatus         = big.NewInt(1 << 18)
+	eventDetailResponseDataFieldSubtype        = big.NewInt(1 << 19)
+	eventDetailResponseDataFieldType           = big.NewInt(1 << 20)
+	eventDetailResponseDataFieldUpdatedAt      = big.NewInt(1 << 21)
+	eventDetailResponseDataFieldUser           = big.NewInt(1 << 22)
+	eventDetailResponseDataFieldUserID         = big.NewInt(1 << 23)
 )
 
 type EventDetailResponseData struct {
-	APIKey        *string          `json:"api_key,omitempty" url:"api_key,omitempty"`
-	Body          map[string]any   `json:"body" url:"body"`
-	BodyPreview   string           `json:"body_preview" url:"body_preview"`
-	CapturedAt    time.Time        `json:"captured_at" url:"captured_at"`
-	Company       *PreviewObject   `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID     *string          `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EnrichedAt    *time.Time       `json:"enriched_at,omitempty" url:"enriched_at,omitempty"`
-	EnvironmentID *string          `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ErrorMessage  *string          `json:"error_message,omitempty" url:"error_message,omitempty"`
-	FeatureIDs    []string         `json:"feature_ids" url:"feature_ids"`
-	Features      []*PreviewObject `json:"features" url:"features"`
-	ID            string           `json:"id" url:"id"`
-	LoadedAt      *time.Time       `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
-	ProcessedAt   *time.Time       `json:"processed_at,omitempty" url:"processed_at,omitempty"`
-	Quantity      int64            `json:"quantity" url:"quantity"`
-	SentAt        *time.Time       `json:"sent_at,omitempty" url:"sent_at,omitempty"`
-	Status        EventStatus      `json:"status" url:"status"`
-	Subtype       *string          `json:"subtype,omitempty" url:"subtype,omitempty"`
-	Type          EventType        `json:"type" url:"type"`
-	UpdatedAt     *time.Time       `json:"updated_at,omitempty" url:"updated_at,omitempty"`
-	User          *PreviewObject   `json:"user,omitempty" url:"user,omitempty"`
-	UserID        *string          `json:"user_id,omitempty" url:"user_id,omitempty"`
+	APIKey         *string             `json:"api_key,omitempty" url:"api_key,omitempty"`
+	APIKeyView     *APIKeyResponseData `json:"api_key_view,omitempty" url:"api_key_view,omitempty"`
+	Body           map[string]any      `json:"body" url:"body"`
+	BodyPreview    string              `json:"body_preview" url:"body_preview"`
+	CapturedAt     time.Time           `json:"captured_at" url:"captured_at"`
+	Company        *PreviewObject      `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID      *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EnrichedAt     *time.Time          `json:"enriched_at,omitempty" url:"enriched_at,omitempty"`
+	EnvironmentID  *string             `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ErrorMessage   *string             `json:"error_message,omitempty" url:"error_message,omitempty"`
+	FeatureIDs     []string            `json:"feature_ids" url:"feature_ids"`
+	Features       []*PreviewObject    `json:"features" url:"features"`
+	ID             string              `json:"id" url:"id"`
+	IdempotencyKey *string             `json:"idempotency_key,omitempty" url:"idempotency_key,omitempty"`
+	LoadedAt       *time.Time          `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
+	ProcessedAt    *time.Time          `json:"processed_at,omitempty" url:"processed_at,omitempty"`
+	Quantity       int64               `json:"quantity" url:"quantity"`
+	SentAt         *time.Time          `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+	Status         EventStatus         `json:"status" url:"status"`
+	Subtype        *string             `json:"subtype,omitempty" url:"subtype,omitempty"`
+	Type           EventType           `json:"type" url:"type"`
+	UpdatedAt      *time.Time          `json:"updated_at,omitempty" url:"updated_at,omitempty"`
+	User           *PreviewObject      `json:"user,omitempty" url:"user,omitempty"`
+	UserID         *string             `json:"user_id,omitempty" url:"user_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1108,6 +1138,13 @@ func (e *EventDetailResponseData) GetAPIKey() *string {
 		return nil
 	}
 	return e.APIKey
+}
+
+func (e *EventDetailResponseData) GetAPIKeyView() *APIKeyResponseData {
+	if e == nil {
+		return nil
+	}
+	return e.APIKeyView
 }
 
 func (e *EventDetailResponseData) GetBody() map[string]any {
@@ -1185,6 +1222,13 @@ func (e *EventDetailResponseData) GetID() string {
 		return ""
 	}
 	return e.ID
+}
+
+func (e *EventDetailResponseData) GetIdempotencyKey() *string {
+	if e == nil {
+		return nil
+	}
+	return e.IdempotencyKey
 }
 
 func (e *EventDetailResponseData) GetLoadedAt() *time.Time {
@@ -1278,6 +1322,13 @@ func (e *EventDetailResponseData) SetAPIKey(apiKey *string) {
 	e.require(eventDetailResponseDataFieldAPIKey)
 }
 
+// SetAPIKeyView sets the APIKeyView field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventDetailResponseData) SetAPIKeyView(apiKeyView *APIKeyResponseData) {
+	e.APIKeyView = apiKeyView
+	e.require(eventDetailResponseDataFieldAPIKeyView)
+}
+
 // SetBody sets the Body field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (e *EventDetailResponseData) SetBody(body map[string]any) {
@@ -1353,6 +1404,13 @@ func (e *EventDetailResponseData) SetFeatures(features []*PreviewObject) {
 func (e *EventDetailResponseData) SetID(id string) {
 	e.ID = id
 	e.require(eventDetailResponseDataFieldID)
+}
+
+// SetIdempotencyKey sets the IdempotencyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventDetailResponseData) SetIdempotencyKey(idempotencyKey *string) {
+	e.IdempotencyKey = idempotencyKey
+	e.require(eventDetailResponseDataFieldIdempotencyKey)
 }
 
 // SetLoadedAt sets the LoadedAt field and marks it as non-optional;
@@ -2557,20 +2615,22 @@ func (g *GetSegmentIntegrationStatusResponse) String() string {
 
 // Input parameters
 var (
-	listEventsParamsFieldCompanyID    = big.NewInt(1 << 0)
-	listEventsParamsFieldEventSubtype = big.NewInt(1 << 1)
-	listEventsParamsFieldEventTypes   = big.NewInt(1 << 2)
-	listEventsParamsFieldFlagID       = big.NewInt(1 << 3)
-	listEventsParamsFieldLimit        = big.NewInt(1 << 4)
-	listEventsParamsFieldOffset       = big.NewInt(1 << 5)
-	listEventsParamsFieldUserID       = big.NewInt(1 << 6)
+	listEventsParamsFieldCompanyID      = big.NewInt(1 << 0)
+	listEventsParamsFieldEventSubtype   = big.NewInt(1 << 1)
+	listEventsParamsFieldEventTypes     = big.NewInt(1 << 2)
+	listEventsParamsFieldFlagID         = big.NewInt(1 << 3)
+	listEventsParamsFieldIdempotencyKey = big.NewInt(1 << 4)
+	listEventsParamsFieldLimit          = big.NewInt(1 << 5)
+	listEventsParamsFieldOffset         = big.NewInt(1 << 6)
+	listEventsParamsFieldUserID         = big.NewInt(1 << 7)
 )
 
 type ListEventsParams struct {
-	CompanyID    *string     `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EventSubtype *string     `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	EventTypes   []EventType `json:"event_types,omitempty" url:"event_types,omitempty"`
-	FlagID       *string     `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	CompanyID      *string     `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EventSubtype   *string     `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	EventTypes     []EventType `json:"event_types,omitempty" url:"event_types,omitempty"`
+	FlagID         *string     `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	IdempotencyKey *string     `json:"idempotency_key,omitempty" url:"idempotency_key,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -2610,6 +2670,13 @@ func (l *ListEventsParams) GetFlagID() *string {
 		return nil
 	}
 	return l.FlagID
+}
+
+func (l *ListEventsParams) GetIdempotencyKey() *string {
+	if l == nil {
+		return nil
+	}
+	return l.IdempotencyKey
 }
 
 func (l *ListEventsParams) GetLimit() *int64 {
@@ -2673,6 +2740,13 @@ func (l *ListEventsParams) SetEventTypes(eventTypes []EventType) {
 func (l *ListEventsParams) SetFlagID(flagID *string) {
 	l.FlagID = flagID
 	l.require(listEventsParamsFieldFlagID)
+}
+
+// SetIdempotencyKey sets the IdempotencyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListEventsParams) SetIdempotencyKey(idempotencyKey *string) {
+	l.IdempotencyKey = idempotencyKey
+	l.require(listEventsParamsFieldIdempotencyKey)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;

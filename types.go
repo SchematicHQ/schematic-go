@@ -3232,11 +3232,12 @@ var (
 	billingPriceResponseDataFieldExternalPriceID = big.NewInt(1 << 1)
 	billingPriceResponseDataFieldID              = big.NewInt(1 << 2)
 	billingPriceResponseDataFieldInterval        = big.NewInt(1 << 3)
-	billingPriceResponseDataFieldNickname        = big.NewInt(1 << 4)
-	billingPriceResponseDataFieldPrice           = big.NewInt(1 << 5)
-	billingPriceResponseDataFieldPriceDecimal    = big.NewInt(1 << 6)
-	billingPriceResponseDataFieldProviderType    = big.NewInt(1 << 7)
-	billingPriceResponseDataFieldScheme          = big.NewInt(1 << 8)
+	billingPriceResponseDataFieldIntervalCount   = big.NewInt(1 << 4)
+	billingPriceResponseDataFieldNickname        = big.NewInt(1 << 5)
+	billingPriceResponseDataFieldPrice           = big.NewInt(1 << 6)
+	billingPriceResponseDataFieldPriceDecimal    = big.NewInt(1 << 7)
+	billingPriceResponseDataFieldProviderType    = big.NewInt(1 << 8)
+	billingPriceResponseDataFieldScheme          = big.NewInt(1 << 9)
 )
 
 type BillingPriceResponseData struct {
@@ -3244,6 +3245,7 @@ type BillingPriceResponseData struct {
 	ExternalPriceID string                      `json:"external_price_id" url:"external_price_id"`
 	ID              string                      `json:"id" url:"id"`
 	Interval        BillingProductPriceInterval `json:"interval" url:"interval"`
+	IntervalCount   int64                       `json:"interval_count" url:"interval_count"`
 	Nickname        *string                     `json:"nickname,omitempty" url:"nickname,omitempty"`
 	Price           int64                       `json:"price" url:"price"`
 	PriceDecimal    *string                     `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
@@ -3283,6 +3285,13 @@ func (b *BillingPriceResponseData) GetInterval() BillingProductPriceInterval {
 		return ""
 	}
 	return b.Interval
+}
+
+func (b *BillingPriceResponseData) GetIntervalCount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.IntervalCount
 }
 
 func (b *BillingPriceResponseData) GetNickname() *string {
@@ -3360,6 +3369,13 @@ func (b *BillingPriceResponseData) SetID(id string) {
 func (b *BillingPriceResponseData) SetInterval(interval BillingProductPriceInterval) {
 	b.Interval = interval
 	b.require(billingPriceResponseDataFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPriceResponseData) SetIntervalCount(intervalCount int64) {
+	b.IntervalCount = intervalCount
+	b.require(billingPriceResponseDataFieldIntervalCount)
 }
 
 // SetNickname sets the Nickname field and marks it as non-optional;
@@ -3489,24 +3505,25 @@ var (
 	billingPriceViewFieldCurrency             = big.NewInt(1 << 2)
 	billingPriceViewFieldID                   = big.NewInt(1 << 3)
 	billingPriceViewFieldInterval             = big.NewInt(1 << 4)
-	billingPriceViewFieldIsActive             = big.NewInt(1 << 5)
-	billingPriceViewFieldMeterEventName       = big.NewInt(1 << 6)
-	billingPriceViewFieldMeterEventPayloadKey = big.NewInt(1 << 7)
-	billingPriceViewFieldMeterID              = big.NewInt(1 << 8)
-	billingPriceViewFieldNickname             = big.NewInt(1 << 9)
-	billingPriceViewFieldPackageSize          = big.NewInt(1 << 10)
-	billingPriceViewFieldPrice                = big.NewInt(1 << 11)
-	billingPriceViewFieldPriceDecimal         = big.NewInt(1 << 12)
-	billingPriceViewFieldPriceExternalID      = big.NewInt(1 << 13)
-	billingPriceViewFieldPriceID              = big.NewInt(1 << 14)
-	billingPriceViewFieldPriceTier            = big.NewInt(1 << 15)
-	billingPriceViewFieldProductExternalID    = big.NewInt(1 << 16)
-	billingPriceViewFieldProductID            = big.NewInt(1 << 17)
-	billingPriceViewFieldProductName          = big.NewInt(1 << 18)
-	billingPriceViewFieldProviderType         = big.NewInt(1 << 19)
-	billingPriceViewFieldTiersMode            = big.NewInt(1 << 20)
-	billingPriceViewFieldUpdatedAt            = big.NewInt(1 << 21)
-	billingPriceViewFieldUsageType            = big.NewInt(1 << 22)
+	billingPriceViewFieldIntervalCount        = big.NewInt(1 << 5)
+	billingPriceViewFieldIsActive             = big.NewInt(1 << 6)
+	billingPriceViewFieldMeterEventName       = big.NewInt(1 << 7)
+	billingPriceViewFieldMeterEventPayloadKey = big.NewInt(1 << 8)
+	billingPriceViewFieldMeterID              = big.NewInt(1 << 9)
+	billingPriceViewFieldNickname             = big.NewInt(1 << 10)
+	billingPriceViewFieldPackageSize          = big.NewInt(1 << 11)
+	billingPriceViewFieldPrice                = big.NewInt(1 << 12)
+	billingPriceViewFieldPriceDecimal         = big.NewInt(1 << 13)
+	billingPriceViewFieldPriceExternalID      = big.NewInt(1 << 14)
+	billingPriceViewFieldPriceID              = big.NewInt(1 << 15)
+	billingPriceViewFieldPriceTier            = big.NewInt(1 << 16)
+	billingPriceViewFieldProductExternalID    = big.NewInt(1 << 17)
+	billingPriceViewFieldProductID            = big.NewInt(1 << 18)
+	billingPriceViewFieldProductName          = big.NewInt(1 << 19)
+	billingPriceViewFieldProviderType         = big.NewInt(1 << 20)
+	billingPriceViewFieldTiersMode            = big.NewInt(1 << 21)
+	billingPriceViewFieldUpdatedAt            = big.NewInt(1 << 22)
+	billingPriceViewFieldUsageType            = big.NewInt(1 << 23)
 )
 
 type BillingPriceView struct {
@@ -3515,6 +3532,7 @@ type BillingPriceView struct {
 	Currency             string                                 `json:"currency" url:"currency"`
 	ID                   string                                 `json:"id" url:"id"`
 	Interval             BillingProductPriceInterval            `json:"interval" url:"interval"`
+	IntervalCount        int64                                  `json:"interval_count" url:"interval_count"`
 	IsActive             bool                                   `json:"is_active" url:"is_active"`
 	MeterEventName       *string                                `json:"meter_event_name,omitempty" url:"meter_event_name,omitempty"`
 	MeterEventPayloadKey *string                                `json:"meter_event_payload_key,omitempty" url:"meter_event_payload_key,omitempty"`
@@ -3574,6 +3592,13 @@ func (b *BillingPriceView) GetInterval() BillingProductPriceInterval {
 		return ""
 	}
 	return b.Interval
+}
+
+func (b *BillingPriceView) GetIntervalCount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.IntervalCount
 }
 
 func (b *BillingPriceView) GetIsActive() bool {
@@ -3749,6 +3774,13 @@ func (b *BillingPriceView) SetID(id string) {
 func (b *BillingPriceView) SetInterval(interval BillingProductPriceInterval) {
 	b.Interval = interval
 	b.require(billingPriceViewFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPriceView) SetIntervalCount(intervalCount int64) {
+	b.IntervalCount = intervalCount
+	b.require(billingPriceViewFieldIntervalCount)
 }
 
 // SetIsActive sets the IsActive field and marks it as non-optional;
@@ -4261,20 +4293,21 @@ var (
 	billingProductForSubscriptionResponseDataFieldExternalID                 = big.NewInt(1 << 5)
 	billingProductForSubscriptionResponseDataFieldID                         = big.NewInt(1 << 6)
 	billingProductForSubscriptionResponseDataFieldInterval                   = big.NewInt(1 << 7)
-	billingProductForSubscriptionResponseDataFieldMeterID                    = big.NewInt(1 << 8)
-	billingProductForSubscriptionResponseDataFieldName                       = big.NewInt(1 << 9)
-	billingProductForSubscriptionResponseDataFieldPackageSize                = big.NewInt(1 << 10)
-	billingProductForSubscriptionResponseDataFieldPrice                      = big.NewInt(1 << 11)
-	billingProductForSubscriptionResponseDataFieldPriceDecimal               = big.NewInt(1 << 12)
-	billingProductForSubscriptionResponseDataFieldPriceExternalID            = big.NewInt(1 << 13)
-	billingProductForSubscriptionResponseDataFieldPriceID                    = big.NewInt(1 << 14)
-	billingProductForSubscriptionResponseDataFieldPriceTier                  = big.NewInt(1 << 15)
-	billingProductForSubscriptionResponseDataFieldProviderType               = big.NewInt(1 << 16)
-	billingProductForSubscriptionResponseDataFieldQuantity                   = big.NewInt(1 << 17)
-	billingProductForSubscriptionResponseDataFieldSubscriptionID             = big.NewInt(1 << 18)
-	billingProductForSubscriptionResponseDataFieldSubscriptionItemExternalID = big.NewInt(1 << 19)
-	billingProductForSubscriptionResponseDataFieldUpdatedAt                  = big.NewInt(1 << 20)
-	billingProductForSubscriptionResponseDataFieldUsageType                  = big.NewInt(1 << 21)
+	billingProductForSubscriptionResponseDataFieldIntervalCount              = big.NewInt(1 << 8)
+	billingProductForSubscriptionResponseDataFieldMeterID                    = big.NewInt(1 << 9)
+	billingProductForSubscriptionResponseDataFieldName                       = big.NewInt(1 << 10)
+	billingProductForSubscriptionResponseDataFieldPackageSize                = big.NewInt(1 << 11)
+	billingProductForSubscriptionResponseDataFieldPrice                      = big.NewInt(1 << 12)
+	billingProductForSubscriptionResponseDataFieldPriceDecimal               = big.NewInt(1 << 13)
+	billingProductForSubscriptionResponseDataFieldPriceExternalID            = big.NewInt(1 << 14)
+	billingProductForSubscriptionResponseDataFieldPriceID                    = big.NewInt(1 << 15)
+	billingProductForSubscriptionResponseDataFieldPriceTier                  = big.NewInt(1 << 16)
+	billingProductForSubscriptionResponseDataFieldProviderType               = big.NewInt(1 << 17)
+	billingProductForSubscriptionResponseDataFieldQuantity                   = big.NewInt(1 << 18)
+	billingProductForSubscriptionResponseDataFieldSubscriptionID             = big.NewInt(1 << 19)
+	billingProductForSubscriptionResponseDataFieldSubscriptionItemExternalID = big.NewInt(1 << 20)
+	billingProductForSubscriptionResponseDataFieldUpdatedAt                  = big.NewInt(1 << 21)
+	billingProductForSubscriptionResponseDataFieldUsageType                  = big.NewInt(1 << 22)
 )
 
 type BillingProductForSubscriptionResponseData struct {
@@ -4286,6 +4319,7 @@ type BillingProductForSubscriptionResponseData struct {
 	ExternalID                 string                                 `json:"external_id" url:"external_id"`
 	ID                         string                                 `json:"id" url:"id"`
 	Interval                   string                                 `json:"interval" url:"interval"`
+	IntervalCount              *int64                                 `json:"interval_count,omitempty" url:"interval_count,omitempty"`
 	MeterID                    *string                                `json:"meter_id,omitempty" url:"meter_id,omitempty"`
 	Name                       string                                 `json:"name" url:"name"`
 	PackageSize                int64                                  `json:"package_size" url:"package_size"`
@@ -4362,6 +4396,13 @@ func (b *BillingProductForSubscriptionResponseData) GetInterval() string {
 		return ""
 	}
 	return b.Interval
+}
+
+func (b *BillingProductForSubscriptionResponseData) GetIntervalCount() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.IntervalCount
 }
 
 func (b *BillingProductForSubscriptionResponseData) GetMeterID() *string {
@@ -4530,6 +4571,13 @@ func (b *BillingProductForSubscriptionResponseData) SetID(id string) {
 func (b *BillingProductForSubscriptionResponseData) SetInterval(interval string) {
 	b.Interval = interval
 	b.require(billingProductForSubscriptionResponseDataFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductForSubscriptionResponseData) SetIntervalCount(intervalCount *int64) {
+	b.IntervalCount = intervalCount
+	b.require(billingProductForSubscriptionResponseDataFieldIntervalCount)
 }
 
 // SetMeterID sets the MeterID field and marks it as non-optional;
@@ -14485,23 +14533,29 @@ func (c *CreditsAutoTopupRetryFailure) String() string {
 }
 
 var (
-	currencyPriceRequestBodyFieldCurrency                = big.NewInt(1 << 0)
-	currencyPriceRequestBodyFieldMonthlyPriceTiers       = big.NewInt(1 << 1)
-	currencyPriceRequestBodyFieldMonthlyUnitPrice        = big.NewInt(1 << 2)
-	currencyPriceRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 3)
-	currencyPriceRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 4)
-	currencyPriceRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 5)
-	currencyPriceRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 6)
+	currencyPriceRequestBodyFieldCurrency                  = big.NewInt(1 << 0)
+	currencyPriceRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 1)
+	currencyPriceRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 2)
+	currencyPriceRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 3)
+	currencyPriceRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 4)
+	currencyPriceRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 5)
+	currencyPriceRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 6)
+	currencyPriceRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 7)
+	currencyPriceRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 8)
+	currencyPriceRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 9)
 )
 
 type CurrencyPriceRequestBody struct {
-	Currency                string                        `json:"currency" url:"currency"`
-	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
-	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
-	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
-	YearlyPriceTiers        []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
-	YearlyUnitPrice         *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
-	YearlyUnitPriceDecimal  *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
+	Currency                  string                        `json:"currency" url:"currency"`
+	MonthlyPriceTiers         []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
+	MonthlyUnitPrice          *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
+	MonthlyUnitPriceDecimal   *string                       `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
+	QuarterlyPriceTiers       []*CreatePriceTierRequestBody `json:"quarterly_price_tiers,omitempty" url:"quarterly_price_tiers,omitempty"`
+	QuarterlyUnitPrice        *int64                        `json:"quarterly_unit_price,omitempty" url:"quarterly_unit_price,omitempty"`
+	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"quarterly_unit_price_decimal,omitempty"`
+	YearlyPriceTiers          []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
+	YearlyUnitPrice           *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
+	YearlyUnitPriceDecimal    *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -14536,6 +14590,27 @@ func (c *CurrencyPriceRequestBody) GetMonthlyUnitPriceDecimal() *string {
 		return nil
 	}
 	return c.MonthlyUnitPriceDecimal
+}
+
+func (c *CurrencyPriceRequestBody) GetQuarterlyPriceTiers() []*CreatePriceTierRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyPriceTiers
+}
+
+func (c *CurrencyPriceRequestBody) GetQuarterlyUnitPrice() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyUnitPrice
+}
+
+func (c *CurrencyPriceRequestBody) GetQuarterlyUnitPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyUnitPriceDecimal
 }
 
 func (c *CurrencyPriceRequestBody) GetYearlyPriceTiers() []*CreatePriceTierRequestBody {
@@ -14599,6 +14674,27 @@ func (c *CurrencyPriceRequestBody) SetMonthlyUnitPrice(monthlyUnitPrice *int64) 
 func (c *CurrencyPriceRequestBody) SetMonthlyUnitPriceDecimal(monthlyUnitPriceDecimal *string) {
 	c.MonthlyUnitPriceDecimal = monthlyUnitPriceDecimal
 	c.require(currencyPriceRequestBodyFieldMonthlyUnitPriceDecimal)
+}
+
+// SetQuarterlyPriceTiers sets the QuarterlyPriceTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetQuarterlyPriceTiers(quarterlyPriceTiers []*CreatePriceTierRequestBody) {
+	c.QuarterlyPriceTiers = quarterlyPriceTiers
+	c.require(currencyPriceRequestBodyFieldQuarterlyPriceTiers)
+}
+
+// SetQuarterlyUnitPrice sets the QuarterlyUnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetQuarterlyUnitPrice(quarterlyUnitPrice *int64) {
+	c.QuarterlyUnitPrice = quarterlyUnitPrice
+	c.require(currencyPriceRequestBodyFieldQuarterlyUnitPrice)
+}
+
+// SetQuarterlyUnitPriceDecimal sets the QuarterlyUnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CurrencyPriceRequestBody) SetQuarterlyUnitPriceDecimal(quarterlyUnitPriceDecimal *string) {
+	c.QuarterlyUnitPriceDecimal = quarterlyUnitPriceDecimal
+	c.require(currencyPriceRequestBodyFieldQuarterlyUnitPriceDecimal)
 }
 
 // SetYearlyPriceTiers sets the YearlyPriceTiers field and marks it as non-optional;
@@ -15336,15 +15432,17 @@ func (d *DeleteResponse) String() string {
 }
 
 var (
-	entitlementCurrencyPricesResponseDataFieldCurrency     = big.NewInt(1 << 0)
-	entitlementCurrencyPricesResponseDataFieldMonthlyPrice = big.NewInt(1 << 1)
-	entitlementCurrencyPricesResponseDataFieldYearlyPrice  = big.NewInt(1 << 2)
+	entitlementCurrencyPricesResponseDataFieldCurrency       = big.NewInt(1 << 0)
+	entitlementCurrencyPricesResponseDataFieldMonthlyPrice   = big.NewInt(1 << 1)
+	entitlementCurrencyPricesResponseDataFieldQuarterlyPrice = big.NewInt(1 << 2)
+	entitlementCurrencyPricesResponseDataFieldYearlyPrice    = big.NewInt(1 << 3)
 )
 
 type EntitlementCurrencyPricesResponseData struct {
-	Currency     string            `json:"currency" url:"currency"`
-	MonthlyPrice *BillingPriceView `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	YearlyPrice  *BillingPriceView `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+	Currency       string            `json:"currency" url:"currency"`
+	MonthlyPrice   *BillingPriceView `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	QuarterlyPrice *BillingPriceView `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
+	YearlyPrice    *BillingPriceView `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -15365,6 +15463,13 @@ func (e *EntitlementCurrencyPricesResponseData) GetMonthlyPrice() *BillingPriceV
 		return nil
 	}
 	return e.MonthlyPrice
+}
+
+func (e *EntitlementCurrencyPricesResponseData) GetQuarterlyPrice() *BillingPriceView {
+	if e == nil {
+		return nil
+	}
+	return e.QuarterlyPrice
 }
 
 func (e *EntitlementCurrencyPricesResponseData) GetYearlyPrice() *BillingPriceView {
@@ -15400,6 +15505,13 @@ func (e *EntitlementCurrencyPricesResponseData) SetCurrency(currency string) {
 func (e *EntitlementCurrencyPricesResponseData) SetMonthlyPrice(monthlyPrice *BillingPriceView) {
 	e.MonthlyPrice = monthlyPrice
 	e.require(entitlementCurrencyPricesResponseDataFieldMonthlyPrice)
+}
+
+// SetQuarterlyPrice sets the QuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EntitlementCurrencyPricesResponseData) SetQuarterlyPrice(quarterlyPrice *BillingPriceView) {
+	e.QuarterlyPrice = quarterlyPrice
+	e.require(entitlementCurrencyPricesResponseDataFieldQuarterlyPrice)
 }
 
 // SetYearlyPrice sets the YearlyPrice field and marks it as non-optional;
@@ -19230,9 +19342,10 @@ var (
 	featureUsageResponseDataFieldPlan                      = big.NewInt(1 << 28)
 	featureUsageResponseDataFieldPlanEntitlement           = big.NewInt(1 << 29)
 	featureUsageResponseDataFieldPriceBehavior             = big.NewInt(1 << 30)
-	featureUsageResponseDataFieldSoftLimit                 = big.NewInt(1 << 31)
-	featureUsageResponseDataFieldUsage                     = big.NewInt(1 << 32)
-	featureUsageResponseDataFieldYearlyUsageBasedPrice     = big.NewInt(1 << 33)
+	featureUsageResponseDataFieldQuarterlyUsageBasedPrice  = big.NewInt(1 << 31)
+	featureUsageResponseDataFieldSoftLimit                 = big.NewInt(1 << 32)
+	featureUsageResponseDataFieldUsage                     = big.NewInt(1 << 33)
+	featureUsageResponseDataFieldYearlyUsageBasedPrice     = big.NewInt(1 << 34)
 )
 
 type FeatureUsageResponseData struct {
@@ -19281,10 +19394,11 @@ type FeatureUsageResponseData struct {
 	// Percentage of allocation consumed (0-100+)
 	PercentUsed *float64 `json:"percent_used,omitempty" url:"percent_used,omitempty"`
 	// The period over which usage is measured.
-	Period          *MetricPeriod                `json:"period,omitempty" url:"period,omitempty"`
-	Plan            *PlanResponseData            `json:"plan,omitempty" url:"plan,omitempty"`
-	PlanEntitlement *PlanEntitlementResponseData `json:"plan_entitlement,omitempty" url:"plan_entitlement,omitempty"`
-	PriceBehavior   *EntitlementPriceBehavior    `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	Period                   *MetricPeriod                `json:"period,omitempty" url:"period,omitempty"`
+	Plan                     *PlanResponseData            `json:"plan,omitempty" url:"plan,omitempty"`
+	PlanEntitlement          *PlanEntitlementResponseData `json:"plan_entitlement,omitempty" url:"plan_entitlement,omitempty"`
+	PriceBehavior            *EntitlementPriceBehavior    `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	QuarterlyUsageBasedPrice *BillingPriceView            `json:"quarterly_usage_based_price,omitempty" url:"quarterly_usage_based_price,omitempty"`
 	// The soft limit for the feature usage. Available only for overage price behavior
 	SoftLimit *int64 `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// The amount of usage that has been consumed; a null value indicates that usage is not being measured or that this is a credit-based entitlement (use credit_used instead).
@@ -19513,6 +19627,13 @@ func (f *FeatureUsageResponseData) GetPriceBehavior() *EntitlementPriceBehavior 
 		return nil
 	}
 	return f.PriceBehavior
+}
+
+func (f *FeatureUsageResponseData) GetQuarterlyUsageBasedPrice() *BillingPriceView {
+	if f == nil {
+		return nil
+	}
+	return f.QuarterlyUsageBasedPrice
 }
 
 func (f *FeatureUsageResponseData) GetSoftLimit() *int64 {
@@ -19765,6 +19886,13 @@ func (f *FeatureUsageResponseData) SetPlanEntitlement(planEntitlement *PlanEntit
 func (f *FeatureUsageResponseData) SetPriceBehavior(priceBehavior *EntitlementPriceBehavior) {
 	f.PriceBehavior = priceBehavior
 	f.require(featureUsageResponseDataFieldPriceBehavior)
+}
+
+// SetQuarterlyUsageBasedPrice sets the QuarterlyUsageBasedPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageResponseData) SetQuarterlyUsageBasedPrice(quarterlyUsageBasedPrice *BillingPriceView) {
+	f.QuarterlyUsageBasedPrice = quarterlyUsageBasedPrice
+	f.require(featureUsageResponseDataFieldQuarterlyUsageBasedPrice)
 }
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
@@ -23443,17 +23571,19 @@ func (p *PlanCreditGrantView) String() string {
 }
 
 var (
-	planCurrencyPriceRequestBodyFieldCurrency     = big.NewInt(1 << 0)
-	planCurrencyPriceRequestBodyFieldMonthlyPrice = big.NewInt(1 << 1)
-	planCurrencyPriceRequestBodyFieldOneTimePrice = big.NewInt(1 << 2)
-	planCurrencyPriceRequestBodyFieldYearlyPrice  = big.NewInt(1 << 3)
+	planCurrencyPriceRequestBodyFieldCurrency       = big.NewInt(1 << 0)
+	planCurrencyPriceRequestBodyFieldMonthlyPrice   = big.NewInt(1 << 1)
+	planCurrencyPriceRequestBodyFieldOneTimePrice   = big.NewInt(1 << 2)
+	planCurrencyPriceRequestBodyFieldQuarterlyPrice = big.NewInt(1 << 3)
+	planCurrencyPriceRequestBodyFieldYearlyPrice    = big.NewInt(1 << 4)
 )
 
 type PlanCurrencyPriceRequestBody struct {
-	Currency     string `json:"currency" url:"currency"`
-	MonthlyPrice *int64 `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	OneTimePrice *int64 `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
-	YearlyPrice  *int64 `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+	Currency       string `json:"currency" url:"currency"`
+	MonthlyPrice   *int64 `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	OneTimePrice   *int64 `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	QuarterlyPrice *int64 `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
+	YearlyPrice    *int64 `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -23481,6 +23611,13 @@ func (p *PlanCurrencyPriceRequestBody) GetOneTimePrice() *int64 {
 		return nil
 	}
 	return p.OneTimePrice
+}
+
+func (p *PlanCurrencyPriceRequestBody) GetQuarterlyPrice() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.QuarterlyPrice
 }
 
 func (p *PlanCurrencyPriceRequestBody) GetYearlyPrice() *int64 {
@@ -23523,6 +23660,13 @@ func (p *PlanCurrencyPriceRequestBody) SetMonthlyPrice(monthlyPrice *int64) {
 func (p *PlanCurrencyPriceRequestBody) SetOneTimePrice(oneTimePrice *int64) {
 	p.OneTimePrice = oneTimePrice
 	p.require(planCurrencyPriceRequestBodyFieldOneTimePrice)
+}
+
+// SetQuarterlyPrice sets the QuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPriceRequestBody) SetQuarterlyPrice(quarterlyPrice *int64) {
+	p.QuarterlyPrice = quarterlyPrice
+	p.require(planCurrencyPriceRequestBodyFieldQuarterlyPrice)
 }
 
 // SetYearlyPrice sets the YearlyPrice field and marks it as non-optional;
@@ -23575,17 +23719,19 @@ func (p *PlanCurrencyPriceRequestBody) String() string {
 }
 
 var (
-	planCurrencyPricesResponseDataFieldCurrency     = big.NewInt(1 << 0)
-	planCurrencyPricesResponseDataFieldMonthlyPrice = big.NewInt(1 << 1)
-	planCurrencyPricesResponseDataFieldOneTimePrice = big.NewInt(1 << 2)
-	planCurrencyPricesResponseDataFieldYearlyPrice  = big.NewInt(1 << 3)
+	planCurrencyPricesResponseDataFieldCurrency       = big.NewInt(1 << 0)
+	planCurrencyPricesResponseDataFieldMonthlyPrice   = big.NewInt(1 << 1)
+	planCurrencyPricesResponseDataFieldOneTimePrice   = big.NewInt(1 << 2)
+	planCurrencyPricesResponseDataFieldQuarterlyPrice = big.NewInt(1 << 3)
+	planCurrencyPricesResponseDataFieldYearlyPrice    = big.NewInt(1 << 4)
 )
 
 type PlanCurrencyPricesResponseData struct {
-	Currency     string                    `json:"currency" url:"currency"`
-	MonthlyPrice *BillingPriceResponseData `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	OneTimePrice *BillingPriceResponseData `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
-	YearlyPrice  *BillingPriceResponseData `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+	Currency       string                    `json:"currency" url:"currency"`
+	MonthlyPrice   *BillingPriceResponseData `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	OneTimePrice   *BillingPriceResponseData `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	QuarterlyPrice *BillingPriceResponseData `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
+	YearlyPrice    *BillingPriceResponseData `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -23613,6 +23759,13 @@ func (p *PlanCurrencyPricesResponseData) GetOneTimePrice() *BillingPriceResponse
 		return nil
 	}
 	return p.OneTimePrice
+}
+
+func (p *PlanCurrencyPricesResponseData) GetQuarterlyPrice() *BillingPriceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.QuarterlyPrice
 }
 
 func (p *PlanCurrencyPricesResponseData) GetYearlyPrice() *BillingPriceResponseData {
@@ -23655,6 +23808,13 @@ func (p *PlanCurrencyPricesResponseData) SetMonthlyPrice(monthlyPrice *BillingPr
 func (p *PlanCurrencyPricesResponseData) SetOneTimePrice(oneTimePrice *BillingPriceResponseData) {
 	p.OneTimePrice = oneTimePrice
 	p.require(planCurrencyPricesResponseDataFieldOneTimePrice)
+}
+
+// SetQuarterlyPrice sets the QuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCurrencyPricesResponseData) SetQuarterlyPrice(quarterlyPrice *BillingPriceResponseData) {
+	p.QuarterlyPrice = quarterlyPrice
+	p.require(planCurrencyPricesResponseDataFieldQuarterlyPrice)
 }
 
 // SetYearlyPrice sets the YearlyPrice field and marks it as non-optional;
@@ -23732,10 +23892,11 @@ var (
 	planDetailResponseDataFieldName                  = big.NewInt(1 << 22)
 	planDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 23)
 	planDetailResponseDataFieldPlanType              = big.NewInt(1 << 24)
-	planDetailResponseDataFieldTrialDays             = big.NewInt(1 << 25)
-	planDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 26)
-	planDetailResponseDataFieldVersions              = big.NewInt(1 << 27)
-	planDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 28)
+	planDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 25)
+	planDetailResponseDataFieldTrialDays             = big.NewInt(1 << 26)
+	planDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 27)
+	planDetailResponseDataFieldVersions              = big.NewInt(1 << 28)
+	planDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 29)
 )
 
 type PlanDetailResponseData struct {
@@ -23764,6 +23925,7 @@ type PlanDetailResponseData struct {
 	Name                  string                                `json:"name" url:"name"`
 	OneTimePrice          *BillingPriceResponseData             `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	PlanType              PlanType                              `json:"plan_type" url:"plan_type"`
+	QuarterlyPrice        *BillingPriceResponseData             `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
 	TrialDays             *int64                                `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt             time.Time                             `json:"updated_at" url:"updated_at"`
 	Versions              []*PlanVersionResponseData            `json:"versions" url:"versions"`
@@ -23949,6 +24111,13 @@ func (p *PlanDetailResponseData) GetPlanType() PlanType {
 		return ""
 	}
 	return p.PlanType
+}
+
+func (p *PlanDetailResponseData) GetQuarterlyPrice() *BillingPriceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.QuarterlyPrice
 }
 
 func (p *PlanDetailResponseData) GetTrialDays() *int64 {
@@ -24168,6 +24337,13 @@ func (p *PlanDetailResponseData) SetPlanType(planType PlanType) {
 	p.require(planDetailResponseDataFieldPlanType)
 }
 
+// SetQuarterlyPrice sets the QuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanDetailResponseData) SetQuarterlyPrice(quarterlyPrice *BillingPriceResponseData) {
+	p.QuarterlyPrice = quarterlyPrice
+	p.require(planDetailResponseDataFieldQuarterlyPrice)
+}
+
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanDetailResponseData) SetTrialDays(trialDays *int64) {
@@ -24261,23 +24437,24 @@ var (
 	planEntitlementResponseDataFieldFeatureID              = big.NewInt(1 << 7)
 	planEntitlementResponseDataFieldID                     = big.NewInt(1 << 8)
 	planEntitlementResponseDataFieldMeteredMonthlyPrice    = big.NewInt(1 << 9)
-	planEntitlementResponseDataFieldMeteredYearlyPrice     = big.NewInt(1 << 10)
-	planEntitlementResponseDataFieldMetricPeriod           = big.NewInt(1 << 11)
-	planEntitlementResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 12)
-	planEntitlementResponseDataFieldPlan                   = big.NewInt(1 << 13)
-	planEntitlementResponseDataFieldPlanID                 = big.NewInt(1 << 14)
-	planEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 15)
-	planEntitlementResponseDataFieldRuleID                 = big.NewInt(1 << 16)
-	planEntitlementResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 17)
-	planEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 18)
-	planEntitlementResponseDataFieldUpdatedAt              = big.NewInt(1 << 19)
-	planEntitlementResponseDataFieldUsageBasedProduct      = big.NewInt(1 << 20)
-	planEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 21)
-	planEntitlementResponseDataFieldValueCredit            = big.NewInt(1 << 22)
-	planEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 23)
-	planEntitlementResponseDataFieldValueTrait             = big.NewInt(1 << 24)
-	planEntitlementResponseDataFieldValueTraitID           = big.NewInt(1 << 25)
-	planEntitlementResponseDataFieldValueType              = big.NewInt(1 << 26)
+	planEntitlementResponseDataFieldMeteredQuarterlyPrice  = big.NewInt(1 << 10)
+	planEntitlementResponseDataFieldMeteredYearlyPrice     = big.NewInt(1 << 11)
+	planEntitlementResponseDataFieldMetricPeriod           = big.NewInt(1 << 12)
+	planEntitlementResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 13)
+	planEntitlementResponseDataFieldPlan                   = big.NewInt(1 << 14)
+	planEntitlementResponseDataFieldPlanID                 = big.NewInt(1 << 15)
+	planEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 16)
+	planEntitlementResponseDataFieldRuleID                 = big.NewInt(1 << 17)
+	planEntitlementResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 18)
+	planEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 19)
+	planEntitlementResponseDataFieldUpdatedAt              = big.NewInt(1 << 20)
+	planEntitlementResponseDataFieldUsageBasedProduct      = big.NewInt(1 << 21)
+	planEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 22)
+	planEntitlementResponseDataFieldValueCredit            = big.NewInt(1 << 23)
+	planEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 24)
+	planEntitlementResponseDataFieldValueTrait             = big.NewInt(1 << 25)
+	planEntitlementResponseDataFieldValueTraitID           = big.NewInt(1 << 26)
+	planEntitlementResponseDataFieldValueType              = big.NewInt(1 << 27)
 )
 
 type PlanEntitlementResponseData struct {
@@ -24291,6 +24468,7 @@ type PlanEntitlementResponseData struct {
 	FeatureID              string                                   `json:"feature_id" url:"feature_id"`
 	ID                     string                                   `json:"id" url:"id"`
 	MeteredMonthlyPrice    *BillingPriceView                        `json:"metered_monthly_price,omitempty" url:"metered_monthly_price,omitempty"`
+	MeteredQuarterlyPrice  *BillingPriceView                        `json:"metered_quarterly_price,omitempty" url:"metered_quarterly_price,omitempty"`
 	MeteredYearlyPrice     *BillingPriceView                        `json:"metered_yearly_price,omitempty" url:"metered_yearly_price,omitempty"`
 	MetricPeriod           *MetricPeriod                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *MetricPeriodMonthReset                  `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
@@ -24384,6 +24562,13 @@ func (p *PlanEntitlementResponseData) GetMeteredMonthlyPrice() *BillingPriceView
 		return nil
 	}
 	return p.MeteredMonthlyPrice
+}
+
+func (p *PlanEntitlementResponseData) GetMeteredQuarterlyPrice() *BillingPriceView {
+	if p == nil {
+		return nil
+	}
+	return p.MeteredQuarterlyPrice
 }
 
 func (p *PlanEntitlementResponseData) GetMeteredYearlyPrice() *BillingPriceView {
@@ -24587,6 +24772,13 @@ func (p *PlanEntitlementResponseData) SetID(id string) {
 func (p *PlanEntitlementResponseData) SetMeteredMonthlyPrice(meteredMonthlyPrice *BillingPriceView) {
 	p.MeteredMonthlyPrice = meteredMonthlyPrice
 	p.require(planEntitlementResponseDataFieldMeteredMonthlyPrice)
+}
+
+// SetMeteredQuarterlyPrice sets the MeteredQuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanEntitlementResponseData) SetMeteredQuarterlyPrice(meteredQuarterlyPrice *BillingPriceView) {
+	p.MeteredQuarterlyPrice = meteredQuarterlyPrice
+	p.require(planEntitlementResponseDataFieldMeteredQuarterlyPrice)
 }
 
 // SetMeteredYearlyPrice sets the MeteredYearlyPrice field and marks it as non-optional;
@@ -32554,9 +32746,11 @@ var (
 	upsertBillingProductRequestBodyFieldMonthlyPriceID   = big.NewInt(1 << 6)
 	upsertBillingProductRequestBodyFieldOneTimePrice     = big.NewInt(1 << 7)
 	upsertBillingProductRequestBodyFieldOneTimePriceID   = big.NewInt(1 << 8)
-	upsertBillingProductRequestBodyFieldTrialDays        = big.NewInt(1 << 9)
-	upsertBillingProductRequestBodyFieldYearlyPrice      = big.NewInt(1 << 10)
-	upsertBillingProductRequestBodyFieldYearlyPriceID    = big.NewInt(1 << 11)
+	upsertBillingProductRequestBodyFieldQuarterlyPrice   = big.NewInt(1 << 9)
+	upsertBillingProductRequestBodyFieldQuarterlyPriceID = big.NewInt(1 << 10)
+	upsertBillingProductRequestBodyFieldTrialDays        = big.NewInt(1 << 11)
+	upsertBillingProductRequestBodyFieldYearlyPrice      = big.NewInt(1 << 12)
+	upsertBillingProductRequestBodyFieldYearlyPriceID    = big.NewInt(1 << 13)
 )
 
 type UpsertBillingProductRequestBody struct {
@@ -32569,6 +32763,8 @@ type UpsertBillingProductRequestBody struct {
 	MonthlyPriceID   *string                         `json:"monthly_price_id,omitempty" url:"monthly_price_id,omitempty"`
 	OneTimePrice     *int64                          `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	OneTimePriceID   *string                         `json:"one_time_price_id,omitempty" url:"one_time_price_id,omitempty"`
+	QuarterlyPrice   *int64                          `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
+	QuarterlyPriceID *string                         `json:"quarterly_price_id,omitempty" url:"quarterly_price_id,omitempty"`
 	TrialDays        *int64                          `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	YearlyPrice      *int64                          `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 	YearlyPriceID    *string                         `json:"yearly_price_id,omitempty" url:"yearly_price_id,omitempty"`
@@ -32641,6 +32837,20 @@ func (u *UpsertBillingProductRequestBody) GetOneTimePriceID() *string {
 		return nil
 	}
 	return u.OneTimePriceID
+}
+
+func (u *UpsertBillingProductRequestBody) GetQuarterlyPrice() *int64 {
+	if u == nil {
+		return nil
+	}
+	return u.QuarterlyPrice
+}
+
+func (u *UpsertBillingProductRequestBody) GetQuarterlyPriceID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.QuarterlyPriceID
 }
 
 func (u *UpsertBillingProductRequestBody) GetTrialDays() *int64 {
@@ -32739,6 +32949,20 @@ func (u *UpsertBillingProductRequestBody) SetOneTimePrice(oneTimePrice *int64) {
 func (u *UpsertBillingProductRequestBody) SetOneTimePriceID(oneTimePriceID *string) {
 	u.OneTimePriceID = oneTimePriceID
 	u.require(upsertBillingProductRequestBodyFieldOneTimePriceID)
+}
+
+// SetQuarterlyPrice sets the QuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertBillingProductRequestBody) SetQuarterlyPrice(quarterlyPrice *int64) {
+	u.QuarterlyPrice = quarterlyPrice
+	u.require(upsertBillingProductRequestBodyFieldQuarterlyPrice)
+}
+
+// SetQuarterlyPriceID sets the QuarterlyPriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertBillingProductRequestBody) SetQuarterlyPriceID(quarterlyPriceID *string) {
+	u.QuarterlyPriceID = quarterlyPriceID
+	u.require(upsertBillingProductRequestBodyFieldQuarterlyPriceID)
 }
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
@@ -33014,23 +33238,27 @@ func (u *UpsertUserSubRequestBody) String() string {
 }
 
 var (
-	usageBasedEntitlementRequestBodyFieldBillingProductID        = big.NewInt(1 << 0)
-	usageBasedEntitlementRequestBodyFieldBillingThreshold        = big.NewInt(1 << 1)
-	usageBasedEntitlementRequestBodyFieldCurrency                = big.NewInt(1 << 2)
-	usageBasedEntitlementRequestBodyFieldCurrencyPrices          = big.NewInt(1 << 3)
-	usageBasedEntitlementRequestBodyFieldMonthlyMeteredPriceID   = big.NewInt(1 << 4)
-	usageBasedEntitlementRequestBodyFieldMonthlyPriceTiers       = big.NewInt(1 << 5)
-	usageBasedEntitlementRequestBodyFieldMonthlyUnitPrice        = big.NewInt(1 << 6)
-	usageBasedEntitlementRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 7)
-	usageBasedEntitlementRequestBodyFieldOverageBillingProductID = big.NewInt(1 << 8)
-	usageBasedEntitlementRequestBodyFieldPriceBehavior           = big.NewInt(1 << 9)
-	usageBasedEntitlementRequestBodyFieldPriceTiers              = big.NewInt(1 << 10)
-	usageBasedEntitlementRequestBodyFieldSoftLimit               = big.NewInt(1 << 11)
-	usageBasedEntitlementRequestBodyFieldTierMode                = big.NewInt(1 << 12)
-	usageBasedEntitlementRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 13)
-	usageBasedEntitlementRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 14)
-	usageBasedEntitlementRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 15)
-	usageBasedEntitlementRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 16)
+	usageBasedEntitlementRequestBodyFieldBillingProductID          = big.NewInt(1 << 0)
+	usageBasedEntitlementRequestBodyFieldBillingThreshold          = big.NewInt(1 << 1)
+	usageBasedEntitlementRequestBodyFieldCurrency                  = big.NewInt(1 << 2)
+	usageBasedEntitlementRequestBodyFieldCurrencyPrices            = big.NewInt(1 << 3)
+	usageBasedEntitlementRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 4)
+	usageBasedEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 5)
+	usageBasedEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 6)
+	usageBasedEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 7)
+	usageBasedEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 8)
+	usageBasedEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 9)
+	usageBasedEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 10)
+	usageBasedEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 11)
+	usageBasedEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 12)
+	usageBasedEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 13)
+	usageBasedEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 14)
+	usageBasedEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 15)
+	usageBasedEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 16)
+	usageBasedEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 17)
+	usageBasedEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 18)
+	usageBasedEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 19)
+	usageBasedEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 20)
 )
 
 type UsageBasedEntitlementRequestBody struct {
@@ -33045,13 +33273,17 @@ type UsageBasedEntitlementRequestBody struct {
 	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
 	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
-	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
-	SoftLimit              *int64                        `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
-	TierMode               *BillingTiersMode             `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
-	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
-	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
-	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
-	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
+	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
+	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"quarterly_metered_price_id,omitempty"`
+	QuarterlyPriceTiers       []*CreatePriceTierRequestBody `json:"quarterly_price_tiers,omitempty" url:"quarterly_price_tiers,omitempty"`
+	QuarterlyUnitPrice        *int64                        `json:"quarterly_unit_price,omitempty" url:"quarterly_unit_price,omitempty"`
+	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"quarterly_unit_price_decimal,omitempty"`
+	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
+	YearlyMeteredPriceID      *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
+	YearlyPriceTiers          []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
+	YearlyUnitPrice           *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
+	YearlyUnitPriceDecimal    *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -33135,6 +33367,34 @@ func (u *UsageBasedEntitlementRequestBody) GetPriceTiers() []*CreatePriceTierReq
 		return nil
 	}
 	return u.PriceTiers
+}
+
+func (u *UsageBasedEntitlementRequestBody) GetQuarterlyMeteredPriceID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.QuarterlyMeteredPriceID
+}
+
+func (u *UsageBasedEntitlementRequestBody) GetQuarterlyPriceTiers() []*CreatePriceTierRequestBody {
+	if u == nil {
+		return nil
+	}
+	return u.QuarterlyPriceTiers
+}
+
+func (u *UsageBasedEntitlementRequestBody) GetQuarterlyUnitPrice() *int64 {
+	if u == nil {
+		return nil
+	}
+	return u.QuarterlyUnitPrice
+}
+
+func (u *UsageBasedEntitlementRequestBody) GetQuarterlyUnitPriceDecimal() *string {
+	if u == nil {
+		return nil
+	}
+	return u.QuarterlyUnitPriceDecimal
 }
 
 func (u *UsageBasedEntitlementRequestBody) GetSoftLimit() *int64 {
@@ -33270,6 +33530,34 @@ func (u *UsageBasedEntitlementRequestBody) SetPriceTiers(priceTiers []*CreatePri
 	u.require(usageBasedEntitlementRequestBodyFieldPriceTiers)
 }
 
+// SetQuarterlyMeteredPriceID sets the QuarterlyMeteredPriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageBasedEntitlementRequestBody) SetQuarterlyMeteredPriceID(quarterlyMeteredPriceID *string) {
+	u.QuarterlyMeteredPriceID = quarterlyMeteredPriceID
+	u.require(usageBasedEntitlementRequestBodyFieldQuarterlyMeteredPriceID)
+}
+
+// SetQuarterlyPriceTiers sets the QuarterlyPriceTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageBasedEntitlementRequestBody) SetQuarterlyPriceTiers(quarterlyPriceTiers []*CreatePriceTierRequestBody) {
+	u.QuarterlyPriceTiers = quarterlyPriceTiers
+	u.require(usageBasedEntitlementRequestBodyFieldQuarterlyPriceTiers)
+}
+
+// SetQuarterlyUnitPrice sets the QuarterlyUnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageBasedEntitlementRequestBody) SetQuarterlyUnitPrice(quarterlyUnitPrice *int64) {
+	u.QuarterlyUnitPrice = quarterlyUnitPrice
+	u.require(usageBasedEntitlementRequestBodyFieldQuarterlyUnitPrice)
+}
+
+// SetQuarterlyUnitPriceDecimal sets the QuarterlyUnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageBasedEntitlementRequestBody) SetQuarterlyUnitPriceDecimal(quarterlyUnitPriceDecimal *string) {
+	u.QuarterlyUnitPriceDecimal = quarterlyUnitPriceDecimal
+	u.require(usageBasedEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal)
+}
+
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UsageBasedEntitlementRequestBody) SetSoftLimit(softLimit *int64) {
@@ -33355,33 +33643,35 @@ func (u *UsageBasedEntitlementRequestBody) String() string {
 }
 
 var (
-	usageBasedEntitlementResponseDataFieldBillingThreshold       = big.NewInt(1 << 0)
-	usageBasedEntitlementResponseDataFieldConsumptionRate        = big.NewInt(1 << 1)
-	usageBasedEntitlementResponseDataFieldFeatureID              = big.NewInt(1 << 2)
-	usageBasedEntitlementResponseDataFieldMeteredPrice           = big.NewInt(1 << 3)
-	usageBasedEntitlementResponseDataFieldMetricPeriod           = big.NewInt(1 << 4)
-	usageBasedEntitlementResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 5)
-	usageBasedEntitlementResponseDataFieldMonthlyUsageBasedPrice = big.NewInt(1 << 6)
-	usageBasedEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 7)
-	usageBasedEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 8)
-	usageBasedEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 9)
-	usageBasedEntitlementResponseDataFieldValueType              = big.NewInt(1 << 10)
-	usageBasedEntitlementResponseDataFieldYearlyUsageBasedPrice  = big.NewInt(1 << 11)
+	usageBasedEntitlementResponseDataFieldBillingThreshold         = big.NewInt(1 << 0)
+	usageBasedEntitlementResponseDataFieldConsumptionRate          = big.NewInt(1 << 1)
+	usageBasedEntitlementResponseDataFieldFeatureID                = big.NewInt(1 << 2)
+	usageBasedEntitlementResponseDataFieldMeteredPrice             = big.NewInt(1 << 3)
+	usageBasedEntitlementResponseDataFieldMetricPeriod             = big.NewInt(1 << 4)
+	usageBasedEntitlementResponseDataFieldMetricPeriodMonthReset   = big.NewInt(1 << 5)
+	usageBasedEntitlementResponseDataFieldMonthlyUsageBasedPrice   = big.NewInt(1 << 6)
+	usageBasedEntitlementResponseDataFieldPriceBehavior            = big.NewInt(1 << 7)
+	usageBasedEntitlementResponseDataFieldQuarterlyUsageBasedPrice = big.NewInt(1 << 8)
+	usageBasedEntitlementResponseDataFieldValueBool                = big.NewInt(1 << 9)
+	usageBasedEntitlementResponseDataFieldValueNumeric             = big.NewInt(1 << 10)
+	usageBasedEntitlementResponseDataFieldValueType                = big.NewInt(1 << 11)
+	usageBasedEntitlementResponseDataFieldYearlyUsageBasedPrice    = big.NewInt(1 << 12)
 )
 
 type UsageBasedEntitlementResponseData struct {
-	BillingThreshold       *int64                    `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
-	ConsumptionRate        *float64                  `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
-	FeatureID              string                    `json:"feature_id" url:"feature_id"`
-	MeteredPrice           *BillingPriceView         `json:"metered_price,omitempty" url:"metered_price,omitempty"`
-	MetricPeriod           *MetricPeriod             `json:"metric_period,omitempty" url:"metric_period,omitempty"`
-	MetricPeriodMonthReset *MetricPeriodMonthReset   `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	MonthlyUsageBasedPrice *BillingPriceView         `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
-	PriceBehavior          *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
-	ValueBool              *bool                     `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueNumeric           *int64                    `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	ValueType              EntitlementValueType      `json:"value_type" url:"value_type"`
-	YearlyUsageBasedPrice  *BillingPriceView         `json:"yearly_usage_based_price,omitempty" url:"yearly_usage_based_price,omitempty"`
+	BillingThreshold         *int64                    `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
+	ConsumptionRate          *float64                  `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
+	FeatureID                string                    `json:"feature_id" url:"feature_id"`
+	MeteredPrice             *BillingPriceView         `json:"metered_price,omitempty" url:"metered_price,omitempty"`
+	MetricPeriod             *MetricPeriod             `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset   *MetricPeriodMonthReset   `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	MonthlyUsageBasedPrice   *BillingPriceView         `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
+	PriceBehavior            *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	QuarterlyUsageBasedPrice *BillingPriceView         `json:"quarterly_usage_based_price,omitempty" url:"quarterly_usage_based_price,omitempty"`
+	ValueBool                *bool                     `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueNumeric             *int64                    `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueType                EntitlementValueType      `json:"value_type" url:"value_type"`
+	YearlyUsageBasedPrice    *BillingPriceView         `json:"yearly_usage_based_price,omitempty" url:"yearly_usage_based_price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -33444,6 +33734,13 @@ func (u *UsageBasedEntitlementResponseData) GetPriceBehavior() *EntitlementPrice
 		return nil
 	}
 	return u.PriceBehavior
+}
+
+func (u *UsageBasedEntitlementResponseData) GetQuarterlyUsageBasedPrice() *BillingPriceView {
+	if u == nil {
+		return nil
+	}
+	return u.QuarterlyUsageBasedPrice
 }
 
 func (u *UsageBasedEntitlementResponseData) GetValueBool() *bool {
@@ -33542,6 +33839,13 @@ func (u *UsageBasedEntitlementResponseData) SetMonthlyUsageBasedPrice(monthlyUsa
 func (u *UsageBasedEntitlementResponseData) SetPriceBehavior(priceBehavior *EntitlementPriceBehavior) {
 	u.PriceBehavior = priceBehavior
 	u.require(usageBasedEntitlementResponseDataFieldPriceBehavior)
+}
+
+// SetQuarterlyUsageBasedPrice sets the QuarterlyUsageBasedPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageBasedEntitlementResponseData) SetQuarterlyUsageBasedPrice(quarterlyUsageBasedPrice *BillingPriceView) {
+	u.QuarterlyUsageBasedPrice = quarterlyUsageBasedPrice
+	u.require(usageBasedEntitlementResponseDataFieldQuarterlyUsageBasedPrice)
 }
 
 // SetValueBool sets the ValueBool field and marks it as non-optional;

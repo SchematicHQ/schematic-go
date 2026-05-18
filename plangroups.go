@@ -1931,10 +1931,11 @@ var (
 	planGroupPlanDetailResponseDataFieldName                  = big.NewInt(1 << 26)
 	planGroupPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 27)
 	planGroupPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 28)
-	planGroupPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 29)
-	planGroupPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 30)
-	planGroupPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 31)
-	planGroupPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 32)
+	planGroupPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 29)
+	planGroupPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 30)
+	planGroupPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 31)
+	planGroupPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 32)
+	planGroupPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 33)
 )
 
 type PlanGroupPlanDetailResponseData struct {
@@ -1967,6 +1968,7 @@ type PlanGroupPlanDetailResponseData struct {
 	Name                  string                                `json:"name" url:"name"`
 	OneTimePrice          *BillingPriceResponseData             `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	PlanType              PlanType                              `json:"plan_type" url:"plan_type"`
+	QuarterlyPrice        *BillingPriceResponseData             `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
 	TrialDays             *int64                                `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt             time.Time                             `json:"updated_at" url:"updated_at"`
 	Versions              []*PlanVersionResponseData            `json:"versions" url:"versions"`
@@ -2180,6 +2182,13 @@ func (p *PlanGroupPlanDetailResponseData) GetPlanType() PlanType {
 		return ""
 	}
 	return p.PlanType
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetQuarterlyPrice() *BillingPriceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.QuarterlyPrice
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetTrialDays() *int64 {
@@ -2425,6 +2434,13 @@ func (p *PlanGroupPlanDetailResponseData) SetOneTimePrice(oneTimePrice *BillingP
 func (p *PlanGroupPlanDetailResponseData) SetPlanType(planType PlanType) {
 	p.PlanType = planType
 	p.require(planGroupPlanDetailResponseDataFieldPlanType)
+}
+
+// SetQuarterlyPrice sets the QuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanDetailResponseData) SetQuarterlyPrice(quarterlyPrice *BillingPriceResponseData) {
+	p.QuarterlyPrice = quarterlyPrice
+	p.require(planGroupPlanDetailResponseDataFieldQuarterlyPrice)
 }
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;

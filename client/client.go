@@ -37,12 +37,12 @@ type Client struct {
 	Entitlements      *entitlements.Client
 	Plans             *plans.Client
 	Components        *components.Client
+	Planbundle        *planbundle.Client
 	Dataexports       *dataexports.Client
 	Events            *events.Client
 	Features          *features.Client
 	Insights          *insights.Client
 	Integrationsapi   *integrationsapi.Client
-	Planbundle        *planbundle.Client
 	Plangroups        *plangroups.Client
 	Planmigrations    *planmigrations.Client
 	Componentspublic  *componentspublic.Client
@@ -66,12 +66,12 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Entitlements:      entitlements.NewClient(options),
 		Plans:             plans.NewClient(options),
 		Components:        components.NewClient(options),
+		Planbundle:        planbundle.NewClient(options),
 		Dataexports:       dataexports.NewClient(options),
 		Events:            events.NewClient(options),
 		Features:          features.NewClient(options),
 		Insights:          insights.NewClient(options),
 		Integrationsapi:   integrationsapi.NewClient(options),
-		Planbundle:        planbundle.NewClient(options),
 		Plangroups:        plangroups.NewClient(options),
 		Planmigrations:    planmigrations.NewClient(options),
 		Componentspublic:  componentspublic.NewClient(options),

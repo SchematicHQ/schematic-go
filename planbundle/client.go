@@ -33,6 +33,22 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+func (c *Client) CreateCustomPlanBundle(
+	ctx context.Context,
+	request *schematichq.CreateCustomPlanBundleRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.CreateCustomPlanBundleResponse, error) {
+	response, err := c.WithRawResponse.CreateCustomPlanBundle(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CreatePlanBundle(
 	ctx context.Context,
 	request *schematichq.CreatePlanBundleRequestBody,

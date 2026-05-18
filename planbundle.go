@@ -10,6 +10,70 @@ import (
 )
 
 var (
+	createCustomPlanBundleRequestBodyFieldBillingProduct = big.NewInt(1 << 0)
+	createCustomPlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 1)
+	createCustomPlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 2)
+)
+
+type CreateCustomPlanBundleRequestBody struct {
+	BillingProduct *UpsertBillingProductRequestBody       `json:"billing_product,omitempty" url:"-"`
+	Entitlements   []*PlanBundleEntitlementRequestBody    `json:"entitlements" url:"-"`
+	Plan           *CreateCustomPlanBundlePlanRequestBody `json:"plan,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CreateCustomPlanBundleRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingProduct sets the BillingProduct field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundleRequestBody) SetBillingProduct(billingProduct *UpsertBillingProductRequestBody) {
+	c.BillingProduct = billingProduct
+	c.require(createCustomPlanBundleRequestBodyFieldBillingProduct)
+}
+
+// SetEntitlements sets the Entitlements field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundleRequestBody) SetEntitlements(entitlements []*PlanBundleEntitlementRequestBody) {
+	c.Entitlements = entitlements
+	c.require(createCustomPlanBundleRequestBodyFieldEntitlements)
+}
+
+// SetPlan sets the Plan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundleRequestBody) SetPlan(plan *CreateCustomPlanBundlePlanRequestBody) {
+	c.Plan = plan
+	c.require(createCustomPlanBundleRequestBodyFieldPlan)
+}
+
+func (c *CreateCustomPlanBundleRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCustomPlanBundleRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateCustomPlanBundleRequestBody(body)
+	return nil
+}
+
+func (c *CreateCustomPlanBundleRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateCustomPlanBundleRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	createPlanBundleRequestBodyFieldBillingProduct = big.NewInt(1 << 0)
 	createPlanBundleRequestBodyFieldCreditGrants   = big.NewInt(1 << 1)
 	createPlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
@@ -92,34 +156,170 @@ func (c *CreatePlanBundleRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	createEntitlementInBundleRequestBodyFieldBillingProductID        = big.NewInt(1 << 0)
-	createEntitlementInBundleRequestBodyFieldBillingThreshold        = big.NewInt(1 << 1)
-	createEntitlementInBundleRequestBodyFieldCreditConsumptionRate   = big.NewInt(1 << 2)
-	createEntitlementInBundleRequestBodyFieldCurrency                = big.NewInt(1 << 3)
-	createEntitlementInBundleRequestBodyFieldCurrencyPrices          = big.NewInt(1 << 4)
-	createEntitlementInBundleRequestBodyFieldFeatureID               = big.NewInt(1 << 5)
-	createEntitlementInBundleRequestBodyFieldMetricPeriod            = big.NewInt(1 << 6)
-	createEntitlementInBundleRequestBodyFieldMetricPeriodMonthReset  = big.NewInt(1 << 7)
-	createEntitlementInBundleRequestBodyFieldMonthlyMeteredPriceID   = big.NewInt(1 << 8)
-	createEntitlementInBundleRequestBodyFieldMonthlyPriceTiers       = big.NewInt(1 << 9)
-	createEntitlementInBundleRequestBodyFieldMonthlyUnitPrice        = big.NewInt(1 << 10)
-	createEntitlementInBundleRequestBodyFieldMonthlyUnitPriceDecimal = big.NewInt(1 << 11)
-	createEntitlementInBundleRequestBodyFieldOverageBillingProductID = big.NewInt(1 << 12)
-	createEntitlementInBundleRequestBodyFieldPlanID                  = big.NewInt(1 << 13)
-	createEntitlementInBundleRequestBodyFieldPlanVersionID           = big.NewInt(1 << 14)
-	createEntitlementInBundleRequestBodyFieldPriceBehavior           = big.NewInt(1 << 15)
-	createEntitlementInBundleRequestBodyFieldPriceTiers              = big.NewInt(1 << 16)
-	createEntitlementInBundleRequestBodyFieldSoftLimit               = big.NewInt(1 << 17)
-	createEntitlementInBundleRequestBodyFieldTierMode                = big.NewInt(1 << 18)
-	createEntitlementInBundleRequestBodyFieldValueBool               = big.NewInt(1 << 19)
-	createEntitlementInBundleRequestBodyFieldValueCreditID           = big.NewInt(1 << 20)
-	createEntitlementInBundleRequestBodyFieldValueNumeric            = big.NewInt(1 << 21)
-	createEntitlementInBundleRequestBodyFieldValueTraitID            = big.NewInt(1 << 22)
-	createEntitlementInBundleRequestBodyFieldValueType               = big.NewInt(1 << 23)
-	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID    = big.NewInt(1 << 24)
-	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers        = big.NewInt(1 << 25)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice         = big.NewInt(1 << 26)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal  = big.NewInt(1 << 27)
+	createCustomPlanBundlePlanRequestBodyFieldCompanyID   = big.NewInt(1 << 0)
+	createCustomPlanBundlePlanRequestBodyFieldDescription = big.NewInt(1 << 1)
+	createCustomPlanBundlePlanRequestBodyFieldIcon        = big.NewInt(1 << 2)
+	createCustomPlanBundlePlanRequestBodyFieldName        = big.NewInt(1 << 3)
+)
+
+type CreateCustomPlanBundlePlanRequestBody struct {
+	CompanyID   string    `json:"company_id" url:"company_id"`
+	Description string    `json:"description" url:"description"`
+	Icon        *PlanIcon `json:"icon,omitempty" url:"icon,omitempty"`
+	Name        string    `json:"name" url:"name"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateCustomPlanBundlePlanRequestBody) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CreateCustomPlanBundlePlanRequestBody) GetDescription() string {
+	if c == nil {
+		return ""
+	}
+	return c.Description
+}
+
+func (c *CreateCustomPlanBundlePlanRequestBody) GetIcon() *PlanIcon {
+	if c == nil {
+		return nil
+	}
+	return c.Icon
+}
+
+func (c *CreateCustomPlanBundlePlanRequestBody) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreateCustomPlanBundlePlanRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateCustomPlanBundlePlanRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundlePlanRequestBody) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(createCustomPlanBundlePlanRequestBodyFieldCompanyID)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundlePlanRequestBody) SetDescription(description string) {
+	c.Description = description
+	c.require(createCustomPlanBundlePlanRequestBodyFieldDescription)
+}
+
+// SetIcon sets the Icon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundlePlanRequestBody) SetIcon(icon *PlanIcon) {
+	c.Icon = icon
+	c.require(createCustomPlanBundlePlanRequestBodyFieldIcon)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundlePlanRequestBody) SetName(name string) {
+	c.Name = name
+	c.require(createCustomPlanBundlePlanRequestBodyFieldName)
+}
+
+func (c *CreateCustomPlanBundlePlanRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCustomPlanBundlePlanRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateCustomPlanBundlePlanRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateCustomPlanBundlePlanRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateCustomPlanBundlePlanRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateCustomPlanBundlePlanRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	createEntitlementInBundleRequestBodyFieldBillingProductID          = big.NewInt(1 << 0)
+	createEntitlementInBundleRequestBodyFieldBillingThreshold          = big.NewInt(1 << 1)
+	createEntitlementInBundleRequestBodyFieldCreditConsumptionRate     = big.NewInt(1 << 2)
+	createEntitlementInBundleRequestBodyFieldCurrency                  = big.NewInt(1 << 3)
+	createEntitlementInBundleRequestBodyFieldCurrencyPrices            = big.NewInt(1 << 4)
+	createEntitlementInBundleRequestBodyFieldFeatureID                 = big.NewInt(1 << 5)
+	createEntitlementInBundleRequestBodyFieldMetricPeriod              = big.NewInt(1 << 6)
+	createEntitlementInBundleRequestBodyFieldMetricPeriodMonthReset    = big.NewInt(1 << 7)
+	createEntitlementInBundleRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 8)
+	createEntitlementInBundleRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 9)
+	createEntitlementInBundleRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 10)
+	createEntitlementInBundleRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 11)
+	createEntitlementInBundleRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 12)
+	createEntitlementInBundleRequestBodyFieldPlanID                    = big.NewInt(1 << 13)
+	createEntitlementInBundleRequestBodyFieldPlanVersionID             = big.NewInt(1 << 14)
+	createEntitlementInBundleRequestBodyFieldPriceBehavior             = big.NewInt(1 << 15)
+	createEntitlementInBundleRequestBodyFieldPriceTiers                = big.NewInt(1 << 16)
+	createEntitlementInBundleRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 17)
+	createEntitlementInBundleRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 18)
+	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 19)
+	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 20)
+	createEntitlementInBundleRequestBodyFieldSoftLimit                 = big.NewInt(1 << 21)
+	createEntitlementInBundleRequestBodyFieldTierMode                  = big.NewInt(1 << 22)
+	createEntitlementInBundleRequestBodyFieldValueBool                 = big.NewInt(1 << 23)
+	createEntitlementInBundleRequestBodyFieldValueCreditID             = big.NewInt(1 << 24)
+	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 25)
+	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 26)
+	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 27)
+	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 28)
+	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 29)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 30)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 31)
 )
 
 type CreateEntitlementInBundleRequestBody struct {
@@ -140,18 +340,22 @@ type CreateEntitlementInBundleRequestBody struct {
 	PlanVersionID           *string                       `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
-	PriceTiers             []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
-	SoftLimit              *int64                        `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
-	TierMode               *BillingTiersMode             `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
-	ValueBool              *bool                         `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
-	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
-	ValueType              EntitlementValueType          `json:"value_type" url:"value_type"`
-	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
-	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
-	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
-	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
+	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
+	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"quarterly_metered_price_id,omitempty"`
+	QuarterlyPriceTiers       []*CreatePriceTierRequestBody `json:"quarterly_price_tiers,omitempty" url:"quarterly_price_tiers,omitempty"`
+	QuarterlyUnitPrice        *int64                        `json:"quarterly_unit_price,omitempty" url:"quarterly_unit_price,omitempty"`
+	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"quarterly_unit_price_decimal,omitempty"`
+	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
+	ValueBool                 *bool                         `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueCreditID             *string                       `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
+	ValueNumeric              *int64                        `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueTraitID              *string                       `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
+	ValueType                 EntitlementValueType          `json:"value_type" url:"value_type"`
+	YearlyMeteredPriceID      *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
+	YearlyPriceTiers          []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
+	YearlyUnitPrice           *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
+	YearlyUnitPriceDecimal    *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -277,6 +481,34 @@ func (c *CreateEntitlementInBundleRequestBody) GetPriceTiers() []*CreatePriceTie
 		return nil
 	}
 	return c.PriceTiers
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetQuarterlyMeteredPriceID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyMeteredPriceID
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetQuarterlyPriceTiers() []*CreatePriceTierRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyPriceTiers
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetQuarterlyUnitPrice() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyUnitPrice
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetQuarterlyUnitPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyUnitPriceDecimal
 }
 
 func (c *CreateEntitlementInBundleRequestBody) GetSoftLimit() *int64 {
@@ -487,6 +719,34 @@ func (c *CreateEntitlementInBundleRequestBody) SetPriceBehavior(priceBehavior *E
 func (c *CreateEntitlementInBundleRequestBody) SetPriceTiers(priceTiers []*CreatePriceTierRequestBody) {
 	c.PriceTiers = priceTiers
 	c.require(createEntitlementInBundleRequestBodyFieldPriceTiers)
+}
+
+// SetQuarterlyMeteredPriceID sets the QuarterlyMeteredPriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetQuarterlyMeteredPriceID(quarterlyMeteredPriceID *string) {
+	c.QuarterlyMeteredPriceID = quarterlyMeteredPriceID
+	c.require(createEntitlementInBundleRequestBodyFieldQuarterlyMeteredPriceID)
+}
+
+// SetQuarterlyPriceTiers sets the QuarterlyPriceTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetQuarterlyPriceTiers(quarterlyPriceTiers []*CreatePriceTierRequestBody) {
+	c.QuarterlyPriceTiers = quarterlyPriceTiers
+	c.require(createEntitlementInBundleRequestBodyFieldQuarterlyPriceTiers)
+}
+
+// SetQuarterlyUnitPrice sets the QuarterlyUnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetQuarterlyUnitPrice(quarterlyUnitPrice *int64) {
+	c.QuarterlyUnitPrice = quarterlyUnitPrice
+	c.require(createEntitlementInBundleRequestBodyFieldQuarterlyUnitPrice)
+}
+
+// SetQuarterlyUnitPriceDecimal sets the QuarterlyUnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetQuarterlyUnitPriceDecimal(quarterlyUnitPriceDecimal *string) {
+	c.QuarterlyUnitPriceDecimal = quarterlyUnitPriceDecimal
+	c.require(createEntitlementInBundleRequestBodyFieldQuarterlyUnitPriceDecimal)
 }
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
@@ -1127,6 +1387,107 @@ func (p *PlanBundleResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	createCustomPlanBundleResponseFieldData   = big.NewInt(1 << 0)
+	createCustomPlanBundleResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CreateCustomPlanBundleResponse struct {
+	Data *PlanBundleResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateCustomPlanBundleResponse) GetData() *PlanBundleResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateCustomPlanBundleResponse) GetParams() map[string]any {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CreateCustomPlanBundleResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateCustomPlanBundleResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundleResponse) SetData(data *PlanBundleResponseData) {
+	c.Data = data
+	c.require(createCustomPlanBundleResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundleResponse) SetParams(params map[string]any) {
+	c.Params = params
+	c.require(createCustomPlanBundleResponseFieldParams)
+}
+
+func (c *CreateCustomPlanBundleResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCustomPlanBundleResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateCustomPlanBundleResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateCustomPlanBundleResponse) MarshalJSON() ([]byte, error) {
+	type embed CreateCustomPlanBundleResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateCustomPlanBundleResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 var (

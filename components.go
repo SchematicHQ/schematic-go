@@ -597,18 +597,19 @@ var (
 	billingProductPriceResponseDataFieldCurrency          = big.NewInt(1 << 2)
 	billingProductPriceResponseDataFieldID                = big.NewInt(1 << 3)
 	billingProductPriceResponseDataFieldInterval          = big.NewInt(1 << 4)
-	billingProductPriceResponseDataFieldIsActive          = big.NewInt(1 << 5)
-	billingProductPriceResponseDataFieldMeterID           = big.NewInt(1 << 6)
-	billingProductPriceResponseDataFieldNickname          = big.NewInt(1 << 7)
-	billingProductPriceResponseDataFieldPackageSize       = big.NewInt(1 << 8)
-	billingProductPriceResponseDataFieldPrice             = big.NewInt(1 << 9)
-	billingProductPriceResponseDataFieldPriceDecimal      = big.NewInt(1 << 10)
-	billingProductPriceResponseDataFieldPriceExternalID   = big.NewInt(1 << 11)
-	billingProductPriceResponseDataFieldProductExternalID = big.NewInt(1 << 12)
-	billingProductPriceResponseDataFieldProviderType      = big.NewInt(1 << 13)
-	billingProductPriceResponseDataFieldTiersMode         = big.NewInt(1 << 14)
-	billingProductPriceResponseDataFieldUpdatedAt         = big.NewInt(1 << 15)
-	billingProductPriceResponseDataFieldUsageType         = big.NewInt(1 << 16)
+	billingProductPriceResponseDataFieldIntervalCount     = big.NewInt(1 << 5)
+	billingProductPriceResponseDataFieldIsActive          = big.NewInt(1 << 6)
+	billingProductPriceResponseDataFieldMeterID           = big.NewInt(1 << 7)
+	billingProductPriceResponseDataFieldNickname          = big.NewInt(1 << 8)
+	billingProductPriceResponseDataFieldPackageSize       = big.NewInt(1 << 9)
+	billingProductPriceResponseDataFieldPrice             = big.NewInt(1 << 10)
+	billingProductPriceResponseDataFieldPriceDecimal      = big.NewInt(1 << 11)
+	billingProductPriceResponseDataFieldPriceExternalID   = big.NewInt(1 << 12)
+	billingProductPriceResponseDataFieldProductExternalID = big.NewInt(1 << 13)
+	billingProductPriceResponseDataFieldProviderType      = big.NewInt(1 << 14)
+	billingProductPriceResponseDataFieldTiersMode         = big.NewInt(1 << 15)
+	billingProductPriceResponseDataFieldUpdatedAt         = big.NewInt(1 << 16)
+	billingProductPriceResponseDataFieldUsageType         = big.NewInt(1 << 17)
 )
 
 type BillingProductPriceResponseData struct {
@@ -617,6 +618,7 @@ type BillingProductPriceResponseData struct {
 	Currency          string                      `json:"currency" url:"currency"`
 	ID                string                      `json:"id" url:"id"`
 	Interval          BillingProductPriceInterval `json:"interval" url:"interval"`
+	IntervalCount     int64                       `json:"interval_count" url:"interval_count"`
 	IsActive          bool                        `json:"is_active" url:"is_active"`
 	MeterID           *string                     `json:"meter_id,omitempty" url:"meter_id,omitempty"`
 	Nickname          *string                     `json:"nickname,omitempty" url:"nickname,omitempty"`
@@ -670,6 +672,13 @@ func (b *BillingProductPriceResponseData) GetInterval() BillingProductPriceInter
 		return ""
 	}
 	return b.Interval
+}
+
+func (b *BillingProductPriceResponseData) GetIntervalCount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.IntervalCount
 }
 
 func (b *BillingProductPriceResponseData) GetIsActive() bool {
@@ -803,6 +812,13 @@ func (b *BillingProductPriceResponseData) SetID(id string) {
 func (b *BillingProductPriceResponseData) SetInterval(interval BillingProductPriceInterval) {
 	b.Interval = interval
 	b.require(billingProductPriceResponseDataFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductPriceResponseData) SetIntervalCount(intervalCount int64) {
+	b.IntervalCount = intervalCount
+	b.require(billingProductPriceResponseDataFieldIntervalCount)
 }
 
 // SetIsActive sets the IsActive field and marks it as non-optional;
@@ -977,12 +993,13 @@ var (
 	companyPlanDetailResponseDataFieldName                  = big.NewInt(1 << 30)
 	companyPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 31)
 	companyPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 32)
-	companyPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 33)
-	companyPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 34)
-	companyPlanDetailResponseDataFieldUsageViolations       = big.NewInt(1 << 35)
-	companyPlanDetailResponseDataFieldValid                 = big.NewInt(1 << 36)
-	companyPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 37)
-	companyPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 38)
+	companyPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 33)
+	companyPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 34)
+	companyPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 35)
+	companyPlanDetailResponseDataFieldUsageViolations       = big.NewInt(1 << 36)
+	companyPlanDetailResponseDataFieldValid                 = big.NewInt(1 << 37)
+	companyPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 38)
+	companyPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 39)
 )
 
 type CompanyPlanDetailResponseData struct {
@@ -1019,6 +1036,7 @@ type CompanyPlanDetailResponseData struct {
 	Name                  string                             `json:"name" url:"name"`
 	OneTimePrice          *BillingPriceResponseData          `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	PlanType              PlanType                           `json:"plan_type" url:"plan_type"`
+	QuarterlyPrice        *BillingPriceResponseData          `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
 	TrialDays             *int64                             `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	UpdatedAt             time.Time                          `json:"updated_at" url:"updated_at"`
 	UsageViolations       []*FeatureUsageResponseData        `json:"usage_violations" url:"usage_violations"`
@@ -1262,6 +1280,13 @@ func (c *CompanyPlanDetailResponseData) GetPlanType() PlanType {
 		return ""
 	}
 	return c.PlanType
+}
+
+func (c *CompanyPlanDetailResponseData) GetQuarterlyPrice() *BillingPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyPrice
 }
 
 func (c *CompanyPlanDetailResponseData) GetTrialDays() *int64 {
@@ -1549,6 +1574,13 @@ func (c *CompanyPlanDetailResponseData) SetOneTimePrice(oneTimePrice *BillingPri
 func (c *CompanyPlanDetailResponseData) SetPlanType(planType PlanType) {
 	c.PlanType = planType
 	c.require(companyPlanDetailResponseDataFieldPlanType)
+}
+
+// SetQuarterlyPrice sets the QuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanDetailResponseData) SetQuarterlyPrice(quarterlyPrice *BillingPriceResponseData) {
+	c.QuarterlyPrice = quarterlyPrice
+	c.require(companyPlanDetailResponseDataFieldQuarterlyPrice)
 }
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;

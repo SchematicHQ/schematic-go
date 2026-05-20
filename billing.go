@@ -7555,18 +7555,19 @@ var (
 	createBillingPriceRequestBodyFieldCurrency          = big.NewInt(1 << 1)
 	createBillingPriceRequestBodyFieldExternalAccountID = big.NewInt(1 << 2)
 	createBillingPriceRequestBodyFieldInterval          = big.NewInt(1 << 3)
-	createBillingPriceRequestBodyFieldIsActive          = big.NewInt(1 << 4)
-	createBillingPriceRequestBodyFieldMeterID           = big.NewInt(1 << 5)
-	createBillingPriceRequestBodyFieldNickname          = big.NewInt(1 << 6)
-	createBillingPriceRequestBodyFieldPackageSize       = big.NewInt(1 << 7)
-	createBillingPriceRequestBodyFieldPrice             = big.NewInt(1 << 8)
-	createBillingPriceRequestBodyFieldPriceDecimal      = big.NewInt(1 << 9)
-	createBillingPriceRequestBodyFieldPriceExternalID   = big.NewInt(1 << 10)
-	createBillingPriceRequestBodyFieldPriceTiers        = big.NewInt(1 << 11)
-	createBillingPriceRequestBodyFieldProductExternalID = big.NewInt(1 << 12)
-	createBillingPriceRequestBodyFieldProviderType      = big.NewInt(1 << 13)
-	createBillingPriceRequestBodyFieldTiersMode         = big.NewInt(1 << 14)
-	createBillingPriceRequestBodyFieldUsageType         = big.NewInt(1 << 15)
+	createBillingPriceRequestBodyFieldIntervalCount     = big.NewInt(1 << 4)
+	createBillingPriceRequestBodyFieldIsActive          = big.NewInt(1 << 5)
+	createBillingPriceRequestBodyFieldMeterID           = big.NewInt(1 << 6)
+	createBillingPriceRequestBodyFieldNickname          = big.NewInt(1 << 7)
+	createBillingPriceRequestBodyFieldPackageSize       = big.NewInt(1 << 8)
+	createBillingPriceRequestBodyFieldPrice             = big.NewInt(1 << 9)
+	createBillingPriceRequestBodyFieldPriceDecimal      = big.NewInt(1 << 10)
+	createBillingPriceRequestBodyFieldPriceExternalID   = big.NewInt(1 << 11)
+	createBillingPriceRequestBodyFieldPriceTiers        = big.NewInt(1 << 12)
+	createBillingPriceRequestBodyFieldProductExternalID = big.NewInt(1 << 13)
+	createBillingPriceRequestBodyFieldProviderType      = big.NewInt(1 << 14)
+	createBillingPriceRequestBodyFieldTiersMode         = big.NewInt(1 << 15)
+	createBillingPriceRequestBodyFieldUsageType         = big.NewInt(1 << 16)
 )
 
 type CreateBillingPriceRequestBody struct {
@@ -7574,6 +7575,7 @@ type CreateBillingPriceRequestBody struct {
 	Currency          string                               `json:"currency" url:"-"`
 	ExternalAccountID string                               `json:"external_account_id" url:"-"`
 	Interval          string                               `json:"interval" url:"-"`
+	IntervalCount     *int64                               `json:"interval_count,omitempty" url:"-"`
 	IsActive          bool                                 `json:"is_active" url:"-"`
 	MeterID           *string                              `json:"meter_id,omitempty" url:"-"`
 	Nickname          *string                              `json:"nickname,omitempty" url:"-"`
@@ -7624,6 +7626,13 @@ func (c *CreateBillingPriceRequestBody) SetExternalAccountID(externalAccountID s
 func (c *CreateBillingPriceRequestBody) SetInterval(interval string) {
 	c.Interval = interval
 	c.require(createBillingPriceRequestBodyFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPriceRequestBody) SetIntervalCount(intervalCount *int64) {
+	c.IntervalCount = intervalCount
+	c.require(createBillingPriceRequestBodyFieldIntervalCount)
 }
 
 // SetIsActive sets the IsActive field and marks it as non-optional;

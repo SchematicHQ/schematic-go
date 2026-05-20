@@ -2531,6 +2531,14 @@ client.Billing.UpsertBillingPrice(
 <dl>
 <dd>
 
+**intervalCount:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **isActive:** `bool` 
     
 </dd>
@@ -10373,6 +10381,7 @@ request := &schematichq.ListFeatureUsageRequest{
         IncludeUsageAggregation: schematichq.Bool(
             true,
         ),
+        ManagedBy: schematichq.BillingProviderTypeOrb.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -10430,6 +10439,14 @@ client.Entitlements.ListFeatureUsage(
 <dd>
 
 **includeUsageAggregation:** `*bool` — Include time-bucketed usage aggregation (today, this week, this month, billing period) for credit-based entitlements. Defaults to false for performance.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**managedBy:** `*schematichq.BillingProviderType` — Filter for features managed by a billing provider, or by Schematic (no billing provider)
     
 </dd>
 </dl>
@@ -10585,6 +10602,7 @@ request := &schematichq.CountFeatureUsageRequest{
         IncludeUsageAggregation: schematichq.Bool(
             true,
         ),
+        ManagedBy: schematichq.BillingProviderTypeOrb.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -10642,6 +10660,14 @@ client.Entitlements.CountFeatureUsage(
 <dd>
 
 **includeUsageAggregation:** `*bool` — Include time-bucketed usage aggregation (today, this week, this month, billing period) for credit-based entitlements. Defaults to false for performance.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**managedBy:** `*schematichq.BillingProviderType` — Filter for features managed by a billing provider, or by Schematic (no billing provider)
     
 </dd>
 </dl>
@@ -11185,6 +11211,38 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
+**quarterlyMeteredPriceID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyPriceTiers:** `[]*schematichq.CreatePriceTierRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyUnitPrice:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyUnitPriceDecimal:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **softLimit:** `*int64` 
     
 </dd>
@@ -11470,6 +11528,38 @@ client.Entitlements.UpdatePlanEntitlement(
 <dd>
 
 **priceTiers:** `[]*schematichq.CreatePriceTierRequestBody` — Use MonthlyPriceTiers or YearlyPriceTiers instead
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyMeteredPriceID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyPriceTiers:** `[]*schematichq.CreatePriceTierRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyUnitPrice:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyUnitPriceDecimal:** `*string` 
     
 </dd>
 </dl>
@@ -11797,6 +11887,38 @@ client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dd>
 
 **priceTiers:** `[]*schematichq.CreatePriceTierRequestBody` — Use MonthlyPriceTiers or YearlyPriceTiers instead
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyMeteredPriceID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyPriceTiers:** `[]*schematichq.CreatePriceTierRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyUnitPrice:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quarterlyUnitPriceDecimal:** `*string` 
     
 </dd>
 </dl>
@@ -14098,6 +14220,257 @@ client.Components.PreviewComponentData(
 <dd>
 
 **componentID:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## planbundle
+<details><summary><code>client.Planbundle.CreateCustomPlanBundle(request) -> *schematichq.CreateCustomPlanBundleResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreateCustomPlanBundleRequestBody{
+        Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
+            &schematichq.PlanBundleEntitlementRequestBody{
+                Action: schematichq.PlanBundleActionCreate,
+            },
+        },
+    }
+client.Planbundle.CreateCustomPlanBundle(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProduct:** `*schematichq.UpsertBillingProductRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**entitlements:** `[]*schematichq.PlanBundleEntitlementRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**plan:** `*schematichq.CreateCustomPlanBundlePlanRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Planbundle.CreatePlanBundle(request) -> *schematichq.CreatePlanBundleResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreatePlanBundleRequestBody{
+        Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
+            &schematichq.PlanBundleEntitlementRequestBody{
+                Action: schematichq.PlanBundleActionCreate,
+            },
+        },
+    }
+client.Planbundle.CreatePlanBundle(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProduct:** `*schematichq.UpsertBillingProductRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditGrants:** `[]*schematichq.PlanBundleCreditGrantRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**entitlements:** `[]*schematichq.PlanBundleEntitlementRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**plan:** `*schematichq.CreatePlanRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**traits:** `[]*schematichq.UpdatePlanTraitTraitRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Planbundle.UpdatePlanBundle(PlanBundleID, request) -> *schematichq.UpdatePlanBundleResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdatePlanBundleRequestBody{
+        Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
+            &schematichq.PlanBundleEntitlementRequestBody{
+                Action: schematichq.PlanBundleActionCreate,
+            },
+        },
+    }
+client.Planbundle.UpdatePlanBundle(
+        context.TODO(),
+        "plan_bundle_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planBundleID:** `string` — plan_bundle_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**billingProduct:** `*schematichq.UpsertBillingProductRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditGrants:** `[]*schematichq.PlanBundleCreditGrantRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**entitlements:** `[]*schematichq.PlanBundleEntitlementRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**plan:** `*schematichq.UpdatePlanRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**traits:** `[]*schematichq.UpdatePlanTraitTraitRequestBody` 
     
 </dd>
 </dl>
@@ -16704,190 +17077,6 @@ client.Integrationsapi.UninstallIntegration(
 <dd>
 
 **integrationID:** `string` — integration_id
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## planbundle
-<details><summary><code>client.Planbundle.CreatePlanBundle(request) -> *schematichq.CreatePlanBundleResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.CreatePlanBundleRequestBody{
-        Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
-            &schematichq.PlanBundleEntitlementRequestBody{
-                Action: schematichq.PlanBundleActionCreate,
-            },
-        },
-    }
-client.Planbundle.CreatePlanBundle(
-        context.TODO(),
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**billingProduct:** `*schematichq.UpsertBillingProductRequestBody` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**creditGrants:** `[]*schematichq.PlanBundleCreditGrantRequestBody` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**entitlements:** `[]*schematichq.PlanBundleEntitlementRequestBody` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**plan:** `*schematichq.CreatePlanRequestBody` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**traits:** `[]*schematichq.UpdatePlanTraitTraitRequestBody` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Planbundle.UpdatePlanBundle(PlanBundleID, request) -> *schematichq.UpdatePlanBundleResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.UpdatePlanBundleRequestBody{
-        Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
-            &schematichq.PlanBundleEntitlementRequestBody{
-                Action: schematichq.PlanBundleActionCreate,
-            },
-        },
-    }
-client.Planbundle.UpdatePlanBundle(
-        context.TODO(),
-        "plan_bundle_id",
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**planBundleID:** `string` — plan_bundle_id
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**billingProduct:** `*schematichq.UpsertBillingProductRequestBody` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**creditGrants:** `[]*schematichq.PlanBundleCreditGrantRequestBody` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**entitlements:** `[]*schematichq.PlanBundleEntitlementRequestBody` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**plan:** `*schematichq.UpdatePlanRequestBody` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**planVersionID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**traits:** `[]*schematichq.UpdatePlanTraitTraitRequestBody` 
     
 </dd>
 </dl>

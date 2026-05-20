@@ -52,7 +52,7 @@ func NewRequestOptions(opts ...RequestOption) *RequestOptions {
 		HTTPHeader:      make(http.Header),
 		BodyProperties:  make(map[string]interface{}),
 		QueryParameters: make(url.Values),
-		LogLevel:        LogLevelInfo, // Default log level
+		LogLevel:        LogLevelWarn,
 	}
 	for _, opt := range opts {
 		opt.applyRequestOptions(options)

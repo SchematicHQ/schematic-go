@@ -46,6 +46,7 @@ generate.go
 generate.sh
 http/offline.go
 logger/logger.go
+logger/logger_test.go
 mocks/http_mock.go
 option/custom_options.go
 webhooks/verification.go

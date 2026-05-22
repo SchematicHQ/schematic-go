@@ -50,3 +50,6 @@ mocks/http_mock.go
 option/custom_options.go
 webhooks/verification.go
 webhooks/verification_test.go
+.fern/replay.lock
+.fern/replay.yml
+.gitattributes

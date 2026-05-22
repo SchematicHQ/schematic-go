@@ -11,6 +11,81 @@ import (
 )
 
 var (
+	acquireCreditLeaseRequestBodyFieldCompanyID       = big.NewInt(1 << 0)
+	acquireCreditLeaseRequestBodyFieldCreditTypeID    = big.NewInt(1 << 1)
+	acquireCreditLeaseRequestBodyFieldExpiresAt       = big.NewInt(1 << 2)
+	acquireCreditLeaseRequestBodyFieldRequestedAmount = big.NewInt(1 << 3)
+)
+
+type AcquireCreditLeaseRequestBody struct {
+	CompanyID       string     `json:"company_id" url:"-"`
+	CreditTypeID    string     `json:"credit_type_id" url:"-"`
+	ExpiresAt       *time.Time `json:"expires_at,omitempty" url:"-"`
+	RequestedAmount float64    `json:"requested_amount" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (a *AcquireCreditLeaseRequestBody) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AcquireCreditLeaseRequestBody) SetCompanyID(companyID string) {
+	a.CompanyID = companyID
+	a.require(acquireCreditLeaseRequestBodyFieldCompanyID)
+}
+
+// SetCreditTypeID sets the CreditTypeID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AcquireCreditLeaseRequestBody) SetCreditTypeID(creditTypeID string) {
+	a.CreditTypeID = creditTypeID
+	a.require(acquireCreditLeaseRequestBodyFieldCreditTypeID)
+}
+
+// SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AcquireCreditLeaseRequestBody) SetExpiresAt(expiresAt *time.Time) {
+	a.ExpiresAt = expiresAt
+	a.require(acquireCreditLeaseRequestBodyFieldExpiresAt)
+}
+
+// SetRequestedAmount sets the RequestedAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AcquireCreditLeaseRequestBody) SetRequestedAmount(requestedAmount float64) {
+	a.RequestedAmount = requestedAmount
+	a.require(acquireCreditLeaseRequestBodyFieldRequestedAmount)
+}
+
+func (a *AcquireCreditLeaseRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler AcquireCreditLeaseRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*a = AcquireCreditLeaseRequestBody(body)
+	return nil
+}
+
+func (a *AcquireCreditLeaseRequestBody) MarshalJSON() ([]byte, error) {
+	type embed AcquireCreditLeaseRequestBody
+	var marshaler = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed:     embed(*a),
+		ExpiresAt: internal.NewOptionalDateTime(a.ExpiresAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	countBillingCreditsRequestFieldIDs    = big.NewInt(1 << 0)
 	countBillingCreditsRequestFieldName   = big.NewInt(1 << 1)
 	countBillingCreditsRequestFieldLimit  = big.NewInt(1 << 2)
@@ -845,6 +920,63 @@ func (d *DeleteBillingPlanCreditGrantRequest) require(field *big.Int) {
 func (d *DeleteBillingPlanCreditGrantRequest) SetApplyToExisting(applyToExisting *bool) {
 	d.ApplyToExisting = applyToExisting
 	d.require(deleteBillingPlanCreditGrantRequestFieldApplyToExisting)
+}
+
+var (
+	extendCreditLeaseRequestBodyFieldAdditionalAmount = big.NewInt(1 << 0)
+	extendCreditLeaseRequestBodyFieldExpiresAt        = big.NewInt(1 << 1)
+)
+
+type ExtendCreditLeaseRequestBody struct {
+	AdditionalAmount float64    `json:"additional_amount" url:"-"`
+	ExpiresAt        *time.Time `json:"expires_at,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (e *ExtendCreditLeaseRequestBody) require(field *big.Int) {
+	if e.explicitFields == nil {
+		e.explicitFields = big.NewInt(0)
+	}
+	e.explicitFields.Or(e.explicitFields, field)
+}
+
+// SetAdditionalAmount sets the AdditionalAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *ExtendCreditLeaseRequestBody) SetAdditionalAmount(additionalAmount float64) {
+	e.AdditionalAmount = additionalAmount
+	e.require(extendCreditLeaseRequestBodyFieldAdditionalAmount)
+}
+
+// SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *ExtendCreditLeaseRequestBody) SetExpiresAt(expiresAt *time.Time) {
+	e.ExpiresAt = expiresAt
+	e.require(extendCreditLeaseRequestBodyFieldExpiresAt)
+}
+
+func (e *ExtendCreditLeaseRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler ExtendCreditLeaseRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*e = ExtendCreditLeaseRequestBody(body)
+	return nil
+}
+
+func (e *ExtendCreditLeaseRequestBody) MarshalJSON() ([]byte, error) {
+	type embed ExtendCreditLeaseRequestBody
+	var marshaler = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed:     embed(*e),
+		ExpiresAt: internal.NewOptionalDateTime(e.ExpiresAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, e.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -3289,6 +3421,222 @@ func (c CreditGrantSortOrder) Ptr() *CreditGrantSortOrder {
 }
 
 var (
+	creditLeaseResponseDataFieldCompanyID     = big.NewInt(1 << 0)
+	creditLeaseResponseDataFieldCreatedAt     = big.NewInt(1 << 1)
+	creditLeaseResponseDataFieldCreditTypeID  = big.NewInt(1 << 2)
+	creditLeaseResponseDataFieldExpiresAt     = big.NewInt(1 << 3)
+	creditLeaseResponseDataFieldGrantedAmount = big.NewInt(1 << 4)
+	creditLeaseResponseDataFieldID            = big.NewInt(1 << 5)
+	creditLeaseResponseDataFieldReleasedAt    = big.NewInt(1 << 6)
+	creditLeaseResponseDataFieldUpdatedAt     = big.NewInt(1 << 7)
+)
+
+type CreditLeaseResponseData struct {
+	CompanyID     string     `json:"company_id" url:"company_id"`
+	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
+	CreditTypeID  string     `json:"credit_type_id" url:"credit_type_id"`
+	ExpiresAt     time.Time  `json:"expires_at" url:"expires_at"`
+	GrantedAmount float64    `json:"granted_amount" url:"granted_amount"`
+	ID            string     `json:"id" url:"id"`
+	ReleasedAt    *time.Time `json:"released_at,omitempty" url:"released_at,omitempty"`
+	UpdatedAt     time.Time  `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditLeaseResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CreditLeaseResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CreditLeaseResponseData) GetCreditTypeID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditTypeID
+}
+
+func (c *CreditLeaseResponseData) GetExpiresAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.ExpiresAt
+}
+
+func (c *CreditLeaseResponseData) GetGrantedAmount() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.GrantedAmount
+}
+
+func (c *CreditLeaseResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CreditLeaseResponseData) GetReleasedAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.ReleasedAt
+}
+
+func (c *CreditLeaseResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CreditLeaseResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditLeaseResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLeaseResponseData) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(creditLeaseResponseDataFieldCompanyID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLeaseResponseData) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(creditLeaseResponseDataFieldCreatedAt)
+}
+
+// SetCreditTypeID sets the CreditTypeID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLeaseResponseData) SetCreditTypeID(creditTypeID string) {
+	c.CreditTypeID = creditTypeID
+	c.require(creditLeaseResponseDataFieldCreditTypeID)
+}
+
+// SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLeaseResponseData) SetExpiresAt(expiresAt time.Time) {
+	c.ExpiresAt = expiresAt
+	c.require(creditLeaseResponseDataFieldExpiresAt)
+}
+
+// SetGrantedAmount sets the GrantedAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLeaseResponseData) SetGrantedAmount(grantedAmount float64) {
+	c.GrantedAmount = grantedAmount
+	c.require(creditLeaseResponseDataFieldGrantedAmount)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLeaseResponseData) SetID(id string) {
+	c.ID = id
+	c.require(creditLeaseResponseDataFieldID)
+}
+
+// SetReleasedAt sets the ReleasedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLeaseResponseData) SetReleasedAt(releasedAt *time.Time) {
+	c.ReleasedAt = releasedAt
+	c.require(creditLeaseResponseDataFieldReleasedAt)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLeaseResponseData) SetUpdatedAt(updatedAt time.Time) {
+	c.UpdatedAt = updatedAt
+	c.require(creditLeaseResponseDataFieldUpdatedAt)
+}
+
+func (c *CreditLeaseResponseData) UnmarshalJSON(data []byte) error {
+	type embed CreditLeaseResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		ExpiresAt  *internal.DateTime `json:"expires_at"`
+		ReleasedAt *internal.DateTime `json:"released_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CreditLeaseResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.ExpiresAt = unmarshaler.ExpiresAt.Time()
+	c.ReleasedAt = unmarshaler.ReleasedAt.TimePtr()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditLeaseResponseData) MarshalJSON() ([]byte, error) {
+	type embed CreditLeaseResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		ExpiresAt  *internal.DateTime `json:"expires_at"`
+		ReleasedAt *internal.DateTime `json:"released_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed:      embed(*c),
+		CreatedAt:  internal.NewDateTime(c.CreatedAt),
+		ExpiresAt:  internal.NewDateTime(c.ExpiresAt),
+		ReleasedAt: internal.NewOptionalDateTime(c.ReleasedAt),
+		UpdatedAt:  internal.NewDateTime(c.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditLeaseResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	creditLedgerEnrichedEntryResponseDataFieldBillingCreditAutoTopupGrantCount = big.NewInt(1 << 0)
 	creditLedgerEnrichedEntryResponseDataFieldBillingCreditID                  = big.NewInt(1 << 1)
 	creditLedgerEnrichedEntryResponseDataFieldCompany                          = big.NewInt(1 << 2)
@@ -4054,6 +4402,109 @@ func (f *FeatureLedgerResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", f)
+}
+
+type ReleaseCreditLeaseRequestBody = map[string]any
+
+var (
+	acquireCreditLeaseResponseFieldData   = big.NewInt(1 << 0)
+	acquireCreditLeaseResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type AcquireCreditLeaseResponse struct {
+	Data *CreditLeaseResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AcquireCreditLeaseResponse) GetData() *CreditLeaseResponseData {
+	if a == nil {
+		return nil
+	}
+	return a.Data
+}
+
+func (a *AcquireCreditLeaseResponse) GetParams() map[string]any {
+	if a == nil {
+		return nil
+	}
+	return a.Params
+}
+
+func (a *AcquireCreditLeaseResponse) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AcquireCreditLeaseResponse) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AcquireCreditLeaseResponse) SetData(data *CreditLeaseResponseData) {
+	a.Data = data
+	a.require(acquireCreditLeaseResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AcquireCreditLeaseResponse) SetParams(params map[string]any) {
+	a.Params = params
+	a.require(acquireCreditLeaseResponseFieldParams)
+}
+
+func (a *AcquireCreditLeaseResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler AcquireCreditLeaseResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AcquireCreditLeaseResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AcquireCreditLeaseResponse) MarshalJSON() ([]byte, error) {
+	type embed AcquireCreditLeaseResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AcquireCreditLeaseResponse) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
 }
 
 // Input parameters
@@ -6532,6 +6983,107 @@ func (d *DeleteCreditBundleResponse) String() string {
 }
 
 var (
+	extendCreditLeaseResponseFieldData   = big.NewInt(1 << 0)
+	extendCreditLeaseResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ExtendCreditLeaseResponse struct {
+	Data *CreditLeaseResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *ExtendCreditLeaseResponse) GetData() *CreditLeaseResponseData {
+	if e == nil {
+		return nil
+	}
+	return e.Data
+}
+
+func (e *ExtendCreditLeaseResponse) GetParams() map[string]any {
+	if e == nil {
+		return nil
+	}
+	return e.Params
+}
+
+func (e *ExtendCreditLeaseResponse) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.extraProperties
+}
+
+func (e *ExtendCreditLeaseResponse) require(field *big.Int) {
+	if e.explicitFields == nil {
+		e.explicitFields = big.NewInt(0)
+	}
+	e.explicitFields.Or(e.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *ExtendCreditLeaseResponse) SetData(data *CreditLeaseResponseData) {
+	e.Data = data
+	e.require(extendCreditLeaseResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *ExtendCreditLeaseResponse) SetParams(params map[string]any) {
+	e.Params = params
+	e.require(extendCreditLeaseResponseFieldParams)
+}
+
+func (e *ExtendCreditLeaseResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ExtendCreditLeaseResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = ExtendCreditLeaseResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *ExtendCreditLeaseResponse) MarshalJSON() ([]byte, error) {
+	type embed ExtendCreditLeaseResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*e),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, e.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (e *ExtendCreditLeaseResponse) String() string {
+	if e == nil {
+		return "<nil>"
+	}
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+var (
 	getCreditBundleResponseFieldData   = big.NewInt(1 << 0)
 	getCreditBundleResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -9004,6 +9556,107 @@ func (l *ListGrantsForCreditResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	releaseCreditLeaseResponseFieldData   = big.NewInt(1 << 0)
+	releaseCreditLeaseResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ReleaseCreditLeaseResponse struct {
+	Data *CreditLeaseResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *ReleaseCreditLeaseResponse) GetData() *CreditLeaseResponseData {
+	if r == nil {
+		return nil
+	}
+	return r.Data
+}
+
+func (r *ReleaseCreditLeaseResponse) GetParams() map[string]any {
+	if r == nil {
+		return nil
+	}
+	return r.Params
+}
+
+func (r *ReleaseCreditLeaseResponse) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *ReleaseCreditLeaseResponse) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReleaseCreditLeaseResponse) SetData(data *CreditLeaseResponseData) {
+	r.Data = data
+	r.require(releaseCreditLeaseResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReleaseCreditLeaseResponse) SetParams(params map[string]any) {
+	r.Params = params
+	r.require(releaseCreditLeaseResponseFieldParams)
+}
+
+func (r *ReleaseCreditLeaseResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ReleaseCreditLeaseResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = ReleaseCreditLeaseResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *ReleaseCreditLeaseResponse) MarshalJSON() ([]byte, error) {
+	type embed ReleaseCreditLeaseResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *ReleaseCreditLeaseResponse) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
 }
 
 var (

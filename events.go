@@ -201,26 +201,39 @@ func (l *ListEventsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	createEventRequestBodyFieldBody           = big.NewInt(1 << 0)
-	createEventRequestBodyFieldEventType      = big.NewInt(1 << 1)
-	createEventRequestBodyFieldIdempotencyKey = big.NewInt(1 << 2)
-	createEventRequestBodyFieldSentAt         = big.NewInt(1 << 3)
+	createEventRequestBodyFieldBackfill           = big.NewInt(1 << 0)
+	createEventRequestBodyFieldBody               = big.NewInt(1 << 1)
+	createEventRequestBodyFieldEventType          = big.NewInt(1 << 2)
+	createEventRequestBodyFieldIdempotencyKey     = big.NewInt(1 << 3)
+	createEventRequestBodyFieldSentAt             = big.NewInt(1 << 4)
+	createEventRequestBodyFieldTrustedClientClock = big.NewInt(1 << 5)
 )
 
 type CreateEventRequestBody struct {
-	Body *EventBody `json:"body,omitempty" url:"body,omitempty"`
+	// Requires a secret API key, and trusted_client_clock. Import historical data without affecting billing.
+	Backfill *bool      `json:"backfill,omitempty" url:"backfill,omitempty"`
+	Body     *EventBody `json:"body,omitempty" url:"body,omitempty"`
 	// Either 'identify' or 'track'
 	EventType EventType `json:"event_type" url:"event_type"`
 	// Optional client-supplied key. Duplicate events with the same key (scoped to the environment) are dropped for 24h.
 	IdempotencyKey *string `json:"idempotency_key,omitempty" url:"idempotency_key,omitempty"`
 	// Optionally provide a timestamp at which the event was sent to Schematic
 	SentAt *time.Time `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+	// Requires a secret API key and sent_at. Use sent_at as the effective timestamp.
+	TrustedClientClock *bool `json:"trusted_client_clock,omitempty" url:"trusted_client_clock,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CreateEventRequestBody) GetBackfill() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.Backfill
 }
 
 func (c *CreateEventRequestBody) GetBody() *EventBody {
@@ -251,6 +264,13 @@ func (c *CreateEventRequestBody) GetSentAt() *time.Time {
 	return c.SentAt
 }
 
+func (c *CreateEventRequestBody) GetTrustedClientClock() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.TrustedClientClock
+}
+
 func (c *CreateEventRequestBody) GetExtraProperties() map[string]interface{} {
 	if c == nil {
 		return nil
@@ -263,6 +283,13 @@ func (c *CreateEventRequestBody) require(field *big.Int) {
 		c.explicitFields = big.NewInt(0)
 	}
 	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBackfill sets the Backfill field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEventRequestBody) SetBackfill(backfill *bool) {
+	c.Backfill = backfill
+	c.require(createEventRequestBodyFieldBackfill)
 }
 
 // SetBody sets the Body field and marks it as non-optional;
@@ -291,6 +318,13 @@ func (c *CreateEventRequestBody) SetIdempotencyKey(idempotencyKey *string) {
 func (c *CreateEventRequestBody) SetSentAt(sentAt *time.Time) {
 	c.SentAt = sentAt
 	c.require(createEventRequestBodyFieldSentAt)
+}
+
+// SetTrustedClientClock sets the TrustedClientClock field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEventRequestBody) SetTrustedClientClock(trustedClientClock *bool) {
+	c.TrustedClientClock = trustedClientClock
+	c.require(createEventRequestBodyFieldTrustedClientClock)
 }
 
 func (c *CreateEventRequestBody) UnmarshalJSON(data []byte) error {

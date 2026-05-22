@@ -4735,20 +4735,22 @@ func (b *BillingProductForSubscriptionResponseData) String() string {
 var (
 	billingProductPlanResponseDataFieldAccountID        = big.NewInt(1 << 0)
 	billingProductPlanResponseDataFieldBillingProductID = big.NewInt(1 << 1)
-	billingProductPlanResponseDataFieldChargeType       = big.NewInt(1 << 2)
-	billingProductPlanResponseDataFieldControlledBy     = big.NewInt(1 << 3)
-	billingProductPlanResponseDataFieldEnvironmentID    = big.NewInt(1 << 4)
-	billingProductPlanResponseDataFieldIsTrialable      = big.NewInt(1 << 5)
-	billingProductPlanResponseDataFieldMonthlyPriceID   = big.NewInt(1 << 6)
-	billingProductPlanResponseDataFieldOneTimePriceID   = big.NewInt(1 << 7)
-	billingProductPlanResponseDataFieldPlanID           = big.NewInt(1 << 8)
-	billingProductPlanResponseDataFieldTrialDays        = big.NewInt(1 << 9)
-	billingProductPlanResponseDataFieldYearlyPriceID    = big.NewInt(1 << 10)
+	billingProductPlanResponseDataFieldBillingStrategy  = big.NewInt(1 << 2)
+	billingProductPlanResponseDataFieldChargeType       = big.NewInt(1 << 3)
+	billingProductPlanResponseDataFieldControlledBy     = big.NewInt(1 << 4)
+	billingProductPlanResponseDataFieldEnvironmentID    = big.NewInt(1 << 5)
+	billingProductPlanResponseDataFieldIsTrialable      = big.NewInt(1 << 6)
+	billingProductPlanResponseDataFieldMonthlyPriceID   = big.NewInt(1 << 7)
+	billingProductPlanResponseDataFieldOneTimePriceID   = big.NewInt(1 << 8)
+	billingProductPlanResponseDataFieldPlanID           = big.NewInt(1 << 9)
+	billingProductPlanResponseDataFieldTrialDays        = big.NewInt(1 << 10)
+	billingProductPlanResponseDataFieldYearlyPriceID    = big.NewInt(1 << 11)
 )
 
 type BillingProductPlanResponseData struct {
 	AccountID        string              `json:"account_id" url:"account_id"`
 	BillingProductID string              `json:"billing_product_id" url:"billing_product_id"`
+	BillingStrategy  BillingStrategy     `json:"billing_strategy" url:"billing_strategy"`
 	ChargeType       ChargeType          `json:"charge_type" url:"charge_type"`
 	ControlledBy     BillingProviderType `json:"controlled_by" url:"controlled_by"`
 	EnvironmentID    string              `json:"environment_id" url:"environment_id"`
@@ -4778,6 +4780,13 @@ func (b *BillingProductPlanResponseData) GetBillingProductID() string {
 		return ""
 	}
 	return b.BillingProductID
+}
+
+func (b *BillingProductPlanResponseData) GetBillingStrategy() BillingStrategy {
+	if b == nil {
+		return ""
+	}
+	return b.BillingStrategy
 }
 
 func (b *BillingProductPlanResponseData) GetChargeType() ChargeType {
@@ -4869,6 +4878,13 @@ func (b *BillingProductPlanResponseData) SetAccountID(accountID string) {
 func (b *BillingProductPlanResponseData) SetBillingProductID(billingProductID string) {
 	b.BillingProductID = billingProductID
 	b.require(billingProductPlanResponseDataFieldBillingProductID)
+}
+
+// SetBillingStrategy sets the BillingStrategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductPlanResponseData) SetBillingStrategy(billingStrategy BillingStrategy) {
+	b.BillingStrategy = billingStrategy
+	b.require(billingProductPlanResponseDataFieldBillingStrategy)
 }
 
 // SetChargeType sets the ChargeType field and marks it as non-optional;
@@ -5447,6 +5463,31 @@ func NewBillingProviderTypeFromString(s string) (BillingProviderType, error) {
 }
 
 func (b BillingProviderType) Ptr() *BillingProviderType {
+	return &b
+}
+
+type BillingStrategy string
+
+const (
+	BillingStrategySchematicManaged BillingStrategy = "schematic_managed"
+	BillingStrategyProviderManaged  BillingStrategy = "provider_managed"
+	BillingStrategyNoBilling        BillingStrategy = "no_billing"
+)
+
+func NewBillingStrategyFromString(s string) (BillingStrategy, error) {
+	switch s {
+	case "schematic_managed":
+		return BillingStrategySchematicManaged, nil
+	case "provider_managed":
+		return BillingStrategyProviderManaged, nil
+	case "no_billing":
+		return BillingStrategyNoBilling, nil
+	}
+	var t BillingStrategy
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (b BillingStrategy) Ptr() *BillingStrategy {
 	return &b
 }
 
@@ -6734,6 +6775,7 @@ type ChargeType string
 
 const (
 	ChargeTypeFree      ChargeType = "free"
+	ChargeTypeNone      ChargeType = "none"
 	ChargeTypeOneTime   ChargeType = "one_time"
 	ChargeTypeRecurring ChargeType = "recurring"
 )
@@ -6742,6 +6784,8 @@ func NewChargeTypeFromString(s string) (ChargeType, error) {
 	switch s {
 	case "free":
 		return ChargeTypeFree, nil
+	case "none":
+		return ChargeTypeNone, nil
 	case "one_time":
 		return ChargeTypeOneTime, nil
 	case "recurring":
@@ -15191,19 +15235,23 @@ func (c *CustomPlanConfig) String() string {
 }
 
 var (
-	dataEventPayloadFieldAPIKey         = big.NewInt(1 << 0)
-	dataEventPayloadFieldBody           = big.NewInt(1 << 1)
-	dataEventPayloadFieldIdempotencyKey = big.NewInt(1 << 2)
-	dataEventPayloadFieldSentAt         = big.NewInt(1 << 3)
-	dataEventPayloadFieldType           = big.NewInt(1 << 4)
+	dataEventPayloadFieldAPIKey             = big.NewInt(1 << 0)
+	dataEventPayloadFieldBackfill           = big.NewInt(1 << 1)
+	dataEventPayloadFieldBody               = big.NewInt(1 << 2)
+	dataEventPayloadFieldIdempotencyKey     = big.NewInt(1 << 3)
+	dataEventPayloadFieldSentAt             = big.NewInt(1 << 4)
+	dataEventPayloadFieldTrustedClientClock = big.NewInt(1 << 5)
+	dataEventPayloadFieldType               = big.NewInt(1 << 6)
 )
 
 type DataEventPayload struct {
-	APIKey         string         `json:"api_key" url:"api_key"`
-	Body           map[string]any `json:"body,omitempty" url:"body,omitempty"`
-	IdempotencyKey *string        `json:"idempotency_key,omitempty" url:"idempotency_key,omitempty"`
-	SentAt         *time.Time     `json:"sent_at,omitempty" url:"sent_at,omitempty"`
-	Type           EventType      `json:"type" url:"type"`
+	APIKey             string         `json:"api_key" url:"api_key"`
+	Backfill           *bool          `json:"backfill,omitempty" url:"backfill,omitempty"`
+	Body               map[string]any `json:"body,omitempty" url:"body,omitempty"`
+	IdempotencyKey     *string        `json:"idempotency_key,omitempty" url:"idempotency_key,omitempty"`
+	SentAt             *time.Time     `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+	TrustedClientClock *bool          `json:"trusted_client_clock,omitempty" url:"trusted_client_clock,omitempty"`
+	Type               EventType      `json:"type" url:"type"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -15217,6 +15265,13 @@ func (d *DataEventPayload) GetAPIKey() string {
 		return ""
 	}
 	return d.APIKey
+}
+
+func (d *DataEventPayload) GetBackfill() *bool {
+	if d == nil {
+		return nil
+	}
+	return d.Backfill
 }
 
 func (d *DataEventPayload) GetBody() map[string]any {
@@ -15238,6 +15293,13 @@ func (d *DataEventPayload) GetSentAt() *time.Time {
 		return nil
 	}
 	return d.SentAt
+}
+
+func (d *DataEventPayload) GetTrustedClientClock() *bool {
+	if d == nil {
+		return nil
+	}
+	return d.TrustedClientClock
 }
 
 func (d *DataEventPayload) GetType() EventType {
@@ -15268,6 +15330,13 @@ func (d *DataEventPayload) SetAPIKey(apiKey string) {
 	d.require(dataEventPayloadFieldAPIKey)
 }
 
+// SetBackfill sets the Backfill field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DataEventPayload) SetBackfill(backfill *bool) {
+	d.Backfill = backfill
+	d.require(dataEventPayloadFieldBackfill)
+}
+
 // SetBody sets the Body field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (d *DataEventPayload) SetBody(body map[string]any) {
@@ -15287,6 +15356,13 @@ func (d *DataEventPayload) SetIdempotencyKey(idempotencyKey *string) {
 func (d *DataEventPayload) SetSentAt(sentAt *time.Time) {
 	d.SentAt = sentAt
 	d.require(dataEventPayloadFieldSentAt)
+}
+
+// SetTrustedClientClock sets the TrustedClientClock field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DataEventPayload) SetTrustedClientClock(trustedClientClock *bool) {
+	d.TrustedClientClock = trustedClientClock
+	d.require(dataEventPayloadFieldTrustedClientClock)
 }
 
 // SetType sets the Type field and marks it as non-optional;
@@ -19989,6 +20065,7 @@ var (
 	featureViewFieldTrait                 = big.NewInt(1 << 15)
 	featureViewFieldTraitID               = big.NewInt(1 << 16)
 	featureViewFieldUpdatedAt             = big.NewInt(1 << 17)
+	featureViewFieldUsageLimitTraitID     = big.NewInt(1 << 18)
 )
 
 type FeatureView struct {
@@ -20010,6 +20087,7 @@ type FeatureView struct {
 	Trait                 *EntityTraitDefinitionResponseData `json:"trait,omitempty" url:"trait,omitempty"`
 	TraitID               *string                            `json:"trait_id,omitempty" url:"trait_id,omitempty"`
 	UpdatedAt             time.Time                          `json:"updated_at" url:"updated_at"`
+	UsageLimitTraitID     *string                            `json:"usage_limit_trait_id,omitempty" url:"usage_limit_trait_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -20142,6 +20220,13 @@ func (f *FeatureView) GetUpdatedAt() time.Time {
 		return time.Time{}
 	}
 	return f.UpdatedAt
+}
+
+func (f *FeatureView) GetUsageLimitTraitID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.UsageLimitTraitID
 }
 
 func (f *FeatureView) GetExtraProperties() map[string]interface{} {
@@ -20282,6 +20367,13 @@ func (f *FeatureView) SetTraitID(traitID *string) {
 func (f *FeatureView) SetUpdatedAt(updatedAt time.Time) {
 	f.UpdatedAt = updatedAt
 	f.require(featureViewFieldUpdatedAt)
+}
+
+// SetUsageLimitTraitID sets the UsageLimitTraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetUsageLimitTraitID(usageLimitTraitID *string) {
+	f.UsageLimitTraitID = usageLimitTraitID
+	f.require(featureViewFieldUsageLimitTraitID)
 }
 
 func (f *FeatureView) UnmarshalJSON(data []byte) error {
@@ -23871,32 +23963,33 @@ var (
 	planDetailResponseDataFieldAudienceType          = big.NewInt(1 << 1)
 	planDetailResponseDataFieldBillingLinkedResource = big.NewInt(1 << 2)
 	planDetailResponseDataFieldBillingProduct        = big.NewInt(1 << 3)
-	planDetailResponseDataFieldChargeType            = big.NewInt(1 << 4)
-	planDetailResponseDataFieldCompanyCount          = big.NewInt(1 << 5)
-	planDetailResponseDataFieldCompanyID             = big.NewInt(1 << 6)
-	planDetailResponseDataFieldCompanyName           = big.NewInt(1 << 7)
-	planDetailResponseDataFieldControlledBy          = big.NewInt(1 << 8)
-	planDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 9)
-	planDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 10)
-	planDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 11)
-	planDetailResponseDataFieldDescription           = big.NewInt(1 << 12)
-	planDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 13)
-	planDetailResponseDataFieldFeatures              = big.NewInt(1 << 14)
-	planDetailResponseDataFieldIcon                  = big.NewInt(1 << 15)
-	planDetailResponseDataFieldID                    = big.NewInt(1 << 16)
-	planDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 17)
-	planDetailResponseDataFieldIsDefault             = big.NewInt(1 << 18)
-	planDetailResponseDataFieldIsFree                = big.NewInt(1 << 19)
-	planDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 20)
-	planDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 21)
-	planDetailResponseDataFieldName                  = big.NewInt(1 << 22)
-	planDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 23)
-	planDetailResponseDataFieldPlanType              = big.NewInt(1 << 24)
-	planDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 25)
-	planDetailResponseDataFieldTrialDays             = big.NewInt(1 << 26)
-	planDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 27)
-	planDetailResponseDataFieldVersions              = big.NewInt(1 << 28)
-	planDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 29)
+	planDetailResponseDataFieldBillingStrategy       = big.NewInt(1 << 4)
+	planDetailResponseDataFieldChargeType            = big.NewInt(1 << 5)
+	planDetailResponseDataFieldCompanyCount          = big.NewInt(1 << 6)
+	planDetailResponseDataFieldCompanyID             = big.NewInt(1 << 7)
+	planDetailResponseDataFieldCompanyName           = big.NewInt(1 << 8)
+	planDetailResponseDataFieldControlledBy          = big.NewInt(1 << 9)
+	planDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 10)
+	planDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 11)
+	planDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 12)
+	planDetailResponseDataFieldDescription           = big.NewInt(1 << 13)
+	planDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 14)
+	planDetailResponseDataFieldFeatures              = big.NewInt(1 << 15)
+	planDetailResponseDataFieldIcon                  = big.NewInt(1 << 16)
+	planDetailResponseDataFieldID                    = big.NewInt(1 << 17)
+	planDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 18)
+	planDetailResponseDataFieldIsDefault             = big.NewInt(1 << 19)
+	planDetailResponseDataFieldIsFree                = big.NewInt(1 << 20)
+	planDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 21)
+	planDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 22)
+	planDetailResponseDataFieldName                  = big.NewInt(1 << 23)
+	planDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 24)
+	planDetailResponseDataFieldPlanType              = big.NewInt(1 << 25)
+	planDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 26)
+	planDetailResponseDataFieldTrialDays             = big.NewInt(1 << 27)
+	planDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 28)
+	planDetailResponseDataFieldVersions              = big.NewInt(1 << 29)
+	planDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 30)
 )
 
 type PlanDetailResponseData struct {
@@ -23904,6 +23997,7 @@ type PlanDetailResponseData struct {
 	AudienceType          *string                               `json:"audience_type,omitempty" url:"audience_type,omitempty"`
 	BillingLinkedResource *BillingLinkedResourceResponseData    `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
 	BillingProduct        *BillingProductDetailResponseData     `json:"billing_product,omitempty" url:"billing_product,omitempty"`
+	BillingStrategy       BillingStrategy                       `json:"billing_strategy" url:"billing_strategy"`
 	ChargeType            ChargeType                            `json:"charge_type" url:"charge_type"`
 	CompanyCount          int64                                 `json:"company_count" url:"company_count"`
 	CompanyID             *string                               `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -23919,17 +24013,18 @@ type PlanDetailResponseData struct {
 	ID                    string                                `json:"id" url:"id"`
 	IncludedCreditGrants  []*BillingPlanCreditGrantResponseData `json:"included_credit_grants,omitempty" url:"included_credit_grants,omitempty"`
 	IsDefault             bool                                  `json:"is_default" url:"is_default"`
-	IsFree                bool                                  `json:"is_free" url:"is_free"`
-	IsTrialable           bool                                  `json:"is_trialable" url:"is_trialable"`
-	MonthlyPrice          *BillingPriceResponseData             `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	Name                  string                                `json:"name" url:"name"`
-	OneTimePrice          *BillingPriceResponseData             `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
-	PlanType              PlanType                              `json:"plan_type" url:"plan_type"`
-	QuarterlyPrice        *BillingPriceResponseData             `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
-	TrialDays             *int64                                `json:"trial_days,omitempty" url:"trial_days,omitempty"`
-	UpdatedAt             time.Time                             `json:"updated_at" url:"updated_at"`
-	Versions              []*PlanVersionResponseData            `json:"versions" url:"versions"`
-	YearlyPrice           *BillingPriceResponseData             `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+	// Deprecated: Use BillingStrategy instead
+	IsFree         bool                       `json:"is_free" url:"is_free"`
+	IsTrialable    bool                       `json:"is_trialable" url:"is_trialable"`
+	MonthlyPrice   *BillingPriceResponseData  `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	Name           string                     `json:"name" url:"name"`
+	OneTimePrice   *BillingPriceResponseData  `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	PlanType       PlanType                   `json:"plan_type" url:"plan_type"`
+	QuarterlyPrice *BillingPriceResponseData  `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
+	TrialDays      *int64                     `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	UpdatedAt      time.Time                  `json:"updated_at" url:"updated_at"`
+	Versions       []*PlanVersionResponseData `json:"versions" url:"versions"`
+	YearlyPrice    *BillingPriceResponseData  `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -23964,6 +24059,13 @@ func (p *PlanDetailResponseData) GetBillingProduct() *BillingProductDetailRespon
 		return nil
 	}
 	return p.BillingProduct
+}
+
+func (p *PlanDetailResponseData) GetBillingStrategy() BillingStrategy {
+	if p == nil {
+		return ""
+	}
+	return p.BillingStrategy
 }
 
 func (p *PlanDetailResponseData) GetChargeType() ChargeType {
@@ -24188,6 +24290,13 @@ func (p *PlanDetailResponseData) SetBillingLinkedResource(billingLinkedResource 
 func (p *PlanDetailResponseData) SetBillingProduct(billingProduct *BillingProductDetailResponseData) {
 	p.BillingProduct = billingProduct
 	p.require(planDetailResponseDataFieldBillingProduct)
+}
+
+// SetBillingStrategy sets the BillingStrategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanDetailResponseData) SetBillingStrategy(billingStrategy BillingStrategy) {
+	p.BillingStrategy = billingStrategy
+	p.require(planDetailResponseDataFieldBillingStrategy)
 }
 
 // SetChargeType sets the ChargeType field and marks it as non-optional;
@@ -32738,23 +32847,25 @@ func (u *UpdateRuleRequestBody) String() string {
 
 var (
 	upsertBillingProductRequestBodyFieldBillingProductID = big.NewInt(1 << 0)
-	upsertBillingProductRequestBodyFieldChargeType       = big.NewInt(1 << 1)
-	upsertBillingProductRequestBodyFieldCurrency         = big.NewInt(1 << 2)
-	upsertBillingProductRequestBodyFieldCurrencyPrices   = big.NewInt(1 << 3)
-	upsertBillingProductRequestBodyFieldIsTrialable      = big.NewInt(1 << 4)
-	upsertBillingProductRequestBodyFieldMonthlyPrice     = big.NewInt(1 << 5)
-	upsertBillingProductRequestBodyFieldMonthlyPriceID   = big.NewInt(1 << 6)
-	upsertBillingProductRequestBodyFieldOneTimePrice     = big.NewInt(1 << 7)
-	upsertBillingProductRequestBodyFieldOneTimePriceID   = big.NewInt(1 << 8)
-	upsertBillingProductRequestBodyFieldQuarterlyPrice   = big.NewInt(1 << 9)
-	upsertBillingProductRequestBodyFieldQuarterlyPriceID = big.NewInt(1 << 10)
-	upsertBillingProductRequestBodyFieldTrialDays        = big.NewInt(1 << 11)
-	upsertBillingProductRequestBodyFieldYearlyPrice      = big.NewInt(1 << 12)
-	upsertBillingProductRequestBodyFieldYearlyPriceID    = big.NewInt(1 << 13)
+	upsertBillingProductRequestBodyFieldBillingStrategy  = big.NewInt(1 << 1)
+	upsertBillingProductRequestBodyFieldChargeType       = big.NewInt(1 << 2)
+	upsertBillingProductRequestBodyFieldCurrency         = big.NewInt(1 << 3)
+	upsertBillingProductRequestBodyFieldCurrencyPrices   = big.NewInt(1 << 4)
+	upsertBillingProductRequestBodyFieldIsTrialable      = big.NewInt(1 << 5)
+	upsertBillingProductRequestBodyFieldMonthlyPrice     = big.NewInt(1 << 6)
+	upsertBillingProductRequestBodyFieldMonthlyPriceID   = big.NewInt(1 << 7)
+	upsertBillingProductRequestBodyFieldOneTimePrice     = big.NewInt(1 << 8)
+	upsertBillingProductRequestBodyFieldOneTimePriceID   = big.NewInt(1 << 9)
+	upsertBillingProductRequestBodyFieldQuarterlyPrice   = big.NewInt(1 << 10)
+	upsertBillingProductRequestBodyFieldQuarterlyPriceID = big.NewInt(1 << 11)
+	upsertBillingProductRequestBodyFieldTrialDays        = big.NewInt(1 << 12)
+	upsertBillingProductRequestBodyFieldYearlyPrice      = big.NewInt(1 << 13)
+	upsertBillingProductRequestBodyFieldYearlyPriceID    = big.NewInt(1 << 14)
 )
 
 type UpsertBillingProductRequestBody struct {
 	BillingProductID *string                         `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
+	BillingStrategy  *BillingStrategy                `json:"billing_strategy,omitempty" url:"billing_strategy,omitempty"`
 	ChargeType       ChargeType                      `json:"charge_type" url:"charge_type"`
 	Currency         *string                         `json:"currency,omitempty" url:"currency,omitempty"`
 	CurrencyPrices   []*PlanCurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
@@ -32781,6 +32892,13 @@ func (u *UpsertBillingProductRequestBody) GetBillingProductID() *string {
 		return nil
 	}
 	return u.BillingProductID
+}
+
+func (u *UpsertBillingProductRequestBody) GetBillingStrategy() *BillingStrategy {
+	if u == nil {
+		return nil
+	}
+	return u.BillingStrategy
 }
 
 func (u *UpsertBillingProductRequestBody) GetChargeType() ChargeType {
@@ -32893,6 +33011,13 @@ func (u *UpsertBillingProductRequestBody) require(field *big.Int) {
 func (u *UpsertBillingProductRequestBody) SetBillingProductID(billingProductID *string) {
 	u.BillingProductID = billingProductID
 	u.require(upsertBillingProductRequestBodyFieldBillingProductID)
+}
+
+// SetBillingStrategy sets the BillingStrategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertBillingProductRequestBody) SetBillingStrategy(billingStrategy *BillingStrategy) {
+	u.BillingStrategy = billingStrategy
+	u.require(upsertBillingProductRequestBodyFieldBillingStrategy)
 }
 
 // SetChargeType sets the ChargeType field and marks it as non-optional;

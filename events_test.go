@@ -536,6 +536,14 @@ func TestSettersMarkExplicitListEventsRequest(t *testing.T) {
 }
 
 func TestSettersCreateEventRequestBody(t *testing.T) {
+	t.Run("SetBackfill", func(t *testing.T) {
+		obj := &CreateEventRequestBody{}
+		var fernTestValueBackfill *bool
+		obj.SetBackfill(fernTestValueBackfill)
+		assert.Equal(t, fernTestValueBackfill, obj.Backfill)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetBody", func(t *testing.T) {
 		obj := &CreateEventRequestBody{}
 		var fernTestValueBody *EventBody
@@ -568,9 +576,50 @@ func TestSettersCreateEventRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetTrustedClientClock", func(t *testing.T) {
+		obj := &CreateEventRequestBody{}
+		var fernTestValueTrustedClientClock *bool
+		obj.SetTrustedClientClock(fernTestValueTrustedClientClock)
+		assert.Equal(t, fernTestValueTrustedClientClock, obj.TrustedClientClock)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 }
 
 func TestGettersCreateEventRequestBody(t *testing.T) {
+	t.Run("GetBackfill", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEventRequestBody{}
+		var expected *bool
+		obj.Backfill = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetBackfill(), "getter should return the property value")
+	})
+
+	t.Run("GetBackfill_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEventRequestBody{}
+		obj.Backfill = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetBackfill(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetBackfill_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreateEventRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetBackfill() // Should return zero value
+	})
+
 	t.Run("GetBody", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -693,9 +742,73 @@ func TestGettersCreateEventRequestBody(t *testing.T) {
 		_ = obj.GetSentAt() // Should return zero value
 	})
 
+	t.Run("GetTrustedClientClock", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEventRequestBody{}
+		var expected *bool
+		obj.TrustedClientClock = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetTrustedClientClock(), "getter should return the property value")
+	})
+
+	t.Run("GetTrustedClientClock_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEventRequestBody{}
+		obj.TrustedClientClock = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetTrustedClientClock(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetTrustedClientClock_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreateEventRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetTrustedClientClock() // Should return zero value
+	})
+
 }
 
 func TestSettersMarkExplicitCreateEventRequestBody(t *testing.T) {
+	t.Run("SetBackfill_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEventRequestBody{}
+		var fernTestValueBackfill *bool
+
+		// Act
+		obj.SetBackfill(fernTestValueBackfill)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetBody_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -797,6 +910,37 @@ func TestSettersMarkExplicitCreateEventRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetSentAt(fernTestValueSentAt)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetTrustedClientClock_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEventRequestBody{}
+		var fernTestValueTrustedClientClock *bool
+
+		// Act
+		obj.SetTrustedClientClock(fernTestValueTrustedClientClock)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

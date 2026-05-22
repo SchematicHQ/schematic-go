@@ -5291,6 +5291,199 @@ client.Credits.ListGrantsForCredit(
 </dl>
 </details>
 
+<details><summary><code>client.Credits.AcquireCreditLease(request) -> *schematichq.AcquireCreditLeaseResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.AcquireCreditLeaseRequestBody{
+        CompanyID: "company_id",
+        CreditTypeID: "credit_type_id",
+        RequestedAmount: 1.1,
+    }
+client.Credits.AcquireCreditLease(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditTypeID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**expiresAt:** `*time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestedAmount:** `float64` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.ExtendCreditLease(LeaseID, request) -> *schematichq.ExtendCreditLeaseResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ExtendCreditLeaseRequestBody{
+        AdditionalAmount: 1.1,
+    }
+client.Credits.ExtendCreditLease(
+        context.TODO(),
+        "lease_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**leaseID:** `string` — lease_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**additionalAmount:** `float64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**expiresAt:** `*time.Time` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.ReleaseCreditLease(LeaseID, request) -> *schematichq.ReleaseCreditLeaseResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := map[string]any{
+        "key": "value",
+    }
+client.Credits.ReleaseCreditLease(
+        context.TODO(),
+        "lease_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**leaseID:** `string` — lease_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `schematichq.ReleaseCreditLeaseRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Credits.GetEnrichedCreditLedger() -> *schematichq.GetEnrichedCreditLedgerResponse</code></summary>
 <dl>
 <dd>

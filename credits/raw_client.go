@@ -24,8 +24,9 @@ func NewRawClient(options *core.RequestOptions) *RawClient {
 		baseURL: options.BaseURL,
 		caller: internal.NewCaller(
 			&internal.CallerParams{
-				Client:      options.HTTPClient,
-				MaxAttempts: options.MaxAttempts,
+				Client:         options.HTTPClient,
+				MaxAttempts:    options.MaxAttempts,
+				DisableRetries: options.DisableRetries,
 			},
 		),
 	}
@@ -62,6 +63,7 @@ func (r *RawClient) ListBillingCredits(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -104,6 +106,7 @@ func (r *RawClient) CreateBillingCredit(
 			Method:          http.MethodPost,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -150,6 +153,7 @@ func (r *RawClient) GetSingleBillingCredit(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -197,6 +201,7 @@ func (r *RawClient) UpdateBillingCredit(
 			Method:          http.MethodPut,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -243,6 +248,7 @@ func (r *RawClient) SoftDeleteBillingCredit(
 			Method:          http.MethodDelete,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -291,6 +297,7 @@ func (r *RawClient) ListCompanyCreditBalances(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -339,6 +346,7 @@ func (r *RawClient) ListCreditBundles(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -381,6 +389,7 @@ func (r *RawClient) CreateCreditBundle(
 			Method:          http.MethodPost,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -427,6 +436,7 @@ func (r *RawClient) GetCreditBundle(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -474,6 +484,7 @@ func (r *RawClient) UpdateCreditBundleDetails(
 			Method:          http.MethodPut,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -520,6 +531,7 @@ func (r *RawClient) DeleteCreditBundle(
 			Method:          http.MethodDelete,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -568,6 +580,7 @@ func (r *RawClient) CountCreditBundles(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -616,6 +629,7 @@ func (r *RawClient) CountBillingCredits(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -663,6 +677,7 @@ func (r *RawClient) ZeroOutGrant(
 			Method:          http.MethodPut,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -706,6 +721,7 @@ func (r *RawClient) GrantBillingCreditsToCompany(
 			Method:          http.MethodPost,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -755,6 +771,7 @@ func (r *RawClient) CountCompanyGrants(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -803,6 +820,7 @@ func (r *RawClient) ListCompanyGrants(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -851,6 +869,7 @@ func (r *RawClient) CountBillingCreditsGrants(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -899,6 +918,7 @@ func (r *RawClient) ListGrantsForCredit(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -910,6 +930,147 @@ func (r *RawClient) ListGrantsForCredit(
 		return nil, err
 	}
 	return &core.Response[*schematichq.ListGrantsForCreditResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
+func (r *RawClient) AcquireCreditLease(
+	ctx context.Context,
+	request *schematichq.AcquireCreditLeaseRequestBody,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.AcquireCreditLeaseResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := baseURL + "/billing/credits/lease"
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	headers.Add("Content-Type", "application/json")
+	var response *schematichq.AcquireCreditLeaseResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.AcquireCreditLeaseResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
+func (r *RawClient) ExtendCreditLease(
+	ctx context.Context,
+	// lease_id
+	leaseID string,
+	request *schematichq.ExtendCreditLeaseRequestBody,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.ExtendCreditLeaseResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/billing/credits/lease/%v/extend",
+		leaseID,
+	)
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	headers.Add("Content-Type", "application/json")
+	var response *schematichq.ExtendCreditLeaseResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPut,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.ExtendCreditLeaseResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
+func (r *RawClient) ReleaseCreditLease(
+	ctx context.Context,
+	// lease_id
+	leaseID string,
+	request schematichq.ReleaseCreditLeaseRequestBody,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.ReleaseCreditLeaseResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/billing/credits/lease/%v/release",
+		leaseID,
+	)
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	var response *schematichq.ReleaseCreditLeaseResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPut,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.ReleaseCreditLeaseResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,
@@ -947,6 +1108,7 @@ func (r *RawClient) GetEnrichedCreditLedger(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -995,6 +1157,7 @@ func (r *RawClient) CountCreditLedger(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -1043,6 +1206,7 @@ func (r *RawClient) ListBillingPlanCreditGrants(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -1084,6 +1248,7 @@ func (r *RawClient) CreateBillingPlanCreditGrant(
 			Method:          http.MethodPost,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -1130,6 +1295,7 @@ func (r *RawClient) GetSingleBillingPlanCreditGrant(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -1176,6 +1342,7 @@ func (r *RawClient) UpdateBillingPlanCreditGrant(
 			Method:          http.MethodPut,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -1230,6 +1397,7 @@ func (r *RawClient) DeleteBillingPlanCreditGrant(
 			Method:          http.MethodDelete,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -1278,6 +1446,7 @@ func (r *RawClient) CountBillingPlanCreditGrants(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -1326,6 +1495,7 @@ func (r *RawClient) ListCreditEventLedger(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -1374,6 +1544,7 @@ func (r *RawClient) CountCreditEventLedger(
 			Method:          http.MethodGet,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,

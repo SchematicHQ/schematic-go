@@ -26,8 +26,9 @@ func NewClient(options *core.RequestOptions) *Client {
 		baseURL:         options.BaseURL,
 		caller: internal.NewCaller(
 			&internal.CallerParams{
-				Client:      options.HTTPClient,
-				MaxAttempts: options.MaxAttempts,
+				Client:         options.HTTPClient,
+				MaxAttempts:    options.MaxAttempts,
+				DisableRetries: options.DisableRetries,
 			},
 		),
 	}
@@ -341,6 +342,60 @@ func (c *Client) ListGrantsForCredit(
 ) (*schematichq.ListGrantsForCreditResponse, error) {
 	response, err := c.WithRawResponse.ListGrantsForCredit(
 		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) AcquireCreditLease(
+	ctx context.Context,
+	request *schematichq.AcquireCreditLeaseRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.AcquireCreditLeaseResponse, error) {
+	response, err := c.WithRawResponse.AcquireCreditLease(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) ExtendCreditLease(
+	ctx context.Context,
+	// lease_id
+	leaseID string,
+	request *schematichq.ExtendCreditLeaseRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.ExtendCreditLeaseResponse, error) {
+	response, err := c.WithRawResponse.ExtendCreditLease(
+		ctx,
+		leaseID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) ReleaseCreditLease(
+	ctx context.Context,
+	// lease_id
+	leaseID string,
+	request schematichq.ReleaseCreditLeaseRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.ReleaseCreditLeaseResponse, error) {
+	response, err := c.WithRawResponse.ReleaseCreditLease(
+		ctx,
+		leaseID,
 		request,
 		opts...,
 	)

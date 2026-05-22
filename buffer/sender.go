@@ -14,12 +14,19 @@ import (
 	"github.com/schematichq/schematic-go/core"
 )
 
-// EventPayload represents an event in the format expected by the capture service
+// EventPayload represents an event in the format expected by the capture
+// service. The optional metadata fields (IdempotencyKey, SentAt,
+// TrustedClientClock, Backfill) map directly to the equivalent fields on
+// the server-side EventPayload and are omitted from the wire payload when
+// nil (per `omitempty`).
 type EventPayload struct {
-	APIKey    string                 `json:"api_key"`
-	Body      *schematicgo.EventBody `json:"body"`
-	EventType schematicgo.EventType  `json:"type"`
-	SentAt    *time.Time             `json:"sent_at,omitempty"`
+	APIKey             string                 `json:"api_key"`
+	Body               *schematicgo.EventBody `json:"body"`
+	EventType          schematicgo.EventType  `json:"type"`
+	IdempotencyKey     *string                `json:"idempotency_key,omitempty"`
+	SentAt             *time.Time             `json:"sent_at,omitempty"`
+	TrustedClientClock *bool                  `json:"trusted_client_clock,omitempty"`
+	Backfill           *bool                  `json:"backfill,omitempty"`
 }
 
 // BatchPayload represents the batch request body
@@ -111,10 +118,13 @@ func (h *HTTPEventSender) sendBatch(ctx context.Context, events []*schematicgo.C
 	eventPayloads := make([]EventPayload, len(events))
 	for i, event := range events {
 		eventPayloads[i] = EventPayload{
-			APIKey:    h.apiKey,
-			Body:      event.Body,
-			EventType: event.EventType,
-			SentAt:    event.SentAt,
+			APIKey:             h.apiKey,
+			Body:               event.Body,
+			EventType:          event.EventType,
+			IdempotencyKey:     event.IdempotencyKey,
+			SentAt:             event.SentAt,
+			TrustedClientClock: event.TrustedClientClock,
+			Backfill:           event.Backfill,
 		}
 	}
 

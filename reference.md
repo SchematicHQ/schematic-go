@@ -2239,6 +2239,50 @@ client.Billing.UpsertPaymentMethod(
 </dl>
 </details>
 
+<details><summary><code>client.Billing.DeletePaymentMethodByExternalID(BillingID) -> *schematichq.DeletePaymentMethodByExternalIDResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.DeletePaymentMethodByExternalID(
+        context.TODO(),
+        "billing_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingID:** `string` — billing_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Billing.ListBillingPrices() -> *schematichq.ListBillingPricesResponse</code></summary>
 <dl>
 <dd>

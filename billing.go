@@ -3878,6 +3878,107 @@ func (d *DeleteBillingProductResponse) String() string {
 }
 
 var (
+	deletePaymentMethodByExternalIDResponseFieldData   = big.NewInt(1 << 0)
+	deletePaymentMethodByExternalIDResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type DeletePaymentMethodByExternalIDResponse struct {
+	Data *DeleteResponse `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletePaymentMethodByExternalIDResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeletePaymentMethodByExternalIDResponse) GetParams() map[string]any {
+	if d == nil {
+		return nil
+	}
+	return d.Params
+}
+
+func (d *DeletePaymentMethodByExternalIDResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeletePaymentMethodByExternalIDResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeletePaymentMethodByExternalIDResponse) SetData(data *DeleteResponse) {
+	d.Data = data
+	d.require(deletePaymentMethodByExternalIDResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeletePaymentMethodByExternalIDResponse) SetParams(params map[string]any) {
+	d.Params = params
+	d.require(deletePaymentMethodByExternalIDResponseFieldParams)
+}
+
+func (d *DeletePaymentMethodByExternalIDResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeletePaymentMethodByExternalIDResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeletePaymentMethodByExternalIDResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeletePaymentMethodByExternalIDResponse) MarshalJSON() ([]byte, error) {
+	type embed DeletePaymentMethodByExternalIDResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeletePaymentMethodByExternalIDResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+var (
 	deleteProductPriceResponseFieldData   = big.NewInt(1 << 0)
 	deleteProductPriceResponseFieldParams = big.NewInt(1 << 1)
 )

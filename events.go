@@ -957,9 +957,10 @@ func (e *EventBodyIdentifyCompany) String() string {
 var (
 	eventBodyTrackFieldCompany  = big.NewInt(1 << 0)
 	eventBodyTrackFieldEvent    = big.NewInt(1 << 1)
-	eventBodyTrackFieldQuantity = big.NewInt(1 << 2)
-	eventBodyTrackFieldTraits   = big.NewInt(1 << 3)
-	eventBodyTrackFieldUser     = big.NewInt(1 << 4)
+	eventBodyTrackFieldLeaseID  = big.NewInt(1 << 2)
+	eventBodyTrackFieldQuantity = big.NewInt(1 << 3)
+	eventBodyTrackFieldTraits   = big.NewInt(1 << 4)
+	eventBodyTrackFieldUser     = big.NewInt(1 << 5)
 )
 
 type EventBodyTrack struct {
@@ -967,6 +968,8 @@ type EventBodyTrack struct {
 	Company map[string]string `json:"company,omitempty" url:"company,omitempty"`
 	// The name of the type of track event
 	Event string `json:"event" url:"event"`
+	// Credit lease ID this track event is redeeming against
+	LeaseID *string `json:"lease_id,omitempty" url:"lease_id,omitempty"`
 	// Optionally specify the quantity of the event
 	Quantity *int `json:"quantity,omitempty" url:"quantity,omitempty"`
 	// A map of trait names to trait values
@@ -993,6 +996,13 @@ func (e *EventBodyTrack) GetEvent() string {
 		return ""
 	}
 	return e.Event
+}
+
+func (e *EventBodyTrack) GetLeaseID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.LeaseID
 }
 
 func (e *EventBodyTrack) GetQuantity() *int {
@@ -1042,6 +1052,13 @@ func (e *EventBodyTrack) SetCompany(company map[string]string) {
 func (e *EventBodyTrack) SetEvent(event string) {
 	e.Event = event
 	e.require(eventBodyTrackFieldEvent)
+}
+
+// SetLeaseID sets the LeaseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyTrack) SetLeaseID(leaseID *string) {
+	e.LeaseID = leaseID
+	e.require(eventBodyTrackFieldLeaseID)
 }
 
 // SetQuantity sets the Quantity field and marks it as non-optional;

@@ -210,6 +210,23 @@ func (c *Client) UpsertPaymentMethod(
 	return response.Body, nil
 }
 
+func (c *Client) DeletePaymentMethodByExternalID(
+	ctx context.Context,
+	// billing_id
+	billingID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeletePaymentMethodByExternalIDResponse, error) {
+	response, err := c.WithRawResponse.DeletePaymentMethodByExternalID(
+		ctx,
+		billingID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) ListBillingPrices(
 	ctx context.Context,
 	request *schematichq.ListBillingPricesRequest,

@@ -546,6 +546,52 @@ func (r *RawClient) UpsertPaymentMethod(
 	}, nil
 }
 
+func (r *RawClient) DeletePaymentMethodByExternalID(
+	ctx context.Context,
+	// billing_id
+	billingID string,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.DeletePaymentMethodByExternalIDResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/billing/payment-methods/%v",
+		billingID,
+	)
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	var response *schematichq.DeletePaymentMethodByExternalIDResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.DeletePaymentMethodByExternalIDResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
 func (r *RawClient) ListBillingPrices(
 	ctx context.Context,
 	request *schematichq.ListBillingPricesRequest,

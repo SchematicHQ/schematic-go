@@ -2306,6 +2306,14 @@ func TestSettersEventBodyTrack(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetLeaseID", func(t *testing.T) {
+		obj := &EventBodyTrack{}
+		var fernTestValueLeaseID *string
+		obj.SetLeaseID(fernTestValueLeaseID)
+		assert.Equal(t, fernTestValueLeaseID, obj.LeaseID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetQuantity", func(t *testing.T) {
 		obj := &EventBodyTrack{}
 		var fernTestValueQuantity *int
@@ -2387,6 +2395,39 @@ func TestGettersEventBodyTrack(t *testing.T) {
 			}
 		}()
 		_ = obj.GetEvent() // Should return zero value
+	})
+
+	t.Run("GetLeaseID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &EventBodyTrack{}
+		var expected *string
+		obj.LeaseID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetLeaseID(), "getter should return the property value")
+	})
+
+	t.Run("GetLeaseID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &EventBodyTrack{}
+		obj.LeaseID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetLeaseID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetLeaseID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *EventBodyTrack
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetLeaseID() // Should return zero value
 	})
 
 	t.Run("GetQuantity", func(t *testing.T) {
@@ -2530,6 +2571,37 @@ func TestSettersMarkExplicitEventBodyTrack(t *testing.T) {
 
 		// Act
 		obj.SetEvent(fernTestValueEvent)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetLeaseID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &EventBodyTrack{}
+		var fernTestValueLeaseID *string
+
+		// Act
+		obj.SetLeaseID(fernTestValueLeaseID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

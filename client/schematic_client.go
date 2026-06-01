@@ -49,15 +49,21 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		opts = append(opts, core.WithFlagCheckCacheProvider(cache.NewDefaultCache[*core.CheckFlagResponse]()))
 	}
 
-	if options.Logger == nil {
+	// Track whether we're supplying the SDK-default logger so we only apply the
+	// configured log level to our own logger. A consumer-provided logger's level
+	// is the source of truth and must not be overridden.
+	usingDefaultLogger := options.Logger == nil
+	if usingDefaultLogger {
 		opts = append(opts, core.WithLogger(logger.NewDefaultLogger()))
 	}
 
 	// Rebuild options struct in case we added any new options above
 	options = core.NewRequestOptions(opts...)
 
-	if setter, ok := options.Logger.(interface{ SetLevel(core.LogLevel) }); ok {
-		setter.SetLevel(options.LogLevel)
+	if usingDefaultLogger {
+		if setter, ok := options.Logger.(interface{ SetLevel(core.LogLevel) }); ok {
+			setter.SetLevel(options.LogLevel)
+		}
 	}
 
 	client := &SchematicClient{

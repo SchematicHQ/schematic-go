@@ -81,6 +81,52 @@ func (r *RawClient) ListCompanyMigrations(
 	}, nil
 }
 
+func (r *RawClient) RetryCompanyMigration(
+	ctx context.Context,
+	// plan_version_company_migration_id
+	planVersionCompanyMigrationID string,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.RetryCompanyMigrationResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/plan-version-company-migrations/%v/retry",
+		planVersionCompanyMigrationID,
+	)
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	var response *schematichq.RetryCompanyMigrationResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.RetryCompanyMigrationResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
 func (r *RawClient) CountCompanyMigrations(
 	ctx context.Context,
 	request *schematichq.CountCompanyMigrationsRequest,
@@ -179,6 +225,50 @@ func (r *RawClient) ListMigrations(
 	}, nil
 }
 
+func (r *RawClient) CreateMigration(
+	ctx context.Context,
+	request *schematichq.CreateMigrationInput,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.CreateMigrationResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := baseURL + "/plan-version-migrations"
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	headers.Add("Content-Type", "application/json")
+	var response *schematichq.CreateMigrationResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.CreateMigrationResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
 func (r *RawClient) GetMigration(
 	ctx context.Context,
 	// plan_version_migration_id
@@ -219,6 +309,55 @@ func (r *RawClient) GetMigration(
 		return nil, err
 	}
 	return &core.Response[*schematichq.GetMigrationResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
+func (r *RawClient) RetryMigration(
+	ctx context.Context,
+	// plan_version_migration_id
+	planVersionMigrationID string,
+	request *schematichq.RetryMigrationRequestBody,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.RetryMigrationResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/plan-version-migrations/%v/retry",
+		planVersionMigrationID,
+	)
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	headers.Add("Content-Type", "application/json")
+	var response *schematichq.RetryMigrationResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.RetryMigrationResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,

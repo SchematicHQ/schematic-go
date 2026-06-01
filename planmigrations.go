@@ -128,6 +128,106 @@ func (c *CountMigrationsRequest) SetOffset(offset *int64) {
 }
 
 var (
+	createMigrationInputFieldCompanyIDs         = big.NewInt(1 << 0)
+	createMigrationInputFieldExcludedCompanyIDs = big.NewInt(1 << 1)
+	createMigrationInputFieldPlanID             = big.NewInt(1 << 2)
+	createMigrationInputFieldPlanVersionIDTo    = big.NewInt(1 << 3)
+	createMigrationInputFieldPlanVersionIDsFrom = big.NewInt(1 << 4)
+	createMigrationInputFieldStrategy           = big.NewInt(1 << 5)
+	createMigrationInputFieldTargetPlanType     = big.NewInt(1 << 6)
+)
+
+type CreateMigrationInput struct {
+	CompanyIDs         []string                     `json:"company_ids" url:"-"`
+	ExcludedCompanyIDs []string                     `json:"excluded_company_ids" url:"-"`
+	PlanID             string                       `json:"plan_id" url:"-"`
+	PlanVersionIDTo    string                       `json:"plan_version_id_to" url:"-"`
+	PlanVersionIDsFrom []string                     `json:"plan_version_ids_from" url:"-"`
+	Strategy           PlanVersionMigrationStrategy `json:"strategy" url:"-"`
+	TargetPlanType     PlanType                     `json:"target_plan_type" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CreateMigrationInput) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationInput) SetCompanyIDs(companyIDs []string) {
+	c.CompanyIDs = companyIDs
+	c.require(createMigrationInputFieldCompanyIDs)
+}
+
+// SetExcludedCompanyIDs sets the ExcludedCompanyIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationInput) SetExcludedCompanyIDs(excludedCompanyIDs []string) {
+	c.ExcludedCompanyIDs = excludedCompanyIDs
+	c.require(createMigrationInputFieldExcludedCompanyIDs)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationInput) SetPlanID(planID string) {
+	c.PlanID = planID
+	c.require(createMigrationInputFieldPlanID)
+}
+
+// SetPlanVersionIDTo sets the PlanVersionIDTo field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationInput) SetPlanVersionIDTo(planVersionIDTo string) {
+	c.PlanVersionIDTo = planVersionIDTo
+	c.require(createMigrationInputFieldPlanVersionIDTo)
+}
+
+// SetPlanVersionIDsFrom sets the PlanVersionIDsFrom field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationInput) SetPlanVersionIDsFrom(planVersionIDsFrom []string) {
+	c.PlanVersionIDsFrom = planVersionIDsFrom
+	c.require(createMigrationInputFieldPlanVersionIDsFrom)
+}
+
+// SetStrategy sets the Strategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationInput) SetStrategy(strategy PlanVersionMigrationStrategy) {
+	c.Strategy = strategy
+	c.require(createMigrationInputFieldStrategy)
+}
+
+// SetTargetPlanType sets the TargetPlanType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationInput) SetTargetPlanType(targetPlanType PlanType) {
+	c.TargetPlanType = targetPlanType
+	c.require(createMigrationInputFieldTargetPlanType)
+}
+
+func (c *CreateMigrationInput) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateMigrationInput
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateMigrationInput(body)
+	return nil
+}
+
+func (c *CreateMigrationInput) MarshalJSON() ([]byte, error) {
+	type embed CreateMigrationInput
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	listCompanyMigrationsRequestFieldMigrationID = big.NewInt(1 << 0)
 	listCompanyMigrationsRequestFieldQ           = big.NewInt(1 << 1)
 	listCompanyMigrationsRequestFieldStatus      = big.NewInt(1 << 2)
@@ -245,17 +345,113 @@ func (l *ListMigrationsRequest) SetOffset(offset *int64) {
 }
 
 var (
+	retryMigrationRequestBodyFieldErrorCodes = big.NewInt(1 << 0)
+)
+
+type RetryMigrationRequestBody struct {
+	ErrorCodes []MigrationErrorCode `json:"error_codes" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (r *RetryMigrationRequestBody) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetErrorCodes sets the ErrorCodes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RetryMigrationRequestBody) SetErrorCodes(errorCodes []MigrationErrorCode) {
+	r.ErrorCodes = errorCodes
+	r.require(retryMigrationRequestBodyFieldErrorCodes)
+}
+
+func (r *RetryMigrationRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler RetryMigrationRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*r = RetryMigrationRequestBody(body)
+	return nil
+}
+
+func (r *RetryMigrationRequestBody) MarshalJSON() ([]byte, error) {
+	type embed RetryMigrationRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+type MigrationErrorCode string
+
+const (
+	MigrationErrorCodeAmbiguousSubscriptionItem   MigrationErrorCode = "ambiguous_subscription_item"
+	MigrationErrorCodeMultipleSubscriptions       MigrationErrorCode = "multiple_subscriptions"
+	MigrationErrorCodeNoPriceForInterval          MigrationErrorCode = "no_price_for_interval"
+	MigrationErrorCodeNotOnOriginVersion          MigrationErrorCode = "not_on_origin_version"
+	MigrationErrorCodePermanentConfig             MigrationErrorCode = "permanent_config"
+	MigrationErrorCodePermanentDecline            MigrationErrorCode = "permanent_decline"
+	MigrationErrorCodeTransientDecline            MigrationErrorCode = "transient_decline"
+	MigrationErrorCodeTransientInfra              MigrationErrorCode = "transient_infra"
+	MigrationErrorCodeTransientStripe             MigrationErrorCode = "transient_stripe"
+	MigrationErrorCodeUnknown                     MigrationErrorCode = "unknown"
+	MigrationErrorCodeWouldLeaveEmptySubscription MigrationErrorCode = "would_leave_empty_subscription"
+)
+
+func NewMigrationErrorCodeFromString(s string) (MigrationErrorCode, error) {
+	switch s {
+	case "ambiguous_subscription_item":
+		return MigrationErrorCodeAmbiguousSubscriptionItem, nil
+	case "multiple_subscriptions":
+		return MigrationErrorCodeMultipleSubscriptions, nil
+	case "no_price_for_interval":
+		return MigrationErrorCodeNoPriceForInterval, nil
+	case "not_on_origin_version":
+		return MigrationErrorCodeNotOnOriginVersion, nil
+	case "permanent_config":
+		return MigrationErrorCodePermanentConfig, nil
+	case "permanent_decline":
+		return MigrationErrorCodePermanentDecline, nil
+	case "transient_decline":
+		return MigrationErrorCodeTransientDecline, nil
+	case "transient_infra":
+		return MigrationErrorCodeTransientInfra, nil
+	case "transient_stripe":
+		return MigrationErrorCodeTransientStripe, nil
+	case "unknown":
+		return MigrationErrorCodeUnknown, nil
+	case "would_leave_empty_subscription":
+		return MigrationErrorCodeWouldLeaveEmptySubscription, nil
+	}
+	var t MigrationErrorCode
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (m MigrationErrorCode) Ptr() *MigrationErrorCode {
+	return &m
+}
+
+var (
 	planVersionCompanyMigrationResponseDataFieldCompanyID         = big.NewInt(1 << 0)
 	planVersionCompanyMigrationResponseDataFieldCompanyName       = big.NewInt(1 << 1)
 	planVersionCompanyMigrationResponseDataFieldCompletedAt       = big.NewInt(1 << 2)
 	planVersionCompanyMigrationResponseDataFieldCreatedAt         = big.NewInt(1 << 3)
 	planVersionCompanyMigrationResponseDataFieldError             = big.NewInt(1 << 4)
-	planVersionCompanyMigrationResponseDataFieldID                = big.NewInt(1 << 5)
-	planVersionCompanyMigrationResponseDataFieldMigrationID       = big.NewInt(1 << 6)
-	planVersionCompanyMigrationResponseDataFieldPlanVersionIDFrom = big.NewInt(1 << 7)
-	planVersionCompanyMigrationResponseDataFieldStartedAt         = big.NewInt(1 << 8)
-	planVersionCompanyMigrationResponseDataFieldStatus            = big.NewInt(1 << 9)
-	planVersionCompanyMigrationResponseDataFieldUpdatedAt         = big.NewInt(1 << 10)
+	planVersionCompanyMigrationResponseDataFieldErrorCode         = big.NewInt(1 << 5)
+	planVersionCompanyMigrationResponseDataFieldID                = big.NewInt(1 << 6)
+	planVersionCompanyMigrationResponseDataFieldMigrationID       = big.NewInt(1 << 7)
+	planVersionCompanyMigrationResponseDataFieldPlanVersionIDFrom = big.NewInt(1 << 8)
+	planVersionCompanyMigrationResponseDataFieldStartedAt         = big.NewInt(1 << 9)
+	planVersionCompanyMigrationResponseDataFieldStatus            = big.NewInt(1 << 10)
+	planVersionCompanyMigrationResponseDataFieldUpdatedAt         = big.NewInt(1 << 11)
 )
 
 type PlanVersionCompanyMigrationResponseData struct {
@@ -264,6 +460,7 @@ type PlanVersionCompanyMigrationResponseData struct {
 	CompletedAt       *time.Time                        `json:"completed_at,omitempty" url:"completed_at,omitempty"`
 	CreatedAt         time.Time                         `json:"created_at" url:"created_at"`
 	Error             *string                           `json:"error,omitempty" url:"error,omitempty"`
+	ErrorCode         *MigrationErrorCode               `json:"error_code,omitempty" url:"error_code,omitempty"`
 	ID                string                            `json:"id" url:"id"`
 	MigrationID       string                            `json:"migration_id" url:"migration_id"`
 	PlanVersionIDFrom *string                           `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
@@ -311,6 +508,13 @@ func (p *PlanVersionCompanyMigrationResponseData) GetError() *string {
 		return nil
 	}
 	return p.Error
+}
+
+func (p *PlanVersionCompanyMigrationResponseData) GetErrorCode() *MigrationErrorCode {
+	if p == nil {
+		return nil
+	}
+	return p.ErrorCode
 }
 
 func (p *PlanVersionCompanyMigrationResponseData) GetID() string {
@@ -402,6 +606,13 @@ func (p *PlanVersionCompanyMigrationResponseData) SetCreatedAt(createdAt time.Ti
 func (p *PlanVersionCompanyMigrationResponseData) SetError(error_ *string) {
 	p.Error = error_
 	p.require(planVersionCompanyMigrationResponseDataFieldError)
+}
+
+// SetErrorCode sets the ErrorCode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionCompanyMigrationResponseData) SetErrorCode(errorCode *MigrationErrorCode) {
+	p.ErrorCode = errorCode
+	p.require(planVersionCompanyMigrationResponseDataFieldErrorCode)
 }
 
 // SetID sets the ID field and marks it as non-optional;
@@ -549,12 +760,13 @@ var (
 	planVersionMigrationResponseDataFieldPlanID             = big.NewInt(1 << 6)
 	planVersionMigrationResponseDataFieldPlanVersionIDFrom  = big.NewInt(1 << 7)
 	planVersionMigrationResponseDataFieldPlanVersionIDTo    = big.NewInt(1 << 8)
-	planVersionMigrationResponseDataFieldSkippedCompanies   = big.NewInt(1 << 9)
-	planVersionMigrationResponseDataFieldStartedAt          = big.NewInt(1 << 10)
-	planVersionMigrationResponseDataFieldStatus             = big.NewInt(1 << 11)
-	planVersionMigrationResponseDataFieldStrategy           = big.NewInt(1 << 12)
-	planVersionMigrationResponseDataFieldTotalCompanies     = big.NewInt(1 << 13)
-	planVersionMigrationResponseDataFieldUpdatedAt          = big.NewInt(1 << 14)
+	planVersionMigrationResponseDataFieldPlanVersionIDsFrom = big.NewInt(1 << 9)
+	planVersionMigrationResponseDataFieldSkippedCompanies   = big.NewInt(1 << 10)
+	planVersionMigrationResponseDataFieldStartedAt          = big.NewInt(1 << 11)
+	planVersionMigrationResponseDataFieldStatus             = big.NewInt(1 << 12)
+	planVersionMigrationResponseDataFieldStrategy           = big.NewInt(1 << 13)
+	planVersionMigrationResponseDataFieldTotalCompanies     = big.NewInt(1 << 14)
+	planVersionMigrationResponseDataFieldUpdatedAt          = big.NewInt(1 << 15)
 )
 
 type PlanVersionMigrationResponseData struct {
@@ -567,6 +779,7 @@ type PlanVersionMigrationResponseData struct {
 	PlanID             string                       `json:"plan_id" url:"plan_id"`
 	PlanVersionIDFrom  *string                      `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
 	PlanVersionIDTo    string                       `json:"plan_version_id_to" url:"plan_version_id_to"`
+	PlanVersionIDsFrom []string                     `json:"plan_version_ids_from" url:"plan_version_ids_from"`
 	SkippedCompanies   int64                        `json:"skipped_companies" url:"skipped_companies"`
 	StartedAt          *time.Time                   `json:"started_at,omitempty" url:"started_at,omitempty"`
 	Status             PlanVersionMigrationStatus   `json:"status" url:"status"`
@@ -642,6 +855,13 @@ func (p *PlanVersionMigrationResponseData) GetPlanVersionIDTo() string {
 		return ""
 	}
 	return p.PlanVersionIDTo
+}
+
+func (p *PlanVersionMigrationResponseData) GetPlanVersionIDsFrom() []string {
+	if p == nil {
+		return nil
+	}
+	return p.PlanVersionIDsFrom
 }
 
 func (p *PlanVersionMigrationResponseData) GetSkippedCompanies() int64 {
@@ -761,6 +981,13 @@ func (p *PlanVersionMigrationResponseData) SetPlanVersionIDFrom(planVersionIDFro
 func (p *PlanVersionMigrationResponseData) SetPlanVersionIDTo(planVersionIDTo string) {
 	p.PlanVersionIDTo = planVersionIDTo
 	p.require(planVersionMigrationResponseDataFieldPlanVersionIDTo)
+}
+
+// SetPlanVersionIDsFrom sets the PlanVersionIDsFrom field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationResponseData) SetPlanVersionIDsFrom(planVersionIDsFrom []string) {
+	p.PlanVersionIDsFrom = planVersionIDsFrom
+	p.require(planVersionMigrationResponseDataFieldPlanVersionIDsFrom)
 }
 
 // SetSkippedCompanies sets the SkippedCompanies field and marks it as non-optional;
@@ -1384,6 +1611,107 @@ func (c *CountMigrationsResponse) String() string {
 }
 
 var (
+	createMigrationResponseFieldData   = big.NewInt(1 << 0)
+	createMigrationResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CreateMigrationResponse struct {
+	Data *PlanVersionMigrationResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateMigrationResponse) GetData() *PlanVersionMigrationResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateMigrationResponse) GetParams() map[string]any {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CreateMigrationResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateMigrationResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationResponse) SetData(data *PlanVersionMigrationResponseData) {
+	c.Data = data
+	c.require(createMigrationResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationResponse) SetParams(params map[string]any) {
+	c.Params = params
+	c.require(createMigrationResponseFieldParams)
+}
+
+func (c *CreateMigrationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateMigrationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateMigrationResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateMigrationResponse) MarshalJSON() ([]byte, error) {
+	type embed CreateMigrationResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateMigrationResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	getMigrationResponseFieldData   = big.NewInt(1 << 0)
 	getMigrationResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -1970,4 +2298,206 @@ func (l *ListMigrationsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	retryCompanyMigrationResponseFieldData   = big.NewInt(1 << 0)
+	retryCompanyMigrationResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type RetryCompanyMigrationResponse struct {
+	Data *PlanVersionCompanyMigrationResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RetryCompanyMigrationResponse) GetData() *PlanVersionCompanyMigrationResponseData {
+	if r == nil {
+		return nil
+	}
+	return r.Data
+}
+
+func (r *RetryCompanyMigrationResponse) GetParams() map[string]any {
+	if r == nil {
+		return nil
+	}
+	return r.Params
+}
+
+func (r *RetryCompanyMigrationResponse) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RetryCompanyMigrationResponse) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RetryCompanyMigrationResponse) SetData(data *PlanVersionCompanyMigrationResponseData) {
+	r.Data = data
+	r.require(retryCompanyMigrationResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RetryCompanyMigrationResponse) SetParams(params map[string]any) {
+	r.Params = params
+	r.require(retryCompanyMigrationResponseFieldParams)
+}
+
+func (r *RetryCompanyMigrationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler RetryCompanyMigrationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RetryCompanyMigrationResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RetryCompanyMigrationResponse) MarshalJSON() ([]byte, error) {
+	type embed RetryCompanyMigrationResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RetryCompanyMigrationResponse) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+var (
+	retryMigrationResponseFieldData   = big.NewInt(1 << 0)
+	retryMigrationResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type RetryMigrationResponse struct {
+	Data *PlanVersionMigrationResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RetryMigrationResponse) GetData() *PlanVersionMigrationResponseData {
+	if r == nil {
+		return nil
+	}
+	return r.Data
+}
+
+func (r *RetryMigrationResponse) GetParams() map[string]any {
+	if r == nil {
+		return nil
+	}
+	return r.Params
+}
+
+func (r *RetryMigrationResponse) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RetryMigrationResponse) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RetryMigrationResponse) SetData(data *PlanVersionMigrationResponseData) {
+	r.Data = data
+	r.require(retryMigrationResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RetryMigrationResponse) SetParams(params map[string]any) {
+	r.Params = params
+	r.require(retryMigrationResponseFieldParams)
+}
+
+func (r *RetryMigrationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler RetryMigrationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RetryMigrationResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RetryMigrationResponse) MarshalJSON() ([]byte, error) {
+	type embed RetryMigrationResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RetryMigrationResponse) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
 }

@@ -13,45 +13,47 @@ import (
 var (
 	planViewPublicResponseDataFieldActiveVersion         = big.NewInt(1 << 0)
 	planViewPublicResponseDataFieldAudienceType          = big.NewInt(1 << 1)
-	planViewPublicResponseDataFieldBillingLinkedResource = big.NewInt(1 << 2)
-	planViewPublicResponseDataFieldBillingProduct        = big.NewInt(1 << 3)
-	planViewPublicResponseDataFieldBillingStrategy       = big.NewInt(1 << 4)
-	planViewPublicResponseDataFieldChargeType            = big.NewInt(1 << 5)
-	planViewPublicResponseDataFieldCompanyCount          = big.NewInt(1 << 6)
-	planViewPublicResponseDataFieldCompanyID             = big.NewInt(1 << 7)
-	planViewPublicResponseDataFieldCompanyName           = big.NewInt(1 << 8)
-	planViewPublicResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 9)
-	planViewPublicResponseDataFieldControlledBy          = big.NewInt(1 << 10)
-	planViewPublicResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 11)
-	planViewPublicResponseDataFieldCreatedAt             = big.NewInt(1 << 12)
-	planViewPublicResponseDataFieldCurrencyPrices        = big.NewInt(1 << 13)
-	planViewPublicResponseDataFieldCustom                = big.NewInt(1 << 14)
-	planViewPublicResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 15)
-	planViewPublicResponseDataFieldDescription           = big.NewInt(1 << 16)
-	planViewPublicResponseDataFieldDraftVersion          = big.NewInt(1 << 17)
-	planViewPublicResponseDataFieldEntitlements          = big.NewInt(1 << 18)
-	planViewPublicResponseDataFieldFeatures              = big.NewInt(1 << 19)
-	planViewPublicResponseDataFieldIcon                  = big.NewInt(1 << 20)
-	planViewPublicResponseDataFieldID                    = big.NewInt(1 << 21)
-	planViewPublicResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 22)
-	planViewPublicResponseDataFieldIsCustom              = big.NewInt(1 << 23)
-	planViewPublicResponseDataFieldIsDefault             = big.NewInt(1 << 24)
-	planViewPublicResponseDataFieldIsFree                = big.NewInt(1 << 25)
-	planViewPublicResponseDataFieldIsTrialable           = big.NewInt(1 << 26)
-	planViewPublicResponseDataFieldMonthlyPrice          = big.NewInt(1 << 27)
-	planViewPublicResponseDataFieldName                  = big.NewInt(1 << 28)
-	planViewPublicResponseDataFieldOneTimePrice          = big.NewInt(1 << 29)
-	planViewPublicResponseDataFieldPlanType              = big.NewInt(1 << 30)
-	planViewPublicResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 31)
-	planViewPublicResponseDataFieldTrialDays             = big.NewInt(1 << 32)
-	planViewPublicResponseDataFieldUpdatedAt             = big.NewInt(1 << 33)
-	planViewPublicResponseDataFieldVersions              = big.NewInt(1 << 34)
-	planViewPublicResponseDataFieldYearlyPrice           = big.NewInt(1 << 35)
+	planViewPublicResponseDataFieldAvailablePeriods      = big.NewInt(1 << 2)
+	planViewPublicResponseDataFieldBillingLinkedResource = big.NewInt(1 << 3)
+	planViewPublicResponseDataFieldBillingProduct        = big.NewInt(1 << 4)
+	planViewPublicResponseDataFieldBillingStrategy       = big.NewInt(1 << 5)
+	planViewPublicResponseDataFieldChargeType            = big.NewInt(1 << 6)
+	planViewPublicResponseDataFieldCompanyCount          = big.NewInt(1 << 7)
+	planViewPublicResponseDataFieldCompanyID             = big.NewInt(1 << 8)
+	planViewPublicResponseDataFieldCompanyName           = big.NewInt(1 << 9)
+	planViewPublicResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 10)
+	planViewPublicResponseDataFieldControlledBy          = big.NewInt(1 << 11)
+	planViewPublicResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 12)
+	planViewPublicResponseDataFieldCreatedAt             = big.NewInt(1 << 13)
+	planViewPublicResponseDataFieldCurrencyPrices        = big.NewInt(1 << 14)
+	planViewPublicResponseDataFieldCustom                = big.NewInt(1 << 15)
+	planViewPublicResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 16)
+	planViewPublicResponseDataFieldDescription           = big.NewInt(1 << 17)
+	planViewPublicResponseDataFieldDraftVersion          = big.NewInt(1 << 18)
+	planViewPublicResponseDataFieldEntitlements          = big.NewInt(1 << 19)
+	planViewPublicResponseDataFieldFeatures              = big.NewInt(1 << 20)
+	planViewPublicResponseDataFieldIcon                  = big.NewInt(1 << 21)
+	planViewPublicResponseDataFieldID                    = big.NewInt(1 << 22)
+	planViewPublicResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 23)
+	planViewPublicResponseDataFieldIsCustom              = big.NewInt(1 << 24)
+	planViewPublicResponseDataFieldIsDefault             = big.NewInt(1 << 25)
+	planViewPublicResponseDataFieldIsFree                = big.NewInt(1 << 26)
+	planViewPublicResponseDataFieldIsTrialable           = big.NewInt(1 << 27)
+	planViewPublicResponseDataFieldMonthlyPrice          = big.NewInt(1 << 28)
+	planViewPublicResponseDataFieldName                  = big.NewInt(1 << 29)
+	planViewPublicResponseDataFieldOneTimePrice          = big.NewInt(1 << 30)
+	planViewPublicResponseDataFieldPlanType              = big.NewInt(1 << 31)
+	planViewPublicResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 32)
+	planViewPublicResponseDataFieldTrialDays             = big.NewInt(1 << 33)
+	planViewPublicResponseDataFieldUpdatedAt             = big.NewInt(1 << 34)
+	planViewPublicResponseDataFieldVersions              = big.NewInt(1 << 35)
+	planViewPublicResponseDataFieldYearlyPrice           = big.NewInt(1 << 36)
 )
 
 type PlanViewPublicResponseData struct {
 	ActiveVersion         *PlanVersionResponseData           `json:"active_version,omitempty" url:"active_version,omitempty"`
 	AudienceType          *string                            `json:"audience_type,omitempty" url:"audience_type,omitempty"`
+	AvailablePeriods      []PlanPriceCadence                 `json:"available_periods" url:"available_periods"`
 	BillingLinkedResource *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
 	BillingProduct        *BillingProductDetailResponseData  `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	BillingStrategy       BillingStrategy                    `json:"billing_strategy" url:"billing_strategy"`
@@ -68,7 +70,7 @@ type PlanViewPublicResponseData struct {
 	CustomPlanConfig      *CustomPlanConfig                  `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
 	Description           string                             `json:"description" url:"description"`
 	DraftVersion          *PlanVersionResponseData           `json:"draft_version,omitempty" url:"draft_version,omitempty"`
-	Entitlements          []*PlanEntitlementResponseData     `json:"entitlements" url:"entitlements"`
+	Entitlements          []*PlanEntitlementResponseData     `json:"entitlements,omitempty" url:"entitlements,omitempty"`
 	Features              []*FeatureInPlanResponseData       `json:"features" url:"features"`
 	Icon                  PlanIcon                           `json:"icon" url:"icon"`
 	ID                    string                             `json:"id" url:"id"`
@@ -107,6 +109,13 @@ func (p *PlanViewPublicResponseData) GetAudienceType() *string {
 		return nil
 	}
 	return p.AudienceType
+}
+
+func (p *PlanViewPublicResponseData) GetAvailablePeriods() []PlanPriceCadence {
+	if p == nil {
+		return nil
+	}
+	return p.AvailablePeriods
 }
 
 func (p *PlanViewPublicResponseData) GetBillingLinkedResource() *BillingLinkedResourceResponseData {
@@ -373,6 +382,13 @@ func (p *PlanViewPublicResponseData) SetActiveVersion(activeVersion *PlanVersion
 func (p *PlanViewPublicResponseData) SetAudienceType(audienceType *string) {
 	p.AudienceType = audienceType
 	p.require(planViewPublicResponseDataFieldAudienceType)
+}
+
+// SetAvailablePeriods sets the AvailablePeriods field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanViewPublicResponseData) SetAvailablePeriods(availablePeriods []PlanPriceCadence) {
+	p.AvailablePeriods = availablePeriods
+	p.require(planViewPublicResponseDataFieldAvailablePeriods)
 }
 
 // SetBillingLinkedResource sets the BillingLinkedResource field and marks it as non-optional;

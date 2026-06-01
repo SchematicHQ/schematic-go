@@ -1812,6 +1812,14 @@ func TestSettersCheckoutSubscription(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetInvoiceID", func(t *testing.T) {
+		obj := &CheckoutSubscription{}
+		var fernTestValueInvoiceID *string
+		obj.SetInvoiceID(fernTestValueInvoiceID)
+		assert.Equal(t, fernTestValueInvoiceID, obj.InvoiceID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetInvoiceURL", func(t *testing.T) {
 		obj := &CheckoutSubscription{}
 		var fernTestValueInvoiceURL *string
@@ -2262,6 +2270,39 @@ func TestGettersCheckoutSubscription(t *testing.T) {
 			}
 		}()
 		_ = obj.GetInterval() // Should return zero value
+	})
+
+	t.Run("GetInvoiceID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSubscription{}
+		var expected *string
+		obj.InvoiceID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetInvoiceID(), "getter should return the property value")
+	})
+
+	t.Run("GetInvoiceID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSubscription{}
+		obj.InvoiceID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetInvoiceID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetInvoiceID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CheckoutSubscription
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetInvoiceID() // Should return zero value
 	})
 
 	t.Run("GetInvoiceURL", func(t *testing.T) {
@@ -2917,6 +2958,37 @@ func TestSettersMarkExplicitCheckoutSubscription(t *testing.T) {
 
 		// Act
 		obj.SetInterval(fernTestValueInterval)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetInvoiceID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSubscription{}
+		var fernTestValueInvoiceID *string
+
+		// Act
+		obj.SetInvoiceID(fernTestValueInvoiceID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

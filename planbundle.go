@@ -311,15 +311,16 @@ var (
 	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 20)
 	createEntitlementInBundleRequestBodyFieldSoftLimit                 = big.NewInt(1 << 21)
 	createEntitlementInBundleRequestBodyFieldTierMode                  = big.NewInt(1 << 22)
-	createEntitlementInBundleRequestBodyFieldValueBool                 = big.NewInt(1 << 23)
-	createEntitlementInBundleRequestBodyFieldValueCreditID             = big.NewInt(1 << 24)
-	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 25)
-	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 26)
-	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 27)
-	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 28)
-	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 29)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 30)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 31)
+	createEntitlementInBundleRequestBodyFieldUsageQuantity             = big.NewInt(1 << 23)
+	createEntitlementInBundleRequestBodyFieldValueBool                 = big.NewInt(1 << 24)
+	createEntitlementInBundleRequestBodyFieldValueCreditID             = big.NewInt(1 << 25)
+	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 26)
+	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 27)
+	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 28)
+	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 29)
+	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 30)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 31)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 32)
 )
 
 type CreateEntitlementInBundleRequestBody struct {
@@ -347,15 +348,17 @@ type CreateEntitlementInBundleRequestBody struct {
 	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"quarterly_unit_price_decimal,omitempty"`
 	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
-	ValueBool                 *bool                         `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueCreditID             *string                       `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
-	ValueNumeric              *int64                        `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	ValueTraitID              *string                       `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
-	ValueType                 EntitlementValueType          `json:"value_type" url:"value_type"`
-	YearlyMeteredPriceID      *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
-	YearlyPriceTiers          []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
-	YearlyUnitPrice           *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
-	YearlyUnitPriceDecimal    *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
+	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	UsageQuantity          *int64                        `json:"usage_quantity,omitempty" url:"usage_quantity,omitempty"`
+	ValueBool              *bool                         `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
+	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
+	ValueType              EntitlementValueType          `json:"value_type" url:"value_type"`
+	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
+	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
+	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
+	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"yearly_unit_price_decimal,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -523,6 +526,13 @@ func (c *CreateEntitlementInBundleRequestBody) GetTierMode() *BillingTiersMode {
 		return nil
 	}
 	return c.TierMode
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetUsageQuantity() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.UsageQuantity
 }
 
 func (c *CreateEntitlementInBundleRequestBody) GetValueBool() *bool {
@@ -761,6 +771,13 @@ func (c *CreateEntitlementInBundleRequestBody) SetSoftLimit(softLimit *int64) {
 func (c *CreateEntitlementInBundleRequestBody) SetTierMode(tierMode *BillingTiersMode) {
 	c.TierMode = tierMode
 	c.require(createEntitlementInBundleRequestBodyFieldTierMode)
+}
+
+// SetUsageQuantity sets the UsageQuantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetUsageQuantity(usageQuantity *int64) {
+	c.UsageQuantity = usageQuantity
+	c.require(createEntitlementInBundleRequestBodyFieldUsageQuantity)
 }
 
 // SetValueBool sets the ValueBool field and marks it as non-optional;

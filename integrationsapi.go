@@ -400,6 +400,7 @@ type IntegrationConfig struct {
 	Clerk  *ClerkIntegrationConfig
 	Orb    *OrbIntegrationConfig
 	Stripe *StripeIntegrationConfig
+	Workos *WorkOsIntegrationConfig
 }
 
 func (i *IntegrationConfig) GetType() string {
@@ -428,6 +429,13 @@ func (i *IntegrationConfig) GetStripe() *StripeIntegrationConfig {
 		return nil
 	}
 	return i.Stripe
+}
+
+func (i *IntegrationConfig) GetWorkos() *WorkOsIntegrationConfig {
+	if i == nil {
+		return nil
+	}
+	return i.Workos
 }
 
 func (i *IntegrationConfig) UnmarshalJSON(data []byte) error {
@@ -460,6 +468,12 @@ func (i *IntegrationConfig) UnmarshalJSON(data []byte) error {
 			return err
 		}
 		i.Stripe = value
+	case "workos":
+		value := new(WorkOsIntegrationConfig)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		i.Workos = value
 	}
 	return nil
 }
@@ -477,6 +491,9 @@ func (i IntegrationConfig) MarshalJSON() ([]byte, error) {
 	if i.Stripe != nil {
 		return internal.MarshalJSONWithExtraProperty(i.Stripe, "type", "stripe")
 	}
+	if i.Workos != nil {
+		return internal.MarshalJSONWithExtraProperty(i.Workos, "type", "workos")
+	}
 	return nil, fmt.Errorf("type %T does not define a non-empty union type", i)
 }
 
@@ -484,6 +501,7 @@ type IntegrationConfigVisitor interface {
 	VisitClerk(*ClerkIntegrationConfig) error
 	VisitOrb(*OrbIntegrationConfig) error
 	VisitStripe(*StripeIntegrationConfig) error
+	VisitWorkos(*WorkOsIntegrationConfig) error
 }
 
 func (i *IntegrationConfig) Accept(visitor IntegrationConfigVisitor) error {
@@ -495,6 +513,9 @@ func (i *IntegrationConfig) Accept(visitor IntegrationConfigVisitor) error {
 	}
 	if i.Stripe != nil {
 		return visitor.VisitStripe(i.Stripe)
+	}
+	if i.Workos != nil {
+		return visitor.VisitWorkos(i.Workos)
 	}
 	return fmt.Errorf("type %T does not define a non-empty union type", i)
 }
@@ -512,6 +533,9 @@ func (i *IntegrationConfig) validate() error {
 	}
 	if i.Stripe != nil {
 		fields = append(fields, "stripe")
+	}
+	if i.Workos != nil {
+		fields = append(fields, "workos")
 	}
 	if len(fields) == 0 {
 		if i.Type != "" {
@@ -1152,7 +1176,6 @@ var (
 	stripeIntegrationConfigFieldIsSandbox         = big.NewInt(1 << 3)
 	stripeIntegrationConfigFieldLiveMode          = big.NewInt(1 << 4)
 	stripeIntegrationConfigFieldOnboardURL        = big.NewInt(1 << 5)
-	stripeIntegrationConfigFieldVersion           = big.NewInt(1 << 6)
 )
 
 type StripeIntegrationConfig struct {
@@ -1168,8 +1191,6 @@ type StripeIntegrationConfig struct {
 	LiveMode bool `json:"live_mode" url:"live_mode"`
 	// Onboarding URL returned during the v2 (Connect) install flow before activation
 	OnboardURL *string `json:"onboard_url,omitempty" url:"onboard_url,omitempty"`
-	// Stripe integration config version (1 = legacy API key install, 2 = Connect/App install)
-	Version int `json:"version" url:"version"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1218,13 +1239,6 @@ func (s *StripeIntegrationConfig) GetOnboardURL() *string {
 		return nil
 	}
 	return s.OnboardURL
-}
-
-func (s *StripeIntegrationConfig) GetVersion() int {
-	if s == nil {
-		return 0
-	}
-	return s.Version
 }
 
 func (s *StripeIntegrationConfig) GetExtraProperties() map[string]interface{} {
@@ -1283,13 +1297,6 @@ func (s *StripeIntegrationConfig) SetOnboardURL(onboardURL *string) {
 	s.require(stripeIntegrationConfigFieldOnboardURL)
 }
 
-// SetVersion sets the Version field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (s *StripeIntegrationConfig) SetVersion(version int) {
-	s.Version = version
-	s.require(stripeIntegrationConfigFieldVersion)
-}
-
 func (s *StripeIntegrationConfig) UnmarshalJSON(data []byte) error {
 	type unmarshaler StripeIntegrationConfig
 	var value unmarshaler
@@ -1330,6 +1337,108 @@ func (s *StripeIntegrationConfig) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", s)
+}
+
+var (
+	workOsIntegrationConfigFieldFirstEventsReceived = big.NewInt(1 << 0)
+	workOsIntegrationConfigFieldWebhookURL          = big.NewInt(1 << 1)
+)
+
+type WorkOsIntegrationConfig struct {
+	// Whether Schematic has received the first webhook event from WorkOS after install
+	FirstEventsReceived *bool `json:"first_events_received,omitempty" url:"first_events_received,omitempty"`
+	// URL configured on the WorkOS webhook endpoint that delivers events to Schematic
+	WebhookURL *string `json:"webhook_url,omitempty" url:"webhook_url,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkOsIntegrationConfig) GetFirstEventsReceived() *bool {
+	if w == nil {
+		return nil
+	}
+	return w.FirstEventsReceived
+}
+
+func (w *WorkOsIntegrationConfig) GetWebhookURL() *string {
+	if w == nil {
+		return nil
+	}
+	return w.WebhookURL
+}
+
+func (w *WorkOsIntegrationConfig) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WorkOsIntegrationConfig) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetFirstEventsReceived sets the FirstEventsReceived field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WorkOsIntegrationConfig) SetFirstEventsReceived(firstEventsReceived *bool) {
+	w.FirstEventsReceived = firstEventsReceived
+	w.require(workOsIntegrationConfigFieldFirstEventsReceived)
+}
+
+// SetWebhookURL sets the WebhookURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WorkOsIntegrationConfig) SetWebhookURL(webhookURL *string) {
+	w.WebhookURL = webhookURL
+	w.require(workOsIntegrationConfigFieldWebhookURL)
+}
+
+func (w *WorkOsIntegrationConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkOsIntegrationConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkOsIntegrationConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkOsIntegrationConfig) MarshalJSON() ([]byte, error) {
+	type embed WorkOsIntegrationConfig
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*w),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WorkOsIntegrationConfig) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
 }
 
 var (

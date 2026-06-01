@@ -69,6 +69,25 @@ func (c *Client) ListCustomPlanBillings(
 	return response.Body, nil
 }
 
+func (c *Client) MarkCustomPlanBillingPaid(
+	ctx context.Context,
+	// custom_plan_billing_id
+	customPlanBillingID string,
+	request schematichq.MarkCustomPlanBillingPaidRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.MarkCustomPlanBillingPaidResponse, error) {
+	response, err := c.WithRawResponse.MarkCustomPlanBillingPaid(
+		ctx,
+		customPlanBillingID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) RetryCustomPlanBilling(
 	ctx context.Context,
 	// custom_plan_billing_id

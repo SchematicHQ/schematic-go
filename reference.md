@@ -6979,6 +6979,11 @@ request := &schematichq.ListCompaniesRequest{
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
+        PlanVersionIDs: []*string{
+            schematichq.String(
+                "plan_version_ids",
+            ),
+        },
         Q: schematichq.String(
             "q",
         ),
@@ -7082,6 +7087,14 @@ client.Companies.ListCompanies(
 <dd>
 
 **planVersionID:** `*string` — Filter companies by plan version ID (starts with plvr_)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionIDs:** `*string` — Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
     
 </dd>
 </dl>
@@ -7392,6 +7405,11 @@ request := &schematichq.CountCompaniesRequest{
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
+        PlanVersionIDs: []*string{
+            schematichq.String(
+                "plan_version_ids",
+            ),
+        },
         Q: schematichq.String(
             "q",
         ),
@@ -7495,6 +7513,14 @@ client.Companies.CountCompanies(
 <dd>
 
 **planVersionID:** `*string` — Filter companies by plan version ID (starts with plvr_)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionIDs:** `*string` — Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
     
 </dd>
 </dl>
@@ -11496,6 +11522,14 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
+**usageQuantity:** `*int64` — The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **valueBool:** `*bool` 
     
 </dd>
@@ -11813,6 +11847,14 @@ client.Entitlements.UpdatePlanEntitlement(
 <dd>
 
 **tierMode:** `*schematichq.BillingTiersMode` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**usageQuantity:** `*int64` — The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
     
 </dd>
 </dl>
@@ -12172,6 +12214,14 @@ client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dd>
 
 **tierMode:** `*schematichq.BillingTiersMode` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**usageQuantity:** `*int64` — The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
     
 </dd>
 </dl>
@@ -12696,6 +12746,62 @@ client.Plans.ListCustomPlanBillings(
 </dl>
 </details>
 
+<details><summary><code>client.Plans.MarkCustomPlanBillingPaid(CustomPlanBillingID, request) -> *schematichq.MarkCustomPlanBillingPaidResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := map[string]any{
+        "key": "value",
+    }
+client.Plans.MarkCustomPlanBillingPaid(
+        context.TODO(),
+        "custom_plan_billing_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**customPlanBillingID:** `string` — custom_plan_billing_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `schematichq.MarkCustomPlanBillingPaidRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Plans.RetryCustomPlanBilling(CustomPlanBillingID, request) -> *schematichq.RetryCustomPlanBillingResponse</code></summary>
 <dl>
 <dd>
@@ -12913,6 +13019,9 @@ request := &schematichq.ListPlansRequest{
         ScopedToCompanyID: schematichq.String(
             "scoped_to_company_id",
         ),
+        WithEntitlements: schematichq.Bool(
+            true,
+        ),
         WithoutEntitlementFor: schematichq.String(
             "without_entitlement_for",
         ),
@@ -13034,6 +13143,14 @@ client.Plans.ListPlans(
 <dd>
 
 **scopedToCompanyID:** `*string` — Filter plans scoped to a specific company (custom plans)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**withEntitlements:** `*bool` — Include each plan's entitlements in the response
     
 </dd>
 </dl>
@@ -13650,6 +13767,9 @@ request := &schematichq.CountPlansRequest{
         ScopedToCompanyID: schematichq.String(
             "scoped_to_company_id",
         ),
+        WithEntitlements: schematichq.Bool(
+            true,
+        ),
         WithoutEntitlementFor: schematichq.String(
             "without_entitlement_for",
         ),
@@ -13771,6 +13891,14 @@ client.Plans.CountPlans(
 <dd>
 
 **scopedToCompanyID:** `*string` — Filter plans scoped to a specific company (custom plans)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**withEntitlements:** `*bool` — Include each plan's entitlements in the response
     
 </dd>
 </dl>
@@ -18128,6 +18256,50 @@ client.Planmigrations.ListCompanyMigrations(
 </dl>
 </details>
 
+<details><summary><code>client.Planmigrations.RetryCompanyMigration(PlanVersionCompanyMigrationID) -> *schematichq.RetryCompanyMigrationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Planmigrations.RetryCompanyMigration(
+        context.TODO(),
+        "plan_version_company_migration_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planVersionCompanyMigrationID:** `string` — plan_version_company_migration_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Planmigrations.CountCompanyMigrations() -> *schematichq.CountCompanyMigrationsResponse</code></summary>
 <dl>
 <dd>
@@ -18299,6 +18471,113 @@ client.Planmigrations.ListMigrations(
 </dl>
 </details>
 
+<details><summary><code>client.Planmigrations.CreateMigration(request) -> *schematichq.CreateMigrationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreateMigrationInput{
+        CompanyIDs: []string{
+            "company_ids",
+        },
+        ExcludedCompanyIDs: []string{
+            "excluded_company_ids",
+        },
+        PlanID: "plan_id",
+        PlanVersionIDTo: "plan_version_id_to",
+        PlanVersionIDsFrom: []string{
+            "plan_version_ids_from",
+        },
+        Strategy: schematichq.PlanVersionMigrationStrategyImmediate,
+        TargetPlanType: schematichq.PlanTypePlan,
+    }
+client.Planmigrations.CreateMigration(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyIDs:** `[]string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**excludedCompanyIDs:** `[]string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionIDTo:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionIDsFrom:** `[]string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**strategy:** `*schematichq.PlanVersionMigrationStrategy` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**targetPlanType:** `*schematichq.PlanType` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Planmigrations.GetMigration(PlanVersionMigrationID) -> *schematichq.GetMigrationResponse</code></summary>
 <dl>
 <dd>
@@ -18332,6 +18611,64 @@ client.Planmigrations.GetMigration(
 <dd>
 
 **planVersionMigrationID:** `string` — plan_version_migration_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Planmigrations.RetryMigration(PlanVersionMigrationID, request) -> *schematichq.RetryMigrationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.RetryMigrationRequestBody{
+        ErrorCodes: []schematichq.MigrationErrorCode{
+            schematichq.MigrationErrorCodeAmbiguousSubscriptionItem,
+        },
+    }
+client.Planmigrations.RetryMigration(
+        context.TODO(),
+        "plan_version_migration_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planVersionMigrationID:** `string` — plan_version_migration_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**errorCodes:** `[]*schematichq.MigrationErrorCode` 
     
 </dd>
 </dl>

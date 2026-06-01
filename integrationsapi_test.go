@@ -883,6 +883,39 @@ func TestGettersIntegrationConfig(t *testing.T) {
 		_ = obj.GetStripe() // Should return zero value
 	})
 
+	t.Run("GetWorkos", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &IntegrationConfig{}
+		var expected *WorkOsIntegrationConfig
+		obj.Workos = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetWorkos(), "getter should return the property value")
+	})
+
+	t.Run("GetWorkos_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &IntegrationConfig{}
+		obj.Workos = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetWorkos(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetWorkos_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *IntegrationConfig
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetWorkos() // Should return zero value
+	})
+
 }
 
 func TestSettersIntegrationWebhookURLResponseData(t *testing.T) {
@@ -2011,14 +2044,6 @@ func TestSettersStripeIntegrationConfig(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
-	t.Run("SetVersion", func(t *testing.T) {
-		obj := &StripeIntegrationConfig{}
-		var fernTestValueVersion int
-		obj.SetVersion(fernTestValueVersion)
-		assert.Equal(t, fernTestValueVersion, obj.Version)
-		assert.NotNil(t, obj.explicitFields)
-	})
-
 }
 
 func TestGettersStripeIntegrationConfig(t *testing.T) {
@@ -2198,29 +2223,6 @@ func TestGettersStripeIntegrationConfig(t *testing.T) {
 			}
 		}()
 		_ = obj.GetOnboardURL() // Should return zero value
-	})
-
-	t.Run("GetVersion", func(t *testing.T) {
-		t.Parallel()
-		// Arrange
-		obj := &StripeIntegrationConfig{}
-		var expected int
-		obj.Version = expected
-
-		// Act & Assert
-		assert.Equal(t, expected, obj.GetVersion(), "getter should return the property value")
-	})
-
-	t.Run("GetVersion_NilReceiver", func(t *testing.T) {
-		t.Parallel()
-		var obj *StripeIntegrationConfig
-		// Should not panic - getters should handle nil receiver gracefully
-		defer func() {
-			if r := recover(); r != nil {
-				t.Errorf("Getter panicked on nil receiver: %v", r)
-			}
-		}()
-		_ = obj.GetVersion() // Should return zero value
 	})
 
 }
@@ -2412,14 +2414,136 @@ func TestSettersMarkExplicitStripeIntegrationConfig(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
-	t.Run("SetVersion_MarksExplicit", func(t *testing.T) {
+}
+
+func TestSettersWorkOsIntegrationConfig(t *testing.T) {
+	t.Run("SetFirstEventsReceived", func(t *testing.T) {
+		obj := &WorkOsIntegrationConfig{}
+		var fernTestValueFirstEventsReceived *bool
+		obj.SetFirstEventsReceived(fernTestValueFirstEventsReceived)
+		assert.Equal(t, fernTestValueFirstEventsReceived, obj.FirstEventsReceived)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetWebhookURL", func(t *testing.T) {
+		obj := &WorkOsIntegrationConfig{}
+		var fernTestValueWebhookURL *string
+		obj.SetWebhookURL(fernTestValueWebhookURL)
+		assert.Equal(t, fernTestValueWebhookURL, obj.WebhookURL)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+}
+
+func TestGettersWorkOsIntegrationConfig(t *testing.T) {
+	t.Run("GetFirstEventsReceived", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &StripeIntegrationConfig{}
-		var fernTestValueVersion int
+		obj := &WorkOsIntegrationConfig{}
+		var expected *bool
+		obj.FirstEventsReceived = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetFirstEventsReceived(), "getter should return the property value")
+	})
+
+	t.Run("GetFirstEventsReceived_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WorkOsIntegrationConfig{}
+		obj.FirstEventsReceived = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetFirstEventsReceived(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetFirstEventsReceived_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *WorkOsIntegrationConfig
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetFirstEventsReceived() // Should return zero value
+	})
+
+	t.Run("GetWebhookURL", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WorkOsIntegrationConfig{}
+		var expected *string
+		obj.WebhookURL = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetWebhookURL(), "getter should return the property value")
+	})
+
+	t.Run("GetWebhookURL_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WorkOsIntegrationConfig{}
+		obj.WebhookURL = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetWebhookURL(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetWebhookURL_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *WorkOsIntegrationConfig
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetWebhookURL() // Should return zero value
+	})
+
+}
+
+func TestSettersMarkExplicitWorkOsIntegrationConfig(t *testing.T) {
+	t.Run("SetFirstEventsReceived_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WorkOsIntegrationConfig{}
+		var fernTestValueFirstEventsReceived *bool
 
 		// Act
-		obj.SetVersion(fernTestValueVersion)
+		obj.SetFirstEventsReceived(fernTestValueFirstEventsReceived)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetWebhookURL_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WorkOsIntegrationConfig{}
+		var fernTestValueWebhookURL *string
+
+		// Act
+		obj.SetWebhookURL(fernTestValueWebhookURL)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -4371,6 +4495,39 @@ func TestJSONMarshalingUninstallIntegrationResponse(t *testing.T) {
 	})
 }
 
+func TestJSONMarshalingWorkOsIntegrationConfig(t *testing.T) {
+	t.Run("MarshalUnmarshal", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WorkOsIntegrationConfig{}
+
+		// Act - Marshal to JSON
+		data, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed")
+		assert.NotNil(t, data, "marshaled data should not be nil")
+		assert.NotEmpty(t, data, "marshaled data should not be empty")
+
+		// Unmarshal back and verify round-trip
+		var unmarshaled WorkOsIntegrationConfig
+		err = json.Unmarshal(data, &unmarshaled)
+		assert.NoError(t, err, "round-trip unmarshal should succeed")
+	})
+
+	t.Run("UnmarshalInvalidJSON", func(t *testing.T) {
+		t.Parallel()
+		var obj WorkOsIntegrationConfig
+		err := json.Unmarshal([]byte(`{invalid json}`), &obj)
+		assert.Error(t, err, "unmarshaling invalid JSON should return an error")
+	})
+
+	t.Run("UnmarshalEmptyObject", func(t *testing.T) {
+		t.Parallel()
+		var obj WorkOsIntegrationConfig
+		err := json.Unmarshal([]byte(`{}`), &obj)
+		assert.NoError(t, err, "unmarshaling empty object should succeed")
+	})
+}
+
 func TestStringClerkIntegrationConfig(t *testing.T) {
 	t.Run("StringMethod", func(t *testing.T) {
 		t.Parallel()
@@ -4606,6 +4763,22 @@ func TestStringUninstallIntegrationResponse(t *testing.T) {
 	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *UninstallIntegrationResponse
+		result := obj.String()
+		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
+	})
+}
+
+func TestStringWorkOsIntegrationConfig(t *testing.T) {
+	t.Run("StringMethod", func(t *testing.T) {
+		t.Parallel()
+		obj := &WorkOsIntegrationConfig{}
+		result := obj.String()
+		assert.NotEmpty(t, result, "String() should return a non-empty representation")
+	})
+
+	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *WorkOsIntegrationConfig
 		result := obj.String()
 		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
 	})
@@ -4980,6 +5153,29 @@ func TestExtraPropertiesUninstallIntegrationResponse(t *testing.T) {
 	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *UninstallIntegrationResponse
+		extraProps := obj.GetExtraProperties()
+		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
+	})
+}
+
+func TestExtraPropertiesWorkOsIntegrationConfig(t *testing.T) {
+	t.Run("GetExtraProperties", func(t *testing.T) {
+		t.Parallel()
+		obj := &WorkOsIntegrationConfig{}
+		// Should not panic when calling GetExtraProperties()
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("GetExtraProperties() panicked: %v", r)
+			}
+		}()
+		extraProps := obj.GetExtraProperties()
+		// Result can be nil or an empty/non-empty map
+		_ = extraProps
+	})
+
+	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *WorkOsIntegrationConfig
 		extraProps := obj.GetExtraProperties()
 		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
 	})

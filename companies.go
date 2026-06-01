@@ -18,18 +18,19 @@ var (
 	countCompaniesRequestFieldPlanID                    = big.NewInt(1 << 4)
 	countCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 5)
 	countCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 6)
-	countCompaniesRequestFieldQ                         = big.NewInt(1 << 7)
-	countCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 8)
-	countCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 9)
-	countCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 10)
-	countCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 11)
-	countCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 12)
-	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 13)
-	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 14)
-	countCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 15)
-	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 16)
-	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 17)
-	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 18)
+	countCompaniesRequestFieldPlanVersionIDs            = big.NewInt(1 << 7)
+	countCompaniesRequestFieldQ                         = big.NewInt(1 << 8)
+	countCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 9)
+	countCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 10)
+	countCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 11)
+	countCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 12)
+	countCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 13)
+	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 14)
+	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 15)
+	countCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 16)
+	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 17)
+	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 18)
+	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 19)
 )
 
 type CountCompaniesRequest struct {
@@ -47,6 +48,8 @@ type CountCompaniesRequest struct {
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
 	// Filter companies by plan version ID (starts with plvr_)
 	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
+	// Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
+	PlanVersionIDs []*string `json:"-" url:"plan_version_ids,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
@@ -130,6 +133,13 @@ func (c *CountCompaniesRequest) SetPlanIDs(planIDs []*string) {
 func (c *CountCompaniesRequest) SetPlanVersionID(planVersionID *string) {
 	c.PlanVersionID = planVersionID
 	c.require(countCompaniesRequestFieldPlanVersionID)
+}
+
+// SetPlanVersionIDs sets the PlanVersionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetPlanVersionIDs(planVersionIDs []*string) {
+	c.PlanVersionIDs = planVersionIDs
+	c.require(countCompaniesRequestFieldPlanVersionIDs)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -786,18 +796,19 @@ var (
 	listCompaniesRequestFieldPlanID                    = big.NewInt(1 << 4)
 	listCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 5)
 	listCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 6)
-	listCompaniesRequestFieldQ                         = big.NewInt(1 << 7)
-	listCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 8)
-	listCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 9)
-	listCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 10)
-	listCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 11)
-	listCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 12)
-	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 13)
-	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 14)
-	listCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 15)
-	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 16)
-	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 17)
-	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 18)
+	listCompaniesRequestFieldPlanVersionIDs            = big.NewInt(1 << 7)
+	listCompaniesRequestFieldQ                         = big.NewInt(1 << 8)
+	listCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 9)
+	listCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 10)
+	listCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 11)
+	listCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 12)
+	listCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 13)
+	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 14)
+	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 15)
+	listCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 16)
+	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 17)
+	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 18)
+	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 19)
 )
 
 type ListCompaniesRequest struct {
@@ -815,6 +826,8 @@ type ListCompaniesRequest struct {
 	PlanIDs []*string `json:"-" url:"plan_ids,omitempty"`
 	// Filter companies by plan version ID (starts with plvr_)
 	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
+	// Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
+	PlanVersionIDs []*string `json:"-" url:"plan_version_ids,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
@@ -898,6 +911,13 @@ func (l *ListCompaniesRequest) SetPlanIDs(planIDs []*string) {
 func (l *ListCompaniesRequest) SetPlanVersionID(planVersionID *string) {
 	l.PlanVersionID = planVersionID
 	l.require(listCompaniesRequestFieldPlanVersionID)
+}
+
+// SetPlanVersionIDs sets the PlanVersionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetPlanVersionIDs(planVersionIDs []*string) {
+	l.PlanVersionIDs = planVersionIDs
+	l.require(listCompaniesRequestFieldPlanVersionIDs)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -3928,16 +3948,17 @@ var (
 	countCompaniesParamsFieldPlanID                    = big.NewInt(1 << 6)
 	countCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 7)
 	countCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 8)
-	countCompaniesParamsFieldQ                         = big.NewInt(1 << 9)
-	countCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 10)
-	countCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 11)
-	countCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 12)
-	countCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 13)
-	countCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 14)
-	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 15)
-	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 16)
-	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 17)
-	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 18)
+	countCompaniesParamsFieldPlanVersionIDs            = big.NewInt(1 << 9)
+	countCompaniesParamsFieldQ                         = big.NewInt(1 << 10)
+	countCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 11)
+	countCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 12)
+	countCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 13)
+	countCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 14)
+	countCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 15)
+	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 16)
+	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 17)
+	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 18)
+	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 19)
 )
 
 type CountCompaniesParams struct {
@@ -3959,6 +3980,8 @@ type CountCompaniesParams struct {
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 	// Filter companies by plan version ID (starts with plvr_)
 	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	// Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
+	PlanVersionIDs []string `json:"plan_version_ids,omitempty" url:"plan_version_ids,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
@@ -4048,6 +4071,13 @@ func (c *CountCompaniesParams) GetPlanVersionID() *string {
 		return nil
 	}
 	return c.PlanVersionID
+}
+
+func (c *CountCompaniesParams) GetPlanVersionIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionIDs
 }
 
 func (c *CountCompaniesParams) GetQ() *string {
@@ -4195,6 +4225,13 @@ func (c *CountCompaniesParams) SetPlanIDs(planIDs []string) {
 func (c *CountCompaniesParams) SetPlanVersionID(planVersionID *string) {
 	c.PlanVersionID = planVersionID
 	c.require(countCompaniesParamsFieldPlanVersionID)
+}
+
+// SetPlanVersionIDs sets the PlanVersionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetPlanVersionIDs(planVersionIDs []string) {
+	c.PlanVersionIDs = planVersionIDs
+	c.require(countCompaniesParamsFieldPlanVersionIDs)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -7484,16 +7521,17 @@ var (
 	listCompaniesParamsFieldPlanID                    = big.NewInt(1 << 6)
 	listCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 7)
 	listCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 8)
-	listCompaniesParamsFieldQ                         = big.NewInt(1 << 9)
-	listCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 10)
-	listCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 11)
-	listCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 12)
-	listCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 13)
-	listCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 14)
-	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 15)
-	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 16)
-	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 17)
-	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 18)
+	listCompaniesParamsFieldPlanVersionIDs            = big.NewInt(1 << 9)
+	listCompaniesParamsFieldQ                         = big.NewInt(1 << 10)
+	listCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 11)
+	listCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 12)
+	listCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 13)
+	listCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 14)
+	listCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 15)
+	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 16)
+	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 17)
+	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 18)
+	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 19)
 )
 
 type ListCompaniesParams struct {
@@ -7515,6 +7553,8 @@ type ListCompaniesParams struct {
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 	// Filter companies by plan version ID (starts with plvr_)
 	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	// Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
+	PlanVersionIDs []string `json:"plan_version_ids,omitempty" url:"plan_version_ids,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
@@ -7604,6 +7644,13 @@ func (l *ListCompaniesParams) GetPlanVersionID() *string {
 		return nil
 	}
 	return l.PlanVersionID
+}
+
+func (l *ListCompaniesParams) GetPlanVersionIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionIDs
 }
 
 func (l *ListCompaniesParams) GetQ() *string {
@@ -7751,6 +7798,13 @@ func (l *ListCompaniesParams) SetPlanIDs(planIDs []string) {
 func (l *ListCompaniesParams) SetPlanVersionID(planVersionID *string) {
 	l.PlanVersionID = planVersionID
 	l.require(listCompaniesParamsFieldPlanVersionID)
+}
+
+// SetPlanVersionIDs sets the PlanVersionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetPlanVersionIDs(planVersionIDs []string) {
+	l.PlanVersionIDs = planVersionIDs
+	l.require(listCompaniesParamsFieldPlanVersionIDs)
 }
 
 // SetQ sets the Q field and marks it as non-optional;

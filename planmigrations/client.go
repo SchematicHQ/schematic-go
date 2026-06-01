@@ -50,6 +50,23 @@ func (c *Client) ListCompanyMigrations(
 	return response.Body, nil
 }
 
+func (c *Client) RetryCompanyMigration(
+	ctx context.Context,
+	// plan_version_company_migration_id
+	planVersionCompanyMigrationID string,
+	opts ...option.RequestOption,
+) (*schematichq.RetryCompanyMigrationResponse, error) {
+	response, err := c.WithRawResponse.RetryCompanyMigration(
+		ctx,
+		planVersionCompanyMigrationID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CountCompanyMigrations(
 	ctx context.Context,
 	request *schematichq.CountCompanyMigrationsRequest,
@@ -82,6 +99,22 @@ func (c *Client) ListMigrations(
 	return response.Body, nil
 }
 
+func (c *Client) CreateMigration(
+	ctx context.Context,
+	request *schematichq.CreateMigrationInput,
+	opts ...option.RequestOption,
+) (*schematichq.CreateMigrationResponse, error) {
+	response, err := c.WithRawResponse.CreateMigration(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) GetMigration(
 	ctx context.Context,
 	// plan_version_migration_id
@@ -91,6 +124,25 @@ func (c *Client) GetMigration(
 	response, err := c.WithRawResponse.GetMigration(
 		ctx,
 		planVersionMigrationID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) RetryMigration(
+	ctx context.Context,
+	// plan_version_migration_id
+	planVersionMigrationID string,
+	request *schematichq.RetryMigrationRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.RetryMigrationResponse, error) {
+	response, err := c.WithRawResponse.RetryMigration(
+		ctx,
+		planVersionMigrationID,
+		request,
 		opts...,
 	)
 	if err != nil {

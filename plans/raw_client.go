@@ -130,6 +130,54 @@ func (r *RawClient) ListCustomPlanBillings(
 	}, nil
 }
 
+func (r *RawClient) MarkCustomPlanBillingPaid(
+	ctx context.Context,
+	// custom_plan_billing_id
+	customPlanBillingID string,
+	request schematichq.MarkCustomPlanBillingPaidRequestBody,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.MarkCustomPlanBillingPaidResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/custom-plan-billings/%v/mark-paid",
+		customPlanBillingID,
+	)
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	var response *schematichq.MarkCustomPlanBillingPaidResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPut,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.MarkCustomPlanBillingPaidResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
 func (r *RawClient) RetryCustomPlanBilling(
 	ctx context.Context,
 	// custom_plan_billing_id

@@ -617,16 +617,17 @@ var (
 	checkoutSubscriptionFieldExpiredAt                        = big.NewInt(1 << 10)
 	checkoutSubscriptionFieldID                               = big.NewInt(1 << 11)
 	checkoutSubscriptionFieldInterval                         = big.NewInt(1 << 12)
-	checkoutSubscriptionFieldInvoiceURL                       = big.NewInt(1 << 13)
-	checkoutSubscriptionFieldMetadata                         = big.NewInt(1 << 14)
-	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 15)
-	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 16)
-	checkoutSubscriptionFieldProviderType                     = big.NewInt(1 << 17)
-	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 18)
-	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 19)
-	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 20)
-	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 21)
-	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 22)
+	checkoutSubscriptionFieldInvoiceID                        = big.NewInt(1 << 13)
+	checkoutSubscriptionFieldInvoiceURL                       = big.NewInt(1 << 14)
+	checkoutSubscriptionFieldMetadata                         = big.NewInt(1 << 15)
+	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 16)
+	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 17)
+	checkoutSubscriptionFieldProviderType                     = big.NewInt(1 << 18)
+	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 19)
+	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 20)
+	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 21)
+	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 22)
+	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 23)
 )
 
 type CheckoutSubscription struct {
@@ -643,6 +644,7 @@ type CheckoutSubscription struct {
 	ExpiredAt                        *time.Time                          `json:"expired_at,omitempty" url:"expired_at,omitempty"`
 	ID                               string                              `json:"id" url:"id"`
 	Interval                         string                              `json:"interval" url:"interval"`
+	InvoiceID                        *string                             `json:"invoice_id,omitempty" url:"invoice_id,omitempty"`
 	InvoiceURL                       *string                             `json:"invoice_url,omitempty" url:"invoice_url,omitempty"`
 	Metadata                         map[string]any                      `json:"metadata,omitempty" url:"metadata,omitempty"`
 	PeriodEnd                        int64                               `json:"period_end" url:"period_end"`
@@ -750,6 +752,13 @@ func (c *CheckoutSubscription) GetInterval() string {
 		return ""
 	}
 	return c.Interval
+}
+
+func (c *CheckoutSubscription) GetInvoiceID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.InvoiceID
 }
 
 func (c *CheckoutSubscription) GetInvoiceURL() *string {
@@ -925,6 +934,13 @@ func (c *CheckoutSubscription) SetID(id string) {
 func (c *CheckoutSubscription) SetInterval(interval string) {
 	c.Interval = interval
 	c.require(checkoutSubscriptionFieldInterval)
+}
+
+// SetInvoiceID sets the InvoiceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutSubscription) SetInvoiceID(invoiceID *string) {
+	c.InvoiceID = invoiceID
+	c.require(checkoutSubscriptionFieldInvoiceID)
 }
 
 // SetInvoiceURL sets the InvoiceURL field and marks it as non-optional;

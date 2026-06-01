@@ -622,15 +622,16 @@ var (
 	createPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 20)
 	createPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 21)
 	createPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 22)
-	createPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 23)
-	createPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 24)
-	createPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 25)
-	createPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 26)
-	createPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 27)
-	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 28)
-	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 29)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 30)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 31)
+	createPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 23)
+	createPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 24)
+	createPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 25)
+	createPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 26)
+	createPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 27)
+	createPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 28)
+	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 29)
+	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 30)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 31)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 32)
 )
 
 type CreatePlanEntitlementRequestBody struct {
@@ -658,15 +659,17 @@ type CreatePlanEntitlementRequestBody struct {
 	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"-"`
 	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"-"`
 	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
-	ValueBool                 *bool                         `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID             *string                       `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric              *int64                        `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID              *string                       `json:"value_trait_id,omitempty" url:"-"`
-	ValueType                 EntitlementValueType          `json:"value_type" url:"-"`
-	YearlyMeteredPriceID      *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
-	YearlyPriceTiers          []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
-	YearlyUnitPrice           *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
-	YearlyUnitPriceDecimal    *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
+	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	UsageQuantity          *int64                        `json:"usage_quantity,omitempty" url:"-"`
+	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
+	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
+	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
+	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -838,6 +841,13 @@ func (c *CreatePlanEntitlementRequestBody) SetSoftLimit(softLimit *int64) {
 func (c *CreatePlanEntitlementRequestBody) SetTierMode(tierMode *BillingTiersMode) {
 	c.TierMode = tierMode
 	c.require(createPlanEntitlementRequestBodyFieldTierMode)
+}
+
+// SetUsageQuantity sets the UsageQuantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanEntitlementRequestBody) SetUsageQuantity(usageQuantity *int64) {
+	c.UsageQuantity = usageQuantity
+	c.require(createPlanEntitlementRequestBodyFieldUsageQuantity)
 }
 
 // SetValueBool sets the ValueBool field and marks it as non-optional;
@@ -8050,15 +8060,16 @@ var (
 	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 17)
 	updatePlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 18)
 	updatePlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 19)
-	updatePlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 20)
-	updatePlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 21)
-	updatePlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 22)
-	updatePlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 23)
-	updatePlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 24)
-	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 25)
-	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 26)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 27)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 28)
+	updatePlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 20)
+	updatePlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 21)
+	updatePlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 22)
+	updatePlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 23)
+	updatePlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 24)
+	updatePlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 25)
+	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 26)
+	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 27)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 28)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 29)
 )
 
 type UpdatePlanEntitlementRequestBody struct {
@@ -8083,15 +8094,17 @@ type UpdatePlanEntitlementRequestBody struct {
 	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"-"`
 	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"-"`
 	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
-	ValueBool                 *bool                         `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID             *string                       `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric              *int64                        `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID              *string                       `json:"value_trait_id,omitempty" url:"-"`
-	ValueType                 EntitlementValueType          `json:"value_type" url:"-"`
-	YearlyMeteredPriceID      *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
-	YearlyPriceTiers          []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
-	YearlyUnitPrice           *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
-	YearlyUnitPriceDecimal    *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
+	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	UsageQuantity          *int64                        `json:"usage_quantity,omitempty" url:"-"`
+	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
+	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
+	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
+	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -8244,6 +8257,13 @@ func (u *UpdatePlanEntitlementRequestBody) SetTierMode(tierMode *BillingTiersMod
 	u.require(updatePlanEntitlementRequestBodyFieldTierMode)
 }
 
+// SetUsageQuantity sets the UsageQuantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanEntitlementRequestBody) SetUsageQuantity(usageQuantity *int64) {
+	u.UsageQuantity = usageQuantity
+	u.require(updatePlanEntitlementRequestBodyFieldUsageQuantity)
+}
+
 // SetValueBool sets the ValueBool field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdatePlanEntitlementRequestBody) SetValueBool(valueBool *bool) {
@@ -8354,15 +8374,16 @@ var (
 	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 22)
 	createBillingLinkedPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 23)
 	createBillingLinkedPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 24)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 25)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 26)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 27)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 28)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 29)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 30)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 31)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 32)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 33)
+	createBillingLinkedPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 25)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 26)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 27)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 28)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 29)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 30)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 31)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 32)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 33)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 34)
 )
 
 type CreateBillingLinkedPlanEntitlementRequestBody struct {
@@ -8392,15 +8413,17 @@ type CreateBillingLinkedPlanEntitlementRequestBody struct {
 	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"-"`
 	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"-"`
 	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
-	ValueBool                 *bool                         `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID             *string                       `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric              *int64                        `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID              *string                       `json:"value_trait_id,omitempty" url:"-"`
-	ValueType                 EntitlementValueType          `json:"value_type" url:"-"`
-	YearlyMeteredPriceID      *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
-	YearlyPriceTiers          []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
-	YearlyUnitPrice           *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
-	YearlyUnitPriceDecimal    *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
+	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	UsageQuantity          *int64                        `json:"usage_quantity,omitempty" url:"-"`
+	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
+	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
+	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
+	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
+	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
+	YearlyUnitPriceDecimal *string                       `json:"yearly_unit_price_decimal,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -8586,6 +8609,13 @@ func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetSoftLimit(softLimit *
 func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetTierMode(tierMode *BillingTiersMode) {
 	c.TierMode = tierMode
 	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldTierMode)
+}
+
+// SetUsageQuantity sets the UsageQuantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetUsageQuantity(usageQuantity *int64) {
+	c.UsageQuantity = usageQuantity
+	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldUsageQuantity)
 }
 
 // SetValueBool sets the ValueBool field and marks it as non-optional;

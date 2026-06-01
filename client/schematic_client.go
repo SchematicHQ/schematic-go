@@ -141,7 +141,7 @@ func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx 
 			},
 		}
 
-		if err := c.enqueueEvent("flag_check", body); err != nil {
+		if err := c.enqueueEvent("flag_check", body, &eventOptions{}); err != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Failed to enqueue flag_check event: %v", err))
 		}
 
@@ -504,13 +504,19 @@ func (c *SchematicClient) Close() {
 func (c *SchematicClient) Identify(
 	ctx context.Context,
 	body *schematicgo.EventBodyIdentify,
+	opts ...IdentifyOption,
 ) {
 
 	eventBody := schematicgo.EventBody{
 		EventBodyIdentify: body,
 	}
 
-	if err := c.enqueueEvent("identify", eventBody); err != nil {
+	o := &eventOptions{}
+	for _, apply := range opts {
+		apply(o)
+	}
+
+	if err := c.enqueueEvent("identify", eventBody, o); err != nil {
 		c.ctxErrors <- &core.CtxError{
 			Ctx: ctx,
 			Err: err,
@@ -539,13 +545,19 @@ func (c *SchematicClient) SetFlagDefaults(
 func (c *SchematicClient) Track(
 	ctx context.Context,
 	body *schematicgo.EventBodyTrack,
+	opts ...TrackOption,
 ) {
 
 	eventBody := schematicgo.EventBody{
 		EventBodyTrack: body,
 	}
 
-	if err := c.enqueueEvent("track", eventBody); err != nil {
+	o := &eventOptions{}
+	for _, apply := range opts {
+		apply(o)
+	}
+
+	if err := c.enqueueEvent("track", eventBody, o); err != nil {
 		c.ctxErrors <- &core.CtxError{
 			Ctx: ctx,
 			Err: err,
@@ -566,6 +578,7 @@ func (c *SchematicClient) Track(
 func (c *SchematicClient) enqueueEvent(
 	eventType string,
 	body schematicgo.EventBody,
+	opts *eventOptions,
 ) error {
 	defer func() {
 		if r := recover(); r != nil {
@@ -577,14 +590,20 @@ func (c *SchematicClient) enqueueEvent(
 		return nil
 	}
 
-	now := time.Now().UTC()
-	eventBody := &schematicgo.CreateEventRequestBody{
-		EventType: schematicgo.EventType(eventType),
-		Body:      &body,
-		SentAt:    &now,
+	sentAt := opts.sentAt
+	if sentAt == nil {
+		now := time.Now().UTC()
+		sentAt = &now
 	}
 
-	c.events <- eventBody
+	c.events <- &schematicgo.CreateEventRequestBody{
+		EventType:          schematicgo.EventType(eventType),
+		Body:               &body,
+		IdempotencyKey:     opts.idempotencyKey,
+		SentAt:             sentAt,
+		TrustedClientClock: opts.trustedClientClock,
+		Backfill:           opts.backfill,
+	}
 
 	return nil
 }

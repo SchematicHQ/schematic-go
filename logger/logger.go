@@ -54,6 +54,6 @@ func (l *defaultLogger) GetLevel() core.LogLevel {
 func NewDefaultLogger() core.Logger {
 	return &defaultLogger{
 		logger: log.New(os.Stderr, "schematic ", log.LstdFlags),
-		level:  core.LogLevelInfo, // Default level
+		level:  core.LogLevelWarn,
 	}
 }

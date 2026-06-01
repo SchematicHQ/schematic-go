@@ -216,6 +216,82 @@ func TestMultipleEventBatches(t *testing.T) {
 	time.Sleep(20 * time.Millisecond)
 }
 
+func TestTrackEventWithOptions(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithEventBufferPeriod(10*time.Millisecond), option.WithHTTPClient(mockHTTPClient))
+	assert.NotNil(t, client)
+	defer client.Close()
+
+	responseBody := &schematicgo.CreateEventBatchResponse{
+		Data: &schematicgo.RawEventBatchResponseData{
+			Events: []*schematicgo.RawEventResponseData{},
+		},
+	}
+	respData, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	// Capture the actual outgoing request body so we can assert the
+	// optional metadata fields make it onto the wire.
+	var captured []byte
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(func(req *http.Request) (*http.Response, error) {
+		captured, err = io.ReadAll(req.Body)
+		assert.Nil(t, err)
+		return &http.Response{
+			Status:     "200",
+			StatusCode: 200,
+			Body:       io.NopCloser(bytes.NewReader(respData)),
+		}, nil
+	})
+
+	sentAt := time.Date(2026, 5, 22, 12, 0, 0, 0, time.UTC)
+	ctx := context.Background()
+	client.Track(
+		ctx,
+		&schematicgo.EventBodyTrack{Event: "foo", Company: map[string]string{"foo": "bar"}},
+		schematicclient.WithTrackIdempotencyKey("dedupe-1"),
+		schematicclient.WithTrackSentAt(sentAt),
+		schematicclient.WithTrustedClientClock(true),
+		schematicclient.WithBackfill(true),
+	)
+	client.Identify(
+		ctx,
+		&schematicgo.EventBodyIdentify{Keys: map[string]string{"foo": "bar"}},
+		schematicclient.WithIdentifyIdempotencyKey("dedupe-2"),
+	)
+	time.Sleep(30 * time.Millisecond)
+
+	// Decode and inspect each event in the batch.
+	var batch struct {
+		Events []map[string]any `json:"events"`
+	}
+	assert.Nil(t, json.Unmarshal(captured, &batch))
+	assert.Len(t, batch.Events, 2)
+
+	var track, identify map[string]any
+	for _, e := range batch.Events {
+		switch e["type"] {
+		case "track":
+			track = e
+		case "identify":
+			identify = e
+		}
+	}
+	assert.NotNil(t, track, "expected track event in batch")
+	assert.NotNil(t, identify, "expected identify event in batch")
+
+	assert.Equal(t, "dedupe-1", track["idempotency_key"])
+	assert.Equal(t, true, track["trusted_client_clock"])
+	assert.Equal(t, true, track["backfill"])
+	assert.Equal(t, "2026-05-22T12:00:00Z", track["sent_at"])
+
+	assert.Equal(t, "dedupe-2", identify["idempotency_key"])
+	_, hasTCC := identify["trusted_client_clock"]
+	assert.False(t, hasTCC, "trusted_client_clock should be omitted when unset")
+	_, hasBackfill := identify["backfill"]
+	assert.False(t, hasBackfill, "backfill should be omitted when unset")
+}
+
 func TestCheckFlagOfflineModeNoAPIKeyOption(t *testing.T) {
 	// Passing mock HTTP client, which we expect to be replaced by a NoopClient internally. This test will fail if any calls are made to the mock client.
 	ctrl := gomock.NewController(t)

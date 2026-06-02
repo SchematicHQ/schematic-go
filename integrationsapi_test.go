@@ -3388,9 +3388,9 @@ func TestSettersMarkExplicitListIntegrationsResponse(t *testing.T) {
 
 }
 
-func TestSettersLoadSampleDataSetV2Response(t *testing.T) {
+func TestSettersLoadSampleDataSetResponse(t *testing.T) {
 	t.Run("SetData", func(t *testing.T) {
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		var fernTestValueData *IntegrationsDataSetResponseData
 		obj.SetData(fernTestValueData)
 		assert.Equal(t, fernTestValueData, obj.Data)
@@ -3398,7 +3398,7 @@ func TestSettersLoadSampleDataSetV2Response(t *testing.T) {
 	})
 
 	t.Run("SetParams", func(t *testing.T) {
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		var fernTestValueParams map[string]any
 		obj.SetParams(fernTestValueParams)
 		assert.Equal(t, fernTestValueParams, obj.Params)
@@ -3407,11 +3407,11 @@ func TestSettersLoadSampleDataSetV2Response(t *testing.T) {
 
 }
 
-func TestGettersLoadSampleDataSetV2Response(t *testing.T) {
+func TestGettersLoadSampleDataSetResponse(t *testing.T) {
 	t.Run("GetData", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		var expected *IntegrationsDataSetResponseData
 		obj.Data = expected
 
@@ -3422,7 +3422,7 @@ func TestGettersLoadSampleDataSetV2Response(t *testing.T) {
 	t.Run("GetData_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		obj.Data = nil
 
 		// Act & Assert
@@ -3431,7 +3431,7 @@ func TestGettersLoadSampleDataSetV2Response(t *testing.T) {
 
 	t.Run("GetData_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *LoadSampleDataSetV2Response
+		var obj *LoadSampleDataSetResponse
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -3444,7 +3444,7 @@ func TestGettersLoadSampleDataSetV2Response(t *testing.T) {
 	t.Run("GetParams", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		var expected map[string]any
 		obj.Params = expected
 
@@ -3455,7 +3455,7 @@ func TestGettersLoadSampleDataSetV2Response(t *testing.T) {
 	t.Run("GetParams_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		obj.Params = nil
 
 		// Act & Assert
@@ -3464,7 +3464,7 @@ func TestGettersLoadSampleDataSetV2Response(t *testing.T) {
 
 	t.Run("GetParams_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *LoadSampleDataSetV2Response
+		var obj *LoadSampleDataSetResponse
 		// Should not panic - getters should handle nil receiver gracefully
 		defer func() {
 			if r := recover(); r != nil {
@@ -3476,11 +3476,11 @@ func TestGettersLoadSampleDataSetV2Response(t *testing.T) {
 
 }
 
-func TestSettersMarkExplicitLoadSampleDataSetV2Response(t *testing.T) {
+func TestSettersMarkExplicitLoadSampleDataSetResponse(t *testing.T) {
 	t.Run("SetData_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		var fernTestValueData *IntegrationsDataSetResponseData
 
 		// Act
@@ -3511,7 +3511,7 @@ func TestSettersMarkExplicitLoadSampleDataSetV2Response(t *testing.T) {
 	t.Run("SetParams_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		var fernTestValueParams map[string]any
 
 		// Act
@@ -4297,11 +4297,11 @@ func TestJSONMarshalingListIntegrationsResponse(t *testing.T) {
 	})
 }
 
-func TestJSONMarshalingLoadSampleDataSetV2Response(t *testing.T) {
+func TestJSONMarshalingLoadSampleDataSetResponse(t *testing.T) {
 	t.Run("MarshalUnmarshal", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 
 		// Act - Marshal to JSON
 		data, err := json.Marshal(obj)
@@ -4310,21 +4310,21 @@ func TestJSONMarshalingLoadSampleDataSetV2Response(t *testing.T) {
 		assert.NotEmpty(t, data, "marshaled data should not be empty")
 
 		// Unmarshal back and verify round-trip
-		var unmarshaled LoadSampleDataSetV2Response
+		var unmarshaled LoadSampleDataSetResponse
 		err = json.Unmarshal(data, &unmarshaled)
 		assert.NoError(t, err, "round-trip unmarshal should succeed")
 	})
 
 	t.Run("UnmarshalInvalidJSON", func(t *testing.T) {
 		t.Parallel()
-		var obj LoadSampleDataSetV2Response
+		var obj LoadSampleDataSetResponse
 		err := json.Unmarshal([]byte(`{invalid json}`), &obj)
 		assert.Error(t, err, "unmarshaling invalid JSON should return an error")
 	})
 
 	t.Run("UnmarshalEmptyObject", func(t *testing.T) {
 		t.Parallel()
-		var obj LoadSampleDataSetV2Response
+		var obj LoadSampleDataSetResponse
 		err := json.Unmarshal([]byte(`{}`), &obj)
 		assert.NoError(t, err, "unmarshaling empty object should succeed")
 	})
@@ -4672,17 +4672,17 @@ func TestStringListIntegrationsResponse(t *testing.T) {
 	})
 }
 
-func TestStringLoadSampleDataSetV2Response(t *testing.T) {
+func TestStringLoadSampleDataSetResponse(t *testing.T) {
 	t.Run("StringMethod", func(t *testing.T) {
 		t.Parallel()
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		result := obj.String()
 		assert.NotEmpty(t, result, "String() should return a non-empty representation")
 	})
 
 	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *LoadSampleDataSetV2Response
+		var obj *LoadSampleDataSetResponse
 		result := obj.String()
 		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
 	})
@@ -5020,10 +5020,10 @@ func TestExtraPropertiesListIntegrationsResponse(t *testing.T) {
 	})
 }
 
-func TestExtraPropertiesLoadSampleDataSetV2Response(t *testing.T) {
+func TestExtraPropertiesLoadSampleDataSetResponse(t *testing.T) {
 	t.Run("GetExtraProperties", func(t *testing.T) {
 		t.Parallel()
-		obj := &LoadSampleDataSetV2Response{}
+		obj := &LoadSampleDataSetResponse{}
 		// Should not panic when calling GetExtraProperties()
 		defer func() {
 			if r := recover(); r != nil {
@@ -5037,7 +5037,7 @@ func TestExtraPropertiesLoadSampleDataSetV2Response(t *testing.T) {
 
 	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
 		t.Parallel()
-		var obj *LoadSampleDataSetV2Response
+		var obj *LoadSampleDataSetResponse
 		extraProps := obj.GetExtraProperties()
 		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
 	})

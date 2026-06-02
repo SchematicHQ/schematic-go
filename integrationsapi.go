@@ -1827,11 +1827,11 @@ func (l *ListIntegrationsResponse) String() string {
 }
 
 var (
-	loadSampleDataSetV2ResponseFieldData   = big.NewInt(1 << 0)
-	loadSampleDataSetV2ResponseFieldParams = big.NewInt(1 << 1)
+	loadSampleDataSetResponseFieldData   = big.NewInt(1 << 0)
+	loadSampleDataSetResponseFieldParams = big.NewInt(1 << 1)
 )
 
-type LoadSampleDataSetV2Response struct {
+type LoadSampleDataSetResponse struct {
 	Data *IntegrationsDataSetResponseData `json:"data" url:"data"`
 	// Input parameters
 	Params map[string]any `json:"params" url:"params"`
@@ -1843,28 +1843,28 @@ type LoadSampleDataSetV2Response struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *LoadSampleDataSetV2Response) GetData() *IntegrationsDataSetResponseData {
+func (l *LoadSampleDataSetResponse) GetData() *IntegrationsDataSetResponseData {
 	if l == nil {
 		return nil
 	}
 	return l.Data
 }
 
-func (l *LoadSampleDataSetV2Response) GetParams() map[string]any {
+func (l *LoadSampleDataSetResponse) GetParams() map[string]any {
 	if l == nil {
 		return nil
 	}
 	return l.Params
 }
 
-func (l *LoadSampleDataSetV2Response) GetExtraProperties() map[string]interface{} {
+func (l *LoadSampleDataSetResponse) GetExtraProperties() map[string]interface{} {
 	if l == nil {
 		return nil
 	}
 	return l.extraProperties
 }
 
-func (l *LoadSampleDataSetV2Response) require(field *big.Int) {
+func (l *LoadSampleDataSetResponse) require(field *big.Int) {
 	if l.explicitFields == nil {
 		l.explicitFields = big.NewInt(0)
 	}
@@ -1873,25 +1873,25 @@ func (l *LoadSampleDataSetV2Response) require(field *big.Int) {
 
 // SetData sets the Data field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *LoadSampleDataSetV2Response) SetData(data *IntegrationsDataSetResponseData) {
+func (l *LoadSampleDataSetResponse) SetData(data *IntegrationsDataSetResponseData) {
 	l.Data = data
-	l.require(loadSampleDataSetV2ResponseFieldData)
+	l.require(loadSampleDataSetResponseFieldData)
 }
 
 // SetParams sets the Params field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *LoadSampleDataSetV2Response) SetParams(params map[string]any) {
+func (l *LoadSampleDataSetResponse) SetParams(params map[string]any) {
 	l.Params = params
-	l.require(loadSampleDataSetV2ResponseFieldParams)
+	l.require(loadSampleDataSetResponseFieldParams)
 }
 
-func (l *LoadSampleDataSetV2Response) UnmarshalJSON(data []byte) error {
-	type unmarshaler LoadSampleDataSetV2Response
+func (l *LoadSampleDataSetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler LoadSampleDataSetResponse
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*l = LoadSampleDataSetV2Response(value)
+	*l = LoadSampleDataSetResponse(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
@@ -1901,8 +1901,8 @@ func (l *LoadSampleDataSetV2Response) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (l *LoadSampleDataSetV2Response) MarshalJSON() ([]byte, error) {
-	type embed LoadSampleDataSetV2Response
+func (l *LoadSampleDataSetResponse) MarshalJSON() ([]byte, error) {
+	type embed LoadSampleDataSetResponse
 	var marshaler = struct {
 		embed
 	}{
@@ -1912,7 +1912,7 @@ func (l *LoadSampleDataSetV2Response) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-func (l *LoadSampleDataSetV2Response) String() string {
+func (l *LoadSampleDataSetResponse) String() string {
 	if l == nil {
 		return "<nil>"
 	}

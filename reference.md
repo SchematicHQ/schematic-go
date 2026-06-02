@@ -128,6 +128,90 @@ client.Accounts.GetAccountMember(
 </dl>
 </details>
 
+<details><summary><code>client.Accounts.CountAccountMembers() -> *schematichq.CountAccountMembersResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountAccountMembersRequest{
+        IDs: []*string{
+            schematichq.String(
+                "ids",
+            ),
+        },
+        Q: schematichq.String(
+            "q",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Accounts.CountAccountMembers(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**ids:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `*string` — Search filter
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Accounts.ListAPIKeys() -> *schematichq.ListAPIKeysResponse</code></summary>
 <dl>
 <dd>
@@ -17381,7 +17465,7 @@ client.Integrationsapi.StartDataImport(
 </dl>
 </details>
 
-<details><summary><code>client.Integrationsapi.LoadSampleDataSetV2() -> *schematichq.LoadSampleDataSetV2Response</code></summary>
+<details><summary><code>client.Integrationsapi.LoadSampleDataSet() -> *schematichq.LoadSampleDataSetResponse</code></summary>
 <dl>
 <dd>
 
@@ -17394,7 +17478,7 @@ client.Integrationsapi.StartDataImport(
 <dd>
 
 ```go
-client.Integrationsapi.LoadSampleDataSetV2(
+client.Integrationsapi.LoadSampleDataSet(
         context.TODO(),
     )
 }

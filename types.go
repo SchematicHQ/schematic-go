@@ -74,19 +74,23 @@ func (a AccountMemberPermission) Ptr() *AccountMemberPermission {
 var (
 	accountMemberResponseDataFieldCreatedAt   = big.NewInt(1 << 0)
 	accountMemberResponseDataFieldEmail       = big.NewInt(1 << 1)
-	accountMemberResponseDataFieldID          = big.NewInt(1 << 2)
-	accountMemberResponseDataFieldImageURL    = big.NewInt(1 << 3)
-	accountMemberResponseDataFieldName        = big.NewInt(1 << 4)
-	accountMemberResponseDataFieldPermissions = big.NewInt(1 << 5)
-	accountMemberResponseDataFieldRole        = big.NewInt(1 << 6)
-	accountMemberResponseDataFieldUpdatedAt   = big.NewInt(1 << 7)
+	accountMemberResponseDataFieldFirstName   = big.NewInt(1 << 2)
+	accountMemberResponseDataFieldID          = big.NewInt(1 << 3)
+	accountMemberResponseDataFieldImageURL    = big.NewInt(1 << 4)
+	accountMemberResponseDataFieldLastName    = big.NewInt(1 << 5)
+	accountMemberResponseDataFieldName        = big.NewInt(1 << 6)
+	accountMemberResponseDataFieldPermissions = big.NewInt(1 << 7)
+	accountMemberResponseDataFieldRole        = big.NewInt(1 << 8)
+	accountMemberResponseDataFieldUpdatedAt   = big.NewInt(1 << 9)
 )
 
 type AccountMemberResponseData struct {
 	CreatedAt   time.Time                            `json:"created_at" url:"created_at"`
 	Email       *string                              `json:"email,omitempty" url:"email,omitempty"`
+	FirstName   *string                              `json:"first_name,omitempty" url:"first_name,omitempty"`
 	ID          string                               `json:"id" url:"id"`
 	ImageURL    *string                              `json:"image_url,omitempty" url:"image_url,omitempty"`
+	LastName    *string                              `json:"last_name,omitempty" url:"last_name,omitempty"`
 	Name        *string                              `json:"name,omitempty" url:"name,omitempty"`
 	Permissions map[string][]AccountMemberPermission `json:"permissions" url:"permissions"`
 	Role        *AccountMemberRole                   `json:"role,omitempty" url:"role,omitempty"`
@@ -113,6 +117,13 @@ func (a *AccountMemberResponseData) GetEmail() *string {
 	return a.Email
 }
 
+func (a *AccountMemberResponseData) GetFirstName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.FirstName
+}
+
 func (a *AccountMemberResponseData) GetID() string {
 	if a == nil {
 		return ""
@@ -125,6 +136,13 @@ func (a *AccountMemberResponseData) GetImageURL() *string {
 		return nil
 	}
 	return a.ImageURL
+}
+
+func (a *AccountMemberResponseData) GetLastName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.LastName
 }
 
 func (a *AccountMemberResponseData) GetName() *string {
@@ -183,6 +201,13 @@ func (a *AccountMemberResponseData) SetEmail(email *string) {
 	a.require(accountMemberResponseDataFieldEmail)
 }
 
+// SetFirstName sets the FirstName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetFirstName(firstName *string) {
+	a.FirstName = firstName
+	a.require(accountMemberResponseDataFieldFirstName)
+}
+
 // SetID sets the ID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (a *AccountMemberResponseData) SetID(id string) {
@@ -195,6 +220,13 @@ func (a *AccountMemberResponseData) SetID(id string) {
 func (a *AccountMemberResponseData) SetImageURL(imageURL *string) {
 	a.ImageURL = imageURL
 	a.require(accountMemberResponseDataFieldImageURL)
+}
+
+// SetLastName sets the LastName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AccountMemberResponseData) SetLastName(lastName *string) {
+	a.LastName = lastName
+	a.require(accountMemberResponseDataFieldLastName)
 }
 
 // SetName sets the Name field and marks it as non-optional;

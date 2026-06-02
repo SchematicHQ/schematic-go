@@ -11,6 +11,61 @@ import (
 )
 
 var (
+	countAccountMembersRequestFieldIDs    = big.NewInt(1 << 0)
+	countAccountMembersRequestFieldQ      = big.NewInt(1 << 1)
+	countAccountMembersRequestFieldLimit  = big.NewInt(1 << 2)
+	countAccountMembersRequestFieldOffset = big.NewInt(1 << 3)
+)
+
+type CountAccountMembersRequest struct {
+	IDs []*string `json:"-" url:"ids,omitempty"`
+	// Search filter
+	Q *string `json:"-" url:"q,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CountAccountMembersRequest) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetIDs sets the IDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersRequest) SetIDs(ids []*string) {
+	c.IDs = ids
+	c.require(countAccountMembersRequestFieldIDs)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersRequest) SetQ(q *string) {
+	c.Q = q
+	c.require(countAccountMembersRequestFieldQ)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersRequest) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countAccountMembersRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersRequest) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countAccountMembersRequestFieldOffset)
+}
+
+var (
 	countAPIKeysRequestFieldEnvironmentID      = big.NewInt(1 << 0)
 	countAPIKeysRequestFieldRequireEnvironment = big.NewInt(1 << 1)
 	countAPIKeysRequestFieldLimit              = big.NewInt(1 << 2)
@@ -1654,6 +1709,243 @@ func (w *WhoAmIResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", w)
+}
+
+// Input parameters
+var (
+	countAccountMembersParamsFieldIDs    = big.NewInt(1 << 0)
+	countAccountMembersParamsFieldLimit  = big.NewInt(1 << 1)
+	countAccountMembersParamsFieldOffset = big.NewInt(1 << 2)
+	countAccountMembersParamsFieldQ      = big.NewInt(1 << 3)
+)
+
+type CountAccountMembersParams struct {
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Search filter
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountAccountMembersParams) GetIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.IDs
+}
+
+func (c *CountAccountMembersParams) GetLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountAccountMembersParams) GetOffset() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountAccountMembersParams) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CountAccountMembersParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountAccountMembersParams) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetIDs sets the IDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersParams) SetIDs(ids []string) {
+	c.IDs = ids
+	c.require(countAccountMembersParamsFieldIDs)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersParams) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countAccountMembersParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersParams) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countAccountMembersParamsFieldOffset)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersParams) SetQ(q *string) {
+	c.Q = q
+	c.require(countAccountMembersParamsFieldQ)
+}
+
+func (c *CountAccountMembersParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountAccountMembersParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountAccountMembersParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountAccountMembersParams) MarshalJSON() ([]byte, error) {
+	type embed CountAccountMembersParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountAccountMembersParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	countAccountMembersResponseFieldData   = big.NewInt(1 << 0)
+	countAccountMembersResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CountAccountMembersResponse struct {
+	Data *CountResponse `json:"data" url:"data"`
+	// Input parameters
+	Params *CountAccountMembersParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountAccountMembersResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountAccountMembersResponse) GetParams() *CountAccountMembersParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountAccountMembersResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountAccountMembersResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersResponse) SetData(data *CountResponse) {
+	c.Data = data
+	c.require(countAccountMembersResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersResponse) SetParams(params *CountAccountMembersParams) {
+	c.Params = params
+	c.require(countAccountMembersResponseFieldParams)
+}
+
+func (c *CountAccountMembersResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountAccountMembersResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountAccountMembersResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountAccountMembersResponse) MarshalJSON() ([]byte, error) {
+	type embed CountAccountMembersResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountAccountMembersResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 // Input parameters

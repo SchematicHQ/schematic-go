@@ -11,10 +11,10 @@
     },
     "packageName": "schematichq"
   },
-  "originGitCommit": "a3057c10aa6a1daa708dc714c89ce943f67a722a",
+  "originGitCommit": "d7c4ae7a441b544859c55ace64f5529068698dfc",
   "originGitCommitIsDirty": false,
   "invokedBy": "ci",
-  "requestedVersion": "v1.4.8",
+  "requestedVersion": "v1.4.9",
   "ciProvider": "github",
-  "sdkVersion": "v1.4.8"
+  "sdkVersion": "v1.4.9"
 }

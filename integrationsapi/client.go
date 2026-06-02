@@ -100,11 +100,11 @@ func (c *Client) StartDataImport(
 	return response.Body, nil
 }
 
-func (c *Client) LoadSampleDataSetV2(
+func (c *Client) LoadSampleDataSet(
 	ctx context.Context,
 	opts ...option.RequestOption,
-) (*schematichq.LoadSampleDataSetV2Response, error) {
-	response, err := c.WithRawResponse.LoadSampleDataSetV2(
+) (*schematichq.LoadSampleDataSetResponse, error) {
+	response, err := c.WithRawResponse.LoadSampleDataSet(
 		ctx,
 		opts...,
 	)

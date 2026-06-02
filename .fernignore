@@ -31,6 +31,7 @@ client/conversion_test.go
 client/event_options.go
 client/schematic_client.go
 client/schematic_client_test.go
+client/logger_config_test.go
 datastream/cache.go
 datastream/client.go
 datastream/resource_cache.go

@@ -189,8 +189,8 @@ func TestPartialCompany_ReplacesBillingProductIDs(t *testing.T) {
 	merged, err := PartialCompany(existing, partial)
 	require.NoError(t, err)
 
-	assert.Equal(t, []string{"bp-10", "bp-20"}, merged.BillingProductIDs)
-	assert.Equal(t, []string{"bp-1"}, existing.BillingProductIDs)
+	assert.Equal(t, rulesengine.JSONSlice[string]{"bp-10", "bp-20"}, merged.BillingProductIDs)
+	assert.Equal(t, rulesengine.JSONSlice[string]{"bp-1"}, existing.BillingProductIDs)
 }
 
 func TestPartialCompany_ReplacesPlanIDs(t *testing.T) {
@@ -200,8 +200,8 @@ func TestPartialCompany_ReplacesPlanIDs(t *testing.T) {
 	merged, err := PartialCompany(existing, partial)
 	require.NoError(t, err)
 
-	assert.Equal(t, []string{"plan-99", "plan-100"}, merged.PlanIDs)
-	assert.Equal(t, []string{"plan-1"}, existing.PlanIDs)
+	assert.Equal(t, rulesengine.JSONSlice[string]{"plan-99", "plan-100"}, merged.PlanIDs)
+	assert.Equal(t, rulesengine.JSONSlice[string]{"plan-1"}, existing.PlanIDs)
 }
 
 func TestPartialCompany_ReplacesPlanVersionIDs(t *testing.T) {
@@ -211,8 +211,8 @@ func TestPartialCompany_ReplacesPlanVersionIDs(t *testing.T) {
 	merged, err := PartialCompany(existing, partial)
 	require.NoError(t, err)
 
-	assert.Equal(t, []string{"pv-99"}, merged.PlanVersionIDs)
-	assert.Equal(t, []string{"pv-1"}, existing.PlanVersionIDs)
+	assert.Equal(t, rulesengine.JSONSlice[string]{"pv-99"}, merged.PlanVersionIDs)
+	assert.Equal(t, rulesengine.JSONSlice[string]{"pv-1"}, existing.PlanVersionIDs)
 }
 
 func TestPartialCompany_NullBasePlanID(t *testing.T) {

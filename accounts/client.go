@@ -67,6 +67,22 @@ func (c *Client) GetAccountMember(
 	return response.Body, nil
 }
 
+func (c *Client) CountAccountMembers(
+	ctx context.Context,
+	request *schematichq.CountAccountMembersRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CountAccountMembersResponse, error) {
+	response, err := c.WithRawResponse.CountAccountMembers(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) ListAPIKeys(
 	ctx context.Context,
 	request *schematichq.ListAPIKeysRequest,

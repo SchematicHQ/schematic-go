@@ -217,10 +217,10 @@ func (r *RawClient) StartDataImport(
 	}, nil
 }
 
-func (r *RawClient) LoadSampleDataSetV2(
+func (r *RawClient) LoadSampleDataSet(
 	ctx context.Context,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.LoadSampleDataSetV2Response], error) {
+) (*core.Response[*schematichq.LoadSampleDataSetResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -232,7 +232,7 @@ func (r *RawClient) LoadSampleDataSetV2(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	var response *schematichq.LoadSampleDataSetV2Response
+	var response *schematichq.LoadSampleDataSetResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -251,7 +251,7 @@ func (r *RawClient) LoadSampleDataSetV2(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.LoadSampleDataSetV2Response]{
+	return &core.Response[*schematichq.LoadSampleDataSetResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,

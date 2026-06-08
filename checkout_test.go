@@ -258,6 +258,14 @@ func TestSettersChangeSubscriptionInternalRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCustomFieldValues", func(t *testing.T) {
+		obj := &ChangeSubscriptionInternalRequestBody{}
+		var fernTestValueCustomFieldValues []*CheckoutFieldValue
+		obj.SetCustomFieldValues(fernTestValueCustomFieldValues)
+		assert.Equal(t, fernTestValueCustomFieldValues, obj.CustomFieldValues)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetNewPlanID", func(t *testing.T) {
 		obj := &ChangeSubscriptionInternalRequestBody{}
 		var fernTestValueNewPlanID string
@@ -462,6 +470,39 @@ func TestGettersChangeSubscriptionInternalRequestBody(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCreditBundles() // Should return zero value
+	})
+
+	t.Run("GetCustomFieldValues", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ChangeSubscriptionInternalRequestBody{}
+		var expected []*CheckoutFieldValue
+		obj.CustomFieldValues = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCustomFieldValues(), "getter should return the property value")
+	})
+
+	t.Run("GetCustomFieldValues_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ChangeSubscriptionInternalRequestBody{}
+		obj.CustomFieldValues = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetCustomFieldValues(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetCustomFieldValues_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ChangeSubscriptionInternalRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCustomFieldValues() // Should return zero value
 	})
 
 	t.Run("GetNewPlanID", func(t *testing.T) {
@@ -790,6 +831,37 @@ func TestSettersMarkExplicitChangeSubscriptionInternalRequestBody(t *testing.T) 
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetCustomFieldValues_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ChangeSubscriptionInternalRequestBody{}
+		var fernTestValueCustomFieldValues []*CheckoutFieldValue
+
+		// Act
+		obj.SetCustomFieldValues(fernTestValueCustomFieldValues)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetNewPlanID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -1019,6 +1091,14 @@ func TestSettersCheckoutDataResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCustomCheckoutFields", func(t *testing.T) {
+		obj := &CheckoutDataResponseData{}
+		var fernTestValueCustomCheckoutFields []*CheckoutFieldWithValue
+		obj.SetCustomCheckoutFields(fernTestValueCustomCheckoutFields)
+		assert.Equal(t, fernTestValueCustomCheckoutFields, obj.CustomCheckoutFields)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetFeatureUsage", func(t *testing.T) {
 		obj := &CheckoutDataResponseData{}
 		var fernTestValueFeatureUsage *FeatureUsageDetailResponseData
@@ -1225,6 +1305,39 @@ func TestGettersCheckoutDataResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCompany() // Should return zero value
+	})
+
+	t.Run("GetCustomCheckoutFields", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutDataResponseData{}
+		var expected []*CheckoutFieldWithValue
+		obj.CustomCheckoutFields = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCustomCheckoutFields(), "getter should return the property value")
+	})
+
+	t.Run("GetCustomCheckoutFields_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutDataResponseData{}
+		obj.CustomCheckoutFields = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetCustomCheckoutFields(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetCustomCheckoutFields_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CheckoutDataResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCustomCheckoutFields() // Should return zero value
 	})
 
 	t.Run("GetFeatureUsage", func(t *testing.T) {
@@ -1550,6 +1663,37 @@ func TestSettersMarkExplicitCheckoutDataResponseData(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetCustomCheckoutFields_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutDataResponseData{}
+		var fernTestValueCustomCheckoutFields []*CheckoutFieldWithValue
+
+		// Act
+		obj.SetCustomCheckoutFields(fernTestValueCustomCheckoutFields)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetFeatureUsage_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -1682,6 +1826,139 @@ func TestSettersMarkExplicitCheckoutDataResponseData(t *testing.T) {
 
 		// Act
 		obj.SetSubscription(fernTestValueSubscription)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+}
+
+func TestSettersCheckoutFieldValue(t *testing.T) {
+	t.Run("SetID", func(t *testing.T) {
+		obj := &CheckoutFieldValue{}
+		var fernTestValueID string
+		obj.SetID(fernTestValueID)
+		assert.Equal(t, fernTestValueID, obj.ID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetValue", func(t *testing.T) {
+		obj := &CheckoutFieldValue{}
+		var fernTestValueValue string
+		obj.SetValue(fernTestValueValue)
+		assert.Equal(t, fernTestValueValue, obj.Value)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+}
+
+func TestGettersCheckoutFieldValue(t *testing.T) {
+	t.Run("GetID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutFieldValue{}
+		var expected string
+		obj.ID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetID(), "getter should return the property value")
+	})
+
+	t.Run("GetID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CheckoutFieldValue
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetID() // Should return zero value
+	})
+
+	t.Run("GetValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutFieldValue{}
+		var expected string
+		obj.Value = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetValue(), "getter should return the property value")
+	})
+
+	t.Run("GetValue_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CheckoutFieldValue
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetValue() // Should return zero value
+	})
+
+}
+
+func TestSettersMarkExplicitCheckoutFieldValue(t *testing.T) {
+	t.Run("SetID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutFieldValue{}
+		var fernTestValueID string
+
+		// Act
+		obj.SetID(fernTestValueID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetValue_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutFieldValue{}
+		var fernTestValueValue string
+
+		// Act
+		obj.SetValue(fernTestValueValue)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -3675,6 +3952,14 @@ func TestSettersManagePlanRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCustomFieldValues", func(t *testing.T) {
+		obj := &ManagePlanRequest{}
+		var fernTestValueCustomFieldValues []*CheckoutFieldValue
+		obj.SetCustomFieldValues(fernTestValueCustomFieldValues)
+		assert.Equal(t, fernTestValueCustomFieldValues, obj.CustomFieldValues)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetPayInAdvanceEntitlements", func(t *testing.T) {
 		obj := &ManagePlanRequest{}
 		var fernTestValuePayInAdvanceEntitlements []*UpdatePayInAdvanceRequestBody
@@ -3970,6 +4255,39 @@ func TestGettersManagePlanRequest(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCreditBundles() // Should return zero value
+	})
+
+	t.Run("GetCustomFieldValues", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ManagePlanRequest{}
+		var expected []*CheckoutFieldValue
+		obj.CustomFieldValues = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCustomFieldValues(), "getter should return the property value")
+	})
+
+	t.Run("GetCustomFieldValues_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ManagePlanRequest{}
+		obj.CustomFieldValues = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetCustomFieldValues(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetCustomFieldValues_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ManagePlanRequest
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCustomFieldValues() // Should return zero value
 	})
 
 	t.Run("GetPayInAdvanceEntitlements", func(t *testing.T) {
@@ -4365,6 +4683,37 @@ func TestSettersMarkExplicitManagePlanRequest(t *testing.T) {
 
 		// Act
 		obj.SetCreditBundles(fernTestValueCreditBundles)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetCustomFieldValues_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ManagePlanRequest{}
+		var fernTestValueCustomFieldValues []*CheckoutFieldValue
+
+		// Act
+		obj.SetCustomFieldValues(fernTestValueCustomFieldValues)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -8700,6 +9049,39 @@ func TestJSONMarshalingCheckoutDataResponseData(t *testing.T) {
 	})
 }
 
+func TestJSONMarshalingCheckoutFieldValue(t *testing.T) {
+	t.Run("MarshalUnmarshal", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutFieldValue{}
+
+		// Act - Marshal to JSON
+		data, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed")
+		assert.NotNil(t, data, "marshaled data should not be nil")
+		assert.NotEmpty(t, data, "marshaled data should not be empty")
+
+		// Unmarshal back and verify round-trip
+		var unmarshaled CheckoutFieldValue
+		err = json.Unmarshal(data, &unmarshaled)
+		assert.NoError(t, err, "round-trip unmarshal should succeed")
+	})
+
+	t.Run("UnmarshalInvalidJSON", func(t *testing.T) {
+		t.Parallel()
+		var obj CheckoutFieldValue
+		err := json.Unmarshal([]byte(`{invalid json}`), &obj)
+		assert.Error(t, err, "unmarshaling invalid JSON should return an error")
+	})
+
+	t.Run("UnmarshalEmptyObject", func(t *testing.T) {
+		t.Parallel()
+		var obj CheckoutFieldValue
+		err := json.Unmarshal([]byte(`{}`), &obj)
+		assert.NoError(t, err, "unmarshaling empty object should succeed")
+	})
+}
+
 func TestJSONMarshalingCheckoutInternalResponse(t *testing.T) {
 	t.Run("MarshalUnmarshal", func(t *testing.T) {
 		t.Parallel()
@@ -9342,6 +9724,22 @@ func TestStringCheckoutDataResponseData(t *testing.T) {
 	})
 }
 
+func TestStringCheckoutFieldValue(t *testing.T) {
+	t.Run("StringMethod", func(t *testing.T) {
+		t.Parallel()
+		obj := &CheckoutFieldValue{}
+		result := obj.String()
+		assert.NotEmpty(t, result, "String() should return a non-empty representation")
+	})
+
+	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CheckoutFieldValue
+		result := obj.String()
+		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
+	})
+}
+
 func TestStringCheckoutInternalResponse(t *testing.T) {
 	t.Run("StringMethod", func(t *testing.T) {
 		t.Parallel()
@@ -9694,6 +10092,29 @@ func TestExtraPropertiesCheckoutDataResponseData(t *testing.T) {
 	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *CheckoutDataResponseData
+		extraProps := obj.GetExtraProperties()
+		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
+	})
+}
+
+func TestExtraPropertiesCheckoutFieldValue(t *testing.T) {
+	t.Run("GetExtraProperties", func(t *testing.T) {
+		t.Parallel()
+		obj := &CheckoutFieldValue{}
+		// Should not panic when calling GetExtraProperties()
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("GetExtraProperties() panicked: %v", r)
+			}
+		}()
+		extraProps := obj.GetExtraProperties()
+		// Result can be nil or an empty/non-empty map
+		_ = extraProps
+	})
+
+	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CheckoutFieldValue
 		extraProps := obj.GetExtraProperties()
 		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
 	})

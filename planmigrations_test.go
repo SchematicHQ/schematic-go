@@ -6185,6 +6185,13 @@ func TestEnumMigrationErrorCode(t *testing.T) {
 		assert.Equal(t, MigrationErrorCode("not_on_origin_version"), val, "enum value should match expected wire value")
 	})
 
+	t.Run("NewFromString_operation_item_not_found", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewMigrationErrorCodeFromString("operation_item_not_found")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, MigrationErrorCode("operation_item_not_found"), val, "enum value should match expected wire value")
+	})
+
 	t.Run("NewFromString_permanent_config", func(t *testing.T) {
 		t.Parallel()
 		val, err := NewMigrationErrorCodeFromString("permanent_config")

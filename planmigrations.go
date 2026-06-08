@@ -397,6 +397,7 @@ const (
 	MigrationErrorCodeMultipleSubscriptions       MigrationErrorCode = "multiple_subscriptions"
 	MigrationErrorCodeNoPriceForInterval          MigrationErrorCode = "no_price_for_interval"
 	MigrationErrorCodeNotOnOriginVersion          MigrationErrorCode = "not_on_origin_version"
+	MigrationErrorCodeOperationItemNotFound       MigrationErrorCode = "operation_item_not_found"
 	MigrationErrorCodePermanentConfig             MigrationErrorCode = "permanent_config"
 	MigrationErrorCodePermanentDecline            MigrationErrorCode = "permanent_decline"
 	MigrationErrorCodeTransientDecline            MigrationErrorCode = "transient_decline"
@@ -416,6 +417,8 @@ func NewMigrationErrorCodeFromString(s string) (MigrationErrorCode, error) {
 		return MigrationErrorCodeNoPriceForInterval, nil
 	case "not_on_origin_version":
 		return MigrationErrorCodeNotOnOriginVersion, nil
+	case "operation_item_not_found":
+		return MigrationErrorCodeOperationItemNotFound, nil
 	case "permanent_config":
 		return MigrationErrorCodePermanentConfig, nil
 	case "permanent_decline":

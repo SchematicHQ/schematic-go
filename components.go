@@ -1899,23 +1899,24 @@ var (
 	componentPreviewResponseDataFieldComponent                             = big.NewInt(1 << 7)
 	componentPreviewResponseDataFieldCreditBundles                         = big.NewInt(1 << 8)
 	componentPreviewResponseDataFieldCreditGrants                          = big.NewInt(1 << 9)
-	componentPreviewResponseDataFieldDefaultPlan                           = big.NewInt(1 << 10)
-	componentPreviewResponseDataFieldDisplaySettings                       = big.NewInt(1 << 11)
-	componentPreviewResponseDataFieldFeatureUsage                          = big.NewInt(1 << 12)
-	componentPreviewResponseDataFieldInvoices                              = big.NewInt(1 << 13)
-	componentPreviewResponseDataFieldPostTrialPlan                         = big.NewInt(1 << 14)
-	componentPreviewResponseDataFieldPreventSelfServiceDowngrade           = big.NewInt(1 << 15)
-	componentPreviewResponseDataFieldPreventSelfServiceDowngradeButtonText = big.NewInt(1 << 16)
-	componentPreviewResponseDataFieldPreventSelfServiceDowngradeURL        = big.NewInt(1 << 17)
-	componentPreviewResponseDataFieldScheduledDowngrade                    = big.NewInt(1 << 18)
-	componentPreviewResponseDataFieldShowAsMonthlyPrices                   = big.NewInt(1 << 19)
-	componentPreviewResponseDataFieldShowCredits                           = big.NewInt(1 << 20)
-	componentPreviewResponseDataFieldShowPeriodToggle                      = big.NewInt(1 << 21)
-	componentPreviewResponseDataFieldShowZeroPriceAsFree                   = big.NewInt(1 << 22)
-	componentPreviewResponseDataFieldStripeEmbed                           = big.NewInt(1 << 23)
-	componentPreviewResponseDataFieldSubscription                          = big.NewInt(1 << 24)
-	componentPreviewResponseDataFieldTrialPaymentMethodRequired            = big.NewInt(1 << 25)
-	componentPreviewResponseDataFieldUpcomingInvoice                       = big.NewInt(1 << 26)
+	componentPreviewResponseDataFieldCustomCheckoutFields                  = big.NewInt(1 << 10)
+	componentPreviewResponseDataFieldDefaultPlan                           = big.NewInt(1 << 11)
+	componentPreviewResponseDataFieldDisplaySettings                       = big.NewInt(1 << 12)
+	componentPreviewResponseDataFieldFeatureUsage                          = big.NewInt(1 << 13)
+	componentPreviewResponseDataFieldInvoices                              = big.NewInt(1 << 14)
+	componentPreviewResponseDataFieldPostTrialPlan                         = big.NewInt(1 << 15)
+	componentPreviewResponseDataFieldPreventSelfServiceDowngrade           = big.NewInt(1 << 16)
+	componentPreviewResponseDataFieldPreventSelfServiceDowngradeButtonText = big.NewInt(1 << 17)
+	componentPreviewResponseDataFieldPreventSelfServiceDowngradeURL        = big.NewInt(1 << 18)
+	componentPreviewResponseDataFieldScheduledDowngrade                    = big.NewInt(1 << 19)
+	componentPreviewResponseDataFieldShowAsMonthlyPrices                   = big.NewInt(1 << 20)
+	componentPreviewResponseDataFieldShowCredits                           = big.NewInt(1 << 21)
+	componentPreviewResponseDataFieldShowPeriodToggle                      = big.NewInt(1 << 22)
+	componentPreviewResponseDataFieldShowZeroPriceAsFree                   = big.NewInt(1 << 23)
+	componentPreviewResponseDataFieldStripeEmbed                           = big.NewInt(1 << 24)
+	componentPreviewResponseDataFieldSubscription                          = big.NewInt(1 << 25)
+	componentPreviewResponseDataFieldTrialPaymentMethodRequired            = big.NewInt(1 << 26)
+	componentPreviewResponseDataFieldUpcomingInvoice                       = big.NewInt(1 << 27)
 )
 
 type ComponentPreviewResponseData struct {
@@ -1929,6 +1930,7 @@ type ComponentPreviewResponseData struct {
 	Component                             *ComponentResponseData               `json:"component,omitempty" url:"component,omitempty"`
 	CreditBundles                         []*BillingCreditBundleView           `json:"credit_bundles" url:"credit_bundles"`
 	CreditGrants                          []*CreditCompanyGrantView            `json:"credit_grants" url:"credit_grants"`
+	CustomCheckoutFields                  []*CheckoutFieldWithValue            `json:"custom_checkout_fields" url:"custom_checkout_fields"`
 	DefaultPlan                           *PlanDetailResponseData              `json:"default_plan,omitempty" url:"default_plan,omitempty"`
 	DisplaySettings                       *ComponentDisplaySettings            `json:"display_settings" url:"display_settings"`
 	FeatureUsage                          *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
@@ -2022,6 +2024,13 @@ func (c *ComponentPreviewResponseData) GetCreditGrants() []*CreditCompanyGrantVi
 		return nil
 	}
 	return c.CreditGrants
+}
+
+func (c *ComponentPreviewResponseData) GetCustomCheckoutFields() []*CheckoutFieldWithValue {
+	if c == nil {
+		return nil
+	}
+	return c.CustomCheckoutFields
 }
 
 func (c *ComponentPreviewResponseData) GetDefaultPlan() *PlanDetailResponseData {
@@ -2225,6 +2234,13 @@ func (c *ComponentPreviewResponseData) SetCreditBundles(creditBundles []*Billing
 func (c *ComponentPreviewResponseData) SetCreditGrants(creditGrants []*CreditCompanyGrantView) {
 	c.CreditGrants = creditGrants
 	c.require(componentPreviewResponseDataFieldCreditGrants)
+}
+
+// SetCustomCheckoutFields sets the CustomCheckoutFields field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentPreviewResponseData) SetCustomCheckoutFields(customCheckoutFields []*CheckoutFieldWithValue) {
+	c.CustomCheckoutFields = customCheckoutFields
+	c.require(componentPreviewResponseDataFieldCustomCheckoutFields)
 }
 
 // SetDefaultPlan sets the DefaultPlan field and marks it as non-optional;
@@ -2728,13 +2744,16 @@ var (
 	creditCompanyGrantViewFieldQuantityUsed          = big.NewInt(1 << 22)
 	creditCompanyGrantViewFieldRenewalEnabled        = big.NewInt(1 << 23)
 	creditCompanyGrantViewFieldRenewalPeriod         = big.NewInt(1 << 24)
-	creditCompanyGrantViewFieldSingularName          = big.NewInt(1 << 25)
-	creditCompanyGrantViewFieldSourceLabel           = big.NewInt(1 << 26)
-	creditCompanyGrantViewFieldTransfers             = big.NewInt(1 << 27)
-	creditCompanyGrantViewFieldUpdatedAt             = big.NewInt(1 << 28)
-	creditCompanyGrantViewFieldValidFrom             = big.NewInt(1 << 29)
-	creditCompanyGrantViewFieldZeroedOutDate         = big.NewInt(1 << 30)
-	creditCompanyGrantViewFieldZeroedOutReason       = big.NewInt(1 << 31)
+	creditCompanyGrantViewFieldReserved              = big.NewInt(1 << 25)
+	creditCompanyGrantViewFieldSettled               = big.NewInt(1 << 26)
+	creditCompanyGrantViewFieldSingularName          = big.NewInt(1 << 27)
+	creditCompanyGrantViewFieldSourceGrantID         = big.NewInt(1 << 28)
+	creditCompanyGrantViewFieldSourceLabel           = big.NewInt(1 << 29)
+	creditCompanyGrantViewFieldTransfers             = big.NewInt(1 << 30)
+	creditCompanyGrantViewFieldUpdatedAt             = big.NewInt(1 << 31)
+	creditCompanyGrantViewFieldValidFrom             = big.NewInt(1 << 32)
+	creditCompanyGrantViewFieldZeroedOutDate         = big.NewInt(1 << 33)
+	creditCompanyGrantViewFieldZeroedOutReason       = big.NewInt(1 << 34)
 )
 
 type CreditCompanyGrantView struct {
@@ -2763,7 +2782,10 @@ type CreditCompanyGrantView struct {
 	QuantityUsed          float64                             `json:"quantity_used" url:"quantity_used"`
 	RenewalEnabled        bool                                `json:"renewal_enabled" url:"renewal_enabled"`
 	RenewalPeriod         *BillingPlanCreditGrantResetCadence `json:"renewal_period,omitempty" url:"renewal_period,omitempty"`
+	Reserved              *float64                            `json:"reserved,omitempty" url:"reserved,omitempty"`
+	Settled               *float64                            `json:"settled,omitempty" url:"settled,omitempty"`
 	SingularName          *string                             `json:"singular_name,omitempty" url:"singular_name,omitempty"`
+	SourceGrantID         *string                             `json:"source_grant_id,omitempty" url:"source_grant_id,omitempty"`
 	SourceLabel           string                              `json:"source_label" url:"source_label"`
 	Transfers             []*CreditTransferView               `json:"transfers,omitempty" url:"transfers,omitempty"`
 	UpdatedAt             time.Time                           `json:"updated_at" url:"updated_at"`
@@ -2953,11 +2975,32 @@ func (c *CreditCompanyGrantView) GetRenewalPeriod() *BillingPlanCreditGrantReset
 	return c.RenewalPeriod
 }
 
+func (c *CreditCompanyGrantView) GetReserved() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.Reserved
+}
+
+func (c *CreditCompanyGrantView) GetSettled() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.Settled
+}
+
 func (c *CreditCompanyGrantView) GetSingularName() *string {
 	if c == nil {
 		return nil
 	}
 	return c.SingularName
+}
+
+func (c *CreditCompanyGrantView) GetSourceGrantID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.SourceGrantID
 }
 
 func (c *CreditCompanyGrantView) GetSourceLabel() string {
@@ -3191,11 +3234,32 @@ func (c *CreditCompanyGrantView) SetRenewalPeriod(renewalPeriod *BillingPlanCred
 	c.require(creditCompanyGrantViewFieldRenewalPeriod)
 }
 
+// SetReserved sets the Reserved field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetReserved(reserved *float64) {
+	c.Reserved = reserved
+	c.require(creditCompanyGrantViewFieldReserved)
+}
+
+// SetSettled sets the Settled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetSettled(settled *float64) {
+	c.Settled = settled
+	c.require(creditCompanyGrantViewFieldSettled)
+}
+
 // SetSingularName sets the SingularName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreditCompanyGrantView) SetSingularName(singularName *string) {
 	c.SingularName = singularName
 	c.require(creditCompanyGrantViewFieldSingularName)
+}
+
+// SetSourceGrantID sets the SourceGrantID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetSourceGrantID(sourceGrantID *string) {
+	c.SourceGrantID = sourceGrantID
+	c.require(creditCompanyGrantViewFieldSourceGrantID)
 }
 
 // SetSourceLabel sets the SourceLabel field and marks it as non-optional;

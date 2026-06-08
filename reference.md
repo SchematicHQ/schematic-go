@@ -1529,7 +1529,7 @@ request := &schematichq.ListCustomersWithSubscriptionsRequest{
         Name: schematichq.String(
             "name",
         ),
-        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -1633,7 +1633,7 @@ request := &schematichq.CountCustomersRequest{
         Name: schematichq.String(
             "name",
         ),
-        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -2412,7 +2412,7 @@ request := &schematichq.ListBillingPricesRequest{
                 "product_ids",
             ),
         },
-        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -2856,7 +2856,7 @@ request := &schematichq.ListBillingProductPricesRequest{
                 "product_ids",
             ),
         },
-        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -3173,7 +3173,7 @@ request := &schematichq.ListBillingProductsRequest{
             "name",
         ),
         PriceUsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
-        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -3352,7 +3352,7 @@ request := &schematichq.CountBillingProductsRequest{
             "name",
         ),
         PriceUsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
-        ProviderType: schematichq.BillingProviderTypeOrb.Ptr(),
+        ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -6607,6 +6607,12 @@ request := &schematichq.ChangeSubscriptionInternalRequestBody{
                 Quantity: int64(1000000),
             },
         },
+        CustomFieldValues: []*schematichq.CheckoutFieldValue{
+            &schematichq.CheckoutFieldValue{
+                ID: "id",
+                Value: "value",
+            },
+        },
         NewPlanID: "new_plan_id",
         NewPriceID: "new_price_id",
         PayInAdvance: []*schematichq.UpdatePayInAdvanceRequestBody{
@@ -6735,6 +6741,12 @@ request := &schematichq.ChangeSubscriptionInternalRequestBody{
                 Quantity: int64(1000000),
             },
         },
+        CustomFieldValues: []*schematichq.CheckoutFieldValue{
+            &schematichq.CheckoutFieldValue{
+                ID: "id",
+                Value: "value",
+            },
+        },
         NewPlanID: "new_plan_id",
         NewPriceID: "new_price_id",
         PayInAdvance: []*schematichq.UpdatePayInAdvanceRequestBody{
@@ -6802,6 +6814,12 @@ request := &schematichq.ManagePlanRequest{
                 Quantity: int64(1000000),
             },
         },
+        CustomFieldValues: []*schematichq.CheckoutFieldValue{
+            &schematichq.CheckoutFieldValue{
+                ID: "id",
+                Value: "value",
+            },
+        },
         PayInAdvanceEntitlements: []*schematichq.UpdatePayInAdvanceRequestBody{
             &schematichq.UpdatePayInAdvanceRequestBody{
                 PriceID: "price_id",
@@ -6864,6 +6882,12 @@ request := &schematichq.ManagePlanRequest{
             &schematichq.UpdateCreditBundleRequestBody{
                 BundleID: "bundle_id",
                 Quantity: int64(1000000),
+            },
+        },
+        CustomFieldValues: []*schematichq.CheckoutFieldValue{
+            &schematichq.CheckoutFieldValue{
+                ID: "id",
+                Value: "value",
             },
         },
         PayInAdvanceEntitlements: []*schematichq.UpdatePayInAdvanceRequestBody{
@@ -10728,7 +10752,7 @@ request := &schematichq.ListFeatureUsageRequest{
         IncludeUsageAggregation: schematichq.Bool(
             true,
         ),
-        ManagedBy: schematichq.BillingProviderTypeOrb.Ptr(),
+        ManagedBy: schematichq.BillingProviderTypeMetronome.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -10949,7 +10973,7 @@ request := &schematichq.CountFeatureUsageRequest{
         IncludeUsageAggregation: schematichq.Bool(
             true,
         ),
-        ManagedBy: schematichq.BillingProviderTypeOrb.Ptr(),
+        ManagedBy: schematichq.BillingProviderTypeMetronome.Ptr(),
         Q: schematichq.String(
             "q",
         ),
@@ -12080,7 +12104,7 @@ client.Entitlements.DeletePlanEntitlement(
 
 ```go
 request := &schematichq.CreateBillingLinkedPlanEntitlementRequestBody{
-        BillingProvider: schematichq.BillingProviderTypeOrb,
+        BillingProvider: schematichq.BillingProviderTypeMetronome,
         ExternalResourceID: "external_resource_id",
         FeatureID: "feature_id",
         PlanID: "plan_id",
@@ -13556,7 +13580,7 @@ client.Plans.UpsertBillingProductPlan(
 
 ```go
 request := &schematichq.CreateBillingLinkedPlanRequestBody{
-        BillingProvider: schematichq.BillingProviderTypeOrb,
+        BillingProvider: schematichq.BillingProviderTypeMetronome,
         Description: "description",
         ExternalResourceID: "external_resource_id",
         Name: "name",
@@ -15452,7 +15476,7 @@ request := &schematichq.ListFeaturesRequest{
                 "ids",
             ),
         },
-        ManagedBy: schematichq.BillingProviderTypeOrb.Ptr(),
+        ManagedBy: schematichq.BillingProviderTypeMetronome.Ptr(),
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
@@ -15940,7 +15964,7 @@ client.Features.DeleteFeature(
 
 ```go
 request := &schematichq.CreateBillingLinkedFeatureRequestBody{
-        BillingProvider: schematichq.BillingProviderTypeOrb,
+        BillingProvider: schematichq.BillingProviderTypeMetronome,
         Description: "description",
         ExternalResourceID: "external_resource_id",
         FeatureType: schematichq.FeatureTypeBoolean,
@@ -16098,7 +16122,7 @@ request := &schematichq.CountFeaturesRequest{
                 "ids",
             ),
         },
-        ManagedBy: schematichq.BillingProviderTypeOrb.Ptr(),
+        ManagedBy: schematichq.BillingProviderTypeMetronome.Ptr(),
         PlanVersionID: schematichq.String(
             "plan_version_id",
         ),
@@ -17402,6 +17426,53 @@ client.Integrationsapi.GetIntegrationWebhookURL(
 </dl>
 </details>
 
+<details><summary><code>client.Integrationsapi.InstallIntegration(request) -> *schematichq.InstallIntegrationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.InstallIntegrationRequestBody{
+        Type: schematichq.IntegrationTypeClerk,
+    }
+client.Integrationsapi.InstallIntegration(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `*schematichq.InstallIntegrationRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Integrationsapi.StartDataImport(request) -> *schematichq.StartDataImportResponse</code></summary>
 <dl>
 <dd>
@@ -17483,6 +17554,100 @@ client.Integrationsapi.LoadSampleDataSet(
     )
 }
 ```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.AssumeStripeInstalled(request) -> *schematichq.AssumeStripeInstalledResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.InstallIntegrationRequestBody{
+        Type: schematichq.IntegrationTypeClerk,
+    }
+client.Integrationsapi.AssumeStripeInstalled(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `*schematichq.InstallIntegrationRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.InstallStripe(request) -> *schematichq.InstallStripeResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.InstallIntegrationRequestBody{
+        Type: schematichq.IntegrationTypeClerk,
+    }
+client.Integrationsapi.InstallStripe(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `*schematichq.InstallIntegrationRequestBody` 
+    
 </dd>
 </dl>
 </dd>
@@ -17686,6 +17851,14 @@ client.Plangroups.CreatePlanGroup(
 <dd>
 
 **checkoutCollectPhone:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customCheckoutFields:** `[]*schematichq.CheckoutFieldInput` 
     
 </dd>
 </dl>
@@ -18021,6 +18194,14 @@ client.Plangroups.UpdatePlanGroup(
 <dd>
 
 **checkoutCollectPhone:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customCheckoutFields:** `[]*schematichq.CheckoutFieldInput` 
     
 </dd>
 </dl>

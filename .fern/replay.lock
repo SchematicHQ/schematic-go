@@ -6,5 +6,127 @@ generations:
     timestamp: 2026-05-22T15:19:25.154Z
     cli_version: unknown
     generator_versions: {}
-current_generation: 4044a9c5bf1a69528f6480bfb5dddb027a44f549
-patches: []
+  - commit_sha: c524d469094a042d395f90f597f6070179df15fd
+    tree_hash: 9f966353bfa8ae190194fc76c8f523f71473ab54
+    timestamp: 2026-06-08T16:19:50.953Z
+    cli_version: unknown
+    generator_versions:
+      fernapi/fern-go-sdk: 1.44.2
+current_generation: c524d469094a042d395f90f597f6070179df15fd
+patches:
+  - id: patch-c1dec125
+    content_hash: sha256:3602badfd6867857bc1f9fc1eddae9cba4a3e8016e6f7211a1339d67bb73c8d2
+    original_commit: c1dec12524ae4d861b313c6edb5d4c61b2b2b3a7
+    original_message: "chore(deps): bump actions/setup-go from 4 to 6 (#165)"
+    original_author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+    base_generation: c524d469094a042d395f90f597f6070179df15fd
+    files:
+      - .github/workflows/ci.yml
+    patch_content: |
+      diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+      index 1097e6a..e9cfd15 100644
+      --- a/.github/workflows/ci.yml
+      +++ b/.github/workflows/ci.yml
+      @@ -14,7 +14,9 @@ jobs:
+               uses: actions/checkout@v4
+       
+             - name: Set up go
+      -        uses: actions/setup-go@v4
+      +        uses: actions/setup-go@v6
+      +        with:
+      +          go-version-file: go.mod
+       
+             - name: Compile
+               run: go build ./...
+      @@ -25,7 +27,9 @@ jobs:
+               uses: actions/checkout@v4
+       
+             - name: Set up go
+      -        uses: actions/setup-go@v4
+      +        uses: actions/setup-go@v6
+      +        with:
+      +          go-version-file: go.mod
+       
+             - name: Lint
+               uses: golangci/golangci-lint-action@v9
+      @@ -38,7 +42,9 @@ jobs:
+               uses: actions/checkout@v4
+       
+             - name: Set up go
+      -        uses: actions/setup-go@v4
+      +        uses: actions/setup-go@v6
+      +        with:
+      +          go-version-file: go.mod
+       
+             - name: Setup wiremock server
+               run: |
+    theirs_snapshot:
+      .github/workflows/ci.yml: |
+        name: ci
+
+        on: [push]
+
+        concurrency:
+          group: ${{ github.workflow }}-${{ github.ref }}
+          cancel-in-progress: false
+
+        jobs:
+          compile:
+            runs-on: ubuntu-latest
+            steps:
+              - name: Checkout repo
+                uses: actions/checkout@v4
+
+              - name: Set up go
+                uses: actions/setup-go@v6
+                with:
+                  go-version-file: go.mod
+
+              - name: Compile
+                run: go build ./...
+          lint:
+            runs-on: ubuntu-latest
+            steps:
+              - name: Checkout repo
+                uses: actions/checkout@v4
+
+              - name: Set up go
+                uses: actions/setup-go@v6
+                with:
+                  go-version-file: go.mod
+
+              - name: Lint
+                uses: golangci/golangci-lint-action@v9
+                with:
+                  version: v2.10.1
+          test:
+            runs-on: ubuntu-latest
+            steps:
+              - name: Checkout repo
+                uses: actions/checkout@v4
+
+              - name: Set up go
+                uses: actions/setup-go@v6
+                with:
+                  go-version-file: go.mod
+
+              - name: Setup wiremock server
+                run: |
+                  PROJECT_NAME="wiremock-$(basename $(dirname $(pwd)) | tr -d '.')"
+                  echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
+                  if [ -f wiremock/docker-compose.test.yml ]; then
+                    docker compose -p "$PROJECT_NAME" -f wiremock/docker-compose.test.yml down
+                    docker compose -p "$PROJECT_NAME" -f wiremock/docker-compose.test.yml up -d
+                    WIREMOCK_PORT=$(docker compose -p "$PROJECT_NAME" -f wiremock/docker-compose.test.yml port wiremock 8080 | cut -d: -f2)
+                    echo "WIREMOCK_URL=http://localhost:$WIREMOCK_PORT" >> $GITHUB_ENV
+                  fi
+
+              - name: Test
+                run: go test ./...
+
+              - name: Teardown wiremock server
+                if: always()
+                run: |
+                  if [ -f wiremock/docker-compose.test.yml ]; then
+                    docker compose -p "$PROJECT_NAME" -f wiremock/docker-compose.test.yml down
+                  fi

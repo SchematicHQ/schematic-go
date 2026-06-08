@@ -1139,16 +1139,17 @@ var (
 	eventDetailResponseDataFieldFeatures       = big.NewInt(1 << 11)
 	eventDetailResponseDataFieldID             = big.NewInt(1 << 12)
 	eventDetailResponseDataFieldIdempotencyKey = big.NewInt(1 << 13)
-	eventDetailResponseDataFieldLoadedAt       = big.NewInt(1 << 14)
-	eventDetailResponseDataFieldProcessedAt    = big.NewInt(1 << 15)
-	eventDetailResponseDataFieldQuantity       = big.NewInt(1 << 16)
-	eventDetailResponseDataFieldSentAt         = big.NewInt(1 << 17)
-	eventDetailResponseDataFieldStatus         = big.NewInt(1 << 18)
-	eventDetailResponseDataFieldSubtype        = big.NewInt(1 << 19)
-	eventDetailResponseDataFieldType           = big.NewInt(1 << 20)
-	eventDetailResponseDataFieldUpdatedAt      = big.NewInt(1 << 21)
-	eventDetailResponseDataFieldUser           = big.NewInt(1 << 22)
-	eventDetailResponseDataFieldUserID         = big.NewInt(1 << 23)
+	eventDetailResponseDataFieldLeaseID        = big.NewInt(1 << 14)
+	eventDetailResponseDataFieldLoadedAt       = big.NewInt(1 << 15)
+	eventDetailResponseDataFieldProcessedAt    = big.NewInt(1 << 16)
+	eventDetailResponseDataFieldQuantity       = big.NewInt(1 << 17)
+	eventDetailResponseDataFieldSentAt         = big.NewInt(1 << 18)
+	eventDetailResponseDataFieldStatus         = big.NewInt(1 << 19)
+	eventDetailResponseDataFieldSubtype        = big.NewInt(1 << 20)
+	eventDetailResponseDataFieldType           = big.NewInt(1 << 21)
+	eventDetailResponseDataFieldUpdatedAt      = big.NewInt(1 << 22)
+	eventDetailResponseDataFieldUser           = big.NewInt(1 << 23)
+	eventDetailResponseDataFieldUserID         = big.NewInt(1 << 24)
 )
 
 type EventDetailResponseData struct {
@@ -1166,6 +1167,7 @@ type EventDetailResponseData struct {
 	Features       []*PreviewObject    `json:"features" url:"features"`
 	ID             string              `json:"id" url:"id"`
 	IdempotencyKey *string             `json:"idempotency_key,omitempty" url:"idempotency_key,omitempty"`
+	LeaseID        *string             `json:"lease_id,omitempty" url:"lease_id,omitempty"`
 	LoadedAt       *time.Time          `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
 	ProcessedAt    *time.Time          `json:"processed_at,omitempty" url:"processed_at,omitempty"`
 	Quantity       int64               `json:"quantity" url:"quantity"`
@@ -1280,6 +1282,13 @@ func (e *EventDetailResponseData) GetIdempotencyKey() *string {
 		return nil
 	}
 	return e.IdempotencyKey
+}
+
+func (e *EventDetailResponseData) GetLeaseID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.LeaseID
 }
 
 func (e *EventDetailResponseData) GetLoadedAt() *time.Time {
@@ -1462,6 +1471,13 @@ func (e *EventDetailResponseData) SetID(id string) {
 func (e *EventDetailResponseData) SetIdempotencyKey(idempotencyKey *string) {
 	e.IdempotencyKey = idempotencyKey
 	e.require(eventDetailResponseDataFieldIdempotencyKey)
+}
+
+// SetLeaseID sets the LeaseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventDetailResponseData) SetLeaseID(leaseID *string) {
+	e.LeaseID = leaseID
+	e.require(eventDetailResponseDataFieldLeaseID)
 }
 
 // SetLoadedAt sets the LoadedAt field and marks it as non-optional;

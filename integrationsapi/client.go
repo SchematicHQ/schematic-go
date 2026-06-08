@@ -84,6 +84,22 @@ func (c *Client) GetIntegrationWebhookURL(
 	return response.Body, nil
 }
 
+func (c *Client) InstallIntegration(
+	ctx context.Context,
+	request *schematichq.InstallIntegrationRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.InstallIntegrationResponse, error) {
+	response, err := c.WithRawResponse.InstallIntegration(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) StartDataImport(
 	ctx context.Context,
 	request *schematichq.StartDataImportRequestBody,
@@ -106,6 +122,38 @@ func (c *Client) LoadSampleDataSet(
 ) (*schematichq.LoadSampleDataSetResponse, error) {
 	response, err := c.WithRawResponse.LoadSampleDataSet(
 		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) AssumeStripeInstalled(
+	ctx context.Context,
+	request *schematichq.InstallIntegrationRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.AssumeStripeInstalledResponse, error) {
+	response, err := c.WithRawResponse.AssumeStripeInstalled(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) InstallStripe(
+	ctx context.Context,
+	request *schematichq.InstallIntegrationRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.InstallStripeResponse, error) {
+	response, err := c.WithRawResponse.InstallStripe(
+		ctx,
+		request,
 		opts...,
 	)
 	if err != nil {

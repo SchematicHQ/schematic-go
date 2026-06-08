@@ -1683,12 +1683,15 @@ var (
 	billingCreditGrantResponseDataFieldQuantityUsed      = big.NewInt(1 << 15)
 	billingCreditGrantResponseDataFieldRenewalEnabled    = big.NewInt(1 << 16)
 	billingCreditGrantResponseDataFieldRenewalPeriod     = big.NewInt(1 << 17)
-	billingCreditGrantResponseDataFieldSourceLabel       = big.NewInt(1 << 18)
-	billingCreditGrantResponseDataFieldTransfers         = big.NewInt(1 << 19)
-	billingCreditGrantResponseDataFieldUpdatedAt         = big.NewInt(1 << 20)
-	billingCreditGrantResponseDataFieldValidFrom         = big.NewInt(1 << 21)
-	billingCreditGrantResponseDataFieldZeroedOutDate     = big.NewInt(1 << 22)
-	billingCreditGrantResponseDataFieldZeroedOutReason   = big.NewInt(1 << 23)
+	billingCreditGrantResponseDataFieldReserved          = big.NewInt(1 << 18)
+	billingCreditGrantResponseDataFieldSettled           = big.NewInt(1 << 19)
+	billingCreditGrantResponseDataFieldSourceGrantID     = big.NewInt(1 << 20)
+	billingCreditGrantResponseDataFieldSourceLabel       = big.NewInt(1 << 21)
+	billingCreditGrantResponseDataFieldTransfers         = big.NewInt(1 << 22)
+	billingCreditGrantResponseDataFieldUpdatedAt         = big.NewInt(1 << 23)
+	billingCreditGrantResponseDataFieldValidFrom         = big.NewInt(1 << 24)
+	billingCreditGrantResponseDataFieldZeroedOutDate     = big.NewInt(1 << 25)
+	billingCreditGrantResponseDataFieldZeroedOutReason   = big.NewInt(1 << 26)
 )
 
 type BillingCreditGrantResponseData struct {
@@ -1710,12 +1713,16 @@ type BillingCreditGrantResponseData struct {
 	QuantityUsed      float64                             `json:"quantity_used" url:"quantity_used"`
 	RenewalEnabled    bool                                `json:"renewal_enabled" url:"renewal_enabled"`
 	RenewalPeriod     *BillingPlanCreditGrantResetCadence `json:"renewal_period,omitempty" url:"renewal_period,omitempty"`
-	SourceLabel       string                              `json:"source_label" url:"source_label"`
-	Transfers         []*CreditTransferResponseData       `json:"transfers,omitempty" url:"transfers,omitempty"`
-	UpdatedAt         time.Time                           `json:"updated_at" url:"updated_at"`
-	ValidFrom         *time.Time                          `json:"valid_from,omitempty" url:"valid_from,omitempty"`
-	ZeroedOutDate     *time.Time                          `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
-	ZeroedOutReason   *BillingCreditGrantZeroedOutReason  `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
+	Reserved          *float64                            `json:"reserved,omitempty" url:"reserved,omitempty"`
+	Settled           *float64                            `json:"settled,omitempty" url:"settled,omitempty"`
+	// For rollover grants, the ID of the source grant that this grant rolled from.
+	SourceGrantID   *string                            `json:"source_grant_id,omitempty" url:"source_grant_id,omitempty"`
+	SourceLabel     string                             `json:"source_label" url:"source_label"`
+	Transfers       []*CreditTransferResponseData      `json:"transfers,omitempty" url:"transfers,omitempty"`
+	UpdatedAt       time.Time                          `json:"updated_at" url:"updated_at"`
+	ValidFrom       *time.Time                         `json:"valid_from,omitempty" url:"valid_from,omitempty"`
+	ZeroedOutDate   *time.Time                         `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
+	ZeroedOutReason *BillingCreditGrantZeroedOutReason `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1848,6 +1855,27 @@ func (b *BillingCreditGrantResponseData) GetRenewalPeriod() *BillingPlanCreditGr
 		return nil
 	}
 	return b.RenewalPeriod
+}
+
+func (b *BillingCreditGrantResponseData) GetReserved() *float64 {
+	if b == nil {
+		return nil
+	}
+	return b.Reserved
+}
+
+func (b *BillingCreditGrantResponseData) GetSettled() *float64 {
+	if b == nil {
+		return nil
+	}
+	return b.Settled
+}
+
+func (b *BillingCreditGrantResponseData) GetSourceGrantID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.SourceGrantID
 }
 
 func (b *BillingCreditGrantResponseData) GetSourceLabel() string {
@@ -2030,6 +2058,27 @@ func (b *BillingCreditGrantResponseData) SetRenewalEnabled(renewalEnabled bool) 
 func (b *BillingCreditGrantResponseData) SetRenewalPeriod(renewalPeriod *BillingPlanCreditGrantResetCadence) {
 	b.RenewalPeriod = renewalPeriod
 	b.require(billingCreditGrantResponseDataFieldRenewalPeriod)
+}
+
+// SetReserved sets the Reserved field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetReserved(reserved *float64) {
+	b.Reserved = reserved
+	b.require(billingCreditGrantResponseDataFieldReserved)
+}
+
+// SetSettled sets the Settled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetSettled(settled *float64) {
+	b.Settled = settled
+	b.require(billingCreditGrantResponseDataFieldSettled)
+}
+
+// SetSourceGrantID sets the SourceGrantID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetSourceGrantID(sourceGrantID *string) {
+	b.SourceGrantID = sourceGrantID
+	b.require(billingCreditGrantResponseDataFieldSourceGrantID)
 }
 
 // SetSourceLabel sets the SourceLabel field and marks it as non-optional;
@@ -2307,13 +2356,17 @@ func (b *BillingCreditLedgerResponseData) String() string {
 var (
 	companyCreditBalanceResponseDataFieldCreditID  = big.NewInt(1 << 0)
 	companyCreditBalanceResponseDataFieldRemaining = big.NewInt(1 << 1)
-	companyCreditBalanceResponseDataFieldSource    = big.NewInt(1 << 2)
-	companyCreditBalanceResponseDataFieldTotal     = big.NewInt(1 << 3)
+	companyCreditBalanceResponseDataFieldReserved  = big.NewInt(1 << 2)
+	companyCreditBalanceResponseDataFieldSettled   = big.NewInt(1 << 3)
+	companyCreditBalanceResponseDataFieldSource    = big.NewInt(1 << 4)
+	companyCreditBalanceResponseDataFieldTotal     = big.NewInt(1 << 5)
 )
 
 type CompanyCreditBalanceResponseData struct {
 	CreditID  string              `json:"credit_id" url:"credit_id"`
 	Remaining float64             `json:"remaining" url:"remaining"`
+	Reserved  float64             `json:"reserved" url:"reserved"`
+	Settled   float64             `json:"settled" url:"settled"`
 	Source    BillingProviderType `json:"source" url:"source"`
 	Total     *float64            `json:"total,omitempty" url:"total,omitempty"`
 
@@ -2336,6 +2389,20 @@ func (c *CompanyCreditBalanceResponseData) GetRemaining() float64 {
 		return 0
 	}
 	return c.Remaining
+}
+
+func (c *CompanyCreditBalanceResponseData) GetReserved() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Reserved
+}
+
+func (c *CompanyCreditBalanceResponseData) GetSettled() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Settled
 }
 
 func (c *CompanyCreditBalanceResponseData) GetSource() BillingProviderType {
@@ -2378,6 +2445,20 @@ func (c *CompanyCreditBalanceResponseData) SetCreditID(creditID string) {
 func (c *CompanyCreditBalanceResponseData) SetRemaining(remaining float64) {
 	c.Remaining = remaining
 	c.require(companyCreditBalanceResponseDataFieldRemaining)
+}
+
+// SetReserved sets the Reserved field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalanceResponseData) SetReserved(reserved float64) {
+	c.Reserved = reserved
+	c.require(companyCreditBalanceResponseDataFieldReserved)
+}
+
+// SetSettled sets the Settled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalanceResponseData) SetSettled(settled float64) {
+	c.Settled = settled
+	c.require(companyCreditBalanceResponseDataFieldSettled)
 }
 
 // SetSource sets the Source field and marks it as non-optional;
@@ -2815,7 +2896,8 @@ var (
 	creditEventLedgerResponseDataFieldSourceID                   = big.NewInt(1 << 27)
 	creditEventLedgerResponseDataFieldToGrantID                  = big.NewInt(1 << 28)
 	creditEventLedgerResponseDataFieldUsageEventID               = big.NewInt(1 << 29)
-	creditEventLedgerResponseDataFieldZeroedOutReason            = big.NewInt(1 << 30)
+	creditEventLedgerResponseDataFieldUsageReason                = big.NewInt(1 << 30)
+	creditEventLedgerResponseDataFieldZeroedOutReason            = big.NewInt(1 << 31)
 )
 
 type CreditEventLedgerResponseData struct {
@@ -2849,6 +2931,7 @@ type CreditEventLedgerResponseData struct {
 	SourceID                   int64                              `json:"source_id" url:"source_id"`
 	ToGrantID                  *string                            `json:"to_grant_id,omitempty" url:"to_grant_id,omitempty"`
 	UsageEventID               *string                            `json:"usage_event_id,omitempty" url:"usage_event_id,omitempty"`
+	UsageReason                *CreditUsageReason                 `json:"usage_reason,omitempty" url:"usage_reason,omitempty"`
 	ZeroedOutReason            *BillingCreditGrantZeroedOutReason `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -3066,6 +3149,13 @@ func (c *CreditEventLedgerResponseData) GetUsageEventID() *string {
 		return nil
 	}
 	return c.UsageEventID
+}
+
+func (c *CreditEventLedgerResponseData) GetUsageReason() *CreditUsageReason {
+	if c == nil {
+		return nil
+	}
+	return c.UsageReason
 }
 
 func (c *CreditEventLedgerResponseData) GetZeroedOutReason() *BillingCreditGrantZeroedOutReason {
@@ -3297,6 +3387,13 @@ func (c *CreditEventLedgerResponseData) SetToGrantID(toGrantID *string) {
 func (c *CreditEventLedgerResponseData) SetUsageEventID(usageEventID *string) {
 	c.UsageEventID = usageEventID
 	c.require(creditEventLedgerResponseDataFieldUsageEventID)
+}
+
+// SetUsageReason sets the UsageReason field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetUsageReason(usageReason *CreditUsageReason) {
+	c.UsageReason = usageReason
+	c.require(creditEventLedgerResponseDataFieldUsageReason)
 }
 
 // SetZeroedOutReason sets the ZeroedOutReason field and marks it as non-optional;
@@ -4270,6 +4367,37 @@ func (c *CreditTransferResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+type CreditUsageReason string
+
+const (
+	CreditUsageReasonLeaseHold        CreditUsageReason = "lease_hold"
+	CreditUsageReasonLeaseRelease     CreditUsageReason = "lease_release"
+	CreditUsageReasonManualAdjustment CreditUsageReason = "manual_adjustment"
+	CreditUsageReasonReconciliation   CreditUsageReason = "reconciliation"
+	CreditUsageReasonTrack            CreditUsageReason = "track"
+)
+
+func NewCreditUsageReasonFromString(s string) (CreditUsageReason, error) {
+	switch s {
+	case "lease_hold":
+		return CreditUsageReasonLeaseHold, nil
+	case "lease_release":
+		return CreditUsageReasonLeaseRelease, nil
+	case "manual_adjustment":
+		return CreditUsageReasonManualAdjustment, nil
+	case "reconciliation":
+		return CreditUsageReasonReconciliation, nil
+	case "track":
+		return CreditUsageReasonTrack, nil
+	}
+	var t CreditUsageReason
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreditUsageReason) Ptr() *CreditUsageReason {
+	return &c
 }
 
 var (

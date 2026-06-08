@@ -137,12 +137,13 @@ var (
 	changeSubscriptionInternalRequestBodyFieldCompanyID          = big.NewInt(1 << 2)
 	changeSubscriptionInternalRequestBodyFieldCouponExternalID   = big.NewInt(1 << 3)
 	changeSubscriptionInternalRequestBodyFieldCreditBundles      = big.NewInt(1 << 4)
-	changeSubscriptionInternalRequestBodyFieldNewPlanID          = big.NewInt(1 << 5)
-	changeSubscriptionInternalRequestBodyFieldNewPriceID         = big.NewInt(1 << 6)
-	changeSubscriptionInternalRequestBodyFieldPayInAdvance       = big.NewInt(1 << 7)
-	changeSubscriptionInternalRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 8)
-	changeSubscriptionInternalRequestBodyFieldPromoCode          = big.NewInt(1 << 9)
-	changeSubscriptionInternalRequestBodyFieldSkipTrial          = big.NewInt(1 << 10)
+	changeSubscriptionInternalRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 5)
+	changeSubscriptionInternalRequestBodyFieldNewPlanID          = big.NewInt(1 << 6)
+	changeSubscriptionInternalRequestBodyFieldNewPriceID         = big.NewInt(1 << 7)
+	changeSubscriptionInternalRequestBodyFieldPayInAdvance       = big.NewInt(1 << 8)
+	changeSubscriptionInternalRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 9)
+	changeSubscriptionInternalRequestBodyFieldPromoCode          = big.NewInt(1 << 10)
+	changeSubscriptionInternalRequestBodyFieldSkipTrial          = big.NewInt(1 << 11)
 )
 
 type ChangeSubscriptionInternalRequestBody struct {
@@ -151,6 +152,7 @@ type ChangeSubscriptionInternalRequestBody struct {
 	CompanyID          string                                `json:"company_id" url:"company_id"`
 	CouponExternalID   *string                               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles      []*UpdateCreditBundleRequestBody      `json:"credit_bundles" url:"credit_bundles"`
+	CustomFieldValues  []*CheckoutFieldValue                 `json:"custom_field_values" url:"custom_field_values"`
 	NewPlanID          string                                `json:"new_plan_id" url:"new_plan_id"`
 	NewPriceID         string                                `json:"new_price_id" url:"new_price_id"`
 	PayInAdvance       []*UpdatePayInAdvanceRequestBody      `json:"pay_in_advance" url:"pay_in_advance"`
@@ -198,6 +200,13 @@ func (c *ChangeSubscriptionInternalRequestBody) GetCreditBundles() []*UpdateCred
 		return nil
 	}
 	return c.CreditBundles
+}
+
+func (c *ChangeSubscriptionInternalRequestBody) GetCustomFieldValues() []*CheckoutFieldValue {
+	if c == nil {
+		return nil
+	}
+	return c.CustomFieldValues
 }
 
 func (c *ChangeSubscriptionInternalRequestBody) GetNewPlanID() string {
@@ -291,6 +300,13 @@ func (c *ChangeSubscriptionInternalRequestBody) SetCreditBundles(creditBundles [
 	c.require(changeSubscriptionInternalRequestBodyFieldCreditBundles)
 }
 
+// SetCustomFieldValues sets the CustomFieldValues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ChangeSubscriptionInternalRequestBody) SetCustomFieldValues(customFieldValues []*CheckoutFieldValue) {
+	c.CustomFieldValues = customFieldValues
+	c.require(changeSubscriptionInternalRequestBodyFieldCustomFieldValues)
+}
+
 // SetNewPlanID sets the NewPlanID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *ChangeSubscriptionInternalRequestBody) SetNewPlanID(newPlanID string) {
@@ -381,11 +397,12 @@ var (
 	checkoutDataResponseDataFieldActiveUsageBasedEntitlements   = big.NewInt(1 << 2)
 	checkoutDataResponseDataFieldAvailableCreditBundles         = big.NewInt(1 << 3)
 	checkoutDataResponseDataFieldCompany                        = big.NewInt(1 << 4)
-	checkoutDataResponseDataFieldFeatureUsage                   = big.NewInt(1 << 5)
-	checkoutDataResponseDataFieldSelectedCreditBundles          = big.NewInt(1 << 6)
-	checkoutDataResponseDataFieldSelectedPlan                   = big.NewInt(1 << 7)
-	checkoutDataResponseDataFieldSelectedUsageBasedEntitlements = big.NewInt(1 << 8)
-	checkoutDataResponseDataFieldSubscription                   = big.NewInt(1 << 9)
+	checkoutDataResponseDataFieldCustomCheckoutFields           = big.NewInt(1 << 5)
+	checkoutDataResponseDataFieldFeatureUsage                   = big.NewInt(1 << 6)
+	checkoutDataResponseDataFieldSelectedCreditBundles          = big.NewInt(1 << 7)
+	checkoutDataResponseDataFieldSelectedPlan                   = big.NewInt(1 << 8)
+	checkoutDataResponseDataFieldSelectedUsageBasedEntitlements = big.NewInt(1 << 9)
+	checkoutDataResponseDataFieldSubscription                   = big.NewInt(1 << 10)
 )
 
 type CheckoutDataResponseData struct {
@@ -394,6 +411,7 @@ type CheckoutDataResponseData struct {
 	ActiveUsageBasedEntitlements   []*UsageBasedEntitlementResponseData `json:"active_usage_based_entitlements" url:"active_usage_based_entitlements"`
 	AvailableCreditBundles         []*BillingCreditBundleResponseData   `json:"available_credit_bundles" url:"available_credit_bundles"`
 	Company                        *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
+	CustomCheckoutFields           []*CheckoutFieldWithValue            `json:"custom_checkout_fields" url:"custom_checkout_fields"`
 	FeatureUsage                   *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
 	SelectedCreditBundles          []*CreditBundlePurchaseResponseData  `json:"selected_credit_bundles" url:"selected_credit_bundles"`
 	SelectedPlan                   *PlanDetailResponseData              `json:"selected_plan,omitempty" url:"selected_plan,omitempty"`
@@ -440,6 +458,13 @@ func (c *CheckoutDataResponseData) GetCompany() *CompanyDetailResponseData {
 		return nil
 	}
 	return c.Company
+}
+
+func (c *CheckoutDataResponseData) GetCustomCheckoutFields() []*CheckoutFieldWithValue {
+	if c == nil {
+		return nil
+	}
+	return c.CustomCheckoutFields
 }
 
 func (c *CheckoutDataResponseData) GetFeatureUsage() *FeatureUsageDetailResponseData {
@@ -526,6 +551,13 @@ func (c *CheckoutDataResponseData) SetCompany(company *CompanyDetailResponseData
 	c.require(checkoutDataResponseDataFieldCompany)
 }
 
+// SetCustomCheckoutFields sets the CustomCheckoutFields field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutDataResponseData) SetCustomCheckoutFields(customCheckoutFields []*CheckoutFieldWithValue) {
+	c.CustomCheckoutFields = customCheckoutFields
+	c.require(checkoutDataResponseDataFieldCustomCheckoutFields)
+}
+
 // SetFeatureUsage sets the FeatureUsage field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CheckoutDataResponseData) SetFeatureUsage(featureUsage *FeatureUsageDetailResponseData) {
@@ -589,6 +621,106 @@ func (c *CheckoutDataResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CheckoutDataResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	checkoutFieldValueFieldID    = big.NewInt(1 << 0)
+	checkoutFieldValueFieldValue = big.NewInt(1 << 1)
+)
+
+type CheckoutFieldValue struct {
+	ID    string `json:"id" url:"id"`
+	Value string `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CheckoutFieldValue) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CheckoutFieldValue) GetValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.Value
+}
+
+func (c *CheckoutFieldValue) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CheckoutFieldValue) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutFieldValue) SetID(id string) {
+	c.ID = id
+	c.require(checkoutFieldValueFieldID)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutFieldValue) SetValue(value string) {
+	c.Value = value
+	c.require(checkoutFieldValueFieldValue)
+}
+
+func (c *CheckoutFieldValue) UnmarshalJSON(data []byte) error {
+	type unmarshaler CheckoutFieldValue
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CheckoutFieldValue(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CheckoutFieldValue) MarshalJSON() ([]byte, error) {
+	type embed CheckoutFieldValue
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CheckoutFieldValue) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -1276,11 +1408,12 @@ var (
 	managePlanRequestFieldCompanyID                = big.NewInt(1 << 5)
 	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 6)
 	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 7)
-	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 8)
-	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 9)
-	managePlanRequestFieldPromoCode                = big.NewInt(1 << 10)
-	managePlanRequestFieldProrate                  = big.NewInt(1 << 11)
-	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 12)
+	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 8)
+	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 9)
+	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 10)
+	managePlanRequestFieldPromoCode                = big.NewInt(1 << 11)
+	managePlanRequestFieldProrate                  = big.NewInt(1 << 12)
+	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 13)
 )
 
 type ManagePlanRequest struct {
@@ -1293,6 +1426,7 @@ type ManagePlanRequest struct {
 	CompanyID                string                           `json:"company_id" url:"company_id"`
 	CouponExternalID         *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles            []*UpdateCreditBundleRequestBody `json:"credit_bundles" url:"credit_bundles"`
+	CustomFieldValues        []*CheckoutFieldValue            `json:"custom_field_values" url:"custom_field_values"`
 	PayInAdvanceEntitlements []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance_entitlements" url:"pay_in_advance_entitlements"`
 	PaymentMethodExternalID  *string                          `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
 	PromoCode                *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
@@ -1361,6 +1495,13 @@ func (m *ManagePlanRequest) GetCreditBundles() []*UpdateCreditBundleRequestBody 
 		return nil
 	}
 	return m.CreditBundles
+}
+
+func (m *ManagePlanRequest) GetCustomFieldValues() []*CheckoutFieldValue {
+	if m == nil {
+		return nil
+	}
+	return m.CustomFieldValues
 }
 
 func (m *ManagePlanRequest) GetPayInAdvanceEntitlements() []*UpdatePayInAdvanceRequestBody {
@@ -1466,6 +1607,13 @@ func (m *ManagePlanRequest) SetCouponExternalID(couponExternalID *string) {
 func (m *ManagePlanRequest) SetCreditBundles(creditBundles []*UpdateCreditBundleRequestBody) {
 	m.CreditBundles = creditBundles
 	m.require(managePlanRequestFieldCreditBundles)
+}
+
+// SetCustomFieldValues sets the CustomFieldValues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetCustomFieldValues(customFieldValues []*CheckoutFieldValue) {
+	m.CustomFieldValues = customFieldValues
+	m.require(managePlanRequestFieldCustomFieldValues)
 }
 
 // SetPayInAdvanceEntitlements sets the PayInAdvanceEntitlements field and marks it as non-optional;

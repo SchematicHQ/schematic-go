@@ -1,4 +1,32 @@
 # Reference
+<details><summary><code>client.GetCreditLedger() -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.GetCreditLedger(
+        context.TODO(),
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## accounts
 <details><summary><code>client.Accounts.ListAccountMembers() -> *schematichq.ListAccountMembersResponse</code></summary>
 <dl>
@@ -5601,250 +5629,6 @@ client.Credits.ReleaseCreditLease(
 <dd>
 
 **request:** `schematichq.ReleaseCreditLeaseRequestBody` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Credits.GetEnrichedCreditLedger() -> *schematichq.GetEnrichedCreditLedgerResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.GetEnrichedCreditLedgerRequest{
-        CompanyID: "company_id",
-        BillingCreditID: schematichq.String(
-            "billing_credit_id",
-        ),
-        FeatureID: schematichq.String(
-            "feature_id",
-        ),
-        Period: schematichq.CreditLedgerPeriodDaily,
-        StartTime: schematichq.String(
-            "start_time",
-        ),
-        EndTime: schematichq.String(
-            "end_time",
-        ),
-        Limit: schematichq.Int64(
-            int64(1000000),
-        ),
-        Offset: schematichq.Int64(
-            int64(1000000),
-        ),
-    }
-client.Credits.GetEnrichedCreditLedger(
-        context.TODO(),
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**companyID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**billingCreditID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**featureID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**period:** `*schematichq.CreditLedgerPeriod` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**startTime:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**endTime:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**limit:** `*int64` — Page limit (default 100)
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**offset:** `*int64` — Page offset (default 0)
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Credits.CountCreditLedger() -> *schematichq.CountCreditLedgerResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.CountCreditLedgerRequest{
-        CompanyID: "company_id",
-        BillingCreditID: schematichq.String(
-            "billing_credit_id",
-        ),
-        FeatureID: schematichq.String(
-            "feature_id",
-        ),
-        Period: schematichq.CreditLedgerPeriodDaily,
-        StartTime: schematichq.String(
-            "start_time",
-        ),
-        EndTime: schematichq.String(
-            "end_time",
-        ),
-        Limit: schematichq.Int64(
-            int64(1000000),
-        ),
-        Offset: schematichq.Int64(
-            int64(1000000),
-        ),
-    }
-client.Credits.CountCreditLedger(
-        context.TODO(),
-        request,
-    )
-}
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**companyID:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**billingCreditID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**featureID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**period:** `*schematichq.CreditLedgerPeriod` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**startTime:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**endTime:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**limit:** `*int64` — Page limit (default 100)
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -12925,12 +12709,6 @@ client.Plans.MarkCustomPlanBillingPaid(
 ```go
 request := &schematichq.RetryCustomPlanBillingRequestBody{
         CustomerEmail: "customer_email",
-        PayInAdvance: []*schematichq.UpdatePayInAdvanceRequestBody{
-            &schematichq.UpdatePayInAdvanceRequestBody{
-                PriceID: "price_id",
-                Quantity: int64(1000000),
-            },
-        },
     }
 client.Plans.RetryCustomPlanBilling(
         context.TODO(),
@@ -12977,14 +12755,6 @@ client.Plans.RetryCustomPlanBilling(
 <dd>
 
 **daysUntilDue:** `*int64` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**payInAdvance:** `[]*schematichq.UpdatePayInAdvanceRequestBody` 
     
 </dd>
 </dl>
@@ -14184,12 +13954,6 @@ request := &schematichq.PublishPlanVersionRequestBody{
             "excluded_company_ids",
         },
         MigrationStrategy: schematichq.PlanVersionMigrationStrategyImmediate,
-        PayInAdvance: []*schematichq.UpdatePayInAdvanceRequestBody{
-            &schematichq.UpdatePayInAdvanceRequestBody{
-                PriceID: "price_id",
-                Quantity: int64(1000000),
-            },
-        },
     }
 client.Plans.PublishPlanVersion(
         context.TODO(),
@@ -14252,14 +14016,6 @@ client.Plans.PublishPlanVersion(
 <dd>
 
 **migrationStrategy:** `*schematichq.PlanVersionMigrationStrategy` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**payInAdvance:** `[]*schematichq.UpdatePayInAdvanceRequestBody` 
     
 </dd>
 </dl>
@@ -17773,6 +17529,7 @@ request := &schematichq.CreatePlanGroupRequestBody{
         CheckoutCollectEmail: true,
         CheckoutCollectPhone: true,
         EnableTaxCollection: true,
+        OptInEnabled: true,
         OrderedAddOns: []*schematichq.OrderedPlansInGroup{
             &schematichq.OrderedPlansInGroup{
                 PlanID: "plan_id",
@@ -17907,6 +17664,30 @@ client.Plangroups.CreatePlanGroup(
 <dd>
 
 **initialPlanPriceID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**optInEnabled:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**optInText:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**optInTitle:** `*string` 
     
 </dd>
 </dl>
@@ -18107,6 +17888,7 @@ request := &schematichq.UpdatePlanGroupRequestBody{
         CheckoutCollectEmail: true,
         CheckoutCollectPhone: true,
         EnableTaxCollection: true,
+        OptInEnabled: true,
         OrderedAddOns: []*schematichq.OrderedPlansInGroup{
             &schematichq.OrderedPlansInGroup{
                 PlanID: "plan_id",
@@ -18250,6 +18032,30 @@ client.Plangroups.UpdatePlanGroup(
 <dd>
 
 **initialPlanPriceID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**optInEnabled:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**optInText:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**optInTitle:** `*string` 
     
 </dd>
 </dl>

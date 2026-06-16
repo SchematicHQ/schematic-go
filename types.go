@@ -1760,6 +1760,7 @@ const (
 	BillingCreditGrantZeroedOutReasonManual          BillingCreditGrantZeroedOutReason = "manual"
 	BillingCreditGrantZeroedOutReasonPlanChange      BillingCreditGrantZeroedOutReason = "plan_change"
 	BillingCreditGrantZeroedOutReasonPlanPeriodReset BillingCreditGrantZeroedOutReason = "plan_period_reset"
+	BillingCreditGrantZeroedOutReasonReconciled      BillingCreditGrantZeroedOutReason = "reconciled"
 )
 
 func NewBillingCreditGrantZeroedOutReasonFromString(s string) (BillingCreditGrantZeroedOutReason, error) {
@@ -1772,6 +1773,8 @@ func NewBillingCreditGrantZeroedOutReasonFromString(s string) (BillingCreditGran
 		return BillingCreditGrantZeroedOutReasonPlanChange, nil
 	case "plan_period_reset":
 		return BillingCreditGrantZeroedOutReasonPlanPeriodReset, nil
+	case "reconciled":
+		return BillingCreditGrantZeroedOutReasonReconciled, nil
 	}
 	var t BillingCreditGrantZeroedOutReason
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -6647,10 +6650,11 @@ var (
 	changeSubscriptionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 4)
 	changeSubscriptionRequestBodyFieldNewPlanID          = big.NewInt(1 << 5)
 	changeSubscriptionRequestBodyFieldNewPriceID         = big.NewInt(1 << 6)
-	changeSubscriptionRequestBodyFieldPayInAdvance       = big.NewInt(1 << 7)
-	changeSubscriptionRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 8)
-	changeSubscriptionRequestBodyFieldPromoCode          = big.NewInt(1 << 9)
-	changeSubscriptionRequestBodyFieldSkipTrial          = big.NewInt(1 << 10)
+	changeSubscriptionRequestBodyFieldOptInAccepted      = big.NewInt(1 << 7)
+	changeSubscriptionRequestBodyFieldPayInAdvance       = big.NewInt(1 << 8)
+	changeSubscriptionRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 9)
+	changeSubscriptionRequestBodyFieldPromoCode          = big.NewInt(1 << 10)
+	changeSubscriptionRequestBodyFieldSkipTrial          = big.NewInt(1 << 11)
 )
 
 type ChangeSubscriptionRequestBody struct {
@@ -6661,6 +6665,7 @@ type ChangeSubscriptionRequestBody struct {
 	CustomFieldValues  []*CheckoutFieldValue                 `json:"custom_field_values" url:"custom_field_values"`
 	NewPlanID          string                                `json:"new_plan_id" url:"new_plan_id"`
 	NewPriceID         string                                `json:"new_price_id" url:"new_price_id"`
+	OptInAccepted      *bool                                 `json:"opt_in_accepted,omitempty" url:"opt_in_accepted,omitempty"`
 	PayInAdvance       []*UpdatePayInAdvanceRequestBody      `json:"pay_in_advance" url:"pay_in_advance"`
 	PaymentMethodID    *string                               `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
 	PromoCode          *string                               `json:"promo_code,omitempty" url:"promo_code,omitempty"`
@@ -6720,6 +6725,13 @@ func (c *ChangeSubscriptionRequestBody) GetNewPriceID() string {
 		return ""
 	}
 	return c.NewPriceID
+}
+
+func (c *ChangeSubscriptionRequestBody) GetOptInAccepted() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.OptInAccepted
 }
 
 func (c *ChangeSubscriptionRequestBody) GetPayInAdvance() []*UpdatePayInAdvanceRequestBody {
@@ -6811,6 +6823,13 @@ func (c *ChangeSubscriptionRequestBody) SetNewPlanID(newPlanID string) {
 func (c *ChangeSubscriptionRequestBody) SetNewPriceID(newPriceID string) {
 	c.NewPriceID = newPriceID
 	c.require(changeSubscriptionRequestBodyFieldNewPriceID)
+}
+
+// SetOptInAccepted sets the OptInAccepted field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ChangeSubscriptionRequestBody) SetOptInAccepted(optInAccepted *bool) {
+	c.OptInAccepted = optInAccepted
+	c.require(changeSubscriptionRequestBodyFieldOptInAccepted)
 }
 
 // SetPayInAdvance sets the PayInAdvance field and marks it as non-optional;
@@ -18469,17 +18488,19 @@ var (
 	featureEntitlementFieldAllocation      = big.NewInt(1 << 0)
 	featureEntitlementFieldCreditID        = big.NewInt(1 << 1)
 	featureEntitlementFieldCreditRemaining = big.NewInt(1 << 2)
-	featureEntitlementFieldCreditTotal     = big.NewInt(1 << 3)
-	featureEntitlementFieldCreditUsed      = big.NewInt(1 << 4)
-	featureEntitlementFieldEventName       = big.NewInt(1 << 5)
-	featureEntitlementFieldFeatureID       = big.NewInt(1 << 6)
-	featureEntitlementFieldFeatureKey      = big.NewInt(1 << 7)
-	featureEntitlementFieldMetricPeriod    = big.NewInt(1 << 8)
-	featureEntitlementFieldMetricResetAt   = big.NewInt(1 << 9)
-	featureEntitlementFieldMonthReset      = big.NewInt(1 << 10)
-	featureEntitlementFieldSoftLimit       = big.NewInt(1 << 11)
-	featureEntitlementFieldUsage           = big.NewInt(1 << 12)
-	featureEntitlementFieldValueType       = big.NewInt(1 << 13)
+	featureEntitlementFieldCreditReserved  = big.NewInt(1 << 3)
+	featureEntitlementFieldCreditSettled   = big.NewInt(1 << 4)
+	featureEntitlementFieldCreditTotal     = big.NewInt(1 << 5)
+	featureEntitlementFieldCreditUsed      = big.NewInt(1 << 6)
+	featureEntitlementFieldEventName       = big.NewInt(1 << 7)
+	featureEntitlementFieldFeatureID       = big.NewInt(1 << 8)
+	featureEntitlementFieldFeatureKey      = big.NewInt(1 << 9)
+	featureEntitlementFieldMetricPeriod    = big.NewInt(1 << 10)
+	featureEntitlementFieldMetricResetAt   = big.NewInt(1 << 11)
+	featureEntitlementFieldMonthReset      = big.NewInt(1 << 12)
+	featureEntitlementFieldSoftLimit       = big.NewInt(1 << 13)
+	featureEntitlementFieldUsage           = big.NewInt(1 << 14)
+	featureEntitlementFieldValueType       = big.NewInt(1 << 15)
 )
 
 type FeatureEntitlement struct {
@@ -18487,8 +18508,12 @@ type FeatureEntitlement struct {
 	Allocation *int64 `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the ID of the credit
 	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
-	// If the company has a credit-based entitlement for this feature, the remaining credit amount
+	// If the company has a credit-based entitlement for this feature, the credit available to fund new consumption or a new lease hold — open lease holds are excluded. Clients that hold a lease should gate on this plus their own unspent hold; clients with no lease awareness should use credit_settled instead
 	CreditRemaining *float64 `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
+	// If the company has a credit-based entitlement for this feature, the unspent amount held by an open credit lease. Returns to credit_remaining when the lease is released
+	CreditReserved *float64 `json:"credit_reserved,omitempty" url:"credit_reserved,omitempty"`
+	// If the company has a credit-based entitlement for this feature, the balance net of actual consumption, unaffected by open lease holds (credit_remaining plus credit_reserved). The number to display to end users
+	CreditSettled *float64 `json:"credit_settled,omitempty" url:"credit_settled,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the total credit amount
 	CreditTotal *float64 `json:"credit_total,omitempty" url:"credit_total,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the amount of credit used
@@ -18538,6 +18563,20 @@ func (f *FeatureEntitlement) GetCreditRemaining() *float64 {
 		return nil
 	}
 	return f.CreditRemaining
+}
+
+func (f *FeatureEntitlement) GetCreditReserved() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditReserved
+}
+
+func (f *FeatureEntitlement) GetCreditSettled() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.CreditSettled
 }
 
 func (f *FeatureEntitlement) GetCreditTotal() *float64 {
@@ -18650,6 +18689,20 @@ func (f *FeatureEntitlement) SetCreditID(creditID *string) {
 func (f *FeatureEntitlement) SetCreditRemaining(creditRemaining *float64) {
 	f.CreditRemaining = creditRemaining
 	f.require(featureEntitlementFieldCreditRemaining)
+}
+
+// SetCreditReserved sets the CreditReserved field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetCreditReserved(creditReserved *float64) {
+	f.CreditReserved = creditReserved
+	f.require(featureEntitlementFieldCreditReserved)
+}
+
+// SetCreditSettled sets the CreditSettled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetCreditSettled(creditSettled *float64) {
+	f.CreditSettled = creditSettled
+	f.require(featureEntitlementFieldCreditSettled)
 }
 
 // SetCreditTotal sets the CreditTotal field and marks it as non-optional;
@@ -30151,17 +30204,19 @@ var (
 	rulesengineFeatureEntitlementFieldAllocation      = big.NewInt(1 << 0)
 	rulesengineFeatureEntitlementFieldCreditID        = big.NewInt(1 << 1)
 	rulesengineFeatureEntitlementFieldCreditRemaining = big.NewInt(1 << 2)
-	rulesengineFeatureEntitlementFieldCreditTotal     = big.NewInt(1 << 3)
-	rulesengineFeatureEntitlementFieldCreditUsed      = big.NewInt(1 << 4)
-	rulesengineFeatureEntitlementFieldEventName       = big.NewInt(1 << 5)
-	rulesengineFeatureEntitlementFieldFeatureID       = big.NewInt(1 << 6)
-	rulesengineFeatureEntitlementFieldFeatureKey      = big.NewInt(1 << 7)
-	rulesengineFeatureEntitlementFieldMetricPeriod    = big.NewInt(1 << 8)
-	rulesengineFeatureEntitlementFieldMetricResetAt   = big.NewInt(1 << 9)
-	rulesengineFeatureEntitlementFieldMonthReset      = big.NewInt(1 << 10)
-	rulesengineFeatureEntitlementFieldSoftLimit       = big.NewInt(1 << 11)
-	rulesengineFeatureEntitlementFieldUsage           = big.NewInt(1 << 12)
-	rulesengineFeatureEntitlementFieldValueType       = big.NewInt(1 << 13)
+	rulesengineFeatureEntitlementFieldCreditReserved  = big.NewInt(1 << 3)
+	rulesengineFeatureEntitlementFieldCreditSettled   = big.NewInt(1 << 4)
+	rulesengineFeatureEntitlementFieldCreditTotal     = big.NewInt(1 << 5)
+	rulesengineFeatureEntitlementFieldCreditUsed      = big.NewInt(1 << 6)
+	rulesengineFeatureEntitlementFieldEventName       = big.NewInt(1 << 7)
+	rulesengineFeatureEntitlementFieldFeatureID       = big.NewInt(1 << 8)
+	rulesengineFeatureEntitlementFieldFeatureKey      = big.NewInt(1 << 9)
+	rulesengineFeatureEntitlementFieldMetricPeriod    = big.NewInt(1 << 10)
+	rulesengineFeatureEntitlementFieldMetricResetAt   = big.NewInt(1 << 11)
+	rulesengineFeatureEntitlementFieldMonthReset      = big.NewInt(1 << 12)
+	rulesengineFeatureEntitlementFieldSoftLimit       = big.NewInt(1 << 13)
+	rulesengineFeatureEntitlementFieldUsage           = big.NewInt(1 << 14)
+	rulesengineFeatureEntitlementFieldValueType       = big.NewInt(1 << 15)
 )
 
 type RulesengineFeatureEntitlement struct {
@@ -30169,8 +30224,12 @@ type RulesengineFeatureEntitlement struct {
 	Allocation *int64 `json:"allocation,omitempty" url:"allocation,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the ID of the credit
 	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
-	// If the company has a credit-based entitlement for this feature, the remaining credit amount
+	// If the company has a credit-based entitlement for this feature, the credit available to fund new consumption or a new lease hold — open lease holds are excluded. Clients that hold a lease should gate on this plus their own unspent hold; clients with no lease awareness should use credit_settled instead
 	CreditRemaining *float64 `json:"credit_remaining,omitempty" url:"credit_remaining,omitempty"`
+	// If the company has a credit-based entitlement for this feature, the unspent amount held by an open credit lease. Returns to credit_remaining when the lease is released
+	CreditReserved *float64 `json:"credit_reserved,omitempty" url:"credit_reserved,omitempty"`
+	// If the company has a credit-based entitlement for this feature, the balance net of actual consumption, unaffected by open lease holds (credit_remaining plus credit_reserved). The number to display to end users
+	CreditSettled *float64 `json:"credit_settled,omitempty" url:"credit_settled,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the total credit amount
 	CreditTotal *float64 `json:"credit_total,omitempty" url:"credit_total,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the amount of credit used
@@ -30220,6 +30279,20 @@ func (r *RulesengineFeatureEntitlement) GetCreditRemaining() *float64 {
 		return nil
 	}
 	return r.CreditRemaining
+}
+
+func (r *RulesengineFeatureEntitlement) GetCreditReserved() *float64 {
+	if r == nil {
+		return nil
+	}
+	return r.CreditReserved
+}
+
+func (r *RulesengineFeatureEntitlement) GetCreditSettled() *float64 {
+	if r == nil {
+		return nil
+	}
+	return r.CreditSettled
 }
 
 func (r *RulesengineFeatureEntitlement) GetCreditTotal() *float64 {
@@ -30332,6 +30405,20 @@ func (r *RulesengineFeatureEntitlement) SetCreditID(creditID *string) {
 func (r *RulesengineFeatureEntitlement) SetCreditRemaining(creditRemaining *float64) {
 	r.CreditRemaining = creditRemaining
 	r.require(rulesengineFeatureEntitlementFieldCreditRemaining)
+}
+
+// SetCreditReserved sets the CreditReserved field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetCreditReserved(creditReserved *float64) {
+	r.CreditReserved = creditReserved
+	r.require(rulesengineFeatureEntitlementFieldCreditReserved)
+}
+
+// SetCreditSettled sets the CreditSettled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetCreditSettled(creditSettled *float64) {
+	r.CreditSettled = creditSettled
+	r.require(rulesengineFeatureEntitlementFieldCreditSettled)
 }
 
 // SetCreditTotal sets the CreditTotal field and marks it as non-optional;
@@ -32677,106 +32764,6 @@ func (u *UpdateEntitlementReqCommon) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateEntitlementReqCommon) String() string {
-	if u == nil {
-		return "<nil>"
-	}
-	if len(u.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(u); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", u)
-}
-
-var (
-	updatePayInAdvanceRequestBodyFieldPriceID  = big.NewInt(1 << 0)
-	updatePayInAdvanceRequestBodyFieldQuantity = big.NewInt(1 << 1)
-)
-
-type UpdatePayInAdvanceRequestBody struct {
-	PriceID  string `json:"price_id" url:"price_id"`
-	Quantity int64  `json:"quantity" url:"quantity"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (u *UpdatePayInAdvanceRequestBody) GetPriceID() string {
-	if u == nil {
-		return ""
-	}
-	return u.PriceID
-}
-
-func (u *UpdatePayInAdvanceRequestBody) GetQuantity() int64 {
-	if u == nil {
-		return 0
-	}
-	return u.Quantity
-}
-
-func (u *UpdatePayInAdvanceRequestBody) GetExtraProperties() map[string]interface{} {
-	if u == nil {
-		return nil
-	}
-	return u.extraProperties
-}
-
-func (u *UpdatePayInAdvanceRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
-	}
-	u.explicitFields.Or(u.explicitFields, field)
-}
-
-// SetPriceID sets the PriceID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePayInAdvanceRequestBody) SetPriceID(priceID string) {
-	u.PriceID = priceID
-	u.require(updatePayInAdvanceRequestBodyFieldPriceID)
-}
-
-// SetQuantity sets the Quantity field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePayInAdvanceRequestBody) SetQuantity(quantity int64) {
-	u.Quantity = quantity
-	u.require(updatePayInAdvanceRequestBodyFieldQuantity)
-}
-
-func (u *UpdatePayInAdvanceRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler UpdatePayInAdvanceRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*u = UpdatePayInAdvanceRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *u)
-	if err != nil {
-		return err
-	}
-	u.extraProperties = extraProperties
-	u.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (u *UpdatePayInAdvanceRequestBody) MarshalJSON() ([]byte, error) {
-	type embed UpdatePayInAdvanceRequestBody
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*u),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (u *UpdatePayInAdvanceRequestBody) String() string {
 	if u == nil {
 		return "<nil>"
 	}

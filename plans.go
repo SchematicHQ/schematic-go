@@ -736,16 +736,14 @@ var (
 	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 2)
 	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 3)
 	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 4)
-	publishPlanVersionRequestBodyFieldPayInAdvance       = big.NewInt(1 << 5)
 )
 
 type PublishPlanVersionRequestBody struct {
-	ActivationStrategy *CustomPlanActivationStrategy    `json:"activation_strategy,omitempty" url:"-"`
-	CustomerEmail      *string                          `json:"customer_email,omitempty" url:"-"`
-	DaysUntilDue       *int64                           `json:"days_until_due,omitempty" url:"-"`
-	ExcludedCompanyIDs []string                         `json:"excluded_company_ids" url:"-"`
-	MigrationStrategy  PlanVersionMigrationStrategy     `json:"migration_strategy" url:"-"`
-	PayInAdvance       []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance" url:"-"`
+	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"-"`
+	CustomerEmail      *string                       `json:"customer_email,omitempty" url:"-"`
+	DaysUntilDue       *int64                        `json:"days_until_due,omitempty" url:"-"`
+	ExcludedCompanyIDs []string                      `json:"excluded_company_ids" url:"-"`
+	MigrationStrategy  PlanVersionMigrationStrategy  `json:"migration_strategy" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -793,13 +791,6 @@ func (p *PublishPlanVersionRequestBody) SetMigrationStrategy(migrationStrategy P
 	p.require(publishPlanVersionRequestBodyFieldMigrationStrategy)
 }
 
-// SetPayInAdvance sets the PayInAdvance field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetPayInAdvance(payInAdvance []*UpdatePayInAdvanceRequestBody) {
-	p.PayInAdvance = payInAdvance
-	p.require(publishPlanVersionRequestBodyFieldPayInAdvance)
-}
-
 func (p *PublishPlanVersionRequestBody) UnmarshalJSON(data []byte) error {
 	type unmarshaler PublishPlanVersionRequestBody
 	var body unmarshaler
@@ -825,14 +816,12 @@ var (
 	retryCustomPlanBillingRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
 	retryCustomPlanBillingRequestBodyFieldCustomerEmail      = big.NewInt(1 << 1)
 	retryCustomPlanBillingRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 2)
-	retryCustomPlanBillingRequestBodyFieldPayInAdvance       = big.NewInt(1 << 3)
 )
 
 type RetryCustomPlanBillingRequestBody struct {
-	ActivationStrategy *CustomPlanActivationStrategy    `json:"activation_strategy,omitempty" url:"-"`
-	CustomerEmail      string                           `json:"customer_email" url:"-"`
-	DaysUntilDue       *int64                           `json:"days_until_due,omitempty" url:"-"`
-	PayInAdvance       []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance" url:"-"`
+	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"-"`
+	CustomerEmail      string                        `json:"customer_email" url:"-"`
+	DaysUntilDue       *int64                        `json:"days_until_due,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -864,13 +853,6 @@ func (r *RetryCustomPlanBillingRequestBody) SetCustomerEmail(customerEmail strin
 func (r *RetryCustomPlanBillingRequestBody) SetDaysUntilDue(daysUntilDue *int64) {
 	r.DaysUntilDue = daysUntilDue
 	r.require(retryCustomPlanBillingRequestBodyFieldDaysUntilDue)
-}
-
-// SetPayInAdvance sets the PayInAdvance field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RetryCustomPlanBillingRequestBody) SetPayInAdvance(payInAdvance []*UpdatePayInAdvanceRequestBody) {
-	r.PayInAdvance = payInAdvance
-	r.require(retryCustomPlanBillingRequestBodyFieldPayInAdvance)
 }
 
 func (r *RetryCustomPlanBillingRequestBody) UnmarshalJSON(data []byte) error {

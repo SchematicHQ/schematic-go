@@ -3,6 +3,8 @@
 package client
 
 import (
+	context "context"
+
 	accesstokens "github.com/schematichq/schematic-go/accesstokens"
 	accounts "github.com/schematichq/schematic-go/accounts"
 	billing "github.com/schematichq/schematic-go/billing"
@@ -29,6 +31,7 @@ import (
 )
 
 type Client struct {
+	WithRawResponse   *RawClient
 	Accounts          *accounts.Client
 	Billing           *billing.Client
 	Credits           *credits.Client
@@ -78,6 +81,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Scheduledcheckout: scheduledcheckout.NewClient(options),
 		Accesstokens:      accesstokens.NewClient(options),
 		Webhooks:          webhooks.NewClient(options),
+		WithRawResponse:   NewRawClient(options),
 		options:           options,
 		baseURL:           options.BaseURL,
 		caller: internal.NewCaller(
@@ -88,4 +92,18 @@ func NewClient(opts ...option.RequestOption) *Client {
 			},
 		),
 	}
+}
+
+func (c *Client) GetCreditLedger(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) error {
+	_, err := c.WithRawResponse.GetCreditLedger(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }

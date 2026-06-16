@@ -140,10 +140,11 @@ var (
 	changeSubscriptionInternalRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 5)
 	changeSubscriptionInternalRequestBodyFieldNewPlanID          = big.NewInt(1 << 6)
 	changeSubscriptionInternalRequestBodyFieldNewPriceID         = big.NewInt(1 << 7)
-	changeSubscriptionInternalRequestBodyFieldPayInAdvance       = big.NewInt(1 << 8)
-	changeSubscriptionInternalRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 9)
-	changeSubscriptionInternalRequestBodyFieldPromoCode          = big.NewInt(1 << 10)
-	changeSubscriptionInternalRequestBodyFieldSkipTrial          = big.NewInt(1 << 11)
+	changeSubscriptionInternalRequestBodyFieldOptInAccepted      = big.NewInt(1 << 8)
+	changeSubscriptionInternalRequestBodyFieldPayInAdvance       = big.NewInt(1 << 9)
+	changeSubscriptionInternalRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 10)
+	changeSubscriptionInternalRequestBodyFieldPromoCode          = big.NewInt(1 << 11)
+	changeSubscriptionInternalRequestBodyFieldSkipTrial          = big.NewInt(1 << 12)
 )
 
 type ChangeSubscriptionInternalRequestBody struct {
@@ -155,6 +156,7 @@ type ChangeSubscriptionInternalRequestBody struct {
 	CustomFieldValues  []*CheckoutFieldValue                 `json:"custom_field_values" url:"custom_field_values"`
 	NewPlanID          string                                `json:"new_plan_id" url:"new_plan_id"`
 	NewPriceID         string                                `json:"new_price_id" url:"new_price_id"`
+	OptInAccepted      *bool                                 `json:"opt_in_accepted,omitempty" url:"opt_in_accepted,omitempty"`
 	PayInAdvance       []*UpdatePayInAdvanceRequestBody      `json:"pay_in_advance" url:"pay_in_advance"`
 	PaymentMethodID    *string                               `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
 	PromoCode          *string                               `json:"promo_code,omitempty" url:"promo_code,omitempty"`
@@ -221,6 +223,13 @@ func (c *ChangeSubscriptionInternalRequestBody) GetNewPriceID() string {
 		return ""
 	}
 	return c.NewPriceID
+}
+
+func (c *ChangeSubscriptionInternalRequestBody) GetOptInAccepted() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.OptInAccepted
 }
 
 func (c *ChangeSubscriptionInternalRequestBody) GetPayInAdvance() []*UpdatePayInAdvanceRequestBody {
@@ -319,6 +328,13 @@ func (c *ChangeSubscriptionInternalRequestBody) SetNewPlanID(newPlanID string) {
 func (c *ChangeSubscriptionInternalRequestBody) SetNewPriceID(newPriceID string) {
 	c.NewPriceID = newPriceID
 	c.require(changeSubscriptionInternalRequestBodyFieldNewPriceID)
+}
+
+// SetOptInAccepted sets the OptInAccepted field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ChangeSubscriptionInternalRequestBody) SetOptInAccepted(optInAccepted *bool) {
+	c.OptInAccepted = optInAccepted
+	c.require(changeSubscriptionInternalRequestBodyFieldOptInAccepted)
 }
 
 // SetPayInAdvance sets the PayInAdvance field and marks it as non-optional;
@@ -1923,14 +1939,17 @@ var (
 	previewSubscriptionChangeResponseDataFieldFinance               = big.NewInt(1 << 2)
 	previewSubscriptionChangeResponseDataFieldIsScheduledDowngrade  = big.NewInt(1 << 3)
 	previewSubscriptionChangeResponseDataFieldNewCharges            = big.NewInt(1 << 4)
-	previewSubscriptionChangeResponseDataFieldPaymentMethodRequired = big.NewInt(1 << 5)
-	previewSubscriptionChangeResponseDataFieldPercentOff            = big.NewInt(1 << 6)
-	previewSubscriptionChangeResponseDataFieldPeriodStart           = big.NewInt(1 << 7)
-	previewSubscriptionChangeResponseDataFieldPromoCodeApplied      = big.NewInt(1 << 8)
-	previewSubscriptionChangeResponseDataFieldProration             = big.NewInt(1 << 9)
-	previewSubscriptionChangeResponseDataFieldScheduledChangeTime   = big.NewInt(1 << 10)
-	previewSubscriptionChangeResponseDataFieldTrialEnd              = big.NewInt(1 << 11)
-	previewSubscriptionChangeResponseDataFieldUsageViolations       = big.NewInt(1 << 12)
+	previewSubscriptionChangeResponseDataFieldOptInRequired         = big.NewInt(1 << 5)
+	previewSubscriptionChangeResponseDataFieldOptInText             = big.NewInt(1 << 6)
+	previewSubscriptionChangeResponseDataFieldOptInTitle            = big.NewInt(1 << 7)
+	previewSubscriptionChangeResponseDataFieldPaymentMethodRequired = big.NewInt(1 << 8)
+	previewSubscriptionChangeResponseDataFieldPercentOff            = big.NewInt(1 << 9)
+	previewSubscriptionChangeResponseDataFieldPeriodStart           = big.NewInt(1 << 10)
+	previewSubscriptionChangeResponseDataFieldPromoCodeApplied      = big.NewInt(1 << 11)
+	previewSubscriptionChangeResponseDataFieldProration             = big.NewInt(1 << 12)
+	previewSubscriptionChangeResponseDataFieldScheduledChangeTime   = big.NewInt(1 << 13)
+	previewSubscriptionChangeResponseDataFieldTrialEnd              = big.NewInt(1 << 14)
+	previewSubscriptionChangeResponseDataFieldUsageViolations       = big.NewInt(1 << 15)
 )
 
 type PreviewSubscriptionChangeResponseData struct {
@@ -1939,6 +1958,9 @@ type PreviewSubscriptionChangeResponseData struct {
 	Finance               *PreviewSubscriptionFinanceResponseData `json:"finance,omitempty" url:"finance,omitempty"`
 	IsScheduledDowngrade  bool                                    `json:"is_scheduled_downgrade" url:"is_scheduled_downgrade"`
 	NewCharges            int64                                   `json:"new_charges" url:"new_charges"`
+	OptInRequired         bool                                    `json:"opt_in_required" url:"opt_in_required"`
+	OptInText             *string                                 `json:"opt_in_text,omitempty" url:"opt_in_text,omitempty"`
+	OptInTitle            *string                                 `json:"opt_in_title,omitempty" url:"opt_in_title,omitempty"`
 	PaymentMethodRequired bool                                    `json:"payment_method_required" url:"payment_method_required"`
 	PercentOff            float64                                 `json:"percent_off" url:"percent_off"`
 	PeriodStart           time.Time                               `json:"period_start" url:"period_start"`
@@ -1988,6 +2010,27 @@ func (p *PreviewSubscriptionChangeResponseData) GetNewCharges() int64 {
 		return 0
 	}
 	return p.NewCharges
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetOptInRequired() bool {
+	if p == nil {
+		return false
+	}
+	return p.OptInRequired
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetOptInText() *string {
+	if p == nil {
+		return nil
+	}
+	return p.OptInText
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetOptInTitle() *string {
+	if p == nil {
+		return nil
+	}
+	return p.OptInTitle
 }
 
 func (p *PreviewSubscriptionChangeResponseData) GetPaymentMethodRequired() bool {
@@ -2093,6 +2136,27 @@ func (p *PreviewSubscriptionChangeResponseData) SetIsScheduledDowngrade(isSchedu
 func (p *PreviewSubscriptionChangeResponseData) SetNewCharges(newCharges int64) {
 	p.NewCharges = newCharges
 	p.require(previewSubscriptionChangeResponseDataFieldNewCharges)
+}
+
+// SetOptInRequired sets the OptInRequired field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionChangeResponseData) SetOptInRequired(optInRequired bool) {
+	p.OptInRequired = optInRequired
+	p.require(previewSubscriptionChangeResponseDataFieldOptInRequired)
+}
+
+// SetOptInText sets the OptInText field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionChangeResponseData) SetOptInText(optInText *string) {
+	p.OptInText = optInText
+	p.require(previewSubscriptionChangeResponseDataFieldOptInText)
+}
+
+// SetOptInTitle sets the OptInTitle field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionChangeResponseData) SetOptInTitle(optInTitle *string) {
+	p.OptInTitle = optInTitle
+	p.require(previewSubscriptionChangeResponseDataFieldOptInTitle)
 }
 
 // SetPaymentMethodRequired sets the PaymentMethodRequired field and marks it as non-optional;
@@ -2963,6 +3027,106 @@ func (u *UpdateCreditBundleRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateCreditBundleRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updatePayInAdvanceRequestBodyFieldPriceID  = big.NewInt(1 << 0)
+	updatePayInAdvanceRequestBodyFieldQuantity = big.NewInt(1 << 1)
+)
+
+type UpdatePayInAdvanceRequestBody struct {
+	PriceID  string `json:"price_id" url:"price_id"`
+	Quantity int64  `json:"quantity" url:"quantity"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatePayInAdvanceRequestBody) GetPriceID() string {
+	if u == nil {
+		return ""
+	}
+	return u.PriceID
+}
+
+func (u *UpdatePayInAdvanceRequestBody) GetQuantity() int64 {
+	if u == nil {
+		return 0
+	}
+	return u.Quantity
+}
+
+func (u *UpdatePayInAdvanceRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdatePayInAdvanceRequestBody) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetPriceID sets the PriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePayInAdvanceRequestBody) SetPriceID(priceID string) {
+	u.PriceID = priceID
+	u.require(updatePayInAdvanceRequestBodyFieldPriceID)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePayInAdvanceRequestBody) SetQuantity(quantity int64) {
+	u.Quantity = quantity
+	u.require(updatePayInAdvanceRequestBodyFieldQuantity)
+}
+
+func (u *UpdatePayInAdvanceRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePayInAdvanceRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdatePayInAdvanceRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdatePayInAdvanceRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdatePayInAdvanceRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdatePayInAdvanceRequestBody) String() string {
 	if u == nil {
 		return "<nil>"
 	}

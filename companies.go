@@ -2131,14 +2131,15 @@ var (
 	planChangeResponseDataFieldCreatedAt                = big.NewInt(1 << 11)
 	planChangeResponseDataFieldEnvironmentID            = big.NewInt(1 << 12)
 	planChangeResponseDataFieldID                       = big.NewInt(1 << 13)
-	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 14)
-	planChangeResponseDataFieldPreviousBasePlanVersion  = big.NewInt(1 << 15)
-	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 16)
-	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 17)
-	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 18)
-	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 19)
-	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 20)
-	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 21)
+	planChangeResponseDataFieldIsVersionUpgrade         = big.NewInt(1 << 14)
+	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 15)
+	planChangeResponseDataFieldPreviousBasePlanVersion  = big.NewInt(1 << 16)
+	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 17)
+	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 18)
+	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 19)
+	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 20)
+	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 21)
+	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 22)
 )
 
 type PlanChangeResponseData struct {
@@ -2152,13 +2153,15 @@ type PlanChangeResponseData struct {
 	// Any special behavior that affected the assignment of the base plan during this change.
 	BasePlanAction *PlanChangeBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
 	// The plan version that was assigned during this change.
-	BasePlanVersion  *PlanVersionSnapshotView `json:"base_plan_version,omitempty" url:"base_plan_version,omitempty"`
-	Company          *CompanyResponseData     `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID        string                   `json:"company_id" url:"company_id"`
-	CreatedAt        time.Time                `json:"created_at" url:"created_at"`
-	EnvironmentID    string                   `json:"environment_id" url:"environment_id"`
-	ID               string                   `json:"id" url:"id"`
-	PreviousBasePlan *PlanSnapshotView        `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
+	BasePlanVersion *PlanVersionSnapshotView `json:"base_plan_version,omitempty" url:"base_plan_version,omitempty"`
+	Company         *CompanyResponseData     `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID       string                   `json:"company_id" url:"company_id"`
+	CreatedAt       time.Time                `json:"created_at" url:"created_at"`
+	EnvironmentID   string                   `json:"environment_id" url:"environment_id"`
+	ID              string                   `json:"id" url:"id"`
+	// True when this change moved the company to a different version of the same plan (e.g. a plan version migration) rather than to a different plan.
+	IsVersionUpgrade bool              `json:"is_version_upgrade" url:"is_version_upgrade"`
+	PreviousBasePlan *PlanSnapshotView `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
 	// The plan version of the previous base plan before this change.
 	PreviousBasePlanVersion *PlanVersionSnapshotView `json:"previous_base_plan_version,omitempty" url:"previous_base_plan_version,omitempty"`
 	RequestID               *string                  `json:"request_id,omitempty" url:"request_id,omitempty"`
@@ -2273,6 +2276,13 @@ func (p *PlanChangeResponseData) GetID() string {
 		return ""
 	}
 	return p.ID
+}
+
+func (p *PlanChangeResponseData) GetIsVersionUpgrade() bool {
+	if p == nil {
+		return false
+	}
+	return p.IsVersionUpgrade
 }
 
 func (p *PlanChangeResponseData) GetPreviousBasePlan() *PlanSnapshotView {
@@ -2441,6 +2451,13 @@ func (p *PlanChangeResponseData) SetEnvironmentID(environmentID string) {
 func (p *PlanChangeResponseData) SetID(id string) {
 	p.ID = id
 	p.require(planChangeResponseDataFieldID)
+}
+
+// SetIsVersionUpgrade sets the IsVersionUpgrade field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetIsVersionUpgrade(isVersionUpgrade bool) {
+	p.IsVersionUpgrade = isVersionUpgrade
+	p.require(planChangeResponseDataFieldIsVersionUpgrade)
 }
 
 // SetPreviousBasePlan sets the PreviousBasePlan field and marks it as non-optional;

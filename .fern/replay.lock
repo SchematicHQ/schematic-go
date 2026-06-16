@@ -12,14 +12,20 @@ generations:
     cli_version: unknown
     generator_versions:
       fernapi/fern-go-sdk: 1.44.2
-current_generation: c524d469094a042d395f90f597f6070179df15fd
+  - commit_sha: 1ae81bce72403f7c41c714bcf80de6f24de89b58
+    tree_hash: 1b4992cafd772ad5dd315f597237822a7014e5ea
+    timestamp: 2026-06-16T15:13:46.804Z
+    cli_version: unknown
+    generator_versions:
+      fernapi/fern-go-sdk: 1.44.2
+current_generation: 1ae81bce72403f7c41c714bcf80de6f24de89b58
 patches:
   - id: patch-c1dec125
     content_hash: sha256:3602badfd6867857bc1f9fc1eddae9cba4a3e8016e6f7211a1339d67bb73c8d2
     original_commit: c1dec12524ae4d861b313c6edb5d4c61b2b2b3a7
     original_message: "chore(deps): bump actions/setup-go from 4 to 6 (#165)"
     original_author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
-    base_generation: c524d469094a042d395f90f597f6070179df15fd
+    base_generation: 1ae81bce72403f7c41c714bcf80de6f24de89b58
     files:
       - .github/workflows/ci.yml
     patch_content: |
@@ -130,3 +136,4 @@ patches:
                   if [ -f wiremock/docker-compose.test.yml ]; then
                     docker compose -p "$PROJECT_NAME" -f wiremock/docker-compose.test.yml down
                   fi
+    user_owned: true

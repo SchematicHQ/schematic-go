@@ -27357,6 +27357,14 @@ func TestSettersCompanySubscriptionResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetIsInitial", func(t *testing.T) {
+		obj := &CompanySubscriptionResponseData{}
+		var fernTestValueIsInitial bool
+		obj.SetIsInitial(fernTestValueIsInitial)
+		assert.Equal(t, fernTestValueIsInitial, obj.IsInitial)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetLatestInvoice", func(t *testing.T) {
 		obj := &CompanySubscriptionResponseData{}
 		var fernTestValueLatestInvoice *InvoiceResponseData
@@ -27613,6 +27621,29 @@ func TestGettersCompanySubscriptionResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetInterval() // Should return zero value
+	})
+
+	t.Run("GetIsInitial", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanySubscriptionResponseData{}
+		var expected bool
+		obj.IsInitial = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetIsInitial(), "getter should return the property value")
+	})
+
+	t.Run("GetIsInitial_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CompanySubscriptionResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetIsInitial() // Should return zero value
 	})
 
 	t.Run("GetLatestInvoice", func(t *testing.T) {
@@ -28036,6 +28067,37 @@ func TestSettersMarkExplicitCompanySubscriptionResponseData(t *testing.T) {
 
 		// Act
 		obj.SetInterval(fernTestValueInterval)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetIsInitial_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanySubscriptionResponseData{}
+		var fernTestValueIsInitial bool
+
+		// Act
+		obj.SetIsInitial(fernTestValueIsInitial)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -51124,6 +51186,14 @@ func TestSettersFeatureEntitlement(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetConsumptionRate", func(t *testing.T) {
+		obj := &FeatureEntitlement{}
+		var fernTestValueConsumptionRate *float64
+		obj.SetConsumptionRate(fernTestValueConsumptionRate)
+		assert.Equal(t, fernTestValueConsumptionRate, obj.ConsumptionRate)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCreditID", func(t *testing.T) {
 		obj := &FeatureEntitlement{}
 		var fernTestValueCreditID *string
@@ -51177,6 +51247,14 @@ func TestSettersFeatureEntitlement(t *testing.T) {
 		var fernTestValueEventName *string
 		obj.SetEventName(fernTestValueEventName)
 		assert.Equal(t, fernTestValueEventName, obj.EventName)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetEventSubtype", func(t *testing.T) {
+		obj := &FeatureEntitlement{}
+		var fernTestValueEventSubtype *string
+		obj.SetEventSubtype(fernTestValueEventSubtype)
+		assert.Equal(t, fernTestValueEventSubtype, obj.EventSubtype)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -51278,6 +51356,39 @@ func TestGettersFeatureEntitlement(t *testing.T) {
 			}
 		}()
 		_ = obj.GetAllocation() // Should return zero value
+	})
+
+	t.Run("GetConsumptionRate", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureEntitlement{}
+		var expected *float64
+		obj.ConsumptionRate = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetConsumptionRate(), "getter should return the property value")
+	})
+
+	t.Run("GetConsumptionRate_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureEntitlement{}
+		obj.ConsumptionRate = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetConsumptionRate(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetConsumptionRate_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureEntitlement
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetConsumptionRate() // Should return zero value
 	})
 
 	t.Run("GetCreditID", func(t *testing.T) {
@@ -51509,6 +51620,39 @@ func TestGettersFeatureEntitlement(t *testing.T) {
 			}
 		}()
 		_ = obj.GetEventName() // Should return zero value
+	})
+
+	t.Run("GetEventSubtype", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureEntitlement{}
+		var expected *string
+		obj.EventSubtype = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEventSubtype(), "getter should return the property value")
+	})
+
+	t.Run("GetEventSubtype_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureEntitlement{}
+		obj.EventSubtype = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEventSubtype(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEventSubtype_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureEntitlement
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEventSubtype() // Should return zero value
 	})
 
 	t.Run("GetFeatureID", func(t *testing.T) {
@@ -51779,6 +51923,37 @@ func TestSettersMarkExplicitFeatureEntitlement(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetConsumptionRate_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureEntitlement{}
+		var fernTestValueConsumptionRate *float64
+
+		// Act
+		obj.SetConsumptionRate(fernTestValueConsumptionRate)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetCreditID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -51973,6 +52148,37 @@ func TestSettersMarkExplicitFeatureEntitlement(t *testing.T) {
 
 		// Act
 		obj.SetEventName(fernTestValueEventName)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEventSubtype_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureEntitlement{}
+		var fernTestValueEventSubtype *string
+
+		// Act
+		obj.SetEventSubtype(fernTestValueEventSubtype)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -85380,6 +85586,14 @@ func TestSettersRulesengineFeatureEntitlement(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetConsumptionRate", func(t *testing.T) {
+		obj := &RulesengineFeatureEntitlement{}
+		var fernTestValueConsumptionRate *float64
+		obj.SetConsumptionRate(fernTestValueConsumptionRate)
+		assert.Equal(t, fernTestValueConsumptionRate, obj.ConsumptionRate)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCreditID", func(t *testing.T) {
 		obj := &RulesengineFeatureEntitlement{}
 		var fernTestValueCreditID *string
@@ -85433,6 +85647,14 @@ func TestSettersRulesengineFeatureEntitlement(t *testing.T) {
 		var fernTestValueEventName *string
 		obj.SetEventName(fernTestValueEventName)
 		assert.Equal(t, fernTestValueEventName, obj.EventName)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetEventSubtype", func(t *testing.T) {
+		obj := &RulesengineFeatureEntitlement{}
+		var fernTestValueEventSubtype *string
+		obj.SetEventSubtype(fernTestValueEventSubtype)
+		assert.Equal(t, fernTestValueEventSubtype, obj.EventSubtype)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -85534,6 +85756,39 @@ func TestGettersRulesengineFeatureEntitlement(t *testing.T) {
 			}
 		}()
 		_ = obj.GetAllocation() // Should return zero value
+	})
+
+	t.Run("GetConsumptionRate", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &RulesengineFeatureEntitlement{}
+		var expected *float64
+		obj.ConsumptionRate = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetConsumptionRate(), "getter should return the property value")
+	})
+
+	t.Run("GetConsumptionRate_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &RulesengineFeatureEntitlement{}
+		obj.ConsumptionRate = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetConsumptionRate(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetConsumptionRate_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *RulesengineFeatureEntitlement
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetConsumptionRate() // Should return zero value
 	})
 
 	t.Run("GetCreditID", func(t *testing.T) {
@@ -85765,6 +86020,39 @@ func TestGettersRulesengineFeatureEntitlement(t *testing.T) {
 			}
 		}()
 		_ = obj.GetEventName() // Should return zero value
+	})
+
+	t.Run("GetEventSubtype", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &RulesengineFeatureEntitlement{}
+		var expected *string
+		obj.EventSubtype = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEventSubtype(), "getter should return the property value")
+	})
+
+	t.Run("GetEventSubtype_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &RulesengineFeatureEntitlement{}
+		obj.EventSubtype = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEventSubtype(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEventSubtype_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *RulesengineFeatureEntitlement
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEventSubtype() // Should return zero value
 	})
 
 	t.Run("GetFeatureID", func(t *testing.T) {
@@ -86035,6 +86323,37 @@ func TestSettersMarkExplicitRulesengineFeatureEntitlement(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetConsumptionRate_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &RulesengineFeatureEntitlement{}
+		var fernTestValueConsumptionRate *float64
+
+		// Act
+		obj.SetConsumptionRate(fernTestValueConsumptionRate)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetCreditID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -86229,6 +86548,37 @@ func TestSettersMarkExplicitRulesengineFeatureEntitlement(t *testing.T) {
 
 		// Act
 		obj.SetEventName(fernTestValueEventName)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEventSubtype_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &RulesengineFeatureEntitlement{}
+		var fernTestValueEventSubtype *string
+
+		// Act
+		obj.SetEventSubtype(fernTestValueEventSubtype)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -105376,13 +105726,6 @@ func TestEnumAPIKeyScope(t *testing.T) {
 }
 
 func TestEnumAccountMemberPermission(t *testing.T) {
-	t.Run("NewFromString_billing_credits_edit", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewAccountMemberPermissionFromString("billing_credits_edit")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, AccountMemberPermission("billing_credits_edit"), val, "enum value should match expected wire value")
-	})
-
 	t.Run("NewFromString_companies_edit", func(t *testing.T) {
 		t.Parallel()
 		val, err := NewAccountMemberPermissionFromString("companies_edit")
@@ -105487,7 +105830,7 @@ func TestEnumAccountMemberPermission(t *testing.T) {
 	})
 
 	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewAccountMemberPermissionFromString("billing_credits_edit")
+		val, err := NewAccountMemberPermissionFromString("companies_edit")
 		assert.NoError(t, err)
 		ptr := val.Ptr()
 		assert.NotNil(t, ptr)

@@ -1066,19 +1066,29 @@ func (c *CheckFlagsBulkResponseData) String() string {
 }
 
 var (
-	checkFlagsResponseDataFieldFlags = big.NewInt(1 << 0)
-	checkFlagsResponseDataFieldPlan  = big.NewInt(1 << 1)
+	checkFlagsResponseDataFieldCreditBalances = big.NewInt(1 << 0)
+	checkFlagsResponseDataFieldFlags          = big.NewInt(1 << 1)
+	checkFlagsResponseDataFieldPlan           = big.NewInt(1 << 2)
 )
 
 type CheckFlagsResponseData struct {
-	Flags []*CheckFlagResponseData `json:"flags" url:"flags"`
-	Plan  *DatastreamCompanyPlan   `json:"plan,omitempty" url:"plan,omitempty"`
+	// Lease-aware credit balances keyed by credit ID, covering every credit type the company holds a balance in
+	CreditBalances map[string]*CompanyCreditBalance `json:"credit_balances,omitempty" url:"credit_balances,omitempty"`
+	Flags          []*CheckFlagResponseData         `json:"flags" url:"flags"`
+	Plan           *DatastreamCompanyPlan           `json:"plan,omitempty" url:"plan,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CheckFlagsResponseData) GetCreditBalances() map[string]*CompanyCreditBalance {
+	if c == nil {
+		return nil
+	}
+	return c.CreditBalances
 }
 
 func (c *CheckFlagsResponseData) GetFlags() []*CheckFlagResponseData {
@@ -1107,6 +1117,13 @@ func (c *CheckFlagsResponseData) require(field *big.Int) {
 		c.explicitFields = big.NewInt(0)
 	}
 	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCreditBalances sets the CreditBalances field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckFlagsResponseData) SetCreditBalances(creditBalances map[string]*CompanyCreditBalance) {
+	c.CreditBalances = creditBalances
+	c.require(checkFlagsResponseDataFieldCreditBalances)
 }
 
 // SetFlags sets the Flags field and marks it as non-optional;
@@ -1151,6 +1168,125 @@ func (c *CheckFlagsResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CheckFlagsResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	companyCreditBalanceFieldRemaining = big.NewInt(1 << 0)
+	companyCreditBalanceFieldReserved  = big.NewInt(1 << 1)
+	companyCreditBalanceFieldSettled   = big.NewInt(1 << 2)
+)
+
+type CompanyCreditBalance struct {
+	// Remaining credit, excluding any open lease hold (the value SDKs gate on)
+	Remaining float64 `json:"remaining" url:"remaining"`
+	// Amount held by the company's open credit lease, 0 when none is open
+	Reserved float64 `json:"reserved" url:"reserved"`
+	// Spendable balance including the open lease hold (remaining + reserved)
+	Settled float64 `json:"settled" url:"settled"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyCreditBalance) GetRemaining() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Remaining
+}
+
+func (c *CompanyCreditBalance) GetReserved() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Reserved
+}
+
+func (c *CompanyCreditBalance) GetSettled() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Settled
+}
+
+func (c *CompanyCreditBalance) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyCreditBalance) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetRemaining sets the Remaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalance) SetRemaining(remaining float64) {
+	c.Remaining = remaining
+	c.require(companyCreditBalanceFieldRemaining)
+}
+
+// SetReserved sets the Reserved field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalance) SetReserved(reserved float64) {
+	c.Reserved = reserved
+	c.require(companyCreditBalanceFieldReserved)
+}
+
+// SetSettled sets the Settled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalance) SetSettled(settled float64) {
+	c.Settled = settled
+	c.require(companyCreditBalanceFieldSettled)
+}
+
+func (c *CompanyCreditBalance) UnmarshalJSON(data []byte) error {
+	type unmarshaler CompanyCreditBalance
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CompanyCreditBalance(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyCreditBalance) MarshalJSON() ([]byte, error) {
+	type embed CompanyCreditBalance
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyCreditBalance) String() string {
 	if c == nil {
 		return "<nil>"
 	}

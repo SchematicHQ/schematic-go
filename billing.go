@@ -230,16 +230,17 @@ var (
 	listBillingPricesRequestFieldIDs                = big.NewInt(1 << 3)
 	listBillingPricesRequestFieldInterval           = big.NewInt(1 << 4)
 	listBillingPricesRequestFieldIsActive           = big.NewInt(1 << 5)
-	listBillingPricesRequestFieldPrice              = big.NewInt(1 << 6)
-	listBillingPricesRequestFieldProductID          = big.NewInt(1 << 7)
-	listBillingPricesRequestFieldProductIDs         = big.NewInt(1 << 8)
-	listBillingPricesRequestFieldProviderType       = big.NewInt(1 << 9)
-	listBillingPricesRequestFieldQ                  = big.NewInt(1 << 10)
-	listBillingPricesRequestFieldTiersMode          = big.NewInt(1 << 11)
-	listBillingPricesRequestFieldUsageType          = big.NewInt(1 << 12)
-	listBillingPricesRequestFieldWithMeter          = big.NewInt(1 << 13)
-	listBillingPricesRequestFieldLimit              = big.NewInt(1 << 14)
-	listBillingPricesRequestFieldOffset             = big.NewInt(1 << 15)
+	listBillingPricesRequestFieldPlanVersionID      = big.NewInt(1 << 6)
+	listBillingPricesRequestFieldPrice              = big.NewInt(1 << 7)
+	listBillingPricesRequestFieldProductID          = big.NewInt(1 << 8)
+	listBillingPricesRequestFieldProductIDs         = big.NewInt(1 << 9)
+	listBillingPricesRequestFieldProviderType       = big.NewInt(1 << 10)
+	listBillingPricesRequestFieldQ                  = big.NewInt(1 << 11)
+	listBillingPricesRequestFieldTiersMode          = big.NewInt(1 << 12)
+	listBillingPricesRequestFieldUsageType          = big.NewInt(1 << 13)
+	listBillingPricesRequestFieldWithMeter          = big.NewInt(1 << 14)
+	listBillingPricesRequestFieldLimit              = big.NewInt(1 << 15)
+	listBillingPricesRequestFieldOffset             = big.NewInt(1 << 16)
 )
 
 type ListBillingPricesRequest struct {
@@ -252,14 +253,16 @@ type ListBillingPricesRequest struct {
 	IDs                []*string `json:"-" url:"ids,omitempty"`
 	Interval           *string   `json:"-" url:"interval,omitempty"`
 	// Filter for active prices on active products (defaults to true if not specified)
-	IsActive     *bool                  `json:"-" url:"is_active,omitempty"`
-	Price        *int64                 `json:"-" url:"price,omitempty"`
-	ProductID    *string                `json:"-" url:"product_id,omitempty"`
-	ProductIDs   []*string              `json:"-" url:"product_ids,omitempty"`
-	ProviderType *BillingProviderType   `json:"-" url:"provider_type,omitempty"`
-	Q            *string                `json:"-" url:"q,omitempty"`
-	TiersMode    *BillingTiersMode      `json:"-" url:"tiers_mode,omitempty"`
-	UsageType    *BillingPriceUsageType `json:"-" url:"usage_type,omitempty"`
+	IsActive *bool `json:"-" url:"is_active,omitempty"`
+	// Filter for prices belonging to a specific plan version (e.g. the latest published version)
+	PlanVersionID *string                `json:"-" url:"plan_version_id,omitempty"`
+	Price         *int64                 `json:"-" url:"price,omitempty"`
+	ProductID     *string                `json:"-" url:"product_id,omitempty"`
+	ProductIDs    []*string              `json:"-" url:"product_ids,omitempty"`
+	ProviderType  *BillingProviderType   `json:"-" url:"provider_type,omitempty"`
+	Q             *string                `json:"-" url:"q,omitempty"`
+	TiersMode     *BillingTiersMode      `json:"-" url:"tiers_mode,omitempty"`
+	UsageType     *BillingPriceUsageType `json:"-" url:"usage_type,omitempty"`
 	// Filter for prices with a meter
 	WithMeter *bool `json:"-" url:"with_meter,omitempty"`
 	// Page limit (default 100)
@@ -318,6 +321,13 @@ func (l *ListBillingPricesRequest) SetInterval(interval *string) {
 func (l *ListBillingPricesRequest) SetIsActive(isActive *bool) {
 	l.IsActive = isActive
 	l.require(listBillingPricesRequestFieldIsActive)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingPricesRequest) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listBillingPricesRequestFieldPlanVersionID)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
@@ -397,16 +407,17 @@ var (
 	listBillingProductPricesRequestFieldIDs                = big.NewInt(1 << 3)
 	listBillingProductPricesRequestFieldInterval           = big.NewInt(1 << 4)
 	listBillingProductPricesRequestFieldIsActive           = big.NewInt(1 << 5)
-	listBillingProductPricesRequestFieldPrice              = big.NewInt(1 << 6)
-	listBillingProductPricesRequestFieldProductID          = big.NewInt(1 << 7)
-	listBillingProductPricesRequestFieldProductIDs         = big.NewInt(1 << 8)
-	listBillingProductPricesRequestFieldProviderType       = big.NewInt(1 << 9)
-	listBillingProductPricesRequestFieldQ                  = big.NewInt(1 << 10)
-	listBillingProductPricesRequestFieldTiersMode          = big.NewInt(1 << 11)
-	listBillingProductPricesRequestFieldUsageType          = big.NewInt(1 << 12)
-	listBillingProductPricesRequestFieldWithMeter          = big.NewInt(1 << 13)
-	listBillingProductPricesRequestFieldLimit              = big.NewInt(1 << 14)
-	listBillingProductPricesRequestFieldOffset             = big.NewInt(1 << 15)
+	listBillingProductPricesRequestFieldPlanVersionID      = big.NewInt(1 << 6)
+	listBillingProductPricesRequestFieldPrice              = big.NewInt(1 << 7)
+	listBillingProductPricesRequestFieldProductID          = big.NewInt(1 << 8)
+	listBillingProductPricesRequestFieldProductIDs         = big.NewInt(1 << 9)
+	listBillingProductPricesRequestFieldProviderType       = big.NewInt(1 << 10)
+	listBillingProductPricesRequestFieldQ                  = big.NewInt(1 << 11)
+	listBillingProductPricesRequestFieldTiersMode          = big.NewInt(1 << 12)
+	listBillingProductPricesRequestFieldUsageType          = big.NewInt(1 << 13)
+	listBillingProductPricesRequestFieldWithMeter          = big.NewInt(1 << 14)
+	listBillingProductPricesRequestFieldLimit              = big.NewInt(1 << 15)
+	listBillingProductPricesRequestFieldOffset             = big.NewInt(1 << 16)
 )
 
 type ListBillingProductPricesRequest struct {
@@ -419,14 +430,16 @@ type ListBillingProductPricesRequest struct {
 	IDs                []*string `json:"-" url:"ids,omitempty"`
 	Interval           *string   `json:"-" url:"interval,omitempty"`
 	// Filter for active prices on active products (defaults to true if not specified)
-	IsActive     *bool                  `json:"-" url:"is_active,omitempty"`
-	Price        *int64                 `json:"-" url:"price,omitempty"`
-	ProductID    *string                `json:"-" url:"product_id,omitempty"`
-	ProductIDs   []*string              `json:"-" url:"product_ids,omitempty"`
-	ProviderType *BillingProviderType   `json:"-" url:"provider_type,omitempty"`
-	Q            *string                `json:"-" url:"q,omitempty"`
-	TiersMode    *BillingTiersMode      `json:"-" url:"tiers_mode,omitempty"`
-	UsageType    *BillingPriceUsageType `json:"-" url:"usage_type,omitempty"`
+	IsActive *bool `json:"-" url:"is_active,omitempty"`
+	// Filter for prices belonging to a specific plan version (e.g. the latest published version)
+	PlanVersionID *string                `json:"-" url:"plan_version_id,omitempty"`
+	Price         *int64                 `json:"-" url:"price,omitempty"`
+	ProductID     *string                `json:"-" url:"product_id,omitempty"`
+	ProductIDs    []*string              `json:"-" url:"product_ids,omitempty"`
+	ProviderType  *BillingProviderType   `json:"-" url:"provider_type,omitempty"`
+	Q             *string                `json:"-" url:"q,omitempty"`
+	TiersMode     *BillingTiersMode      `json:"-" url:"tiers_mode,omitempty"`
+	UsageType     *BillingPriceUsageType `json:"-" url:"usage_type,omitempty"`
 	// Filter for prices with a meter
 	WithMeter *bool `json:"-" url:"with_meter,omitempty"`
 	// Page limit (default 100)
@@ -485,6 +498,13 @@ func (l *ListBillingProductPricesRequest) SetInterval(interval *string) {
 func (l *ListBillingProductPricesRequest) SetIsActive(isActive *bool) {
 	l.IsActive = isActive
 	l.require(listBillingProductPricesRequestFieldIsActive)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductPricesRequest) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listBillingProductPricesRequestFieldPlanVersionID)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
@@ -4089,14 +4109,15 @@ var (
 	listBillingPricesParamsFieldIsActive           = big.NewInt(1 << 5)
 	listBillingPricesParamsFieldLimit              = big.NewInt(1 << 6)
 	listBillingPricesParamsFieldOffset             = big.NewInt(1 << 7)
-	listBillingPricesParamsFieldPrice              = big.NewInt(1 << 8)
-	listBillingPricesParamsFieldProductID          = big.NewInt(1 << 9)
-	listBillingPricesParamsFieldProductIDs         = big.NewInt(1 << 10)
-	listBillingPricesParamsFieldProviderType       = big.NewInt(1 << 11)
-	listBillingPricesParamsFieldQ                  = big.NewInt(1 << 12)
-	listBillingPricesParamsFieldTiersMode          = big.NewInt(1 << 13)
-	listBillingPricesParamsFieldUsageType          = big.NewInt(1 << 14)
-	listBillingPricesParamsFieldWithMeter          = big.NewInt(1 << 15)
+	listBillingPricesParamsFieldPlanVersionID      = big.NewInt(1 << 8)
+	listBillingPricesParamsFieldPrice              = big.NewInt(1 << 9)
+	listBillingPricesParamsFieldProductID          = big.NewInt(1 << 10)
+	listBillingPricesParamsFieldProductIDs         = big.NewInt(1 << 11)
+	listBillingPricesParamsFieldProviderType       = big.NewInt(1 << 12)
+	listBillingPricesParamsFieldQ                  = big.NewInt(1 << 13)
+	listBillingPricesParamsFieldTiersMode          = big.NewInt(1 << 14)
+	listBillingPricesParamsFieldUsageType          = big.NewInt(1 << 15)
+	listBillingPricesParamsFieldWithMeter          = big.NewInt(1 << 16)
 )
 
 type ListBillingPricesParams struct {
@@ -4113,14 +4134,16 @@ type ListBillingPricesParams struct {
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset       *int64                 `json:"offset,omitempty" url:"offset,omitempty"`
-	Price        *int64                 `json:"price,omitempty" url:"price,omitempty"`
-	ProductID    *string                `json:"product_id,omitempty" url:"product_id,omitempty"`
-	ProductIDs   []string               `json:"product_ids,omitempty" url:"product_ids,omitempty"`
-	ProviderType *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
-	Q            *string                `json:"q,omitempty" url:"q,omitempty"`
-	TiersMode    *BillingTiersMode      `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
-	UsageType    *BillingPriceUsageType `json:"usage_type,omitempty" url:"usage_type,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter for prices belonging to a specific plan version (e.g. the latest published version)
+	PlanVersionID *string                `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	Price         *int64                 `json:"price,omitempty" url:"price,omitempty"`
+	ProductID     *string                `json:"product_id,omitempty" url:"product_id,omitempty"`
+	ProductIDs    []string               `json:"product_ids,omitempty" url:"product_ids,omitempty"`
+	ProviderType  *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
+	Q             *string                `json:"q,omitempty" url:"q,omitempty"`
+	TiersMode     *BillingTiersMode      `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
+	UsageType     *BillingPriceUsageType `json:"usage_type,omitempty" url:"usage_type,omitempty"`
 	// Filter for prices with a meter
 	WithMeter *bool `json:"with_meter,omitempty" url:"with_meter,omitempty"`
 
@@ -4185,6 +4208,13 @@ func (l *ListBillingPricesParams) GetOffset() *int64 {
 		return nil
 	}
 	return l.Offset
+}
+
+func (l *ListBillingPricesParams) GetPlanVersionID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionID
 }
 
 func (l *ListBillingPricesParams) GetPrice() *int64 {
@@ -4311,6 +4341,13 @@ func (l *ListBillingPricesParams) SetLimit(limit *int64) {
 func (l *ListBillingPricesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingPricesParamsFieldOffset)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingPricesParams) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listBillingPricesParamsFieldPlanVersionID)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
@@ -4522,14 +4559,15 @@ var (
 	listBillingProductPricesParamsFieldIsActive           = big.NewInt(1 << 5)
 	listBillingProductPricesParamsFieldLimit              = big.NewInt(1 << 6)
 	listBillingProductPricesParamsFieldOffset             = big.NewInt(1 << 7)
-	listBillingProductPricesParamsFieldPrice              = big.NewInt(1 << 8)
-	listBillingProductPricesParamsFieldProductID          = big.NewInt(1 << 9)
-	listBillingProductPricesParamsFieldProductIDs         = big.NewInt(1 << 10)
-	listBillingProductPricesParamsFieldProviderType       = big.NewInt(1 << 11)
-	listBillingProductPricesParamsFieldQ                  = big.NewInt(1 << 12)
-	listBillingProductPricesParamsFieldTiersMode          = big.NewInt(1 << 13)
-	listBillingProductPricesParamsFieldUsageType          = big.NewInt(1 << 14)
-	listBillingProductPricesParamsFieldWithMeter          = big.NewInt(1 << 15)
+	listBillingProductPricesParamsFieldPlanVersionID      = big.NewInt(1 << 8)
+	listBillingProductPricesParamsFieldPrice              = big.NewInt(1 << 9)
+	listBillingProductPricesParamsFieldProductID          = big.NewInt(1 << 10)
+	listBillingProductPricesParamsFieldProductIDs         = big.NewInt(1 << 11)
+	listBillingProductPricesParamsFieldProviderType       = big.NewInt(1 << 12)
+	listBillingProductPricesParamsFieldQ                  = big.NewInt(1 << 13)
+	listBillingProductPricesParamsFieldTiersMode          = big.NewInt(1 << 14)
+	listBillingProductPricesParamsFieldUsageType          = big.NewInt(1 << 15)
+	listBillingProductPricesParamsFieldWithMeter          = big.NewInt(1 << 16)
 )
 
 type ListBillingProductPricesParams struct {
@@ -4546,14 +4584,16 @@ type ListBillingProductPricesParams struct {
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset       *int64                 `json:"offset,omitempty" url:"offset,omitempty"`
-	Price        *int64                 `json:"price,omitempty" url:"price,omitempty"`
-	ProductID    *string                `json:"product_id,omitempty" url:"product_id,omitempty"`
-	ProductIDs   []string               `json:"product_ids,omitempty" url:"product_ids,omitempty"`
-	ProviderType *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
-	Q            *string                `json:"q,omitempty" url:"q,omitempty"`
-	TiersMode    *BillingTiersMode      `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
-	UsageType    *BillingPriceUsageType `json:"usage_type,omitempty" url:"usage_type,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter for prices belonging to a specific plan version (e.g. the latest published version)
+	PlanVersionID *string                `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	Price         *int64                 `json:"price,omitempty" url:"price,omitempty"`
+	ProductID     *string                `json:"product_id,omitempty" url:"product_id,omitempty"`
+	ProductIDs    []string               `json:"product_ids,omitempty" url:"product_ids,omitempty"`
+	ProviderType  *BillingProviderType   `json:"provider_type,omitempty" url:"provider_type,omitempty"`
+	Q             *string                `json:"q,omitempty" url:"q,omitempty"`
+	TiersMode     *BillingTiersMode      `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
+	UsageType     *BillingPriceUsageType `json:"usage_type,omitempty" url:"usage_type,omitempty"`
 	// Filter for prices with a meter
 	WithMeter *bool `json:"with_meter,omitempty" url:"with_meter,omitempty"`
 
@@ -4618,6 +4658,13 @@ func (l *ListBillingProductPricesParams) GetOffset() *int64 {
 		return nil
 	}
 	return l.Offset
+}
+
+func (l *ListBillingProductPricesParams) GetPlanVersionID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionID
 }
 
 func (l *ListBillingProductPricesParams) GetPrice() *int64 {
@@ -4744,6 +4791,13 @@ func (l *ListBillingProductPricesParams) SetLimit(limit *int64) {
 func (l *ListBillingProductPricesParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listBillingProductPricesParamsFieldOffset)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductPricesParams) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listBillingProductPricesParamsFieldPlanVersionID)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;

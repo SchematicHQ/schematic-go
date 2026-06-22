@@ -13,7 +13,6 @@ import (
 type AccountMemberPermission string
 
 const (
-	AccountMemberPermissionBillingCreditsEdit   AccountMemberPermission = "billing_credits_edit"
 	AccountMemberPermissionCompaniesEdit        AccountMemberPermission = "companies_edit"
 	AccountMemberPermissionCompanyUsersEdit     AccountMemberPermission = "company_users_edit"
 	AccountMemberPermissionComponentsEdit       AccountMemberPermission = "components_edit"
@@ -32,8 +31,6 @@ const (
 
 func NewAccountMemberPermissionFromString(s string) (AccountMemberPermission, error) {
 	switch s {
-	case "billing_credits_edit":
-		return AccountMemberPermissionBillingCreditsEdit, nil
 	case "companies_edit":
 		return AccountMemberPermissionCompaniesEdit, nil
 	case "company_users_edit":
@@ -9456,14 +9453,15 @@ var (
 	companySubscriptionResponseDataFieldDiscounts              = big.NewInt(1 << 4)
 	companySubscriptionResponseDataFieldExpiredAt              = big.NewInt(1 << 5)
 	companySubscriptionResponseDataFieldInterval               = big.NewInt(1 << 6)
-	companySubscriptionResponseDataFieldLatestInvoice          = big.NewInt(1 << 7)
-	companySubscriptionResponseDataFieldPaymentMethod          = big.NewInt(1 << 8)
-	companySubscriptionResponseDataFieldProducts               = big.NewInt(1 << 9)
-	companySubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 10)
-	companySubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 11)
-	companySubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 12)
-	companySubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 13)
-	companySubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 14)
+	companySubscriptionResponseDataFieldIsInitial              = big.NewInt(1 << 7)
+	companySubscriptionResponseDataFieldLatestInvoice          = big.NewInt(1 << 8)
+	companySubscriptionResponseDataFieldPaymentMethod          = big.NewInt(1 << 9)
+	companySubscriptionResponseDataFieldProducts               = big.NewInt(1 << 10)
+	companySubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 11)
+	companySubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 12)
+	companySubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 13)
+	companySubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 14)
+	companySubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 15)
 )
 
 type CompanySubscriptionResponseData struct {
@@ -9474,6 +9472,7 @@ type CompanySubscriptionResponseData struct {
 	Discounts              []*BillingSubscriptionDiscountView           `json:"discounts" url:"discounts"`
 	ExpiredAt              *time.Time                                   `json:"expired_at,omitempty" url:"expired_at,omitempty"`
 	Interval               string                                       `json:"interval" url:"interval"`
+	IsInitial              bool                                         `json:"is_initial" url:"is_initial"`
 	LatestInvoice          *InvoiceResponseData                         `json:"latest_invoice,omitempty" url:"latest_invoice,omitempty"`
 	PaymentMethod          *PaymentMethodResponseData                   `json:"payment_method,omitempty" url:"payment_method,omitempty"`
 	Products               []*BillingProductForSubscriptionResponseData `json:"products" url:"products"`
@@ -9537,6 +9536,13 @@ func (c *CompanySubscriptionResponseData) GetInterval() string {
 		return ""
 	}
 	return c.Interval
+}
+
+func (c *CompanySubscriptionResponseData) GetIsInitial() bool {
+	if c == nil {
+		return false
+	}
+	return c.IsInitial
 }
 
 func (c *CompanySubscriptionResponseData) GetLatestInvoice() *InvoiceResponseData {
@@ -9656,6 +9662,13 @@ func (c *CompanySubscriptionResponseData) SetExpiredAt(expiredAt *time.Time) {
 func (c *CompanySubscriptionResponseData) SetInterval(interval string) {
 	c.Interval = interval
 	c.require(companySubscriptionResponseDataFieldInterval)
+}
+
+// SetIsInitial sets the IsInitial field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanySubscriptionResponseData) SetIsInitial(isInitial bool) {
+	c.IsInitial = isInitial
+	c.require(companySubscriptionResponseDataFieldIsInitial)
 }
 
 // SetLatestInvoice sets the LatestInvoice field and marks it as non-optional;
@@ -18486,26 +18499,30 @@ func (f *FeatureDetailResponseData) String() string {
 
 var (
 	featureEntitlementFieldAllocation      = big.NewInt(1 << 0)
-	featureEntitlementFieldCreditID        = big.NewInt(1 << 1)
-	featureEntitlementFieldCreditRemaining = big.NewInt(1 << 2)
-	featureEntitlementFieldCreditReserved  = big.NewInt(1 << 3)
-	featureEntitlementFieldCreditSettled   = big.NewInt(1 << 4)
-	featureEntitlementFieldCreditTotal     = big.NewInt(1 << 5)
-	featureEntitlementFieldCreditUsed      = big.NewInt(1 << 6)
-	featureEntitlementFieldEventName       = big.NewInt(1 << 7)
-	featureEntitlementFieldFeatureID       = big.NewInt(1 << 8)
-	featureEntitlementFieldFeatureKey      = big.NewInt(1 << 9)
-	featureEntitlementFieldMetricPeriod    = big.NewInt(1 << 10)
-	featureEntitlementFieldMetricResetAt   = big.NewInt(1 << 11)
-	featureEntitlementFieldMonthReset      = big.NewInt(1 << 12)
-	featureEntitlementFieldSoftLimit       = big.NewInt(1 << 13)
-	featureEntitlementFieldUsage           = big.NewInt(1 << 14)
-	featureEntitlementFieldValueType       = big.NewInt(1 << 15)
+	featureEntitlementFieldConsumptionRate = big.NewInt(1 << 1)
+	featureEntitlementFieldCreditID        = big.NewInt(1 << 2)
+	featureEntitlementFieldCreditRemaining = big.NewInt(1 << 3)
+	featureEntitlementFieldCreditReserved  = big.NewInt(1 << 4)
+	featureEntitlementFieldCreditSettled   = big.NewInt(1 << 5)
+	featureEntitlementFieldCreditTotal     = big.NewInt(1 << 6)
+	featureEntitlementFieldCreditUsed      = big.NewInt(1 << 7)
+	featureEntitlementFieldEventName       = big.NewInt(1 << 8)
+	featureEntitlementFieldEventSubtype    = big.NewInt(1 << 9)
+	featureEntitlementFieldFeatureID       = big.NewInt(1 << 10)
+	featureEntitlementFieldFeatureKey      = big.NewInt(1 << 11)
+	featureEntitlementFieldMetricPeriod    = big.NewInt(1 << 12)
+	featureEntitlementFieldMetricResetAt   = big.NewInt(1 << 13)
+	featureEntitlementFieldMonthReset      = big.NewInt(1 << 14)
+	featureEntitlementFieldSoftLimit       = big.NewInt(1 << 15)
+	featureEntitlementFieldUsage           = big.NewInt(1 << 16)
+	featureEntitlementFieldValueType       = big.NewInt(1 << 17)
 )
 
 type FeatureEntitlement struct {
 	// If the company has a numeric entitlement for this feature, the allocated amount
 	Allocation *int64 `json:"allocation,omitempty" url:"allocation,omitempty"`
+	// If the company has a credit-based entitlement for this feature, the credit cost per unit of usage
+	ConsumptionRate *float64 `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the ID of the credit
 	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the credit available to fund new consumption or a new lease hold — open lease holds are excluded. Clients that hold a lease should gate on this plus their own unspent hold; clients with no lease awareness should use credit_settled instead
@@ -18520,6 +18537,8 @@ type FeatureEntitlement struct {
 	CreditUsed *float64 `json:"credit_used,omitempty" url:"credit_used,omitempty"`
 	// If the feature is event-based, the name of the event tracked for usage
 	EventName *string `json:"event_name,omitempty" url:"event_name,omitempty"`
+	// For event-based or credit-metered feature entitlements, the event subtype whose usage is tracked
+	EventSubtype *string `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
 	// The ID of the feature
 	FeatureID string `json:"feature_id" url:"feature_id"`
 	// The key of the flag associated with the feature
@@ -18549,6 +18568,13 @@ func (f *FeatureEntitlement) GetAllocation() *int64 {
 		return nil
 	}
 	return f.Allocation
+}
+
+func (f *FeatureEntitlement) GetConsumptionRate() *float64 {
+	if f == nil {
+		return nil
+	}
+	return f.ConsumptionRate
 }
 
 func (f *FeatureEntitlement) GetCreditID() *string {
@@ -18598,6 +18624,13 @@ func (f *FeatureEntitlement) GetEventName() *string {
 		return nil
 	}
 	return f.EventName
+}
+
+func (f *FeatureEntitlement) GetEventSubtype() *string {
+	if f == nil {
+		return nil
+	}
+	return f.EventSubtype
 }
 
 func (f *FeatureEntitlement) GetFeatureID() string {
@@ -18677,6 +18710,13 @@ func (f *FeatureEntitlement) SetAllocation(allocation *int64) {
 	f.require(featureEntitlementFieldAllocation)
 }
 
+// SetConsumptionRate sets the ConsumptionRate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetConsumptionRate(consumptionRate *float64) {
+	f.ConsumptionRate = consumptionRate
+	f.require(featureEntitlementFieldConsumptionRate)
+}
+
 // SetCreditID sets the CreditID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (f *FeatureEntitlement) SetCreditID(creditID *string) {
@@ -18724,6 +18764,13 @@ func (f *FeatureEntitlement) SetCreditUsed(creditUsed *float64) {
 func (f *FeatureEntitlement) SetEventName(eventName *string) {
 	f.EventName = eventName
 	f.require(featureEntitlementFieldEventName)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetEventSubtype(eventSubtype *string) {
+	f.EventSubtype = eventSubtype
+	f.require(featureEntitlementFieldEventSubtype)
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -30202,26 +30249,30 @@ func (r RulesengineEntityType) Ptr() *RulesengineEntityType {
 
 var (
 	rulesengineFeatureEntitlementFieldAllocation      = big.NewInt(1 << 0)
-	rulesengineFeatureEntitlementFieldCreditID        = big.NewInt(1 << 1)
-	rulesengineFeatureEntitlementFieldCreditRemaining = big.NewInt(1 << 2)
-	rulesengineFeatureEntitlementFieldCreditReserved  = big.NewInt(1 << 3)
-	rulesengineFeatureEntitlementFieldCreditSettled   = big.NewInt(1 << 4)
-	rulesengineFeatureEntitlementFieldCreditTotal     = big.NewInt(1 << 5)
-	rulesengineFeatureEntitlementFieldCreditUsed      = big.NewInt(1 << 6)
-	rulesengineFeatureEntitlementFieldEventName       = big.NewInt(1 << 7)
-	rulesengineFeatureEntitlementFieldFeatureID       = big.NewInt(1 << 8)
-	rulesengineFeatureEntitlementFieldFeatureKey      = big.NewInt(1 << 9)
-	rulesengineFeatureEntitlementFieldMetricPeriod    = big.NewInt(1 << 10)
-	rulesengineFeatureEntitlementFieldMetricResetAt   = big.NewInt(1 << 11)
-	rulesengineFeatureEntitlementFieldMonthReset      = big.NewInt(1 << 12)
-	rulesengineFeatureEntitlementFieldSoftLimit       = big.NewInt(1 << 13)
-	rulesengineFeatureEntitlementFieldUsage           = big.NewInt(1 << 14)
-	rulesengineFeatureEntitlementFieldValueType       = big.NewInt(1 << 15)
+	rulesengineFeatureEntitlementFieldConsumptionRate = big.NewInt(1 << 1)
+	rulesengineFeatureEntitlementFieldCreditID        = big.NewInt(1 << 2)
+	rulesengineFeatureEntitlementFieldCreditRemaining = big.NewInt(1 << 3)
+	rulesengineFeatureEntitlementFieldCreditReserved  = big.NewInt(1 << 4)
+	rulesengineFeatureEntitlementFieldCreditSettled   = big.NewInt(1 << 5)
+	rulesengineFeatureEntitlementFieldCreditTotal     = big.NewInt(1 << 6)
+	rulesengineFeatureEntitlementFieldCreditUsed      = big.NewInt(1 << 7)
+	rulesengineFeatureEntitlementFieldEventName       = big.NewInt(1 << 8)
+	rulesengineFeatureEntitlementFieldEventSubtype    = big.NewInt(1 << 9)
+	rulesengineFeatureEntitlementFieldFeatureID       = big.NewInt(1 << 10)
+	rulesengineFeatureEntitlementFieldFeatureKey      = big.NewInt(1 << 11)
+	rulesengineFeatureEntitlementFieldMetricPeriod    = big.NewInt(1 << 12)
+	rulesengineFeatureEntitlementFieldMetricResetAt   = big.NewInt(1 << 13)
+	rulesengineFeatureEntitlementFieldMonthReset      = big.NewInt(1 << 14)
+	rulesengineFeatureEntitlementFieldSoftLimit       = big.NewInt(1 << 15)
+	rulesengineFeatureEntitlementFieldUsage           = big.NewInt(1 << 16)
+	rulesengineFeatureEntitlementFieldValueType       = big.NewInt(1 << 17)
 )
 
 type RulesengineFeatureEntitlement struct {
 	// If the company has a numeric entitlement for this feature, the allocated amount
 	Allocation *int64 `json:"allocation,omitempty" url:"allocation,omitempty"`
+	// If the company has a credit-based entitlement for this feature, the credit cost per unit of usage
+	ConsumptionRate *float64 `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the ID of the credit
 	CreditID *string `json:"credit_id,omitempty" url:"credit_id,omitempty"`
 	// If the company has a credit-based entitlement for this feature, the credit available to fund new consumption or a new lease hold — open lease holds are excluded. Clients that hold a lease should gate on this plus their own unspent hold; clients with no lease awareness should use credit_settled instead
@@ -30236,6 +30287,8 @@ type RulesengineFeatureEntitlement struct {
 	CreditUsed *float64 `json:"credit_used,omitempty" url:"credit_used,omitempty"`
 	// If the feature is event-based, the name of the event tracked for usage
 	EventName *string `json:"event_name,omitempty" url:"event_name,omitempty"`
+	// For event-based or credit-metered feature entitlements, the event subtype whose usage is tracked
+	EventSubtype *string `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
 	// The ID of the feature
 	FeatureID string `json:"feature_id" url:"feature_id"`
 	// The key of the flag associated with the feature
@@ -30265,6 +30318,13 @@ func (r *RulesengineFeatureEntitlement) GetAllocation() *int64 {
 		return nil
 	}
 	return r.Allocation
+}
+
+func (r *RulesengineFeatureEntitlement) GetConsumptionRate() *float64 {
+	if r == nil {
+		return nil
+	}
+	return r.ConsumptionRate
 }
 
 func (r *RulesengineFeatureEntitlement) GetCreditID() *string {
@@ -30314,6 +30374,13 @@ func (r *RulesengineFeatureEntitlement) GetEventName() *string {
 		return nil
 	}
 	return r.EventName
+}
+
+func (r *RulesengineFeatureEntitlement) GetEventSubtype() *string {
+	if r == nil {
+		return nil
+	}
+	return r.EventSubtype
 }
 
 func (r *RulesengineFeatureEntitlement) GetFeatureID() string {
@@ -30393,6 +30460,13 @@ func (r *RulesengineFeatureEntitlement) SetAllocation(allocation *int64) {
 	r.require(rulesengineFeatureEntitlementFieldAllocation)
 }
 
+// SetConsumptionRate sets the ConsumptionRate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetConsumptionRate(consumptionRate *float64) {
+	r.ConsumptionRate = consumptionRate
+	r.require(rulesengineFeatureEntitlementFieldConsumptionRate)
+}
+
 // SetCreditID sets the CreditID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (r *RulesengineFeatureEntitlement) SetCreditID(creditID *string) {
@@ -30440,6 +30514,13 @@ func (r *RulesengineFeatureEntitlement) SetCreditUsed(creditUsed *float64) {
 func (r *RulesengineFeatureEntitlement) SetEventName(eventName *string) {
 	r.EventName = eventName
 	r.require(rulesengineFeatureEntitlementFieldEventName)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetEventSubtype(eventSubtype *string) {
+	r.EventSubtype = eventSubtype
+	r.require(rulesengineFeatureEntitlementFieldEventSubtype)
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;

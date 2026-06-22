@@ -309,6 +309,52 @@ func (l *ListWebhooksRequest) SetOffset(offset *int64) {
 }
 
 var (
+	testWebhookRequestBodyFieldRequestType = big.NewInt(1 << 0)
+)
+
+type TestWebhookRequestBody struct {
+	RequestType WebhookRequestType `json:"request_type" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (t *TestWebhookRequestBody) require(field *big.Int) {
+	if t.explicitFields == nil {
+		t.explicitFields = big.NewInt(0)
+	}
+	t.explicitFields.Or(t.explicitFields, field)
+}
+
+// SetRequestType sets the RequestType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (t *TestWebhookRequestBody) SetRequestType(requestType WebhookRequestType) {
+	t.RequestType = requestType
+	t.require(testWebhookRequestBodyFieldRequestType)
+}
+
+func (t *TestWebhookRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler TestWebhookRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*t = TestWebhookRequestBody(body)
+	return nil
+}
+
+func (t *TestWebhookRequestBody) MarshalJSON() ([]byte, error) {
+	type embed TestWebhookRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*t),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, t.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	creditTriggerConfigFieldCreditID = big.NewInt(1 << 0)
 )
 
@@ -474,6 +520,106 @@ func (e *EntitlementTriggerConfig) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
+}
+
+var (
+	testWebhookResponseDataFieldResponseCode = big.NewInt(1 << 0)
+	testWebhookResponseDataFieldSuccess      = big.NewInt(1 << 1)
+)
+
+type TestWebhookResponseData struct {
+	ResponseCode int64 `json:"response_code" url:"response_code"`
+	Success      bool  `json:"success" url:"success"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (t *TestWebhookResponseData) GetResponseCode() int64 {
+	if t == nil {
+		return 0
+	}
+	return t.ResponseCode
+}
+
+func (t *TestWebhookResponseData) GetSuccess() bool {
+	if t == nil {
+		return false
+	}
+	return t.Success
+}
+
+func (t *TestWebhookResponseData) GetExtraProperties() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.extraProperties
+}
+
+func (t *TestWebhookResponseData) require(field *big.Int) {
+	if t.explicitFields == nil {
+		t.explicitFields = big.NewInt(0)
+	}
+	t.explicitFields.Or(t.explicitFields, field)
+}
+
+// SetResponseCode sets the ResponseCode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (t *TestWebhookResponseData) SetResponseCode(responseCode int64) {
+	t.ResponseCode = responseCode
+	t.require(testWebhookResponseDataFieldResponseCode)
+}
+
+// SetSuccess sets the Success field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (t *TestWebhookResponseData) SetSuccess(success bool) {
+	t.Success = success
+	t.require(testWebhookResponseDataFieldSuccess)
+}
+
+func (t *TestWebhookResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler TestWebhookResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = TestWebhookResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+	t.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *TestWebhookResponseData) MarshalJSON() ([]byte, error) {
+	type embed TestWebhookResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*t),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, t.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (t *TestWebhookResponseData) String() string {
+	if t == nil {
+		return "<nil>"
+	}
+	if len(t.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
 }
 
 var (
@@ -2486,6 +2632,107 @@ func (l *ListWebhooksResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	sendTestWebhookActionResponseFieldData   = big.NewInt(1 << 0)
+	sendTestWebhookActionResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type SendTestWebhookActionResponse struct {
+	Data *TestWebhookResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *SendTestWebhookActionResponse) GetData() *TestWebhookResponseData {
+	if s == nil {
+		return nil
+	}
+	return s.Data
+}
+
+func (s *SendTestWebhookActionResponse) GetParams() map[string]any {
+	if s == nil {
+		return nil
+	}
+	return s.Params
+}
+
+func (s *SendTestWebhookActionResponse) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *SendTestWebhookActionResponse) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SendTestWebhookActionResponse) SetData(data *TestWebhookResponseData) {
+	s.Data = data
+	s.require(sendTestWebhookActionResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SendTestWebhookActionResponse) SetParams(params map[string]any) {
+	s.Params = params
+	s.require(sendTestWebhookActionResponseFieldParams)
+}
+
+func (s *SendTestWebhookActionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler SendTestWebhookActionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = SendTestWebhookActionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SendTestWebhookActionResponse) MarshalJSON() ([]byte, error) {
+	type embed SendTestWebhookActionResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *SendTestWebhookActionResponse) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
 }
 
 var (

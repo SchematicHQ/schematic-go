@@ -410,6 +410,55 @@ func (r *RawClient) DeleteWebhook(
 	}, nil
 }
 
+func (r *RawClient) SendTestWebhookAction(
+	ctx context.Context,
+	// webhook_id
+	webhookID string,
+	request *schematichq.TestWebhookRequestBody,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.SendTestWebhookActionResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/webhooks/%v/test",
+		webhookID,
+	)
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	headers.Add("Content-Type", "application/json")
+	var response *schematichq.SendTestWebhookActionResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.SendTestWebhookActionResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
 func (r *RawClient) CountWebhooks(
 	ctx context.Context,
 	request *schematichq.CountWebhooksRequest,

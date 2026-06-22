@@ -2429,6 +2429,9 @@ request := &schematichq.ListBillingPricesRequest{
         IsActive: schematichq.Bool(
             true,
         ),
+        PlanVersionID: schematichq.String(
+            "plan_version_id",
+        ),
         Price: schematichq.Int64(
             int64(1000000),
         ),
@@ -2516,6 +2519,14 @@ client.Billing.ListBillingPrices(
 <dd>
 
 **isActive:** `*bool` — Filter for active prices on active products (defaults to true if not specified)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionID:** `*string` — Filter for prices belonging to a specific plan version (e.g. the latest published version)
     
 </dd>
 </dl>
@@ -2873,6 +2884,9 @@ request := &schematichq.ListBillingProductPricesRequest{
         IsActive: schematichq.Bool(
             true,
         ),
+        PlanVersionID: schematichq.String(
+            "plan_version_id",
+        ),
         Price: schematichq.Int64(
             int64(1000000),
         ),
@@ -2960,6 +2974,14 @@ client.Billing.ListBillingProductPrices(
 <dd>
 
 **isActive:** `*bool` — Filter for active prices on active products (defaults to true if not specified)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionID:** `*string` — Filter for prices belonging to a specific plan version (e.g. the latest published version)
     
 </dd>
 </dl>
@@ -19744,6 +19766,62 @@ client.Webhooks.DeleteWebhook(
 <dd>
 
 **webhookID:** `string` — webhook_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Webhooks.SendTestWebhookAction(WebhookID, request) -> *schematichq.SendTestWebhookActionResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.TestWebhookRequestBody{
+        RequestType: schematichq.WebhookRequestTypeSubscriptionTrialEnded,
+    }
+client.Webhooks.SendTestWebhookAction(
+        context.TODO(),
+        "webhook_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**webhookID:** `string` — webhook_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestType:** `*schematichq.WebhookRequestType` 
     
 </dd>
 </dl>

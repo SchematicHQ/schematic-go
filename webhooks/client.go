@@ -168,6 +168,25 @@ func (c *Client) DeleteWebhook(
 	return response.Body, nil
 }
 
+func (c *Client) SendTestWebhookAction(
+	ctx context.Context,
+	// webhook_id
+	webhookID string,
+	request *schematichq.TestWebhookRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.SendTestWebhookActionResponse, error) {
+	response, err := c.WithRawResponse.SendTestWebhookAction(
+		ctx,
+		webhookID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CountWebhooks(
 	ctx context.Context,
 	request *schematichq.CountWebhooksRequest,

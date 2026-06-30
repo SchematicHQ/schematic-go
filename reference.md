@@ -1435,6 +1435,94 @@ client.Billing.UpsertBillingCoupon(
 </dl>
 </details>
 
+<details><summary><code>client.Billing.DeleteBillingCoupon(BillingID) -> *schematichq.DeleteBillingCouponResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.DeleteBillingCoupon(
+        context.TODO(),
+        "billing_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingID:** `string` — billing_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.DeleteBillingCustomer(BillingID) -> *schematichq.DeleteBillingCustomerResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.DeleteBillingCustomer(
+        context.TODO(),
+        "billing_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingID:** `string` — billing_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Billing.UpsertBillingCustomer(request) -> *schematichq.UpsertBillingCustomerResponse</code></summary>
 <dl>
 <dd>
@@ -1970,6 +2058,50 @@ client.Billing.UpsertInvoice(
 <dd>
 
 **url:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.DeleteBillingInvoice(BillingID) -> *schematichq.DeleteBillingInvoiceResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.DeleteBillingInvoice(
+        context.TODO(),
+        "billing_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingID:** `string` — billing_id
     
 </dd>
 </dl>
@@ -6496,6 +6628,14 @@ client.Checkout.GetCheckoutData(
 <dd>
 
 **companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**currency:** `*string` 
     
 </dd>
 </dl>
@@ -14006,6 +14146,14 @@ client.Plans.PublishPlanVersion(
 <dd>
 
 **activationStrategy:** `*schematichq.CustomPlanActivationStrategy` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**couponExternalID:** `*string` 
     
 </dd>
 </dl>

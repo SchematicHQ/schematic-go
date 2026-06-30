@@ -1528,7 +1528,7 @@ type BillingCreditGrantResponseData struct {
 	PlanID            *string                             `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	PlanName          *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
 	Price             *BillingPriceResponseData           `json:"price,omitempty" url:"price,omitempty"`
-	Quantity          int64                               `json:"quantity" url:"quantity"`
+	Quantity          float64                             `json:"quantity" url:"quantity"`
 	QuantityRemaining float64                             `json:"quantity_remaining" url:"quantity_remaining"`
 	QuantityUsed      float64                             `json:"quantity_used" url:"quantity_used"`
 	RenewalEnabled    bool                                `json:"renewal_enabled" url:"renewal_enabled"`
@@ -1642,7 +1642,7 @@ func (b *BillingCreditGrantResponseData) GetPrice() *BillingPriceResponseData {
 	return b.Price
 }
 
-func (b *BillingCreditGrantResponseData) GetQuantity() int64 {
+func (b *BillingCreditGrantResponseData) GetQuantity() float64 {
 	if b == nil {
 		return 0
 	}
@@ -1847,7 +1847,7 @@ func (b *BillingCreditGrantResponseData) SetPrice(price *BillingPriceResponseDat
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditGrantResponseData) SetQuantity(quantity int64) {
+func (b *BillingCreditGrantResponseData) SetQuantity(quantity float64) {
 	b.Quantity = quantity
 	b.require(billingCreditGrantResponseDataFieldQuantity)
 }
@@ -2741,7 +2741,7 @@ type CreditEventLedgerResponseData struct {
 	FromGrantID                *string                            `json:"from_grant_id,omitempty" url:"from_grant_id,omitempty"`
 	GrantExpiresAt             *time.Time                         `json:"grant_expires_at,omitempty" url:"grant_expires_at,omitempty"`
 	GrantID                    *string                            `json:"grant_id,omitempty" url:"grant_id,omitempty"`
-	GrantQuantity              *int64                             `json:"grant_quantity,omitempty" url:"grant_quantity,omitempty"`
+	GrantQuantity              *float64                           `json:"grant_quantity,omitempty" url:"grant_quantity,omitempty"`
 	GrantQuantityRemaining     *float64                           `json:"grant_quantity_remaining,omitempty" url:"grant_quantity_remaining,omitempty"`
 	GrantReason                *BillingCreditGrantReason          `json:"grant_reason,omitempty" url:"grant_reason,omitempty"`
 	GrantValidFrom             *time.Time                         `json:"grant_valid_from,omitempty" url:"grant_valid_from,omitempty"`
@@ -2901,7 +2901,7 @@ func (c *CreditEventLedgerResponseData) GetGrantID() *string {
 	return c.GrantID
 }
 
-func (c *CreditEventLedgerResponseData) GetGrantQuantity() *int64 {
+func (c *CreditEventLedgerResponseData) GetGrantQuantity() *float64 {
 	if c == nil {
 		return nil
 	}
@@ -3141,7 +3141,7 @@ func (c *CreditEventLedgerResponseData) SetGrantID(grantID *string) {
 
 // SetGrantQuantity sets the GrantQuantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditEventLedgerResponseData) SetGrantQuantity(grantQuantity *int64) {
+func (c *CreditEventLedgerResponseData) SetGrantQuantity(grantQuantity *float64) {
 	c.GrantQuantity = grantQuantity
 	c.require(creditEventLedgerResponseDataFieldGrantQuantity)
 }

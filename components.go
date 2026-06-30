@@ -2777,7 +2777,7 @@ type CreditCompanyGrantView struct {
 	PlanName              *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
 	PluralName            *string                             `json:"plural_name,omitempty" url:"plural_name,omitempty"`
 	Price                 *BillingProductPriceResponseData    `json:"price,omitempty" url:"price,omitempty"`
-	Quantity              int64                               `json:"quantity" url:"quantity"`
+	Quantity              float64                             `json:"quantity" url:"quantity"`
 	QuantityRemaining     float64                             `json:"quantity_remaining" url:"quantity_remaining"`
 	QuantityUsed          float64                             `json:"quantity_used" url:"quantity_used"`
 	RenewalEnabled        bool                                `json:"renewal_enabled" url:"renewal_enabled"`
@@ -2940,7 +2940,7 @@ func (c *CreditCompanyGrantView) GetPrice() *BillingProductPriceResponseData {
 	return c.Price
 }
 
-func (c *CreditCompanyGrantView) GetQuantity() int64 {
+func (c *CreditCompanyGrantView) GetQuantity() float64 {
 	if c == nil {
 		return 0
 	}
@@ -3201,7 +3201,7 @@ func (c *CreditCompanyGrantView) SetPrice(price *BillingProductPriceResponseData
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCompanyGrantView) SetQuantity(quantity int64) {
+func (c *CreditCompanyGrantView) SetQuantity(quantity float64) {
 	c.Quantity = quantity
 	c.require(creditCompanyGrantViewFieldQuantity)
 }

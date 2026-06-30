@@ -178,7 +178,7 @@ func TestTrackEventWithQuantity(t *testing.T) {
 	}, nil)
 
 	ctx := context.Background()
-	client.Track(ctx, &schematicgo.EventBodyTrack{Event: "bar", Company: map[string]string{"foo": "bar"}, Quantity: schematicgo.Int(100)})
+	client.Track(ctx, &schematicgo.EventBodyTrack{Event: "bar", Company: map[string]string{"foo": "bar"}, Quantity: schematicgo.Int64(100)})
 	time.Sleep(20 * time.Millisecond)
 }
 

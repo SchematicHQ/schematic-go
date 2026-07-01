@@ -264,7 +264,7 @@ func handleTrack(w http.ResponseWriter, r *http.Request) {
 		trackBody.User = user
 	}
 	if quantity, ok := body["quantity"].(float64); ok {
-		q := int(quantity)
+		q := int64(quantity)
 		trackBody.Quantity = &q
 	}
 

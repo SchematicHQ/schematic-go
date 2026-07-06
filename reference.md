@@ -3774,6 +3774,14 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
+**companyID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **currency:** `string` 
     
 </dd>
@@ -7836,6 +7844,104 @@ client.Companies.LookupCompany(
 <dd>
 
 **keys:** `map[string]string` — Key/value pairs
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Companies.GetCompanyBillingEntity() -> *schematichq.GetCompanyBillingEntityResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetCompanyBillingEntityRequest{
+        CompanyID: schematichq.String(
+            "company_id",
+        ),
+    }
+client.Companies.GetCompanyBillingEntity(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Companies.GetBillingEntityChildSubscriptions() -> *schematichq.GetBillingEntityChildSubscriptionsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetBillingEntityChildSubscriptionsRequest{
+        CompanyID: schematichq.String(
+            "company_id",
+        ),
+    }
+client.Companies.GetBillingEntityChildSubscriptions(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `*string` 
     
 </dd>
 </dl>

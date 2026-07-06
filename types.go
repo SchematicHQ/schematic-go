@@ -1202,6 +1202,31 @@ func (a *AuditLogListResponseData) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+type BillingCreditAutoTopupAvailability string
+
+const (
+	BillingCreditAutoTopupAvailabilityOff            BillingCreditAutoTopupAvailability = "off"
+	BillingCreditAutoTopupAvailabilityAutomatic      BillingCreditAutoTopupAvailability = "automatic"
+	BillingCreditAutoTopupAvailabilityUserControlled BillingCreditAutoTopupAvailability = "user_controlled"
+)
+
+func NewBillingCreditAutoTopupAvailabilityFromString(s string) (BillingCreditAutoTopupAvailability, error) {
+	switch s {
+	case "off":
+		return BillingCreditAutoTopupAvailabilityOff, nil
+	case "automatic":
+		return BillingCreditAutoTopupAvailabilityAutomatic, nil
+	case "user_controlled":
+		return BillingCreditAutoTopupAvailabilityUserControlled, nil
+	}
+	var t BillingCreditAutoTopupAvailability
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (b BillingCreditAutoTopupAvailability) Ptr() *BillingCreditAutoTopupAvailability {
+	return &b
+}
+
 var (
 	billingCreditBundleResponseDataFieldBillingInvoiceID  = big.NewInt(1 << 0)
 	billingCreditBundleResponseDataFieldBundleType        = big.NewInt(1 << 1)
@@ -2774,49 +2799,56 @@ func (b BillingPlanCreditGrantResetType) Ptr() *BillingPlanCreditGrantResetType 
 var (
 	billingPlanCreditGrantResponseDataFieldAutoTopupAmount           = big.NewInt(1 << 0)
 	billingPlanCreditGrantResponseDataFieldAutoTopupAmountType       = big.NewInt(1 << 1)
-	billingPlanCreditGrantResponseDataFieldAutoTopupEnabled          = big.NewInt(1 << 2)
-	billingPlanCreditGrantResponseDataFieldAutoTopupExpiryType       = big.NewInt(1 << 3)
-	billingPlanCreditGrantResponseDataFieldAutoTopupExpiryUnit       = big.NewInt(1 << 4)
-	billingPlanCreditGrantResponseDataFieldAutoTopupExpiryUnitCount  = big.NewInt(1 << 5)
-	billingPlanCreditGrantResponseDataFieldAutoTopupSelfService      = big.NewInt(1 << 6)
-	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdCredits = big.NewInt(1 << 7)
-	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdPercent = big.NewInt(1 << 8)
-	billingPlanCreditGrantResponseDataFieldCreatedAt                 = big.NewInt(1 << 9)
-	billingPlanCreditGrantResponseDataFieldCredit                    = big.NewInt(1 << 10)
-	billingPlanCreditGrantResponseDataFieldCreditAmount              = big.NewInt(1 << 11)
-	billingPlanCreditGrantResponseDataFieldCreditID                  = big.NewInt(1 << 12)
-	billingPlanCreditGrantResponseDataFieldCreditName                = big.NewInt(1 << 13)
-	billingPlanCreditGrantResponseDataFieldCreditPluralName          = big.NewInt(1 << 14)
-	billingPlanCreditGrantResponseDataFieldCreditSingularName        = big.NewInt(1 << 15)
-	billingPlanCreditGrantResponseDataFieldExpiryType                = big.NewInt(1 << 16)
-	billingPlanCreditGrantResponseDataFieldExpiryUnit                = big.NewInt(1 << 17)
-	billingPlanCreditGrantResponseDataFieldExpiryUnitCount           = big.NewInt(1 << 18)
-	billingPlanCreditGrantResponseDataFieldID                        = big.NewInt(1 << 19)
-	billingPlanCreditGrantResponseDataFieldPlan                      = big.NewInt(1 << 20)
-	billingPlanCreditGrantResponseDataFieldPlanID                    = big.NewInt(1 << 21)
-	billingPlanCreditGrantResponseDataFieldPlanName                  = big.NewInt(1 << 22)
-	billingPlanCreditGrantResponseDataFieldPlanVersionID             = big.NewInt(1 << 23)
-	billingPlanCreditGrantResponseDataFieldResetCadence              = big.NewInt(1 << 24)
-	billingPlanCreditGrantResponseDataFieldResetStart                = big.NewInt(1 << 25)
-	billingPlanCreditGrantResponseDataFieldResetType                 = big.NewInt(1 << 26)
-	billingPlanCreditGrantResponseDataFieldRolloverPercentage        = big.NewInt(1 << 27)
-	billingPlanCreditGrantResponseDataFieldUpdatedAt                 = big.NewInt(1 << 28)
+	billingPlanCreditGrantResponseDataFieldAutoTopupAvailability     = big.NewInt(1 << 2)
+	billingPlanCreditGrantResponseDataFieldAutoTopupEnabled          = big.NewInt(1 << 3)
+	billingPlanCreditGrantResponseDataFieldAutoTopupExpiryType       = big.NewInt(1 << 4)
+	billingPlanCreditGrantResponseDataFieldAutoTopupExpiryUnit       = big.NewInt(1 << 5)
+	billingPlanCreditGrantResponseDataFieldAutoTopupExpiryUnitCount  = big.NewInt(1 << 6)
+	billingPlanCreditGrantResponseDataFieldAutoTopupSelfService      = big.NewInt(1 << 7)
+	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdCredits = big.NewInt(1 << 8)
+	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdPercent = big.NewInt(1 << 9)
+	billingPlanCreditGrantResponseDataFieldCanBuyBundles             = big.NewInt(1 << 10)
+	billingPlanCreditGrantResponseDataFieldCreatedAt                 = big.NewInt(1 << 11)
+	billingPlanCreditGrantResponseDataFieldCredit                    = big.NewInt(1 << 12)
+	billingPlanCreditGrantResponseDataFieldCreditAmount              = big.NewInt(1 << 13)
+	billingPlanCreditGrantResponseDataFieldCreditID                  = big.NewInt(1 << 14)
+	billingPlanCreditGrantResponseDataFieldCreditName                = big.NewInt(1 << 15)
+	billingPlanCreditGrantResponseDataFieldCreditPluralName          = big.NewInt(1 << 16)
+	billingPlanCreditGrantResponseDataFieldCreditSingularName        = big.NewInt(1 << 17)
+	billingPlanCreditGrantResponseDataFieldExpiryType                = big.NewInt(1 << 18)
+	billingPlanCreditGrantResponseDataFieldExpiryUnit                = big.NewInt(1 << 19)
+	billingPlanCreditGrantResponseDataFieldExpiryUnitCount           = big.NewInt(1 << 20)
+	billingPlanCreditGrantResponseDataFieldID                        = big.NewInt(1 << 21)
+	billingPlanCreditGrantResponseDataFieldPlan                      = big.NewInt(1 << 22)
+	billingPlanCreditGrantResponseDataFieldPlanID                    = big.NewInt(1 << 23)
+	billingPlanCreditGrantResponseDataFieldPlanName                  = big.NewInt(1 << 24)
+	billingPlanCreditGrantResponseDataFieldPlanVersionID             = big.NewInt(1 << 25)
+	billingPlanCreditGrantResponseDataFieldResetCadence              = big.NewInt(1 << 26)
+	billingPlanCreditGrantResponseDataFieldResetStart                = big.NewInt(1 << 27)
+	billingPlanCreditGrantResponseDataFieldResetType                 = big.NewInt(1 << 28)
+	billingPlanCreditGrantResponseDataFieldRolloverPercentage        = big.NewInt(1 << 29)
+	billingPlanCreditGrantResponseDataFieldUpdatedAt                 = big.NewInt(1 << 30)
 )
 
 type BillingPlanCreditGrantResponseData struct {
-	AutoTopupAmount           *int64                     `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
-	AutoTopupAmountType       *string                    `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
-	AutoTopupEnabled          bool                       `json:"auto_topup_enabled" url:"auto_topup_enabled"`
-	AutoTopupExpiryType       *BillingCreditExpiryType   `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
-	AutoTopupExpiryUnit       *BillingCreditExpiryUnit   `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
-	AutoTopupExpiryUnitCount  *int64                     `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
-	AutoTopupSelfService      bool                       `json:"auto_topup_self_service" url:"auto_topup_self_service"`
-	AutoTopupThresholdCredits *int64                     `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
-	AutoTopupThresholdPercent *int64                     `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
-	CreatedAt                 time.Time                  `json:"created_at" url:"created_at"`
-	Credit                    *BillingCreditResponseData `json:"credit,omitempty" url:"credit,omitempty"`
-	CreditAmount              int64                      `json:"credit_amount" url:"credit_amount"`
-	CreditID                  string                     `json:"credit_id" url:"credit_id"`
+	AutoTopupAmount       *int64                             `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
+	AutoTopupAmountType   *string                            `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
+	AutoTopupAvailability BillingCreditAutoTopupAvailability `json:"auto_topup_availability" url:"auto_topup_availability"`
+	// Derived from auto_topup_availability; use that instead.
+	AutoTopupEnabled         bool                     `json:"auto_topup_enabled" url:"auto_topup_enabled"`
+	AutoTopupExpiryType      *BillingCreditExpiryType `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
+	AutoTopupExpiryUnit      *BillingCreditExpiryUnit `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
+	AutoTopupExpiryUnitCount *int64                   `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
+	// Derived from auto_topup_availability; use that instead.
+	AutoTopupSelfService      bool   `json:"auto_topup_self_service" url:"auto_topup_self_service"`
+	AutoTopupThresholdCredits *int64 `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
+	AutoTopupThresholdPercent *int64 `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
+	// Whether buyers can purchase one-time credit bundles on this grant, independent of auto top-up availability.
+	CanBuyBundles bool                       `json:"can_buy_bundles" url:"can_buy_bundles"`
+	CreatedAt     time.Time                  `json:"created_at" url:"created_at"`
+	Credit        *BillingCreditResponseData `json:"credit,omitempty" url:"credit,omitempty"`
+	CreditAmount  int64                      `json:"credit_amount" url:"credit_amount"`
+	CreditID      string                     `json:"credit_id" url:"credit_id"`
 	// Use credit.name from the nested credit object instead
 	CreditName string `json:"credit_name" url:"credit_name"`
 	// Use plural_name from the nested credit object instead
@@ -2858,6 +2890,13 @@ func (b *BillingPlanCreditGrantResponseData) GetAutoTopupAmountType() *string {
 		return nil
 	}
 	return b.AutoTopupAmountType
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetAutoTopupAvailability() BillingCreditAutoTopupAvailability {
+	if b == nil {
+		return ""
+	}
+	return b.AutoTopupAvailability
 }
 
 func (b *BillingPlanCreditGrantResponseData) GetAutoTopupEnabled() bool {
@@ -2907,6 +2946,13 @@ func (b *BillingPlanCreditGrantResponseData) GetAutoTopupThresholdPercent() *int
 		return nil
 	}
 	return b.AutoTopupThresholdPercent
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetCanBuyBundles() bool {
+	if b == nil {
+		return false
+	}
+	return b.CanBuyBundles
 }
 
 func (b *BillingPlanCreditGrantResponseData) GetCreatedAt() time.Time {
@@ -3077,6 +3123,13 @@ func (b *BillingPlanCreditGrantResponseData) SetAutoTopupAmountType(autoTopupAmo
 	b.require(billingPlanCreditGrantResponseDataFieldAutoTopupAmountType)
 }
 
+// SetAutoTopupAvailability sets the AutoTopupAvailability field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetAutoTopupAvailability(autoTopupAvailability BillingCreditAutoTopupAvailability) {
+	b.AutoTopupAvailability = autoTopupAvailability
+	b.require(billingPlanCreditGrantResponseDataFieldAutoTopupAvailability)
+}
+
 // SetAutoTopupEnabled sets the AutoTopupEnabled field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingPlanCreditGrantResponseData) SetAutoTopupEnabled(autoTopupEnabled bool) {
@@ -3124,6 +3177,13 @@ func (b *BillingPlanCreditGrantResponseData) SetAutoTopupThresholdCredits(autoTo
 func (b *BillingPlanCreditGrantResponseData) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int64) {
 	b.AutoTopupThresholdPercent = autoTopupThresholdPercent
 	b.require(billingPlanCreditGrantResponseDataFieldAutoTopupThresholdPercent)
+}
+
+// SetCanBuyBundles sets the CanBuyBundles field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetCanBuyBundles(canBuyBundles bool) {
+	b.CanBuyBundles = canBuyBundles
+	b.require(billingPlanCreditGrantResponseDataFieldCanBuyBundles)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -6642,21 +6702,23 @@ func (c *CaptureRawEventBatch) String() string {
 var (
 	changeSubscriptionRequestBodyFieldAddOnIDs           = big.NewInt(1 << 0)
 	changeSubscriptionRequestBodyFieldAutoTopupOverrides = big.NewInt(1 << 1)
-	changeSubscriptionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 2)
-	changeSubscriptionRequestBodyFieldCreditBundles      = big.NewInt(1 << 3)
-	changeSubscriptionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 4)
-	changeSubscriptionRequestBodyFieldNewPlanID          = big.NewInt(1 << 5)
-	changeSubscriptionRequestBodyFieldNewPriceID         = big.NewInt(1 << 6)
-	changeSubscriptionRequestBodyFieldOptInAccepted      = big.NewInt(1 << 7)
-	changeSubscriptionRequestBodyFieldPayInAdvance       = big.NewInt(1 << 8)
-	changeSubscriptionRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 9)
-	changeSubscriptionRequestBodyFieldPromoCode          = big.NewInt(1 << 10)
-	changeSubscriptionRequestBodyFieldSkipTrial          = big.NewInt(1 << 11)
+	changeSubscriptionRequestBodyFieldBillingEntityID    = big.NewInt(1 << 2)
+	changeSubscriptionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 3)
+	changeSubscriptionRequestBodyFieldCreditBundles      = big.NewInt(1 << 4)
+	changeSubscriptionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 5)
+	changeSubscriptionRequestBodyFieldNewPlanID          = big.NewInt(1 << 6)
+	changeSubscriptionRequestBodyFieldNewPriceID         = big.NewInt(1 << 7)
+	changeSubscriptionRequestBodyFieldOptInAccepted      = big.NewInt(1 << 8)
+	changeSubscriptionRequestBodyFieldPayInAdvance       = big.NewInt(1 << 9)
+	changeSubscriptionRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 10)
+	changeSubscriptionRequestBodyFieldPromoCode          = big.NewInt(1 << 11)
+	changeSubscriptionRequestBodyFieldSkipTrial          = big.NewInt(1 << 12)
 )
 
 type ChangeSubscriptionRequestBody struct {
 	AddOnIDs           []*UpdateAddOnRequestBody             `json:"add_on_ids" url:"add_on_ids"`
 	AutoTopupOverrides []*UpdateAutoTopupOverrideRequestBody `json:"auto_topup_overrides" url:"auto_topup_overrides"`
+	BillingEntityID    *string                               `json:"billing_entity_id,omitempty" url:"billing_entity_id,omitempty"`
 	CouponExternalID   *string                               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles      []*UpdateCreditBundleRequestBody      `json:"credit_bundles" url:"credit_bundles"`
 	CustomFieldValues  []*CheckoutFieldValue                 `json:"custom_field_values" url:"custom_field_values"`
@@ -6687,6 +6749,13 @@ func (c *ChangeSubscriptionRequestBody) GetAutoTopupOverrides() []*UpdateAutoTop
 		return nil
 	}
 	return c.AutoTopupOverrides
+}
+
+func (c *ChangeSubscriptionRequestBody) GetBillingEntityID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingEntityID
 }
 
 func (c *ChangeSubscriptionRequestBody) GetCouponExternalID() *string {
@@ -6785,6 +6854,13 @@ func (c *ChangeSubscriptionRequestBody) SetAddOnIDs(addOnIDs []*UpdateAddOnReque
 func (c *ChangeSubscriptionRequestBody) SetAutoTopupOverrides(autoTopupOverrides []*UpdateAutoTopupOverrideRequestBody) {
 	c.AutoTopupOverrides = autoTopupOverrides
 	c.require(changeSubscriptionRequestBodyFieldAutoTopupOverrides)
+}
+
+// SetBillingEntityID sets the BillingEntityID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ChangeSubscriptionRequestBody) SetBillingEntityID(billingEntityID *string) {
+	c.BillingEntityID = billingEntityID
+	c.require(changeSubscriptionRequestBodyFieldBillingEntityID)
 }
 
 // SetCouponExternalID sets the CouponExternalID field and marks it as non-optional;
@@ -8583,55 +8659,59 @@ func (c *CompanyOverrideResponseData) String() string {
 var (
 	companyPlanCreditGrantViewFieldBillingCreditAutoTopupAmount           = big.NewInt(1 << 0)
 	companyPlanCreditGrantViewFieldBillingCreditAutoTopupAmountType       = big.NewInt(1 << 1)
-	companyPlanCreditGrantViewFieldBillingCreditAutoTopupEnabled          = big.NewInt(1 << 2)
-	companyPlanCreditGrantViewFieldBillingCreditAutoTopupExpiryType       = big.NewInt(1 << 3)
-	companyPlanCreditGrantViewFieldBillingCreditAutoTopupExpiryUnit       = big.NewInt(1 << 4)
-	companyPlanCreditGrantViewFieldBillingCreditAutoTopupExpiryUnitCount  = big.NewInt(1 << 5)
-	companyPlanCreditGrantViewFieldBillingCreditAutoTopupSelfService      = big.NewInt(1 << 6)
-	companyPlanCreditGrantViewFieldBillingCreditAutoTopupThresholdCredits = big.NewInt(1 << 7)
-	companyPlanCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent = big.NewInt(1 << 8)
-	companyPlanCreditGrantViewFieldCompanyAutoTopupAmount                 = big.NewInt(1 << 9)
-	companyPlanCreditGrantViewFieldCompanyAutoTopupEnabled                = big.NewInt(1 << 10)
-	companyPlanCreditGrantViewFieldCompanyAutoTopupThresholdCredits       = big.NewInt(1 << 11)
-	companyPlanCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 12)
-	companyPlanCreditGrantViewFieldCredit                                 = big.NewInt(1 << 13)
-	companyPlanCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 14)
-	companyPlanCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 15)
-	companyPlanCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 16)
-	companyPlanCreditGrantViewFieldCreditID                               = big.NewInt(1 << 17)
-	companyPlanCreditGrantViewFieldCreditName                             = big.NewInt(1 << 18)
-	companyPlanCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 19)
-	companyPlanCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 20)
-	companyPlanCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 21)
-	companyPlanCreditGrantViewFieldID                                     = big.NewInt(1 << 22)
-	companyPlanCreditGrantViewFieldPlan                                   = big.NewInt(1 << 23)
-	companyPlanCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 24)
-	companyPlanCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 25)
-	companyPlanCreditGrantViewFieldPluralName                             = big.NewInt(1 << 26)
-	companyPlanCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 27)
-	companyPlanCreditGrantViewFieldResetStart                             = big.NewInt(1 << 28)
-	companyPlanCreditGrantViewFieldResetType                              = big.NewInt(1 << 29)
-	companyPlanCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 30)
-	companyPlanCreditGrantViewFieldSingularName                           = big.NewInt(1 << 31)
-	companyPlanCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 32)
+	companyPlanCreditGrantViewFieldBillingCreditAutoTopupAvailability     = big.NewInt(1 << 2)
+	companyPlanCreditGrantViewFieldBillingCreditAutoTopupEnabled          = big.NewInt(1 << 3)
+	companyPlanCreditGrantViewFieldBillingCreditAutoTopupExpiryType       = big.NewInt(1 << 4)
+	companyPlanCreditGrantViewFieldBillingCreditAutoTopupExpiryUnit       = big.NewInt(1 << 5)
+	companyPlanCreditGrantViewFieldBillingCreditAutoTopupExpiryUnitCount  = big.NewInt(1 << 6)
+	companyPlanCreditGrantViewFieldBillingCreditAutoTopupSelfService      = big.NewInt(1 << 7)
+	companyPlanCreditGrantViewFieldBillingCreditAutoTopupThresholdCredits = big.NewInt(1 << 8)
+	companyPlanCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent = big.NewInt(1 << 9)
+	companyPlanCreditGrantViewFieldBillingCreditCanBuyBundles             = big.NewInt(1 << 10)
+	companyPlanCreditGrantViewFieldCompanyAutoTopupAmount                 = big.NewInt(1 << 11)
+	companyPlanCreditGrantViewFieldCompanyAutoTopupEnabled                = big.NewInt(1 << 12)
+	companyPlanCreditGrantViewFieldCompanyAutoTopupThresholdCredits       = big.NewInt(1 << 13)
+	companyPlanCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 14)
+	companyPlanCreditGrantViewFieldCredit                                 = big.NewInt(1 << 15)
+	companyPlanCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 16)
+	companyPlanCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 17)
+	companyPlanCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 18)
+	companyPlanCreditGrantViewFieldCreditID                               = big.NewInt(1 << 19)
+	companyPlanCreditGrantViewFieldCreditName                             = big.NewInt(1 << 20)
+	companyPlanCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 21)
+	companyPlanCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 22)
+	companyPlanCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 23)
+	companyPlanCreditGrantViewFieldID                                     = big.NewInt(1 << 24)
+	companyPlanCreditGrantViewFieldPlan                                   = big.NewInt(1 << 25)
+	companyPlanCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 26)
+	companyPlanCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 27)
+	companyPlanCreditGrantViewFieldPluralName                             = big.NewInt(1 << 28)
+	companyPlanCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 29)
+	companyPlanCreditGrantViewFieldResetStart                             = big.NewInt(1 << 30)
+	companyPlanCreditGrantViewFieldResetType                              = big.NewInt(1 << 31)
+	companyPlanCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 32)
+	companyPlanCreditGrantViewFieldSingularName                           = big.NewInt(1 << 33)
+	companyPlanCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 34)
 )
 
 type CompanyPlanCreditGrantView struct {
-	BillingCreditAutoTopupAmount           *int64                   `json:"billing_credit_auto_topup_amount,omitempty" url:"billing_credit_auto_topup_amount,omitempty"`
-	BillingCreditAutoTopupAmountType       *string                  `json:"billing_credit_auto_topup_amount_type,omitempty" url:"billing_credit_auto_topup_amount_type,omitempty"`
-	BillingCreditAutoTopupEnabled          bool                     `json:"billing_credit_auto_topup_enabled" url:"billing_credit_auto_topup_enabled"`
-	BillingCreditAutoTopupExpiryType       *BillingCreditExpiryType `json:"billing_credit_auto_topup_expiry_type,omitempty" url:"billing_credit_auto_topup_expiry_type,omitempty"`
-	BillingCreditAutoTopupExpiryUnit       *BillingCreditExpiryUnit `json:"billing_credit_auto_topup_expiry_unit,omitempty" url:"billing_credit_auto_topup_expiry_unit,omitempty"`
-	BillingCreditAutoTopupExpiryUnitCount  *int64                   `json:"billing_credit_auto_topup_expiry_unit_count,omitempty" url:"billing_credit_auto_topup_expiry_unit_count,omitempty"`
-	BillingCreditAutoTopupSelfService      bool                     `json:"billing_credit_auto_topup_self_service" url:"billing_credit_auto_topup_self_service"`
-	BillingCreditAutoTopupThresholdCredits *int64                   `json:"billing_credit_auto_topup_threshold_credits,omitempty" url:"billing_credit_auto_topup_threshold_credits,omitempty"`
-	BillingCreditAutoTopupThresholdPercent *int64                   `json:"billing_credit_auto_topup_threshold_percent,omitempty" url:"billing_credit_auto_topup_threshold_percent,omitempty"`
-	CompanyAutoTopupAmount                 *int64                   `json:"company_auto_topup_amount,omitempty" url:"company_auto_topup_amount,omitempty"`
-	CompanyAutoTopupEnabled                *bool                    `json:"company_auto_topup_enabled,omitempty" url:"company_auto_topup_enabled,omitempty"`
-	CompanyAutoTopupThresholdCredits       *int64                   `json:"company_auto_topup_threshold_credits,omitempty" url:"company_auto_topup_threshold_credits,omitempty"`
-	CreatedAt                              time.Time                `json:"created_at" url:"created_at"`
-	Credit                                 *BillingCreditView       `json:"credit,omitempty" url:"credit,omitempty"`
-	CreditAmount                           int64                    `json:"credit_amount" url:"credit_amount"`
+	BillingCreditAutoTopupAmount           *int64                              `json:"billing_credit_auto_topup_amount,omitempty" url:"billing_credit_auto_topup_amount,omitempty"`
+	BillingCreditAutoTopupAmountType       *string                             `json:"billing_credit_auto_topup_amount_type,omitempty" url:"billing_credit_auto_topup_amount_type,omitempty"`
+	BillingCreditAutoTopupAvailability     *BillingCreditAutoTopupAvailability `json:"billing_credit_auto_topup_availability,omitempty" url:"billing_credit_auto_topup_availability,omitempty"`
+	BillingCreditAutoTopupEnabled          bool                                `json:"billing_credit_auto_topup_enabled" url:"billing_credit_auto_topup_enabled"`
+	BillingCreditAutoTopupExpiryType       *BillingCreditExpiryType            `json:"billing_credit_auto_topup_expiry_type,omitempty" url:"billing_credit_auto_topup_expiry_type,omitempty"`
+	BillingCreditAutoTopupExpiryUnit       *BillingCreditExpiryUnit            `json:"billing_credit_auto_topup_expiry_unit,omitempty" url:"billing_credit_auto_topup_expiry_unit,omitempty"`
+	BillingCreditAutoTopupExpiryUnitCount  *int64                              `json:"billing_credit_auto_topup_expiry_unit_count,omitempty" url:"billing_credit_auto_topup_expiry_unit_count,omitempty"`
+	BillingCreditAutoTopupSelfService      bool                                `json:"billing_credit_auto_topup_self_service" url:"billing_credit_auto_topup_self_service"`
+	BillingCreditAutoTopupThresholdCredits *int64                              `json:"billing_credit_auto_topup_threshold_credits,omitempty" url:"billing_credit_auto_topup_threshold_credits,omitempty"`
+	BillingCreditAutoTopupThresholdPercent *int64                              `json:"billing_credit_auto_topup_threshold_percent,omitempty" url:"billing_credit_auto_topup_threshold_percent,omitempty"`
+	BillingCreditCanBuyBundles             bool                                `json:"billing_credit_can_buy_bundles" url:"billing_credit_can_buy_bundles"`
+	CompanyAutoTopupAmount                 *int64                              `json:"company_auto_topup_amount,omitempty" url:"company_auto_topup_amount,omitempty"`
+	CompanyAutoTopupEnabled                *bool                               `json:"company_auto_topup_enabled,omitempty" url:"company_auto_topup_enabled,omitempty"`
+	CompanyAutoTopupThresholdCredits       *int64                              `json:"company_auto_topup_threshold_credits,omitempty" url:"company_auto_topup_threshold_credits,omitempty"`
+	CreatedAt                              time.Time                           `json:"created_at" url:"created_at"`
+	Credit                                 *BillingCreditView                  `json:"credit,omitempty" url:"credit,omitempty"`
+	CreditAmount                           int64                               `json:"credit_amount" url:"credit_amount"`
 	// Deprecated field, will be removed in the future. Use Credit.Description instead.
 	CreditDescription string `json:"credit_description" url:"credit_description"`
 	// Deprecated field, will be removed in the future. Use Credit.Icon instead.
@@ -8675,6 +8755,13 @@ func (c *CompanyPlanCreditGrantView) GetBillingCreditAutoTopupAmountType() *stri
 		return nil
 	}
 	return c.BillingCreditAutoTopupAmountType
+}
+
+func (c *CompanyPlanCreditGrantView) GetBillingCreditAutoTopupAvailability() *BillingCreditAutoTopupAvailability {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCreditAutoTopupAvailability
 }
 
 func (c *CompanyPlanCreditGrantView) GetBillingCreditAutoTopupEnabled() bool {
@@ -8724,6 +8811,13 @@ func (c *CompanyPlanCreditGrantView) GetBillingCreditAutoTopupThresholdPercent()
 		return nil
 	}
 	return c.BillingCreditAutoTopupThresholdPercent
+}
+
+func (c *CompanyPlanCreditGrantView) GetBillingCreditCanBuyBundles() bool {
+	if c == nil {
+		return false
+	}
+	return c.BillingCreditCanBuyBundles
 }
 
 func (c *CompanyPlanCreditGrantView) GetCompanyAutoTopupAmount() *int64 {
@@ -8922,6 +9016,13 @@ func (c *CompanyPlanCreditGrantView) SetBillingCreditAutoTopupAmountType(billing
 	c.require(companyPlanCreditGrantViewFieldBillingCreditAutoTopupAmountType)
 }
 
+// SetBillingCreditAutoTopupAvailability sets the BillingCreditAutoTopupAvailability field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanCreditGrantView) SetBillingCreditAutoTopupAvailability(billingCreditAutoTopupAvailability *BillingCreditAutoTopupAvailability) {
+	c.BillingCreditAutoTopupAvailability = billingCreditAutoTopupAvailability
+	c.require(companyPlanCreditGrantViewFieldBillingCreditAutoTopupAvailability)
+}
+
 // SetBillingCreditAutoTopupEnabled sets the BillingCreditAutoTopupEnabled field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyPlanCreditGrantView) SetBillingCreditAutoTopupEnabled(billingCreditAutoTopupEnabled bool) {
@@ -8969,6 +9070,13 @@ func (c *CompanyPlanCreditGrantView) SetBillingCreditAutoTopupThresholdCredits(b
 func (c *CompanyPlanCreditGrantView) SetBillingCreditAutoTopupThresholdPercent(billingCreditAutoTopupThresholdPercent *int64) {
 	c.BillingCreditAutoTopupThresholdPercent = billingCreditAutoTopupThresholdPercent
 	c.require(companyPlanCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent)
+}
+
+// SetBillingCreditCanBuyBundles sets the BillingCreditCanBuyBundles field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanCreditGrantView) SetBillingCreditCanBuyBundles(billingCreditCanBuyBundles bool) {
+	c.BillingCreditCanBuyBundles = billingCreditCanBuyBundles
+	c.require(companyPlanCreditGrantViewFieldBillingCreditCanBuyBundles)
 }
 
 // SetCompanyAutoTopupAmount sets the CompanyAutoTopupAmount field and marks it as non-optional;
@@ -12857,47 +12965,51 @@ var (
 	createBillingPlanCreditGrantRequestBodyFieldApplyToExisting           = big.NewInt(1 << 0)
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupAmount           = big.NewInt(1 << 1)
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupAmountType       = big.NewInt(1 << 2)
-	createBillingPlanCreditGrantRequestBodyFieldAutoTopupEnabled          = big.NewInt(1 << 3)
-	createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryType       = big.NewInt(1 << 4)
-	createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnit       = big.NewInt(1 << 5)
-	createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount  = big.NewInt(1 << 6)
-	createBillingPlanCreditGrantRequestBodyFieldAutoTopupSelfService      = big.NewInt(1 << 7)
-	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits = big.NewInt(1 << 8)
-	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 9)
-	createBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 10)
-	createBillingPlanCreditGrantRequestBodyFieldCreditID                  = big.NewInt(1 << 11)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 12)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 13)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 14)
-	createBillingPlanCreditGrantRequestBodyFieldPlanID                    = big.NewInt(1 << 15)
-	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID             = big.NewInt(1 << 16)
-	createBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 17)
-	createBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 18)
-	createBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 19)
-	createBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 20)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupAvailability     = big.NewInt(1 << 3)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupEnabled          = big.NewInt(1 << 4)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryType       = big.NewInt(1 << 5)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnit       = big.NewInt(1 << 6)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount  = big.NewInt(1 << 7)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupSelfService      = big.NewInt(1 << 8)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits = big.NewInt(1 << 9)
+	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 10)
+	createBillingPlanCreditGrantRequestBodyFieldCanBuyBundles             = big.NewInt(1 << 11)
+	createBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 12)
+	createBillingPlanCreditGrantRequestBodyFieldCreditID                  = big.NewInt(1 << 13)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 14)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 15)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 16)
+	createBillingPlanCreditGrantRequestBodyFieldPlanID                    = big.NewInt(1 << 17)
+	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID             = big.NewInt(1 << 18)
+	createBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 19)
+	createBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 20)
+	createBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 21)
+	createBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 22)
 )
 
 type CreateBillingPlanCreditGrantRequestBody struct {
-	ApplyToExisting           *bool                              `json:"apply_to_existing,omitempty" url:"apply_to_existing,omitempty"`
-	AutoTopupAmount           *int64                             `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
-	AutoTopupAmountType       *CreditAutoTopupAmountType         `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
-	AutoTopupEnabled          *bool                              `json:"auto_topup_enabled,omitempty" url:"auto_topup_enabled,omitempty"`
-	AutoTopupExpiryType       *BillingCreditExpiryType           `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
-	AutoTopupExpiryUnit       *BillingCreditExpiryUnit           `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
-	AutoTopupExpiryUnitCount  *int64                             `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
-	AutoTopupSelfService      *bool                              `json:"auto_topup_self_service,omitempty" url:"auto_topup_self_service,omitempty"`
-	AutoTopupThresholdCredits *int64                             `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
-	AutoTopupThresholdPercent *int64                             `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
-	CreditAmount              int64                              `json:"credit_amount" url:"credit_amount"`
-	CreditID                  string                             `json:"credit_id" url:"credit_id"`
-	ExpiryType                *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
-	ExpiryUnit                *BillingCreditExpiryUnit           `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount           *int64                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	PlanID                    string                             `json:"plan_id" url:"plan_id"`
-	PlanVersionID             *string                            `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
-	ResetCadence              BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
-	ResetStart                BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
-	ResetType                 *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
+	ApplyToExisting           *bool                               `json:"apply_to_existing,omitempty" url:"apply_to_existing,omitempty"`
+	AutoTopupAmount           *int64                              `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
+	AutoTopupAmountType       *CreditAutoTopupAmountType          `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
+	AutoTopupAvailability     *BillingCreditAutoTopupAvailability `json:"auto_topup_availability,omitempty" url:"auto_topup_availability,omitempty"`
+	AutoTopupEnabled          *bool                               `json:"auto_topup_enabled,omitempty" url:"auto_topup_enabled,omitempty"`
+	AutoTopupExpiryType       *BillingCreditExpiryType            `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
+	AutoTopupExpiryUnit       *BillingCreditExpiryUnit            `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
+	AutoTopupExpiryUnitCount  *int64                              `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
+	AutoTopupSelfService      *bool                               `json:"auto_topup_self_service,omitempty" url:"auto_topup_self_service,omitempty"`
+	AutoTopupThresholdCredits *int64                              `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
+	AutoTopupThresholdPercent *int64                              `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
+	CanBuyBundles             *bool                               `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
+	CreditAmount              int64                               `json:"credit_amount" url:"credit_amount"`
+	CreditID                  string                              `json:"credit_id" url:"credit_id"`
+	ExpiryType                *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
+	ExpiryUnit                *BillingCreditExpiryUnit            `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
+	ExpiryUnitCount           *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	PlanID                    string                              `json:"plan_id" url:"plan_id"`
+	PlanVersionID             *string                             `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	ResetCadence              BillingPlanCreditGrantResetCadence  `json:"reset_cadence" url:"reset_cadence"`
+	ResetStart                BillingPlanCreditGrantResetStart    `json:"reset_start" url:"reset_start"`
+	ResetType                 *BillingPlanCreditGrantResetType    `json:"reset_type,omitempty" url:"reset_type,omitempty"`
 	// Percentage of unused credits that carry over when this grant resets. Only applies when reset_type is plan_period. Rolled-over credits expire at the next reset and are not rolled again. Defaults to 0.
 	RolloverPercentage *int64 `json:"rollover_percentage,omitempty" url:"rollover_percentage,omitempty"`
 
@@ -12920,6 +13032,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupAmount() *int64 {
 		return nil
 	}
 	return c.AutoTopupAmount
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupAvailability() *BillingCreditAutoTopupAvailability {
+	if c == nil {
+		return nil
+	}
+	return c.AutoTopupAvailability
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupEnabled() *bool {
@@ -12969,6 +13088,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent()
 		return nil
 	}
 	return c.AutoTopupThresholdPercent
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetCanBuyBundles() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.CanBuyBundles
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) GetCreditAmount() int64 {
@@ -13083,6 +13209,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupAmountType(autoTop
 	c.require(createBillingPlanCreditGrantRequestBodyFieldAutoTopupAmountType)
 }
 
+// SetAutoTopupAvailability sets the AutoTopupAvailability field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupAvailability(autoTopupAvailability *BillingCreditAutoTopupAvailability) {
+	c.AutoTopupAvailability = autoTopupAvailability
+	c.require(createBillingPlanCreditGrantRequestBodyFieldAutoTopupAvailability)
+}
+
 // SetAutoTopupEnabled sets the AutoTopupEnabled field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupEnabled(autoTopupEnabled *bool) {
@@ -13130,6 +13263,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdCredits(a
 func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int64) {
 	c.AutoTopupThresholdPercent = autoTopupThresholdPercent
 	c.require(createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent)
+}
+
+// SetCanBuyBundles sets the CanBuyBundles field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetCanBuyBundles(canBuyBundles *bool) {
+	c.CanBuyBundles = canBuyBundles
+	c.require(createBillingPlanCreditGrantRequestBodyFieldCanBuyBundles)
 }
 
 // SetCreditAmount sets the CreditAmount field and marks it as non-optional;
@@ -23595,49 +23735,53 @@ func (p *PaymentMethodResponseData) String() string {
 var (
 	planCreditGrantViewFieldBillingCreditAutoTopupAmount           = big.NewInt(1 << 0)
 	planCreditGrantViewFieldBillingCreditAutoTopupAmountType       = big.NewInt(1 << 1)
-	planCreditGrantViewFieldBillingCreditAutoTopupEnabled          = big.NewInt(1 << 2)
-	planCreditGrantViewFieldBillingCreditAutoTopupExpiryType       = big.NewInt(1 << 3)
-	planCreditGrantViewFieldBillingCreditAutoTopupExpiryUnit       = big.NewInt(1 << 4)
-	planCreditGrantViewFieldBillingCreditAutoTopupExpiryUnitCount  = big.NewInt(1 << 5)
-	planCreditGrantViewFieldBillingCreditAutoTopupSelfService      = big.NewInt(1 << 6)
-	planCreditGrantViewFieldBillingCreditAutoTopupThresholdCredits = big.NewInt(1 << 7)
-	planCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent = big.NewInt(1 << 8)
-	planCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 9)
-	planCreditGrantViewFieldCredit                                 = big.NewInt(1 << 10)
-	planCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 11)
-	planCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 12)
-	planCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 13)
-	planCreditGrantViewFieldCreditID                               = big.NewInt(1 << 14)
-	planCreditGrantViewFieldCreditName                             = big.NewInt(1 << 15)
-	planCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 16)
-	planCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 17)
-	planCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 18)
-	planCreditGrantViewFieldID                                     = big.NewInt(1 << 19)
-	planCreditGrantViewFieldPlan                                   = big.NewInt(1 << 20)
-	planCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 21)
-	planCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 22)
-	planCreditGrantViewFieldPluralName                             = big.NewInt(1 << 23)
-	planCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 24)
-	planCreditGrantViewFieldResetStart                             = big.NewInt(1 << 25)
-	planCreditGrantViewFieldResetType                              = big.NewInt(1 << 26)
-	planCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 27)
-	planCreditGrantViewFieldSingularName                           = big.NewInt(1 << 28)
-	planCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 29)
+	planCreditGrantViewFieldBillingCreditAutoTopupAvailability     = big.NewInt(1 << 2)
+	planCreditGrantViewFieldBillingCreditAutoTopupEnabled          = big.NewInt(1 << 3)
+	planCreditGrantViewFieldBillingCreditAutoTopupExpiryType       = big.NewInt(1 << 4)
+	planCreditGrantViewFieldBillingCreditAutoTopupExpiryUnit       = big.NewInt(1 << 5)
+	planCreditGrantViewFieldBillingCreditAutoTopupExpiryUnitCount  = big.NewInt(1 << 6)
+	planCreditGrantViewFieldBillingCreditAutoTopupSelfService      = big.NewInt(1 << 7)
+	planCreditGrantViewFieldBillingCreditAutoTopupThresholdCredits = big.NewInt(1 << 8)
+	planCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent = big.NewInt(1 << 9)
+	planCreditGrantViewFieldBillingCreditCanBuyBundles             = big.NewInt(1 << 10)
+	planCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 11)
+	planCreditGrantViewFieldCredit                                 = big.NewInt(1 << 12)
+	planCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 13)
+	planCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 14)
+	planCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 15)
+	planCreditGrantViewFieldCreditID                               = big.NewInt(1 << 16)
+	planCreditGrantViewFieldCreditName                             = big.NewInt(1 << 17)
+	planCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 18)
+	planCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 19)
+	planCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 20)
+	planCreditGrantViewFieldID                                     = big.NewInt(1 << 21)
+	planCreditGrantViewFieldPlan                                   = big.NewInt(1 << 22)
+	planCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 23)
+	planCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 24)
+	planCreditGrantViewFieldPluralName                             = big.NewInt(1 << 25)
+	planCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 26)
+	planCreditGrantViewFieldResetStart                             = big.NewInt(1 << 27)
+	planCreditGrantViewFieldResetType                              = big.NewInt(1 << 28)
+	planCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 29)
+	planCreditGrantViewFieldSingularName                           = big.NewInt(1 << 30)
+	planCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 31)
 )
 
 type PlanCreditGrantView struct {
-	BillingCreditAutoTopupAmount           *int64                   `json:"billing_credit_auto_topup_amount,omitempty" url:"billing_credit_auto_topup_amount,omitempty"`
-	BillingCreditAutoTopupAmountType       *string                  `json:"billing_credit_auto_topup_amount_type,omitempty" url:"billing_credit_auto_topup_amount_type,omitempty"`
-	BillingCreditAutoTopupEnabled          bool                     `json:"billing_credit_auto_topup_enabled" url:"billing_credit_auto_topup_enabled"`
-	BillingCreditAutoTopupExpiryType       *BillingCreditExpiryType `json:"billing_credit_auto_topup_expiry_type,omitempty" url:"billing_credit_auto_topup_expiry_type,omitempty"`
-	BillingCreditAutoTopupExpiryUnit       *BillingCreditExpiryUnit `json:"billing_credit_auto_topup_expiry_unit,omitempty" url:"billing_credit_auto_topup_expiry_unit,omitempty"`
-	BillingCreditAutoTopupExpiryUnitCount  *int64                   `json:"billing_credit_auto_topup_expiry_unit_count,omitempty" url:"billing_credit_auto_topup_expiry_unit_count,omitempty"`
-	BillingCreditAutoTopupSelfService      bool                     `json:"billing_credit_auto_topup_self_service" url:"billing_credit_auto_topup_self_service"`
-	BillingCreditAutoTopupThresholdCredits *int64                   `json:"billing_credit_auto_topup_threshold_credits,omitempty" url:"billing_credit_auto_topup_threshold_credits,omitempty"`
-	BillingCreditAutoTopupThresholdPercent *int64                   `json:"billing_credit_auto_topup_threshold_percent,omitempty" url:"billing_credit_auto_topup_threshold_percent,omitempty"`
-	CreatedAt                              time.Time                `json:"created_at" url:"created_at"`
-	Credit                                 *BillingCreditView       `json:"credit,omitempty" url:"credit,omitempty"`
-	CreditAmount                           int64                    `json:"credit_amount" url:"credit_amount"`
+	BillingCreditAutoTopupAmount           *int64                              `json:"billing_credit_auto_topup_amount,omitempty" url:"billing_credit_auto_topup_amount,omitempty"`
+	BillingCreditAutoTopupAmountType       *string                             `json:"billing_credit_auto_topup_amount_type,omitempty" url:"billing_credit_auto_topup_amount_type,omitempty"`
+	BillingCreditAutoTopupAvailability     *BillingCreditAutoTopupAvailability `json:"billing_credit_auto_topup_availability,omitempty" url:"billing_credit_auto_topup_availability,omitempty"`
+	BillingCreditAutoTopupEnabled          bool                                `json:"billing_credit_auto_topup_enabled" url:"billing_credit_auto_topup_enabled"`
+	BillingCreditAutoTopupExpiryType       *BillingCreditExpiryType            `json:"billing_credit_auto_topup_expiry_type,omitempty" url:"billing_credit_auto_topup_expiry_type,omitempty"`
+	BillingCreditAutoTopupExpiryUnit       *BillingCreditExpiryUnit            `json:"billing_credit_auto_topup_expiry_unit,omitempty" url:"billing_credit_auto_topup_expiry_unit,omitempty"`
+	BillingCreditAutoTopupExpiryUnitCount  *int64                              `json:"billing_credit_auto_topup_expiry_unit_count,omitempty" url:"billing_credit_auto_topup_expiry_unit_count,omitempty"`
+	BillingCreditAutoTopupSelfService      bool                                `json:"billing_credit_auto_topup_self_service" url:"billing_credit_auto_topup_self_service"`
+	BillingCreditAutoTopupThresholdCredits *int64                              `json:"billing_credit_auto_topup_threshold_credits,omitempty" url:"billing_credit_auto_topup_threshold_credits,omitempty"`
+	BillingCreditAutoTopupThresholdPercent *int64                              `json:"billing_credit_auto_topup_threshold_percent,omitempty" url:"billing_credit_auto_topup_threshold_percent,omitempty"`
+	BillingCreditCanBuyBundles             bool                                `json:"billing_credit_can_buy_bundles" url:"billing_credit_can_buy_bundles"`
+	CreatedAt                              time.Time                           `json:"created_at" url:"created_at"`
+	Credit                                 *BillingCreditView                  `json:"credit,omitempty" url:"credit,omitempty"`
+	CreditAmount                           int64                               `json:"credit_amount" url:"credit_amount"`
 	// Deprecated field, will be removed in the future. Use Credit.Description instead.
 	CreditDescription string `json:"credit_description" url:"credit_description"`
 	// Deprecated field, will be removed in the future. Use Credit.Icon instead.
@@ -23681,6 +23825,13 @@ func (p *PlanCreditGrantView) GetBillingCreditAutoTopupAmountType() *string {
 		return nil
 	}
 	return p.BillingCreditAutoTopupAmountType
+}
+
+func (p *PlanCreditGrantView) GetBillingCreditAutoTopupAvailability() *BillingCreditAutoTopupAvailability {
+	if p == nil {
+		return nil
+	}
+	return p.BillingCreditAutoTopupAvailability
 }
 
 func (p *PlanCreditGrantView) GetBillingCreditAutoTopupEnabled() bool {
@@ -23730,6 +23881,13 @@ func (p *PlanCreditGrantView) GetBillingCreditAutoTopupThresholdPercent() *int64
 		return nil
 	}
 	return p.BillingCreditAutoTopupThresholdPercent
+}
+
+func (p *PlanCreditGrantView) GetBillingCreditCanBuyBundles() bool {
+	if p == nil {
+		return false
+	}
+	return p.BillingCreditCanBuyBundles
 }
 
 func (p *PlanCreditGrantView) GetCreatedAt() time.Time {
@@ -23907,6 +24065,13 @@ func (p *PlanCreditGrantView) SetBillingCreditAutoTopupAmountType(billingCreditA
 	p.require(planCreditGrantViewFieldBillingCreditAutoTopupAmountType)
 }
 
+// SetBillingCreditAutoTopupAvailability sets the BillingCreditAutoTopupAvailability field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantView) SetBillingCreditAutoTopupAvailability(billingCreditAutoTopupAvailability *BillingCreditAutoTopupAvailability) {
+	p.BillingCreditAutoTopupAvailability = billingCreditAutoTopupAvailability
+	p.require(planCreditGrantViewFieldBillingCreditAutoTopupAvailability)
+}
+
 // SetBillingCreditAutoTopupEnabled sets the BillingCreditAutoTopupEnabled field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanCreditGrantView) SetBillingCreditAutoTopupEnabled(billingCreditAutoTopupEnabled bool) {
@@ -23954,6 +24119,13 @@ func (p *PlanCreditGrantView) SetBillingCreditAutoTopupThresholdCredits(billingC
 func (p *PlanCreditGrantView) SetBillingCreditAutoTopupThresholdPercent(billingCreditAutoTopupThresholdPercent *int64) {
 	p.BillingCreditAutoTopupThresholdPercent = billingCreditAutoTopupThresholdPercent
 	p.require(planCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent)
+}
+
+// SetBillingCreditCanBuyBundles sets the BillingCreditCanBuyBundles field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantView) SetBillingCreditCanBuyBundles(billingCreditCanBuyBundles bool) {
+	p.BillingCreditCanBuyBundles = billingCreditCanBuyBundles
+	p.require(planCreditGrantViewFieldBillingCreditCanBuyBundles)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -24462,30 +24634,32 @@ var (
 	planDetailResponseDataFieldChargeType            = big.NewInt(1 << 5)
 	planDetailResponseDataFieldCompanyCount          = big.NewInt(1 << 6)
 	planDetailResponseDataFieldCompanyID             = big.NewInt(1 << 7)
-	planDetailResponseDataFieldCompanyName           = big.NewInt(1 << 8)
-	planDetailResponseDataFieldControlledBy          = big.NewInt(1 << 9)
-	planDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 10)
-	planDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 11)
-	planDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 12)
-	planDetailResponseDataFieldDescription           = big.NewInt(1 << 13)
-	planDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 14)
-	planDetailResponseDataFieldEntitlements          = big.NewInt(1 << 15)
-	planDetailResponseDataFieldFeatures              = big.NewInt(1 << 16)
-	planDetailResponseDataFieldIcon                  = big.NewInt(1 << 17)
-	planDetailResponseDataFieldID                    = big.NewInt(1 << 18)
-	planDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 19)
-	planDetailResponseDataFieldIsDefault             = big.NewInt(1 << 20)
-	planDetailResponseDataFieldIsFree                = big.NewInt(1 << 21)
-	planDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 22)
-	planDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 23)
-	planDetailResponseDataFieldName                  = big.NewInt(1 << 24)
-	planDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 25)
-	planDetailResponseDataFieldPlanType              = big.NewInt(1 << 26)
-	planDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 27)
-	planDetailResponseDataFieldTrialDays             = big.NewInt(1 << 28)
-	planDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 29)
-	planDetailResponseDataFieldVersions              = big.NewInt(1 << 30)
-	planDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 31)
+	planDetailResponseDataFieldCompanyLogoURL        = big.NewInt(1 << 8)
+	planDetailResponseDataFieldCompanyName           = big.NewInt(1 << 9)
+	planDetailResponseDataFieldControlledBy          = big.NewInt(1 << 10)
+	planDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 11)
+	planDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 12)
+	planDetailResponseDataFieldCredits               = big.NewInt(1 << 13)
+	planDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 14)
+	planDetailResponseDataFieldDescription           = big.NewInt(1 << 15)
+	planDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 16)
+	planDetailResponseDataFieldEntitlements          = big.NewInt(1 << 17)
+	planDetailResponseDataFieldFeatures              = big.NewInt(1 << 18)
+	planDetailResponseDataFieldIcon                  = big.NewInt(1 << 19)
+	planDetailResponseDataFieldID                    = big.NewInt(1 << 20)
+	planDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 21)
+	planDetailResponseDataFieldIsDefault             = big.NewInt(1 << 22)
+	planDetailResponseDataFieldIsFree                = big.NewInt(1 << 23)
+	planDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 24)
+	planDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 25)
+	planDetailResponseDataFieldName                  = big.NewInt(1 << 26)
+	planDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 27)
+	planDetailResponseDataFieldPlanType              = big.NewInt(1 << 28)
+	planDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 29)
+	planDetailResponseDataFieldTrialDays             = big.NewInt(1 << 30)
+	planDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 31)
+	planDetailResponseDataFieldVersions              = big.NewInt(1 << 32)
+	planDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 33)
 )
 
 type PlanDetailResponseData struct {
@@ -24497,10 +24671,12 @@ type PlanDetailResponseData struct {
 	ChargeType            ChargeType                            `json:"charge_type" url:"charge_type"`
 	CompanyCount          int64                                 `json:"company_count" url:"company_count"`
 	CompanyID             *string                               `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyLogoURL        *string                               `json:"company_logo_url,omitempty" url:"company_logo_url,omitempty"`
 	CompanyName           *string                               `json:"company_name,omitempty" url:"company_name,omitempty"`
 	ControlledBy          BillingProviderType                   `json:"controlled_by" url:"controlled_by"`
 	CopiedFromPlanID      *string                               `json:"copied_from_plan_id,omitempty" url:"copied_from_plan_id,omitempty"`
 	CreatedAt             time.Time                             `json:"created_at" url:"created_at"`
+	Credits               []*BillingCreditResponseData          `json:"credits" url:"credits"`
 	CurrencyPrices        []*PlanCurrencyPricesResponseData     `json:"currency_prices" url:"currency_prices"`
 	Description           string                                `json:"description" url:"description"`
 	DraftVersion          *PlanVersionResponseData              `json:"draft_version,omitempty" url:"draft_version,omitempty"`
@@ -24586,6 +24762,13 @@ func (p *PlanDetailResponseData) GetCompanyID() *string {
 	return p.CompanyID
 }
 
+func (p *PlanDetailResponseData) GetCompanyLogoURL() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CompanyLogoURL
+}
+
 func (p *PlanDetailResponseData) GetCompanyName() *string {
 	if p == nil {
 		return nil
@@ -24612,6 +24795,13 @@ func (p *PlanDetailResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return p.CreatedAt
+}
+
+func (p *PlanDetailResponseData) GetCredits() []*BillingCreditResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Credits
 }
 
 func (p *PlanDetailResponseData) GetCurrencyPrices() []*PlanCurrencyPricesResponseData {
@@ -24824,6 +25014,13 @@ func (p *PlanDetailResponseData) SetCompanyID(companyID *string) {
 	p.require(planDetailResponseDataFieldCompanyID)
 }
 
+// SetCompanyLogoURL sets the CompanyLogoURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanDetailResponseData) SetCompanyLogoURL(companyLogoURL *string) {
+	p.CompanyLogoURL = companyLogoURL
+	p.require(planDetailResponseDataFieldCompanyLogoURL)
+}
+
 // SetCompanyName sets the CompanyName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanDetailResponseData) SetCompanyName(companyName *string) {
@@ -24850,6 +25047,13 @@ func (p *PlanDetailResponseData) SetCopiedFromPlanID(copiedFromPlanID *string) {
 func (p *PlanDetailResponseData) SetCreatedAt(createdAt time.Time) {
 	p.CreatedAt = createdAt
 	p.require(planDetailResponseDataFieldCreatedAt)
+}
+
+// SetCredits sets the Credits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanDetailResponseData) SetCredits(credits []*BillingCreditResponseData) {
+	p.Credits = credits
+	p.require(planDetailResponseDataFieldCredits)
 }
 
 // SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
@@ -32477,41 +32681,45 @@ var (
 	updateBillingPlanCreditGrantRequestBodyFieldApplyToExisting           = big.NewInt(1 << 0)
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupAmount           = big.NewInt(1 << 1)
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupAmountType       = big.NewInt(1 << 2)
-	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupEnabled          = big.NewInt(1 << 3)
-	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryType       = big.NewInt(1 << 4)
-	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnit       = big.NewInt(1 << 5)
-	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount  = big.NewInt(1 << 6)
-	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupSelfService      = big.NewInt(1 << 7)
-	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits = big.NewInt(1 << 8)
-	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 9)
-	updateBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 10)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 11)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 12)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 13)
-	updateBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 14)
-	updateBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 15)
-	updateBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 16)
-	updateBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 17)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupAvailability     = big.NewInt(1 << 3)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupEnabled          = big.NewInt(1 << 4)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryType       = big.NewInt(1 << 5)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnit       = big.NewInt(1 << 6)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupExpiryUnitCount  = big.NewInt(1 << 7)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupSelfService      = big.NewInt(1 << 8)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits = big.NewInt(1 << 9)
+	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 10)
+	updateBillingPlanCreditGrantRequestBodyFieldCanBuyBundles             = big.NewInt(1 << 11)
+	updateBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 12)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 13)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 14)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 15)
+	updateBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 16)
+	updateBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 17)
+	updateBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 18)
+	updateBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 19)
 )
 
 type UpdateBillingPlanCreditGrantRequestBody struct {
-	ApplyToExisting           *bool                              `json:"apply_to_existing,omitempty" url:"apply_to_existing,omitempty"`
-	AutoTopupAmount           *int64                             `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
-	AutoTopupAmountType       *CreditAutoTopupAmountType         `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
-	AutoTopupEnabled          *bool                              `json:"auto_topup_enabled,omitempty" url:"auto_topup_enabled,omitempty"`
-	AutoTopupExpiryType       *BillingCreditExpiryType           `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
-	AutoTopupExpiryUnit       *BillingCreditExpiryUnit           `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
-	AutoTopupExpiryUnitCount  *int64                             `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
-	AutoTopupSelfService      *bool                              `json:"auto_topup_self_service,omitempty" url:"auto_topup_self_service,omitempty"`
-	AutoTopupThresholdCredits *int64                             `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
-	AutoTopupThresholdPercent *int64                             `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
-	CreditAmount              *int64                             `json:"credit_amount,omitempty" url:"credit_amount,omitempty"`
-	ExpiryType                *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
-	ExpiryUnit                *BillingCreditExpiryUnit           `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount           *int64                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	ResetCadence              BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
-	ResetStart                BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
-	ResetType                 *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
+	ApplyToExisting           *bool                               `json:"apply_to_existing,omitempty" url:"apply_to_existing,omitempty"`
+	AutoTopupAmount           *int64                              `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
+	AutoTopupAmountType       *CreditAutoTopupAmountType          `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
+	AutoTopupAvailability     *BillingCreditAutoTopupAvailability `json:"auto_topup_availability,omitempty" url:"auto_topup_availability,omitempty"`
+	AutoTopupEnabled          *bool                               `json:"auto_topup_enabled,omitempty" url:"auto_topup_enabled,omitempty"`
+	AutoTopupExpiryType       *BillingCreditExpiryType            `json:"auto_topup_expiry_type,omitempty" url:"auto_topup_expiry_type,omitempty"`
+	AutoTopupExpiryUnit       *BillingCreditExpiryUnit            `json:"auto_topup_expiry_unit,omitempty" url:"auto_topup_expiry_unit,omitempty"`
+	AutoTopupExpiryUnitCount  *int64                              `json:"auto_topup_expiry_unit_count,omitempty" url:"auto_topup_expiry_unit_count,omitempty"`
+	AutoTopupSelfService      *bool                               `json:"auto_topup_self_service,omitempty" url:"auto_topup_self_service,omitempty"`
+	AutoTopupThresholdCredits *int64                              `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
+	AutoTopupThresholdPercent *int64                              `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
+	CanBuyBundles             *bool                               `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
+	CreditAmount              *int64                              `json:"credit_amount,omitempty" url:"credit_amount,omitempty"`
+	ExpiryType                *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
+	ExpiryUnit                *BillingCreditExpiryUnit            `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
+	ExpiryUnitCount           *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ResetCadence              BillingPlanCreditGrantResetCadence  `json:"reset_cadence" url:"reset_cadence"`
+	ResetStart                BillingPlanCreditGrantResetStart    `json:"reset_start" url:"reset_start"`
+	ResetType                 *BillingPlanCreditGrantResetType    `json:"reset_type,omitempty" url:"reset_type,omitempty"`
 	// Percentage of unused credits that carry over when this grant resets. Only applies when reset_type is plan_period. Rolled-over credits expire at the next reset and are not rolled again.
 	RolloverPercentage *int64 `json:"rollover_percentage,omitempty" url:"rollover_percentage,omitempty"`
 
@@ -32534,6 +32742,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupAmount() *int64 {
 		return nil
 	}
 	return u.AutoTopupAmount
+}
+
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupAvailability() *BillingCreditAutoTopupAvailability {
+	if u == nil {
+		return nil
+	}
+	return u.AutoTopupAvailability
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupEnabled() *bool {
@@ -32583,6 +32798,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent()
 		return nil
 	}
 	return u.AutoTopupThresholdPercent
+}
+
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetCanBuyBundles() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.CanBuyBundles
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetCreditAmount() *int64 {
@@ -32676,6 +32898,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupAmountType(autoTop
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldAutoTopupAmountType)
 }
 
+// SetAutoTopupAvailability sets the AutoTopupAvailability field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupAvailability(autoTopupAvailability *BillingCreditAutoTopupAvailability) {
+	u.AutoTopupAvailability = autoTopupAvailability
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldAutoTopupAvailability)
+}
+
 // SetAutoTopupEnabled sets the AutoTopupEnabled field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupEnabled(autoTopupEnabled *bool) {
@@ -32723,6 +32952,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdCredits(a
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int64) {
 	u.AutoTopupThresholdPercent = autoTopupThresholdPercent
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent)
+}
+
+// SetCanBuyBundles sets the CanBuyBundles field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetCanBuyBundles(canBuyBundles *bool) {
+	u.CanBuyBundles = canBuyBundles
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldCanBuyBundles)
 }
 
 // SetCreditAmount sets the CreditAmount field and marks it as non-optional;

@@ -143,22 +143,24 @@ func (c *CheckoutDataRequestBody) MarshalJSON() ([]byte, error) {
 var (
 	changeSubscriptionInternalRequestBodyFieldAddOnIDs           = big.NewInt(1 << 0)
 	changeSubscriptionInternalRequestBodyFieldAutoTopupOverrides = big.NewInt(1 << 1)
-	changeSubscriptionInternalRequestBodyFieldCompanyID          = big.NewInt(1 << 2)
-	changeSubscriptionInternalRequestBodyFieldCouponExternalID   = big.NewInt(1 << 3)
-	changeSubscriptionInternalRequestBodyFieldCreditBundles      = big.NewInt(1 << 4)
-	changeSubscriptionInternalRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 5)
-	changeSubscriptionInternalRequestBodyFieldNewPlanID          = big.NewInt(1 << 6)
-	changeSubscriptionInternalRequestBodyFieldNewPriceID         = big.NewInt(1 << 7)
-	changeSubscriptionInternalRequestBodyFieldOptInAccepted      = big.NewInt(1 << 8)
-	changeSubscriptionInternalRequestBodyFieldPayInAdvance       = big.NewInt(1 << 9)
-	changeSubscriptionInternalRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 10)
-	changeSubscriptionInternalRequestBodyFieldPromoCode          = big.NewInt(1 << 11)
-	changeSubscriptionInternalRequestBodyFieldSkipTrial          = big.NewInt(1 << 12)
+	changeSubscriptionInternalRequestBodyFieldBillingEntityID    = big.NewInt(1 << 2)
+	changeSubscriptionInternalRequestBodyFieldCompanyID          = big.NewInt(1 << 3)
+	changeSubscriptionInternalRequestBodyFieldCouponExternalID   = big.NewInt(1 << 4)
+	changeSubscriptionInternalRequestBodyFieldCreditBundles      = big.NewInt(1 << 5)
+	changeSubscriptionInternalRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 6)
+	changeSubscriptionInternalRequestBodyFieldNewPlanID          = big.NewInt(1 << 7)
+	changeSubscriptionInternalRequestBodyFieldNewPriceID         = big.NewInt(1 << 8)
+	changeSubscriptionInternalRequestBodyFieldOptInAccepted      = big.NewInt(1 << 9)
+	changeSubscriptionInternalRequestBodyFieldPayInAdvance       = big.NewInt(1 << 10)
+	changeSubscriptionInternalRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 11)
+	changeSubscriptionInternalRequestBodyFieldPromoCode          = big.NewInt(1 << 12)
+	changeSubscriptionInternalRequestBodyFieldSkipTrial          = big.NewInt(1 << 13)
 )
 
 type ChangeSubscriptionInternalRequestBody struct {
 	AddOnIDs           []*UpdateAddOnRequestBody             `json:"add_on_ids" url:"add_on_ids"`
 	AutoTopupOverrides []*UpdateAutoTopupOverrideRequestBody `json:"auto_topup_overrides" url:"auto_topup_overrides"`
+	BillingEntityID    *string                               `json:"billing_entity_id,omitempty" url:"billing_entity_id,omitempty"`
 	CompanyID          string                                `json:"company_id" url:"company_id"`
 	CouponExternalID   *string                               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles      []*UpdateCreditBundleRequestBody      `json:"credit_bundles" url:"credit_bundles"`
@@ -190,6 +192,13 @@ func (c *ChangeSubscriptionInternalRequestBody) GetAutoTopupOverrides() []*Updat
 		return nil
 	}
 	return c.AutoTopupOverrides
+}
+
+func (c *ChangeSubscriptionInternalRequestBody) GetBillingEntityID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingEntityID
 }
 
 func (c *ChangeSubscriptionInternalRequestBody) GetCompanyID() string {
@@ -295,6 +304,13 @@ func (c *ChangeSubscriptionInternalRequestBody) SetAddOnIDs(addOnIDs []*UpdateAd
 func (c *ChangeSubscriptionInternalRequestBody) SetAutoTopupOverrides(autoTopupOverrides []*UpdateAutoTopupOverrideRequestBody) {
 	c.AutoTopupOverrides = autoTopupOverrides
 	c.require(changeSubscriptionInternalRequestBodyFieldAutoTopupOverrides)
+}
+
+// SetBillingEntityID sets the BillingEntityID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ChangeSubscriptionInternalRequestBody) SetBillingEntityID(billingEntityID *string) {
+	c.BillingEntityID = billingEntityID
+	c.require(changeSubscriptionInternalRequestBodyFieldBillingEntityID)
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1429,16 +1445,17 @@ var (
 	managePlanRequestFieldBasePlanID               = big.NewInt(1 << 1)
 	managePlanRequestFieldBasePlanPriceID          = big.NewInt(1 << 2)
 	managePlanRequestFieldBasePlanVersionID        = big.NewInt(1 << 3)
-	managePlanRequestFieldCancelImmediately        = big.NewInt(1 << 4)
-	managePlanRequestFieldCompanyID                = big.NewInt(1 << 5)
-	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 6)
-	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 7)
-	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 8)
-	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 9)
-	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 10)
-	managePlanRequestFieldPromoCode                = big.NewInt(1 << 11)
-	managePlanRequestFieldProrate                  = big.NewInt(1 << 12)
-	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 13)
+	managePlanRequestFieldBillingEntityID          = big.NewInt(1 << 4)
+	managePlanRequestFieldCancelImmediately        = big.NewInt(1 << 5)
+	managePlanRequestFieldCompanyID                = big.NewInt(1 << 6)
+	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 7)
+	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 8)
+	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 9)
+	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 10)
+	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 11)
+	managePlanRequestFieldPromoCode                = big.NewInt(1 << 12)
+	managePlanRequestFieldProrate                  = big.NewInt(1 << 13)
+	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 14)
 )
 
 type ManagePlanRequest struct {
@@ -1446,6 +1463,8 @@ type ManagePlanRequest struct {
 	BasePlanID        *string          `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
 	BasePlanPriceID   *string          `json:"base_plan_price_id,omitempty" url:"base_plan_price_id,omitempty"`
 	BasePlanVersionID *string          `json:"base_plan_version_id,omitempty" url:"base_plan_version_id,omitempty"`
+	// The company that pays for this subscription. Must already have a Stripe customer. Only honored when starting a new subscription.
+	BillingEntityID *string `json:"billing_entity_id,omitempty" url:"billing_entity_id,omitempty"`
 	// If false, subscription cancels at period end. Only applies when removing all plans. Defaults to true.
 	CancelImmediately        *bool                            `json:"cancel_immediately,omitempty" url:"cancel_immediately,omitempty"`
 	CompanyID                string                           `json:"company_id" url:"company_id"`
@@ -1492,6 +1511,13 @@ func (m *ManagePlanRequest) GetBasePlanVersionID() *string {
 		return nil
 	}
 	return m.BasePlanVersionID
+}
+
+func (m *ManagePlanRequest) GetBillingEntityID() *string {
+	if m == nil {
+		return nil
+	}
+	return m.BillingEntityID
 }
 
 func (m *ManagePlanRequest) GetCancelImmediately() *bool {
@@ -1604,6 +1630,13 @@ func (m *ManagePlanRequest) SetBasePlanPriceID(basePlanPriceID *string) {
 func (m *ManagePlanRequest) SetBasePlanVersionID(basePlanVersionID *string) {
 	m.BasePlanVersionID = basePlanVersionID
 	m.require(managePlanRequestFieldBasePlanVersionID)
+}
+
+// SetBillingEntityID sets the BillingEntityID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetBillingEntityID(billingEntityID *string) {
+	m.BillingEntityID = billingEntityID
+	m.require(managePlanRequestFieldBillingEntityID)
 }
 
 // SetCancelImmediately sets the CancelImmediately field and marks it as non-optional;

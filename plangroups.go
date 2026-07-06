@@ -2415,33 +2415,35 @@ var (
 	planGroupPlanDetailResponseDataFieldChargeType            = big.NewInt(1 << 6)
 	planGroupPlanDetailResponseDataFieldCompanyCount          = big.NewInt(1 << 7)
 	planGroupPlanDetailResponseDataFieldCompanyID             = big.NewInt(1 << 8)
-	planGroupPlanDetailResponseDataFieldCompanyName           = big.NewInt(1 << 9)
-	planGroupPlanDetailResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 10)
-	planGroupPlanDetailResponseDataFieldControlledBy          = big.NewInt(1 << 11)
-	planGroupPlanDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 12)
-	planGroupPlanDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 13)
-	planGroupPlanDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 14)
-	planGroupPlanDetailResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 15)
-	planGroupPlanDetailResponseDataFieldDescription           = big.NewInt(1 << 16)
-	planGroupPlanDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 17)
-	planGroupPlanDetailResponseDataFieldEntitlements          = big.NewInt(1 << 18)
-	planGroupPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 19)
-	planGroupPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 20)
-	planGroupPlanDetailResponseDataFieldID                    = big.NewInt(1 << 21)
-	planGroupPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 22)
-	planGroupPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 23)
-	planGroupPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 24)
-	planGroupPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 25)
-	planGroupPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 26)
-	planGroupPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 27)
-	planGroupPlanDetailResponseDataFieldName                  = big.NewInt(1 << 28)
-	planGroupPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 29)
-	planGroupPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 30)
-	planGroupPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 31)
-	planGroupPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 32)
-	planGroupPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 33)
-	planGroupPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 34)
-	planGroupPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 35)
+	planGroupPlanDetailResponseDataFieldCompanyLogoURL        = big.NewInt(1 << 9)
+	planGroupPlanDetailResponseDataFieldCompanyName           = big.NewInt(1 << 10)
+	planGroupPlanDetailResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 11)
+	planGroupPlanDetailResponseDataFieldControlledBy          = big.NewInt(1 << 12)
+	planGroupPlanDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 13)
+	planGroupPlanDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 14)
+	planGroupPlanDetailResponseDataFieldCredits               = big.NewInt(1 << 15)
+	planGroupPlanDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 16)
+	planGroupPlanDetailResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 17)
+	planGroupPlanDetailResponseDataFieldDescription           = big.NewInt(1 << 18)
+	planGroupPlanDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 19)
+	planGroupPlanDetailResponseDataFieldEntitlements          = big.NewInt(1 << 20)
+	planGroupPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 21)
+	planGroupPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 22)
+	planGroupPlanDetailResponseDataFieldID                    = big.NewInt(1 << 23)
+	planGroupPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 24)
+	planGroupPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 25)
+	planGroupPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 26)
+	planGroupPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 27)
+	planGroupPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 28)
+	planGroupPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 29)
+	planGroupPlanDetailResponseDataFieldName                  = big.NewInt(1 << 30)
+	planGroupPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 31)
+	planGroupPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 32)
+	planGroupPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 33)
+	planGroupPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 34)
+	planGroupPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 35)
+	planGroupPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 36)
+	planGroupPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 37)
 )
 
 type PlanGroupPlanDetailResponseData struct {
@@ -2454,11 +2456,13 @@ type PlanGroupPlanDetailResponseData struct {
 	ChargeType            ChargeType                            `json:"charge_type" url:"charge_type"`
 	CompanyCount          int64                                 `json:"company_count" url:"company_count"`
 	CompanyID             *string                               `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyLogoURL        *string                               `json:"company_logo_url,omitempty" url:"company_logo_url,omitempty"`
 	CompanyName           *string                               `json:"company_name,omitempty" url:"company_name,omitempty"`
 	CompatiblePlanIDs     []string                              `json:"compatible_plan_ids" url:"compatible_plan_ids"`
 	ControlledBy          BillingProviderType                   `json:"controlled_by" url:"controlled_by"`
 	CopiedFromPlanID      *string                               `json:"copied_from_plan_id,omitempty" url:"copied_from_plan_id,omitempty"`
 	CreatedAt             time.Time                             `json:"created_at" url:"created_at"`
+	Credits               []*BillingCreditResponseData          `json:"credits" url:"credits"`
 	CurrencyPrices        []*PlanCurrencyPricesResponseData     `json:"currency_prices" url:"currency_prices"`
 	CustomPlanConfig      *CustomPlanViewConfigResponseData     `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
 	Description           string                                `json:"description" url:"description"`
@@ -2553,6 +2557,13 @@ func (p *PlanGroupPlanDetailResponseData) GetCompanyID() *string {
 	return p.CompanyID
 }
 
+func (p *PlanGroupPlanDetailResponseData) GetCompanyLogoURL() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CompanyLogoURL
+}
+
 func (p *PlanGroupPlanDetailResponseData) GetCompanyName() *string {
 	if p == nil {
 		return nil
@@ -2586,6 +2597,13 @@ func (p *PlanGroupPlanDetailResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return p.CreatedAt
+}
+
+func (p *PlanGroupPlanDetailResponseData) GetCredits() []*BillingCreditResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Credits
 }
 
 func (p *PlanGroupPlanDetailResponseData) GetCurrencyPrices() []*PlanCurrencyPricesResponseData {
@@ -2819,6 +2837,13 @@ func (p *PlanGroupPlanDetailResponseData) SetCompanyID(companyID *string) {
 	p.require(planGroupPlanDetailResponseDataFieldCompanyID)
 }
 
+// SetCompanyLogoURL sets the CompanyLogoURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanDetailResponseData) SetCompanyLogoURL(companyLogoURL *string) {
+	p.CompanyLogoURL = companyLogoURL
+	p.require(planGroupPlanDetailResponseDataFieldCompanyLogoURL)
+}
+
 // SetCompanyName sets the CompanyName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanGroupPlanDetailResponseData) SetCompanyName(companyName *string) {
@@ -2852,6 +2877,13 @@ func (p *PlanGroupPlanDetailResponseData) SetCopiedFromPlanID(copiedFromPlanID *
 func (p *PlanGroupPlanDetailResponseData) SetCreatedAt(createdAt time.Time) {
 	p.CreatedAt = createdAt
 	p.require(planGroupPlanDetailResponseDataFieldCreatedAt)
+}
+
+// SetCredits sets the Credits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanDetailResponseData) SetCredits(credits []*BillingCreditResponseData) {
+	p.Credits = credits
+	p.require(planGroupPlanDetailResponseDataFieldCredits)
 }
 
 // SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;

@@ -171,6 +171,38 @@ func (c *Client) LookupCompany(
 	return response.Body, nil
 }
 
+func (c *Client) GetCompanyBillingEntity(
+	ctx context.Context,
+	request *schematichq.GetCompanyBillingEntityRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetCompanyBillingEntityResponse, error) {
+	response, err := c.WithRawResponse.GetCompanyBillingEntity(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) GetBillingEntityChildSubscriptions(
+	ctx context.Context,
+	request *schematichq.GetBillingEntityChildSubscriptionsRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetBillingEntityChildSubscriptionsResponse, error) {
+	response, err := c.WithRawResponse.GetBillingEntityChildSubscriptions(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) ListCompanyMemberships(
 	ctx context.Context,
 	request *schematichq.ListCompanyMembershipsRequest,

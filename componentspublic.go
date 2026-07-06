@@ -20,34 +20,36 @@ var (
 	planViewPublicResponseDataFieldChargeType            = big.NewInt(1 << 6)
 	planViewPublicResponseDataFieldCompanyCount          = big.NewInt(1 << 7)
 	planViewPublicResponseDataFieldCompanyID             = big.NewInt(1 << 8)
-	planViewPublicResponseDataFieldCompanyName           = big.NewInt(1 << 9)
-	planViewPublicResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 10)
-	planViewPublicResponseDataFieldControlledBy          = big.NewInt(1 << 11)
-	planViewPublicResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 12)
-	planViewPublicResponseDataFieldCreatedAt             = big.NewInt(1 << 13)
-	planViewPublicResponseDataFieldCurrencyPrices        = big.NewInt(1 << 14)
-	planViewPublicResponseDataFieldCustom                = big.NewInt(1 << 15)
-	planViewPublicResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 16)
-	planViewPublicResponseDataFieldDescription           = big.NewInt(1 << 17)
-	planViewPublicResponseDataFieldDraftVersion          = big.NewInt(1 << 18)
-	planViewPublicResponseDataFieldEntitlements          = big.NewInt(1 << 19)
-	planViewPublicResponseDataFieldFeatures              = big.NewInt(1 << 20)
-	planViewPublicResponseDataFieldIcon                  = big.NewInt(1 << 21)
-	planViewPublicResponseDataFieldID                    = big.NewInt(1 << 22)
-	planViewPublicResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 23)
-	planViewPublicResponseDataFieldIsCustom              = big.NewInt(1 << 24)
-	planViewPublicResponseDataFieldIsDefault             = big.NewInt(1 << 25)
-	planViewPublicResponseDataFieldIsFree                = big.NewInt(1 << 26)
-	planViewPublicResponseDataFieldIsTrialable           = big.NewInt(1 << 27)
-	planViewPublicResponseDataFieldMonthlyPrice          = big.NewInt(1 << 28)
-	planViewPublicResponseDataFieldName                  = big.NewInt(1 << 29)
-	planViewPublicResponseDataFieldOneTimePrice          = big.NewInt(1 << 30)
-	planViewPublicResponseDataFieldPlanType              = big.NewInt(1 << 31)
-	planViewPublicResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 32)
-	planViewPublicResponseDataFieldTrialDays             = big.NewInt(1 << 33)
-	planViewPublicResponseDataFieldUpdatedAt             = big.NewInt(1 << 34)
-	planViewPublicResponseDataFieldVersions              = big.NewInt(1 << 35)
-	planViewPublicResponseDataFieldYearlyPrice           = big.NewInt(1 << 36)
+	planViewPublicResponseDataFieldCompanyLogoURL        = big.NewInt(1 << 9)
+	planViewPublicResponseDataFieldCompanyName           = big.NewInt(1 << 10)
+	planViewPublicResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 11)
+	planViewPublicResponseDataFieldControlledBy          = big.NewInt(1 << 12)
+	planViewPublicResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 13)
+	planViewPublicResponseDataFieldCreatedAt             = big.NewInt(1 << 14)
+	planViewPublicResponseDataFieldCredits               = big.NewInt(1 << 15)
+	planViewPublicResponseDataFieldCurrencyPrices        = big.NewInt(1 << 16)
+	planViewPublicResponseDataFieldCustom                = big.NewInt(1 << 17)
+	planViewPublicResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 18)
+	planViewPublicResponseDataFieldDescription           = big.NewInt(1 << 19)
+	planViewPublicResponseDataFieldDraftVersion          = big.NewInt(1 << 20)
+	planViewPublicResponseDataFieldEntitlements          = big.NewInt(1 << 21)
+	planViewPublicResponseDataFieldFeatures              = big.NewInt(1 << 22)
+	planViewPublicResponseDataFieldIcon                  = big.NewInt(1 << 23)
+	planViewPublicResponseDataFieldID                    = big.NewInt(1 << 24)
+	planViewPublicResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 25)
+	planViewPublicResponseDataFieldIsCustom              = big.NewInt(1 << 26)
+	planViewPublicResponseDataFieldIsDefault             = big.NewInt(1 << 27)
+	planViewPublicResponseDataFieldIsFree                = big.NewInt(1 << 28)
+	planViewPublicResponseDataFieldIsTrialable           = big.NewInt(1 << 29)
+	planViewPublicResponseDataFieldMonthlyPrice          = big.NewInt(1 << 30)
+	planViewPublicResponseDataFieldName                  = big.NewInt(1 << 31)
+	planViewPublicResponseDataFieldOneTimePrice          = big.NewInt(1 << 32)
+	planViewPublicResponseDataFieldPlanType              = big.NewInt(1 << 33)
+	planViewPublicResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 34)
+	planViewPublicResponseDataFieldTrialDays             = big.NewInt(1 << 35)
+	planViewPublicResponseDataFieldUpdatedAt             = big.NewInt(1 << 36)
+	planViewPublicResponseDataFieldVersions              = big.NewInt(1 << 37)
+	planViewPublicResponseDataFieldYearlyPrice           = big.NewInt(1 << 38)
 )
 
 type PlanViewPublicResponseData struct {
@@ -60,11 +62,13 @@ type PlanViewPublicResponseData struct {
 	ChargeType            ChargeType                         `json:"charge_type" url:"charge_type"`
 	CompanyCount          int64                              `json:"company_count" url:"company_count"`
 	CompanyID             *string                            `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyLogoURL        *string                            `json:"company_logo_url,omitempty" url:"company_logo_url,omitempty"`
 	CompanyName           *string                            `json:"company_name,omitempty" url:"company_name,omitempty"`
 	CompatiblePlanIDs     []string                           `json:"compatible_plan_ids" url:"compatible_plan_ids"`
 	ControlledBy          BillingProviderType                `json:"controlled_by" url:"controlled_by"`
 	CopiedFromPlanID      *string                            `json:"copied_from_plan_id,omitempty" url:"copied_from_plan_id,omitempty"`
 	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
+	Credits               []*BillingCreditResponseData       `json:"credits" url:"credits"`
 	CurrencyPrices        []*PlanCurrencyPricesResponseData  `json:"currency_prices" url:"currency_prices"`
 	Custom                bool                               `json:"custom" url:"custom"`
 	CustomPlanConfig      *CustomPlanConfig                  `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
@@ -160,6 +164,13 @@ func (p *PlanViewPublicResponseData) GetCompanyID() *string {
 	return p.CompanyID
 }
 
+func (p *PlanViewPublicResponseData) GetCompanyLogoURL() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CompanyLogoURL
+}
+
 func (p *PlanViewPublicResponseData) GetCompanyName() *string {
 	if p == nil {
 		return nil
@@ -193,6 +204,13 @@ func (p *PlanViewPublicResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return p.CreatedAt
+}
+
+func (p *PlanViewPublicResponseData) GetCredits() []*BillingCreditResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Credits
 }
 
 func (p *PlanViewPublicResponseData) GetCurrencyPrices() []*PlanCurrencyPricesResponseData {
@@ -433,6 +451,13 @@ func (p *PlanViewPublicResponseData) SetCompanyID(companyID *string) {
 	p.require(planViewPublicResponseDataFieldCompanyID)
 }
 
+// SetCompanyLogoURL sets the CompanyLogoURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanViewPublicResponseData) SetCompanyLogoURL(companyLogoURL *string) {
+	p.CompanyLogoURL = companyLogoURL
+	p.require(planViewPublicResponseDataFieldCompanyLogoURL)
+}
+
 // SetCompanyName sets the CompanyName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanViewPublicResponseData) SetCompanyName(companyName *string) {
@@ -466,6 +491,13 @@ func (p *PlanViewPublicResponseData) SetCopiedFromPlanID(copiedFromPlanID *strin
 func (p *PlanViewPublicResponseData) SetCreatedAt(createdAt time.Time) {
 	p.CreatedAt = createdAt
 	p.require(planViewPublicResponseDataFieldCreatedAt)
+}
+
+// SetCredits sets the Credits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanViewPublicResponseData) SetCredits(credits []*BillingCreditResponseData) {
+	p.Credits = credits
+	p.require(planViewPublicResponseDataFieldCredits)
 }
 
 // SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;

@@ -78,11 +78,13 @@ func (c *CancelSubscriptionRequest) MarshalJSON() ([]byte, error) {
 
 var (
 	checkoutDataRequestBodyFieldCompanyID      = big.NewInt(1 << 0)
-	checkoutDataRequestBodyFieldSelectedPlanID = big.NewInt(1 << 1)
+	checkoutDataRequestBodyFieldCurrency       = big.NewInt(1 << 1)
+	checkoutDataRequestBodyFieldSelectedPlanID = big.NewInt(1 << 2)
 )
 
 type CheckoutDataRequestBody struct {
 	CompanyID      string  `json:"company_id" url:"-"`
+	Currency       *string `json:"currency,omitempty" url:"-"`
 	SelectedPlanID *string `json:"selected_plan_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -101,6 +103,13 @@ func (c *CheckoutDataRequestBody) require(field *big.Int) {
 func (c *CheckoutDataRequestBody) SetCompanyID(companyID string) {
 	c.CompanyID = companyID
 	c.require(checkoutDataRequestBodyFieldCompanyID)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutDataRequestBody) SetCurrency(currency *string) {
+	c.Currency = currency
+	c.require(checkoutDataRequestBodyFieldCurrency)
 }
 
 // SetSelectedPlanID sets the SelectedPlanID field and marks it as non-optional;

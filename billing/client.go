@@ -66,6 +66,40 @@ func (c *Client) UpsertBillingCoupon(
 	return response.Body, nil
 }
 
+func (c *Client) DeleteBillingCoupon(
+	ctx context.Context,
+	// billing_id
+	billingID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeleteBillingCouponResponse, error) {
+	response, err := c.WithRawResponse.DeleteBillingCoupon(
+		ctx,
+		billingID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) DeleteBillingCustomer(
+	ctx context.Context,
+	// billing_id
+	billingID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeleteBillingCustomerResponse, error) {
+	response, err := c.WithRawResponse.DeleteBillingCustomer(
+		ctx,
+		billingID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) UpsertBillingCustomer(
 	ctx context.Context,
 	request *schematichq.CreateBillingCustomerRequestBody,
@@ -138,6 +172,23 @@ func (c *Client) UpsertInvoice(
 	response, err := c.WithRawResponse.UpsertInvoice(
 		ctx,
 		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) DeleteBillingInvoice(
+	ctx context.Context,
+	// billing_id
+	billingID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeleteBillingInvoiceResponse, error) {
+	response, err := c.WithRawResponse.DeleteBillingInvoice(
+		ctx,
+		billingID,
 		opts...,
 	)
 	if err != nil {

@@ -8739,7 +8739,7 @@ func TestSettersCreditCompanyGrantView(t *testing.T) {
 
 	t.Run("SetQuantity", func(t *testing.T) {
 		obj := &CreditCompanyGrantView{}
-		var fernTestValueQuantity int64
+		var fernTestValueQuantity float64
 		obj.SetQuantity(fernTestValueQuantity)
 		assert.Equal(t, fernTestValueQuantity, obj.Quantity)
 		assert.NotNil(t, obj.explicitFields)
@@ -9444,7 +9444,7 @@ func TestGettersCreditCompanyGrantView(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditCompanyGrantView{}
-		var expected int64
+		var expected float64
 		obj.Quantity = expected
 
 		// Act & Assert
@@ -10502,7 +10502,7 @@ func TestSettersMarkExplicitCreditCompanyGrantView(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditCompanyGrantView{}
-		var fernTestValueQuantity int64
+		var fernTestValueQuantity float64
 
 		// Act
 		obj.SetQuantity(fernTestValueQuantity)

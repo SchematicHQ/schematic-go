@@ -732,14 +732,16 @@ func (l *ListPlansRequest) SetOffset(offset *int64) {
 
 var (
 	publishPlanVersionRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
-	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 1)
-	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 2)
-	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 3)
-	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 4)
+	publishPlanVersionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 1)
+	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 2)
+	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 3)
+	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 4)
+	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 5)
 )
 
 type PublishPlanVersionRequestBody struct {
 	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"-"`
+	CouponExternalID   *string                       `json:"coupon_external_id,omitempty" url:"-"`
 	CustomerEmail      *string                       `json:"customer_email,omitempty" url:"-"`
 	DaysUntilDue       *int64                        `json:"days_until_due,omitempty" url:"-"`
 	ExcludedCompanyIDs []string                      `json:"excluded_company_ids" url:"-"`
@@ -761,6 +763,13 @@ func (p *PublishPlanVersionRequestBody) require(field *big.Int) {
 func (p *PublishPlanVersionRequestBody) SetActivationStrategy(activationStrategy *CustomPlanActivationStrategy) {
 	p.ActivationStrategy = activationStrategy
 	p.require(publishPlanVersionRequestBodyFieldActivationStrategy)
+}
+
+// SetCouponExternalID sets the CouponExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetCouponExternalID(couponExternalID *string) {
+	p.CouponExternalID = couponExternalID
+	p.require(publishPlanVersionRequestBodyFieldCouponExternalID)
 }
 
 // SetCustomerEmail sets the CustomerEmail field and marks it as non-optional;

@@ -2316,7 +2316,7 @@ func TestSettersEventBodyTrack(t *testing.T) {
 
 	t.Run("SetQuantity", func(t *testing.T) {
 		obj := &EventBodyTrack{}
-		var fernTestValueQuantity *int
+		var fernTestValueQuantity *int64
 		obj.SetQuantity(fernTestValueQuantity)
 		assert.Equal(t, fernTestValueQuantity, obj.Quantity)
 		assert.NotNil(t, obj.explicitFields)
@@ -2434,7 +2434,7 @@ func TestGettersEventBodyTrack(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &EventBodyTrack{}
-		var expected *int
+		var expected *int64
 		obj.Quantity = expected
 
 		// Act & Assert
@@ -2629,7 +2629,7 @@ func TestSettersMarkExplicitEventBodyTrack(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &EventBodyTrack{}
-		var fernTestValueQuantity *int
+		var fernTestValueQuantity *int64
 
 		// Act
 		obj.SetQuantity(fernTestValueQuantity)

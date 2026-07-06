@@ -2131,15 +2131,16 @@ var (
 	planChangeResponseDataFieldCreatedAt                = big.NewInt(1 << 11)
 	planChangeResponseDataFieldEnvironmentID            = big.NewInt(1 << 12)
 	planChangeResponseDataFieldID                       = big.NewInt(1 << 13)
-	planChangeResponseDataFieldIsVersionUpgrade         = big.NewInt(1 << 14)
-	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 15)
-	planChangeResponseDataFieldPreviousBasePlanVersion  = big.NewInt(1 << 16)
-	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 17)
-	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 18)
-	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 19)
-	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 20)
-	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 21)
-	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 22)
+	planChangeResponseDataFieldIntegration              = big.NewInt(1 << 14)
+	planChangeResponseDataFieldIsVersionUpgrade         = big.NewInt(1 << 15)
+	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 16)
+	planChangeResponseDataFieldPreviousBasePlanVersion  = big.NewInt(1 << 17)
+	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 18)
+	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 19)
+	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 20)
+	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 21)
+	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 22)
+	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 23)
 )
 
 type PlanChangeResponseData struct {
@@ -2159,6 +2160,8 @@ type PlanChangeResponseData struct {
 	CreatedAt       time.Time                `json:"created_at" url:"created_at"`
 	EnvironmentID   string                   `json:"environment_id" url:"environment_id"`
 	ID              string                   `json:"id" url:"id"`
+	// The integration that performed this change, when the actor is an integration-owned API key (e.g. a billing-provider sync).
+	Integration *IntegrationResponseData `json:"integration,omitempty" url:"integration,omitempty"`
 	// True when this change moved the company to a different version of the same plan (e.g. a plan version migration) rather than to a different plan.
 	IsVersionUpgrade bool              `json:"is_version_upgrade" url:"is_version_upgrade"`
 	PreviousBasePlan *PlanSnapshotView `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
@@ -2276,6 +2279,13 @@ func (p *PlanChangeResponseData) GetID() string {
 		return ""
 	}
 	return p.ID
+}
+
+func (p *PlanChangeResponseData) GetIntegration() *IntegrationResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Integration
 }
 
 func (p *PlanChangeResponseData) GetIsVersionUpgrade() bool {
@@ -2451,6 +2461,13 @@ func (p *PlanChangeResponseData) SetEnvironmentID(environmentID string) {
 func (p *PlanChangeResponseData) SetID(id string) {
 	p.ID = id
 	p.require(planChangeResponseDataFieldID)
+}
+
+// SetIntegration sets the Integration field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetIntegration(integration *IntegrationResponseData) {
+	p.Integration = integration
+	p.require(planChangeResponseDataFieldIntegration)
 }
 
 // SetIsVersionUpgrade sets the IsVersionUpgrade field and marks it as non-optional;

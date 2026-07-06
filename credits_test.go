@@ -4716,7 +4716,7 @@ func TestSettersBillingCreditGrantResponseData(t *testing.T) {
 
 	t.Run("SetQuantity", func(t *testing.T) {
 		obj := &BillingCreditGrantResponseData{}
-		var fernTestValueQuantity int64
+		var fernTestValueQuantity float64
 		obj.SetQuantity(fernTestValueQuantity)
 		assert.Equal(t, fernTestValueQuantity, obj.Quantity)
 		assert.NotNil(t, obj.explicitFields)
@@ -5192,7 +5192,7 @@ func TestGettersBillingCreditGrantResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &BillingCreditGrantResponseData{}
-		var expected int64
+		var expected float64
 		obj.Quantity = expected
 
 		// Act & Assert
@@ -6000,7 +6000,7 @@ func TestSettersMarkExplicitBillingCreditGrantResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &BillingCreditGrantResponseData{}
-		var fernTestValueQuantity int64
+		var fernTestValueQuantity float64
 
 		// Act
 		obj.SetQuantity(fernTestValueQuantity)
@@ -8042,7 +8042,7 @@ func TestSettersCreditEventLedgerResponseData(t *testing.T) {
 
 	t.Run("SetGrantQuantity", func(t *testing.T) {
 		obj := &CreditEventLedgerResponseData{}
-		var fernTestValueGrantQuantity *int64
+		var fernTestValueGrantQuantity *float64
 		obj.SetGrantQuantity(fernTestValueGrantQuantity)
 		assert.Equal(t, fernTestValueGrantQuantity, obj.GrantQuantity)
 		assert.NotNil(t, obj.explicitFields)
@@ -8723,7 +8723,7 @@ func TestGettersCreditEventLedgerResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditEventLedgerResponseData{}
-		var expected *int64
+		var expected *float64
 		obj.GrantQuantity = expected
 
 		// Act & Assert
@@ -9732,7 +9732,7 @@ func TestSettersMarkExplicitCreditEventLedgerResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditEventLedgerResponseData{}
-		var fernTestValueGrantQuantity *int64
+		var fernTestValueGrantQuantity *float64
 
 		// Act
 		obj.SetGrantQuantity(fernTestValueGrantQuantity)

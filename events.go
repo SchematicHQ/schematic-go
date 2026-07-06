@@ -971,7 +971,7 @@ type EventBodyTrack struct {
 	// Credit lease ID this track event is redeeming against
 	LeaseID *string `json:"lease_id,omitempty" url:"lease_id,omitempty"`
 	// Optionally specify the quantity of the event
-	Quantity *int `json:"quantity,omitempty" url:"quantity,omitempty"`
+	Quantity *int64 `json:"quantity,omitempty" url:"quantity,omitempty"`
 	// A map of trait names to trait values
 	Traits map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
 	// Key-value pairs to identify user associated with track event
@@ -1005,7 +1005,7 @@ func (e *EventBodyTrack) GetLeaseID() *string {
 	return e.LeaseID
 }
 
-func (e *EventBodyTrack) GetQuantity() *int {
+func (e *EventBodyTrack) GetQuantity() *int64 {
 	if e == nil {
 		return nil
 	}
@@ -1063,7 +1063,7 @@ func (e *EventBodyTrack) SetLeaseID(leaseID *string) {
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EventBodyTrack) SetQuantity(quantity *int) {
+func (e *EventBodyTrack) SetQuantity(quantity *int64) {
 	e.Quantity = quantity
 	e.require(eventBodyTrackFieldQuantity)
 }

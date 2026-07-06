@@ -582,7 +582,7 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 	assert.NotNil(t, cachedCompany, "Cached company should not be nil")
 
 	// Now update metrics for this company
-	incrementValue := 5
+	incrementValue := int64(5)
 	event := &schematicgo.EventBodyTrack{
 		Event:    eventType,
 		Company:  map[string]string{"company_id": companyID},
@@ -613,7 +613,7 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 	assert.Equal(t, expectedValue, foundMetric.Value, "Metric value should be incremented correctly")
 
 	// Send another metric update with a different increment
-	secondIncrementValue := 7
+	secondIncrementValue := int64(7)
 	secondEvent := &schematicgo.EventBodyTrack{
 		Event:    eventType,
 		Company:  map[string]string{"company_id": companyID},

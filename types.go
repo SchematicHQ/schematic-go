@@ -12578,7 +12578,7 @@ var (
 
 type CountResponse struct {
 	// The number of resources
-	Count *int `json:"count,omitempty" url:"count,omitempty"`
+	Count *int64 `json:"count,omitempty" url:"count,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -12587,7 +12587,7 @@ type CountResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CountResponse) GetCount() *int {
+func (c *CountResponse) GetCount() *int64 {
 	if c == nil {
 		return nil
 	}
@@ -12610,7 +12610,7 @@ func (c *CountResponse) require(field *big.Int) {
 
 // SetCount sets the Count field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountResponse) SetCount(count *int) {
+func (c *CountResponse) SetCount(count *int64) {
 	c.Count = count
 	c.require(countResponseFieldCount)
 }
@@ -21908,6 +21908,166 @@ func (g *GenericPreviewObject) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+var (
+	integrationResponseDataFieldCreatedAt = big.NewInt(1 << 0)
+	integrationResponseDataFieldID        = big.NewInt(1 << 1)
+	integrationResponseDataFieldState     = big.NewInt(1 << 2)
+	integrationResponseDataFieldType      = big.NewInt(1 << 3)
+	integrationResponseDataFieldUpdatedAt = big.NewInt(1 << 4)
+)
+
+type IntegrationResponseData struct {
+	CreatedAt time.Time        `json:"created_at" url:"created_at"`
+	ID        string           `json:"id" url:"id"`
+	State     IntegrationState `json:"state" url:"state"`
+	Type      IntegrationType  `json:"type" url:"type"`
+	UpdatedAt time.Time        `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *IntegrationResponseData) GetCreatedAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.CreatedAt
+}
+
+func (i *IntegrationResponseData) GetID() string {
+	if i == nil {
+		return ""
+	}
+	return i.ID
+}
+
+func (i *IntegrationResponseData) GetState() IntegrationState {
+	if i == nil {
+		return ""
+	}
+	return i.State
+}
+
+func (i *IntegrationResponseData) GetType() IntegrationType {
+	if i == nil {
+		return ""
+	}
+	return i.Type
+}
+
+func (i *IntegrationResponseData) GetUpdatedAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.UpdatedAt
+}
+
+func (i *IntegrationResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *IntegrationResponseData) require(field *big.Int) {
+	if i.explicitFields == nil {
+		i.explicitFields = big.NewInt(0)
+	}
+	i.explicitFields.Or(i.explicitFields, field)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationResponseData) SetCreatedAt(createdAt time.Time) {
+	i.CreatedAt = createdAt
+	i.require(integrationResponseDataFieldCreatedAt)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationResponseData) SetID(id string) {
+	i.ID = id
+	i.require(integrationResponseDataFieldID)
+}
+
+// SetState sets the State field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationResponseData) SetState(state IntegrationState) {
+	i.State = state
+	i.require(integrationResponseDataFieldState)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationResponseData) SetType(type_ IntegrationType) {
+	i.Type = type_
+	i.require(integrationResponseDataFieldType)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationResponseData) SetUpdatedAt(updatedAt time.Time) {
+	i.UpdatedAt = updatedAt
+	i.require(integrationResponseDataFieldUpdatedAt)
+}
+
+func (i *IntegrationResponseData) UnmarshalJSON(data []byte) error {
+	type embed IntegrationResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*i),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*i = IntegrationResponseData(unmarshaler.embed)
+	i.CreatedAt = unmarshaler.CreatedAt.Time()
+	i.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IntegrationResponseData) MarshalJSON() ([]byte, error) {
+	type embed IntegrationResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*i),
+		CreatedAt: internal.NewDateTime(i.CreatedAt),
+		UpdatedAt: internal.NewDateTime(i.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *IntegrationResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
 type IntegrationState string
 
 const (
@@ -28905,14 +29065,14 @@ func (r *RuleView) String() string {
 type RulesEngineSchemaVersion string
 
 const (
-	RulesEngineSchemaVersionV97288F60                       RulesEngineSchemaVersion = "v97288f60"
+	RulesEngineSchemaVersionV5B3E7220                       RulesEngineSchemaVersion = "v5b3e7220"
 	RulesEngineSchemaVersionPlaceholderForFernCompatibility RulesEngineSchemaVersion = "placeholder-for-fern-compatibility"
 )
 
 func NewRulesEngineSchemaVersionFromString(s string) (RulesEngineSchemaVersion, error) {
 	switch s {
-	case "v97288f60":
-		return RulesEngineSchemaVersionV97288F60, nil
+	case "v5b3e7220":
+		return RulesEngineSchemaVersionV5B3E7220, nil
 	case "placeholder-for-fern-compatibility":
 		return RulesEngineSchemaVersionPlaceholderForFernCompatibility, nil
 	}

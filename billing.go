@@ -8284,29 +8284,31 @@ var (
 	createBillingSubscriptionRequestBodyFieldApplicationID                  = big.NewInt(1 << 0)
 	createBillingSubscriptionRequestBodyFieldCancelAt                       = big.NewInt(1 << 1)
 	createBillingSubscriptionRequestBodyFieldCancelAtPeriodEnd              = big.NewInt(1 << 2)
-	createBillingSubscriptionRequestBodyFieldCurrency                       = big.NewInt(1 << 3)
-	createBillingSubscriptionRequestBodyFieldCustomerExternalID             = big.NewInt(1 << 4)
-	createBillingSubscriptionRequestBodyFieldDefaultPaymentMethodExternalID = big.NewInt(1 << 5)
-	createBillingSubscriptionRequestBodyFieldDefaultPaymentMethodID         = big.NewInt(1 << 6)
-	createBillingSubscriptionRequestBodyFieldDiscounts                      = big.NewInt(1 << 7)
-	createBillingSubscriptionRequestBodyFieldExpiredAt                      = big.NewInt(1 << 8)
-	createBillingSubscriptionRequestBodyFieldInterval                       = big.NewInt(1 << 9)
-	createBillingSubscriptionRequestBodyFieldMetadata                       = big.NewInt(1 << 10)
-	createBillingSubscriptionRequestBodyFieldPeriodEnd                      = big.NewInt(1 << 11)
-	createBillingSubscriptionRequestBodyFieldPeriodStart                    = big.NewInt(1 << 12)
-	createBillingSubscriptionRequestBodyFieldProductExternalIDs             = big.NewInt(1 << 13)
-	createBillingSubscriptionRequestBodyFieldProviderType                   = big.NewInt(1 << 14)
-	createBillingSubscriptionRequestBodyFieldStatus                         = big.NewInt(1 << 15)
-	createBillingSubscriptionRequestBodyFieldSubscriptionExternalID         = big.NewInt(1 << 16)
-	createBillingSubscriptionRequestBodyFieldTotalPrice                     = big.NewInt(1 << 17)
-	createBillingSubscriptionRequestBodyFieldTrialEnd                       = big.NewInt(1 << 18)
-	createBillingSubscriptionRequestBodyFieldTrialEndSetting                = big.NewInt(1 << 19)
+	createBillingSubscriptionRequestBodyFieldCompanyID                      = big.NewInt(1 << 3)
+	createBillingSubscriptionRequestBodyFieldCurrency                       = big.NewInt(1 << 4)
+	createBillingSubscriptionRequestBodyFieldCustomerExternalID             = big.NewInt(1 << 5)
+	createBillingSubscriptionRequestBodyFieldDefaultPaymentMethodExternalID = big.NewInt(1 << 6)
+	createBillingSubscriptionRequestBodyFieldDefaultPaymentMethodID         = big.NewInt(1 << 7)
+	createBillingSubscriptionRequestBodyFieldDiscounts                      = big.NewInt(1 << 8)
+	createBillingSubscriptionRequestBodyFieldExpiredAt                      = big.NewInt(1 << 9)
+	createBillingSubscriptionRequestBodyFieldInterval                       = big.NewInt(1 << 10)
+	createBillingSubscriptionRequestBodyFieldMetadata                       = big.NewInt(1 << 11)
+	createBillingSubscriptionRequestBodyFieldPeriodEnd                      = big.NewInt(1 << 12)
+	createBillingSubscriptionRequestBodyFieldPeriodStart                    = big.NewInt(1 << 13)
+	createBillingSubscriptionRequestBodyFieldProductExternalIDs             = big.NewInt(1 << 14)
+	createBillingSubscriptionRequestBodyFieldProviderType                   = big.NewInt(1 << 15)
+	createBillingSubscriptionRequestBodyFieldStatus                         = big.NewInt(1 << 16)
+	createBillingSubscriptionRequestBodyFieldSubscriptionExternalID         = big.NewInt(1 << 17)
+	createBillingSubscriptionRequestBodyFieldTotalPrice                     = big.NewInt(1 << 18)
+	createBillingSubscriptionRequestBodyFieldTrialEnd                       = big.NewInt(1 << 19)
+	createBillingSubscriptionRequestBodyFieldTrialEndSetting                = big.NewInt(1 << 20)
 )
 
 type CreateBillingSubscriptionRequestBody struct {
 	ApplicationID                  *string                             `json:"application_id,omitempty" url:"-"`
 	CancelAt                       *int64                              `json:"cancel_at,omitempty" url:"-"`
 	CancelAtPeriodEnd              bool                                `json:"cancel_at_period_end" url:"-"`
+	CompanyID                      *string                             `json:"company_id,omitempty" url:"-"`
 	Currency                       string                              `json:"currency" url:"-"`
 	CustomerExternalID             string                              `json:"customer_external_id" url:"-"`
 	DefaultPaymentMethodExternalID *string                             `json:"default_payment_method_external_id,omitempty" url:"-"`
@@ -8355,6 +8357,13 @@ func (c *CreateBillingSubscriptionRequestBody) SetCancelAt(cancelAt *int64) {
 func (c *CreateBillingSubscriptionRequestBody) SetCancelAtPeriodEnd(cancelAtPeriodEnd bool) {
 	c.CancelAtPeriodEnd = cancelAtPeriodEnd
 	c.require(createBillingSubscriptionRequestBodyFieldCancelAtPeriodEnd)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingSubscriptionRequestBody) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(createBillingSubscriptionRequestBodyFieldCompanyID)
 }
 
 // SetCurrency sets the Currency field and marks it as non-optional;

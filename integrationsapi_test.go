@@ -2521,6 +2521,14 @@ func TestSettersIntegrationsListResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetLastWebhookReceivedAt", func(t *testing.T) {
+		obj := &IntegrationsListResponseData{}
+		var fernTestValueLastWebhookReceivedAt *time.Time
+		obj.SetLastWebhookReceivedAt(fernTestValueLastWebhookReceivedAt)
+		assert.Equal(t, fernTestValueLastWebhookReceivedAt, obj.LastWebhookReceivedAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetState", func(t *testing.T) {
 		obj := &IntegrationsListResponseData{}
 		var fernTestValueState IntegrationState
@@ -2673,6 +2681,39 @@ func TestGettersIntegrationsListResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetIsConnectInstall() // Should return zero value
+	})
+
+	t.Run("GetLastWebhookReceivedAt", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &IntegrationsListResponseData{}
+		var expected *time.Time
+		obj.LastWebhookReceivedAt = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetLastWebhookReceivedAt(), "getter should return the property value")
+	})
+
+	t.Run("GetLastWebhookReceivedAt_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &IntegrationsListResponseData{}
+		obj.LastWebhookReceivedAt = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetLastWebhookReceivedAt(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetLastWebhookReceivedAt_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *IntegrationsListResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetLastWebhookReceivedAt() // Should return zero value
 	})
 
 	t.Run("GetState", func(t *testing.T) {
@@ -2856,6 +2897,37 @@ func TestSettersMarkExplicitIntegrationsListResponseData(t *testing.T) {
 
 		// Act
 		obj.SetIsConnectInstall(fernTestValueIsConnectInstall)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetLastWebhookReceivedAt_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &IntegrationsListResponseData{}
+		var fernTestValueLastWebhookReceivedAt *time.Time
+
+		// Act
+		obj.SetLastWebhookReceivedAt(fernTestValueLastWebhookReceivedAt)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -3237,6 +3309,87 @@ func TestSettersMarkExplicitIntegrationsResponseData(t *testing.T) {
 
 		// Act
 		obj.SetUpdatedAt(fernTestValueUpdatedAt)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+}
+
+func TestSettersMetronomeIntegrationConfig(t *testing.T) {
+	t.Run("SetExternalCustomerIDKey", func(t *testing.T) {
+		obj := &MetronomeIntegrationConfig{}
+		var fernTestValueExternalCustomerIDKey *string
+		obj.SetExternalCustomerIDKey(fernTestValueExternalCustomerIDKey)
+		assert.Equal(t, fernTestValueExternalCustomerIDKey, obj.ExternalCustomerIDKey)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+}
+
+func TestGettersMetronomeIntegrationConfig(t *testing.T) {
+	t.Run("GetExternalCustomerIDKey", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &MetronomeIntegrationConfig{}
+		var expected *string
+		obj.ExternalCustomerIDKey = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetExternalCustomerIDKey(), "getter should return the property value")
+	})
+
+	t.Run("GetExternalCustomerIDKey_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &MetronomeIntegrationConfig{}
+		obj.ExternalCustomerIDKey = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetExternalCustomerIDKey(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetExternalCustomerIDKey_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *MetronomeIntegrationConfig
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetExternalCustomerIDKey() // Should return zero value
+	})
+
+}
+
+func TestSettersMarkExplicitMetronomeIntegrationConfig(t *testing.T) {
+	t.Run("SetExternalCustomerIDKey_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &MetronomeIntegrationConfig{}
+		var fernTestValueExternalCustomerIDKey *string
+
+		// Act
+		obj.SetExternalCustomerIDKey(fernTestValueExternalCustomerIDKey)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

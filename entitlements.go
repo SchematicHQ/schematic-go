@@ -628,10 +628,11 @@ var (
 	createPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 26)
 	createPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 27)
 	createPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 28)
-	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 29)
-	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 30)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 31)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 32)
+	createPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 29)
+	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 30)
+	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 31)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 32)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 33)
 )
 
 type CreatePlanEntitlementRequestBody struct {
@@ -666,6 +667,7 @@ type CreatePlanEntitlementRequestBody struct {
 	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
+	WarningTiers           []*WarningTierRequestBody     `json:"warning_tiers,omitempty" url:"-"`
 	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
 	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
 	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
@@ -883,6 +885,13 @@ func (c *CreatePlanEntitlementRequestBody) SetValueTraitID(valueTraitID *string)
 func (c *CreatePlanEntitlementRequestBody) SetValueType(valueType EntitlementValueType) {
 	c.ValueType = valueType
 	c.require(createPlanEntitlementRequestBodyFieldValueType)
+}
+
+// SetWarningTiers sets the WarningTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanEntitlementRequestBody) SetWarningTiers(warningTiers []*WarningTierRequestBody) {
+	c.WarningTiers = warningTiers
+	c.require(createPlanEntitlementRequestBodyFieldWarningTiers)
 }
 
 // SetYearlyMeteredPriceID sets the YearlyMeteredPriceID field and marks it as non-optional;
@@ -3510,6 +3519,106 @@ func (u *UsageTimeSeriesPointResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	warningTierRequestBodyFieldKey   = big.NewInt(1 << 0)
+	warningTierRequestBodyFieldValue = big.NewInt(1 << 1)
+)
+
+type WarningTierRequestBody struct {
+	Key   string `json:"key" url:"key"`
+	Value int64  `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WarningTierRequestBody) GetKey() string {
+	if w == nil {
+		return ""
+	}
+	return w.Key
+}
+
+func (w *WarningTierRequestBody) GetValue() int64 {
+	if w == nil {
+		return 0
+	}
+	return w.Value
+}
+
+func (w *WarningTierRequestBody) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WarningTierRequestBody) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WarningTierRequestBody) SetKey(key string) {
+	w.Key = key
+	w.require(warningTierRequestBodyFieldKey)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WarningTierRequestBody) SetValue(value int64) {
+	w.Value = value
+	w.require(warningTierRequestBodyFieldValue)
+}
+
+func (w *WarningTierRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler WarningTierRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WarningTierRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WarningTierRequestBody) MarshalJSON() ([]byte, error) {
+	type embed WarningTierRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*w),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WarningTierRequestBody) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
 }
 
 // Input parameters
@@ -8066,10 +8175,11 @@ var (
 	updatePlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 23)
 	updatePlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 24)
 	updatePlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 25)
-	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 26)
-	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 27)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 28)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 29)
+	updatePlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 26)
+	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 27)
+	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 28)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 29)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 30)
 )
 
 type UpdatePlanEntitlementRequestBody struct {
@@ -8101,6 +8211,7 @@ type UpdatePlanEntitlementRequestBody struct {
 	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
+	WarningTiers           []*WarningTierRequestBody     `json:"warning_tiers,omitempty" url:"-"`
 	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
 	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
 	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
@@ -8299,6 +8410,13 @@ func (u *UpdatePlanEntitlementRequestBody) SetValueType(valueType EntitlementVal
 	u.require(updatePlanEntitlementRequestBodyFieldValueType)
 }
 
+// SetWarningTiers sets the WarningTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanEntitlementRequestBody) SetWarningTiers(warningTiers []*WarningTierRequestBody) {
+	u.WarningTiers = warningTiers
+	u.require(updatePlanEntitlementRequestBodyFieldWarningTiers)
+}
+
 // SetYearlyMeteredPriceID sets the YearlyMeteredPriceID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdatePlanEntitlementRequestBody) SetYearlyMeteredPriceID(yearlyMeteredPriceID *string) {
@@ -8380,10 +8498,11 @@ var (
 	createBillingLinkedPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 28)
 	createBillingLinkedPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 29)
 	createBillingLinkedPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 30)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 31)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 32)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 33)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 34)
+	createBillingLinkedPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 31)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 32)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 33)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 34)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 35)
 )
 
 type CreateBillingLinkedPlanEntitlementRequestBody struct {
@@ -8420,6 +8539,7 @@ type CreateBillingLinkedPlanEntitlementRequestBody struct {
 	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"-"`
 	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"-"`
 	ValueType              EntitlementValueType          `json:"value_type" url:"-"`
+	WarningTiers           []*WarningTierRequestBody     `json:"warning_tiers,omitempty" url:"-"`
 	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"-"`
 	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"-"`
 	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"-"`
@@ -8651,6 +8771,13 @@ func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetValueTraitID(valueTra
 func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetValueType(valueType EntitlementValueType) {
 	c.ValueType = valueType
 	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldValueType)
+}
+
+// SetWarningTiers sets the WarningTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetWarningTiers(warningTiers []*WarningTierRequestBody) {
+	c.WarningTiers = warningTiers
+	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldWarningTiers)
 }
 
 // SetYearlyMeteredPriceID sets the YearlyMeteredPriceID field and marks it as non-optional;

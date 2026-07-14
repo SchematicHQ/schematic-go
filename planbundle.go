@@ -78,7 +78,6 @@ var (
 	createPlanBundleRequestBodyFieldCreditGrants   = big.NewInt(1 << 1)
 	createPlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
 	createPlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 3)
-	createPlanBundleRequestBodyFieldTraits         = big.NewInt(1 << 4)
 )
 
 type CreatePlanBundleRequestBody struct {
@@ -86,7 +85,6 @@ type CreatePlanBundleRequestBody struct {
 	CreditGrants   []*PlanBundleCreditGrantRequestBody `json:"credit_grants,omitempty" url:"-"`
 	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements" url:"-"`
 	Plan           *CreatePlanRequestBody              `json:"plan,omitempty" url:"-"`
-	Traits         []*UpdatePlanTraitTraitRequestBody  `json:"traits,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -125,13 +123,6 @@ func (c *CreatePlanBundleRequestBody) SetEntitlements(entitlements []*PlanBundle
 func (c *CreatePlanBundleRequestBody) SetPlan(plan *CreatePlanRequestBody) {
 	c.Plan = plan
 	c.require(createPlanBundleRequestBodyFieldPlan)
-}
-
-// SetTraits sets the Traits field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanBundleRequestBody) SetTraits(traits []*UpdatePlanTraitTraitRequestBody) {
-	c.Traits = traits
-	c.require(createPlanBundleRequestBodyFieldTraits)
 }
 
 func (c *CreatePlanBundleRequestBody) UnmarshalJSON(data []byte) error {
@@ -1263,7 +1254,6 @@ var (
 	planBundleResponseDataFieldCreditGrants   = big.NewInt(1 << 1)
 	planBundleResponseDataFieldEntitlements   = big.NewInt(1 << 2)
 	planBundleResponseDataFieldPlan           = big.NewInt(1 << 3)
-	planBundleResponseDataFieldTraits         = big.NewInt(1 << 4)
 )
 
 type PlanBundleResponseData struct {
@@ -1271,7 +1261,6 @@ type PlanBundleResponseData struct {
 	CreditGrants   []*BillingPlanCreditGrantResponseData `json:"credit_grants,omitempty" url:"credit_grants,omitempty"`
 	Entitlements   []*PlanEntitlementResponseData        `json:"entitlements,omitempty" url:"entitlements,omitempty"`
 	Plan           *PlanResponseData                     `json:"plan,omitempty" url:"plan,omitempty"`
-	Traits         []*PlanTraitResponseData              `json:"traits,omitempty" url:"traits,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1306,13 +1295,6 @@ func (p *PlanBundleResponseData) GetPlan() *PlanResponseData {
 		return nil
 	}
 	return p.Plan
-}
-
-func (p *PlanBundleResponseData) GetTraits() []*PlanTraitResponseData {
-	if p == nil {
-		return nil
-	}
-	return p.Traits
 }
 
 func (p *PlanBundleResponseData) GetExtraProperties() map[string]interface{} {
@@ -1355,13 +1337,6 @@ func (p *PlanBundleResponseData) SetEntitlements(entitlements []*PlanEntitlement
 func (p *PlanBundleResponseData) SetPlan(plan *PlanResponseData) {
 	p.Plan = plan
 	p.require(planBundleResponseDataFieldPlan)
-}
-
-// SetTraits sets the Traits field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanBundleResponseData) SetTraits(traits []*PlanTraitResponseData) {
-	p.Traits = traits
-	p.require(planBundleResponseDataFieldTraits)
 }
 
 func (p *PlanBundleResponseData) UnmarshalJSON(data []byte) error {
@@ -1715,7 +1690,6 @@ var (
 	updatePlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
 	updatePlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 3)
 	updatePlanBundleRequestBodyFieldPlanVersionID  = big.NewInt(1 << 4)
-	updatePlanBundleRequestBodyFieldTraits         = big.NewInt(1 << 5)
 )
 
 type UpdatePlanBundleRequestBody struct {
@@ -1724,7 +1698,6 @@ type UpdatePlanBundleRequestBody struct {
 	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements" url:"-"`
 	Plan           *UpdatePlanRequestBody              `json:"plan,omitempty" url:"-"`
 	PlanVersionID  *string                             `json:"plan_version_id,omitempty" url:"-"`
-	Traits         []*UpdatePlanTraitTraitRequestBody  `json:"traits,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1770,13 +1743,6 @@ func (u *UpdatePlanBundleRequestBody) SetPlan(plan *UpdatePlanRequestBody) {
 func (u *UpdatePlanBundleRequestBody) SetPlanVersionID(planVersionID *string) {
 	u.PlanVersionID = planVersionID
 	u.require(updatePlanBundleRequestBodyFieldPlanVersionID)
-}
-
-// SetTraits sets the Traits field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanBundleRequestBody) SetTraits(traits []*UpdatePlanTraitTraitRequestBody) {
-	u.Traits = traits
-	u.require(updatePlanBundleRequestBodyFieldTraits)
 }
 
 func (u *UpdatePlanBundleRequestBody) UnmarshalJSON(data []byte) error {

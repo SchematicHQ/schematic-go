@@ -22272,6 +22272,14 @@ func TestSettersCreateInvoiceRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetEndingBalance", func(t *testing.T) {
+		obj := &CreateInvoiceRequestBody{}
+		var fernTestValueEndingBalance *int64
+		obj.SetEndingBalance(fernTestValueEndingBalance)
+		assert.Equal(t, fernTestValueEndingBalance, obj.EndingBalance)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetExternalID", func(t *testing.T) {
 		obj := &CreateInvoiceRequestBody{}
 		var fernTestValueExternalID *string
@@ -22285,6 +22293,14 @@ func TestSettersCreateInvoiceRequestBody(t *testing.T) {
 		var fernTestValuePaymentMethodExternalID *string
 		obj.SetPaymentMethodExternalID(fernTestValuePaymentMethodExternalID)
 		assert.Equal(t, fernTestValuePaymentMethodExternalID, obj.PaymentMethodExternalID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetStartingBalance", func(t *testing.T) {
+		obj := &CreateInvoiceRequestBody{}
+		var fernTestValueStartingBalance *int64
+		obj.SetStartingBalance(fernTestValueStartingBalance)
+		assert.Equal(t, fernTestValueStartingBalance, obj.StartingBalance)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -22540,6 +22556,37 @@ func TestSettersMarkExplicitCreateInvoiceRequestBody(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetEndingBalance_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateInvoiceRequestBody{}
+		var fernTestValueEndingBalance *int64
+
+		// Act
+		obj.SetEndingBalance(fernTestValueEndingBalance)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetExternalID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -22579,6 +22626,37 @@ func TestSettersMarkExplicitCreateInvoiceRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetPaymentMethodExternalID(fernTestValuePaymentMethodExternalID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetStartingBalance_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateInvoiceRequestBody{}
+		var fernTestValueStartingBalance *int64
+
+		// Act
+		obj.SetStartingBalance(fernTestValueStartingBalance)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

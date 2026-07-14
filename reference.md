@@ -2017,6 +2017,14 @@ client.Billing.UpsertInvoice(
 <dl>
 <dd>
 
+**endingBalance:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **externalID:** `*string` 
     
 </dd>
@@ -2026,6 +2034,14 @@ client.Billing.UpsertInvoice(
 <dd>
 
 **paymentMethodExternalID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startingBalance:** `*int64` 
     
 </dd>
 </dl>
@@ -11730,6 +11746,14 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
+**warningTiers:** `[]*schematichq.WarningTierRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **yearlyMeteredPriceID:** `*string` 
     
 </dd>
@@ -12055,6 +12079,14 @@ client.Entitlements.UpdatePlanEntitlement(
 <dd>
 
 **valueType:** `*schematichq.EntitlementValueType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**warningTiers:** `[]*schematichq.WarningTierRequestBody` 
     
 </dd>
 </dl>
@@ -12422,6 +12454,14 @@ client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dd>
 
 **valueType:** `*schematichq.EntitlementValueType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**warningTiers:** `[]*schematichq.WarningTierRequestBody` 
     
 </dd>
 </dl>
@@ -14871,14 +14911,6 @@ client.Planbundle.CreatePlanBundle(
     
 </dd>
 </dl>
-
-<dl>
-<dd>
-
-**traits:** `[]*schematichq.UpdatePlanTraitTraitRequestBody` 
-    
-</dd>
-</dl>
 </dd>
 </dl>
 
@@ -14968,14 +15000,6 @@ client.Planbundle.UpdatePlanBundle(
 <dd>
 
 **planVersionID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**traits:** `[]*schematichq.UpdatePlanTraitTraitRequestBody` 
     
 </dd>
 </dl>

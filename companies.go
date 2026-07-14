@@ -3295,6 +3295,230 @@ func (p *PlanSnapshotView) String() string {
 }
 
 var (
+	planTraitResponseDataFieldAccountID     = big.NewInt(1 << 0)
+	planTraitResponseDataFieldCreatedAt     = big.NewInt(1 << 1)
+	planTraitResponseDataFieldEnvironmentID = big.NewInt(1 << 2)
+	planTraitResponseDataFieldID            = big.NewInt(1 << 3)
+	planTraitResponseDataFieldPlanID        = big.NewInt(1 << 4)
+	planTraitResponseDataFieldPlanType      = big.NewInt(1 << 5)
+	planTraitResponseDataFieldTraitID       = big.NewInt(1 << 6)
+	planTraitResponseDataFieldTraitValue    = big.NewInt(1 << 7)
+	planTraitResponseDataFieldUpdatedAt     = big.NewInt(1 << 8)
+)
+
+type PlanTraitResponseData struct {
+	AccountID     string    `json:"account_id" url:"account_id"`
+	CreatedAt     time.Time `json:"created_at" url:"created_at"`
+	EnvironmentID string    `json:"environment_id" url:"environment_id"`
+	ID            string    `json:"id" url:"id"`
+	PlanID        string    `json:"plan_id" url:"plan_id"`
+	PlanType      string    `json:"plan_type" url:"plan_type"`
+	TraitID       string    `json:"trait_id" url:"trait_id"`
+	TraitValue    string    `json:"trait_value" url:"trait_value"`
+	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanTraitResponseData) GetAccountID() string {
+	if p == nil {
+		return ""
+	}
+	return p.AccountID
+}
+
+func (p *PlanTraitResponseData) GetCreatedAt() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.CreatedAt
+}
+
+func (p *PlanTraitResponseData) GetEnvironmentID() string {
+	if p == nil {
+		return ""
+	}
+	return p.EnvironmentID
+}
+
+func (p *PlanTraitResponseData) GetID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ID
+}
+
+func (p *PlanTraitResponseData) GetPlanID() string {
+	if p == nil {
+		return ""
+	}
+	return p.PlanID
+}
+
+func (p *PlanTraitResponseData) GetPlanType() string {
+	if p == nil {
+		return ""
+	}
+	return p.PlanType
+}
+
+func (p *PlanTraitResponseData) GetTraitID() string {
+	if p == nil {
+		return ""
+	}
+	return p.TraitID
+}
+
+func (p *PlanTraitResponseData) GetTraitValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.TraitValue
+}
+
+func (p *PlanTraitResponseData) GetUpdatedAt() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.UpdatedAt
+}
+
+func (p *PlanTraitResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanTraitResponseData) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanTraitResponseData) SetAccountID(accountID string) {
+	p.AccountID = accountID
+	p.require(planTraitResponseDataFieldAccountID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanTraitResponseData) SetCreatedAt(createdAt time.Time) {
+	p.CreatedAt = createdAt
+	p.require(planTraitResponseDataFieldCreatedAt)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanTraitResponseData) SetEnvironmentID(environmentID string) {
+	p.EnvironmentID = environmentID
+	p.require(planTraitResponseDataFieldEnvironmentID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanTraitResponseData) SetID(id string) {
+	p.ID = id
+	p.require(planTraitResponseDataFieldID)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanTraitResponseData) SetPlanID(planID string) {
+	p.PlanID = planID
+	p.require(planTraitResponseDataFieldPlanID)
+}
+
+// SetPlanType sets the PlanType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanTraitResponseData) SetPlanType(planType string) {
+	p.PlanType = planType
+	p.require(planTraitResponseDataFieldPlanType)
+}
+
+// SetTraitID sets the TraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanTraitResponseData) SetTraitID(traitID string) {
+	p.TraitID = traitID
+	p.require(planTraitResponseDataFieldTraitID)
+}
+
+// SetTraitValue sets the TraitValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanTraitResponseData) SetTraitValue(traitValue string) {
+	p.TraitValue = traitValue
+	p.require(planTraitResponseDataFieldTraitValue)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanTraitResponseData) SetUpdatedAt(updatedAt time.Time) {
+	p.UpdatedAt = updatedAt
+	p.require(planTraitResponseDataFieldUpdatedAt)
+}
+
+func (p *PlanTraitResponseData) UnmarshalJSON(data []byte) error {
+	type embed PlanTraitResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PlanTraitResponseData(unmarshaler.embed)
+	p.CreatedAt = unmarshaler.CreatedAt.Time()
+	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanTraitResponseData) MarshalJSON() ([]byte, error) {
+	type embed PlanTraitResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*p),
+		CreatedAt: internal.NewDateTime(p.CreatedAt),
+		UpdatedAt: internal.NewDateTime(p.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanTraitResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
 	planVersionSnapshotViewFieldID      = big.NewInt(1 << 0)
 	planVersionSnapshotViewFieldName    = big.NewInt(1 << 1)
 	planVersionSnapshotViewFieldVersion = big.NewInt(1 << 2)
@@ -3659,6 +3883,106 @@ func NewSubscriptionTypeFromString(s string) (SubscriptionType, error) {
 
 func (s SubscriptionType) Ptr() *SubscriptionType {
 	return &s
+}
+
+var (
+	updatePlanTraitTraitRequestBodyFieldTraitID    = big.NewInt(1 << 0)
+	updatePlanTraitTraitRequestBodyFieldTraitValue = big.NewInt(1 << 1)
+)
+
+type UpdatePlanTraitTraitRequestBody struct {
+	TraitID    string `json:"trait_id" url:"trait_id"`
+	TraitValue string `json:"trait_value" url:"trait_value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) GetTraitID() string {
+	if u == nil {
+		return ""
+	}
+	return u.TraitID
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) GetTraitValue() string {
+	if u == nil {
+		return ""
+	}
+	return u.TraitValue
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetTraitID sets the TraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanTraitTraitRequestBody) SetTraitID(traitID string) {
+	u.TraitID = traitID
+	u.require(updatePlanTraitTraitRequestBodyFieldTraitID)
+}
+
+// SetTraitValue sets the TraitValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanTraitTraitRequestBody) SetTraitValue(traitValue string) {
+	u.TraitValue = traitValue
+	u.require(updatePlanTraitTraitRequestBodyFieldTraitValue)
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePlanTraitTraitRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdatePlanTraitTraitRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdatePlanTraitTraitRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdatePlanTraitTraitRequestBody) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }
 
 var (

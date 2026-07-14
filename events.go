@@ -381,6 +381,7 @@ type EventBody struct {
 	EventBodyTrack     *EventBodyTrack
 	EventBodyFlagCheck *EventBodyFlagCheck
 	EventBodyIdentify  *EventBodyIdentify
+	EventBodyInference *EventBodyInference
 
 	typ string
 }
@@ -406,6 +407,13 @@ func (e *EventBody) GetEventBodyIdentify() *EventBodyIdentify {
 	return e.EventBodyIdentify
 }
 
+func (e *EventBody) GetEventBodyInference() *EventBodyInference {
+	if e == nil {
+		return nil
+	}
+	return e.EventBodyInference
+}
+
 func (e *EventBody) UnmarshalJSON(data []byte) error {
 	valueEventBodyTrack := new(EventBodyTrack)
 	if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
@@ -425,6 +433,12 @@ func (e *EventBody) UnmarshalJSON(data []byte) error {
 		e.EventBodyIdentify = valueEventBodyIdentify
 		return nil
 	}
+	valueEventBodyInference := new(EventBodyInference)
+	if err := json.Unmarshal(data, &valueEventBodyInference); err == nil {
+		e.typ = "EventBodyInference"
+		e.EventBodyInference = valueEventBodyInference
+		return nil
+	}
 	return fmt.Errorf("%s cannot be deserialized as a %T", data, e)
 }
 
@@ -438,6 +452,9 @@ func (e EventBody) MarshalJSON() ([]byte, error) {
 	if e.typ == "EventBodyIdentify" || e.EventBodyIdentify != nil {
 		return json.Marshal(e.EventBodyIdentify)
 	}
+	if e.typ == "EventBodyInference" || e.EventBodyInference != nil {
+		return json.Marshal(e.EventBodyInference)
+	}
 	return nil, fmt.Errorf("type %T does not include a non-empty union type", e)
 }
 
@@ -445,6 +462,7 @@ type EventBodyVisitor interface {
 	VisitEventBodyTrack(*EventBodyTrack) error
 	VisitEventBodyFlagCheck(*EventBodyFlagCheck) error
 	VisitEventBodyIdentify(*EventBodyIdentify) error
+	VisitEventBodyInference(*EventBodyInference) error
 }
 
 func (e *EventBody) Accept(visitor EventBodyVisitor) error {
@@ -456,6 +474,9 @@ func (e *EventBody) Accept(visitor EventBodyVisitor) error {
 	}
 	if e.typ == "EventBodyIdentify" || e.EventBodyIdentify != nil {
 		return visitor.VisitEventBodyIdentify(e.EventBodyIdentify)
+	}
+	if e.typ == "EventBodyInference" || e.EventBodyInference != nil {
+		return visitor.VisitEventBodyInference(e.EventBodyInference)
 	}
 	return fmt.Errorf("type %T does not include a non-empty union type", e)
 }
@@ -940,6 +961,312 @@ func (e *EventBodyIdentifyCompany) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EventBodyIdentifyCompany) String() string {
+	if e == nil {
+		return "<nil>"
+	}
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+var (
+	eventBodyInferenceFieldCachedInputTokens = big.NewInt(1 << 0)
+	eventBodyInferenceFieldCompany           = big.NewInt(1 << 1)
+	eventBodyInferenceFieldCost              = big.NewInt(1 << 2)
+	eventBodyInferenceFieldCurrency          = big.NewInt(1 << 3)
+	eventBodyInferenceFieldEvent             = big.NewInt(1 << 4)
+	eventBodyInferenceFieldInputTokens       = big.NewInt(1 << 5)
+	eventBodyInferenceFieldOperation         = big.NewInt(1 << 6)
+	eventBodyInferenceFieldOutputTokens      = big.NewInt(1 << 7)
+	eventBodyInferenceFieldProvider          = big.NewInt(1 << 8)
+	eventBodyInferenceFieldReasoningTokens   = big.NewInt(1 << 9)
+	eventBodyInferenceFieldRequestModel      = big.NewInt(1 << 10)
+	eventBodyInferenceFieldRequests          = big.NewInt(1 << 11)
+	eventBodyInferenceFieldResponseModel     = big.NewInt(1 << 12)
+	eventBodyInferenceFieldUser              = big.NewInt(1 << 13)
+)
+
+type EventBodyInference struct {
+	// Number of input tokens served from cache
+	CachedInputTokens *int64 `json:"cached_input_tokens,omitempty" url:"cached_input_tokens,omitempty"`
+	// Key-value pairs to identify the company associated with the inference event
+	Company map[string]string `json:"company" url:"company"`
+	// Provided cost of the inference request as a decimal string; derived from model pricing when omitted
+	Cost *string `json:"cost,omitempty" url:"cost,omitempty"`
+	// ISO 4217 currency code for the provided cost; defaults to 'usd'
+	Currency *string `json:"currency,omitempty" url:"currency,omitempty"`
+	// Optional track event name to fan out for usage-based billing
+	Event *string `json:"event,omitempty" url:"event,omitempty"`
+	// Number of input tokens for the inference request
+	InputTokens int64 `json:"input_tokens" url:"input_tokens"`
+	// The inference operation; defaults to 'chat'
+	Operation *string `json:"operation,omitempty" url:"operation,omitempty"`
+	// Number of output tokens for the inference request
+	OutputTokens int64 `json:"output_tokens" url:"output_tokens"`
+	// The inference provider (e.g. 'anthropic', 'openai')
+	Provider string `json:"provider" url:"provider"`
+	// Number of reasoning tokens for the inference request
+	ReasoningTokens *int64 `json:"reasoning_tokens,omitempty" url:"reasoning_tokens,omitempty"`
+	// The model requested for the inference request
+	RequestModel *string `json:"request_model,omitempty" url:"request_model,omitempty"`
+	// Number of requests represented by this event; defaults to 1
+	Requests *int64 `json:"requests,omitempty" url:"requests,omitempty"`
+	// The model that served the inference response
+	ResponseModel string `json:"response_model" url:"response_model"`
+	// Key-value pairs to identify the user associated with the inference event
+	User map[string]string `json:"user,omitempty" url:"user,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EventBodyInference) GetCachedInputTokens() *int64 {
+	if e == nil {
+		return nil
+	}
+	return e.CachedInputTokens
+}
+
+func (e *EventBodyInference) GetCompany() map[string]string {
+	if e == nil {
+		return nil
+	}
+	return e.Company
+}
+
+func (e *EventBodyInference) GetCost() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Cost
+}
+
+func (e *EventBodyInference) GetCurrency() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Currency
+}
+
+func (e *EventBodyInference) GetEvent() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Event
+}
+
+func (e *EventBodyInference) GetInputTokens() int64 {
+	if e == nil {
+		return 0
+	}
+	return e.InputTokens
+}
+
+func (e *EventBodyInference) GetOperation() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Operation
+}
+
+func (e *EventBodyInference) GetOutputTokens() int64 {
+	if e == nil {
+		return 0
+	}
+	return e.OutputTokens
+}
+
+func (e *EventBodyInference) GetProvider() string {
+	if e == nil {
+		return ""
+	}
+	return e.Provider
+}
+
+func (e *EventBodyInference) GetReasoningTokens() *int64 {
+	if e == nil {
+		return nil
+	}
+	return e.ReasoningTokens
+}
+
+func (e *EventBodyInference) GetRequestModel() *string {
+	if e == nil {
+		return nil
+	}
+	return e.RequestModel
+}
+
+func (e *EventBodyInference) GetRequests() *int64 {
+	if e == nil {
+		return nil
+	}
+	return e.Requests
+}
+
+func (e *EventBodyInference) GetResponseModel() string {
+	if e == nil {
+		return ""
+	}
+	return e.ResponseModel
+}
+
+func (e *EventBodyInference) GetUser() map[string]string {
+	if e == nil {
+		return nil
+	}
+	return e.User
+}
+
+func (e *EventBodyInference) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.extraProperties
+}
+
+func (e *EventBodyInference) require(field *big.Int) {
+	if e.explicitFields == nil {
+		e.explicitFields = big.NewInt(0)
+	}
+	e.explicitFields.Or(e.explicitFields, field)
+}
+
+// SetCachedInputTokens sets the CachedInputTokens field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetCachedInputTokens(cachedInputTokens *int64) {
+	e.CachedInputTokens = cachedInputTokens
+	e.require(eventBodyInferenceFieldCachedInputTokens)
+}
+
+// SetCompany sets the Company field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetCompany(company map[string]string) {
+	e.Company = company
+	e.require(eventBodyInferenceFieldCompany)
+}
+
+// SetCost sets the Cost field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetCost(cost *string) {
+	e.Cost = cost
+	e.require(eventBodyInferenceFieldCost)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetCurrency(currency *string) {
+	e.Currency = currency
+	e.require(eventBodyInferenceFieldCurrency)
+}
+
+// SetEvent sets the Event field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetEvent(event *string) {
+	e.Event = event
+	e.require(eventBodyInferenceFieldEvent)
+}
+
+// SetInputTokens sets the InputTokens field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetInputTokens(inputTokens int64) {
+	e.InputTokens = inputTokens
+	e.require(eventBodyInferenceFieldInputTokens)
+}
+
+// SetOperation sets the Operation field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetOperation(operation *string) {
+	e.Operation = operation
+	e.require(eventBodyInferenceFieldOperation)
+}
+
+// SetOutputTokens sets the OutputTokens field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetOutputTokens(outputTokens int64) {
+	e.OutputTokens = outputTokens
+	e.require(eventBodyInferenceFieldOutputTokens)
+}
+
+// SetProvider sets the Provider field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetProvider(provider string) {
+	e.Provider = provider
+	e.require(eventBodyInferenceFieldProvider)
+}
+
+// SetReasoningTokens sets the ReasoningTokens field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetReasoningTokens(reasoningTokens *int64) {
+	e.ReasoningTokens = reasoningTokens
+	e.require(eventBodyInferenceFieldReasoningTokens)
+}
+
+// SetRequestModel sets the RequestModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetRequestModel(requestModel *string) {
+	e.RequestModel = requestModel
+	e.require(eventBodyInferenceFieldRequestModel)
+}
+
+// SetRequests sets the Requests field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetRequests(requests *int64) {
+	e.Requests = requests
+	e.require(eventBodyInferenceFieldRequests)
+}
+
+// SetResponseModel sets the ResponseModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetResponseModel(responseModel string) {
+	e.ResponseModel = responseModel
+	e.require(eventBodyInferenceFieldResponseModel)
+}
+
+// SetUser sets the User field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetUser(user map[string]string) {
+	e.User = user
+	e.require(eventBodyInferenceFieldUser)
+}
+
+func (e *EventBodyInference) UnmarshalJSON(data []byte) error {
+	type unmarshaler EventBodyInference
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EventBodyInference(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EventBodyInference) MarshalJSON() ([]byte, error) {
+	type embed EventBodyInference
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*e),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, e.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (e *EventBodyInference) String() string {
 	if e == nil {
 		return "<nil>"
 	}
@@ -1656,6 +1983,7 @@ type EventType string
 const (
 	EventTypeFlagCheck EventType = "flag_check"
 	EventTypeIdentify  EventType = "identify"
+	EventTypeInference EventType = "inference"
 	EventTypeTrack     EventType = "track"
 )
 
@@ -1665,6 +1993,8 @@ func NewEventTypeFromString(s string) (EventType, error) {
 		return EventTypeFlagCheck, nil
 	case "identify":
 		return EventTypeIdentify, nil
+	case "inference":
+		return EventTypeInference, nil
 	case "track":
 		return EventTypeTrack, nil
 	}

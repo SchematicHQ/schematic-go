@@ -16,6 +16,7 @@ const (
 	AccountMemberPermissionCompaniesEdit        AccountMemberPermission = "companies_edit"
 	AccountMemberPermissionCompanyUsersEdit     AccountMemberPermission = "company_users_edit"
 	AccountMemberPermissionComponentsEdit       AccountMemberPermission = "components_edit"
+	AccountMemberPermissionCustomPlansEdit      AccountMemberPermission = "custom_plans_edit"
 	AccountMemberPermissionDataExportsEdit      AccountMemberPermission = "data_exports_edit"
 	AccountMemberPermissionFeaturesEdit         AccountMemberPermission = "features_edit"
 	AccountMemberPermissionFlagRulesEdit        AccountMemberPermission = "flag_rules_edit"
@@ -37,6 +38,8 @@ func NewAccountMemberPermissionFromString(s string) (AccountMemberPermission, er
 		return AccountMemberPermissionCompanyUsersEdit, nil
 	case "components_edit":
 		return AccountMemberPermissionComponentsEdit, nil
+	case "custom_plans_edit":
+		return AccountMemberPermissionCustomPlansEdit, nil
 	case "data_exports_edit":
 		return AccountMemberPermissionDataExportsEdit, nil
 	case "features_edit":
@@ -1778,17 +1781,23 @@ func (b BillingCreditGrantReason) Ptr() *BillingCreditGrantReason {
 type BillingCreditGrantZeroedOutReason string
 
 const (
-	BillingCreditGrantZeroedOutReasonExpired         BillingCreditGrantZeroedOutReason = "expired"
-	BillingCreditGrantZeroedOutReasonManual          BillingCreditGrantZeroedOutReason = "manual"
-	BillingCreditGrantZeroedOutReasonPlanChange      BillingCreditGrantZeroedOutReason = "plan_change"
-	BillingCreditGrantZeroedOutReasonPlanPeriodReset BillingCreditGrantZeroedOutReason = "plan_period_reset"
-	BillingCreditGrantZeroedOutReasonReconciled      BillingCreditGrantZeroedOutReason = "reconciled"
+	BillingCreditGrantZeroedOutReasonCustomerArchived       BillingCreditGrantZeroedOutReason = "customer_archived"
+	BillingCreditGrantZeroedOutReasonExpired                BillingCreditGrantZeroedOutReason = "expired"
+	BillingCreditGrantZeroedOutReasonIntegrationUninstalled BillingCreditGrantZeroedOutReason = "integration_uninstalled"
+	BillingCreditGrantZeroedOutReasonManual                 BillingCreditGrantZeroedOutReason = "manual"
+	BillingCreditGrantZeroedOutReasonPlanChange             BillingCreditGrantZeroedOutReason = "plan_change"
+	BillingCreditGrantZeroedOutReasonPlanPeriodReset        BillingCreditGrantZeroedOutReason = "plan_period_reset"
+	BillingCreditGrantZeroedOutReasonReconciled             BillingCreditGrantZeroedOutReason = "reconciled"
 )
 
 func NewBillingCreditGrantZeroedOutReasonFromString(s string) (BillingCreditGrantZeroedOutReason, error) {
 	switch s {
+	case "customer_archived":
+		return BillingCreditGrantZeroedOutReasonCustomerArchived, nil
 	case "expired":
 		return BillingCreditGrantZeroedOutReasonExpired, nil
+	case "integration_uninstalled":
+		return BillingCreditGrantZeroedOutReasonIntegrationUninstalled, nil
 	case "manual":
 		return BillingCreditGrantZeroedOutReasonManual, nil
 	case "plan_change":
@@ -2727,18 +2736,24 @@ func (b *BillingLinkedResourceResponseData) String() string {
 type BillingPlanCreditGrantResetCadence string
 
 const (
-	BillingPlanCreditGrantResetCadenceDaily   BillingPlanCreditGrantResetCadence = "daily"
-	BillingPlanCreditGrantResetCadenceMonthly BillingPlanCreditGrantResetCadence = "monthly"
-	BillingPlanCreditGrantResetCadenceWeekly  BillingPlanCreditGrantResetCadence = "weekly"
-	BillingPlanCreditGrantResetCadenceYearly  BillingPlanCreditGrantResetCadence = "yearly"
+	BillingPlanCreditGrantResetCadenceDaily        BillingPlanCreditGrantResetCadence = "daily"
+	BillingPlanCreditGrantResetCadenceEvery6Months BillingPlanCreditGrantResetCadence = "every_6_months"
+	BillingPlanCreditGrantResetCadenceMonthly      BillingPlanCreditGrantResetCadence = "monthly"
+	BillingPlanCreditGrantResetCadenceQuarterly    BillingPlanCreditGrantResetCadence = "quarterly"
+	BillingPlanCreditGrantResetCadenceWeekly       BillingPlanCreditGrantResetCadence = "weekly"
+	BillingPlanCreditGrantResetCadenceYearly       BillingPlanCreditGrantResetCadence = "yearly"
 )
 
 func NewBillingPlanCreditGrantResetCadenceFromString(s string) (BillingPlanCreditGrantResetCadence, error) {
 	switch s {
 	case "daily":
 		return BillingPlanCreditGrantResetCadenceDaily, nil
+	case "every_6_months":
+		return BillingPlanCreditGrantResetCadenceEvery6Months, nil
 	case "monthly":
 		return BillingPlanCreditGrantResetCadenceMonthly, nil
+	case "quarterly":
+		return BillingPlanCreditGrantResetCadenceQuarterly, nil
 	case "weekly":
 		return BillingPlanCreditGrantResetCadenceWeekly, nil
 	case "yearly":
@@ -22275,11 +22290,13 @@ var (
 	invoiceRequestBodyFieldCurrency                = big.NewInt(1 << 4)
 	invoiceRequestBodyFieldCustomerExternalID      = big.NewInt(1 << 5)
 	invoiceRequestBodyFieldDueDate                 = big.NewInt(1 << 6)
-	invoiceRequestBodyFieldPaymentMethodExternalID = big.NewInt(1 << 7)
-	invoiceRequestBodyFieldStatus                  = big.NewInt(1 << 8)
-	invoiceRequestBodyFieldSubscriptionExternalID  = big.NewInt(1 << 9)
-	invoiceRequestBodyFieldSubtotal                = big.NewInt(1 << 10)
-	invoiceRequestBodyFieldURL                     = big.NewInt(1 << 11)
+	invoiceRequestBodyFieldEndingBalance           = big.NewInt(1 << 7)
+	invoiceRequestBodyFieldPaymentMethodExternalID = big.NewInt(1 << 8)
+	invoiceRequestBodyFieldStartingBalance         = big.NewInt(1 << 9)
+	invoiceRequestBodyFieldStatus                  = big.NewInt(1 << 10)
+	invoiceRequestBodyFieldSubscriptionExternalID  = big.NewInt(1 << 11)
+	invoiceRequestBodyFieldSubtotal                = big.NewInt(1 << 12)
+	invoiceRequestBodyFieldURL                     = big.NewInt(1 << 13)
 )
 
 type InvoiceRequestBody struct {
@@ -22290,7 +22307,9 @@ type InvoiceRequestBody struct {
 	Currency                string         `json:"currency" url:"currency"`
 	CustomerExternalID      string         `json:"customer_external_id" url:"customer_external_id"`
 	DueDate                 *time.Time     `json:"due_date,omitempty" url:"due_date,omitempty"`
+	EndingBalance           *int64         `json:"ending_balance,omitempty" url:"ending_balance,omitempty"`
 	PaymentMethodExternalID *string        `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
+	StartingBalance         *int64         `json:"starting_balance,omitempty" url:"starting_balance,omitempty"`
 	Status                  *InvoiceStatus `json:"status,omitempty" url:"status,omitempty"`
 	SubscriptionExternalID  *string        `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 	Subtotal                int64          `json:"subtotal" url:"subtotal"`
@@ -22352,11 +22371,25 @@ func (i *InvoiceRequestBody) GetDueDate() *time.Time {
 	return i.DueDate
 }
 
+func (i *InvoiceRequestBody) GetEndingBalance() *int64 {
+	if i == nil {
+		return nil
+	}
+	return i.EndingBalance
+}
+
 func (i *InvoiceRequestBody) GetPaymentMethodExternalID() *string {
 	if i == nil {
 		return nil
 	}
 	return i.PaymentMethodExternalID
+}
+
+func (i *InvoiceRequestBody) GetStartingBalance() *int64 {
+	if i == nil {
+		return nil
+	}
+	return i.StartingBalance
 }
 
 func (i *InvoiceRequestBody) GetStatus() *InvoiceStatus {
@@ -22450,11 +22483,25 @@ func (i *InvoiceRequestBody) SetDueDate(dueDate *time.Time) {
 	i.require(invoiceRequestBodyFieldDueDate)
 }
 
+// SetEndingBalance sets the EndingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InvoiceRequestBody) SetEndingBalance(endingBalance *int64) {
+	i.EndingBalance = endingBalance
+	i.require(invoiceRequestBodyFieldEndingBalance)
+}
+
 // SetPaymentMethodExternalID sets the PaymentMethodExternalID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (i *InvoiceRequestBody) SetPaymentMethodExternalID(paymentMethodExternalID *string) {
 	i.PaymentMethodExternalID = paymentMethodExternalID
 	i.require(invoiceRequestBodyFieldPaymentMethodExternalID)
+}
+
+// SetStartingBalance sets the StartingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InvoiceRequestBody) SetStartingBalance(startingBalance *int64) {
+	i.StartingBalance = startingBalance
+	i.require(invoiceRequestBodyFieldStartingBalance)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
@@ -22545,16 +22592,18 @@ var (
 	invoiceResponseDataFieldCurrency                = big.NewInt(1 << 6)
 	invoiceResponseDataFieldCustomerExternalID      = big.NewInt(1 << 7)
 	invoiceResponseDataFieldDueDate                 = big.NewInt(1 << 8)
-	invoiceResponseDataFieldEnvironmentID           = big.NewInt(1 << 9)
-	invoiceResponseDataFieldExternalID              = big.NewInt(1 << 10)
-	invoiceResponseDataFieldID                      = big.NewInt(1 << 11)
-	invoiceResponseDataFieldPaymentMethodExternalID = big.NewInt(1 << 12)
-	invoiceResponseDataFieldProviderType            = big.NewInt(1 << 13)
-	invoiceResponseDataFieldStatus                  = big.NewInt(1 << 14)
-	invoiceResponseDataFieldSubscriptionExternalID  = big.NewInt(1 << 15)
-	invoiceResponseDataFieldSubtotal                = big.NewInt(1 << 16)
-	invoiceResponseDataFieldUpdatedAt               = big.NewInt(1 << 17)
-	invoiceResponseDataFieldURL                     = big.NewInt(1 << 18)
+	invoiceResponseDataFieldEndingBalance           = big.NewInt(1 << 9)
+	invoiceResponseDataFieldEnvironmentID           = big.NewInt(1 << 10)
+	invoiceResponseDataFieldExternalID              = big.NewInt(1 << 11)
+	invoiceResponseDataFieldID                      = big.NewInt(1 << 12)
+	invoiceResponseDataFieldPaymentMethodExternalID = big.NewInt(1 << 13)
+	invoiceResponseDataFieldProviderType            = big.NewInt(1 << 14)
+	invoiceResponseDataFieldStartingBalance         = big.NewInt(1 << 15)
+	invoiceResponseDataFieldStatus                  = big.NewInt(1 << 16)
+	invoiceResponseDataFieldSubscriptionExternalID  = big.NewInt(1 << 17)
+	invoiceResponseDataFieldSubtotal                = big.NewInt(1 << 18)
+	invoiceResponseDataFieldUpdatedAt               = big.NewInt(1 << 19)
+	invoiceResponseDataFieldURL                     = big.NewInt(1 << 20)
 )
 
 type InvoiceResponseData struct {
@@ -22567,11 +22616,13 @@ type InvoiceResponseData struct {
 	Currency                string              `json:"currency" url:"currency"`
 	CustomerExternalID      string              `json:"customer_external_id" url:"customer_external_id"`
 	DueDate                 *time.Time          `json:"due_date,omitempty" url:"due_date,omitempty"`
+	EndingBalance           int64               `json:"ending_balance" url:"ending_balance"`
 	EnvironmentID           string              `json:"environment_id" url:"environment_id"`
 	ExternalID              *string             `json:"external_id,omitempty" url:"external_id,omitempty"`
 	ID                      string              `json:"id" url:"id"`
 	PaymentMethodExternalID *string             `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
 	ProviderType            BillingProviderType `json:"provider_type" url:"provider_type"`
+	StartingBalance         int64               `json:"starting_balance" url:"starting_balance"`
 	Status                  *InvoiceStatus      `json:"status,omitempty" url:"status,omitempty"`
 	SubscriptionExternalID  *string             `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 	Subtotal                int64               `json:"subtotal" url:"subtotal"`
@@ -22648,6 +22699,13 @@ func (i *InvoiceResponseData) GetDueDate() *time.Time {
 	return i.DueDate
 }
 
+func (i *InvoiceResponseData) GetEndingBalance() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.EndingBalance
+}
+
 func (i *InvoiceResponseData) GetEnvironmentID() string {
 	if i == nil {
 		return ""
@@ -22681,6 +22739,13 @@ func (i *InvoiceResponseData) GetProviderType() BillingProviderType {
 		return ""
 	}
 	return i.ProviderType
+}
+
+func (i *InvoiceResponseData) GetStartingBalance() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.StartingBalance
 }
 
 func (i *InvoiceResponseData) GetStatus() *InvoiceStatus {
@@ -22795,6 +22860,13 @@ func (i *InvoiceResponseData) SetDueDate(dueDate *time.Time) {
 	i.require(invoiceResponseDataFieldDueDate)
 }
 
+// SetEndingBalance sets the EndingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InvoiceResponseData) SetEndingBalance(endingBalance int64) {
+	i.EndingBalance = endingBalance
+	i.require(invoiceResponseDataFieldEndingBalance)
+}
+
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (i *InvoiceResponseData) SetEnvironmentID(environmentID string) {
@@ -22828,6 +22900,13 @@ func (i *InvoiceResponseData) SetPaymentMethodExternalID(paymentMethodExternalID
 func (i *InvoiceResponseData) SetProviderType(providerType BillingProviderType) {
 	i.ProviderType = providerType
 	i.require(invoiceResponseDataFieldProviderType)
+}
+
+// SetStartingBalance sets the StartingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InvoiceResponseData) SetStartingBalance(startingBalance int64) {
+	i.StartingBalance = startingBalance
+	i.require(invoiceResponseDataFieldStartingBalance)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
@@ -25280,6 +25359,7 @@ var (
 	planEntitlementResponseDataFieldValueTrait             = big.NewInt(1 << 26)
 	planEntitlementResponseDataFieldValueTraitID           = big.NewInt(1 << 27)
 	planEntitlementResponseDataFieldValueType              = big.NewInt(1 << 28)
+	planEntitlementResponseDataFieldWarningTiers           = big.NewInt(1 << 29)
 )
 
 type PlanEntitlementResponseData struct {
@@ -25313,6 +25393,7 @@ type PlanEntitlementResponseData struct {
 	ValueTrait    *EntityTraitDefinitionResponseData `json:"value_trait,omitempty" url:"value_trait,omitempty"`
 	ValueTraitID  *string                            `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
 	ValueType     EntitlementValueType               `json:"value_type" url:"value_type"`
+	WarningTiers  []*WarningTierResponseData         `json:"warning_tiers" url:"warning_tiers"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -25522,6 +25603,13 @@ func (p *PlanEntitlementResponseData) GetValueType() EntitlementValueType {
 		return ""
 	}
 	return p.ValueType
+}
+
+func (p *PlanEntitlementResponseData) GetWarningTiers() []*WarningTierResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.WarningTiers
 }
 
 func (p *PlanEntitlementResponseData) GetExtraProperties() map[string]interface{} {
@@ -25739,6 +25827,13 @@ func (p *PlanEntitlementResponseData) SetValueTraitID(valueTraitID *string) {
 func (p *PlanEntitlementResponseData) SetValueType(valueType EntitlementValueType) {
 	p.ValueType = valueType
 	p.require(planEntitlementResponseDataFieldValueType)
+}
+
+// SetWarningTiers sets the WarningTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanEntitlementResponseData) SetWarningTiers(warningTiers []*WarningTierResponseData) {
+	p.WarningTiers = warningTiers
+	p.require(planEntitlementResponseDataFieldWarningTiers)
 }
 
 func (p *PlanEntitlementResponseData) UnmarshalJSON(data []byte) error {
@@ -26269,230 +26364,6 @@ func (p *PlanResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanResponseData) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	if len(p.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(p); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", p)
-}
-
-var (
-	planTraitResponseDataFieldAccountID     = big.NewInt(1 << 0)
-	planTraitResponseDataFieldCreatedAt     = big.NewInt(1 << 1)
-	planTraitResponseDataFieldEnvironmentID = big.NewInt(1 << 2)
-	planTraitResponseDataFieldID            = big.NewInt(1 << 3)
-	planTraitResponseDataFieldPlanID        = big.NewInt(1 << 4)
-	planTraitResponseDataFieldPlanType      = big.NewInt(1 << 5)
-	planTraitResponseDataFieldTraitID       = big.NewInt(1 << 6)
-	planTraitResponseDataFieldTraitValue    = big.NewInt(1 << 7)
-	planTraitResponseDataFieldUpdatedAt     = big.NewInt(1 << 8)
-)
-
-type PlanTraitResponseData struct {
-	AccountID     string    `json:"account_id" url:"account_id"`
-	CreatedAt     time.Time `json:"created_at" url:"created_at"`
-	EnvironmentID string    `json:"environment_id" url:"environment_id"`
-	ID            string    `json:"id" url:"id"`
-	PlanID        string    `json:"plan_id" url:"plan_id"`
-	PlanType      string    `json:"plan_type" url:"plan_type"`
-	TraitID       string    `json:"trait_id" url:"trait_id"`
-	TraitValue    string    `json:"trait_value" url:"trait_value"`
-	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (p *PlanTraitResponseData) GetAccountID() string {
-	if p == nil {
-		return ""
-	}
-	return p.AccountID
-}
-
-func (p *PlanTraitResponseData) GetCreatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.CreatedAt
-}
-
-func (p *PlanTraitResponseData) GetEnvironmentID() string {
-	if p == nil {
-		return ""
-	}
-	return p.EnvironmentID
-}
-
-func (p *PlanTraitResponseData) GetID() string {
-	if p == nil {
-		return ""
-	}
-	return p.ID
-}
-
-func (p *PlanTraitResponseData) GetPlanID() string {
-	if p == nil {
-		return ""
-	}
-	return p.PlanID
-}
-
-func (p *PlanTraitResponseData) GetPlanType() string {
-	if p == nil {
-		return ""
-	}
-	return p.PlanType
-}
-
-func (p *PlanTraitResponseData) GetTraitID() string {
-	if p == nil {
-		return ""
-	}
-	return p.TraitID
-}
-
-func (p *PlanTraitResponseData) GetTraitValue() string {
-	if p == nil {
-		return ""
-	}
-	return p.TraitValue
-}
-
-func (p *PlanTraitResponseData) GetUpdatedAt() time.Time {
-	if p == nil {
-		return time.Time{}
-	}
-	return p.UpdatedAt
-}
-
-func (p *PlanTraitResponseData) GetExtraProperties() map[string]interface{} {
-	if p == nil {
-		return nil
-	}
-	return p.extraProperties
-}
-
-func (p *PlanTraitResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
-	}
-	p.explicitFields.Or(p.explicitFields, field)
-}
-
-// SetAccountID sets the AccountID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetAccountID(accountID string) {
-	p.AccountID = accountID
-	p.require(planTraitResponseDataFieldAccountID)
-}
-
-// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetCreatedAt(createdAt time.Time) {
-	p.CreatedAt = createdAt
-	p.require(planTraitResponseDataFieldCreatedAt)
-}
-
-// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetEnvironmentID(environmentID string) {
-	p.EnvironmentID = environmentID
-	p.require(planTraitResponseDataFieldEnvironmentID)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetID(id string) {
-	p.ID = id
-	p.require(planTraitResponseDataFieldID)
-}
-
-// SetPlanID sets the PlanID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetPlanID(planID string) {
-	p.PlanID = planID
-	p.require(planTraitResponseDataFieldPlanID)
-}
-
-// SetPlanType sets the PlanType field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetPlanType(planType string) {
-	p.PlanType = planType
-	p.require(planTraitResponseDataFieldPlanType)
-}
-
-// SetTraitID sets the TraitID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetTraitID(traitID string) {
-	p.TraitID = traitID
-	p.require(planTraitResponseDataFieldTraitID)
-}
-
-// SetTraitValue sets the TraitValue field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetTraitValue(traitValue string) {
-	p.TraitValue = traitValue
-	p.require(planTraitResponseDataFieldTraitValue)
-}
-
-// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanTraitResponseData) SetUpdatedAt(updatedAt time.Time) {
-	p.UpdatedAt = updatedAt
-	p.require(planTraitResponseDataFieldUpdatedAt)
-}
-
-func (p *PlanTraitResponseData) UnmarshalJSON(data []byte) error {
-	type embed PlanTraitResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*p),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*p = PlanTraitResponseData(unmarshaler.embed)
-	p.CreatedAt = unmarshaler.CreatedAt.Time()
-	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *p)
-	if err != nil {
-		return err
-	}
-	p.extraProperties = extraProperties
-	p.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (p *PlanTraitResponseData) MarshalJSON() ([]byte, error) {
-	type embed PlanTraitResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
-	}{
-		embed:     embed(*p),
-		CreatedAt: internal.NewDateTime(p.CreatedAt),
-		UpdatedAt: internal.NewDateTime(p.UpdatedAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (p *PlanTraitResponseData) String() string {
 	if p == nil {
 		return "<nil>"
 	}
@@ -33372,106 +33243,6 @@ func (u *UpdatePlanRequestBody) String() string {
 }
 
 var (
-	updatePlanTraitTraitRequestBodyFieldTraitID    = big.NewInt(1 << 0)
-	updatePlanTraitTraitRequestBodyFieldTraitValue = big.NewInt(1 << 1)
-)
-
-type UpdatePlanTraitTraitRequestBody struct {
-	TraitID    string `json:"trait_id" url:"trait_id"`
-	TraitValue string `json:"trait_value" url:"trait_value"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) GetTraitID() string {
-	if u == nil {
-		return ""
-	}
-	return u.TraitID
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) GetTraitValue() string {
-	if u == nil {
-		return ""
-	}
-	return u.TraitValue
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) GetExtraProperties() map[string]interface{} {
-	if u == nil {
-		return nil
-	}
-	return u.extraProperties
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
-	}
-	u.explicitFields.Or(u.explicitFields, field)
-}
-
-// SetTraitID sets the TraitID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanTraitTraitRequestBody) SetTraitID(traitID string) {
-	u.TraitID = traitID
-	u.require(updatePlanTraitTraitRequestBodyFieldTraitID)
-}
-
-// SetTraitValue sets the TraitValue field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanTraitTraitRequestBody) SetTraitValue(traitValue string) {
-	u.TraitValue = traitValue
-	u.require(updatePlanTraitTraitRequestBodyFieldTraitValue)
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler UpdatePlanTraitTraitRequestBody
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*u = UpdatePlanTraitTraitRequestBody(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *u)
-	if err != nil {
-		return err
-	}
-	u.extraProperties = extraProperties
-	u.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) MarshalJSON() ([]byte, error) {
-	type embed UpdatePlanTraitTraitRequestBody
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*u),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (u *UpdatePlanTraitTraitRequestBody) String() string {
-	if u == nil {
-		return "<nil>"
-	}
-	if len(u.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(u); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", u)
-}
-
-var (
 	updateRuleRequestBodyFieldConditionGroups = big.NewInt(1 << 0)
 	updateRuleRequestBodyFieldConditions      = big.NewInt(1 << 1)
 	updateRuleRequestBodyFieldName            = big.NewInt(1 << 2)
@@ -35029,6 +34800,122 @@ func (u *UserResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	warningTierResponseDataFieldID    = big.NewInt(1 << 0)
+	warningTierResponseDataFieldKey   = big.NewInt(1 << 1)
+	warningTierResponseDataFieldValue = big.NewInt(1 << 2)
+)
+
+type WarningTierResponseData struct {
+	ID    string `json:"id" url:"id"`
+	Key   string `json:"key" url:"key"`
+	Value int64  `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WarningTierResponseData) GetID() string {
+	if w == nil {
+		return ""
+	}
+	return w.ID
+}
+
+func (w *WarningTierResponseData) GetKey() string {
+	if w == nil {
+		return ""
+	}
+	return w.Key
+}
+
+func (w *WarningTierResponseData) GetValue() int64 {
+	if w == nil {
+		return 0
+	}
+	return w.Value
+}
+
+func (w *WarningTierResponseData) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WarningTierResponseData) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WarningTierResponseData) SetID(id string) {
+	w.ID = id
+	w.require(warningTierResponseDataFieldID)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WarningTierResponseData) SetKey(key string) {
+	w.Key = key
+	w.require(warningTierResponseDataFieldKey)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WarningTierResponseData) SetValue(value int64) {
+	w.Value = value
+	w.require(warningTierResponseDataFieldValue)
+}
+
+func (w *WarningTierResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler WarningTierResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WarningTierResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WarningTierResponseData) MarshalJSON() ([]byte, error) {
+	type embed WarningTierResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*w),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WarningTierResponseData) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
 }
 
 var (

@@ -1298,23 +1298,25 @@ func (i *IntegrationsDataSetResponseData) String() string {
 }
 
 var (
-	integrationsListResponseDataFieldCapabilities     = big.NewInt(1 << 0)
-	integrationsListResponseDataFieldConfig           = big.NewInt(1 << 1)
-	integrationsListResponseDataFieldID               = big.NewInt(1 << 2)
-	integrationsListResponseDataFieldIsAppInstall     = big.NewInt(1 << 3)
-	integrationsListResponseDataFieldIsConnectInstall = big.NewInt(1 << 4)
-	integrationsListResponseDataFieldState            = big.NewInt(1 << 5)
-	integrationsListResponseDataFieldType             = big.NewInt(1 << 6)
+	integrationsListResponseDataFieldCapabilities          = big.NewInt(1 << 0)
+	integrationsListResponseDataFieldConfig                = big.NewInt(1 << 1)
+	integrationsListResponseDataFieldID                    = big.NewInt(1 << 2)
+	integrationsListResponseDataFieldIsAppInstall          = big.NewInt(1 << 3)
+	integrationsListResponseDataFieldIsConnectInstall      = big.NewInt(1 << 4)
+	integrationsListResponseDataFieldLastWebhookReceivedAt = big.NewInt(1 << 5)
+	integrationsListResponseDataFieldState                 = big.NewInt(1 << 6)
+	integrationsListResponseDataFieldType                  = big.NewInt(1 << 7)
 )
 
 type IntegrationsListResponseData struct {
-	Capabilities     *IntegrationCapabilities `json:"capabilities" url:"capabilities"`
-	Config           *IntegrationConfig       `json:"config,omitempty" url:"config,omitempty"`
-	ID               string                   `json:"id" url:"id"`
-	IsAppInstall     bool                     `json:"is_app_install" url:"is_app_install"`
-	IsConnectInstall bool                     `json:"is_connect_install" url:"is_connect_install"`
-	State            IntegrationState         `json:"state" url:"state"`
-	Type             IntegrationType          `json:"type" url:"type"`
+	Capabilities          *IntegrationCapabilities `json:"capabilities" url:"capabilities"`
+	Config                *IntegrationConfig       `json:"config,omitempty" url:"config,omitempty"`
+	ID                    string                   `json:"id" url:"id"`
+	IsAppInstall          bool                     `json:"is_app_install" url:"is_app_install"`
+	IsConnectInstall      bool                     `json:"is_connect_install" url:"is_connect_install"`
+	LastWebhookReceivedAt *time.Time               `json:"last_webhook_received_at,omitempty" url:"last_webhook_received_at,omitempty"`
+	State                 IntegrationState         `json:"state" url:"state"`
+	Type                  IntegrationType          `json:"type" url:"type"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1356,6 +1358,13 @@ func (i *IntegrationsListResponseData) GetIsConnectInstall() bool {
 		return false
 	}
 	return i.IsConnectInstall
+}
+
+func (i *IntegrationsListResponseData) GetLastWebhookReceivedAt() *time.Time {
+	if i == nil {
+		return nil
+	}
+	return i.LastWebhookReceivedAt
 }
 
 func (i *IntegrationsListResponseData) GetState() IntegrationState {
@@ -1421,6 +1430,13 @@ func (i *IntegrationsListResponseData) SetIsConnectInstall(isConnectInstall bool
 	i.require(integrationsListResponseDataFieldIsConnectInstall)
 }
 
+// SetLastWebhookReceivedAt sets the LastWebhookReceivedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IntegrationsListResponseData) SetLastWebhookReceivedAt(lastWebhookReceivedAt *time.Time) {
+	i.LastWebhookReceivedAt = lastWebhookReceivedAt
+	i.require(integrationsListResponseDataFieldLastWebhookReceivedAt)
+}
+
 // SetState sets the State field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (i *IntegrationsListResponseData) SetState(state IntegrationState) {
@@ -1436,12 +1452,18 @@ func (i *IntegrationsListResponseData) SetType(type_ IntegrationType) {
 }
 
 func (i *IntegrationsListResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler IntegrationsListResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed IntegrationsListResponseData
+	var unmarshaler = struct {
+		embed
+		LastWebhookReceivedAt *internal.DateTime `json:"last_webhook_received_at,omitempty"`
+	}{
+		embed: embed(*i),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*i = IntegrationsListResponseData(value)
+	*i = IntegrationsListResponseData(unmarshaler.embed)
+	i.LastWebhookReceivedAt = unmarshaler.LastWebhookReceivedAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *i)
 	if err != nil {
 		return err
@@ -1455,8 +1477,10 @@ func (i *IntegrationsListResponseData) MarshalJSON() ([]byte, error) {
 	type embed IntegrationsListResponseData
 	var marshaler = struct {
 		embed
+		LastWebhookReceivedAt *internal.DateTime `json:"last_webhook_received_at,omitempty"`
 	}{
-		embed: embed(*i),
+		embed:                 embed(*i),
+		LastWebhookReceivedAt: internal.NewOptionalDateTime(i.LastWebhookReceivedAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -1637,13 +1661,26 @@ func (i *IntegrationsResponseData) String() string {
 	return fmt.Sprintf("%#v", i)
 }
 
+var (
+	metronomeIntegrationConfigFieldExternalCustomerIDKey = big.NewInt(1 << 0)
+)
+
 type MetronomeIntegrationConfig struct {
+	// Schematic company key used to store the Metronome customer's ingest alias; when unset, imported customers carry only metronome_customer_id
+	ExternalCustomerIDKey *string `json:"external_customer_id_key,omitempty" url:"external_customer_id_key,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (m *MetronomeIntegrationConfig) GetExternalCustomerIDKey() *string {
+	if m == nil {
+		return nil
+	}
+	return m.ExternalCustomerIDKey
 }
 
 func (m *MetronomeIntegrationConfig) GetExtraProperties() map[string]interface{} {
@@ -1658,6 +1695,13 @@ func (m *MetronomeIntegrationConfig) require(field *big.Int) {
 		m.explicitFields = big.NewInt(0)
 	}
 	m.explicitFields.Or(m.explicitFields, field)
+}
+
+// SetExternalCustomerIDKey sets the ExternalCustomerIDKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetronomeIntegrationConfig) SetExternalCustomerIDKey(externalCustomerIDKey *string) {
+	m.ExternalCustomerIDKey = externalCustomerIDKey
+	m.require(metronomeIntegrationConfigFieldExternalCustomerIDKey)
 }
 
 func (m *MetronomeIntegrationConfig) UnmarshalJSON(data []byte) error {

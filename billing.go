@@ -8516,12 +8516,14 @@ var (
 	createInvoiceRequestBodyFieldCurrency                = big.NewInt(1 << 4)
 	createInvoiceRequestBodyFieldCustomerExternalID      = big.NewInt(1 << 5)
 	createInvoiceRequestBodyFieldDueDate                 = big.NewInt(1 << 6)
-	createInvoiceRequestBodyFieldExternalID              = big.NewInt(1 << 7)
-	createInvoiceRequestBodyFieldPaymentMethodExternalID = big.NewInt(1 << 8)
-	createInvoiceRequestBodyFieldStatus                  = big.NewInt(1 << 9)
-	createInvoiceRequestBodyFieldSubscriptionExternalID  = big.NewInt(1 << 10)
-	createInvoiceRequestBodyFieldSubtotal                = big.NewInt(1 << 11)
-	createInvoiceRequestBodyFieldURL                     = big.NewInt(1 << 12)
+	createInvoiceRequestBodyFieldEndingBalance           = big.NewInt(1 << 7)
+	createInvoiceRequestBodyFieldExternalID              = big.NewInt(1 << 8)
+	createInvoiceRequestBodyFieldPaymentMethodExternalID = big.NewInt(1 << 9)
+	createInvoiceRequestBodyFieldStartingBalance         = big.NewInt(1 << 10)
+	createInvoiceRequestBodyFieldStatus                  = big.NewInt(1 << 11)
+	createInvoiceRequestBodyFieldSubscriptionExternalID  = big.NewInt(1 << 12)
+	createInvoiceRequestBodyFieldSubtotal                = big.NewInt(1 << 13)
+	createInvoiceRequestBodyFieldURL                     = big.NewInt(1 << 14)
 )
 
 type CreateInvoiceRequestBody struct {
@@ -8532,8 +8534,10 @@ type CreateInvoiceRequestBody struct {
 	Currency                string         `json:"currency" url:"-"`
 	CustomerExternalID      string         `json:"customer_external_id" url:"-"`
 	DueDate                 *time.Time     `json:"due_date,omitempty" url:"-"`
+	EndingBalance           *int64         `json:"ending_balance,omitempty" url:"-"`
 	ExternalID              *string        `json:"external_id,omitempty" url:"-"`
 	PaymentMethodExternalID *string        `json:"payment_method_external_id,omitempty" url:"-"`
+	StartingBalance         *int64         `json:"starting_balance,omitempty" url:"-"`
 	Status                  *InvoiceStatus `json:"status,omitempty" url:"-"`
 	SubscriptionExternalID  *string        `json:"subscription_external_id,omitempty" url:"-"`
 	Subtotal                int64          `json:"subtotal" url:"-"`
@@ -8599,6 +8603,13 @@ func (c *CreateInvoiceRequestBody) SetDueDate(dueDate *time.Time) {
 	c.require(createInvoiceRequestBodyFieldDueDate)
 }
 
+// SetEndingBalance sets the EndingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateInvoiceRequestBody) SetEndingBalance(endingBalance *int64) {
+	c.EndingBalance = endingBalance
+	c.require(createInvoiceRequestBodyFieldEndingBalance)
+}
+
 // SetExternalID sets the ExternalID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateInvoiceRequestBody) SetExternalID(externalID *string) {
@@ -8611,6 +8622,13 @@ func (c *CreateInvoiceRequestBody) SetExternalID(externalID *string) {
 func (c *CreateInvoiceRequestBody) SetPaymentMethodExternalID(paymentMethodExternalID *string) {
 	c.PaymentMethodExternalID = paymentMethodExternalID
 	c.require(createInvoiceRequestBodyFieldPaymentMethodExternalID)
+}
+
+// SetStartingBalance sets the StartingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateInvoiceRequestBody) SetStartingBalance(startingBalance *int64) {
+	c.StartingBalance = startingBalance
+	c.require(createInvoiceRequestBodyFieldStartingBalance)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;

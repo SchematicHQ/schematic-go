@@ -11,12 +11,12 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/schematichq/rulesengine"
 	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/datastream"
+	"github.com/schematichq/schematic-go/rulesengine"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -576,7 +576,7 @@ func TestUpdateCompanyMetrics(t *testing.T) {
 	ctx := context.Background()
 
 	// Verify the company was cached via the ID key
-	idKey := fmt.Sprintf("schematic:company:%s:company-id", rulesengine.VersionKey)
+	idKey := fmt.Sprintf("schematic:company:%s:company-id", client.GetCacheVersion())
 	cachedCompany, exists := localCompanyCache.Get(ctx, idKey)
 	assert.True(t, exists, "Company should exist in cache at ID key")
 	assert.NotNil(t, cachedCompany, "Cached company should not be nil")
@@ -817,7 +817,7 @@ func TestCompanyKeyChangeDeletesOldLookupKey(t *testing.T) {
 
 	// Verify company is cached at the ID key
 	ctx := context.Background()
-	idKey := fmt.Sprintf("schematic:company:%s:%s", rulesengine.VersionKey, companyID)
+	idKey := fmt.Sprintf("schematic:company:%s:%s", client.GetCacheVersion(), companyID)
 	cachedCompany, exists := localCompanyCache.Get(ctx, idKey)
 	assert.True(t, exists, "Company should exist in cache at ID key")
 	assert.Equal(t, "old.com", cachedCompany.Keys["domain"])
@@ -866,7 +866,7 @@ func TestUserKeyChangeDeletesOldLookupKey(t *testing.T) {
 
 	// Verify user is cached at the ID key
 	ctx := context.Background()
-	idKey := fmt.Sprintf("schematic:user:%s:%s", rulesengine.VersionKey, userID)
+	idKey := fmt.Sprintf("schematic:user:%s:%s", client.GetCacheVersion(), userID)
 	cachedUser, exists := localUserCache.Get(ctx, idKey)
 	assert.True(t, exists, "User should exist in cache at ID key")
 	assert.Equal(t, "old@example.com", cachedUser.Keys["email"])
@@ -906,7 +906,7 @@ func TestCompanyDeleteCleansUpAllLookupKeys(t *testing.T) {
 
 	companyID := "company-del"
 	ctx := context.Background()
-	idKey := fmt.Sprintf("schematic:company:%s:%s", rulesengine.VersionKey, companyID)
+	idKey := fmt.Sprintf("schematic:company:%s:%s", client.GetCacheVersion(), companyID)
 
 	// Step 1: Cache company with initial keys (orphaning happens when keys change)
 	outgoingMessages <- createCompanyMessageWithIDAndKeys(companyID, map[string]string{"domain": "first.com"}, schematicdatastreamws.MessageTypeFull)
@@ -987,7 +987,7 @@ func TestPartialCompanyMessage_MergesIntoCachedCompany(t *testing.T) {
 	time.Sleep(200 * time.Millisecond)
 
 	ctx := context.Background()
-	idKey := fmt.Sprintf("schematic:company:%s:%s", rulesengine.VersionKey, companyID)
+	idKey := fmt.Sprintf("schematic:company:%s:%s", client.GetCacheVersion(), companyID)
 	cached, exists := localCompanyCache.Get(ctx, idKey)
 	require.True(t, exists, "company should be cached after full message")
 	require.NotNil(t, cached)

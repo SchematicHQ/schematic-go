@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/schematichq/rulesengine"
 	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
+	"github.com/schematichq/schematic-go/rulesengine"
 )
 
 func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *core.DatastreamOptions) *DataStreamClient {
@@ -44,7 +44,17 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 	companyLookupCacheProvider := buildLookupCacheProvider(configurationOptions, redisClient)
 	userLookupCacheProvider := buildLookupCacheProvider(configurationOptions, redisClient)
 
+	// Compile the rules engine once per client; every flag check runs through it.
+	// A failure here means the embedded WebAssembly module is unusable, which no
+	// caller can recover from, so it is fatal in the same way as the cache
+	// providers above.
+	engine, err := rulesengine.NewEngine(context.Background())
+	if err != nil {
+		panic(fmt.Sprintf("failed to create rules engine: %v", err))
+	}
+
 	client := &DataStreamClient{
+		engine:             engine,
 		apiKey:             options.ApiKey,
 		cacheTTL:           configurationOptions.CacheTTL,
 		logger:             options.Logger,
@@ -141,6 +151,16 @@ func (c *DataStreamClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Fatal error occurred while closing client: %v", r))
+		}
+	}()
+
+	// The engine holds a compiled module and its instances; release them however
+	// we leave this function, including via the replicator-mode return below.
+	defer func() {
+		if c.engine != nil {
+			if err := c.engine.Close(ctx); err != nil {
+				c.logger.Error(ctx, fmt.Sprintf("Error closing rules engine: %v", err))
+			}
 		}
 	}()
 
@@ -516,7 +536,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 	// If we have all cached data we need, use it
 	if (!needsCompany || cachedCompany != nil) && (!needsUser || cachedUser != nil) {
 		// Evaluate against the rules engine with cached data
-		resp, err := rulesengine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
+		resp, err := c.engine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
 		if err != nil {
 			return nil, fmt.Errorf("rules engine error: %w", err)
 		}
@@ -527,7 +547,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 	if c.replicatorMode {
 		// In replicator mode, if we don't have all cached data, evaluate with nil values instead of fetching
 		// The external replicator should have populated the cache with all necessary data
-		resp, err := rulesengine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
+		resp, err := c.engine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
 		if err != nil {
 			return nil, fmt.Errorf("rules engine error: %w", err)
 		}
@@ -567,7 +587,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 	}
 
 	// Evaluate against the rules engine
-	resp, err := rulesengine.CheckFlag(ctx, company, user, flag)
+	resp, err := c.engine.CheckFlag(ctx, company, user, flag)
 	if err != nil {
 		return nil, fmt.Errorf("rules engine error: %w", err)
 	}
@@ -751,7 +771,7 @@ func (c *DataStreamClient) getUserFromCache(keys map[string]string) *rulesengine
 func (c *DataStreamClient) cacheVersion() string {
 	versionKey := c.GetCacheVersion()
 	if versionKey == "" {
-		versionKey = rulesengine.VersionKey
+		versionKey = c.engine.VersionKey()
 	}
 	return versionKey
 }
@@ -996,7 +1016,7 @@ func (c *DataStreamClient) GetCacheVersion() string {
 		defer c.replicatorMu.RUnlock()
 		return c.replicatorCacheVersion
 	}
-	return rulesengine.VersionKey
+	return c.engine.VersionKey()
 }
 
 // IsReplicatorMode returns whether the client is running in replicator mode

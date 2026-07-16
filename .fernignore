@@ -56,3 +56,8 @@ webhooks/verification_test.go
 .fern/replay.lock
 .fern/replay.yml
 .gitattributes
+.gitignore
+.github/workflows/wasm.yml
+WASM_VERSION
+scripts/
+rulesengine/

@@ -4,10 +4,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/schematichq/rulesengine"
 	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
+	"github.com/schematichq/schematic-go/rulesengine"
 )
 
 type CompanyCacheProvider cache.CacheProvider[*rulesengine.Company]
@@ -31,6 +31,10 @@ type DataStreamClient struct {
 	userCache          *resourceCache[*rulesengine.User]
 	flagsCacheProvider FlagCacheProvider
 	apiKey             string
+
+	// engine evaluates flags locally. It owns a compiled WebAssembly module and a
+	// pool of instances, so it is built once per client and closed alongside it.
+	engine *rulesengine.Engine
 
 	pendingCompanyRequests map[string][]chan *rulesengine.Company
 	pendingUserRequests    map[string][]chan *rulesengine.User

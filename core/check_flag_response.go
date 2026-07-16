@@ -1,6 +1,6 @@
 package core
 
-import "github.com/schematichq/rulesengine"
+import "github.com/schematichq/schematic-go/rulesengine"
 
 // CheckFlagResponse contains the result of a flag check with entitlement information.
 // Note: FeatureAllocation and FeatureUsage* fields are deprecated and not included.

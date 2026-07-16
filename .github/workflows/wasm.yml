@@ -1,0 +1,53 @@
+name: wasm
+
+on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify-wasm:
+    name: Verify committed WASM matches WASM_VERSION
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Re-download the pinned WASM and diff against the committed binary
+        env:
+          # Authenticates `gh release download` in scripts/download-wasm.sh. The rules
+          # engine WASM lives in the private SchematicHQ/schematic-api repo, so the
+          # default GITHUB_TOKEN (scoped to this repo) cannot read it. Requires a
+          # GH_TOKEN repo secret with read access to schematic-api releases.
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          # rulesengine/wasm/rulesengine.wasm is tracked in git, unlike in every other
+          # Schematic SDK. Go has no publish step in which a gitignored artifact could
+          # be injected -- `go get` serves the module source straight from the git tag,
+          # and //go:embed needs the file present at compile time.
+          #
+          # Committing it is only safe if it cannot drift from its pin, which is what
+          # this job enforces: re-fetch the asset named by WASM_VERSION and prove the
+          # committed bytes match it. The binary is verified, not trusted.
+
+          # Defensive: the marker is gitignored and so absent from a clean checkout,
+          # but if it were ever restored (e.g. by a cache) the script would skip the
+          # download and this check would silently pass without checking anything.
+          rm -f rulesengine/wasm/.wasm_version
+
+          ./scripts/download-wasm.sh
+
+          if ! git diff --exit-code rulesengine/wasm/rulesengine.wasm; then
+            echo ""
+            echo "ERROR: the committed rulesengine/wasm/rulesengine.wasm does not match"
+            echo "WASM_VERSION ($(tr -d '[:space:]' < WASM_VERSION))."
+            echo ""
+            echo "Fix: run ./scripts/download-wasm.sh and commit the result."
+            exit 1
+          fi
+
+          echo "Committed WASM matches WASM_VERSION ($(tr -d '[:space:]' < WASM_VERSION))."

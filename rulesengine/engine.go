@@ -242,7 +242,14 @@ func (e *Engine) CheckFlag(
 		return nil, err
 	}
 
-	inst := <-e.pool
+	// Wait for a free instance, but honor cancellation: if every instance is
+	// busy and ctx is already done, return rather than block indefinitely.
+	var inst *instance
+	select {
+	case inst = <-e.pool:
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
 	defer func() { e.pool <- inst }()
 
 	out, err := inst.checkFlag(ctx, input)

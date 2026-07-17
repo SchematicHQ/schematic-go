@@ -14,7 +14,7 @@ set -e
 #
 # This script therefore regenerates the committed binary rather than being a
 # prerequisite for building. CI runs it and then diffs the result (see
-# .github/workflows/ci.yml), so the committed binary is verified against
+# .github/workflows/wasm.yml), so the committed binary is verified against
 # WASM_VERSION rather than trusted.
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

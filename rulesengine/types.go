@@ -20,53 +20,73 @@ const (
 
 // CheckFlagResult is the outcome of evaluating a flag.
 //
-// Its json tags are camelCase because the engine emits results that way
-// (serde's rename_all = "camelCase") and this type decodes that output
-// directly -- see UnmarshalJSON. The engine's input types accept snake_case via
-// aliases, so only the result direction is camelCase; the wire types in
-// models.go stay snake_case to match the datastream.
+// Its json tags are snake_case, matching the type this SDK previously exposed
+// (the external rulesengine.CheckFlagResult), so callers that marshal a result
+// returned by DataStreamClient.CheckFlag see an unchanged shape. The engine
+// itself emits camelCase (serde's rename_all = "camelCase"); UnmarshalJSON
+// bridges that, so the wire casing never leaks into this public type.
 type CheckFlagResult struct {
-	CompanyID           *string       `json:"companyId,omitempty"`
-	FeatureAllocation   *int64        `json:"featureAllocation,omitempty"`
-	FeatureUsage        *int64        `json:"featureUsage,omitempty"`
-	FeatureUsageEvent   *string       `json:"featureUsageEvent,omitempty"`
-	FeatureUsagePeriod  *MetricPeriod `json:"featureUsagePeriod,omitempty"`
-	FeatureUsageResetAt *time.Time    `json:"featureUsageResetAt,omitempty"`
-	FlagID              *string       `json:"flagId,omitempty"`
-	FlagKey             string        `json:"flagKey"`
-	Reason              string        `json:"reason"`
-	RuleID              *string       `json:"ruleId,omitempty"`
-	RuleType            *RuleType     `json:"ruleType,omitempty"`
-	UserID              *string       `json:"userId,omitempty"`
-	Value               bool          `json:"value"`
-
-	// Handled in UnmarshalJSON rather than decoded directly. Err is a Go error
-	// but the engine sends a string; Entitlement is a FeatureEntitlement, whose
-	// tags are snake_case for datastream input while the engine emits it
-	// camelCase, so it needs the wasmFeatureEntitlement mirror.
-	Err         error               `json:"-"`
-	Entitlement *FeatureEntitlement `json:"-"`
+	CompanyID           *string             `json:"company_id,omitempty"`
+	Err                 error               `json:"err,omitempty"`
+	Entitlement         *FeatureEntitlement `json:"entitlement,omitempty"`
+	FeatureAllocation   *int64              `json:"feature_allocation,omitempty"`
+	FeatureUsage        *int64              `json:"feature_usage,omitempty"`
+	FeatureUsageEvent   *string             `json:"feature_usage_event,omitempty"`
+	FeatureUsagePeriod  *MetricPeriod       `json:"feature_usage_period,omitempty"`
+	FeatureUsageResetAt *time.Time          `json:"feature_usage_reset_at,omitempty"`
+	FlagID              *string             `json:"flag_id,omitempty"`
+	FlagKey             string              `json:"flag_key"`
+	Reason              string              `json:"reason"`
+	RuleID              *string             `json:"rule_id,omitempty"`
+	RuleType            *RuleType           `json:"rule_type,omitempty"`
+	UserID              *string             `json:"user_id,omitempty"`
+	Value               bool                `json:"value"`
 }
 
-// UnmarshalJSON decodes the engine's camelCase result. Every field except Err
-// and Entitlement decodes straight into CheckFlagResult via the alias (which
-// drops this method to avoid recursion); those two are decoded from their raw
-// wire forms and converted.
+// UnmarshalJSON decodes the engine's camelCase result into this snake_case type.
+// It decodes into a local wire struct with the engine's field names, then maps
+// across; Err (the engine sends a string, this carries a Go error) and
+// Entitlement (bidirectional casing, see wasmFeatureEntitlement) are converted.
 func (r *CheckFlagResult) UnmarshalJSON(data []byte) error {
-	type alias CheckFlagResult
-	aux := struct {
-		*alias
-		Err         *string                 `json:"err"`
-		Entitlement *wasmFeatureEntitlement `json:"entitlement"`
-	}{alias: (*alias)(r)}
-
-	if err := json.Unmarshal(data, &aux); err != nil {
+	var w struct {
+		Value               bool                    `json:"value"`
+		Reason              string                  `json:"reason"`
+		Err                 *string                 `json:"err"`
+		RuleID              *string                 `json:"ruleId"`
+		RuleType            *RuleType               `json:"ruleType"`
+		CompanyID           *string                 `json:"companyId"`
+		UserID              *string                 `json:"userId"`
+		Entitlement         *wasmFeatureEntitlement `json:"entitlement"`
+		FlagID              *string                 `json:"flagId"`
+		FlagKey             string                  `json:"flagKey"`
+		FeatureAllocation   *int64                  `json:"featureAllocation"`
+		FeatureUsage        *int64                  `json:"featureUsage"`
+		FeatureUsageEvent   *string                 `json:"featureUsageEvent"`
+		FeatureUsagePeriod  *MetricPeriod           `json:"featureUsagePeriod"`
+		FeatureUsageResetAt *time.Time              `json:"featureUsageResetAt"`
+	}
+	if err := json.Unmarshal(data, &w); err != nil {
 		return err
 	}
 
-	r.Entitlement = aux.Entitlement.toEntitlement()
-	if aux.Err != nil && *aux.Err != "" {
-		r.Err = newRulesEngineError(*aux.Err, 0)
+	*r = CheckFlagResult{
+		Value:               w.Value,
+		Reason:              w.Reason,
+		CompanyID:           w.CompanyID,
+		UserID:              w.UserID,
+		Entitlement:         w.Entitlement.toEntitlement(),
+		FeatureAllocation:   w.FeatureAllocation,
+		FeatureUsage:        w.FeatureUsage,
+		FeatureUsageEvent:   w.FeatureUsageEvent,
+		FeatureUsagePeriod:  w.FeatureUsagePeriod,
+		FeatureUsageResetAt: w.FeatureUsageResetAt,
+		FlagID:              w.FlagID,
+		FlagKey:             w.FlagKey,
+		RuleID:              w.RuleID,
+		RuleType:            w.RuleType,
+	}
+	if w.Err != nil && *w.Err != "" {
+		r.Err = newRulesEngineError(*w.Err, 0)
 	}
 	return nil
 }

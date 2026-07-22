@@ -18,7 +18,7 @@ var (
 
 type CreateDataExportRequestBody struct {
 	ExportType     DataExportType           `json:"export_type" url:"-"`
-	Metadata       string                   `json:"metadata" url:"-"`
+	Metadata       *DataExportMetadata      `json:"metadata,omitempty" url:"-"`
 	OutputFileType DataExportOutputFileType `json:"output_file_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -41,7 +41,7 @@ func (c *CreateDataExportRequestBody) SetExportType(exportType DataExportType) {
 
 // SetMetadata sets the Metadata field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateDataExportRequestBody) SetMetadata(metadata string) {
+func (c *CreateDataExportRequestBody) SetMetadata(metadata *DataExportMetadata) {
 	c.Metadata = metadata
 	c.require(createDataExportRequestBodyFieldMetadata)
 }
@@ -74,7 +74,729 @@ func (c *CreateDataExportRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-type DataExportOutputFileType = string
+var (
+	listDataExportsRequestFieldExportType = big.NewInt(1 << 0)
+	listDataExportsRequestFieldStatus     = big.NewInt(1 << 1)
+	listDataExportsRequestFieldLimit      = big.NewInt(1 << 2)
+	listDataExportsRequestFieldOffset     = big.NewInt(1 << 3)
+)
+
+type ListDataExportsRequest struct {
+	ExportType *DataExportType   `json:"-" url:"export_type,omitempty"`
+	Status     *DataExportStatus `json:"-" url:"status,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListDataExportsRequest) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetExportType sets the ExportType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsRequest) SetExportType(exportType *DataExportType) {
+	l.ExportType = exportType
+	l.require(listDataExportsRequestFieldExportType)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsRequest) SetStatus(status *DataExportStatus) {
+	l.Status = status
+	l.require(listDataExportsRequestFieldStatus)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listDataExportsRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listDataExportsRequestFieldOffset)
+}
+
+var (
+	auditLogExportMetadataFieldActorType                                = big.NewInt(1 << 0)
+	auditLogExportMetadataFieldEndTime                                  = big.NewInt(1 << 1)
+	auditLogExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 2)
+	auditLogExportMetadataFieldQ                                        = big.NewInt(1 << 3)
+	auditLogExportMetadataFieldStartTime                                = big.NewInt(1 << 4)
+)
+
+type AuditLogExportMetadata struct {
+	// Restrict the export to audit log entries from this actor type
+	ActorType *string `json:"actor_type,omitempty" url:"actor_type,omitempty"`
+	// Restrict the export to audit log entries that started before this time
+	EndTime *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// Account member emails to notify when the export completes; empty means the artifact is only retrievable via the API
+	NotificationEmailRecipientEmailAddresses []string `json:"notification_email_recipient_email_addresses,omitempty" url:"notification_email_recipient_email_addresses,omitempty"`
+	// Free-text search over audit log entries
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Restrict the export to audit log entries that started at or after this time
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AuditLogExportMetadata) GetActorType() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ActorType
+}
+
+func (a *AuditLogExportMetadata) GetEndTime() *time.Time {
+	if a == nil {
+		return nil
+	}
+	return a.EndTime
+}
+
+func (a *AuditLogExportMetadata) GetNotificationEmailRecipientEmailAddresses() []string {
+	if a == nil {
+		return nil
+	}
+	return a.NotificationEmailRecipientEmailAddresses
+}
+
+func (a *AuditLogExportMetadata) GetQ() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Q
+}
+
+func (a *AuditLogExportMetadata) GetStartTime() *time.Time {
+	if a == nil {
+		return nil
+	}
+	return a.StartTime
+}
+
+func (a *AuditLogExportMetadata) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AuditLogExportMetadata) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetActorType sets the ActorType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogExportMetadata) SetActorType(actorType *string) {
+	a.ActorType = actorType
+	a.require(auditLogExportMetadataFieldActorType)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogExportMetadata) SetEndTime(endTime *time.Time) {
+	a.EndTime = endTime
+	a.require(auditLogExportMetadataFieldEndTime)
+}
+
+// SetNotificationEmailRecipientEmailAddresses sets the NotificationEmailRecipientEmailAddresses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogExportMetadata) SetNotificationEmailRecipientEmailAddresses(notificationEmailRecipientEmailAddresses []string) {
+	a.NotificationEmailRecipientEmailAddresses = notificationEmailRecipientEmailAddresses
+	a.require(auditLogExportMetadataFieldNotificationEmailRecipientEmailAddresses)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogExportMetadata) SetQ(q *string) {
+	a.Q = q
+	a.require(auditLogExportMetadataFieldQ)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogExportMetadata) SetStartTime(startTime *time.Time) {
+	a.StartTime = startTime
+	a.require(auditLogExportMetadataFieldStartTime)
+}
+
+func (a *AuditLogExportMetadata) UnmarshalJSON(data []byte) error {
+	type embed AuditLogExportMetadata
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = AuditLogExportMetadata(unmarshaler.embed)
+	a.EndTime = unmarshaler.EndTime.TimePtr()
+	a.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AuditLogExportMetadata) MarshalJSON() ([]byte, error) {
+	type embed AuditLogExportMetadata
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*a),
+		EndTime:   internal.NewOptionalDateTime(a.EndTime),
+		StartTime: internal.NewOptionalDateTime(a.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AuditLogExportMetadata) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+var (
+	companyFeatureUsageExportMetadataFieldCompanyIDs                               = big.NewInt(1 << 0)
+	companyFeatureUsageExportMetadataFieldCreditTypeIDs                            = big.NewInt(1 << 1)
+	companyFeatureUsageExportMetadataFieldFeatureIDs                               = big.NewInt(1 << 2)
+	companyFeatureUsageExportMetadataFieldHasScheduledDowngrade                    = big.NewInt(1 << 3)
+	companyFeatureUsageExportMetadataFieldMonetizedSubscriptions                   = big.NewInt(1 << 4)
+	companyFeatureUsageExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 5)
+	companyFeatureUsageExportMetadataFieldPlanID                                   = big.NewInt(1 << 6)
+	companyFeatureUsageExportMetadataFieldPlanIDs                                  = big.NewInt(1 << 7)
+	companyFeatureUsageExportMetadataFieldPlanVersionID                            = big.NewInt(1 << 8)
+	companyFeatureUsageExportMetadataFieldQ                                        = big.NewInt(1 << 9)
+	companyFeatureUsageExportMetadataFieldSubscriptionStatuses                     = big.NewInt(1 << 10)
+	companyFeatureUsageExportMetadataFieldSubscriptionTypes                        = big.NewInt(1 << 11)
+	companyFeatureUsageExportMetadataFieldWithEntitlementFor                       = big.NewInt(1 << 12)
+	companyFeatureUsageExportMetadataFieldWithSubscription                         = big.NewInt(1 << 13)
+	companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor                = big.NewInt(1 << 14)
+	companyFeatureUsageExportMetadataFieldWithoutPlan                              = big.NewInt(1 << 15)
+	companyFeatureUsageExportMetadataFieldWithoutSubscription                      = big.NewInt(1 << 16)
+)
+
+type CompanyFeatureUsageExportMetadata struct {
+	// Restrict the export to these Schematic company IDs (starting with 'comp_')
+	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	// Restrict the export to companies with these billing credit type IDs
+	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
+	// Schematic feature IDs (starting with 'feat_') to include as usage columns; at least one is required
+	FeatureIDs []string `json:"feature_ids" url:"feature_ids"`
+	// Restrict the export to companies that do (or do not) have a scheduled downgrade
+	HasScheduledDowngrade *bool `json:"has_scheduled_downgrade,omitempty" url:"has_scheduled_downgrade,omitempty"`
+	// Restrict the export to companies with (or without) a monetized subscription
+	MonetizedSubscriptions *bool `json:"monetized_subscriptions,omitempty" url:"monetized_subscriptions,omitempty"`
+	// Account member emails to notify when the export completes; empty means the artifact is only retrievable via the API
+	NotificationEmailRecipientEmailAddresses []string `json:"notification_email_recipient_email_addresses,omitempty" url:"notification_email_recipient_email_addresses,omitempty"`
+	// Restrict the export to companies on this plan ID (starting with 'plan_')
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Restrict the export to companies on any of these plan IDs
+	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
+	// Restrict the export to companies on this plan version ID
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	// Free-text search over company name and keys
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Restrict the export to companies whose subscription has one of these statuses
+	SubscriptionStatuses []string `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
+	// Restrict the export to companies whose subscription has one of these types
+	SubscriptionTypes []string `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
+	// Restrict the export to companies that have an entitlement for this feature ID
+	WithEntitlementFor *string `json:"with_entitlement_for,omitempty" url:"with_entitlement_for,omitempty"`
+	// Restrict the export to companies with a subscription
+	WithSubscription *bool `json:"with_subscription,omitempty" url:"with_subscription,omitempty"`
+	// Restrict the export to companies without a company-level override for this feature ID
+	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
+	// Restrict the export to companies without a plan
+	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
+	// Restrict the export to companies without a subscription
+	WithoutSubscription *bool `json:"without_subscription,omitempty" url:"without_subscription,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetCompanyIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyIDs
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetCreditTypeIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditTypeIDs
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetFeatureIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureIDs
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetHasScheduledDowngrade() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.HasScheduledDowngrade
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetMonetizedSubscriptions() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.MonetizedSubscriptions
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetNotificationEmailRecipientEmailAddresses() []string {
+	if c == nil {
+		return nil
+	}
+	return c.NotificationEmailRecipientEmailAddresses
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanID
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetPlanIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanIDs
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetQ() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Q
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetSubscriptionStatuses() []string {
+	if c == nil {
+		return nil
+	}
+	return c.SubscriptionStatuses
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetSubscriptionTypes() []string {
+	if c == nil {
+		return nil
+	}
+	return c.SubscriptionTypes
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetWithEntitlementFor() *string {
+	if c == nil {
+		return nil
+	}
+	return c.WithEntitlementFor
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetWithSubscription() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithSubscription
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetWithoutFeatureOverrideFor() *string {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutFeatureOverrideFor
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetWithoutPlan() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutPlan
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetWithoutSubscription() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutSubscription
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyFeatureUsageExportMetadata) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetCompanyIDs(companyIDs []string) {
+	c.CompanyIDs = companyIDs
+	c.require(companyFeatureUsageExportMetadataFieldCompanyIDs)
+}
+
+// SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetCreditTypeIDs(creditTypeIDs []string) {
+	c.CreditTypeIDs = creditTypeIDs
+	c.require(companyFeatureUsageExportMetadataFieldCreditTypeIDs)
+}
+
+// SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetFeatureIDs(featureIDs []string) {
+	c.FeatureIDs = featureIDs
+	c.require(companyFeatureUsageExportMetadataFieldFeatureIDs)
+}
+
+// SetHasScheduledDowngrade sets the HasScheduledDowngrade field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetHasScheduledDowngrade(hasScheduledDowngrade *bool) {
+	c.HasScheduledDowngrade = hasScheduledDowngrade
+	c.require(companyFeatureUsageExportMetadataFieldHasScheduledDowngrade)
+}
+
+// SetMonetizedSubscriptions sets the MonetizedSubscriptions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetMonetizedSubscriptions(monetizedSubscriptions *bool) {
+	c.MonetizedSubscriptions = monetizedSubscriptions
+	c.require(companyFeatureUsageExportMetadataFieldMonetizedSubscriptions)
+}
+
+// SetNotificationEmailRecipientEmailAddresses sets the NotificationEmailRecipientEmailAddresses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetNotificationEmailRecipientEmailAddresses(notificationEmailRecipientEmailAddresses []string) {
+	c.NotificationEmailRecipientEmailAddresses = notificationEmailRecipientEmailAddresses
+	c.require(companyFeatureUsageExportMetadataFieldNotificationEmailRecipientEmailAddresses)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetPlanID(planID *string) {
+	c.PlanID = planID
+	c.require(companyFeatureUsageExportMetadataFieldPlanID)
+}
+
+// SetPlanIDs sets the PlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetPlanIDs(planIDs []string) {
+	c.PlanIDs = planIDs
+	c.require(companyFeatureUsageExportMetadataFieldPlanIDs)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(companyFeatureUsageExportMetadataFieldPlanVersionID)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetQ(q *string) {
+	c.Q = q
+	c.require(companyFeatureUsageExportMetadataFieldQ)
+}
+
+// SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetSubscriptionStatuses(subscriptionStatuses []string) {
+	c.SubscriptionStatuses = subscriptionStatuses
+	c.require(companyFeatureUsageExportMetadataFieldSubscriptionStatuses)
+}
+
+// SetSubscriptionTypes sets the SubscriptionTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetSubscriptionTypes(subscriptionTypes []string) {
+	c.SubscriptionTypes = subscriptionTypes
+	c.require(companyFeatureUsageExportMetadataFieldSubscriptionTypes)
+}
+
+// SetWithEntitlementFor sets the WithEntitlementFor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetWithEntitlementFor(withEntitlementFor *string) {
+	c.WithEntitlementFor = withEntitlementFor
+	c.require(companyFeatureUsageExportMetadataFieldWithEntitlementFor)
+}
+
+// SetWithSubscription sets the WithSubscription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetWithSubscription(withSubscription *bool) {
+	c.WithSubscription = withSubscription
+	c.require(companyFeatureUsageExportMetadataFieldWithSubscription)
+}
+
+// SetWithoutFeatureOverrideFor sets the WithoutFeatureOverrideFor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetWithoutFeatureOverrideFor(withoutFeatureOverrideFor *string) {
+	c.WithoutFeatureOverrideFor = withoutFeatureOverrideFor
+	c.require(companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor)
+}
+
+// SetWithoutPlan sets the WithoutPlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetWithoutPlan(withoutPlan *bool) {
+	c.WithoutPlan = withoutPlan
+	c.require(companyFeatureUsageExportMetadataFieldWithoutPlan)
+}
+
+// SetWithoutSubscription sets the WithoutSubscription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetWithoutSubscription(withoutSubscription *bool) {
+	c.WithoutSubscription = withoutSubscription
+	c.require(companyFeatureUsageExportMetadataFieldWithoutSubscription)
+}
+
+func (c *CompanyFeatureUsageExportMetadata) UnmarshalJSON(data []byte) error {
+	type unmarshaler CompanyFeatureUsageExportMetadata
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CompanyFeatureUsageExportMetadata(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyFeatureUsageExportMetadata) MarshalJSON() ([]byte, error) {
+	type embed CompanyFeatureUsageExportMetadata
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyFeatureUsageExportMetadata) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type DataExportMetadata struct {
+	ExportType          string
+	AuditLog            *AuditLogExportMetadata
+	CompanyFeatureUsage *CompanyFeatureUsageExportMetadata
+
+	rawJSON json.RawMessage
+}
+
+func (d *DataExportMetadata) GetExportType() string {
+	if d == nil {
+		return ""
+	}
+	return d.ExportType
+}
+
+func (d *DataExportMetadata) GetAuditLog() *AuditLogExportMetadata {
+	if d == nil {
+		return nil
+	}
+	return d.AuditLog
+}
+
+func (d *DataExportMetadata) GetCompanyFeatureUsage() *CompanyFeatureUsageExportMetadata {
+	if d == nil {
+		return nil
+	}
+	return d.CompanyFeatureUsage
+}
+
+func (d *DataExportMetadata) UnmarshalJSON(data []byte) error {
+	var unmarshaler struct {
+		ExportType string `json:"export_type"`
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	d.ExportType = unmarshaler.ExportType
+	if unmarshaler.ExportType == "" {
+		return fmt.Errorf("%T did not include discriminant export_type", d)
+	}
+	switch unmarshaler.ExportType {
+	case "audit-log":
+		value := new(AuditLogExportMetadata)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		d.AuditLog = value
+	case "company-feature-usage":
+		value := new(CompanyFeatureUsageExportMetadata)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		d.CompanyFeatureUsage = value
+	}
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d DataExportMetadata) MarshalJSON() ([]byte, error) {
+	if err := d.validate(); err != nil {
+		return nil, err
+	}
+	if d.AuditLog != nil {
+		return internal.MarshalJSONWithExtraProperty(d.AuditLog, "export_type", "audit-log")
+	}
+	if d.CompanyFeatureUsage != nil {
+		return internal.MarshalJSONWithExtraProperty(d.CompanyFeatureUsage, "export_type", "company-feature-usage")
+	}
+	if len(d.rawJSON) > 0 {
+		return d.rawJSON, nil
+	}
+	return nil, fmt.Errorf("type %T does not define a non-empty union type", d)
+}
+
+type DataExportMetadataVisitor interface {
+	VisitAuditLog(*AuditLogExportMetadata) error
+	VisitCompanyFeatureUsage(*CompanyFeatureUsageExportMetadata) error
+}
+
+func (d *DataExportMetadata) Accept(visitor DataExportMetadataVisitor) error {
+	if d.AuditLog != nil {
+		return visitor.VisitAuditLog(d.AuditLog)
+	}
+	if d.CompanyFeatureUsage != nil {
+		return visitor.VisitCompanyFeatureUsage(d.CompanyFeatureUsage)
+	}
+	return fmt.Errorf("type %T does not define a non-empty union type", d)
+}
+
+func (d *DataExportMetadata) validate() error {
+	if d == nil {
+		return fmt.Errorf("type %T is nil", d)
+	}
+	var fields []string
+	if d.AuditLog != nil {
+		fields = append(fields, "audit-log")
+	}
+	if d.CompanyFeatureUsage != nil {
+		fields = append(fields, "company-feature-usage")
+	}
+	if len(fields) == 0 {
+		if d.ExportType != "" {
+			if len(d.rawJSON) > 0 {
+				return nil
+			}
+			return fmt.Errorf("type %T defines a discriminant set to %q but the field is not set", d, d.ExportType)
+		}
+		return fmt.Errorf("type %T is empty", d)
+	}
+	if len(fields) > 1 {
+		return fmt.Errorf("type %T defines values for %s, but only one value is allowed", d, fields)
+	}
+	if d.ExportType != "" {
+		field := fields[0]
+		if d.ExportType != field {
+			return fmt.Errorf(
+				"type %T defines a discriminant set to %q, but it does not match the %T field; either remove or update the discriminant to match",
+				d,
+				d.ExportType,
+				d,
+			)
+		}
+	}
+	return nil
+}
+
+type DataExportOutputFileType string
+
+const (
+	DataExportOutputFileTypeCsv   DataExportOutputFileType = "csv"
+	DataExportOutputFileTypeCsvGz DataExportOutputFileType = "csv.gz"
+)
+
+func NewDataExportOutputFileTypeFromString(s string) (DataExportOutputFileType, error) {
+	switch s {
+	case "csv":
+		return DataExportOutputFileTypeCsv, nil
+	case "csv.gz":
+		return DataExportOutputFileTypeCsvGz, nil
+	}
+	var t DataExportOutputFileType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (d DataExportOutputFileType) Ptr() *DataExportOutputFileType {
+	return &d
+}
 
 var (
 	dataExportResponseDataFieldAccountID      = big.NewInt(1 << 0)
@@ -94,7 +816,7 @@ type DataExportResponseData struct {
 	EnvironmentID  string                   `json:"environment_id" url:"environment_id"`
 	ExportType     DataExportType           `json:"export_type" url:"export_type"`
 	ID             string                   `json:"id" url:"id"`
-	Metadata       string                   `json:"metadata" url:"metadata"`
+	Metadata       *DataExportMetadata      `json:"metadata,omitempty" url:"metadata,omitempty"`
 	OutputFileType DataExportOutputFileType `json:"output_file_type" url:"output_file_type"`
 	Status         DataExportStatus         `json:"status" url:"status"`
 	UpdatedAt      time.Time                `json:"updated_at" url:"updated_at"`
@@ -127,6 +849,13 @@ func (d *DataExportResponseData) GetEnvironmentID() string {
 	return d.EnvironmentID
 }
 
+func (d *DataExportResponseData) GetExportType() DataExportType {
+	if d == nil {
+		return ""
+	}
+	return d.ExportType
+}
+
 func (d *DataExportResponseData) GetID() string {
 	if d == nil {
 		return ""
@@ -134,11 +863,18 @@ func (d *DataExportResponseData) GetID() string {
 	return d.ID
 }
 
-func (d *DataExportResponseData) GetMetadata() string {
+func (d *DataExportResponseData) GetMetadata() *DataExportMetadata {
+	if d == nil {
+		return nil
+	}
+	return d.Metadata
+}
+
+func (d *DataExportResponseData) GetOutputFileType() DataExportOutputFileType {
 	if d == nil {
 		return ""
 	}
-	return d.Metadata
+	return d.OutputFileType
 }
 
 func (d *DataExportResponseData) GetStatus() DataExportStatus {
@@ -206,7 +942,7 @@ func (d *DataExportResponseData) SetID(id string) {
 
 // SetMetadata sets the Metadata field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (d *DataExportResponseData) SetMetadata(metadata string) {
+func (d *DataExportResponseData) SetMetadata(metadata *DataExportMetadata) {
 	d.Metadata = metadata
 	d.require(dataExportResponseDataFieldMetadata)
 }
@@ -311,7 +1047,27 @@ func (d DataExportStatus) Ptr() *DataExportStatus {
 	return &d
 }
 
-type DataExportType = string
+type DataExportType string
+
+const (
+	DataExportTypeAuditLog            DataExportType = "audit-log"
+	DataExportTypeCompanyFeatureUsage DataExportType = "company-feature-usage"
+)
+
+func NewDataExportTypeFromString(s string) (DataExportType, error) {
+	switch s {
+	case "audit-log":
+		return DataExportTypeAuditLog, nil
+	case "company-feature-usage":
+		return DataExportTypeCompanyFeatureUsage, nil
+	}
+	var t DataExportType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (d DataExportType) Ptr() *DataExportType {
+	return &d
+}
 
 var (
 	createDataExportResponseFieldData   = big.NewInt(1 << 0)
@@ -412,4 +1168,341 @@ func (c *CreateDataExportResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	getDataExportResponseFieldData   = big.NewInt(1 << 0)
+	getDataExportResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetDataExportResponse struct {
+	Data *DataExportResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetDataExportResponse) GetData() *DataExportResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetDataExportResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetDataExportResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetDataExportResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetDataExportResponse) SetData(data *DataExportResponseData) {
+	g.Data = data
+	g.require(getDataExportResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetDataExportResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getDataExportResponseFieldParams)
+}
+
+func (g *GetDataExportResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetDataExportResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetDataExportResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetDataExportResponse) MarshalJSON() ([]byte, error) {
+	type embed GetDataExportResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetDataExportResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+var (
+	listDataExportsParamsFieldExportType = big.NewInt(1 << 0)
+	listDataExportsParamsFieldLimit      = big.NewInt(1 << 1)
+	listDataExportsParamsFieldOffset     = big.NewInt(1 << 2)
+	listDataExportsParamsFieldStatus     = big.NewInt(1 << 3)
+)
+
+type ListDataExportsParams struct {
+	ExportType *DataExportType `json:"export_type,omitempty" url:"export_type,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64            `json:"offset,omitempty" url:"offset,omitempty"`
+	Status *DataExportStatus `json:"status,omitempty" url:"status,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListDataExportsParams) GetExportType() *DataExportType {
+	if l == nil {
+		return nil
+	}
+	return l.ExportType
+}
+
+func (l *ListDataExportsParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListDataExportsParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListDataExportsParams) GetStatus() *DataExportStatus {
+	if l == nil {
+		return nil
+	}
+	return l.Status
+}
+
+func (l *ListDataExportsParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListDataExportsParams) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetExportType sets the ExportType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsParams) SetExportType(exportType *DataExportType) {
+	l.ExportType = exportType
+	l.require(listDataExportsParamsFieldExportType)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listDataExportsParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listDataExportsParamsFieldOffset)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsParams) SetStatus(status *DataExportStatus) {
+	l.Status = status
+	l.require(listDataExportsParamsFieldStatus)
+}
+
+func (l *ListDataExportsParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListDataExportsParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListDataExportsParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListDataExportsParams) MarshalJSON() ([]byte, error) {
+	type embed ListDataExportsParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListDataExportsParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listDataExportsResponseFieldData   = big.NewInt(1 << 0)
+	listDataExportsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListDataExportsResponse struct {
+	Data []*DataExportResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListDataExportsParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListDataExportsResponse) GetData() []*DataExportResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListDataExportsResponse) GetParams() *ListDataExportsParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListDataExportsResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListDataExportsResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsResponse) SetData(data []*DataExportResponseData) {
+	l.Data = data
+	l.require(listDataExportsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListDataExportsResponse) SetParams(params *ListDataExportsParams) {
+	l.Params = params
+	l.require(listDataExportsResponseFieldParams)
+}
+
+func (l *ListDataExportsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListDataExportsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListDataExportsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListDataExportsResponse) MarshalJSON() ([]byte, error) {
+	type embed ListDataExportsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListDataExportsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }

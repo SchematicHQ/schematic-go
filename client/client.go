@@ -8,6 +8,7 @@ import (
 	accesstokens "github.com/schematichq/schematic-go/accesstokens"
 	accounts "github.com/schematichq/schematic-go/accounts"
 	billing "github.com/schematichq/schematic-go/billing"
+	catalogs "github.com/schematichq/schematic-go/catalogs"
 	checkout "github.com/schematichq/schematic-go/checkout"
 	companies "github.com/schematichq/schematic-go/companies"
 	components "github.com/schematichq/schematic-go/components"
@@ -35,6 +36,7 @@ type Client struct {
 	Accounts          *accounts.Client
 	Billing           *billing.Client
 	Credits           *credits.Client
+	Catalogs          *catalogs.Client
 	Checkout          *checkout.Client
 	Companies         *companies.Client
 	Entitlements      *entitlements.Client
@@ -64,6 +66,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Accounts:          accounts.NewClient(options),
 		Billing:           billing.NewClient(options),
 		Credits:           credits.NewClient(options),
+		Catalogs:          catalogs.NewClient(options),
 		Checkout:          checkout.NewClient(options),
 		Companies:         companies.NewClient(options),
 		Entitlements:      entitlements.NewClient(options),

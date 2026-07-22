@@ -3986,16 +3986,22 @@ func (u *UpdatePlanTraitTraitRequestBody) String() string {
 }
 
 var (
-	upsertCompanyRequestBodyFieldID              = big.NewInt(1 << 0)
-	upsertCompanyRequestBodyFieldKeys            = big.NewInt(1 << 1)
-	upsertCompanyRequestBodyFieldLastSeenAt      = big.NewInt(1 << 2)
-	upsertCompanyRequestBodyFieldName            = big.NewInt(1 << 3)
-	upsertCompanyRequestBodyFieldPreventKeyRemap = big.NewInt(1 << 4)
-	upsertCompanyRequestBodyFieldTraits          = big.NewInt(1 << 5)
-	upsertCompanyRequestBodyFieldUpdateOnly      = big.NewInt(1 << 6)
+	upsertCompanyRequestBodyFieldBasePlanID      = big.NewInt(1 << 0)
+	upsertCompanyRequestBodyFieldBasePlanPriceID = big.NewInt(1 << 1)
+	upsertCompanyRequestBodyFieldID              = big.NewInt(1 << 2)
+	upsertCompanyRequestBodyFieldKeys            = big.NewInt(1 << 3)
+	upsertCompanyRequestBodyFieldLastSeenAt      = big.NewInt(1 << 4)
+	upsertCompanyRequestBodyFieldName            = big.NewInt(1 << 5)
+	upsertCompanyRequestBodyFieldPreventKeyRemap = big.NewInt(1 << 6)
+	upsertCompanyRequestBodyFieldTraits          = big.NewInt(1 << 7)
+	upsertCompanyRequestBodyFieldUpdateOnly      = big.NewInt(1 << 8)
 )
 
 type UpsertCompanyRequestBody struct {
+	// Assign this base plan when creating the company (starts with plan_). Takes precedence over the environment's initial plan and must be provisionable without a payment method.
+	BasePlanID *string `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
+	// The Schematic price to provision for base_plan_id (starts with bilpp_). Required and must be $0 for a billing-linked plan; omit for a plan that is not billing-linked.
+	BasePlanPriceID *string `json:"base_plan_price_id,omitempty" url:"base_plan_price_id,omitempty"`
 	// If you know the Schematic ID, you can use that here instead of keys
 	ID *string `json:"id,omitempty" url:"id,omitempty"`
 	// See [Key Management](https://docs.schematichq.com/developer_resources/key_management) for more information
@@ -4012,6 +4018,20 @@ type UpsertCompanyRequestBody struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (u *UpsertCompanyRequestBody) GetBasePlanID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.BasePlanID
+}
+
+func (u *UpsertCompanyRequestBody) GetBasePlanPriceID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.BasePlanPriceID
 }
 
 func (u *UpsertCompanyRequestBody) GetID() *string {
@@ -4075,6 +4095,20 @@ func (u *UpsertCompanyRequestBody) require(field *big.Int) {
 		u.explicitFields = big.NewInt(0)
 	}
 	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetBasePlanID sets the BasePlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertCompanyRequestBody) SetBasePlanID(basePlanID *string) {
+	u.BasePlanID = basePlanID
+	u.require(upsertCompanyRequestBodyFieldBasePlanID)
+}
+
+// SetBasePlanPriceID sets the BasePlanPriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertCompanyRequestBody) SetBasePlanPriceID(basePlanPriceID *string) {
+	u.BasePlanPriceID = basePlanPriceID
+	u.require(upsertCompanyRequestBodyFieldBasePlanPriceID)
 }
 
 // SetID sets the ID field and marks it as non-optional;

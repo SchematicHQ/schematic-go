@@ -18,6 +18,14 @@ func TestSettersCreateCustomPlanBundleRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCreditGrants", func(t *testing.T) {
+		obj := &CreateCustomPlanBundleRequestBody{}
+		var fernTestValueCreditGrants []*PlanBundleCreditGrantRequestBody
+		obj.SetCreditGrants(fernTestValueCreditGrants)
+		assert.Equal(t, fernTestValueCreditGrants, obj.CreditGrants)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetEntitlements", func(t *testing.T) {
 		obj := &CreateCustomPlanBundleRequestBody{}
 		var fernTestValueEntitlements []*PlanBundleEntitlementRequestBody
@@ -45,6 +53,37 @@ func TestSettersMarkExplicitCreateCustomPlanBundleRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetBillingProduct(fernTestValueBillingProduct)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetCreditGrants_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateCustomPlanBundleRequestBody{}
+		var fernTestValueCreditGrants []*PlanBundleCreditGrantRequestBody
+
+		// Act
+		obj.SetCreditGrants(fernTestValueCreditGrants)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -791,6 +830,14 @@ func TestSettersCreateEntitlementInBundleRequestBody(t *testing.T) {
 		var fernTestValueValueType EntitlementValueType
 		obj.SetValueType(fernTestValueValueType)
 		assert.Equal(t, fernTestValueValueType, obj.ValueType)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetWarningTiers", func(t *testing.T) {
+		obj := &CreateEntitlementInBundleRequestBody{}
+		var fernTestValueWarningTiers []*WarningTierRequestBody
+		obj.SetWarningTiers(fernTestValueWarningTiers)
+		assert.Equal(t, fernTestValueWarningTiers, obj.WarningTiers)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -1754,6 +1801,39 @@ func TestGettersCreateEntitlementInBundleRequestBody(t *testing.T) {
 			}
 		}()
 		_ = obj.GetValueType() // Should return zero value
+	})
+
+	t.Run("GetWarningTiers", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEntitlementInBundleRequestBody{}
+		var expected []*WarningTierRequestBody
+		obj.WarningTiers = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetWarningTiers(), "getter should return the property value")
+	})
+
+	t.Run("GetWarningTiers_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEntitlementInBundleRequestBody{}
+		obj.WarningTiers = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetWarningTiers(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetWarningTiers_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreateEntitlementInBundleRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetWarningTiers() // Should return zero value
 	})
 
 	t.Run("GetYearlyMeteredPriceID", func(t *testing.T) {
@@ -2767,6 +2847,37 @@ func TestSettersMarkExplicitCreateEntitlementInBundleRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetValueType(fernTestValueValueType)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetWarningTiers_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEntitlementInBundleRequestBody{}
+		var fernTestValueWarningTiers []*WarningTierRequestBody
+
+		// Act
+		obj.SetWarningTiers(fernTestValueWarningTiers)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

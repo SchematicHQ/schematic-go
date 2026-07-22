@@ -35,6 +35,22 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+func (c *Client) ListDataExports(
+	ctx context.Context,
+	request *schematichq.ListDataExportsRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListDataExportsResponse, error) {
+	response, err := c.WithRawResponse.ListDataExports(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CreateDataExport(
 	ctx context.Context,
 	request *schematichq.CreateDataExportRequestBody,
@@ -43,6 +59,23 @@ func (c *Client) CreateDataExport(
 	response, err := c.WithRawResponse.CreateDataExport(
 		ctx,
 		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) GetDataExport(
+	ctx context.Context,
+	// data_export_id
+	dataExportID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetDataExportResponse, error) {
+	response, err := c.WithRawResponse.GetDataExport(
+		ctx,
+		dataExportID,
 		opts...,
 	)
 	if err != nil {

@@ -11,12 +11,14 @@ import (
 
 var (
 	createCustomPlanBundleRequestBodyFieldBillingProduct = big.NewInt(1 << 0)
-	createCustomPlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 1)
-	createCustomPlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 2)
+	createCustomPlanBundleRequestBodyFieldCreditGrants   = big.NewInt(1 << 1)
+	createCustomPlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
+	createCustomPlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 3)
 )
 
 type CreateCustomPlanBundleRequestBody struct {
 	BillingProduct *UpsertBillingProductRequestBody       `json:"billing_product,omitempty" url:"-"`
+	CreditGrants   []*PlanBundleCreditGrantRequestBody    `json:"credit_grants,omitempty" url:"-"`
 	Entitlements   []*PlanBundleEntitlementRequestBody    `json:"entitlements" url:"-"`
 	Plan           *CreateCustomPlanBundlePlanRequestBody `json:"plan,omitempty" url:"-"`
 
@@ -36,6 +38,13 @@ func (c *CreateCustomPlanBundleRequestBody) require(field *big.Int) {
 func (c *CreateCustomPlanBundleRequestBody) SetBillingProduct(billingProduct *UpsertBillingProductRequestBody) {
 	c.BillingProduct = billingProduct
 	c.require(createCustomPlanBundleRequestBodyFieldBillingProduct)
+}
+
+// SetCreditGrants sets the CreditGrants field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundleRequestBody) SetCreditGrants(creditGrants []*PlanBundleCreditGrantRequestBody) {
+	c.CreditGrants = creditGrants
+	c.require(createCustomPlanBundleRequestBodyFieldCreditGrants)
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;
@@ -308,10 +317,11 @@ var (
 	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 26)
 	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 27)
 	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 28)
-	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 29)
-	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 30)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 31)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 32)
+	createEntitlementInBundleRequestBodyFieldWarningTiers              = big.NewInt(1 << 29)
+	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 30)
+	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 31)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 32)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 33)
 )
 
 type CreateEntitlementInBundleRequestBody struct {
@@ -346,6 +356,7 @@ type CreateEntitlementInBundleRequestBody struct {
 	ValueNumeric           *int64                        `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
 	ValueTraitID           *string                       `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
 	ValueType              EntitlementValueType          `json:"value_type" url:"value_type"`
+	WarningTiers           []*WarningTierRequestBody     `json:"warning_tiers,omitempty" url:"warning_tiers,omitempty"`
 	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
 	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
 	YearlyUnitPrice        *int64                        `json:"yearly_unit_price,omitempty" url:"yearly_unit_price,omitempty"`
@@ -559,6 +570,13 @@ func (c *CreateEntitlementInBundleRequestBody) GetValueType() EntitlementValueTy
 		return ""
 	}
 	return c.ValueType
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetWarningTiers() []*WarningTierRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.WarningTiers
 }
 
 func (c *CreateEntitlementInBundleRequestBody) GetYearlyMeteredPriceID() *string {
@@ -804,6 +822,13 @@ func (c *CreateEntitlementInBundleRequestBody) SetValueTraitID(valueTraitID *str
 func (c *CreateEntitlementInBundleRequestBody) SetValueType(valueType EntitlementValueType) {
 	c.ValueType = valueType
 	c.require(createEntitlementInBundleRequestBodyFieldValueType)
+}
+
+// SetWarningTiers sets the WarningTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetWarningTiers(warningTiers []*WarningTierRequestBody) {
+	c.WarningTiers = warningTiers
+	c.require(createEntitlementInBundleRequestBodyFieldWarningTiers)
 }
 
 // SetYearlyMeteredPriceID sets the YearlyMeteredPriceID field and marks it as non-optional;

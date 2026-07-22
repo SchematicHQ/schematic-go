@@ -6536,6 +6536,817 @@ client.Credits.CountCreditEventLedger(
 </dl>
 </details>
 
+## catalogs
+<details><summary><code>client.Catalogs.ListCatalogs() -> *schematichq.ListCatalogsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListCatalogsRequest{
+        IsDefault: schematichq.Bool(
+            true,
+        ),
+        Q: schematichq.String(
+            "q",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Catalogs.ListCatalogs(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**isDefault:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `*string` — Search by catalog name
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.CreateCatalog(request) -> *schematichq.CreateCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreateCatalogRequestBody{
+        IsDefault: true,
+        Name: "name",
+    }
+client.Catalogs.CreateCatalog(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**description:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**isDefault:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.GetCatalog(CatalogID) -> *schematichq.GetCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.GetCatalog(
+        context.TODO(),
+        "catalog_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.UpdateCatalog(CatalogID, request) -> *schematichq.UpdateCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateCatalogRequestBody{}
+client.Catalogs.UpdateCatalog(
+        context.TODO(),
+        "catalog_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**description:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**isDefault:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.DeleteCatalog(CatalogID) -> *schematichq.DeleteCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.DeleteCatalog(
+        context.TODO(),
+        "catalog_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.GetConfiguration(CatalogID) -> *schematichq.GetConfigurationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.GetConfiguration(
+        context.TODO(),
+        "catalog_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.UpdateConfiguration(CatalogID, request) -> *schematichq.UpdateConfigurationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateCatalogConfigurationRequestBody{}
+client.Catalogs.UpdateConfiguration(
+        context.TODO(),
+        "catalog_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customPlanCtaText:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customPlanCtaURL:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customPlanPriceText:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customPlansVisible:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**orderedAddOns:** `[]*schematichq.CatalogConfigOrderedPlan` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**orderedBundles:** `[]*schematichq.CatalogConfigOrderedBundle` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**orderedPlans:** `[]*schematichq.CatalogConfigOrderedPlan` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**pricingModel:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**pricingURL:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.GetCreditBundlesInCatalog(CatalogID) -> *schematichq.GetCreditBundlesInCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.GetCreditBundlesInCatalog(
+        context.TODO(),
+        "catalog_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.AddCreditBundle(CatalogID, CreditBundleID) -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.AddCreditBundle(
+        context.TODO(),
+        "catalog_id",
+        "credit_bundle_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditBundleID:** `string` — credit_bundle_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.RemoveCreditBundle(CatalogID, CreditBundleID) -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.RemoveCreditBundle(
+        context.TODO(),
+        "catalog_id",
+        "credit_bundle_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditBundleID:** `string` — credit_bundle_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.GetDerivedFeatures(CatalogID) -> *schematichq.GetDerivedFeaturesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.GetDerivedFeatures(
+        context.TODO(),
+        "catalog_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.GetPlansInCatalog(CatalogID) -> *schematichq.GetPlansInCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.GetPlansInCatalog(
+        context.TODO(),
+        "catalog_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.AddPlan(CatalogID, PlanID) -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.AddPlan(
+        context.TODO(),
+        "catalog_id",
+        "plan_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planID:** `string` — plan_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.RemovePlan(CatalogID, PlanID) -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.RemovePlan(
+        context.TODO(),
+        "catalog_id",
+        "plan_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planID:** `string` — plan_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## checkout
 <details><summary><code>client.Checkout.Internal(request) -> *schematichq.CheckoutInternalResponse</code></summary>
 <dl>
@@ -6747,6 +7558,135 @@ client.Checkout.PreviewCheckoutInternal(
 <dd>
 
 **request:** `*schematichq.ChangeSubscriptionInternalRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Checkout.GetCompanyBillingDetails(CompanyID) -> *schematichq.GetCompanyBillingDetailsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Checkout.GetCompanyBillingDetails(
+        context.TODO(),
+        "company_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Checkout.UpdateCompanyBillingDetails(CompanyID, request) -> *schematichq.UpdateCompanyBillingDetailsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateCompanyBillingDetailsRequestBody{
+        Values: []*schematichq.CheckoutFieldValue{
+            &schematichq.CheckoutFieldValue{
+                ID: "id",
+                Value: "value",
+            },
+        },
+    }
+client.Checkout.UpdateCompanyBillingDetails(
+        context.TODO(),
+        "company_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**address:** `*schematichq.CustomerBillingAddress` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**email:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**phone:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**values:** `[]*schematichq.CheckoutFieldValue` 
     
 </dd>
 </dl>
@@ -14645,6 +15585,60 @@ client.Components.DeleteComponent(
 </dl>
 </details>
 
+<details><summary><code>client.Components.BindCatalog(ComponentID, request) -> *schematichq.BindCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.BindCatalogRequestBody{}
+client.Components.BindCatalog(
+        context.TODO(),
+        "component_id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**componentID:** `string` — component_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**catalogID:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Components.CountComponents() -> *schematichq.CountComponentsResponse</code></summary>
 <dl>
 <dd>
@@ -14817,6 +15811,14 @@ client.Planbundle.CreateCustomPlanBundle(
 <dd>
 
 **billingProduct:** `*schematichq.UpsertBillingProductRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditGrants:** `[]*schematichq.PlanBundleCreditGrantRequestBody` 
     
 </dd>
 </dl>
@@ -15012,6 +16014,84 @@ client.Planbundle.UpdatePlanBundle(
 </details>
 
 ## dataexports
+<details><summary><code>client.Dataexports.ListDataExports() -> *schematichq.ListDataExportsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListDataExportsRequest{
+        ExportType: schematichq.DataExportTypeAuditLog.Ptr(),
+        Status: schematichq.DataExportStatusFailure.Ptr(),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Dataexports.ListDataExports(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**exportType:** `*schematichq.DataExportType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**status:** `*schematichq.DataExportStatus` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Dataexports.CreateDataExport(request) -> *schematichq.CreateDataExportResponse</code></summary>
 <dl>
 <dd>
@@ -15026,13 +16106,8 @@ client.Planbundle.UpdatePlanBundle(
 
 ```go
 request := &schematichq.CreateDataExportRequestBody{
-        ExportType: schematichq.DataExportType(
-            "company-feature-usage",
-        ),
-        Metadata: "metadata",
-        OutputFileType: schematichq.DataExportOutputFileType(
-            "csv",
-        ),
+        ExportType: schematichq.DataExportTypeAuditLog,
+        OutputFileType: schematichq.DataExportOutputFileTypeCsv,
     }
 client.Dataexports.CreateDataExport(
         context.TODO(),
@@ -15053,7 +16128,7 @@ client.Dataexports.CreateDataExport(
 <dl>
 <dd>
 
-**exportType:** `schematichq.DataExportType` 
+**exportType:** `*schematichq.DataExportType` 
     
 </dd>
 </dl>
@@ -15061,7 +16136,7 @@ client.Dataexports.CreateDataExport(
 <dl>
 <dd>
 
-**metadata:** `string` 
+**metadata:** `*schematichq.DataExportMetadata` 
     
 </dd>
 </dl>
@@ -15069,7 +16144,51 @@ client.Dataexports.CreateDataExport(
 <dl>
 <dd>
 
-**outputFileType:** `schematichq.DataExportOutputFileType` 
+**outputFileType:** `*schematichq.DataExportOutputFileType` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Dataexports.GetDataExport(DataExportID) -> *schematichq.GetDataExportResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Dataexports.GetDataExport(
+        context.TODO(),
+        "data_export_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**dataExportID:** `string` — data_export_id
     
 </dd>
 </dl>

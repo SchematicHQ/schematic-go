@@ -10518,6 +10518,22 @@ func TestSettersMarkExplicitUpdatePlanTraitTraitRequestBody(t *testing.T) {
 }
 
 func TestSettersUpsertCompanyRequestBody(t *testing.T) {
+	t.Run("SetBasePlanID", func(t *testing.T) {
+		obj := &UpsertCompanyRequestBody{}
+		var fernTestValueBasePlanID *string
+		obj.SetBasePlanID(fernTestValueBasePlanID)
+		assert.Equal(t, fernTestValueBasePlanID, obj.BasePlanID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetBasePlanPriceID", func(t *testing.T) {
+		obj := &UpsertCompanyRequestBody{}
+		var fernTestValueBasePlanPriceID *string
+		obj.SetBasePlanPriceID(fernTestValueBasePlanPriceID)
+		assert.Equal(t, fernTestValueBasePlanPriceID, obj.BasePlanPriceID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetID", func(t *testing.T) {
 		obj := &UpsertCompanyRequestBody{}
 		var fernTestValueID *string
@@ -10577,6 +10593,72 @@ func TestSettersUpsertCompanyRequestBody(t *testing.T) {
 }
 
 func TestGettersUpsertCompanyRequestBody(t *testing.T) {
+	t.Run("GetBasePlanID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpsertCompanyRequestBody{}
+		var expected *string
+		obj.BasePlanID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetBasePlanID(), "getter should return the property value")
+	})
+
+	t.Run("GetBasePlanID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpsertCompanyRequestBody{}
+		obj.BasePlanID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetBasePlanID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetBasePlanID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UpsertCompanyRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetBasePlanID() // Should return zero value
+	})
+
+	t.Run("GetBasePlanPriceID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpsertCompanyRequestBody{}
+		var expected *string
+		obj.BasePlanPriceID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetBasePlanPriceID(), "getter should return the property value")
+	})
+
+	t.Run("GetBasePlanPriceID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpsertCompanyRequestBody{}
+		obj.BasePlanPriceID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetBasePlanPriceID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetBasePlanPriceID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UpsertCompanyRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetBasePlanPriceID() // Should return zero value
+	})
+
 	t.Run("GetID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -10811,6 +10893,68 @@ func TestGettersUpsertCompanyRequestBody(t *testing.T) {
 }
 
 func TestSettersMarkExplicitUpsertCompanyRequestBody(t *testing.T) {
+	t.Run("SetBasePlanID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpsertCompanyRequestBody{}
+		var fernTestValueBasePlanID *string
+
+		// Act
+		obj.SetBasePlanID(fernTestValueBasePlanID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetBasePlanPriceID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpsertCompanyRequestBody{}
+		var fernTestValueBasePlanPriceID *string
+
+		// Act
+		obj.SetBasePlanPriceID(fernTestValueBasePlanPriceID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange

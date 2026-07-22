@@ -82,6 +82,42 @@ func (c *Client) PreviewCheckoutInternal(
 	return response.Body, nil
 }
 
+func (c *Client) GetCompanyBillingDetails(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetCompanyBillingDetailsResponse, error) {
+	response, err := c.WithRawResponse.GetCompanyBillingDetails(
+		ctx,
+		companyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) UpdateCompanyBillingDetails(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	request *schematichq.UpdateCompanyBillingDetailsRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpdateCompanyBillingDetailsResponse, error) {
+	response, err := c.WithRawResponse.UpdateCompanyBillingDetails(
+		ctx,
+		companyID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) ManagePlan(
 	ctx context.Context,
 	request *schematichq.ManagePlanRequest,

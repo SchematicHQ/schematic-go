@@ -11,6 +11,52 @@ import (
 )
 
 var (
+	bindCatalogRequestBodyFieldCatalogID = big.NewInt(1 << 0)
+)
+
+type BindCatalogRequestBody struct {
+	CatalogID *string `json:"catalog_id,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (b *BindCatalogRequestBody) require(field *big.Int) {
+	if b.explicitFields == nil {
+		b.explicitFields = big.NewInt(0)
+	}
+	b.explicitFields.Or(b.explicitFields, field)
+}
+
+// SetCatalogID sets the CatalogID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BindCatalogRequestBody) SetCatalogID(catalogID *string) {
+	b.CatalogID = catalogID
+	b.require(bindCatalogRequestBodyFieldCatalogID)
+}
+
+func (b *BindCatalogRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler BindCatalogRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*b = BindCatalogRequestBody(body)
+	return nil
+}
+
+func (b *BindCatalogRequestBody) MarshalJSON() ([]byte, error) {
+	type embed BindCatalogRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*b),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	countComponentsRequestFieldQ      = big.NewInt(1 << 0)
 	countComponentsRequestFieldLimit  = big.NewInt(1 << 1)
 	countComponentsRequestFieldOffset = big.NewInt(1 << 2)
@@ -966,78 +1012,80 @@ var (
 	companyPlanDetailResponseDataFieldBillingLinkedResource = big.NewInt(1 << 3)
 	companyPlanDetailResponseDataFieldBillingProduct        = big.NewInt(1 << 4)
 	companyPlanDetailResponseDataFieldBillingStrategy       = big.NewInt(1 << 5)
-	companyPlanDetailResponseDataFieldChargeType            = big.NewInt(1 << 6)
-	companyPlanDetailResponseDataFieldCompanyCanTrial       = big.NewInt(1 << 7)
-	companyPlanDetailResponseDataFieldCompanyCount          = big.NewInt(1 << 8)
-	companyPlanDetailResponseDataFieldCompanyID             = big.NewInt(1 << 9)
-	companyPlanDetailResponseDataFieldCompanyLogoURL        = big.NewInt(1 << 10)
-	companyPlanDetailResponseDataFieldCompanyName           = big.NewInt(1 << 11)
-	companyPlanDetailResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 12)
-	companyPlanDetailResponseDataFieldControlledBy          = big.NewInt(1 << 13)
-	companyPlanDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 14)
-	companyPlanDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 15)
-	companyPlanDetailResponseDataFieldCredits               = big.NewInt(1 << 16)
-	companyPlanDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 17)
-	companyPlanDetailResponseDataFieldCurrent               = big.NewInt(1 << 18)
-	companyPlanDetailResponseDataFieldCustom                = big.NewInt(1 << 19)
-	companyPlanDetailResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 20)
-	companyPlanDetailResponseDataFieldDescription           = big.NewInt(1 << 21)
-	companyPlanDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 22)
-	companyPlanDetailResponseDataFieldEntitlements          = big.NewInt(1 << 23)
-	companyPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 24)
-	companyPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 25)
-	companyPlanDetailResponseDataFieldID                    = big.NewInt(1 << 26)
-	companyPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 27)
-	companyPlanDetailResponseDataFieldInvalidReason         = big.NewInt(1 << 28)
-	companyPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 29)
-	companyPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 30)
-	companyPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 31)
-	companyPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 32)
-	companyPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 33)
-	companyPlanDetailResponseDataFieldName                  = big.NewInt(1 << 34)
-	companyPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 35)
-	companyPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 36)
-	companyPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 37)
-	companyPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 38)
-	companyPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 39)
-	companyPlanDetailResponseDataFieldUsageViolations       = big.NewInt(1 << 40)
-	companyPlanDetailResponseDataFieldValid                 = big.NewInt(1 << 41)
-	companyPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 42)
-	companyPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 43)
+	companyPlanDetailResponseDataFieldCatalogs              = big.NewInt(1 << 6)
+	companyPlanDetailResponseDataFieldChargeType            = big.NewInt(1 << 7)
+	companyPlanDetailResponseDataFieldCompanyCanTrial       = big.NewInt(1 << 8)
+	companyPlanDetailResponseDataFieldCompanyCount          = big.NewInt(1 << 9)
+	companyPlanDetailResponseDataFieldCompanyID             = big.NewInt(1 << 10)
+	companyPlanDetailResponseDataFieldCompanyLogoURL        = big.NewInt(1 << 11)
+	companyPlanDetailResponseDataFieldCompanyName           = big.NewInt(1 << 12)
+	companyPlanDetailResponseDataFieldCompatiblePlanIDs     = big.NewInt(1 << 13)
+	companyPlanDetailResponseDataFieldControlledBy          = big.NewInt(1 << 14)
+	companyPlanDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 15)
+	companyPlanDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 16)
+	companyPlanDetailResponseDataFieldCredits               = big.NewInt(1 << 17)
+	companyPlanDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 18)
+	companyPlanDetailResponseDataFieldCurrent               = big.NewInt(1 << 19)
+	companyPlanDetailResponseDataFieldCustom                = big.NewInt(1 << 20)
+	companyPlanDetailResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 21)
+	companyPlanDetailResponseDataFieldDescription           = big.NewInt(1 << 22)
+	companyPlanDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 23)
+	companyPlanDetailResponseDataFieldEntitlements          = big.NewInt(1 << 24)
+	companyPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 25)
+	companyPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 26)
+	companyPlanDetailResponseDataFieldID                    = big.NewInt(1 << 27)
+	companyPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 28)
+	companyPlanDetailResponseDataFieldInvalidReason         = big.NewInt(1 << 29)
+	companyPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 30)
+	companyPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 31)
+	companyPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 32)
+	companyPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 33)
+	companyPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 34)
+	companyPlanDetailResponseDataFieldName                  = big.NewInt(1 << 35)
+	companyPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 36)
+	companyPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 37)
+	companyPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 38)
+	companyPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 39)
+	companyPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 40)
+	companyPlanDetailResponseDataFieldUsageViolations       = big.NewInt(1 << 41)
+	companyPlanDetailResponseDataFieldValid                 = big.NewInt(1 << 42)
+	companyPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 43)
+	companyPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 44)
 )
 
 type CompanyPlanDetailResponseData struct {
-	ActiveVersion         *PlanVersionResponseData           `json:"active_version,omitempty" url:"active_version,omitempty"`
-	AudienceType          *string                            `json:"audience_type,omitempty" url:"audience_type,omitempty"`
-	AvailablePeriods      []PlanPriceCadence                 `json:"available_periods" url:"available_periods"`
-	BillingLinkedResource *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
-	BillingProduct        *BillingProductDetailResponseData  `json:"billing_product,omitempty" url:"billing_product,omitempty"`
-	BillingStrategy       BillingStrategy                    `json:"billing_strategy" url:"billing_strategy"`
-	ChargeType            ChargeType                         `json:"charge_type" url:"charge_type"`
-	CompanyCanTrial       bool                               `json:"company_can_trial" url:"company_can_trial"`
-	CompanyCount          int64                              `json:"company_count" url:"company_count"`
-	CompanyID             *string                            `json:"company_id,omitempty" url:"company_id,omitempty"`
-	CompanyLogoURL        *string                            `json:"company_logo_url,omitempty" url:"company_logo_url,omitempty"`
-	CompanyName           *string                            `json:"company_name,omitempty" url:"company_name,omitempty"`
-	CompatiblePlanIDs     []string                           `json:"compatible_plan_ids" url:"compatible_plan_ids"`
-	ControlledBy          BillingProviderType                `json:"controlled_by" url:"controlled_by"`
-	CopiedFromPlanID      *string                            `json:"copied_from_plan_id,omitempty" url:"copied_from_plan_id,omitempty"`
-	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
-	Credits               []*BillingCreditResponseData       `json:"credits" url:"credits"`
-	CurrencyPrices        []*PlanCurrencyPricesResponseData  `json:"currency_prices" url:"currency_prices"`
-	Current               bool                               `json:"current" url:"current"`
-	Custom                bool                               `json:"custom" url:"custom"`
-	CustomPlanConfig      *CustomPlanConfig                  `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
-	Description           string                             `json:"description" url:"description"`
-	DraftVersion          *PlanVersionResponseData           `json:"draft_version,omitempty" url:"draft_version,omitempty"`
-	Entitlements          []*PlanEntitlementResponseData     `json:"entitlements,omitempty" url:"entitlements,omitempty"`
-	Features              []*FeatureInPlanResponseData       `json:"features" url:"features"`
-	Icon                  PlanIcon                           `json:"icon" url:"icon"`
-	ID                    string                             `json:"id" url:"id"`
-	IncludedCreditGrants  []*PlanCreditGrantView             `json:"included_credit_grants" url:"included_credit_grants"`
-	InvalidReason         *CompanyPlanInvalidReason          `json:"invalid_reason,omitempty" url:"invalid_reason,omitempty"`
-	IsCustom              bool                               `json:"is_custom" url:"is_custom"`
-	IsDefault             bool                               `json:"is_default" url:"is_default"`
+	ActiveVersion         *PlanVersionResponseData             `json:"active_version,omitempty" url:"active_version,omitempty"`
+	AudienceType          *string                              `json:"audience_type,omitempty" url:"audience_type,omitempty"`
+	AvailablePeriods      []PlanPriceCadence                   `json:"available_periods" url:"available_periods"`
+	BillingLinkedResource *BillingLinkedResourceResponseData   `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
+	BillingProduct        *BillingProductDetailResponseData    `json:"billing_product,omitempty" url:"billing_product,omitempty"`
+	BillingStrategy       BillingStrategy                      `json:"billing_strategy" url:"billing_strategy"`
+	Catalogs              []*PlanCatalogMembershipResponseData `json:"catalogs,omitempty" url:"catalogs,omitempty"`
+	ChargeType            ChargeType                           `json:"charge_type" url:"charge_type"`
+	CompanyCanTrial       bool                                 `json:"company_can_trial" url:"company_can_trial"`
+	CompanyCount          int64                                `json:"company_count" url:"company_count"`
+	CompanyID             *string                              `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CompanyLogoURL        *string                              `json:"company_logo_url,omitempty" url:"company_logo_url,omitempty"`
+	CompanyName           *string                              `json:"company_name,omitempty" url:"company_name,omitempty"`
+	CompatiblePlanIDs     []string                             `json:"compatible_plan_ids" url:"compatible_plan_ids"`
+	ControlledBy          BillingProviderType                  `json:"controlled_by" url:"controlled_by"`
+	CopiedFromPlanID      *string                              `json:"copied_from_plan_id,omitempty" url:"copied_from_plan_id,omitempty"`
+	CreatedAt             time.Time                            `json:"created_at" url:"created_at"`
+	Credits               []*BillingCreditResponseData         `json:"credits" url:"credits"`
+	CurrencyPrices        []*PlanCurrencyPricesResponseData    `json:"currency_prices" url:"currency_prices"`
+	Current               bool                                 `json:"current" url:"current"`
+	Custom                bool                                 `json:"custom" url:"custom"`
+	CustomPlanConfig      *CustomPlanConfig                    `json:"custom_plan_config,omitempty" url:"custom_plan_config,omitempty"`
+	Description           string                               `json:"description" url:"description"`
+	DraftVersion          *PlanVersionResponseData             `json:"draft_version,omitempty" url:"draft_version,omitempty"`
+	Entitlements          []*PlanEntitlementResponseData       `json:"entitlements,omitempty" url:"entitlements,omitempty"`
+	Features              []*FeatureInPlanResponseData         `json:"features" url:"features"`
+	Icon                  PlanIcon                             `json:"icon" url:"icon"`
+	ID                    string                               `json:"id" url:"id"`
+	IncludedCreditGrants  []*PlanCreditGrantView               `json:"included_credit_grants" url:"included_credit_grants"`
+	InvalidReason         *CompanyPlanInvalidReason            `json:"invalid_reason,omitempty" url:"invalid_reason,omitempty"`
+	IsCustom              bool                                 `json:"is_custom" url:"is_custom"`
+	IsDefault             bool                                 `json:"is_default" url:"is_default"`
 	// Deprecated: Use BillingStrategy instead
 	IsFree          bool                        `json:"is_free" url:"is_free"`
 	IsTrialable     bool                        `json:"is_trialable" url:"is_trialable"`
@@ -1100,6 +1148,13 @@ func (c *CompanyPlanDetailResponseData) GetBillingStrategy() BillingStrategy {
 		return ""
 	}
 	return c.BillingStrategy
+}
+
+func (c *CompanyPlanDetailResponseData) GetCatalogs() []*PlanCatalogMembershipResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Catalogs
 }
 
 func (c *CompanyPlanDetailResponseData) GetChargeType() ChargeType {
@@ -1422,6 +1477,13 @@ func (c *CompanyPlanDetailResponseData) SetBillingProduct(billingProduct *Billin
 func (c *CompanyPlanDetailResponseData) SetBillingStrategy(billingStrategy BillingStrategy) {
 	c.BillingStrategy = billingStrategy
 	c.require(companyPlanDetailResponseDataFieldBillingStrategy)
+}
+
+// SetCatalogs sets the Catalogs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanDetailResponseData) SetCatalogs(catalogs []*PlanCatalogMembershipResponseData) {
+	c.Catalogs = catalogs
+	c.require(companyPlanDetailResponseDataFieldCatalogs)
 }
 
 // SetChargeType sets the ChargeType field and marks it as non-optional;
@@ -2438,16 +2500,18 @@ func (c *ComponentPreviewResponseData) String() string {
 
 var (
 	componentResponseDataFieldAst       = big.NewInt(1 << 0)
-	componentResponseDataFieldCreatedAt = big.NewInt(1 << 1)
-	componentResponseDataFieldID        = big.NewInt(1 << 2)
-	componentResponseDataFieldName      = big.NewInt(1 << 3)
-	componentResponseDataFieldState     = big.NewInt(1 << 4)
-	componentResponseDataFieldType      = big.NewInt(1 << 5)
-	componentResponseDataFieldUpdatedAt = big.NewInt(1 << 6)
+	componentResponseDataFieldCatalogID = big.NewInt(1 << 1)
+	componentResponseDataFieldCreatedAt = big.NewInt(1 << 2)
+	componentResponseDataFieldID        = big.NewInt(1 << 3)
+	componentResponseDataFieldName      = big.NewInt(1 << 4)
+	componentResponseDataFieldState     = big.NewInt(1 << 5)
+	componentResponseDataFieldType      = big.NewInt(1 << 6)
+	componentResponseDataFieldUpdatedAt = big.NewInt(1 << 7)
 )
 
 type ComponentResponseData struct {
 	Ast       map[string]float64  `json:"ast,omitempty" url:"ast,omitempty"`
+	CatalogID *string             `json:"catalog_id,omitempty" url:"catalog_id,omitempty"`
 	CreatedAt time.Time           `json:"created_at" url:"created_at"`
 	ID        string              `json:"id" url:"id"`
 	Name      string              `json:"name" url:"name"`
@@ -2467,6 +2531,13 @@ func (c *ComponentResponseData) GetAst() map[string]float64 {
 		return nil
 	}
 	return c.Ast
+}
+
+func (c *ComponentResponseData) GetCatalogID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CatalogID
 }
 
 func (c *ComponentResponseData) GetCreatedAt() time.Time {
@@ -2530,6 +2601,13 @@ func (c *ComponentResponseData) require(field *big.Int) {
 func (c *ComponentResponseData) SetAst(ast map[string]float64) {
 	c.Ast = ast
 	c.require(componentResponseDataFieldAst)
+}
+
+// SetCatalogID sets the CatalogID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentResponseData) SetCatalogID(catalogID *string) {
+	c.CatalogID = catalogID
+	c.require(componentResponseDataFieldCatalogID)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -3708,6 +3786,107 @@ func (s *StripeEmbedInfo) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", s)
+}
+
+var (
+	bindCatalogResponseFieldData   = big.NewInt(1 << 0)
+	bindCatalogResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type BindCatalogResponse struct {
+	Data *ComponentResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BindCatalogResponse) GetData() *ComponentResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Data
+}
+
+func (b *BindCatalogResponse) GetParams() map[string]any {
+	if b == nil {
+		return nil
+	}
+	return b.Params
+}
+
+func (b *BindCatalogResponse) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BindCatalogResponse) require(field *big.Int) {
+	if b.explicitFields == nil {
+		b.explicitFields = big.NewInt(0)
+	}
+	b.explicitFields.Or(b.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BindCatalogResponse) SetData(data *ComponentResponseData) {
+	b.Data = data
+	b.require(bindCatalogResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BindCatalogResponse) SetParams(params map[string]any) {
+	b.Params = params
+	b.require(bindCatalogResponseFieldParams)
+}
+
+func (b *BindCatalogResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler BindCatalogResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BindCatalogResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BindCatalogResponse) MarshalJSON() ([]byte, error) {
+	type embed BindCatalogResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*b),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BindCatalogResponse) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
 }
 
 // Input parameters

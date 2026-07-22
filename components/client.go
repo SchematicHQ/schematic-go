@@ -119,6 +119,25 @@ func (c *Client) DeleteComponent(
 	return response.Body, nil
 }
 
+func (c *Client) BindCatalog(
+	ctx context.Context,
+	// component_id
+	componentID string,
+	request *schematichq.BindCatalogRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.BindCatalogResponse, error) {
+	response, err := c.WithRawResponse.BindCatalog(
+		ctx,
+		componentID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CountComponents(
 	ctx context.Context,
 	request *schematichq.CountComponentsRequest,

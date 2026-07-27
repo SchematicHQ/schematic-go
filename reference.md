@@ -50,6 +50,7 @@ request := &schematichq.ListAccountMembersRequest{
         Q: schematichq.String(
             "q",
         ),
+        Role: schematichq.AccountMemberRoleAdmin.Ptr(),
         Limit: schematichq.Int64(
             int64(1000000),
         ),
@@ -85,6 +86,14 @@ client.Accounts.ListAccountMembers(
 <dd>
 
 **q:** `*string` — Search filter
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**role:** `*schematichq.AccountMemberRole` — Filter by member role
     
 </dd>
 </dl>
@@ -178,6 +187,7 @@ request := &schematichq.CountAccountMembersRequest{
         Q: schematichq.String(
             "q",
         ),
+        Role: schematichq.AccountMemberRoleAdmin.Ptr(),
         Limit: schematichq.Int64(
             int64(1000000),
         ),
@@ -213,6 +223,14 @@ client.Accounts.CountAccountMembers(
 <dd>
 
 **q:** `*string` — Search filter
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**role:** `*schematichq.AccountMemberRole` — Filter by member role
     
 </dd>
 </dl>
@@ -18877,6 +18895,245 @@ client.Integrationsapi.UninstallIntegration(
 </dl>
 </details>
 
+## licenses
+<details><summary><code>client.Licenses.ListLicenses() -> *schematichq.ListLicensesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListLicensesRequest{
+        FeatureIDs: []*string{
+            schematichq.String(
+                "feature_ids",
+            ),
+        },
+        IDs: []*string{
+            schematichq.String(
+                "ids",
+            ),
+        },
+        Name: schematichq.String(
+            "name",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Licenses.ListLicenses(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**featureIDs:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**ids:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Licenses.GetSingleLicense(LicenseID) -> *schematichq.GetSingleLicenseResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Licenses.GetSingleLicense(
+        context.TODO(),
+        "license_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**licenseID:** `string` — license_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Licenses.CountLicenses() -> *schematichq.CountLicensesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountLicensesRequest{
+        FeatureIDs: []*string{
+            schematichq.String(
+                "feature_ids",
+            ),
+        },
+        IDs: []*string{
+            schematichq.String(
+                "ids",
+            ),
+        },
+        Name: schematichq.String(
+            "name",
+        ),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Licenses.CountLicenses(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**featureIDs:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**ids:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## plangroups
 <details><summary><code>client.Plangroups.GetPlanGroup() -> *schematichq.GetPlanGroupResponse</code></summary>
 <dl>
@@ -20239,6 +20496,82 @@ client.Planmigrations.CountMigrations(
 <dd>
 
 **offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Planmigrations.PreviewMigration(request) -> *schematichq.PreviewMigrationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.PreviewMigrationRequestBody{
+        CompanyIDs: []string{
+            "company_ids",
+        },
+        PlanID: "plan_id",
+        PlanVersionIDTo: "plan_version_id_to",
+        TargetPlanType: schematichq.PlanTypePlan,
+    }
+client.Planmigrations.PreviewMigration(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyIDs:** `[]string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionIDTo:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**targetPlanType:** `*schematichq.PlanType` 
     
 </dd>
 </dl>

@@ -345,6 +345,79 @@ func (l *ListMigrationsRequest) SetOffset(offset *int64) {
 }
 
 var (
+	previewMigrationRequestBodyFieldCompanyIDs      = big.NewInt(1 << 0)
+	previewMigrationRequestBodyFieldPlanID          = big.NewInt(1 << 1)
+	previewMigrationRequestBodyFieldPlanVersionIDTo = big.NewInt(1 << 2)
+	previewMigrationRequestBodyFieldTargetPlanType  = big.NewInt(1 << 3)
+)
+
+type PreviewMigrationRequestBody struct {
+	CompanyIDs      []string `json:"company_ids" url:"-"`
+	PlanID          string   `json:"plan_id" url:"-"`
+	PlanVersionIDTo string   `json:"plan_version_id_to" url:"-"`
+	TargetPlanType  PlanType `json:"target_plan_type" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (p *PreviewMigrationRequestBody) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewMigrationRequestBody) SetCompanyIDs(companyIDs []string) {
+	p.CompanyIDs = companyIDs
+	p.require(previewMigrationRequestBodyFieldCompanyIDs)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewMigrationRequestBody) SetPlanID(planID string) {
+	p.PlanID = planID
+	p.require(previewMigrationRequestBodyFieldPlanID)
+}
+
+// SetPlanVersionIDTo sets the PlanVersionIDTo field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewMigrationRequestBody) SetPlanVersionIDTo(planVersionIDTo string) {
+	p.PlanVersionIDTo = planVersionIDTo
+	p.require(previewMigrationRequestBodyFieldPlanVersionIDTo)
+}
+
+// SetTargetPlanType sets the TargetPlanType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewMigrationRequestBody) SetTargetPlanType(targetPlanType PlanType) {
+	p.TargetPlanType = targetPlanType
+	p.require(previewMigrationRequestBodyFieldTargetPlanType)
+}
+
+func (p *PreviewMigrationRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler PreviewMigrationRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*p = PreviewMigrationRequestBody(body)
+	return nil
+}
+
+func (p *PreviewMigrationRequestBody) MarshalJSON() ([]byte, error) {
+	type embed PreviewMigrationRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	retryMigrationRequestBodyFieldErrorCodes = big.NewInt(1 << 0)
 )
 
@@ -751,6 +824,254 @@ func NewPlanVersionCompanyMigrationStatusFromString(s string) (PlanVersionCompan
 
 func (p PlanVersionCompanyMigrationStatus) Ptr() *PlanVersionCompanyMigrationStatus {
 	return &p
+}
+
+var (
+	planVersionMigrationPreviewCompanyResponseDataFieldCompanyID              = big.NewInt(1 << 0)
+	planVersionMigrationPreviewCompanyResponseDataFieldHasBillingChanges      = big.NewInt(1 << 1)
+	planVersionMigrationPreviewCompanyResponseDataFieldHasCustomPricing       = big.NewInt(1 << 2)
+	planVersionMigrationPreviewCompanyResponseDataFieldNote                   = big.NewInt(1 << 3)
+	planVersionMigrationPreviewCompanyResponseDataFieldPlanVersionIDFrom      = big.NewInt(1 << 4)
+	planVersionMigrationPreviewCompanyResponseDataFieldWillUpdateSubscription = big.NewInt(1 << 5)
+)
+
+type PlanVersionMigrationPreviewCompanyResponseData struct {
+	CompanyID              string  `json:"company_id" url:"company_id"`
+	HasBillingChanges      bool    `json:"has_billing_changes" url:"has_billing_changes"`
+	HasCustomPricing       bool    `json:"has_custom_pricing" url:"has_custom_pricing"`
+	Note                   *string `json:"note,omitempty" url:"note,omitempty"`
+	PlanVersionIDFrom      *string `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
+	WillUpdateSubscription bool    `json:"will_update_subscription" url:"will_update_subscription"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) GetCompanyID() string {
+	if p == nil {
+		return ""
+	}
+	return p.CompanyID
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) GetHasBillingChanges() bool {
+	if p == nil {
+		return false
+	}
+	return p.HasBillingChanges
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) GetHasCustomPricing() bool {
+	if p == nil {
+		return false
+	}
+	return p.HasCustomPricing
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) GetNote() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Note
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) GetPlanVersionIDFrom() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PlanVersionIDFrom
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) GetWillUpdateSubscription() bool {
+	if p == nil {
+		return false
+	}
+	return p.WillUpdateSubscription
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewCompanyResponseData) SetCompanyID(companyID string) {
+	p.CompanyID = companyID
+	p.require(planVersionMigrationPreviewCompanyResponseDataFieldCompanyID)
+}
+
+// SetHasBillingChanges sets the HasBillingChanges field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewCompanyResponseData) SetHasBillingChanges(hasBillingChanges bool) {
+	p.HasBillingChanges = hasBillingChanges
+	p.require(planVersionMigrationPreviewCompanyResponseDataFieldHasBillingChanges)
+}
+
+// SetHasCustomPricing sets the HasCustomPricing field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewCompanyResponseData) SetHasCustomPricing(hasCustomPricing bool) {
+	p.HasCustomPricing = hasCustomPricing
+	p.require(planVersionMigrationPreviewCompanyResponseDataFieldHasCustomPricing)
+}
+
+// SetNote sets the Note field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewCompanyResponseData) SetNote(note *string) {
+	p.Note = note
+	p.require(planVersionMigrationPreviewCompanyResponseDataFieldNote)
+}
+
+// SetPlanVersionIDFrom sets the PlanVersionIDFrom field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewCompanyResponseData) SetPlanVersionIDFrom(planVersionIDFrom *string) {
+	p.PlanVersionIDFrom = planVersionIDFrom
+	p.require(planVersionMigrationPreviewCompanyResponseDataFieldPlanVersionIDFrom)
+}
+
+// SetWillUpdateSubscription sets the WillUpdateSubscription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewCompanyResponseData) SetWillUpdateSubscription(willUpdateSubscription bool) {
+	p.WillUpdateSubscription = willUpdateSubscription
+	p.require(planVersionMigrationPreviewCompanyResponseDataFieldWillUpdateSubscription)
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanVersionMigrationPreviewCompanyResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanVersionMigrationPreviewCompanyResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) MarshalJSON() ([]byte, error) {
+	type embed PlanVersionMigrationPreviewCompanyResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	planVersionMigrationPreviewResponseDataFieldCompanies = big.NewInt(1 << 0)
+)
+
+type PlanVersionMigrationPreviewResponseData struct {
+	Companies []*PlanVersionMigrationPreviewCompanyResponseData `json:"companies" url:"companies"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanVersionMigrationPreviewResponseData) GetCompanies() []*PlanVersionMigrationPreviewCompanyResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Companies
+}
+
+func (p *PlanVersionMigrationPreviewResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanVersionMigrationPreviewResponseData) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetCompanies sets the Companies field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewResponseData) SetCompanies(companies []*PlanVersionMigrationPreviewCompanyResponseData) {
+	p.Companies = companies
+	p.require(planVersionMigrationPreviewResponseDataFieldCompanies)
+}
+
+func (p *PlanVersionMigrationPreviewResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanVersionMigrationPreviewResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanVersionMigrationPreviewResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanVersionMigrationPreviewResponseData) MarshalJSON() ([]byte, error) {
+	type embed PlanVersionMigrationPreviewResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanVersionMigrationPreviewResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 var (
@@ -2301,6 +2622,107 @@ func (l *ListMigrationsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	previewMigrationResponseFieldData   = big.NewInt(1 << 0)
+	previewMigrationResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type PreviewMigrationResponse struct {
+	Data *PlanVersionMigrationPreviewResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreviewMigrationResponse) GetData() *PlanVersionMigrationPreviewResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Data
+}
+
+func (p *PreviewMigrationResponse) GetParams() map[string]any {
+	if p == nil {
+		return nil
+	}
+	return p.Params
+}
+
+func (p *PreviewMigrationResponse) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PreviewMigrationResponse) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewMigrationResponse) SetData(data *PlanVersionMigrationPreviewResponseData) {
+	p.Data = data
+	p.require(previewMigrationResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewMigrationResponse) SetParams(params map[string]any) {
+	p.Params = params
+	p.require(previewMigrationResponseFieldParams)
+}
+
+func (p *PreviewMigrationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PreviewMigrationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PreviewMigrationResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreviewMigrationResponse) MarshalJSON() ([]byte, error) {
+	type embed PreviewMigrationResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PreviewMigrationResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 var (

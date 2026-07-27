@@ -1784,6 +1784,7 @@ const (
 	BillingCreditGrantZeroedOutReasonCustomerArchived       BillingCreditGrantZeroedOutReason = "customer_archived"
 	BillingCreditGrantZeroedOutReasonExpired                BillingCreditGrantZeroedOutReason = "expired"
 	BillingCreditGrantZeroedOutReasonIntegrationUninstalled BillingCreditGrantZeroedOutReason = "integration_uninstalled"
+	BillingCreditGrantZeroedOutReasonLicenseRetired         BillingCreditGrantZeroedOutReason = "license_retired"
 	BillingCreditGrantZeroedOutReasonManual                 BillingCreditGrantZeroedOutReason = "manual"
 	BillingCreditGrantZeroedOutReasonPlanChange             BillingCreditGrantZeroedOutReason = "plan_change"
 	BillingCreditGrantZeroedOutReasonPlanPeriodReset        BillingCreditGrantZeroedOutReason = "plan_period_reset"
@@ -1798,6 +1799,8 @@ func NewBillingCreditGrantZeroedOutReasonFromString(s string) (BillingCreditGran
 		return BillingCreditGrantZeroedOutReasonExpired, nil
 	case "integration_uninstalled":
 		return BillingCreditGrantZeroedOutReasonIntegrationUninstalled, nil
+	case "license_retired":
+		return BillingCreditGrantZeroedOutReasonLicenseRetired, nil
 	case "manual":
 		return BillingCreditGrantZeroedOutReasonManual, nil
 	case "plan_change":
@@ -19030,36 +19033,43 @@ func (e *EventSummaryResponseData) String() string {
 
 var (
 	featureDetailResponseDataFieldBillingLinkedResource     = big.NewInt(1 << 0)
-	featureDetailResponseDataFieldCreatedAt                 = big.NewInt(1 << 1)
-	featureDetailResponseDataFieldDescription               = big.NewInt(1 << 2)
-	featureDetailResponseDataFieldEventSubtype              = big.NewInt(1 << 3)
-	featureDetailResponseDataFieldEventSummary              = big.NewInt(1 << 4)
-	featureDetailResponseDataFieldFeatureType               = big.NewInt(1 << 5)
-	featureDetailResponseDataFieldFlags                     = big.NewInt(1 << 6)
-	featureDetailResponseDataFieldIcon                      = big.NewInt(1 << 7)
-	featureDetailResponseDataFieldID                        = big.NewInt(1 << 8)
-	featureDetailResponseDataFieldLifecyclePhase            = big.NewInt(1 << 9)
-	featureDetailResponseDataFieldMaintainer                = big.NewInt(1 << 10)
-	featureDetailResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 11)
-	featureDetailResponseDataFieldName                      = big.NewInt(1 << 12)
-	featureDetailResponseDataFieldPlans                     = big.NewInt(1 << 13)
-	featureDetailResponseDataFieldPluralName                = big.NewInt(1 << 14)
-	featureDetailResponseDataFieldSingularName              = big.NewInt(1 << 15)
-	featureDetailResponseDataFieldTrait                     = big.NewInt(1 << 16)
-	featureDetailResponseDataFieldTraitID                   = big.NewInt(1 << 17)
-	featureDetailResponseDataFieldUpdatedAt                 = big.NewInt(1 << 18)
+	featureDetailResponseDataFieldBillingProduct            = big.NewInt(1 << 1)
+	featureDetailResponseDataFieldCreatedAt                 = big.NewInt(1 << 2)
+	featureDetailResponseDataFieldDescription               = big.NewInt(1 << 3)
+	featureDetailResponseDataFieldEventSubtype              = big.NewInt(1 << 4)
+	featureDetailResponseDataFieldEventSummary              = big.NewInt(1 << 5)
+	featureDetailResponseDataFieldFeatureType               = big.NewInt(1 << 6)
+	featureDetailResponseDataFieldFlags                     = big.NewInt(1 << 7)
+	featureDetailResponseDataFieldIcon                      = big.NewInt(1 << 8)
+	featureDetailResponseDataFieldID                        = big.NewInt(1 << 9)
+	featureDetailResponseDataFieldLicenseID                 = big.NewInt(1 << 10)
+	featureDetailResponseDataFieldLifecyclePhase            = big.NewInt(1 << 11)
+	featureDetailResponseDataFieldMaintainer                = big.NewInt(1 << 12)
+	featureDetailResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 13)
+	featureDetailResponseDataFieldName                      = big.NewInt(1 << 14)
+	featureDetailResponseDataFieldPlans                     = big.NewInt(1 << 15)
+	featureDetailResponseDataFieldPluralName                = big.NewInt(1 << 16)
+	featureDetailResponseDataFieldSingularName              = big.NewInt(1 << 17)
+	featureDetailResponseDataFieldTrait                     = big.NewInt(1 << 18)
+	featureDetailResponseDataFieldTraitID                   = big.NewInt(1 << 19)
+	featureDetailResponseDataFieldUpdatedAt                 = big.NewInt(1 << 20)
+	featureDetailResponseDataFieldUsageLimitTraitID         = big.NewInt(1 << 21)
 )
 
 type FeatureDetailResponseData struct {
-	BillingLinkedResource     *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
-	CreatedAt                 time.Time                          `json:"created_at" url:"created_at"`
-	Description               string                             `json:"description" url:"description"`
-	EventSubtype              *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	EventSummary              *EventSummaryResponseData          `json:"event_summary,omitempty" url:"event_summary,omitempty"`
-	FeatureType               FeatureType                        `json:"feature_type" url:"feature_type"`
-	Flags                     []*FlagDetailResponseData          `json:"flags" url:"flags"`
-	Icon                      string                             `json:"icon" url:"icon"`
-	ID                        string                             `json:"id" url:"id"`
+	BillingLinkedResource *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
+	// The billing provider product that sells this feature in the current environment. Set for license features once they have been priced in a plan; a feature priced in several environments has a different product in each.
+	BillingProduct *BillingProductResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
+	CreatedAt      time.Time                   `json:"created_at" url:"created_at"`
+	Description    string                      `json:"description" url:"description"`
+	EventSubtype   *string                     `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	EventSummary   *EventSummaryResponseData   `json:"event_summary,omitempty" url:"event_summary,omitempty"`
+	FeatureType    FeatureType                 `json:"feature_type" url:"feature_type"`
+	Flags          []*FlagDetailResponseData   `json:"flags" url:"flags"`
+	Icon           string                      `json:"icon" url:"icon"`
+	ID             string                      `json:"id" url:"id"`
+	// The license sold through this feature. Set only on features of type license, and created automatically with them.
+	LicenseID                 *string                            `json:"license_id,omitempty" url:"license_id,omitempty"`
 	LifecyclePhase            *FeatureLifecyclePhase             `json:"lifecycle_phase,omitempty" url:"lifecycle_phase,omitempty"`
 	Maintainer                *AccountMemberResponseData         `json:"maintainer,omitempty" url:"maintainer,omitempty"`
 	MaintainerAccountMemberID *string                            `json:"maintainer_account_member_id,omitempty" url:"maintainer_account_member_id,omitempty"`
@@ -19070,6 +19080,8 @@ type FeatureDetailResponseData struct {
 	Trait                     *EntityTraitDefinitionResponseData `json:"trait,omitempty" url:"trait,omitempty"`
 	TraitID                   *string                            `json:"trait_id,omitempty" url:"trait_id,omitempty"`
 	UpdatedAt                 time.Time                          `json:"updated_at" url:"updated_at"`
+	// Set when the feature carries a pay-in-advance quantity. Provisioned lazily for other feature types, and at creation for license features.
+	UsageLimitTraitID *string `json:"usage_limit_trait_id,omitempty" url:"usage_limit_trait_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -19083,6 +19095,13 @@ func (f *FeatureDetailResponseData) GetBillingLinkedResource() *BillingLinkedRes
 		return nil
 	}
 	return f.BillingLinkedResource
+}
+
+func (f *FeatureDetailResponseData) GetBillingProduct() *BillingProductResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.BillingProduct
 }
 
 func (f *FeatureDetailResponseData) GetCreatedAt() time.Time {
@@ -19139,6 +19158,13 @@ func (f *FeatureDetailResponseData) GetID() string {
 		return ""
 	}
 	return f.ID
+}
+
+func (f *FeatureDetailResponseData) GetLicenseID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.LicenseID
 }
 
 func (f *FeatureDetailResponseData) GetLifecyclePhase() *FeatureLifecyclePhase {
@@ -19211,6 +19237,13 @@ func (f *FeatureDetailResponseData) GetUpdatedAt() time.Time {
 	return f.UpdatedAt
 }
 
+func (f *FeatureDetailResponseData) GetUsageLimitTraitID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.UsageLimitTraitID
+}
+
 func (f *FeatureDetailResponseData) GetExtraProperties() map[string]interface{} {
 	if f == nil {
 		return nil
@@ -19230,6 +19263,13 @@ func (f *FeatureDetailResponseData) require(field *big.Int) {
 func (f *FeatureDetailResponseData) SetBillingLinkedResource(billingLinkedResource *BillingLinkedResourceResponseData) {
 	f.BillingLinkedResource = billingLinkedResource
 	f.require(featureDetailResponseDataFieldBillingLinkedResource)
+}
+
+// SetBillingProduct sets the BillingProduct field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureDetailResponseData) SetBillingProduct(billingProduct *BillingProductResponseData) {
+	f.BillingProduct = billingProduct
+	f.require(featureDetailResponseDataFieldBillingProduct)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -19286,6 +19326,13 @@ func (f *FeatureDetailResponseData) SetIcon(icon string) {
 func (f *FeatureDetailResponseData) SetID(id string) {
 	f.ID = id
 	f.require(featureDetailResponseDataFieldID)
+}
+
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureDetailResponseData) SetLicenseID(licenseID *string) {
+	f.LicenseID = licenseID
+	f.require(featureDetailResponseDataFieldLicenseID)
 }
 
 // SetLifecyclePhase sets the LifecyclePhase field and marks it as non-optional;
@@ -19356,6 +19403,13 @@ func (f *FeatureDetailResponseData) SetTraitID(traitID *string) {
 func (f *FeatureDetailResponseData) SetUpdatedAt(updatedAt time.Time) {
 	f.UpdatedAt = updatedAt
 	f.require(featureDetailResponseDataFieldUpdatedAt)
+}
+
+// SetUsageLimitTraitID sets the UsageLimitTraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureDetailResponseData) SetUsageLimitTraitID(usageLimitTraitID *string) {
+	f.UsageLimitTraitID = usageLimitTraitID
+	f.require(featureDetailResponseDataFieldUsageLimitTraitID)
 }
 
 func (f *FeatureDetailResponseData) UnmarshalJSON(data []byte) error {
@@ -19821,27 +19875,31 @@ var (
 	featureInPlanResponseDataFieldFlags                     = big.NewInt(1 << 6)
 	featureInPlanResponseDataFieldIcon                      = big.NewInt(1 << 7)
 	featureInPlanResponseDataFieldID                        = big.NewInt(1 << 8)
-	featureInPlanResponseDataFieldLifecyclePhase            = big.NewInt(1 << 9)
-	featureInPlanResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 10)
-	featureInPlanResponseDataFieldName                      = big.NewInt(1 << 11)
-	featureInPlanResponseDataFieldPlans                     = big.NewInt(1 << 12)
-	featureInPlanResponseDataFieldPluralName                = big.NewInt(1 << 13)
-	featureInPlanResponseDataFieldSingularName              = big.NewInt(1 << 14)
-	featureInPlanResponseDataFieldTrait                     = big.NewInt(1 << 15)
-	featureInPlanResponseDataFieldTraitID                   = big.NewInt(1 << 16)
-	featureInPlanResponseDataFieldUpdatedAt                 = big.NewInt(1 << 17)
+	featureInPlanResponseDataFieldLicenseID                 = big.NewInt(1 << 9)
+	featureInPlanResponseDataFieldLifecyclePhase            = big.NewInt(1 << 10)
+	featureInPlanResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 11)
+	featureInPlanResponseDataFieldName                      = big.NewInt(1 << 12)
+	featureInPlanResponseDataFieldPlans                     = big.NewInt(1 << 13)
+	featureInPlanResponseDataFieldPluralName                = big.NewInt(1 << 14)
+	featureInPlanResponseDataFieldSingularName              = big.NewInt(1 << 15)
+	featureInPlanResponseDataFieldTrait                     = big.NewInt(1 << 16)
+	featureInPlanResponseDataFieldTraitID                   = big.NewInt(1 << 17)
+	featureInPlanResponseDataFieldUpdatedAt                 = big.NewInt(1 << 18)
+	featureInPlanResponseDataFieldUsageLimitTraitID         = big.NewInt(1 << 19)
 )
 
 type FeatureInPlanResponseData struct {
-	BillingLinkedResource     *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
-	CreatedAt                 time.Time                          `json:"created_at" url:"created_at"`
-	Description               string                             `json:"description" url:"description"`
-	EventSubtype              *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	EventSummary              *EventSummaryResponseData          `json:"event_summary,omitempty" url:"event_summary,omitempty"`
-	FeatureType               FeatureType                        `json:"feature_type" url:"feature_type"`
-	Flags                     []*FlagInPlanResponseData          `json:"flags" url:"flags"`
-	Icon                      string                             `json:"icon" url:"icon"`
-	ID                        string                             `json:"id" url:"id"`
+	BillingLinkedResource *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
+	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
+	Description           string                             `json:"description" url:"description"`
+	EventSubtype          *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	EventSummary          *EventSummaryResponseData          `json:"event_summary,omitempty" url:"event_summary,omitempty"`
+	FeatureType           FeatureType                        `json:"feature_type" url:"feature_type"`
+	Flags                 []*FlagInPlanResponseData          `json:"flags" url:"flags"`
+	Icon                  string                             `json:"icon" url:"icon"`
+	ID                    string                             `json:"id" url:"id"`
+	// The license sold through this feature. Set only on features of type license, and created automatically with them.
+	LicenseID                 *string                            `json:"license_id,omitempty" url:"license_id,omitempty"`
 	LifecyclePhase            *FeatureLifecyclePhase             `json:"lifecycle_phase,omitempty" url:"lifecycle_phase,omitempty"`
 	MaintainerAccountMemberID *string                            `json:"maintainer_account_member_id,omitempty" url:"maintainer_account_member_id,omitempty"`
 	Name                      string                             `json:"name" url:"name"`
@@ -19851,6 +19909,8 @@ type FeatureInPlanResponseData struct {
 	Trait                     *EntityTraitDefinitionResponseData `json:"trait,omitempty" url:"trait,omitempty"`
 	TraitID                   *string                            `json:"trait_id,omitempty" url:"trait_id,omitempty"`
 	UpdatedAt                 time.Time                          `json:"updated_at" url:"updated_at"`
+	// Set when the feature carries a pay-in-advance quantity. Provisioned lazily for other feature types, and at creation for license features.
+	UsageLimitTraitID *string `json:"usage_limit_trait_id,omitempty" url:"usage_limit_trait_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -19922,6 +19982,13 @@ func (f *FeatureInPlanResponseData) GetID() string {
 	return f.ID
 }
 
+func (f *FeatureInPlanResponseData) GetLicenseID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.LicenseID
+}
+
 func (f *FeatureInPlanResponseData) GetLifecyclePhase() *FeatureLifecyclePhase {
 	if f == nil {
 		return nil
@@ -19983,6 +20050,13 @@ func (f *FeatureInPlanResponseData) GetUpdatedAt() time.Time {
 		return time.Time{}
 	}
 	return f.UpdatedAt
+}
+
+func (f *FeatureInPlanResponseData) GetUsageLimitTraitID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.UsageLimitTraitID
 }
 
 func (f *FeatureInPlanResponseData) GetExtraProperties() map[string]interface{} {
@@ -20062,6 +20136,13 @@ func (f *FeatureInPlanResponseData) SetID(id string) {
 	f.require(featureInPlanResponseDataFieldID)
 }
 
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureInPlanResponseData) SetLicenseID(licenseID *string) {
+	f.LicenseID = licenseID
+	f.require(featureInPlanResponseDataFieldLicenseID)
+}
+
 // SetLifecyclePhase sets the LifecyclePhase field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (f *FeatureInPlanResponseData) SetLifecyclePhase(lifecyclePhase *FeatureLifecyclePhase) {
@@ -20123,6 +20204,13 @@ func (f *FeatureInPlanResponseData) SetTraitID(traitID *string) {
 func (f *FeatureInPlanResponseData) SetUpdatedAt(updatedAt time.Time) {
 	f.UpdatedAt = updatedAt
 	f.require(featureInPlanResponseDataFieldUpdatedAt)
+}
+
+// SetUsageLimitTraitID sets the UsageLimitTraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureInPlanResponseData) SetUsageLimitTraitID(usageLimitTraitID *string) {
+	f.UsageLimitTraitID = usageLimitTraitID
+	f.require(featureInPlanResponseDataFieldUsageLimitTraitID)
 }
 
 func (f *FeatureInPlanResponseData) UnmarshalJSON(data []byte) error {
@@ -20229,22 +20317,26 @@ var (
 	featureResponseDataFieldFeatureType               = big.NewInt(1 << 3)
 	featureResponseDataFieldIcon                      = big.NewInt(1 << 4)
 	featureResponseDataFieldID                        = big.NewInt(1 << 5)
-	featureResponseDataFieldLifecyclePhase            = big.NewInt(1 << 6)
-	featureResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 7)
-	featureResponseDataFieldName                      = big.NewInt(1 << 8)
-	featureResponseDataFieldPluralName                = big.NewInt(1 << 9)
-	featureResponseDataFieldSingularName              = big.NewInt(1 << 10)
-	featureResponseDataFieldTraitID                   = big.NewInt(1 << 11)
-	featureResponseDataFieldUpdatedAt                 = big.NewInt(1 << 12)
+	featureResponseDataFieldLicenseID                 = big.NewInt(1 << 6)
+	featureResponseDataFieldLifecyclePhase            = big.NewInt(1 << 7)
+	featureResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 8)
+	featureResponseDataFieldName                      = big.NewInt(1 << 9)
+	featureResponseDataFieldPluralName                = big.NewInt(1 << 10)
+	featureResponseDataFieldSingularName              = big.NewInt(1 << 11)
+	featureResponseDataFieldTraitID                   = big.NewInt(1 << 12)
+	featureResponseDataFieldUpdatedAt                 = big.NewInt(1 << 13)
+	featureResponseDataFieldUsageLimitTraitID         = big.NewInt(1 << 14)
 )
 
 type FeatureResponseData struct {
-	CreatedAt                 time.Time              `json:"created_at" url:"created_at"`
-	Description               string                 `json:"description" url:"description"`
-	EventSubtype              *string                `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	FeatureType               FeatureType            `json:"feature_type" url:"feature_type"`
-	Icon                      string                 `json:"icon" url:"icon"`
-	ID                        string                 `json:"id" url:"id"`
+	CreatedAt    time.Time   `json:"created_at" url:"created_at"`
+	Description  string      `json:"description" url:"description"`
+	EventSubtype *string     `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	FeatureType  FeatureType `json:"feature_type" url:"feature_type"`
+	Icon         string      `json:"icon" url:"icon"`
+	ID           string      `json:"id" url:"id"`
+	// The license sold through this feature. Set only on features of type license, and created automatically with them.
+	LicenseID                 *string                `json:"license_id,omitempty" url:"license_id,omitempty"`
 	LifecyclePhase            *FeatureLifecyclePhase `json:"lifecycle_phase,omitempty" url:"lifecycle_phase,omitempty"`
 	MaintainerAccountMemberID *string                `json:"maintainer_account_member_id,omitempty" url:"maintainer_account_member_id,omitempty"`
 	Name                      string                 `json:"name" url:"name"`
@@ -20252,6 +20344,8 @@ type FeatureResponseData struct {
 	SingularName              *string                `json:"singular_name,omitempty" url:"singular_name,omitempty"`
 	TraitID                   *string                `json:"trait_id,omitempty" url:"trait_id,omitempty"`
 	UpdatedAt                 time.Time              `json:"updated_at" url:"updated_at"`
+	// Set when the feature carries a pay-in-advance quantity. Provisioned lazily for other feature types, and at creation for license features.
+	UsageLimitTraitID *string `json:"usage_limit_trait_id,omitempty" url:"usage_limit_trait_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -20302,6 +20396,13 @@ func (f *FeatureResponseData) GetID() string {
 	return f.ID
 }
 
+func (f *FeatureResponseData) GetLicenseID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.LicenseID
+}
+
 func (f *FeatureResponseData) GetLifecyclePhase() *FeatureLifecyclePhase {
 	if f == nil {
 		return nil
@@ -20349,6 +20450,13 @@ func (f *FeatureResponseData) GetUpdatedAt() time.Time {
 		return time.Time{}
 	}
 	return f.UpdatedAt
+}
+
+func (f *FeatureResponseData) GetUsageLimitTraitID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.UsageLimitTraitID
 }
 
 func (f *FeatureResponseData) GetExtraProperties() map[string]interface{} {
@@ -20407,6 +20515,13 @@ func (f *FeatureResponseData) SetID(id string) {
 	f.require(featureResponseDataFieldID)
 }
 
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureResponseData) SetLicenseID(licenseID *string) {
+	f.LicenseID = licenseID
+	f.require(featureResponseDataFieldLicenseID)
+}
+
 // SetLifecyclePhase sets the LifecyclePhase field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (f *FeatureResponseData) SetLifecyclePhase(lifecyclePhase *FeatureLifecyclePhase) {
@@ -20454,6 +20569,13 @@ func (f *FeatureResponseData) SetTraitID(traitID *string) {
 func (f *FeatureResponseData) SetUpdatedAt(updatedAt time.Time) {
 	f.UpdatedAt = updatedAt
 	f.require(featureResponseDataFieldUpdatedAt)
+}
+
+// SetUsageLimitTraitID sets the UsageLimitTraitID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureResponseData) SetUsageLimitTraitID(usageLimitTraitID *string) {
+	f.UsageLimitTraitID = usageLimitTraitID
+	f.require(featureResponseDataFieldUsageLimitTraitID)
 }
 
 func (f *FeatureResponseData) UnmarshalJSON(data []byte) error {
@@ -20515,6 +20637,7 @@ type FeatureType string
 const (
 	FeatureTypeBoolean FeatureType = "boolean"
 	FeatureTypeEvent   FeatureType = "event"
+	FeatureTypeLicense FeatureType = "license"
 	FeatureTypeTrait   FeatureType = "trait"
 )
 
@@ -20524,6 +20647,8 @@ func NewFeatureTypeFromString(s string) (FeatureType, error) {
 		return FeatureTypeBoolean, nil
 	case "event":
 		return FeatureTypeEvent, nil
+	case "license":
+		return FeatureTypeLicense, nil
 	case "trait":
 		return FeatureTypeTrait, nil
 	}
@@ -21454,28 +21579,31 @@ func (f *FeatureUsageResponseData) String() string {
 var (
 	featureViewFieldAccountID             = big.NewInt(1 << 0)
 	featureViewFieldBillingLinkedResource = big.NewInt(1 << 1)
-	featureViewFieldCreatedAt             = big.NewInt(1 << 2)
-	featureViewFieldDescription           = big.NewInt(1 << 3)
-	featureViewFieldEventSubtype          = big.NewInt(1 << 4)
-	featureViewFieldEventSummary          = big.NewInt(1 << 5)
-	featureViewFieldFeatureType           = big.NewInt(1 << 6)
-	featureViewFieldFlags                 = big.NewInt(1 << 7)
-	featureViewFieldIcon                  = big.NewInt(1 << 8)
-	featureViewFieldID                    = big.NewInt(1 << 9)
-	featureViewFieldLifecyclePhase        = big.NewInt(1 << 10)
-	featureViewFieldName                  = big.NewInt(1 << 11)
-	featureViewFieldPlans                 = big.NewInt(1 << 12)
-	featureViewFieldPluralName            = big.NewInt(1 << 13)
-	featureViewFieldSingularName          = big.NewInt(1 << 14)
-	featureViewFieldTrait                 = big.NewInt(1 << 15)
-	featureViewFieldTraitID               = big.NewInt(1 << 16)
-	featureViewFieldUpdatedAt             = big.NewInt(1 << 17)
-	featureViewFieldUsageLimitTraitID     = big.NewInt(1 << 18)
+	featureViewFieldBillingProduct        = big.NewInt(1 << 2)
+	featureViewFieldCreatedAt             = big.NewInt(1 << 3)
+	featureViewFieldDescription           = big.NewInt(1 << 4)
+	featureViewFieldEventSubtype          = big.NewInt(1 << 5)
+	featureViewFieldEventSummary          = big.NewInt(1 << 6)
+	featureViewFieldFeatureType           = big.NewInt(1 << 7)
+	featureViewFieldFlags                 = big.NewInt(1 << 8)
+	featureViewFieldIcon                  = big.NewInt(1 << 9)
+	featureViewFieldID                    = big.NewInt(1 << 10)
+	featureViewFieldLicenseID             = big.NewInt(1 << 11)
+	featureViewFieldLifecyclePhase        = big.NewInt(1 << 12)
+	featureViewFieldName                  = big.NewInt(1 << 13)
+	featureViewFieldPlans                 = big.NewInt(1 << 14)
+	featureViewFieldPluralName            = big.NewInt(1 << 15)
+	featureViewFieldSingularName          = big.NewInt(1 << 16)
+	featureViewFieldTrait                 = big.NewInt(1 << 17)
+	featureViewFieldTraitID               = big.NewInt(1 << 18)
+	featureViewFieldUpdatedAt             = big.NewInt(1 << 19)
+	featureViewFieldUsageLimitTraitID     = big.NewInt(1 << 20)
 )
 
 type FeatureView struct {
 	AccountID             string                             `json:"account_id" url:"account_id"`
 	BillingLinkedResource *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
+	BillingProduct        *BillingProductResponseData        `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
 	Description           string                             `json:"description" url:"description"`
 	EventSubtype          *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
@@ -21484,6 +21612,7 @@ type FeatureView struct {
 	Flags                 []*FlagView                        `json:"flags" url:"flags"`
 	Icon                  string                             `json:"icon" url:"icon"`
 	ID                    string                             `json:"id" url:"id"`
+	LicenseID             *string                            `json:"license_id,omitempty" url:"license_id,omitempty"`
 	LifecyclePhase        *FeatureLifecyclePhase             `json:"lifecycle_phase,omitempty" url:"lifecycle_phase,omitempty"`
 	Name                  string                             `json:"name" url:"name"`
 	Plans                 []*PreviewObject                   `json:"plans" url:"plans"`
@@ -21513,6 +21642,13 @@ func (f *FeatureView) GetBillingLinkedResource() *BillingLinkedResourceResponseD
 		return nil
 	}
 	return f.BillingLinkedResource
+}
+
+func (f *FeatureView) GetBillingProduct() *BillingProductResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.BillingProduct
 }
 
 func (f *FeatureView) GetCreatedAt() time.Time {
@@ -21569,6 +21705,13 @@ func (f *FeatureView) GetID() string {
 		return ""
 	}
 	return f.ID
+}
+
+func (f *FeatureView) GetLicenseID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.LicenseID
 }
 
 func (f *FeatureView) GetLifecyclePhase() *FeatureLifecyclePhase {
@@ -21662,6 +21805,13 @@ func (f *FeatureView) SetBillingLinkedResource(billingLinkedResource *BillingLin
 	f.require(featureViewFieldBillingLinkedResource)
 }
 
+// SetBillingProduct sets the BillingProduct field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetBillingProduct(billingProduct *BillingProductResponseData) {
+	f.BillingProduct = billingProduct
+	f.require(featureViewFieldBillingProduct)
+}
+
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (f *FeatureView) SetCreatedAt(createdAt time.Time) {
@@ -21716,6 +21866,13 @@ func (f *FeatureView) SetIcon(icon string) {
 func (f *FeatureView) SetID(id string) {
 	f.ID = id
 	f.require(featureViewFieldID)
+}
+
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetLicenseID(licenseID *string) {
+	f.LicenseID = licenseID
+	f.require(featureViewFieldLicenseID)
 }
 
 // SetLifecyclePhase sets the LifecyclePhase field and marks it as non-optional;

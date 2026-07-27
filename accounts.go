@@ -13,14 +13,17 @@ import (
 var (
 	countAccountMembersRequestFieldIDs    = big.NewInt(1 << 0)
 	countAccountMembersRequestFieldQ      = big.NewInt(1 << 1)
-	countAccountMembersRequestFieldLimit  = big.NewInt(1 << 2)
-	countAccountMembersRequestFieldOffset = big.NewInt(1 << 3)
+	countAccountMembersRequestFieldRole   = big.NewInt(1 << 2)
+	countAccountMembersRequestFieldLimit  = big.NewInt(1 << 3)
+	countAccountMembersRequestFieldOffset = big.NewInt(1 << 4)
 )
 
 type CountAccountMembersRequest struct {
 	IDs []*string `json:"-" url:"ids,omitempty"`
 	// Search filter
 	Q *string `json:"-" url:"q,omitempty"`
+	// Filter by member role
+	Role *AccountMemberRole `json:"-" url:"role,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -49,6 +52,13 @@ func (c *CountAccountMembersRequest) SetIDs(ids []*string) {
 func (c *CountAccountMembersRequest) SetQ(q *string) {
 	c.Q = q
 	c.require(countAccountMembersRequestFieldQ)
+}
+
+// SetRole sets the Role field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersRequest) SetRole(role *AccountMemberRole) {
+	c.Role = role
+	c.require(countAccountMembersRequestFieldRole)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -331,14 +341,17 @@ func (c *CreateEnvironmentRequestBody) MarshalJSON() ([]byte, error) {
 var (
 	listAccountMembersRequestFieldIDs    = big.NewInt(1 << 0)
 	listAccountMembersRequestFieldQ      = big.NewInt(1 << 1)
-	listAccountMembersRequestFieldLimit  = big.NewInt(1 << 2)
-	listAccountMembersRequestFieldOffset = big.NewInt(1 << 3)
+	listAccountMembersRequestFieldRole   = big.NewInt(1 << 2)
+	listAccountMembersRequestFieldLimit  = big.NewInt(1 << 3)
+	listAccountMembersRequestFieldOffset = big.NewInt(1 << 4)
 )
 
 type ListAccountMembersRequest struct {
 	IDs []*string `json:"-" url:"ids,omitempty"`
 	// Search filter
 	Q *string `json:"-" url:"q,omitempty"`
+	// Filter by member role
+	Role *AccountMemberRole `json:"-" url:"role,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -367,6 +380,13 @@ func (l *ListAccountMembersRequest) SetIDs(ids []*string) {
 func (l *ListAccountMembersRequest) SetQ(q *string) {
 	l.Q = q
 	l.require(listAccountMembersRequestFieldQ)
+}
+
+// SetRole sets the Role field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersRequest) SetRole(role *AccountMemberRole) {
+	l.Role = role
+	l.require(listAccountMembersRequestFieldRole)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -1717,6 +1737,7 @@ var (
 	countAccountMembersParamsFieldLimit  = big.NewInt(1 << 1)
 	countAccountMembersParamsFieldOffset = big.NewInt(1 << 2)
 	countAccountMembersParamsFieldQ      = big.NewInt(1 << 3)
+	countAccountMembersParamsFieldRole   = big.NewInt(1 << 4)
 )
 
 type CountAccountMembersParams struct {
@@ -1727,6 +1748,8 @@ type CountAccountMembersParams struct {
 	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Search filter
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter by member role
+	Role *AccountMemberRole `json:"role,omitempty" url:"role,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1761,6 +1784,13 @@ func (c *CountAccountMembersParams) GetQ() *string {
 		return nil
 	}
 	return c.Q
+}
+
+func (c *CountAccountMembersParams) GetRole() *AccountMemberRole {
+	if c == nil {
+		return nil
+	}
+	return c.Role
 }
 
 func (c *CountAccountMembersParams) GetExtraProperties() map[string]interface{} {
@@ -1803,6 +1833,13 @@ func (c *CountAccountMembersParams) SetOffset(offset *int64) {
 func (c *CountAccountMembersParams) SetQ(q *string) {
 	c.Q = q
 	c.require(countAccountMembersParamsFieldQ)
+}
+
+// SetRole sets the Role field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAccountMembersParams) SetRole(role *AccountMemberRole) {
+	c.Role = role
+	c.require(countAccountMembersParamsFieldRole)
 }
 
 func (c *CountAccountMembersParams) UnmarshalJSON(data []byte) error {
@@ -3395,6 +3432,7 @@ var (
 	listAccountMembersParamsFieldLimit  = big.NewInt(1 << 1)
 	listAccountMembersParamsFieldOffset = big.NewInt(1 << 2)
 	listAccountMembersParamsFieldQ      = big.NewInt(1 << 3)
+	listAccountMembersParamsFieldRole   = big.NewInt(1 << 4)
 )
 
 type ListAccountMembersParams struct {
@@ -3405,6 +3443,8 @@ type ListAccountMembersParams struct {
 	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
 	// Search filter
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Filter by member role
+	Role *AccountMemberRole `json:"role,omitempty" url:"role,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3439,6 +3479,13 @@ func (l *ListAccountMembersParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListAccountMembersParams) GetRole() *AccountMemberRole {
+	if l == nil {
+		return nil
+	}
+	return l.Role
 }
 
 func (l *ListAccountMembersParams) GetExtraProperties() map[string]interface{} {
@@ -3481,6 +3528,13 @@ func (l *ListAccountMembersParams) SetOffset(offset *int64) {
 func (l *ListAccountMembersParams) SetQ(q *string) {
 	l.Q = q
 	l.require(listAccountMembersParamsFieldQ)
+}
+
+// SetRole sets the Role field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAccountMembersParams) SetRole(role *AccountMemberRole) {
+	l.Role = role
+	l.require(listAccountMembersParamsFieldRole)
 }
 
 func (l *ListAccountMembersParams) UnmarshalJSON(data []byte) error {

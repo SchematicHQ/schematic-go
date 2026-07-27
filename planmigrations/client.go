@@ -166,3 +166,19 @@ func (c *Client) CountMigrations(
 	}
 	return response.Body, nil
 }
+
+func (c *Client) PreviewMigration(
+	ctx context.Context,
+	request *schematichq.PreviewMigrationRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.PreviewMigrationResponse, error) {
+	response, err := c.WithRawResponse.PreviewMigration(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}

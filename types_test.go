@@ -51871,6 +51871,14 @@ func TestSettersFeatureDetailResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetBillingProduct", func(t *testing.T) {
+		obj := &FeatureDetailResponseData{}
+		var fernTestValueBillingProduct *BillingProductResponseData
+		obj.SetBillingProduct(fernTestValueBillingProduct)
+		assert.Equal(t, fernTestValueBillingProduct, obj.BillingProduct)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCreatedAt", func(t *testing.T) {
 		obj := &FeatureDetailResponseData{}
 		var fernTestValueCreatedAt time.Time
@@ -51932,6 +51940,14 @@ func TestSettersFeatureDetailResponseData(t *testing.T) {
 		var fernTestValueID string
 		obj.SetID(fernTestValueID)
 		assert.Equal(t, fernTestValueID, obj.ID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetLicenseID", func(t *testing.T) {
+		obj := &FeatureDetailResponseData{}
+		var fernTestValueLicenseID *string
+		obj.SetLicenseID(fernTestValueLicenseID)
+		assert.Equal(t, fernTestValueLicenseID, obj.LicenseID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -52015,6 +52031,14 @@ func TestSettersFeatureDetailResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetUsageLimitTraitID", func(t *testing.T) {
+		obj := &FeatureDetailResponseData{}
+		var fernTestValueUsageLimitTraitID *string
+		obj.SetUsageLimitTraitID(fernTestValueUsageLimitTraitID)
+		assert.Equal(t, fernTestValueUsageLimitTraitID, obj.UsageLimitTraitID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 }
 
 func TestGettersFeatureDetailResponseData(t *testing.T) {
@@ -52049,6 +52073,39 @@ func TestGettersFeatureDetailResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetBillingLinkedResource() // Should return zero value
+	})
+
+	t.Run("GetBillingProduct", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureDetailResponseData{}
+		var expected *BillingProductResponseData
+		obj.BillingProduct = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetBillingProduct(), "getter should return the property value")
+	})
+
+	t.Run("GetBillingProduct_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureDetailResponseData{}
+		obj.BillingProduct = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetBillingProduct(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetBillingProduct_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureDetailResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetBillingProduct() // Should return zero value
 	})
 
 	t.Run("GetCreatedAt", func(t *testing.T) {
@@ -52263,6 +52320,39 @@ func TestGettersFeatureDetailResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetID() // Should return zero value
+	})
+
+	t.Run("GetLicenseID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureDetailResponseData{}
+		var expected *string
+		obj.LicenseID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetLicenseID(), "getter should return the property value")
+	})
+
+	t.Run("GetLicenseID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureDetailResponseData{}
+		obj.LicenseID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetLicenseID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetLicenseID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureDetailResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetLicenseID() // Should return zero value
 	})
 
 	t.Run("GetLifecyclePhase", func(t *testing.T) {
@@ -52575,6 +52665,39 @@ func TestGettersFeatureDetailResponseData(t *testing.T) {
 		_ = obj.GetUpdatedAt() // Should return zero value
 	})
 
+	t.Run("GetUsageLimitTraitID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureDetailResponseData{}
+		var expected *string
+		obj.UsageLimitTraitID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetUsageLimitTraitID(), "getter should return the property value")
+	})
+
+	t.Run("GetUsageLimitTraitID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureDetailResponseData{}
+		obj.UsageLimitTraitID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetUsageLimitTraitID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetUsageLimitTraitID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureDetailResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetUsageLimitTraitID() // Should return zero value
+	})
+
 }
 
 func TestSettersMarkExplicitFeatureDetailResponseData(t *testing.T) {
@@ -52586,6 +52709,37 @@ func TestSettersMarkExplicitFeatureDetailResponseData(t *testing.T) {
 
 		// Act
 		obj.SetBillingLinkedResource(fernTestValueBillingLinkedResource)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetBillingProduct_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureDetailResponseData{}
+		var fernTestValueBillingProduct *BillingProductResponseData
+
+		// Act
+		obj.SetBillingProduct(fernTestValueBillingProduct)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -52834,6 +52988,37 @@ func TestSettersMarkExplicitFeatureDetailResponseData(t *testing.T) {
 
 		// Act
 		obj.SetID(fernTestValueID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetLicenseID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureDetailResponseData{}
+		var fernTestValueLicenseID *string
+
+		// Act
+		obj.SetLicenseID(fernTestValueLicenseID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -53144,6 +53329,37 @@ func TestSettersMarkExplicitFeatureDetailResponseData(t *testing.T) {
 
 		// Act
 		obj.SetUpdatedAt(fernTestValueUpdatedAt)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetUsageLimitTraitID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureDetailResponseData{}
+		var fernTestValueUsageLimitTraitID *string
+
+		// Act
+		obj.SetUsageLimitTraitID(fernTestValueUsageLimitTraitID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -54589,6 +54805,14 @@ func TestSettersFeatureInPlanResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetLicenseID", func(t *testing.T) {
+		obj := &FeatureInPlanResponseData{}
+		var fernTestValueLicenseID *string
+		obj.SetLicenseID(fernTestValueLicenseID)
+		assert.Equal(t, fernTestValueLicenseID, obj.LicenseID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetLifecyclePhase", func(t *testing.T) {
 		obj := &FeatureInPlanResponseData{}
 		var fernTestValueLifecyclePhase *FeatureLifecyclePhase
@@ -54658,6 +54882,14 @@ func TestSettersFeatureInPlanResponseData(t *testing.T) {
 		var fernTestValueUpdatedAt time.Time
 		obj.SetUpdatedAt(fernTestValueUpdatedAt)
 		assert.Equal(t, fernTestValueUpdatedAt, obj.UpdatedAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetUsageLimitTraitID", func(t *testing.T) {
+		obj := &FeatureInPlanResponseData{}
+		var fernTestValueUsageLimitTraitID *string
+		obj.SetUsageLimitTraitID(fernTestValueUsageLimitTraitID)
+		assert.Equal(t, fernTestValueUsageLimitTraitID, obj.UsageLimitTraitID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -54909,6 +55141,39 @@ func TestGettersFeatureInPlanResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetID() // Should return zero value
+	})
+
+	t.Run("GetLicenseID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureInPlanResponseData{}
+		var expected *string
+		obj.LicenseID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetLicenseID(), "getter should return the property value")
+	})
+
+	t.Run("GetLicenseID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureInPlanResponseData{}
+		obj.LicenseID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetLicenseID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetLicenseID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureInPlanResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetLicenseID() // Should return zero value
 	})
 
 	t.Run("GetLifecyclePhase", func(t *testing.T) {
@@ -55188,6 +55453,39 @@ func TestGettersFeatureInPlanResponseData(t *testing.T) {
 		_ = obj.GetUpdatedAt() // Should return zero value
 	})
 
+	t.Run("GetUsageLimitTraitID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureInPlanResponseData{}
+		var expected *string
+		obj.UsageLimitTraitID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetUsageLimitTraitID(), "getter should return the property value")
+	})
+
+	t.Run("GetUsageLimitTraitID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureInPlanResponseData{}
+		obj.UsageLimitTraitID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetUsageLimitTraitID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetUsageLimitTraitID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureInPlanResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetUsageLimitTraitID() // Should return zero value
+	})
+
 }
 
 func TestSettersMarkExplicitFeatureInPlanResponseData(t *testing.T) {
@@ -55447,6 +55745,37 @@ func TestSettersMarkExplicitFeatureInPlanResponseData(t *testing.T) {
 
 		// Act
 		obj.SetID(fernTestValueID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetLicenseID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureInPlanResponseData{}
+		var fernTestValueLicenseID *string
+
+		// Act
+		obj.SetLicenseID(fernTestValueLicenseID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -55749,6 +56078,37 @@ func TestSettersMarkExplicitFeatureInPlanResponseData(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetUsageLimitTraitID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureInPlanResponseData{}
+		var fernTestValueUsageLimitTraitID *string
+
+		// Act
+		obj.SetUsageLimitTraitID(fernTestValueUsageLimitTraitID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 }
 
 func TestSettersFeatureResponseData(t *testing.T) {
@@ -55797,6 +56157,14 @@ func TestSettersFeatureResponseData(t *testing.T) {
 		var fernTestValueID string
 		obj.SetID(fernTestValueID)
 		assert.Equal(t, fernTestValueID, obj.ID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetLicenseID", func(t *testing.T) {
+		obj := &FeatureResponseData{}
+		var fernTestValueLicenseID *string
+		obj.SetLicenseID(fernTestValueLicenseID)
+		assert.Equal(t, fernTestValueLicenseID, obj.LicenseID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -55853,6 +56221,14 @@ func TestSettersFeatureResponseData(t *testing.T) {
 		var fernTestValueUpdatedAt time.Time
 		obj.SetUpdatedAt(fernTestValueUpdatedAt)
 		assert.Equal(t, fernTestValueUpdatedAt, obj.UpdatedAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetUsageLimitTraitID", func(t *testing.T) {
+		obj := &FeatureResponseData{}
+		var fernTestValueUsageLimitTraitID *string
+		obj.SetUsageLimitTraitID(fernTestValueUsageLimitTraitID)
+		assert.Equal(t, fernTestValueUsageLimitTraitID, obj.UsageLimitTraitID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -56005,6 +56381,39 @@ func TestGettersFeatureResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetID() // Should return zero value
+	})
+
+	t.Run("GetLicenseID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureResponseData{}
+		var expected *string
+		obj.LicenseID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetLicenseID(), "getter should return the property value")
+	})
+
+	t.Run("GetLicenseID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureResponseData{}
+		obj.LicenseID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetLicenseID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetLicenseID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetLicenseID() // Should return zero value
 	})
 
 	t.Run("GetLifecyclePhase", func(t *testing.T) {
@@ -56218,6 +56627,39 @@ func TestGettersFeatureResponseData(t *testing.T) {
 		_ = obj.GetUpdatedAt() // Should return zero value
 	})
 
+	t.Run("GetUsageLimitTraitID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureResponseData{}
+		var expected *string
+		obj.UsageLimitTraitID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetUsageLimitTraitID(), "getter should return the property value")
+	})
+
+	t.Run("GetUsageLimitTraitID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureResponseData{}
+		obj.UsageLimitTraitID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetUsageLimitTraitID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetUsageLimitTraitID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetUsageLimitTraitID() // Should return zero value
+	})
+
 }
 
 func TestSettersMarkExplicitFeatureResponseData(t *testing.T) {
@@ -56384,6 +56826,37 @@ func TestSettersMarkExplicitFeatureResponseData(t *testing.T) {
 
 		// Act
 		obj.SetID(fernTestValueID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetLicenseID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureResponseData{}
+		var fernTestValueLicenseID *string
+
+		// Act
+		obj.SetLicenseID(fernTestValueLicenseID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -56601,6 +57074,37 @@ func TestSettersMarkExplicitFeatureResponseData(t *testing.T) {
 
 		// Act
 		obj.SetUpdatedAt(fernTestValueUpdatedAt)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetUsageLimitTraitID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureResponseData{}
+		var fernTestValueUsageLimitTraitID *string
+
+		// Act
+		obj.SetUsageLimitTraitID(fernTestValueUsageLimitTraitID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -59644,6 +60148,14 @@ func TestSettersFeatureView(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetBillingProduct", func(t *testing.T) {
+		obj := &FeatureView{}
+		var fernTestValueBillingProduct *BillingProductResponseData
+		obj.SetBillingProduct(fernTestValueBillingProduct)
+		assert.Equal(t, fernTestValueBillingProduct, obj.BillingProduct)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCreatedAt", func(t *testing.T) {
 		obj := &FeatureView{}
 		var fernTestValueCreatedAt time.Time
@@ -59705,6 +60217,14 @@ func TestSettersFeatureView(t *testing.T) {
 		var fernTestValueID string
 		obj.SetID(fernTestValueID)
 		assert.Equal(t, fernTestValueID, obj.ID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetLicenseID", func(t *testing.T) {
+		obj := &FeatureView{}
+		var fernTestValueLicenseID *string
+		obj.SetLicenseID(fernTestValueLicenseID)
+		assert.Equal(t, fernTestValueLicenseID, obj.LicenseID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -59837,6 +60357,39 @@ func TestGettersFeatureView(t *testing.T) {
 			}
 		}()
 		_ = obj.GetBillingLinkedResource() // Should return zero value
+	})
+
+	t.Run("GetBillingProduct", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureView{}
+		var expected *BillingProductResponseData
+		obj.BillingProduct = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetBillingProduct(), "getter should return the property value")
+	})
+
+	t.Run("GetBillingProduct_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureView{}
+		obj.BillingProduct = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetBillingProduct(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetBillingProduct_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetBillingProduct() // Should return zero value
 	})
 
 	t.Run("GetCreatedAt", func(t *testing.T) {
@@ -60051,6 +60604,39 @@ func TestGettersFeatureView(t *testing.T) {
 			}
 		}()
 		_ = obj.GetID() // Should return zero value
+	})
+
+	t.Run("GetLicenseID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureView{}
+		var expected *string
+		obj.LicenseID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetLicenseID(), "getter should return the property value")
+	})
+
+	t.Run("GetLicenseID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureView{}
+		obj.LicenseID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetLicenseID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetLicenseID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *FeatureView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetLicenseID() // Should return zero value
 	})
 
 	t.Run("GetLifecyclePhase", func(t *testing.T) {
@@ -60395,6 +60981,37 @@ func TestSettersMarkExplicitFeatureView(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetBillingProduct_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureView{}
+		var fernTestValueBillingProduct *BillingProductResponseData
+
+		// Act
+		obj.SetBillingProduct(fernTestValueBillingProduct)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetCreatedAt_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -60620,6 +61237,37 @@ func TestSettersMarkExplicitFeatureView(t *testing.T) {
 
 		// Act
 		obj.SetID(fernTestValueID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetLicenseID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &FeatureView{}
+		var fernTestValueLicenseID *string
+
+		// Act
+		obj.SetLicenseID(fernTestValueLicenseID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -112712,6 +113360,13 @@ func TestEnumBillingCreditGrantZeroedOutReason(t *testing.T) {
 		assert.Equal(t, BillingCreditGrantZeroedOutReason("integration_uninstalled"), val, "enum value should match expected wire value")
 	})
 
+	t.Run("NewFromString_license_retired", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewBillingCreditGrantZeroedOutReasonFromString("license_retired")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, BillingCreditGrantZeroedOutReason("license_retired"), val, "enum value should match expected wire value")
+	})
+
 	t.Run("NewFromString_manual", func(t *testing.T) {
 		t.Parallel()
 		val, err := NewBillingCreditGrantZeroedOutReasonFromString("manual")
@@ -113742,6 +114397,13 @@ func TestEnumFeatureType(t *testing.T) {
 		val, err := NewFeatureTypeFromString("event")
 		assert.NoError(t, err, "valid enum value should not return error")
 		assert.Equal(t, FeatureType("event"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_license", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewFeatureTypeFromString("license")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, FeatureType("license"), val, "enum value should match expected wire value")
 	})
 
 	t.Run("NewFromString_trait", func(t *testing.T) {

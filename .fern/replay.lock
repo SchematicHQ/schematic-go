@@ -54,14 +54,20 @@ generations:
     cli_version: unknown
     generator_versions:
       fernapi/fern-go-sdk: 1.46.4
-current_generation: 4ef53fca235b60384aa274ce988be9e8177b599f
+  - commit_sha: ed53f318d9f4e74f48df1a77ff679e4f876a38aa
+    tree_hash: e2f6fc0e6dadbd8ea0a5160d9763b8d916042534
+    timestamp: 2026-08-03T11:03:19.880Z
+    cli_version: unknown
+    generator_versions:
+      fernapi/fern-go-sdk: 1.46.4
+current_generation: ed53f318d9f4e74f48df1a77ff679e4f876a38aa
 patches:
   - id: patch-c1dec125
     content_hash: sha256:3602badfd6867857bc1f9fc1eddae9cba4a3e8016e6f7211a1339d67bb73c8d2
     original_commit: c1dec12524ae4d861b313c6edb5d4c61b2b2b3a7
     original_message: "chore(deps): bump actions/setup-go from 4 to 6 (#165)"
     original_author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
-    base_generation: 4ef53fca235b60384aa274ce988be9e8177b599f
+    base_generation: ed53f318d9f4e74f48df1a77ff679e4f876a38aa
     files:
       - .github/workflows/ci.yml
     patch_content: |
@@ -178,7 +184,7 @@ patches:
     original_commit: 9b95120fb6a66e21a6494b83df047161862350eb
     original_message: "chore: update rules engine WASM to v0.6.0 (#190)"
     original_author: Schematic Bot <bot@schematichq.com>
-    base_generation: 4ef53fca235b60384aa274ce988be9e8177b599f
+    base_generation: ed53f318d9f4e74f48df1a77ff679e4f876a38aa
     files:
       - WASM_VERSION
       - rulesengine/wasm/rulesengine.wasm

@@ -3209,7 +3209,7 @@ func TestSettersCompanyPlanDetailResponseData(t *testing.T) {
 
 	t.Run("SetIsFree", func(t *testing.T) {
 		obj := &CompanyPlanDetailResponseData{}
-		var fernTestValueIsFree bool
+		var fernTestValueIsFree *bool
 		obj.SetIsFree(fernTestValueIsFree)
 		assert.Equal(t, fernTestValueIsFree, obj.IsFree)
 		assert.NotNil(t, obj.explicitFields)
@@ -4244,11 +4244,21 @@ func TestGettersCompanyPlanDetailResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CompanyPlanDetailResponseData{}
-		var expected bool
+		var expected *bool
 		obj.IsFree = expected
 
 		// Act & Assert
 		assert.Equal(t, expected, obj.GetIsFree(), "getter should return the property value")
+	})
+
+	t.Run("GetIsFree_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyPlanDetailResponseData{}
+		obj.IsFree = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetIsFree(), "getter should return nil when property is nil")
 	})
 
 	t.Run("GetIsFree_NilReceiver", func(t *testing.T) {
@@ -5608,7 +5618,7 @@ func TestSettersMarkExplicitCompanyPlanDetailResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CompanyPlanDetailResponseData{}
-		var fernTestValueIsFree bool
+		var fernTestValueIsFree *bool
 
 		// Act
 		obj.SetIsFree(fernTestValueIsFree)
@@ -6034,6 +6044,14 @@ func TestSettersComponentCheckoutSettings(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetProrationBehavior", func(t *testing.T) {
+		obj := &ComponentCheckoutSettings{}
+		var fernTestValueProrationBehavior ProrationBehavior
+		obj.SetProrationBehavior(fernTestValueProrationBehavior)
+		assert.Equal(t, fernTestValueProrationBehavior, obj.ProrationBehavior)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetTaxCollectionEnabled", func(t *testing.T) {
 		obj := &ComponentCheckoutSettings{}
 		var fernTestValueTaxCollectionEnabled bool
@@ -6112,6 +6130,29 @@ func TestGettersComponentCheckoutSettings(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCollectPhone() // Should return zero value
+	})
+
+	t.Run("GetProrationBehavior", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ComponentCheckoutSettings{}
+		var expected ProrationBehavior
+		obj.ProrationBehavior = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetProrationBehavior(), "getter should return the property value")
+	})
+
+	t.Run("GetProrationBehavior_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ComponentCheckoutSettings
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetProrationBehavior() // Should return zero value
 	})
 
 	t.Run("GetTaxCollectionEnabled", func(t *testing.T) {
@@ -6210,6 +6251,37 @@ func TestSettersMarkExplicitComponentCheckoutSettings(t *testing.T) {
 
 		// Act
 		obj.SetCollectPhone(fernTestValueCollectPhone)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetProrationBehavior_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ComponentCheckoutSettings{}
+		var fernTestValueProrationBehavior ProrationBehavior
+
+		// Act
+		obj.SetProrationBehavior(fernTestValueProrationBehavior)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

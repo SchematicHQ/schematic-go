@@ -397,6 +397,14 @@ client.Accounts.CreateAPIKey(
 <dl>
 <dd>
 
+**rateLimitPercent:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **readonly:** `*bool` 
     
 </dd>
@@ -504,6 +512,14 @@ client.Accounts.UpdateAPIKey(
 <dd>
 
 **name:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**rateLimitPercent:** `*int64` 
     
 </dd>
 </dl>
@@ -2592,6 +2608,9 @@ request := &schematichq.ListBillingPricesRequest{
         Interval: schematichq.String(
             "interval",
         ),
+        IntervalCount: schematichq.Int64(
+            int64(1000000),
+        ),
         IsActive: schematichq.Bool(
             true,
         ),
@@ -2677,6 +2696,14 @@ client.Billing.ListBillingPrices(
 <dd>
 
 **interval:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**intervalCount:** `*int64` — Filter for prices billed every N intervals; combine with interval (e.g. interval=month, interval_count=3 for quarterly)
     
 </dd>
 </dl>
@@ -3047,6 +3074,9 @@ request := &schematichq.ListBillingProductPricesRequest{
         Interval: schematichq.String(
             "interval",
         ),
+        IntervalCount: schematichq.Int64(
+            int64(1000000),
+        ),
         IsActive: schematichq.Bool(
             true,
         ),
@@ -3132,6 +3162,14 @@ client.Billing.ListBillingProductPrices(
 <dd>
 
 **interval:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**intervalCount:** `*int64` — Filter for prices billed every N intervals; combine with interval (e.g. interval=month, interval_count=3 for quarterly)
     
 </dd>
 </dl>
@@ -6651,7 +6689,6 @@ client.Catalogs.ListCatalogs(
 
 ```go
 request := &schematichq.CreateCatalogRequestBody{
-        IsDefault: true,
         Name: "name",
     }
 client.Catalogs.CreateCatalog(
@@ -6674,14 +6711,6 @@ client.Catalogs.CreateCatalog(
 <dd>
 
 **description:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**isDefault:** `bool` 
     
 </dd>
 </dl>
@@ -7697,6 +7726,14 @@ client.Checkout.UpdateCompanyBillingDetails(
 <dd>
 
 **phone:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**taxID:** `*schematichq.TaxIDInput` 
     
 </dd>
 </dl>
@@ -13735,6 +13772,172 @@ client.Entitlements.GetFeatureUsageByCompany(
 </dl>
 </details>
 
+<details><summary><code>client.Entitlements.GetUserUsageByCompany() -> *schematichq.GetUserUsageByCompanyResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetUserUsageByCompanyRequest{
+        CompanyID: "company_id",
+        EndTime: schematichq.Time(
+            schematichq.MustParseDateTime(
+                "2024-01-15T09:30:00Z",
+            ),
+        ),
+        FeatureID: schematichq.String(
+            "feature_id",
+        ),
+        StartTime: schematichq.Time(
+            schematichq.MustParseDateTime(
+                "2024-01-15T09:30:00Z",
+            ),
+        ),
+    }
+client.Entitlements.GetUserUsageByCompany(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — Company to break usage down for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endTime:** `*time.Time` — End of the usage window (exclusive); defaults to now
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureID:** `*string` — Restrict to a single event-based feature
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `*time.Time` — Start of the usage window; defaults to 30 days before the end
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Entitlements.GetUserUsageDetail() -> *schematichq.GetUserUsageDetailResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetUserUsageDetailRequest{
+        CompanyID: "company_id",
+        EndTime: schematichq.Time(
+            schematichq.MustParseDateTime(
+                "2024-01-15T09:30:00Z",
+            ),
+        ),
+        StartTime: schematichq.Time(
+            schematichq.MustParseDateTime(
+                "2024-01-15T09:30:00Z",
+            ),
+        ),
+        UserID: "user_id",
+    }
+client.Entitlements.GetUserUsageDetail(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — Company the user belongs to
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endTime:** `*time.Time` — End of the usage window (exclusive); defaults to now
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `*time.Time` — Start of the usage window; defaults to 30 days before the end
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userID:** `string` — User to break usage down for
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## plans
 <details><summary><code>client.Plans.UpdateCompanyPlans(CompanyPlanID, request) -> *schematichq.UpdateCompanyPlansResponse</code></summary>
 <dl>
@@ -14021,6 +14224,14 @@ client.Plans.RetryCustomPlanBilling(
 <dd>
 
 **daysUntilDue:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**sendInvoice:** `*bool` — Whether Stripe emails the invoice when it is finalized. Defaults to true.
     
 </dd>
 </dl>
@@ -15257,7 +15468,23 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
+**address:** `*schematichq.CustomerBillingAddress` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **couponExternalID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customFieldValues:** `[]*schematichq.CheckoutFieldValue` 
     
 </dd>
 </dl>
@@ -15290,6 +15517,30 @@ client.Plans.PublishPlanVersion(
 <dd>
 
 **migrationStrategy:** `*schematichq.PlanVersionMigrationStrategy` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**phone:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**sendInvoice:** `*bool` — Whether Stripe emails the invoice when it is finalized. Defaults to true.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**taxID:** `*schematichq.TaxIDInput` 
     
 </dd>
 </dl>

@@ -395,3 +395,35 @@ func (c *Client) GetFeatureUsageByCompany(
 	}
 	return response.Body, nil
 }
+
+func (c *Client) GetUserUsageByCompany(
+	ctx context.Context,
+	request *schematichq.GetUserUsageByCompanyRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetUserUsageByCompanyResponse, error) {
+	response, err := c.WithRawResponse.GetUserUsageByCompany(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) GetUserUsageDetail(
+	ctx context.Context,
+	request *schematichq.GetUserUsageDetailRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetUserUsageDetailResponse, error) {
+	response, err := c.WithRawResponse.GetUserUsageDetail(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}

@@ -677,6 +677,14 @@ func TestSettersCreateAPIKeyRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetRateLimitPercent", func(t *testing.T) {
+		obj := &CreateAPIKeyRequestBody{}
+		var fernTestValueRateLimitPercent *int64
+		obj.SetRateLimitPercent(fernTestValueRateLimitPercent)
+		assert.Equal(t, fernTestValueRateLimitPercent, obj.RateLimitPercent)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetReadonly", func(t *testing.T) {
 		obj := &CreateAPIKeyRequestBody{}
 		var fernTestValueReadonly *bool
@@ -758,6 +766,37 @@ func TestSettersMarkExplicitCreateAPIKeyRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetName(fernTestValueName)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetRateLimitPercent_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateAPIKeyRequestBody{}
+		var fernTestValueRateLimitPercent *int64
+
+		// Act
+		obj.SetRateLimitPercent(fernTestValueRateLimitPercent)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -1728,6 +1767,14 @@ func TestSettersAPIKeyCreateResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetRateLimitPercent", func(t *testing.T) {
+		obj := &APIKeyCreateResponseData{}
+		var fernTestValueRateLimitPercent *int64
+		obj.SetRateLimitPercent(fernTestValueRateLimitPercent)
+		assert.Equal(t, fernTestValueRateLimitPercent, obj.RateLimitPercent)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetReadonly", func(t *testing.T) {
 		obj := &APIKeyCreateResponseData{}
 		var fernTestValueReadonly bool
@@ -1995,6 +2042,39 @@ func TestGettersAPIKeyCreateResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetName() // Should return zero value
+	})
+
+	t.Run("GetRateLimitPercent", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &APIKeyCreateResponseData{}
+		var expected *int64
+		obj.RateLimitPercent = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetRateLimitPercent(), "getter should return the property value")
+	})
+
+	t.Run("GetRateLimitPercent_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &APIKeyCreateResponseData{}
+		obj.RateLimitPercent = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetRateLimitPercent(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetRateLimitPercent_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *APIKeyCreateResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetRateLimitPercent() // Should return zero value
 	})
 
 	t.Run("GetReadonly", func(t *testing.T) {
@@ -2327,6 +2407,37 @@ func TestSettersMarkExplicitAPIKeyCreateResponseData(t *testing.T) {
 
 		// Act
 		obj.SetName(fernTestValueName)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetRateLimitPercent_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &APIKeyCreateResponseData{}
+		var fernTestValueRateLimitPercent *int64
+
+		// Act
+		obj.SetRateLimitPercent(fernTestValueRateLimitPercent)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -10471,6 +10582,14 @@ func TestSettersUpdateAPIKeyRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetRateLimitPercent", func(t *testing.T) {
+		obj := &UpdateAPIKeyRequestBody{}
+		var fernTestValueRateLimitPercent *int64
+		obj.SetRateLimitPercent(fernTestValueRateLimitPercent)
+		assert.Equal(t, fernTestValueRateLimitPercent, obj.RateLimitPercent)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 }
 
 func TestSettersMarkExplicitUpdateAPIKeyRequestBody(t *testing.T) {
@@ -10513,6 +10632,37 @@ func TestSettersMarkExplicitUpdateAPIKeyRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetName(fernTestValueName)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetRateLimitPercent_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdateAPIKeyRequestBody{}
+		var fernTestValueRateLimitPercent *int64
+
+		// Act
+		obj.SetRateLimitPercent(fernTestValueRateLimitPercent)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

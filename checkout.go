@@ -677,106 +677,6 @@ func (c *CheckoutDataResponseData) String() string {
 }
 
 var (
-	checkoutFieldValueFieldID    = big.NewInt(1 << 0)
-	checkoutFieldValueFieldValue = big.NewInt(1 << 1)
-)
-
-type CheckoutFieldValue struct {
-	ID    string `json:"id" url:"id"`
-	Value string `json:"value" url:"value"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CheckoutFieldValue) GetID() string {
-	if c == nil {
-		return ""
-	}
-	return c.ID
-}
-
-func (c *CheckoutFieldValue) GetValue() string {
-	if c == nil {
-		return ""
-	}
-	return c.Value
-}
-
-func (c *CheckoutFieldValue) GetExtraProperties() map[string]interface{} {
-	if c == nil {
-		return nil
-	}
-	return c.extraProperties
-}
-
-func (c *CheckoutFieldValue) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CheckoutFieldValue) SetID(id string) {
-	c.ID = id
-	c.require(checkoutFieldValueFieldID)
-}
-
-// SetValue sets the Value field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CheckoutFieldValue) SetValue(value string) {
-	c.Value = value
-	c.require(checkoutFieldValueFieldValue)
-}
-
-func (c *CheckoutFieldValue) UnmarshalJSON(data []byte) error {
-	type unmarshaler CheckoutFieldValue
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CheckoutFieldValue(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CheckoutFieldValue) MarshalJSON() ([]byte, error) {
-	type embed CheckoutFieldValue
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*c),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *CheckoutFieldValue) String() string {
-	if c == nil {
-		return "<nil>"
-	}
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-var (
 	checkoutSubscriptionFieldApplicationID                    = big.NewInt(1 << 0)
 	checkoutSubscriptionFieldCancelAt                         = big.NewInt(1 << 1)
 	checkoutSubscriptionFieldCancelAtPeriodEnd                = big.NewInt(1 << 2)
@@ -1526,6 +1426,7 @@ var (
 	companyBillingDetailsResponseDataFieldCustomFields     = big.NewInt(1 << 2)
 	companyBillingDetailsResponseDataFieldEmail            = big.NewInt(1 << 3)
 	companyBillingDetailsResponseDataFieldPhone            = big.NewInt(1 << 4)
+	companyBillingDetailsResponseDataFieldTaxIDs           = big.NewInt(1 << 5)
 )
 
 type CompanyBillingDetailsResponseData struct {
@@ -1534,6 +1435,7 @@ type CompanyBillingDetailsResponseData struct {
 	CustomFields     []*CheckoutFieldWithValue       `json:"custom_fields" url:"custom_fields"`
 	Email            *string                         `json:"email,omitempty" url:"email,omitempty"`
 	Phone            *string                         `json:"phone,omitempty" url:"phone,omitempty"`
+	TaxIDs           []*CompanyTaxIDView             `json:"tax_ids" url:"tax_ids"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1575,6 +1477,13 @@ func (c *CompanyBillingDetailsResponseData) GetPhone() *string {
 		return nil
 	}
 	return c.Phone
+}
+
+func (c *CompanyBillingDetailsResponseData) GetTaxIDs() []*CompanyTaxIDView {
+	if c == nil {
+		return nil
+	}
+	return c.TaxIDs
 }
 
 func (c *CompanyBillingDetailsResponseData) GetExtraProperties() map[string]interface{} {
@@ -1626,6 +1535,13 @@ func (c *CompanyBillingDetailsResponseData) SetPhone(phone *string) {
 	c.require(companyBillingDetailsResponseDataFieldPhone)
 }
 
+// SetTaxIDs sets the TaxIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingDetailsResponseData) SetTaxIDs(taxIDs []*CompanyTaxIDView) {
+	c.TaxIDs = taxIDs
+	c.require(companyBillingDetailsResponseDataFieldTaxIDs)
+}
+
 func (c *CompanyBillingDetailsResponseData) UnmarshalJSON(data []byte) error {
 	type unmarshaler CompanyBillingDetailsResponseData
 	var value unmarshaler
@@ -1654,6 +1570,154 @@ func (c *CompanyBillingDetailsResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyBillingDetailsResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	companyTaxIDViewFieldCountry            = big.NewInt(1 << 0)
+	companyTaxIDViewFieldID                 = big.NewInt(1 << 1)
+	companyTaxIDViewFieldType               = big.NewInt(1 << 2)
+	companyTaxIDViewFieldValue              = big.NewInt(1 << 3)
+	companyTaxIDViewFieldVerificationStatus = big.NewInt(1 << 4)
+)
+
+type CompanyTaxIDView struct {
+	Country            string  `json:"country" url:"country"`
+	ID                 string  `json:"id" url:"id"`
+	Type               string  `json:"type" url:"type"`
+	Value              string  `json:"value" url:"value"`
+	VerificationStatus *string `json:"verification_status,omitempty" url:"verification_status,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyTaxIDView) GetCountry() string {
+	if c == nil {
+		return ""
+	}
+	return c.Country
+}
+
+func (c *CompanyTaxIDView) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CompanyTaxIDView) GetType() string {
+	if c == nil {
+		return ""
+	}
+	return c.Type
+}
+
+func (c *CompanyTaxIDView) GetValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.Value
+}
+
+func (c *CompanyTaxIDView) GetVerificationStatus() *string {
+	if c == nil {
+		return nil
+	}
+	return c.VerificationStatus
+}
+
+func (c *CompanyTaxIDView) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyTaxIDView) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCountry sets the Country field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTaxIDView) SetCountry(country string) {
+	c.Country = country
+	c.require(companyTaxIDViewFieldCountry)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTaxIDView) SetID(id string) {
+	c.ID = id
+	c.require(companyTaxIDViewFieldID)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTaxIDView) SetType(type_ string) {
+	c.Type = type_
+	c.require(companyTaxIDViewFieldType)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTaxIDView) SetValue(value string) {
+	c.Value = value
+	c.require(companyTaxIDViewFieldValue)
+}
+
+// SetVerificationStatus sets the VerificationStatus field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTaxIDView) SetVerificationStatus(verificationStatus *string) {
+	c.VerificationStatus = verificationStatus
+	c.require(companyTaxIDViewFieldVerificationStatus)
+}
+
+func (c *CompanyTaxIDView) UnmarshalJSON(data []byte) error {
+	type unmarshaler CompanyTaxIDView
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CompanyTaxIDView(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyTaxIDView) MarshalJSON() ([]byte, error) {
+	type embed CompanyTaxIDView
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyTaxIDView) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -1770,170 +1834,6 @@ func (c *CreditBundlePurchaseResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditBundlePurchaseResponseData) String() string {
-	if c == nil {
-		return "<nil>"
-	}
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-var (
-	customerBillingAddressFieldCity       = big.NewInt(1 << 0)
-	customerBillingAddressFieldCountry    = big.NewInt(1 << 1)
-	customerBillingAddressFieldLine1      = big.NewInt(1 << 2)
-	customerBillingAddressFieldLine2      = big.NewInt(1 << 3)
-	customerBillingAddressFieldPostalCode = big.NewInt(1 << 4)
-	customerBillingAddressFieldState      = big.NewInt(1 << 5)
-)
-
-type CustomerBillingAddress struct {
-	City       string `json:"city" url:"city"`
-	Country    string `json:"country" url:"country"`
-	Line1      string `json:"line1" url:"line1"`
-	Line2      string `json:"line2" url:"line2"`
-	PostalCode string `json:"postal_code" url:"postal_code"`
-	State      string `json:"state" url:"state"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CustomerBillingAddress) GetCity() string {
-	if c == nil {
-		return ""
-	}
-	return c.City
-}
-
-func (c *CustomerBillingAddress) GetCountry() string {
-	if c == nil {
-		return ""
-	}
-	return c.Country
-}
-
-func (c *CustomerBillingAddress) GetLine1() string {
-	if c == nil {
-		return ""
-	}
-	return c.Line1
-}
-
-func (c *CustomerBillingAddress) GetLine2() string {
-	if c == nil {
-		return ""
-	}
-	return c.Line2
-}
-
-func (c *CustomerBillingAddress) GetPostalCode() string {
-	if c == nil {
-		return ""
-	}
-	return c.PostalCode
-}
-
-func (c *CustomerBillingAddress) GetState() string {
-	if c == nil {
-		return ""
-	}
-	return c.State
-}
-
-func (c *CustomerBillingAddress) GetExtraProperties() map[string]interface{} {
-	if c == nil {
-		return nil
-	}
-	return c.extraProperties
-}
-
-func (c *CustomerBillingAddress) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
-	}
-	c.explicitFields.Or(c.explicitFields, field)
-}
-
-// SetCity sets the City field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CustomerBillingAddress) SetCity(city string) {
-	c.City = city
-	c.require(customerBillingAddressFieldCity)
-}
-
-// SetCountry sets the Country field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CustomerBillingAddress) SetCountry(country string) {
-	c.Country = country
-	c.require(customerBillingAddressFieldCountry)
-}
-
-// SetLine1 sets the Line1 field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CustomerBillingAddress) SetLine1(line1 string) {
-	c.Line1 = line1
-	c.require(customerBillingAddressFieldLine1)
-}
-
-// SetLine2 sets the Line2 field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CustomerBillingAddress) SetLine2(line2 string) {
-	c.Line2 = line2
-	c.require(customerBillingAddressFieldLine2)
-}
-
-// SetPostalCode sets the PostalCode field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CustomerBillingAddress) SetPostalCode(postalCode string) {
-	c.PostalCode = postalCode
-	c.require(customerBillingAddressFieldPostalCode)
-}
-
-// SetState sets the State field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CustomerBillingAddress) SetState(state string) {
-	c.State = state
-	c.require(customerBillingAddressFieldState)
-}
-
-func (c *CustomerBillingAddress) UnmarshalJSON(data []byte) error {
-	type unmarshaler CustomerBillingAddress
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CustomerBillingAddress(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CustomerBillingAddress) MarshalJSON() ([]byte, error) {
-	type embed CustomerBillingAddress
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*c),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *CustomerBillingAddress) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -4980,13 +4880,15 @@ var (
 	updateCompanyBillingDetailsRequestBodyFieldAddress = big.NewInt(1 << 0)
 	updateCompanyBillingDetailsRequestBodyFieldEmail   = big.NewInt(1 << 1)
 	updateCompanyBillingDetailsRequestBodyFieldPhone   = big.NewInt(1 << 2)
-	updateCompanyBillingDetailsRequestBodyFieldValues  = big.NewInt(1 << 3)
+	updateCompanyBillingDetailsRequestBodyFieldTaxID   = big.NewInt(1 << 3)
+	updateCompanyBillingDetailsRequestBodyFieldValues  = big.NewInt(1 << 4)
 )
 
 type UpdateCompanyBillingDetailsRequestBody struct {
 	Address *CustomerBillingAddress `json:"address,omitempty" url:"-"`
 	Email   *string                 `json:"email,omitempty" url:"-"`
 	Phone   *string                 `json:"phone,omitempty" url:"-"`
+	TaxID   *TaxIDInput             `json:"tax_id,omitempty" url:"-"`
 	Values  []*CheckoutFieldValue   `json:"values" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -5019,6 +4921,13 @@ func (u *UpdateCompanyBillingDetailsRequestBody) SetEmail(email *string) {
 func (u *UpdateCompanyBillingDetailsRequestBody) SetPhone(phone *string) {
 	u.Phone = phone
 	u.require(updateCompanyBillingDetailsRequestBodyFieldPhone)
+}
+
+// SetTaxID sets the TaxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingDetailsRequestBody) SetTaxID(taxID *TaxIDInput) {
+	u.TaxID = taxID
+	u.require(updateCompanyBillingDetailsRequestBodyFieldTaxID)
 }
 
 // SetValues sets the Values field and marks it as non-optional;

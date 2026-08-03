@@ -19,14 +19,6 @@ func TestSettersCreateCatalogRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
-	t.Run("SetIsDefault", func(t *testing.T) {
-		obj := &CreateCatalogRequestBody{}
-		var fernTestValueIsDefault bool
-		obj.SetIsDefault(fernTestValueIsDefault)
-		assert.Equal(t, fernTestValueIsDefault, obj.IsDefault)
-		assert.NotNil(t, obj.explicitFields)
-	})
-
 	t.Run("SetName", func(t *testing.T) {
 		obj := &CreateCatalogRequestBody{}
 		var fernTestValueName string
@@ -46,37 +38,6 @@ func TestSettersMarkExplicitCreateCatalogRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetDescription(fernTestValueDescription)
-
-		// Assert - object with explicitly set field can be marshaled/unmarshaled
-		bytes, err := json.Marshal(obj)
-		require.NoError(t, err, "marshaling should succeed for test setup")
-
-		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
-		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
-		if len(bytes) > 0 && bytes[0] == '{' {
-			// JSON object - unmarshal into map
-			var unmarshaled map[string]interface{}
-			err = json.Unmarshal(bytes, &unmarshaled)
-			require.NoError(t, err, "unmarshaling should succeed for test verification")
-		} else {
-			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
-			var unmarshaled interface{}
-			err = json.Unmarshal(bytes, &unmarshaled)
-			require.NoError(t, err, "unmarshaling should succeed for test verification")
-		}
-
-		// Note: This does not explicitly assert the presence of a specific JSON field
-		// It verifies that setting a field via setter allows successful JSON round-trip
-	})
-
-	t.Run("SetIsDefault_MarksExplicit", func(t *testing.T) {
-		t.Parallel()
-		// Arrange
-		obj := &CreateCatalogRequestBody{}
-		var fernTestValueIsDefault bool
-
-		// Act
-		obj.SetIsDefault(fernTestValueIsDefault)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -438,11 +399,11 @@ func TestSettersMarkExplicitCatalogConfigOrderedBundleResponseData(t *testing.T)
 }
 
 func TestSettersCatalogConfigOrderedEntitlement(t *testing.T) {
-	t.Run("SetPlanEntitlementID", func(t *testing.T) {
+	t.Run("SetFeatureID", func(t *testing.T) {
 		obj := &CatalogConfigOrderedEntitlement{}
-		var fernTestValuePlanEntitlementID string
-		obj.SetPlanEntitlementID(fernTestValuePlanEntitlementID)
-		assert.Equal(t, fernTestValuePlanEntitlementID, obj.PlanEntitlementID)
+		var fernTestValueFeatureID string
+		obj.SetFeatureID(fernTestValueFeatureID)
+		assert.Equal(t, fernTestValueFeatureID, obj.FeatureID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -457,18 +418,18 @@ func TestSettersCatalogConfigOrderedEntitlement(t *testing.T) {
 }
 
 func TestGettersCatalogConfigOrderedEntitlement(t *testing.T) {
-	t.Run("GetPlanEntitlementID", func(t *testing.T) {
+	t.Run("GetFeatureID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CatalogConfigOrderedEntitlement{}
 		var expected string
-		obj.PlanEntitlementID = expected
+		obj.FeatureID = expected
 
 		// Act & Assert
-		assert.Equal(t, expected, obj.GetPlanEntitlementID(), "getter should return the property value")
+		assert.Equal(t, expected, obj.GetFeatureID(), "getter should return the property value")
 	})
 
-	t.Run("GetPlanEntitlementID_NilReceiver", func(t *testing.T) {
+	t.Run("GetFeatureID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *CatalogConfigOrderedEntitlement
 		// Should not panic - getters should handle nil receiver gracefully
@@ -477,7 +438,7 @@ func TestGettersCatalogConfigOrderedEntitlement(t *testing.T) {
 				t.Errorf("Getter panicked on nil receiver: %v", r)
 			}
 		}()
-		_ = obj.GetPlanEntitlementID() // Should return zero value
+		_ = obj.GetFeatureID() // Should return zero value
 	})
 
 	t.Run("GetVisible", func(t *testing.T) {
@@ -516,14 +477,14 @@ func TestGettersCatalogConfigOrderedEntitlement(t *testing.T) {
 }
 
 func TestSettersMarkExplicitCatalogConfigOrderedEntitlement(t *testing.T) {
-	t.Run("SetPlanEntitlementID_MarksExplicit", func(t *testing.T) {
+	t.Run("SetFeatureID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CatalogConfigOrderedEntitlement{}
-		var fernTestValuePlanEntitlementID string
+		var fernTestValueFeatureID string
 
 		// Act
-		obj.SetPlanEntitlementID(fernTestValuePlanEntitlementID)
+		obj.SetFeatureID(fernTestValueFeatureID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -581,11 +542,11 @@ func TestSettersMarkExplicitCatalogConfigOrderedEntitlement(t *testing.T) {
 }
 
 func TestSettersCatalogConfigOrderedEntitlementResponseData(t *testing.T) {
-	t.Run("SetPlanEntitlementID", func(t *testing.T) {
+	t.Run("SetFeatureID", func(t *testing.T) {
 		obj := &CatalogConfigOrderedEntitlementResponseData{}
-		var fernTestValuePlanEntitlementID string
-		obj.SetPlanEntitlementID(fernTestValuePlanEntitlementID)
-		assert.Equal(t, fernTestValuePlanEntitlementID, obj.PlanEntitlementID)
+		var fernTestValueFeatureID string
+		obj.SetFeatureID(fernTestValueFeatureID)
+		assert.Equal(t, fernTestValueFeatureID, obj.FeatureID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -600,18 +561,18 @@ func TestSettersCatalogConfigOrderedEntitlementResponseData(t *testing.T) {
 }
 
 func TestGettersCatalogConfigOrderedEntitlementResponseData(t *testing.T) {
-	t.Run("GetPlanEntitlementID", func(t *testing.T) {
+	t.Run("GetFeatureID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CatalogConfigOrderedEntitlementResponseData{}
 		var expected string
-		obj.PlanEntitlementID = expected
+		obj.FeatureID = expected
 
 		// Act & Assert
-		assert.Equal(t, expected, obj.GetPlanEntitlementID(), "getter should return the property value")
+		assert.Equal(t, expected, obj.GetFeatureID(), "getter should return the property value")
 	})
 
-	t.Run("GetPlanEntitlementID_NilReceiver", func(t *testing.T) {
+	t.Run("GetFeatureID_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *CatalogConfigOrderedEntitlementResponseData
 		// Should not panic - getters should handle nil receiver gracefully
@@ -620,7 +581,7 @@ func TestGettersCatalogConfigOrderedEntitlementResponseData(t *testing.T) {
 				t.Errorf("Getter panicked on nil receiver: %v", r)
 			}
 		}()
-		_ = obj.GetPlanEntitlementID() // Should return zero value
+		_ = obj.GetFeatureID() // Should return zero value
 	})
 
 	t.Run("GetVisible", func(t *testing.T) {
@@ -649,14 +610,14 @@ func TestGettersCatalogConfigOrderedEntitlementResponseData(t *testing.T) {
 }
 
 func TestSettersMarkExplicitCatalogConfigOrderedEntitlementResponseData(t *testing.T) {
-	t.Run("SetPlanEntitlementID_MarksExplicit", func(t *testing.T) {
+	t.Run("SetFeatureID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CatalogConfigOrderedEntitlementResponseData{}
-		var fernTestValuePlanEntitlementID string
+		var fernTestValueFeatureID string
 
 		// Act
-		obj.SetPlanEntitlementID(fernTestValuePlanEntitlementID)
+		obj.SetFeatureID(fernTestValueFeatureID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -2285,14 +2246,6 @@ func TestSettersCatalogResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
-	t.Run("SetEnvironmentID", func(t *testing.T) {
-		obj := &CatalogResponseData{}
-		var fernTestValueEnvironmentID string
-		obj.SetEnvironmentID(fernTestValueEnvironmentID)
-		assert.Equal(t, fernTestValueEnvironmentID, obj.EnvironmentID)
-		assert.NotNil(t, obj.explicitFields)
-	})
-
 	t.Run("SetID", func(t *testing.T) {
 		obj := &CatalogResponseData{}
 		var fernTestValueID string
@@ -2543,29 +2496,6 @@ func TestGettersCatalogResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetDescription() // Should return zero value
-	})
-
-	t.Run("GetEnvironmentID", func(t *testing.T) {
-		t.Parallel()
-		// Arrange
-		obj := &CatalogResponseData{}
-		var expected string
-		obj.EnvironmentID = expected
-
-		// Act & Assert
-		assert.Equal(t, expected, obj.GetEnvironmentID(), "getter should return the property value")
-	})
-
-	t.Run("GetEnvironmentID_NilReceiver", func(t *testing.T) {
-		t.Parallel()
-		var obj *CatalogResponseData
-		// Should not panic - getters should handle nil receiver gracefully
-		defer func() {
-			if r := recover(); r != nil {
-				t.Errorf("Getter panicked on nil receiver: %v", r)
-			}
-		}()
-		_ = obj.GetEnvironmentID() // Should return zero value
 	})
 
 	t.Run("GetID", func(t *testing.T) {
@@ -2923,37 +2853,6 @@ func TestSettersMarkExplicitCatalogResponseData(t *testing.T) {
 
 		// Act
 		obj.SetDescription(fernTestValueDescription)
-
-		// Assert - object with explicitly set field can be marshaled/unmarshaled
-		bytes, err := json.Marshal(obj)
-		require.NoError(t, err, "marshaling should succeed for test setup")
-
-		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
-		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
-		if len(bytes) > 0 && bytes[0] == '{' {
-			// JSON object - unmarshal into map
-			var unmarshaled map[string]interface{}
-			err = json.Unmarshal(bytes, &unmarshaled)
-			require.NoError(t, err, "unmarshaling should succeed for test verification")
-		} else {
-			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
-			var unmarshaled interface{}
-			err = json.Unmarshal(bytes, &unmarshaled)
-			require.NoError(t, err, "unmarshaling should succeed for test verification")
-		}
-
-		// Note: This does not explicitly assert the presence of a specific JSON field
-		// It verifies that setting a field via setter allows successful JSON round-trip
-	})
-
-	t.Run("SetEnvironmentID_MarksExplicit", func(t *testing.T) {
-		t.Parallel()
-		// Arrange
-		obj := &CatalogResponseData{}
-		var fernTestValueEnvironmentID string
-
-		// Act
-		obj.SetEnvironmentID(fernTestValueEnvironmentID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

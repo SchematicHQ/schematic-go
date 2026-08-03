@@ -12,13 +12,11 @@ import (
 
 var (
 	createCatalogRequestBodyFieldDescription = big.NewInt(1 << 0)
-	createCatalogRequestBodyFieldIsDefault   = big.NewInt(1 << 1)
-	createCatalogRequestBodyFieldName        = big.NewInt(1 << 2)
+	createCatalogRequestBodyFieldName        = big.NewInt(1 << 1)
 )
 
 type CreateCatalogRequestBody struct {
 	Description *string `json:"description,omitempty" url:"-"`
-	IsDefault   bool    `json:"is_default" url:"-"`
 	Name        string  `json:"name" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -37,13 +35,6 @@ func (c *CreateCatalogRequestBody) require(field *big.Int) {
 func (c *CreateCatalogRequestBody) SetDescription(description *string) {
 	c.Description = description
 	c.require(createCatalogRequestBodyFieldDescription)
-}
-
-// SetIsDefault sets the IsDefault field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCatalogRequestBody) SetIsDefault(isDefault bool) {
-	c.IsDefault = isDefault
-	c.require(createCatalogRequestBodyFieldIsDefault)
 }
 
 // SetName sets the Name field and marks it as non-optional;
@@ -298,13 +289,13 @@ func (c *CatalogConfigOrderedBundleResponseData) String() string {
 }
 
 var (
-	catalogConfigOrderedEntitlementFieldPlanEntitlementID = big.NewInt(1 << 0)
-	catalogConfigOrderedEntitlementFieldVisible           = big.NewInt(1 << 1)
+	catalogConfigOrderedEntitlementFieldFeatureID = big.NewInt(1 << 0)
+	catalogConfigOrderedEntitlementFieldVisible   = big.NewInt(1 << 1)
 )
 
 type CatalogConfigOrderedEntitlement struct {
-	PlanEntitlementID string `json:"plan_entitlement_id" url:"plan_entitlement_id"`
-	Visible           *bool  `json:"visible,omitempty" url:"visible,omitempty"`
+	FeatureID string `json:"feature_id" url:"feature_id"`
+	Visible   *bool  `json:"visible,omitempty" url:"visible,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -313,11 +304,11 @@ type CatalogConfigOrderedEntitlement struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CatalogConfigOrderedEntitlement) GetPlanEntitlementID() string {
+func (c *CatalogConfigOrderedEntitlement) GetFeatureID() string {
 	if c == nil {
 		return ""
 	}
-	return c.PlanEntitlementID
+	return c.FeatureID
 }
 
 func (c *CatalogConfigOrderedEntitlement) GetVisible() *bool {
@@ -341,11 +332,11 @@ func (c *CatalogConfigOrderedEntitlement) require(field *big.Int) {
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
-// SetPlanEntitlementID sets the PlanEntitlementID field and marks it as non-optional;
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CatalogConfigOrderedEntitlement) SetPlanEntitlementID(planEntitlementID string) {
-	c.PlanEntitlementID = planEntitlementID
-	c.require(catalogConfigOrderedEntitlementFieldPlanEntitlementID)
+func (c *CatalogConfigOrderedEntitlement) SetFeatureID(featureID string) {
+	c.FeatureID = featureID
+	c.require(catalogConfigOrderedEntitlementFieldFeatureID)
 }
 
 // SetVisible sets the Visible field and marks it as non-optional;
@@ -398,13 +389,13 @@ func (c *CatalogConfigOrderedEntitlement) String() string {
 }
 
 var (
-	catalogConfigOrderedEntitlementResponseDataFieldPlanEntitlementID = big.NewInt(1 << 0)
-	catalogConfigOrderedEntitlementResponseDataFieldVisible           = big.NewInt(1 << 1)
+	catalogConfigOrderedEntitlementResponseDataFieldFeatureID = big.NewInt(1 << 0)
+	catalogConfigOrderedEntitlementResponseDataFieldVisible   = big.NewInt(1 << 1)
 )
 
 type CatalogConfigOrderedEntitlementResponseData struct {
-	PlanEntitlementID string `json:"plan_entitlement_id" url:"plan_entitlement_id"`
-	Visible           bool   `json:"visible" url:"visible"`
+	FeatureID string `json:"feature_id" url:"feature_id"`
+	Visible   bool   `json:"visible" url:"visible"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -413,11 +404,11 @@ type CatalogConfigOrderedEntitlementResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CatalogConfigOrderedEntitlementResponseData) GetPlanEntitlementID() string {
+func (c *CatalogConfigOrderedEntitlementResponseData) GetFeatureID() string {
 	if c == nil {
 		return ""
 	}
-	return c.PlanEntitlementID
+	return c.FeatureID
 }
 
 func (c *CatalogConfigOrderedEntitlementResponseData) GetVisible() bool {
@@ -441,11 +432,11 @@ func (c *CatalogConfigOrderedEntitlementResponseData) require(field *big.Int) {
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
-// SetPlanEntitlementID sets the PlanEntitlementID field and marks it as non-optional;
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CatalogConfigOrderedEntitlementResponseData) SetPlanEntitlementID(planEntitlementID string) {
-	c.PlanEntitlementID = planEntitlementID
-	c.require(catalogConfigOrderedEntitlementResponseDataFieldPlanEntitlementID)
+func (c *CatalogConfigOrderedEntitlementResponseData) SetFeatureID(featureID string) {
+	c.FeatureID = featureID
+	c.require(catalogConfigOrderedEntitlementResponseDataFieldFeatureID)
 }
 
 // SetVisible sets the Visible field and marks it as non-optional;
@@ -1317,13 +1308,12 @@ var (
 	catalogResponseDataFieldCustomPlanPriceText = big.NewInt(1 << 4)
 	catalogResponseDataFieldCustomPlansVisible  = big.NewInt(1 << 5)
 	catalogResponseDataFieldDescription         = big.NewInt(1 << 6)
-	catalogResponseDataFieldEnvironmentID       = big.NewInt(1 << 7)
-	catalogResponseDataFieldID                  = big.NewInt(1 << 8)
-	catalogResponseDataFieldIsDefault           = big.NewInt(1 << 9)
-	catalogResponseDataFieldName                = big.NewInt(1 << 10)
-	catalogResponseDataFieldPricingModel        = big.NewInt(1 << 11)
-	catalogResponseDataFieldPricingURL          = big.NewInt(1 << 12)
-	catalogResponseDataFieldUpdatedAt           = big.NewInt(1 << 13)
+	catalogResponseDataFieldID                  = big.NewInt(1 << 7)
+	catalogResponseDataFieldIsDefault           = big.NewInt(1 << 8)
+	catalogResponseDataFieldName                = big.NewInt(1 << 9)
+	catalogResponseDataFieldPricingModel        = big.NewInt(1 << 10)
+	catalogResponseDataFieldPricingURL          = big.NewInt(1 << 11)
+	catalogResponseDataFieldUpdatedAt           = big.NewInt(1 << 12)
 )
 
 type CatalogResponseData struct {
@@ -1334,7 +1324,6 @@ type CatalogResponseData struct {
 	CustomPlanPriceText *string   `json:"custom_plan_price_text,omitempty" url:"custom_plan_price_text,omitempty"`
 	CustomPlansVisible  bool      `json:"custom_plans_visible" url:"custom_plans_visible"`
 	Description         *string   `json:"description,omitempty" url:"description,omitempty"`
-	EnvironmentID       string    `json:"environment_id" url:"environment_id"`
 	ID                  string    `json:"id" url:"id"`
 	IsDefault           bool      `json:"is_default" url:"is_default"`
 	Name                string    `json:"name" url:"name"`
@@ -1396,13 +1385,6 @@ func (c *CatalogResponseData) GetDescription() *string {
 		return nil
 	}
 	return c.Description
-}
-
-func (c *CatalogResponseData) GetEnvironmentID() string {
-	if c == nil {
-		return ""
-	}
-	return c.EnvironmentID
 }
 
 func (c *CatalogResponseData) GetID() string {
@@ -1508,13 +1490,6 @@ func (c *CatalogResponseData) SetCustomPlansVisible(customPlansVisible bool) {
 func (c *CatalogResponseData) SetDescription(description *string) {
 	c.Description = description
 	c.require(catalogResponseDataFieldDescription)
-}
-
-// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CatalogResponseData) SetEnvironmentID(environmentID string) {
-	c.EnvironmentID = environmentID
-	c.require(catalogResponseDataFieldEnvironmentID)
 }
 
 // SetID sets the ID field and marks it as non-optional;

@@ -732,20 +732,31 @@ func (l *ListPlansRequest) SetOffset(offset *int64) {
 
 var (
 	publishPlanVersionRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
-	publishPlanVersionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 1)
-	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 2)
-	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 3)
-	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 4)
-	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 5)
+	publishPlanVersionRequestBodyFieldAddress            = big.NewInt(1 << 1)
+	publishPlanVersionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 2)
+	publishPlanVersionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 3)
+	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 4)
+	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 5)
+	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 6)
+	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 7)
+	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 8)
+	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 9)
+	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 10)
 )
 
 type PublishPlanVersionRequestBody struct {
 	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"-"`
+	Address            *CustomerBillingAddress       `json:"address,omitempty" url:"-"`
 	CouponExternalID   *string                       `json:"coupon_external_id,omitempty" url:"-"`
+	CustomFieldValues  []*CheckoutFieldValue         `json:"custom_field_values,omitempty" url:"-"`
 	CustomerEmail      *string                       `json:"customer_email,omitempty" url:"-"`
 	DaysUntilDue       *int64                        `json:"days_until_due,omitempty" url:"-"`
 	ExcludedCompanyIDs []string                      `json:"excluded_company_ids" url:"-"`
 	MigrationStrategy  PlanVersionMigrationStrategy  `json:"migration_strategy" url:"-"`
+	Phone              *string                       `json:"phone,omitempty" url:"-"`
+	// Whether Stripe emails the invoice when it is finalized. Defaults to true.
+	SendInvoice *bool       `json:"send_invoice,omitempty" url:"-"`
+	TaxID       *TaxIDInput `json:"tax_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -765,11 +776,25 @@ func (p *PublishPlanVersionRequestBody) SetActivationStrategy(activationStrategy
 	p.require(publishPlanVersionRequestBodyFieldActivationStrategy)
 }
 
+// SetAddress sets the Address field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetAddress(address *CustomerBillingAddress) {
+	p.Address = address
+	p.require(publishPlanVersionRequestBodyFieldAddress)
+}
+
 // SetCouponExternalID sets the CouponExternalID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PublishPlanVersionRequestBody) SetCouponExternalID(couponExternalID *string) {
 	p.CouponExternalID = couponExternalID
 	p.require(publishPlanVersionRequestBodyFieldCouponExternalID)
+}
+
+// SetCustomFieldValues sets the CustomFieldValues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetCustomFieldValues(customFieldValues []*CheckoutFieldValue) {
+	p.CustomFieldValues = customFieldValues
+	p.require(publishPlanVersionRequestBodyFieldCustomFieldValues)
 }
 
 // SetCustomerEmail sets the CustomerEmail field and marks it as non-optional;
@@ -800,6 +825,27 @@ func (p *PublishPlanVersionRequestBody) SetMigrationStrategy(migrationStrategy P
 	p.require(publishPlanVersionRequestBodyFieldMigrationStrategy)
 }
 
+// SetPhone sets the Phone field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetPhone(phone *string) {
+	p.Phone = phone
+	p.require(publishPlanVersionRequestBodyFieldPhone)
+}
+
+// SetSendInvoice sets the SendInvoice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetSendInvoice(sendInvoice *bool) {
+	p.SendInvoice = sendInvoice
+	p.require(publishPlanVersionRequestBodyFieldSendInvoice)
+}
+
+// SetTaxID sets the TaxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetTaxID(taxID *TaxIDInput) {
+	p.TaxID = taxID
+	p.require(publishPlanVersionRequestBodyFieldTaxID)
+}
+
 func (p *PublishPlanVersionRequestBody) UnmarshalJSON(data []byte) error {
 	type unmarshaler PublishPlanVersionRequestBody
 	var body unmarshaler
@@ -825,12 +871,15 @@ var (
 	retryCustomPlanBillingRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
 	retryCustomPlanBillingRequestBodyFieldCustomerEmail      = big.NewInt(1 << 1)
 	retryCustomPlanBillingRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 2)
+	retryCustomPlanBillingRequestBodyFieldSendInvoice        = big.NewInt(1 << 3)
 )
 
 type RetryCustomPlanBillingRequestBody struct {
 	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"-"`
 	CustomerEmail      string                        `json:"customer_email" url:"-"`
 	DaysUntilDue       *int64                        `json:"days_until_due,omitempty" url:"-"`
+	// Whether Stripe emails the invoice when it is finalized. Defaults to true.
+	SendInvoice *bool `json:"send_invoice,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -862,6 +911,13 @@ func (r *RetryCustomPlanBillingRequestBody) SetCustomerEmail(customerEmail strin
 func (r *RetryCustomPlanBillingRequestBody) SetDaysUntilDue(daysUntilDue *int64) {
 	r.DaysUntilDue = daysUntilDue
 	r.require(retryCustomPlanBillingRequestBodyFieldDaysUntilDue)
+}
+
+// SetSendInvoice sets the SendInvoice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RetryCustomPlanBillingRequestBody) SetSendInvoice(sendInvoice *bool) {
+	r.SendInvoice = sendInvoice
+	r.require(retryCustomPlanBillingRequestBodyFieldSendInvoice)
 }
 
 func (r *RetryCustomPlanBillingRequestBody) UnmarshalJSON(data []byte) error {

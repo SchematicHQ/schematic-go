@@ -229,18 +229,19 @@ var (
 	listBillingPricesRequestFieldForTrialExpiryPlan = big.NewInt(1 << 2)
 	listBillingPricesRequestFieldIDs                = big.NewInt(1 << 3)
 	listBillingPricesRequestFieldInterval           = big.NewInt(1 << 4)
-	listBillingPricesRequestFieldIsActive           = big.NewInt(1 << 5)
-	listBillingPricesRequestFieldPlanVersionID      = big.NewInt(1 << 6)
-	listBillingPricesRequestFieldPrice              = big.NewInt(1 << 7)
-	listBillingPricesRequestFieldProductID          = big.NewInt(1 << 8)
-	listBillingPricesRequestFieldProductIDs         = big.NewInt(1 << 9)
-	listBillingPricesRequestFieldProviderType       = big.NewInt(1 << 10)
-	listBillingPricesRequestFieldQ                  = big.NewInt(1 << 11)
-	listBillingPricesRequestFieldTiersMode          = big.NewInt(1 << 12)
-	listBillingPricesRequestFieldUsageType          = big.NewInt(1 << 13)
-	listBillingPricesRequestFieldWithMeter          = big.NewInt(1 << 14)
-	listBillingPricesRequestFieldLimit              = big.NewInt(1 << 15)
-	listBillingPricesRequestFieldOffset             = big.NewInt(1 << 16)
+	listBillingPricesRequestFieldIntervalCount      = big.NewInt(1 << 5)
+	listBillingPricesRequestFieldIsActive           = big.NewInt(1 << 6)
+	listBillingPricesRequestFieldPlanVersionID      = big.NewInt(1 << 7)
+	listBillingPricesRequestFieldPrice              = big.NewInt(1 << 8)
+	listBillingPricesRequestFieldProductID          = big.NewInt(1 << 9)
+	listBillingPricesRequestFieldProductIDs         = big.NewInt(1 << 10)
+	listBillingPricesRequestFieldProviderType       = big.NewInt(1 << 11)
+	listBillingPricesRequestFieldQ                  = big.NewInt(1 << 12)
+	listBillingPricesRequestFieldTiersMode          = big.NewInt(1 << 13)
+	listBillingPricesRequestFieldUsageType          = big.NewInt(1 << 14)
+	listBillingPricesRequestFieldWithMeter          = big.NewInt(1 << 15)
+	listBillingPricesRequestFieldLimit              = big.NewInt(1 << 16)
+	listBillingPricesRequestFieldOffset             = big.NewInt(1 << 17)
 )
 
 type ListBillingPricesRequest struct {
@@ -252,6 +253,8 @@ type ListBillingPricesRequest struct {
 	ForTrialExpiryPlan *bool     `json:"-" url:"for_trial_expiry_plan,omitempty"`
 	IDs                []*string `json:"-" url:"ids,omitempty"`
 	Interval           *string   `json:"-" url:"interval,omitempty"`
+	// Filter for prices billed every N intervals; combine with interval (e.g. interval=month, interval_count=3 for quarterly)
+	IntervalCount *int64 `json:"-" url:"interval_count,omitempty"`
 	// Filter for active prices on active products (defaults to true if not specified)
 	IsActive *bool `json:"-" url:"is_active,omitempty"`
 	// Filter for prices belonging to a specific plan version (e.g. the latest published version)
@@ -314,6 +317,13 @@ func (l *ListBillingPricesRequest) SetIDs(ids []*string) {
 func (l *ListBillingPricesRequest) SetInterval(interval *string) {
 	l.Interval = interval
 	l.require(listBillingPricesRequestFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingPricesRequest) SetIntervalCount(intervalCount *int64) {
+	l.IntervalCount = intervalCount
+	l.require(listBillingPricesRequestFieldIntervalCount)
 }
 
 // SetIsActive sets the IsActive field and marks it as non-optional;
@@ -406,18 +416,19 @@ var (
 	listBillingProductPricesRequestFieldForTrialExpiryPlan = big.NewInt(1 << 2)
 	listBillingProductPricesRequestFieldIDs                = big.NewInt(1 << 3)
 	listBillingProductPricesRequestFieldInterval           = big.NewInt(1 << 4)
-	listBillingProductPricesRequestFieldIsActive           = big.NewInt(1 << 5)
-	listBillingProductPricesRequestFieldPlanVersionID      = big.NewInt(1 << 6)
-	listBillingProductPricesRequestFieldPrice              = big.NewInt(1 << 7)
-	listBillingProductPricesRequestFieldProductID          = big.NewInt(1 << 8)
-	listBillingProductPricesRequestFieldProductIDs         = big.NewInt(1 << 9)
-	listBillingProductPricesRequestFieldProviderType       = big.NewInt(1 << 10)
-	listBillingProductPricesRequestFieldQ                  = big.NewInt(1 << 11)
-	listBillingProductPricesRequestFieldTiersMode          = big.NewInt(1 << 12)
-	listBillingProductPricesRequestFieldUsageType          = big.NewInt(1 << 13)
-	listBillingProductPricesRequestFieldWithMeter          = big.NewInt(1 << 14)
-	listBillingProductPricesRequestFieldLimit              = big.NewInt(1 << 15)
-	listBillingProductPricesRequestFieldOffset             = big.NewInt(1 << 16)
+	listBillingProductPricesRequestFieldIntervalCount      = big.NewInt(1 << 5)
+	listBillingProductPricesRequestFieldIsActive           = big.NewInt(1 << 6)
+	listBillingProductPricesRequestFieldPlanVersionID      = big.NewInt(1 << 7)
+	listBillingProductPricesRequestFieldPrice              = big.NewInt(1 << 8)
+	listBillingProductPricesRequestFieldProductID          = big.NewInt(1 << 9)
+	listBillingProductPricesRequestFieldProductIDs         = big.NewInt(1 << 10)
+	listBillingProductPricesRequestFieldProviderType       = big.NewInt(1 << 11)
+	listBillingProductPricesRequestFieldQ                  = big.NewInt(1 << 12)
+	listBillingProductPricesRequestFieldTiersMode          = big.NewInt(1 << 13)
+	listBillingProductPricesRequestFieldUsageType          = big.NewInt(1 << 14)
+	listBillingProductPricesRequestFieldWithMeter          = big.NewInt(1 << 15)
+	listBillingProductPricesRequestFieldLimit              = big.NewInt(1 << 16)
+	listBillingProductPricesRequestFieldOffset             = big.NewInt(1 << 17)
 )
 
 type ListBillingProductPricesRequest struct {
@@ -429,6 +440,8 @@ type ListBillingProductPricesRequest struct {
 	ForTrialExpiryPlan *bool     `json:"-" url:"for_trial_expiry_plan,omitempty"`
 	IDs                []*string `json:"-" url:"ids,omitempty"`
 	Interval           *string   `json:"-" url:"interval,omitempty"`
+	// Filter for prices billed every N intervals; combine with interval (e.g. interval=month, interval_count=3 for quarterly)
+	IntervalCount *int64 `json:"-" url:"interval_count,omitempty"`
 	// Filter for active prices on active products (defaults to true if not specified)
 	IsActive *bool `json:"-" url:"is_active,omitempty"`
 	// Filter for prices belonging to a specific plan version (e.g. the latest published version)
@@ -491,6 +504,13 @@ func (l *ListBillingProductPricesRequest) SetIDs(ids []*string) {
 func (l *ListBillingProductPricesRequest) SetInterval(interval *string) {
 	l.Interval = interval
 	l.require(listBillingProductPricesRequestFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductPricesRequest) SetIntervalCount(intervalCount *int64) {
+	l.IntervalCount = intervalCount
+	l.require(listBillingProductPricesRequestFieldIntervalCount)
 }
 
 // SetIsActive sets the IsActive field and marks it as non-optional;
@@ -4409,18 +4429,19 @@ var (
 	listBillingPricesParamsFieldForTrialExpiryPlan = big.NewInt(1 << 2)
 	listBillingPricesParamsFieldIDs                = big.NewInt(1 << 3)
 	listBillingPricesParamsFieldInterval           = big.NewInt(1 << 4)
-	listBillingPricesParamsFieldIsActive           = big.NewInt(1 << 5)
-	listBillingPricesParamsFieldLimit              = big.NewInt(1 << 6)
-	listBillingPricesParamsFieldOffset             = big.NewInt(1 << 7)
-	listBillingPricesParamsFieldPlanVersionID      = big.NewInt(1 << 8)
-	listBillingPricesParamsFieldPrice              = big.NewInt(1 << 9)
-	listBillingPricesParamsFieldProductID          = big.NewInt(1 << 10)
-	listBillingPricesParamsFieldProductIDs         = big.NewInt(1 << 11)
-	listBillingPricesParamsFieldProviderType       = big.NewInt(1 << 12)
-	listBillingPricesParamsFieldQ                  = big.NewInt(1 << 13)
-	listBillingPricesParamsFieldTiersMode          = big.NewInt(1 << 14)
-	listBillingPricesParamsFieldUsageType          = big.NewInt(1 << 15)
-	listBillingPricesParamsFieldWithMeter          = big.NewInt(1 << 16)
+	listBillingPricesParamsFieldIntervalCount      = big.NewInt(1 << 5)
+	listBillingPricesParamsFieldIsActive           = big.NewInt(1 << 6)
+	listBillingPricesParamsFieldLimit              = big.NewInt(1 << 7)
+	listBillingPricesParamsFieldOffset             = big.NewInt(1 << 8)
+	listBillingPricesParamsFieldPlanVersionID      = big.NewInt(1 << 9)
+	listBillingPricesParamsFieldPrice              = big.NewInt(1 << 10)
+	listBillingPricesParamsFieldProductID          = big.NewInt(1 << 11)
+	listBillingPricesParamsFieldProductIDs         = big.NewInt(1 << 12)
+	listBillingPricesParamsFieldProviderType       = big.NewInt(1 << 13)
+	listBillingPricesParamsFieldQ                  = big.NewInt(1 << 14)
+	listBillingPricesParamsFieldTiersMode          = big.NewInt(1 << 15)
+	listBillingPricesParamsFieldUsageType          = big.NewInt(1 << 16)
+	listBillingPricesParamsFieldWithMeter          = big.NewInt(1 << 17)
 )
 
 type ListBillingPricesParams struct {
@@ -4432,6 +4453,8 @@ type ListBillingPricesParams struct {
 	ForTrialExpiryPlan *bool    `json:"for_trial_expiry_plan,omitempty" url:"for_trial_expiry_plan,omitempty"`
 	IDs                []string `json:"ids,omitempty" url:"ids,omitempty"`
 	Interval           *string  `json:"interval,omitempty" url:"interval,omitempty"`
+	// Filter for prices billed every N intervals; combine with interval (e.g. interval=month, interval_count=3 for quarterly)
+	IntervalCount *int64 `json:"interval_count,omitempty" url:"interval_count,omitempty"`
 	// Filter for active prices on active products (defaults to true if not specified)
 	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
@@ -4490,6 +4513,13 @@ func (l *ListBillingPricesParams) GetInterval() *string {
 		return nil
 	}
 	return l.Interval
+}
+
+func (l *ListBillingPricesParams) GetIntervalCount() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.IntervalCount
 }
 
 func (l *ListBillingPricesParams) GetIsActive() *bool {
@@ -4623,6 +4653,13 @@ func (l *ListBillingPricesParams) SetIDs(ids []string) {
 func (l *ListBillingPricesParams) SetInterval(interval *string) {
 	l.Interval = interval
 	l.require(listBillingPricesParamsFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingPricesParams) SetIntervalCount(intervalCount *int64) {
+	l.IntervalCount = intervalCount
+	l.require(listBillingPricesParamsFieldIntervalCount)
 }
 
 // SetIsActive sets the IsActive field and marks it as non-optional;
@@ -4859,18 +4896,19 @@ var (
 	listBillingProductPricesParamsFieldForTrialExpiryPlan = big.NewInt(1 << 2)
 	listBillingProductPricesParamsFieldIDs                = big.NewInt(1 << 3)
 	listBillingProductPricesParamsFieldInterval           = big.NewInt(1 << 4)
-	listBillingProductPricesParamsFieldIsActive           = big.NewInt(1 << 5)
-	listBillingProductPricesParamsFieldLimit              = big.NewInt(1 << 6)
-	listBillingProductPricesParamsFieldOffset             = big.NewInt(1 << 7)
-	listBillingProductPricesParamsFieldPlanVersionID      = big.NewInt(1 << 8)
-	listBillingProductPricesParamsFieldPrice              = big.NewInt(1 << 9)
-	listBillingProductPricesParamsFieldProductID          = big.NewInt(1 << 10)
-	listBillingProductPricesParamsFieldProductIDs         = big.NewInt(1 << 11)
-	listBillingProductPricesParamsFieldProviderType       = big.NewInt(1 << 12)
-	listBillingProductPricesParamsFieldQ                  = big.NewInt(1 << 13)
-	listBillingProductPricesParamsFieldTiersMode          = big.NewInt(1 << 14)
-	listBillingProductPricesParamsFieldUsageType          = big.NewInt(1 << 15)
-	listBillingProductPricesParamsFieldWithMeter          = big.NewInt(1 << 16)
+	listBillingProductPricesParamsFieldIntervalCount      = big.NewInt(1 << 5)
+	listBillingProductPricesParamsFieldIsActive           = big.NewInt(1 << 6)
+	listBillingProductPricesParamsFieldLimit              = big.NewInt(1 << 7)
+	listBillingProductPricesParamsFieldOffset             = big.NewInt(1 << 8)
+	listBillingProductPricesParamsFieldPlanVersionID      = big.NewInt(1 << 9)
+	listBillingProductPricesParamsFieldPrice              = big.NewInt(1 << 10)
+	listBillingProductPricesParamsFieldProductID          = big.NewInt(1 << 11)
+	listBillingProductPricesParamsFieldProductIDs         = big.NewInt(1 << 12)
+	listBillingProductPricesParamsFieldProviderType       = big.NewInt(1 << 13)
+	listBillingProductPricesParamsFieldQ                  = big.NewInt(1 << 14)
+	listBillingProductPricesParamsFieldTiersMode          = big.NewInt(1 << 15)
+	listBillingProductPricesParamsFieldUsageType          = big.NewInt(1 << 16)
+	listBillingProductPricesParamsFieldWithMeter          = big.NewInt(1 << 17)
 )
 
 type ListBillingProductPricesParams struct {
@@ -4882,6 +4920,8 @@ type ListBillingProductPricesParams struct {
 	ForTrialExpiryPlan *bool    `json:"for_trial_expiry_plan,omitempty" url:"for_trial_expiry_plan,omitempty"`
 	IDs                []string `json:"ids,omitempty" url:"ids,omitempty"`
 	Interval           *string  `json:"interval,omitempty" url:"interval,omitempty"`
+	// Filter for prices billed every N intervals; combine with interval (e.g. interval=month, interval_count=3 for quarterly)
+	IntervalCount *int64 `json:"interval_count,omitempty" url:"interval_count,omitempty"`
 	// Filter for active prices on active products (defaults to true if not specified)
 	IsActive *bool `json:"is_active,omitempty" url:"is_active,omitempty"`
 	// Page limit (default 100)
@@ -4940,6 +4980,13 @@ func (l *ListBillingProductPricesParams) GetInterval() *string {
 		return nil
 	}
 	return l.Interval
+}
+
+func (l *ListBillingProductPricesParams) GetIntervalCount() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.IntervalCount
 }
 
 func (l *ListBillingProductPricesParams) GetIsActive() *bool {
@@ -5073,6 +5120,13 @@ func (l *ListBillingProductPricesParams) SetIDs(ids []string) {
 func (l *ListBillingProductPricesParams) SetInterval(interval *string) {
 	l.Interval = interval
 	l.require(listBillingProductPricesParamsFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListBillingProductPricesParams) SetIntervalCount(intervalCount *int64) {
+	l.IntervalCount = intervalCount
+	l.require(listBillingProductPricesParamsFieldIntervalCount)
 }
 
 // SetIsActive sets the IsActive field and marks it as non-optional;

@@ -83,8 +83,8 @@ type PlanViewPublicResponseData struct {
 	IncludedCreditGrants  []*PlanCreditGrantView               `json:"included_credit_grants" url:"included_credit_grants"`
 	IsCustom              bool                                 `json:"is_custom" url:"is_custom"`
 	IsDefault             bool                                 `json:"is_default" url:"is_default"`
-	// Deprecated: Use BillingStrategy instead
-	IsFree         bool                       `json:"is_free" url:"is_free"`
+	// Deprecated: reports the plan's charge type, not its price. Read the plan's prices to tell whether it costs anything, or billing_strategy to tell how it is billed.
+	IsFree         *bool                      `json:"is_free,omitempty" url:"is_free,omitempty"`
 	IsTrialable    bool                       `json:"is_trialable" url:"is_trialable"`
 	MonthlyPrice   *BillingPriceResponseData  `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name           string                     `json:"name" url:"name"`
@@ -306,9 +306,9 @@ func (p *PlanViewPublicResponseData) GetIsDefault() bool {
 	return p.IsDefault
 }
 
-func (p *PlanViewPublicResponseData) GetIsFree() bool {
+func (p *PlanViewPublicResponseData) GetIsFree() *bool {
 	if p == nil {
-		return false
+		return nil
 	}
 	return p.IsFree
 }
@@ -602,7 +602,7 @@ func (p *PlanViewPublicResponseData) SetIsDefault(isDefault bool) {
 
 // SetIsFree sets the IsFree field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanViewPublicResponseData) SetIsFree(isFree bool) {
+func (p *PlanViewPublicResponseData) SetIsFree(isFree *bool) {
 	p.IsFree = isFree
 	p.require(planViewPublicResponseDataFieldIsFree)
 }

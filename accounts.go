@@ -211,17 +211,19 @@ func (c *CountAuditLogsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	createAPIKeyRequestBodyFieldDescription   = big.NewInt(1 << 0)
-	createAPIKeyRequestBodyFieldEnvironmentID = big.NewInt(1 << 1)
-	createAPIKeyRequestBodyFieldName          = big.NewInt(1 << 2)
-	createAPIKeyRequestBodyFieldReadonly      = big.NewInt(1 << 3)
+	createAPIKeyRequestBodyFieldDescription      = big.NewInt(1 << 0)
+	createAPIKeyRequestBodyFieldEnvironmentID    = big.NewInt(1 << 1)
+	createAPIKeyRequestBodyFieldName             = big.NewInt(1 << 2)
+	createAPIKeyRequestBodyFieldRateLimitPercent = big.NewInt(1 << 3)
+	createAPIKeyRequestBodyFieldReadonly         = big.NewInt(1 << 4)
 )
 
 type CreateAPIKeyRequestBody struct {
-	Description   *string `json:"description,omitempty" url:"-"`
-	EnvironmentID *string `json:"environment_id,omitempty" url:"-"`
-	Name          string  `json:"name" url:"-"`
-	Readonly      *bool   `json:"readonly,omitempty" url:"-"`
+	Description      *string `json:"description,omitempty" url:"-"`
+	EnvironmentID    *string `json:"environment_id,omitempty" url:"-"`
+	Name             string  `json:"name" url:"-"`
+	RateLimitPercent *int64  `json:"rate_limit_percent,omitempty" url:"-"`
+	Readonly         *bool   `json:"readonly,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -253,6 +255,13 @@ func (c *CreateAPIKeyRequestBody) SetEnvironmentID(environmentID *string) {
 func (c *CreateAPIKeyRequestBody) SetName(name string) {
 	c.Name = name
 	c.require(createAPIKeyRequestBodyFieldName)
+}
+
+// SetRateLimitPercent sets the RateLimitPercent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAPIKeyRequestBody) SetRateLimitPercent(rateLimitPercent *int64) {
+	c.RateLimitPercent = rateLimitPercent
+	c.require(createAPIKeyRequestBodyFieldRateLimitPercent)
 }
 
 // SetReadonly sets the Readonly field and marks it as non-optional;
@@ -584,33 +593,35 @@ func (l *ListEnvironmentsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	aPIKeyCreateResponseDataFieldCreatedAt     = big.NewInt(1 << 0)
-	aPIKeyCreateResponseDataFieldDescription   = big.NewInt(1 << 1)
-	aPIKeyCreateResponseDataFieldEnvironment   = big.NewInt(1 << 2)
-	aPIKeyCreateResponseDataFieldEnvironmentID = big.NewInt(1 << 3)
-	aPIKeyCreateResponseDataFieldID            = big.NewInt(1 << 4)
-	aPIKeyCreateResponseDataFieldIntegration   = big.NewInt(1 << 5)
-	aPIKeyCreateResponseDataFieldLastUsedAt    = big.NewInt(1 << 6)
-	aPIKeyCreateResponseDataFieldName          = big.NewInt(1 << 7)
-	aPIKeyCreateResponseDataFieldReadonly      = big.NewInt(1 << 8)
-	aPIKeyCreateResponseDataFieldScopes        = big.NewInt(1 << 9)
-	aPIKeyCreateResponseDataFieldSecret        = big.NewInt(1 << 10)
-	aPIKeyCreateResponseDataFieldUpdatedAt     = big.NewInt(1 << 11)
+	aPIKeyCreateResponseDataFieldCreatedAt        = big.NewInt(1 << 0)
+	aPIKeyCreateResponseDataFieldDescription      = big.NewInt(1 << 1)
+	aPIKeyCreateResponseDataFieldEnvironment      = big.NewInt(1 << 2)
+	aPIKeyCreateResponseDataFieldEnvironmentID    = big.NewInt(1 << 3)
+	aPIKeyCreateResponseDataFieldID               = big.NewInt(1 << 4)
+	aPIKeyCreateResponseDataFieldIntegration      = big.NewInt(1 << 5)
+	aPIKeyCreateResponseDataFieldLastUsedAt       = big.NewInt(1 << 6)
+	aPIKeyCreateResponseDataFieldName             = big.NewInt(1 << 7)
+	aPIKeyCreateResponseDataFieldRateLimitPercent = big.NewInt(1 << 8)
+	aPIKeyCreateResponseDataFieldReadonly         = big.NewInt(1 << 9)
+	aPIKeyCreateResponseDataFieldScopes           = big.NewInt(1 << 10)
+	aPIKeyCreateResponseDataFieldSecret           = big.NewInt(1 << 11)
+	aPIKeyCreateResponseDataFieldUpdatedAt        = big.NewInt(1 << 12)
 )
 
 type APIKeyCreateResponseData struct {
-	CreatedAt     time.Time                      `json:"created_at" url:"created_at"`
-	Description   *string                        `json:"description,omitempty" url:"description,omitempty"`
-	Environment   *EnvironmentResponseData       `json:"environment,omitempty" url:"environment,omitempty"`
-	EnvironmentID *string                        `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID            string                         `json:"id" url:"id"`
-	Integration   *APIKeyIntegrationResponseData `json:"integration,omitempty" url:"integration,omitempty"`
-	LastUsedAt    *time.Time                     `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
-	Name          string                         `json:"name" url:"name"`
-	Readonly      bool                           `json:"readonly" url:"readonly"`
-	Scopes        []APIKeyScope                  `json:"scopes" url:"scopes"`
-	Secret        string                         `json:"secret" url:"secret"`
-	UpdatedAt     time.Time                      `json:"updated_at" url:"updated_at"`
+	CreatedAt        time.Time                      `json:"created_at" url:"created_at"`
+	Description      *string                        `json:"description,omitempty" url:"description,omitempty"`
+	Environment      *EnvironmentResponseData       `json:"environment,omitempty" url:"environment,omitempty"`
+	EnvironmentID    *string                        `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID               string                         `json:"id" url:"id"`
+	Integration      *APIKeyIntegrationResponseData `json:"integration,omitempty" url:"integration,omitempty"`
+	LastUsedAt       *time.Time                     `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
+	Name             string                         `json:"name" url:"name"`
+	RateLimitPercent *int64                         `json:"rate_limit_percent,omitempty" url:"rate_limit_percent,omitempty"`
+	Readonly         bool                           `json:"readonly" url:"readonly"`
+	Scopes           []APIKeyScope                  `json:"scopes" url:"scopes"`
+	Secret           string                         `json:"secret" url:"secret"`
+	UpdatedAt        time.Time                      `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -673,6 +684,13 @@ func (a *APIKeyCreateResponseData) GetName() string {
 		return ""
 	}
 	return a.Name
+}
+
+func (a *APIKeyCreateResponseData) GetRateLimitPercent() *int64 {
+	if a == nil {
+		return nil
+	}
+	return a.RateLimitPercent
 }
 
 func (a *APIKeyCreateResponseData) GetReadonly() bool {
@@ -771,6 +789,13 @@ func (a *APIKeyCreateResponseData) SetLastUsedAt(lastUsedAt *time.Time) {
 func (a *APIKeyCreateResponseData) SetName(name string) {
 	a.Name = name
 	a.require(aPIKeyCreateResponseDataFieldName)
+}
+
+// SetRateLimitPercent sets the RateLimitPercent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *APIKeyCreateResponseData) SetRateLimitPercent(rateLimitPercent *int64) {
+	a.RateLimitPercent = rateLimitPercent
+	a.require(aPIKeyCreateResponseDataFieldRateLimitPercent)
 }
 
 // SetReadonly sets the Readonly field and marks it as non-optional;
@@ -4736,13 +4761,15 @@ func (u *UpdateEnvironmentResponse) String() string {
 }
 
 var (
-	updateAPIKeyRequestBodyFieldDescription = big.NewInt(1 << 0)
-	updateAPIKeyRequestBodyFieldName        = big.NewInt(1 << 1)
+	updateAPIKeyRequestBodyFieldDescription      = big.NewInt(1 << 0)
+	updateAPIKeyRequestBodyFieldName             = big.NewInt(1 << 1)
+	updateAPIKeyRequestBodyFieldRateLimitPercent = big.NewInt(1 << 2)
 )
 
 type UpdateAPIKeyRequestBody struct {
-	Description *string `json:"description,omitempty" url:"-"`
-	Name        *string `json:"name,omitempty" url:"-"`
+	Description      *string `json:"description,omitempty" url:"-"`
+	Name             *string `json:"name,omitempty" url:"-"`
+	RateLimitPercent *int64  `json:"rate_limit_percent,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4767,6 +4794,13 @@ func (u *UpdateAPIKeyRequestBody) SetDescription(description *string) {
 func (u *UpdateAPIKeyRequestBody) SetName(name *string) {
 	u.Name = name
 	u.require(updateAPIKeyRequestBodyFieldName)
+}
+
+// SetRateLimitPercent sets the RateLimitPercent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAPIKeyRequestBody) SetRateLimitPercent(rateLimitPercent *int64) {
+	u.RateLimitPercent = rateLimitPercent
+	u.require(updateAPIKeyRequestBodyFieldRateLimitPercent)
 }
 
 func (u *UpdateAPIKeyRequestBody) UnmarshalJSON(data []byte) error {

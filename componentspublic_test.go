@@ -245,7 +245,7 @@ func TestSettersPlanViewPublicResponseData(t *testing.T) {
 
 	t.Run("SetIsFree", func(t *testing.T) {
 		obj := &PlanViewPublicResponseData{}
-		var fernTestValueIsFree bool
+		var fernTestValueIsFree *bool
 		obj.SetIsFree(fernTestValueIsFree)
 		assert.Equal(t, fernTestValueIsFree, obj.IsFree)
 		assert.NotNil(t, obj.explicitFields)
@@ -1185,11 +1185,21 @@ func TestGettersPlanViewPublicResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &PlanViewPublicResponseData{}
-		var expected bool
+		var expected *bool
 		obj.IsFree = expected
 
 		// Act & Assert
 		assert.Equal(t, expected, obj.GetIsFree(), "getter should return the property value")
+	})
+
+	t.Run("GetIsFree_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanViewPublicResponseData{}
+		obj.IsFree = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetIsFree(), "getter should return nil when property is nil")
 	})
 
 	t.Run("GetIsFree_NilReceiver", func(t *testing.T) {
@@ -2400,7 +2410,7 @@ func TestSettersMarkExplicitPlanViewPublicResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &PlanViewPublicResponseData{}
-		var fernTestValueIsFree bool
+		var fernTestValueIsFree *bool
 
 		// Act
 		obj.SetIsFree(fernTestValueIsFree)

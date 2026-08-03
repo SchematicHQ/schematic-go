@@ -11397,35 +11397,6 @@ func TestStringUpdatePlanGroupResponse(t *testing.T) {
 	})
 }
 
-func TestEnumProrationBehavior(t *testing.T) {
-	t.Run("NewFromString_create_prorations", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewProrationBehaviorFromString("create_prorations")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, ProrationBehavior("create_prorations"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_invoice_immediately", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewProrationBehaviorFromString("invoice_immediately")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, ProrationBehavior("invoice_immediately"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewProrationBehaviorFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewProrationBehaviorFromString("create_prorations")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
 func TestEnumScheduledDowngradeConfigBehavior(t *testing.T) {
 	t.Run("NewFromString_end_of_billing_period", func(t *testing.T) {
 		t.Parallel()

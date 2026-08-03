@@ -566,31 +566,33 @@ func (a *APIKeyIntegrationResponseData) String() string {
 }
 
 var (
-	aPIKeyResponseDataFieldCreatedAt     = big.NewInt(1 << 0)
-	aPIKeyResponseDataFieldDescription   = big.NewInt(1 << 1)
-	aPIKeyResponseDataFieldEnvironment   = big.NewInt(1 << 2)
-	aPIKeyResponseDataFieldEnvironmentID = big.NewInt(1 << 3)
-	aPIKeyResponseDataFieldID            = big.NewInt(1 << 4)
-	aPIKeyResponseDataFieldIntegration   = big.NewInt(1 << 5)
-	aPIKeyResponseDataFieldLastUsedAt    = big.NewInt(1 << 6)
-	aPIKeyResponseDataFieldName          = big.NewInt(1 << 7)
-	aPIKeyResponseDataFieldReadonly      = big.NewInt(1 << 8)
-	aPIKeyResponseDataFieldScopes        = big.NewInt(1 << 9)
-	aPIKeyResponseDataFieldUpdatedAt     = big.NewInt(1 << 10)
+	aPIKeyResponseDataFieldCreatedAt        = big.NewInt(1 << 0)
+	aPIKeyResponseDataFieldDescription      = big.NewInt(1 << 1)
+	aPIKeyResponseDataFieldEnvironment      = big.NewInt(1 << 2)
+	aPIKeyResponseDataFieldEnvironmentID    = big.NewInt(1 << 3)
+	aPIKeyResponseDataFieldID               = big.NewInt(1 << 4)
+	aPIKeyResponseDataFieldIntegration      = big.NewInt(1 << 5)
+	aPIKeyResponseDataFieldLastUsedAt       = big.NewInt(1 << 6)
+	aPIKeyResponseDataFieldName             = big.NewInt(1 << 7)
+	aPIKeyResponseDataFieldRateLimitPercent = big.NewInt(1 << 8)
+	aPIKeyResponseDataFieldReadonly         = big.NewInt(1 << 9)
+	aPIKeyResponseDataFieldScopes           = big.NewInt(1 << 10)
+	aPIKeyResponseDataFieldUpdatedAt        = big.NewInt(1 << 11)
 )
 
 type APIKeyResponseData struct {
-	CreatedAt     time.Time                      `json:"created_at" url:"created_at"`
-	Description   *string                        `json:"description,omitempty" url:"description,omitempty"`
-	Environment   *EnvironmentResponseData       `json:"environment,omitempty" url:"environment,omitempty"`
-	EnvironmentID *string                        `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID            string                         `json:"id" url:"id"`
-	Integration   *APIKeyIntegrationResponseData `json:"integration,omitempty" url:"integration,omitempty"`
-	LastUsedAt    *time.Time                     `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
-	Name          string                         `json:"name" url:"name"`
-	Readonly      bool                           `json:"readonly" url:"readonly"`
-	Scopes        []APIKeyScope                  `json:"scopes" url:"scopes"`
-	UpdatedAt     time.Time                      `json:"updated_at" url:"updated_at"`
+	CreatedAt        time.Time                      `json:"created_at" url:"created_at"`
+	Description      *string                        `json:"description,omitempty" url:"description,omitempty"`
+	Environment      *EnvironmentResponseData       `json:"environment,omitempty" url:"environment,omitempty"`
+	EnvironmentID    *string                        `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID               string                         `json:"id" url:"id"`
+	Integration      *APIKeyIntegrationResponseData `json:"integration,omitempty" url:"integration,omitempty"`
+	LastUsedAt       *time.Time                     `json:"last_used_at,omitempty" url:"last_used_at,omitempty"`
+	Name             string                         `json:"name" url:"name"`
+	RateLimitPercent *int64                         `json:"rate_limit_percent,omitempty" url:"rate_limit_percent,omitempty"`
+	Readonly         bool                           `json:"readonly" url:"readonly"`
+	Scopes           []APIKeyScope                  `json:"scopes" url:"scopes"`
+	UpdatedAt        time.Time                      `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -653,6 +655,13 @@ func (a *APIKeyResponseData) GetName() string {
 		return ""
 	}
 	return a.Name
+}
+
+func (a *APIKeyResponseData) GetRateLimitPercent() *int64 {
+	if a == nil {
+		return nil
+	}
+	return a.RateLimitPercent
 }
 
 func (a *APIKeyResponseData) GetReadonly() bool {
@@ -744,6 +753,13 @@ func (a *APIKeyResponseData) SetLastUsedAt(lastUsedAt *time.Time) {
 func (a *APIKeyResponseData) SetName(name string) {
 	a.Name = name
 	a.require(aPIKeyResponseDataFieldName)
+}
+
+// SetRateLimitPercent sets the RateLimitPercent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *APIKeyResponseData) SetRateLimitPercent(rateLimitPercent *int64) {
+	a.RateLimitPercent = rateLimitPercent
+	a.require(aPIKeyResponseDataFieldRateLimitPercent)
 }
 
 // SetReadonly sets the Readonly field and marks it as non-optional;
@@ -2837,15 +2853,17 @@ var (
 	billingPlanCreditGrantResponseDataFieldExpiryUnit                = big.NewInt(1 << 19)
 	billingPlanCreditGrantResponseDataFieldExpiryUnitCount           = big.NewInt(1 << 20)
 	billingPlanCreditGrantResponseDataFieldID                        = big.NewInt(1 << 21)
-	billingPlanCreditGrantResponseDataFieldPlan                      = big.NewInt(1 << 22)
-	billingPlanCreditGrantResponseDataFieldPlanID                    = big.NewInt(1 << 23)
-	billingPlanCreditGrantResponseDataFieldPlanName                  = big.NewInt(1 << 24)
-	billingPlanCreditGrantResponseDataFieldPlanVersionID             = big.NewInt(1 << 25)
-	billingPlanCreditGrantResponseDataFieldResetCadence              = big.NewInt(1 << 26)
-	billingPlanCreditGrantResponseDataFieldResetStart                = big.NewInt(1 << 27)
-	billingPlanCreditGrantResponseDataFieldResetType                 = big.NewInt(1 << 28)
-	billingPlanCreditGrantResponseDataFieldRolloverPercentage        = big.NewInt(1 << 29)
-	billingPlanCreditGrantResponseDataFieldUpdatedAt                 = big.NewInt(1 << 30)
+	billingPlanCreditGrantResponseDataFieldLicenseID                 = big.NewInt(1 << 22)
+	billingPlanCreditGrantResponseDataFieldPlan                      = big.NewInt(1 << 23)
+	billingPlanCreditGrantResponseDataFieldPlanID                    = big.NewInt(1 << 24)
+	billingPlanCreditGrantResponseDataFieldPlanName                  = big.NewInt(1 << 25)
+	billingPlanCreditGrantResponseDataFieldPlanVersionID             = big.NewInt(1 << 26)
+	billingPlanCreditGrantResponseDataFieldResetCadence              = big.NewInt(1 << 27)
+	billingPlanCreditGrantResponseDataFieldResetStart                = big.NewInt(1 << 28)
+	billingPlanCreditGrantResponseDataFieldResetType                 = big.NewInt(1 << 29)
+	billingPlanCreditGrantResponseDataFieldRolloverPercentage        = big.NewInt(1 << 30)
+	billingPlanCreditGrantResponseDataFieldScaling                   = big.NewInt(1 << 31)
+	billingPlanCreditGrantResponseDataFieldUpdatedAt                 = big.NewInt(1 << 32)
 )
 
 type BillingPlanCreditGrantResponseData struct {
@@ -2872,13 +2890,15 @@ type BillingPlanCreditGrantResponseData struct {
 	// Use plural_name from the nested credit object instead
 	CreditPluralName *string `json:"credit_plural_name,omitempty" url:"credit_plural_name,omitempty"`
 	// Use singular_name from the nested credit object instead
-	CreditSingularName *string                    `json:"credit_singular_name,omitempty" url:"credit_singular_name,omitempty"`
-	ExpiryType         *BillingCreditExpiryType   `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
-	ExpiryUnit         *BillingCreditExpiryUnit   `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount    *int64                     `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	ID                 string                     `json:"id" url:"id"`
-	Plan               *PreviewObjectResponseData `json:"plan,omitempty" url:"plan,omitempty"`
-	PlanID             string                     `json:"plan_id" url:"plan_id"`
+	CreditSingularName *string                  `json:"credit_singular_name,omitempty" url:"credit_singular_name,omitempty"`
+	ExpiryType         *BillingCreditExpiryType `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
+	ExpiryUnit         *BillingCreditExpiryUnit `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
+	ExpiryUnitCount    *int64                   `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ID                 string                   `json:"id" url:"id"`
+	// The license whose quantity scales this grant. Set only when scaling is per_license.
+	LicenseID *string                    `json:"license_id,omitempty" url:"license_id,omitempty"`
+	Plan      *PreviewObjectResponseData `json:"plan,omitempty" url:"plan,omitempty"`
+	PlanID    string                     `json:"plan_id" url:"plan_id"`
 	// Use plan.name from the nested plan object instead
 	PlanName      string                              `json:"plan_name" url:"plan_name"`
 	PlanVersionID *string                             `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
@@ -2886,8 +2906,10 @@ type BillingPlanCreditGrantResponseData struct {
 	ResetStart    *BillingPlanCreditGrantResetStart   `json:"reset_start,omitempty" url:"reset_start,omitempty"`
 	ResetType     *BillingPlanCreditGrantResetType    `json:"reset_type,omitempty" url:"reset_type,omitempty"`
 	// Percentage of unused credits that carry over when this grant resets. Only meaningful when reset_type is plan_period.
-	RolloverPercentage int64     `json:"rollover_percentage" url:"rollover_percentage"`
-	UpdatedAt          time.Time `json:"updated_at" url:"updated_at"`
+	RolloverPercentage int64 `json:"rollover_percentage" url:"rollover_percentage"`
+	// Whether the grant is a fixed amount per company, or issued once per license the company holds.
+	Scaling   PlanCreditGrantScaling `json:"scaling" url:"scaling"`
+	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3050,6 +3072,13 @@ func (b *BillingPlanCreditGrantResponseData) GetID() string {
 	return b.ID
 }
 
+func (b *BillingPlanCreditGrantResponseData) GetLicenseID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.LicenseID
+}
+
 func (b *BillingPlanCreditGrantResponseData) GetPlan() *PreviewObjectResponseData {
 	if b == nil {
 		return nil
@@ -3104,6 +3133,13 @@ func (b *BillingPlanCreditGrantResponseData) GetRolloverPercentage() int64 {
 		return 0
 	}
 	return b.RolloverPercentage
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetScaling() PlanCreditGrantScaling {
+	if b == nil {
+		return ""
+	}
+	return b.Scaling
 }
 
 func (b *BillingPlanCreditGrantResponseData) GetUpdatedAt() time.Time {
@@ -3281,6 +3317,13 @@ func (b *BillingPlanCreditGrantResponseData) SetID(id string) {
 	b.require(billingPlanCreditGrantResponseDataFieldID)
 }
 
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetLicenseID(licenseID *string) {
+	b.LicenseID = licenseID
+	b.require(billingPlanCreditGrantResponseDataFieldLicenseID)
+}
+
 // SetPlan sets the Plan field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingPlanCreditGrantResponseData) SetPlan(plan *PreviewObjectResponseData) {
@@ -3335,6 +3378,13 @@ func (b *BillingPlanCreditGrantResponseData) SetResetType(resetType *BillingPlan
 func (b *BillingPlanCreditGrantResponseData) SetRolloverPercentage(rolloverPercentage int64) {
 	b.RolloverPercentage = rolloverPercentage
 	b.require(billingPlanCreditGrantResponseDataFieldRolloverPercentage)
+}
+
+// SetScaling sets the Scaling field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetScaling(scaling PlanCreditGrantScaling) {
+	b.Scaling = scaling
+	b.require(billingPlanCreditGrantResponseDataFieldScaling)
 }
 
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
@@ -7022,6 +7072,106 @@ func (c ChargeType) Ptr() *ChargeType {
 }
 
 var (
+	checkoutFieldValueFieldID    = big.NewInt(1 << 0)
+	checkoutFieldValueFieldValue = big.NewInt(1 << 1)
+)
+
+type CheckoutFieldValue struct {
+	ID    string `json:"id" url:"id"`
+	Value string `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CheckoutFieldValue) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CheckoutFieldValue) GetValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.Value
+}
+
+func (c *CheckoutFieldValue) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CheckoutFieldValue) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutFieldValue) SetID(id string) {
+	c.ID = id
+	c.require(checkoutFieldValueFieldID)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutFieldValue) SetValue(value string) {
+	c.Value = value
+	c.require(checkoutFieldValueFieldValue)
+}
+
+func (c *CheckoutFieldValue) UnmarshalJSON(data []byte) error {
+	type unmarshaler CheckoutFieldValue
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CheckoutFieldValue(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CheckoutFieldValue) MarshalJSON() ([]byte, error) {
+	type embed CheckoutFieldValue
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CheckoutFieldValue) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	checkoutFieldWithValueFieldDefinitionID      = big.NewInt(1 << 0)
 	checkoutFieldWithValueFieldHelperText        = big.NewInt(1 << 1)
 	checkoutFieldWithValueFieldID                = big.NewInt(1 << 2)
@@ -7207,6 +7357,7 @@ var (
 	companyBillingDetailsViewFieldCustomFields     = big.NewInt(1 << 2)
 	companyBillingDetailsViewFieldEmail            = big.NewInt(1 << 3)
 	companyBillingDetailsViewFieldPhone            = big.NewInt(1 << 4)
+	companyBillingDetailsViewFieldTaxIDs           = big.NewInt(1 << 5)
 )
 
 type CompanyBillingDetailsView struct {
@@ -7215,6 +7366,7 @@ type CompanyBillingDetailsView struct {
 	CustomFields     []*CheckoutFieldWithValue       `json:"custom_fields" url:"custom_fields"`
 	Email            *string                         `json:"email,omitempty" url:"email,omitempty"`
 	Phone            *string                         `json:"phone,omitempty" url:"phone,omitempty"`
+	TaxIDs           []*CompanyTaxIDView             `json:"tax_ids" url:"tax_ids"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7256,6 +7408,13 @@ func (c *CompanyBillingDetailsView) GetPhone() *string {
 		return nil
 	}
 	return c.Phone
+}
+
+func (c *CompanyBillingDetailsView) GetTaxIDs() []*CompanyTaxIDView {
+	if c == nil {
+		return nil
+	}
+	return c.TaxIDs
 }
 
 func (c *CompanyBillingDetailsView) GetExtraProperties() map[string]interface{} {
@@ -7305,6 +7464,13 @@ func (c *CompanyBillingDetailsView) SetEmail(email *string) {
 func (c *CompanyBillingDetailsView) SetPhone(phone *string) {
 	c.Phone = phone
 	c.require(companyBillingDetailsViewFieldPhone)
+}
+
+// SetTaxIDs sets the TaxIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingDetailsView) SetTaxIDs(taxIDs []*CompanyTaxIDView) {
+	c.TaxIDs = taxIDs
+	c.require(companyBillingDetailsViewFieldTaxIDs)
 }
 
 func (c *CompanyBillingDetailsView) UnmarshalJSON(data []byte) error {
@@ -8848,16 +9014,18 @@ var (
 	companyPlanCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 22)
 	companyPlanCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 23)
 	companyPlanCreditGrantViewFieldID                                     = big.NewInt(1 << 24)
-	companyPlanCreditGrantViewFieldPlan                                   = big.NewInt(1 << 25)
-	companyPlanCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 26)
-	companyPlanCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 27)
-	companyPlanCreditGrantViewFieldPluralName                             = big.NewInt(1 << 28)
-	companyPlanCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 29)
-	companyPlanCreditGrantViewFieldResetStart                             = big.NewInt(1 << 30)
-	companyPlanCreditGrantViewFieldResetType                              = big.NewInt(1 << 31)
-	companyPlanCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 32)
-	companyPlanCreditGrantViewFieldSingularName                           = big.NewInt(1 << 33)
-	companyPlanCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 34)
+	companyPlanCreditGrantViewFieldLicenseID                              = big.NewInt(1 << 25)
+	companyPlanCreditGrantViewFieldPlan                                   = big.NewInt(1 << 26)
+	companyPlanCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 27)
+	companyPlanCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 28)
+	companyPlanCreditGrantViewFieldPluralName                             = big.NewInt(1 << 29)
+	companyPlanCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 30)
+	companyPlanCreditGrantViewFieldResetStart                             = big.NewInt(1 << 31)
+	companyPlanCreditGrantViewFieldResetType                              = big.NewInt(1 << 32)
+	companyPlanCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 33)
+	companyPlanCreditGrantViewFieldScaling                                = big.NewInt(1 << 34)
+	companyPlanCreditGrantViewFieldSingularName                           = big.NewInt(1 << 35)
+	companyPlanCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 36)
 )
 
 type CompanyPlanCreditGrantView struct {
@@ -8889,6 +9057,7 @@ type CompanyPlanCreditGrantView struct {
 	ExpiryUnit      *BillingCreditExpiryUnit `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
 	ExpiryUnitCount *int64                   `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	ID              string                   `json:"id" url:"id"`
+	LicenseID       *string                  `json:"license_id,omitempty" url:"license_id,omitempty"`
 	Plan            *GenericPreviewObject    `json:"plan,omitempty" url:"plan,omitempty"`
 	PlanID          string                   `json:"plan_id" url:"plan_id"`
 	PlanVersionID   *string                  `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
@@ -8898,6 +9067,7 @@ type CompanyPlanCreditGrantView struct {
 	ResetStart         *BillingPlanCreditGrantResetStart   `json:"reset_start,omitempty" url:"reset_start,omitempty"`
 	ResetType          BillingPlanCreditGrantResetType     `json:"reset_type" url:"reset_type"`
 	RolloverPercentage int64                               `json:"rollover_percentage" url:"rollover_percentage"`
+	Scaling            PlanCreditGrantScaling              `json:"scaling" url:"scaling"`
 	// Deprecated field, will be removed in the future. Use Credit.SingularName instead.
 	SingularName *string   `json:"singular_name,omitempty" url:"singular_name,omitempty"`
 	UpdatedAt    time.Time `json:"updated_at" url:"updated_at"`
@@ -9084,6 +9254,13 @@ func (c *CompanyPlanCreditGrantView) GetID() string {
 	return c.ID
 }
 
+func (c *CompanyPlanCreditGrantView) GetLicenseID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LicenseID
+}
+
 func (c *CompanyPlanCreditGrantView) GetPlan() *GenericPreviewObject {
 	if c == nil {
 		return nil
@@ -9138,6 +9315,13 @@ func (c *CompanyPlanCreditGrantView) GetRolloverPercentage() int64 {
 		return 0
 	}
 	return c.RolloverPercentage
+}
+
+func (c *CompanyPlanCreditGrantView) GetScaling() PlanCreditGrantScaling {
+	if c == nil {
+		return ""
+	}
+	return c.Scaling
 }
 
 func (c *CompanyPlanCreditGrantView) GetSingularName() *string {
@@ -9343,6 +9527,13 @@ func (c *CompanyPlanCreditGrantView) SetID(id string) {
 	c.require(companyPlanCreditGrantViewFieldID)
 }
 
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanCreditGrantView) SetLicenseID(licenseID *string) {
+	c.LicenseID = licenseID
+	c.require(companyPlanCreditGrantViewFieldLicenseID)
+}
+
 // SetPlan sets the Plan field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyPlanCreditGrantView) SetPlan(plan *GenericPreviewObject) {
@@ -9397,6 +9588,13 @@ func (c *CompanyPlanCreditGrantView) SetResetType(resetType BillingPlanCreditGra
 func (c *CompanyPlanCreditGrantView) SetRolloverPercentage(rolloverPercentage int64) {
 	c.RolloverPercentage = rolloverPercentage
 	c.require(companyPlanCreditGrantViewFieldRolloverPercentage)
+}
+
+// SetScaling sets the Scaling field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanCreditGrantView) SetScaling(scaling PlanCreditGrantScaling) {
+	c.Scaling = scaling
+	c.require(companyPlanCreditGrantViewFieldScaling)
 }
 
 // SetSingularName sets the SingularName field and marks it as non-optional;
@@ -13145,12 +13343,14 @@ var (
 	createBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 14)
 	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 15)
 	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 16)
-	createBillingPlanCreditGrantRequestBodyFieldPlanID                    = big.NewInt(1 << 17)
-	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID             = big.NewInt(1 << 18)
-	createBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 19)
-	createBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 20)
-	createBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 21)
-	createBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 22)
+	createBillingPlanCreditGrantRequestBodyFieldLicenseID                 = big.NewInt(1 << 17)
+	createBillingPlanCreditGrantRequestBodyFieldPlanID                    = big.NewInt(1 << 18)
+	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID             = big.NewInt(1 << 19)
+	createBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 20)
+	createBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 21)
+	createBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 22)
+	createBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 23)
+	createBillingPlanCreditGrantRequestBodyFieldScaling                   = big.NewInt(1 << 24)
 )
 
 type CreateBillingPlanCreditGrantRequestBody struct {
@@ -13171,13 +13371,17 @@ type CreateBillingPlanCreditGrantRequestBody struct {
 	ExpiryType                *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
 	ExpiryUnit                *BillingCreditExpiryUnit            `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
 	ExpiryUnitCount           *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	PlanID                    string                              `json:"plan_id" url:"plan_id"`
-	PlanVersionID             *string                             `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
-	ResetCadence              BillingPlanCreditGrantResetCadence  `json:"reset_cadence" url:"reset_cadence"`
-	ResetStart                BillingPlanCreditGrantResetStart    `json:"reset_start" url:"reset_start"`
-	ResetType                 *BillingPlanCreditGrantResetType    `json:"reset_type,omitempty" url:"reset_type,omitempty"`
+	// The license whose quantity scales this grant. Required when scaling is per_license.
+	LicenseID     *string                            `json:"license_id,omitempty" url:"license_id,omitempty"`
+	PlanID        string                             `json:"plan_id" url:"plan_id"`
+	PlanVersionID *string                            `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	ResetCadence  BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
+	ResetStart    BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
+	ResetType     *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
 	// Percentage of unused credits that carry over when this grant resets. Only applies when reset_type is plan_period. Rolled-over credits expire at the next reset and are not rolled again. Defaults to 0.
 	RolloverPercentage *int64 `json:"rollover_percentage,omitempty" url:"rollover_percentage,omitempty"`
+	// Whether the grant is a fixed amount per company, or issued once per license the company holds. Defaults to fixed.
+	Scaling *PlanCreditGrantScaling `json:"scaling,omitempty" url:"scaling,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -13298,6 +13502,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetExpiryUnitCount() *int64 {
 	return c.ExpiryUnitCount
 }
 
+func (c *CreateBillingPlanCreditGrantRequestBody) GetLicenseID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LicenseID
+}
+
 func (c *CreateBillingPlanCreditGrantRequestBody) GetPlanID() string {
 	if c == nil {
 		return ""
@@ -13338,6 +13549,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetRolloverPercentage() *int64
 		return nil
 	}
 	return c.RolloverPercentage
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetScaling() *PlanCreditGrantScaling {
+	if c == nil {
+		return nil
+	}
+	return c.Scaling
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
@@ -13473,6 +13691,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetExpiryUnitCount(expiryUnitC
 	c.require(createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount)
 }
 
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetLicenseID(licenseID *string) {
+	c.LicenseID = licenseID
+	c.require(createBillingPlanCreditGrantRequestBodyFieldLicenseID)
+}
+
 // SetPlanID sets the PlanID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateBillingPlanCreditGrantRequestBody) SetPlanID(planID string) {
@@ -13513,6 +13738,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetResetType(resetType *Billin
 func (c *CreateBillingPlanCreditGrantRequestBody) SetRolloverPercentage(rolloverPercentage *int64) {
 	c.RolloverPercentage = rolloverPercentage
 	c.require(createBillingPlanCreditGrantRequestBodyFieldRolloverPercentage)
+}
+
+// SetScaling sets the Scaling field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetScaling(scaling *PlanCreditGrantScaling) {
+	c.Scaling = scaling
+	c.require(createBillingPlanCreditGrantRequestBodyFieldScaling)
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) UnmarshalJSON(data []byte) error {
@@ -16011,9 +16243,10 @@ var (
 	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 6)
 	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 7)
 	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 8)
-	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 9)
-	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 10)
-	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 11)
+	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 9)
+	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 10)
+	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 11)
+	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 12)
 )
 
 type CustomPlanBillingResponseData struct {
@@ -16026,6 +16259,7 @@ type CustomPlanBillingResponseData struct {
 	PaidAt             *time.Time                   `json:"paid_at,omitempty" url:"paid_at,omitempty"`
 	PlanID             string                       `json:"plan_id" url:"plan_id"`
 	PublishedAt        *time.Time                   `json:"published_at,omitempty" url:"published_at,omitempty"`
+	SendInvoice        bool                         `json:"send_invoice" url:"send_invoice"`
 	Status             CustomPlanBillingStatus      `json:"status" url:"status"`
 	StripeInvoiceURL   *string                      `json:"stripe_invoice_url,omitempty" url:"stripe_invoice_url,omitempty"`
 	UpdatedAt          time.Time                    `json:"updated_at" url:"updated_at"`
@@ -16098,6 +16332,13 @@ func (c *CustomPlanBillingResponseData) GetPublishedAt() *time.Time {
 		return nil
 	}
 	return c.PublishedAt
+}
+
+func (c *CustomPlanBillingResponseData) GetSendInvoice() bool {
+	if c == nil {
+		return false
+	}
+	return c.SendInvoice
 }
 
 func (c *CustomPlanBillingResponseData) GetStatus() CustomPlanBillingStatus {
@@ -16196,6 +16437,13 @@ func (c *CustomPlanBillingResponseData) SetPlanID(planID string) {
 func (c *CustomPlanBillingResponseData) SetPublishedAt(publishedAt *time.Time) {
 	c.PublishedAt = publishedAt
 	c.require(customPlanBillingResponseDataFieldPublishedAt)
+}
+
+// SetSendInvoice sets the SendInvoice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomPlanBillingResponseData) SetSendInvoice(sendInvoice bool) {
+	c.SendInvoice = sendInvoice
+	c.require(customPlanBillingResponseDataFieldSendInvoice)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
@@ -16527,6 +16775,170 @@ func (c *CustomPlanViewConfigResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CustomPlanViewConfigResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	customerBillingAddressFieldCity       = big.NewInt(1 << 0)
+	customerBillingAddressFieldCountry    = big.NewInt(1 << 1)
+	customerBillingAddressFieldLine1      = big.NewInt(1 << 2)
+	customerBillingAddressFieldLine2      = big.NewInt(1 << 3)
+	customerBillingAddressFieldPostalCode = big.NewInt(1 << 4)
+	customerBillingAddressFieldState      = big.NewInt(1 << 5)
+)
+
+type CustomerBillingAddress struct {
+	City       string `json:"city" url:"city"`
+	Country    string `json:"country" url:"country"`
+	Line1      string `json:"line1" url:"line1"`
+	Line2      string `json:"line2" url:"line2"`
+	PostalCode string `json:"postal_code" url:"postal_code"`
+	State      string `json:"state" url:"state"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CustomerBillingAddress) GetCity() string {
+	if c == nil {
+		return ""
+	}
+	return c.City
+}
+
+func (c *CustomerBillingAddress) GetCountry() string {
+	if c == nil {
+		return ""
+	}
+	return c.Country
+}
+
+func (c *CustomerBillingAddress) GetLine1() string {
+	if c == nil {
+		return ""
+	}
+	return c.Line1
+}
+
+func (c *CustomerBillingAddress) GetLine2() string {
+	if c == nil {
+		return ""
+	}
+	return c.Line2
+}
+
+func (c *CustomerBillingAddress) GetPostalCode() string {
+	if c == nil {
+		return ""
+	}
+	return c.PostalCode
+}
+
+func (c *CustomerBillingAddress) GetState() string {
+	if c == nil {
+		return ""
+	}
+	return c.State
+}
+
+func (c *CustomerBillingAddress) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CustomerBillingAddress) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCity sets the City field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomerBillingAddress) SetCity(city string) {
+	c.City = city
+	c.require(customerBillingAddressFieldCity)
+}
+
+// SetCountry sets the Country field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomerBillingAddress) SetCountry(country string) {
+	c.Country = country
+	c.require(customerBillingAddressFieldCountry)
+}
+
+// SetLine1 sets the Line1 field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomerBillingAddress) SetLine1(line1 string) {
+	c.Line1 = line1
+	c.require(customerBillingAddressFieldLine1)
+}
+
+// SetLine2 sets the Line2 field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomerBillingAddress) SetLine2(line2 string) {
+	c.Line2 = line2
+	c.require(customerBillingAddressFieldLine2)
+}
+
+// SetPostalCode sets the PostalCode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomerBillingAddress) SetPostalCode(postalCode string) {
+	c.PostalCode = postalCode
+	c.require(customerBillingAddressFieldPostalCode)
+}
+
+// SetState sets the State field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomerBillingAddress) SetState(state string) {
+	c.State = state
+	c.require(customerBillingAddressFieldState)
+}
+
+func (c *CustomerBillingAddress) UnmarshalJSON(data []byte) error {
+	type unmarshaler CustomerBillingAddress
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CustomerBillingAddress(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CustomerBillingAddress) MarshalJSON() ([]byte, error) {
+	type embed CustomerBillingAddress
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CustomerBillingAddress) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -24845,6 +25257,28 @@ func (p *PlanCatalogMembershipResponseData) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+type PlanCreditGrantScaling string
+
+const (
+	PlanCreditGrantScalingFixed      PlanCreditGrantScaling = "fixed"
+	PlanCreditGrantScalingPerLicense PlanCreditGrantScaling = "per_license"
+)
+
+func NewPlanCreditGrantScalingFromString(s string) (PlanCreditGrantScaling, error) {
+	switch s {
+	case "fixed":
+		return PlanCreditGrantScalingFixed, nil
+	case "per_license":
+		return PlanCreditGrantScalingPerLicense, nil
+	}
+	var t PlanCreditGrantScaling
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanCreditGrantScaling) Ptr() *PlanCreditGrantScaling {
+	return &p
+}
+
 var (
 	planCreditGrantViewFieldBillingCreditAutoTopupAmount           = big.NewInt(1 << 0)
 	planCreditGrantViewFieldBillingCreditAutoTopupAmountType       = big.NewInt(1 << 1)
@@ -24868,16 +25302,18 @@ var (
 	planCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 19)
 	planCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 20)
 	planCreditGrantViewFieldID                                     = big.NewInt(1 << 21)
-	planCreditGrantViewFieldPlan                                   = big.NewInt(1 << 22)
-	planCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 23)
-	planCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 24)
-	planCreditGrantViewFieldPluralName                             = big.NewInt(1 << 25)
-	planCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 26)
-	planCreditGrantViewFieldResetStart                             = big.NewInt(1 << 27)
-	planCreditGrantViewFieldResetType                              = big.NewInt(1 << 28)
-	planCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 29)
-	planCreditGrantViewFieldSingularName                           = big.NewInt(1 << 30)
-	planCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 31)
+	planCreditGrantViewFieldLicenseID                              = big.NewInt(1 << 22)
+	planCreditGrantViewFieldPlan                                   = big.NewInt(1 << 23)
+	planCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 24)
+	planCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 25)
+	planCreditGrantViewFieldPluralName                             = big.NewInt(1 << 26)
+	planCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 27)
+	planCreditGrantViewFieldResetStart                             = big.NewInt(1 << 28)
+	planCreditGrantViewFieldResetType                              = big.NewInt(1 << 29)
+	planCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 30)
+	planCreditGrantViewFieldScaling                                = big.NewInt(1 << 31)
+	planCreditGrantViewFieldSingularName                           = big.NewInt(1 << 32)
+	planCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 33)
 )
 
 type PlanCreditGrantView struct {
@@ -24906,6 +25342,7 @@ type PlanCreditGrantView struct {
 	ExpiryUnit      *BillingCreditExpiryUnit `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
 	ExpiryUnitCount *int64                   `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	ID              string                   `json:"id" url:"id"`
+	LicenseID       *string                  `json:"license_id,omitempty" url:"license_id,omitempty"`
 	Plan            *GenericPreviewObject    `json:"plan,omitempty" url:"plan,omitempty"`
 	PlanID          string                   `json:"plan_id" url:"plan_id"`
 	PlanVersionID   *string                  `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
@@ -24915,6 +25352,7 @@ type PlanCreditGrantView struct {
 	ResetStart         *BillingPlanCreditGrantResetStart   `json:"reset_start,omitempty" url:"reset_start,omitempty"`
 	ResetType          BillingPlanCreditGrantResetType     `json:"reset_type" url:"reset_type"`
 	RolloverPercentage int64                               `json:"rollover_percentage" url:"rollover_percentage"`
+	Scaling            PlanCreditGrantScaling              `json:"scaling" url:"scaling"`
 	// Deprecated field, will be removed in the future. Use Credit.SingularName instead.
 	SingularName *string   `json:"singular_name,omitempty" url:"singular_name,omitempty"`
 	UpdatedAt    time.Time `json:"updated_at" url:"updated_at"`
@@ -25080,6 +25518,13 @@ func (p *PlanCreditGrantView) GetID() string {
 	return p.ID
 }
 
+func (p *PlanCreditGrantView) GetLicenseID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.LicenseID
+}
+
 func (p *PlanCreditGrantView) GetPlan() *GenericPreviewObject {
 	if p == nil {
 		return nil
@@ -25134,6 +25579,13 @@ func (p *PlanCreditGrantView) GetRolloverPercentage() int64 {
 		return 0
 	}
 	return p.RolloverPercentage
+}
+
+func (p *PlanCreditGrantView) GetScaling() PlanCreditGrantScaling {
+	if p == nil {
+		return ""
+	}
+	return p.Scaling
 }
 
 func (p *PlanCreditGrantView) GetSingularName() *string {
@@ -25318,6 +25770,13 @@ func (p *PlanCreditGrantView) SetID(id string) {
 	p.require(planCreditGrantViewFieldID)
 }
 
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantView) SetLicenseID(licenseID *string) {
+	p.LicenseID = licenseID
+	p.require(planCreditGrantViewFieldLicenseID)
+}
+
 // SetPlan sets the Plan field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanCreditGrantView) SetPlan(plan *GenericPreviewObject) {
@@ -25372,6 +25831,13 @@ func (p *PlanCreditGrantView) SetResetType(resetType BillingPlanCreditGrantReset
 func (p *PlanCreditGrantView) SetRolloverPercentage(rolloverPercentage int64) {
 	p.RolloverPercentage = rolloverPercentage
 	p.require(planCreditGrantViewFieldRolloverPercentage)
+}
+
+// SetScaling sets the Scaling field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantView) SetScaling(scaling PlanCreditGrantScaling) {
+	p.Scaling = scaling
+	p.require(planCreditGrantViewFieldScaling)
 }
 
 // SetSingularName sets the SingularName field and marks it as non-optional;
@@ -25801,8 +26267,8 @@ type PlanDetailResponseData struct {
 	ID                    string                                `json:"id" url:"id"`
 	IncludedCreditGrants  []*BillingPlanCreditGrantResponseData `json:"included_credit_grants,omitempty" url:"included_credit_grants,omitempty"`
 	IsDefault             bool                                  `json:"is_default" url:"is_default"`
-	// Deprecated: Use BillingStrategy instead
-	IsFree         bool                       `json:"is_free" url:"is_free"`
+	// Deprecated: reports the plan's charge type, not its price. Read the plan's prices to tell whether it costs anything, or billing_strategy to tell how it is billed.
+	IsFree         *bool                      `json:"is_free,omitempty" url:"is_free,omitempty"`
 	IsTrialable    bool                       `json:"is_trialable" url:"is_trialable"`
 	MonthlyPrice   *BillingPriceResponseData  `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name           string                     `json:"name" url:"name"`
@@ -25989,9 +26455,9 @@ func (p *PlanDetailResponseData) GetIsDefault() bool {
 	return p.IsDefault
 }
 
-func (p *PlanDetailResponseData) GetIsFree() bool {
+func (p *PlanDetailResponseData) GetIsFree() *bool {
 	if p == nil {
-		return false
+		return nil
 	}
 	return p.IsFree
 }
@@ -26250,7 +26716,7 @@ func (p *PlanDetailResponseData) SetIsDefault(isDefault bool) {
 
 // SetIsFree sets the IsFree field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanDetailResponseData) SetIsFree(isFree bool) {
+func (p *PlanDetailResponseData) SetIsFree(isFree *bool) {
 	p.IsFree = isFree
 	p.require(planDetailResponseDataFieldIsFree)
 }
@@ -27011,8 +27477,8 @@ type PlanGroupPlanDetailResponseData struct {
 	IncludedCreditGrants  []*BillingPlanCreditGrantResponseData `json:"included_credit_grants,omitempty" url:"included_credit_grants,omitempty"`
 	IsCustom              bool                                  `json:"is_custom" url:"is_custom"`
 	IsDefault             bool                                  `json:"is_default" url:"is_default"`
-	// Deprecated: Use BillingStrategy instead
-	IsFree         bool                       `json:"is_free" url:"is_free"`
+	// Deprecated: reports the plan's charge type, not its price. Read the plan's prices to tell whether it costs anything, or billing_strategy to tell how it is billed.
+	IsFree         *bool                      `json:"is_free,omitempty" url:"is_free,omitempty"`
 	IsTrialable    bool                       `json:"is_trialable" url:"is_trialable"`
 	MonthlyPrice   *BillingPriceResponseData  `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name           string                     `json:"name" url:"name"`
@@ -27227,9 +27693,9 @@ func (p *PlanGroupPlanDetailResponseData) GetIsDefault() bool {
 	return p.IsDefault
 }
 
-func (p *PlanGroupPlanDetailResponseData) GetIsFree() bool {
+func (p *PlanGroupPlanDetailResponseData) GetIsFree() *bool {
 	if p == nil {
-		return false
+		return nil
 	}
 	return p.IsFree
 }
@@ -27516,7 +27982,7 @@ func (p *PlanGroupPlanDetailResponseData) SetIsDefault(isDefault bool) {
 
 // SetIsFree sets the IsFree field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanGroupPlanDetailResponseData) SetIsFree(isFree bool) {
+func (p *PlanGroupPlanDetailResponseData) SetIsFree(isFree *bool) {
 	p.IsFree = isFree
 	p.require(planGroupPlanDetailResponseDataFieldIsFree)
 }
@@ -28720,6 +29186,28 @@ func (p *PreviewObjectResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+type ProrationBehavior string
+
+const (
+	ProrationBehaviorCreateProrations   ProrationBehavior = "create_prorations"
+	ProrationBehaviorInvoiceImmediately ProrationBehavior = "invoice_immediately"
+)
+
+func NewProrationBehaviorFromString(s string) (ProrationBehavior, error) {
+	switch s {
+	case "create_prorations":
+		return ProrationBehaviorCreateProrations, nil
+	case "invoice_immediately":
+		return ProrationBehaviorInvoiceImmediately, nil
+	}
+	var t ProrationBehavior
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p ProrationBehavior) Ptr() *ProrationBehavior {
+	return &p
 }
 
 var (
@@ -34028,6 +34516,236 @@ func (s SortDirection) Ptr() *SortDirection {
 }
 
 var (
+	taxIDInputFieldType  = big.NewInt(1 << 0)
+	taxIDInputFieldValue = big.NewInt(1 << 1)
+)
+
+type TaxIDInput struct {
+	Type  TaxIDType `json:"type" url:"type"`
+	Value string    `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (t *TaxIDInput) GetType() TaxIDType {
+	if t == nil {
+		return ""
+	}
+	return t.Type
+}
+
+func (t *TaxIDInput) GetValue() string {
+	if t == nil {
+		return ""
+	}
+	return t.Value
+}
+
+func (t *TaxIDInput) GetExtraProperties() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.extraProperties
+}
+
+func (t *TaxIDInput) require(field *big.Int) {
+	if t.explicitFields == nil {
+		t.explicitFields = big.NewInt(0)
+	}
+	t.explicitFields.Or(t.explicitFields, field)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (t *TaxIDInput) SetType(type_ TaxIDType) {
+	t.Type = type_
+	t.require(taxIDInputFieldType)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (t *TaxIDInput) SetValue(value string) {
+	t.Value = value
+	t.require(taxIDInputFieldValue)
+}
+
+func (t *TaxIDInput) UnmarshalJSON(data []byte) error {
+	type unmarshaler TaxIDInput
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = TaxIDInput(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+	t.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *TaxIDInput) MarshalJSON() ([]byte, error) {
+	type embed TaxIDInput
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*t),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, t.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (t *TaxIDInput) String() string {
+	if t == nil {
+		return "<nil>"
+	}
+	if len(t.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+type TaxIDType string
+
+const (
+	TaxIDTypeAeTrn    TaxIDType = "ae_trn"
+	TaxIDTypeAuAbn    TaxIDType = "au_abn"
+	TaxIDTypeAuArn    TaxIDType = "au_arn"
+	TaxIDTypeBrCnpj   TaxIDType = "br_cnpj"
+	TaxIDTypeBrCpf    TaxIDType = "br_cpf"
+	TaxIDTypeCaBn     TaxIDType = "ca_bn"
+	TaxIDTypeCaGstHst TaxIDType = "ca_gst_hst"
+	TaxIDTypeCaPstBc  TaxIDType = "ca_pst_bc"
+	TaxIDTypeCaPstMb  TaxIDType = "ca_pst_mb"
+	TaxIDTypeCaPstSk  TaxIDType = "ca_pst_sk"
+	TaxIDTypeCaQst    TaxIDType = "ca_qst"
+	TaxIDTypeChUID    TaxIDType = "ch_uid"
+	TaxIDTypeChVat    TaxIDType = "ch_vat"
+	TaxIDTypeEuVat    TaxIDType = "eu_vat"
+	TaxIDTypeGbVat    TaxIDType = "gb_vat"
+	TaxIDTypeHkBr     TaxIDType = "hk_br"
+	TaxIDTypeIDNpwp   TaxIDType = "id_npwp"
+	TaxIDTypeIlVat    TaxIDType = "il_vat"
+	TaxIDTypeInGst    TaxIDType = "in_gst"
+	TaxIDTypeJpCn     TaxIDType = "jp_cn"
+	TaxIDTypeJpRn     TaxIDType = "jp_rn"
+	TaxIDTypeJpTrn    TaxIDType = "jp_trn"
+	TaxIDTypeKrBrn    TaxIDType = "kr_brn"
+	TaxIDTypeMxRfc    TaxIDType = "mx_rfc"
+	TaxIDTypeMyFrp    TaxIDType = "my_frp"
+	TaxIDTypeMyItn    TaxIDType = "my_itn"
+	TaxIDTypeMySst    TaxIDType = "my_sst"
+	TaxIDTypeNoVat    TaxIDType = "no_vat"
+	TaxIDTypeNzGst    TaxIDType = "nz_gst"
+	TaxIDTypePhTin    TaxIDType = "ph_tin"
+	TaxIDTypeSaVat    TaxIDType = "sa_vat"
+	TaxIDTypeSgGst    TaxIDType = "sg_gst"
+	TaxIDTypeSgUen    TaxIDType = "sg_uen"
+	TaxIDTypeThVat    TaxIDType = "th_vat"
+	TaxIDTypeTrTin    TaxIDType = "tr_tin"
+	TaxIDTypeTwVat    TaxIDType = "tw_vat"
+	TaxIDTypeUsEin    TaxIDType = "us_ein"
+	TaxIDTypeZaVat    TaxIDType = "za_vat"
+)
+
+func NewTaxIDTypeFromString(s string) (TaxIDType, error) {
+	switch s {
+	case "ae_trn":
+		return TaxIDTypeAeTrn, nil
+	case "au_abn":
+		return TaxIDTypeAuAbn, nil
+	case "au_arn":
+		return TaxIDTypeAuArn, nil
+	case "br_cnpj":
+		return TaxIDTypeBrCnpj, nil
+	case "br_cpf":
+		return TaxIDTypeBrCpf, nil
+	case "ca_bn":
+		return TaxIDTypeCaBn, nil
+	case "ca_gst_hst":
+		return TaxIDTypeCaGstHst, nil
+	case "ca_pst_bc":
+		return TaxIDTypeCaPstBc, nil
+	case "ca_pst_mb":
+		return TaxIDTypeCaPstMb, nil
+	case "ca_pst_sk":
+		return TaxIDTypeCaPstSk, nil
+	case "ca_qst":
+		return TaxIDTypeCaQst, nil
+	case "ch_uid":
+		return TaxIDTypeChUID, nil
+	case "ch_vat":
+		return TaxIDTypeChVat, nil
+	case "eu_vat":
+		return TaxIDTypeEuVat, nil
+	case "gb_vat":
+		return TaxIDTypeGbVat, nil
+	case "hk_br":
+		return TaxIDTypeHkBr, nil
+	case "id_npwp":
+		return TaxIDTypeIDNpwp, nil
+	case "il_vat":
+		return TaxIDTypeIlVat, nil
+	case "in_gst":
+		return TaxIDTypeInGst, nil
+	case "jp_cn":
+		return TaxIDTypeJpCn, nil
+	case "jp_rn":
+		return TaxIDTypeJpRn, nil
+	case "jp_trn":
+		return TaxIDTypeJpTrn, nil
+	case "kr_brn":
+		return TaxIDTypeKrBrn, nil
+	case "mx_rfc":
+		return TaxIDTypeMxRfc, nil
+	case "my_frp":
+		return TaxIDTypeMyFrp, nil
+	case "my_itn":
+		return TaxIDTypeMyItn, nil
+	case "my_sst":
+		return TaxIDTypeMySst, nil
+	case "no_vat":
+		return TaxIDTypeNoVat, nil
+	case "nz_gst":
+		return TaxIDTypeNzGst, nil
+	case "ph_tin":
+		return TaxIDTypePhTin, nil
+	case "sa_vat":
+		return TaxIDTypeSaVat, nil
+	case "sg_gst":
+		return TaxIDTypeSgGst, nil
+	case "sg_uen":
+		return TaxIDTypeSgUen, nil
+	case "th_vat":
+		return TaxIDTypeThVat, nil
+	case "tr_tin":
+		return TaxIDTypeTrTin, nil
+	case "tw_vat":
+		return TaxIDTypeTwVat, nil
+	case "us_ein":
+		return TaxIDTypeUsEin, nil
+	case "za_vat":
+		return TaxIDTypeZaVat, nil
+	}
+	var t TaxIDType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TaxIDType) Ptr() *TaxIDType {
+	return &t
+}
+
+var (
 	temporaryAccessTokenResponseDataFieldAPIKeyID      = big.NewInt(1 << 0)
 	temporaryAccessTokenResponseDataFieldCreatedAt     = big.NewInt(1 << 1)
 	temporaryAccessTokenResponseDataFieldEnvironmentID = big.NewInt(1 << 2)
@@ -34439,10 +35157,12 @@ var (
 	updateBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 13)
 	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 14)
 	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 15)
-	updateBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 16)
-	updateBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 17)
-	updateBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 18)
-	updateBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 19)
+	updateBillingPlanCreditGrantRequestBodyFieldLicenseID                 = big.NewInt(1 << 16)
+	updateBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 17)
+	updateBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 18)
+	updateBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 19)
+	updateBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 20)
+	updateBillingPlanCreditGrantRequestBodyFieldScaling                   = big.NewInt(1 << 21)
 )
 
 type UpdateBillingPlanCreditGrantRequestBody struct {
@@ -34462,11 +35182,15 @@ type UpdateBillingPlanCreditGrantRequestBody struct {
 	ExpiryType                *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
 	ExpiryUnit                *BillingCreditExpiryUnit            `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
 	ExpiryUnitCount           *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	ResetCadence              BillingPlanCreditGrantResetCadence  `json:"reset_cadence" url:"reset_cadence"`
-	ResetStart                BillingPlanCreditGrantResetStart    `json:"reset_start" url:"reset_start"`
-	ResetType                 *BillingPlanCreditGrantResetType    `json:"reset_type,omitempty" url:"reset_type,omitempty"`
+	// The license whose quantity scales this grant. Cannot be changed after creation.
+	LicenseID    *string                            `json:"license_id,omitempty" url:"license_id,omitempty"`
+	ResetCadence BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
+	ResetStart   BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
+	ResetType    *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
 	// Percentage of unused credits that carry over when this grant resets. Only applies when reset_type is plan_period. Rolled-over credits expire at the next reset and are not rolled again.
 	RolloverPercentage *int64 `json:"rollover_percentage,omitempty" url:"rollover_percentage,omitempty"`
+	// Whether the grant is a fixed amount per company, or issued once per license the company holds. Cannot be changed after creation.
+	Scaling *PlanCreditGrantScaling `json:"scaling,omitempty" url:"scaling,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -34580,6 +35304,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetExpiryUnitCount() *int64 {
 	return u.ExpiryUnitCount
 }
 
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetLicenseID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.LicenseID
+}
+
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetResetCadence() BillingPlanCreditGrantResetCadence {
 	if u == nil {
 		return ""
@@ -34606,6 +35337,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetRolloverPercentage() *int64
 		return nil
 	}
 	return u.RolloverPercentage
+}
+
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetScaling() *PlanCreditGrantScaling {
+	if u == nil {
+		return nil
+	}
+	return u.Scaling
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
@@ -34734,6 +35472,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetExpiryUnitCount(expiryUnitC
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount)
 }
 
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetLicenseID(licenseID *string) {
+	u.LicenseID = licenseID
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldLicenseID)
+}
+
 // SetResetCadence sets the ResetCadence field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetResetCadence(resetCadence BillingPlanCreditGrantResetCadence) {
@@ -34760,6 +35505,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetResetType(resetType *Billin
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetRolloverPercentage(rolloverPercentage *int64) {
 	u.RolloverPercentage = rolloverPercentage
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldRolloverPercentage)
+}
+
+// SetScaling sets the Scaling field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetScaling(scaling *PlanCreditGrantScaling) {
+	u.Scaling = scaling
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldScaling)
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) UnmarshalJSON(data []byte) error {

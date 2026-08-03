@@ -2905,28 +2905,6 @@ func (p *PlanGroupResponseData) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
-type ProrationBehavior string
-
-const (
-	ProrationBehaviorCreateProrations   ProrationBehavior = "create_prorations"
-	ProrationBehaviorInvoiceImmediately ProrationBehavior = "invoice_immediately"
-)
-
-func NewProrationBehaviorFromString(s string) (ProrationBehavior, error) {
-	switch s {
-	case "create_prorations":
-		return ProrationBehaviorCreateProrations, nil
-	case "invoice_immediately":
-		return ProrationBehaviorInvoiceImmediately, nil
-	}
-	var t ProrationBehavior
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (p ProrationBehavior) Ptr() *ProrationBehavior {
-	return &p
-}
-
 type ScheduledDowngradeConfigBehavior string
 
 const (

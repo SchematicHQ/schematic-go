@@ -1086,8 +1086,8 @@ type CompanyPlanDetailResponseData struct {
 	InvalidReason         *CompanyPlanInvalidReason            `json:"invalid_reason,omitempty" url:"invalid_reason,omitempty"`
 	IsCustom              bool                                 `json:"is_custom" url:"is_custom"`
 	IsDefault             bool                                 `json:"is_default" url:"is_default"`
-	// Deprecated: Use BillingStrategy instead
-	IsFree          bool                        `json:"is_free" url:"is_free"`
+	// Deprecated: reports the plan's charge type, not its price. Read the plan's prices to tell whether it costs anything, or billing_strategy to tell how it is billed.
+	IsFree          *bool                       `json:"is_free,omitempty" url:"is_free,omitempty"`
 	IsTrialable     bool                        `json:"is_trialable" url:"is_trialable"`
 	MonthlyPrice    *BillingPriceResponseData   `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	Name            string                      `json:"name" url:"name"`
@@ -1332,9 +1332,9 @@ func (c *CompanyPlanDetailResponseData) GetIsDefault() bool {
 	return c.IsDefault
 }
 
-func (c *CompanyPlanDetailResponseData) GetIsFree() bool {
+func (c *CompanyPlanDetailResponseData) GetIsFree() *bool {
 	if c == nil {
-		return false
+		return nil
 	}
 	return c.IsFree
 }
@@ -1663,7 +1663,7 @@ func (c *CompanyPlanDetailResponseData) SetIsDefault(isDefault bool) {
 
 // SetIsFree sets the IsFree field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyPlanDetailResponseData) SetIsFree(isFree bool) {
+func (c *CompanyPlanDetailResponseData) SetIsFree(isFree *bool) {
 	c.IsFree = isFree
 	c.require(companyPlanDetailResponseDataFieldIsFree)
 }
@@ -1832,14 +1832,16 @@ var (
 	componentCheckoutSettingsFieldCollectAddress       = big.NewInt(1 << 0)
 	componentCheckoutSettingsFieldCollectEmail         = big.NewInt(1 << 1)
 	componentCheckoutSettingsFieldCollectPhone         = big.NewInt(1 << 2)
-	componentCheckoutSettingsFieldTaxCollectionEnabled = big.NewInt(1 << 3)
+	componentCheckoutSettingsFieldProrationBehavior    = big.NewInt(1 << 3)
+	componentCheckoutSettingsFieldTaxCollectionEnabled = big.NewInt(1 << 4)
 )
 
 type ComponentCheckoutSettings struct {
-	CollectAddress       bool `json:"collect_address" url:"collect_address"`
-	CollectEmail         bool `json:"collect_email" url:"collect_email"`
-	CollectPhone         bool `json:"collect_phone" url:"collect_phone"`
-	TaxCollectionEnabled bool `json:"tax_collection_enabled" url:"tax_collection_enabled"`
+	CollectAddress       bool              `json:"collect_address" url:"collect_address"`
+	CollectEmail         bool              `json:"collect_email" url:"collect_email"`
+	CollectPhone         bool              `json:"collect_phone" url:"collect_phone"`
+	ProrationBehavior    ProrationBehavior `json:"proration_behavior" url:"proration_behavior"`
+	TaxCollectionEnabled bool              `json:"tax_collection_enabled" url:"tax_collection_enabled"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1867,6 +1869,13 @@ func (c *ComponentCheckoutSettings) GetCollectPhone() bool {
 		return false
 	}
 	return c.CollectPhone
+}
+
+func (c *ComponentCheckoutSettings) GetProrationBehavior() ProrationBehavior {
+	if c == nil {
+		return ""
+	}
+	return c.ProrationBehavior
 }
 
 func (c *ComponentCheckoutSettings) GetTaxCollectionEnabled() bool {
@@ -1909,6 +1918,13 @@ func (c *ComponentCheckoutSettings) SetCollectEmail(collectEmail bool) {
 func (c *ComponentCheckoutSettings) SetCollectPhone(collectPhone bool) {
 	c.CollectPhone = collectPhone
 	c.require(componentCheckoutSettingsFieldCollectPhone)
+}
+
+// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentCheckoutSettings) SetProrationBehavior(prorationBehavior ProrationBehavior) {
+	c.ProrationBehavior = prorationBehavior
+	c.require(componentCheckoutSettingsFieldProrationBehavior)
 }
 
 // SetTaxCollectionEnabled sets the TaxCollectionEnabled field and marks it as non-optional;

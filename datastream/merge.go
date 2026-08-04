@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"maps"
 
-	"github.com/schematichq/rulesengine"
+	"github.com/schematichq/schematic-go/rulesengine"
 )
 
 // PartialCompany merges a partial JSON update into an existing Company and
@@ -373,4 +373,3 @@ func upsertMetrics(existing, incoming rulesengine.CompanyMetricCollection) rules
 
 	return result
 }
-

@@ -2,9 +2,9 @@ package datastream
 
 import (
 	"github.com/redis/go-redis/v9"
-	"github.com/schematichq/rulesengine"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
+	"github.com/schematichq/schematic-go/rulesengine"
 )
 
 func getCacheProviders(options DataStreamClientOptions, configOpt *core.DatastreamOptions, redisClient redis.UniversalClient) (CompanyCacheProvider, UserCacheProvider) {

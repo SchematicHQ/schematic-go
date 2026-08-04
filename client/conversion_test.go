@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
+	"github.com/schematichq/schematic-go/rulesengine"
 	"github.com/stretchr/testify/assert"
 )
 

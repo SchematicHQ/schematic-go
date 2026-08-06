@@ -8,7 +8,7 @@
 go get github.com/schematichq/schematic-go
 ```
 
-2. [Issue an API key](https://docs.schematichq.com/quickstart#create-an-api-key) for the appropriate environment using the [Schematic app](https://app.schematichq.com/settings/api-keys). Be sure to capture the secret key when you issue the API key; you'll only see this key once, and this is what you'll use with the Schematic Go library.
+2. [Issue an API key](https://docs.schematichq.com/quickstart/account-setup#2-create-your-api-keys) for the appropriate environment using the [Schematic app](https://app.schematichq.com/settings/api-keys). Be sure to capture the secret key when you issue the API key; you'll only see this key once, and this is what you'll use with the Schematic Go library.
 
 3. Using this secret key, initialize a client in your Go application:
 
@@ -398,7 +398,7 @@ Results are returned in the same order as the requested keys. When any requested
 
 ### Other API operations
 
-The Schematic API supports many operations beyond these, accessible via `client.API()`. See the [API submodule readme](https://github.com/SchematicHQ/schematic-go/tree/main/api#readme) for a full list and documentation of supported operations.
+The Schematic API supports many operations beyond these, accessible via `client.API()`. See the [API reference](https://github.com/SchematicHQ/schematic-go/blob/main/reference.md) for a full list and documentation of supported operations.
 
 ## Testing
 

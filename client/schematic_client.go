@@ -2,8 +2,10 @@ package client
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/schematichq/rulesengine"
@@ -16,6 +18,9 @@ import (
 	"github.com/schematichq/schematic-go/logger"
 	option "github.com/schematichq/schematic-go/option"
 )
+
+// ErrClientClosed is returned by Flush when the client has already been closed.
+var ErrClientClosed = errors.New("schematic: client is closed")
 
 type SchematicClient struct {
 	*Client
@@ -31,6 +36,9 @@ type SchematicClient struct {
 	logger                  core.Logger
 	options                 *core.RequestOptions
 	stopWorker              chan struct{}
+	stopOnce                sync.Once
+	workerDone              chan struct{}
+	flushRequests           chan chan struct{}
 	workerInterval          time.Duration
 }
 
@@ -78,6 +86,8 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		logger:                  options.Logger,
 		options:                 options,
 		stopWorker:              make(chan struct{}),
+		workerDone:              make(chan struct{}),
+		flushRequests:           make(chan chan struct{}),
 		workerInterval:          5 * time.Second,
 	}
 
@@ -493,6 +503,13 @@ func toRulesEngineRuleType(s *schematicgo.RuleType) *rulesengine.RuleType {
 	return &v
 }
 
+// Close shuts the client down and blocks until any buffered events have been
+// flushed to Schematic. Because it waits for the final flush (including the
+// sender's retries), `defer client.Close()` is enough to guarantee that events
+// recorded just before shutdown are delivered; the wait is bounded so a wedged
+// network can't hang the caller indefinitely.
+//
+// Close is safe to call more than once.
 func (c *SchematicClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
@@ -500,10 +517,45 @@ func (c *SchematicClient) Close() {
 		}
 	}()
 
-	close(c.stopWorker)
+	c.stopOnce.Do(func() {
+		close(c.stopWorker)
+	})
+
+	// Wait for the worker to drain pending events and flush the buffer.
+	<-c.workerDone
 
 	if c.datastreamClient != nil {
 		c.datastreamClient.Close()
+	}
+}
+
+// Flush sends any buffered events immediately and blocks until the send has
+// completed, without shutting the client down. Use it when an event must be
+// durable before the calling code proceeds -- for example redeeming a credit
+// lease, where a lost event means the work never gets billed.
+//
+// Flush returns ctx.Err() if the context is cancelled before the flush
+// completes, or ErrClientClosed if the client has already been closed.
+func (c *SchematicClient) Flush(ctx context.Context) error {
+	if c.isOffline {
+		return nil
+	}
+
+	ack := make(chan struct{})
+
+	select {
+	case c.flushRequests <- ack:
+	case <-c.workerDone:
+		return ErrClientClosed
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+
+	select {
+	case <-ack:
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
 	}
 }
 
@@ -629,6 +681,7 @@ func (c *SchematicClient) getFlagDefault(
 }
 
 func (c *SchematicClient) worker() {
+	defer close(c.workerDone)
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(context.Background(), fmt.Sprintf("Panic occurred in worker %v", r))
@@ -649,15 +702,37 @@ func (c *SchematicClient) worker() {
 		c.eventBufferPeriod,
 	)
 
+	// drainEvents moves every event currently enqueued on the events channel into
+	// the buffer. Only called from this goroutine.
+	drainEvents := func() {
+		for {
+			select {
+			case event := <-c.events:
+				buffer.Push(event)
+			default:
+				return
+			}
+		}
+	}
+
 	for {
 		select {
 		case event := <-c.events:
 			buffer.Push(event)
+		case ack := <-c.flushRequests:
+			// Drain anything already enqueued so a Track immediately followed by a
+			// Flush on the same goroutine is included in this flush.
+			drainEvents()
+			buffer.Flush(context.Background())
+			close(ack)
 		case err := <-c.errors:
 			c.logger.Error(context.Background(), fmt.Sprintf("%v", err))
 		case err := <-c.ctxErrors:
 			c.logger.Error(err.Ctx, fmt.Sprintf("%v", err.Err))
 		case <-c.stopWorker:
+			// Move any events still sitting in the channel into the buffer before
+			// stopping it, otherwise they are dropped on shutdown.
+			drainEvents()
 			buffer.Stop()
 			return
 		}

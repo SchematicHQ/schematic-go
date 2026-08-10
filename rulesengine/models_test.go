@@ -36,6 +36,59 @@ func TestEnvelopeHasNoNulls(t *testing.T) {
 	}
 }
 
+// TestResultDecodesWarningTiers pins the warning-tier leg of the camelCase ->
+// snake_case bridge in CheckFlagResult.UnmarshalJSON. The pinned v0.6.0 engine
+// does not emit warningTiers, so the populated case is exercised against a
+// payload shaped like the build that will, and the absent case covers today.
+func TestResultDecodesWarningTiers(t *testing.T) {
+	const withTiers = `{
+		"value": true,
+		"reason": "Plan entitlement",
+		"flagKey": "seats-flag",
+		"entitlement": {
+			"featureId": "feat-1",
+			"featureKey": "seats",
+			"valueType": "numeric",
+			"warningTiers": [{"key": "soft", "value": 80}, {"key": "hard", "value": 95}]
+		}
+	}`
+
+	var r CheckFlagResult
+	if err := json.Unmarshal([]byte(withTiers), &r); err != nil {
+		t.Fatal(err)
+	}
+	if r.Entitlement == nil {
+		t.Fatal("entitlement failed to decode")
+	}
+	if got := len(r.Entitlement.WarningTiers); got != 2 {
+		t.Fatalf("want 2 warning tiers, got %d", got)
+	}
+	if k, v := r.Entitlement.WarningTiers[0].Key, r.Entitlement.WarningTiers[0].Value; k != "soft" || v != 80 {
+		t.Errorf("first tier = %q/%d, want soft/80", k, v)
+	}
+
+	// The public type is snake_case, so a decoded result must re-marshal as
+	// warning_tiers -- the engine's casing must not leak to SDK consumers.
+	out, err := json.Marshal(&r)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(out), `"warning_tiers":[{"key":"soft","value":80}`) {
+		t.Errorf("result did not re-marshal warning tiers as snake_case: %s", out)
+	}
+
+	// v0.6.0 omits the field entirely; that has to stay benign.
+	const withoutTiers = `{"value":true,"reason":"r","flagKey":"k",` +
+		`"entitlement":{"featureId":"f","featureKey":"k","valueType":"numeric"}}`
+	var absent CheckFlagResult
+	if err := json.Unmarshal([]byte(withoutTiers), &absent); err != nil {
+		t.Fatal(err)
+	}
+	if absent.Entitlement.WarningTiers != nil {
+		t.Errorf("absent warningTiers should decode to nil, got %v", absent.Entitlement.WarningTiers)
+	}
+}
+
 // TestNestedRuleHasNoNulls covers the same invariant at depth, where a nil
 // collection hides inside a rule or metric rather than on the top-level entity.
 func TestNestedRuleHasNoNulls(t *testing.T) {

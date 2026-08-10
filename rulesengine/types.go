@@ -123,6 +123,13 @@ type wasmFeatureEntitlement struct {
 	CreditReserved  *float64                `json:"creditReserved"`
 	CreditSettled   *float64                `json:"creditSettled"`
 	ConsumptionRate *float64                `json:"consumptionRate"`
+
+	// Emitted only by engine builds that carry warning tiers. The Rust type has
+	// the field, but it postdates the v0.6.0 release this SDK pins, so against
+	// that binary it is simply absent and decodes to nil. Mapping it now means
+	// the data flows through the moment WASM_VERSION moves to a build that
+	// includes it, rather than being silently dropped here.
+	WarningTiers JSONSlice[*WarningTier] `json:"warningTiers"`
 }
 
 func (w *wasmFeatureEntitlement) toEntitlement() *FeatureEntitlement {
@@ -148,6 +155,7 @@ func (w *wasmFeatureEntitlement) toEntitlement() *FeatureEntitlement {
 		CreditReserved:  w.CreditReserved,
 		CreditSettled:   w.CreditSettled,
 		ConsumptionRate: w.ConsumptionRate,
+		WarningTiers:    w.WarningTiers,
 	}
 }
 

@@ -881,27 +881,9 @@ func TestCheckFlag(t *testing.T) {
 
 			result, err := engine.CheckFlag(ctx, company, nil, flag)
 
-			// KNOWN FAILURE, pending a fix in rulesengine-rust. This asserts the
-			// contract the Go engine held: an unusable condition simply fails to
-			// match, and evaluation falls through to the flag's default. The WASM
-			// engine instead rejects the whole envelope and fails the entire
-			// check.
-			//
-			// The trigger is narrower than this subtest's name suggests. The nil
-			// metric fields and the empty condition group are both handled fine;
-			// what breaks is the zero-valued Operator, which marshals to
-			// `"operator": ""` and has no variant in the Rust ComparableOperator
-			// enum, so deserialization fails and checkFlagCombined returns -1.
-			// Same for a zero-valued ConditionType.
-			//
-			// Fix: give ConditionType and ComparableOperator an `Unknown` variant
-			// tagged `#[serde(other)]` (verified to work on these plain string
-			// enums), and treat Unknown as never-matching in the rule checker.
-			// That restores the per-condition degradation this asserts.
-			//
-			// require, not assert: the engine returns (nil, ErrorUnexpected), so
-			// continuing would nil-deref and panic the test binary, hiding the 20
-			// Preflight options subtests that follow.
+			// An unusable condition simply fails to match, and evaluation falls
+			// through to the flag's default -- the same contract the Go engine
+			// held. require, not assert: result is nil when err is non-nil.
 			require.NoError(t, err)
 			assert.Equal(t, flag.DefaultValue, result.Value)
 			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)

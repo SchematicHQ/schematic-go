@@ -9373,6 +9373,50 @@ client.Companies.ListEntityKeyDefinitions(
 </dl>
 </details>
 
+<details><summary><code>client.Companies.DeleteEntityKeyDefinition(EntityKeyDefinitionID) -> *schematichq.DeleteEntityKeyDefinitionResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Companies.DeleteEntityKeyDefinition(
+        context.TODO(),
+        "entity_key_definition_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**entityKeyDefinitionID:** `string` — entity_key_definition_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Companies.CountEntityKeyDefinitions() -> *schematichq.CountEntityKeyDefinitionsResponse</code></summary>
 <dl>
 <dd>
@@ -9439,6 +9483,86 @@ client.Companies.CountEntityKeyDefinitions(
 <dd>
 
 **q:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Companies.CountEntityKeys() -> *schematichq.CountEntityKeysResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountEntityKeysRequest{
+        DefinitionID: schematichq.String(
+            "definition_id",
+        ),
+        EntityType: schematichq.EntityTypeCompany.Ptr(),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Companies.CountEntityKeys(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**definitionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**entityType:** `*schematichq.EntityType` 
     
 </dd>
 </dl>

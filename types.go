@@ -2245,27 +2245,27 @@ var (
 )
 
 type BillingCreditView struct {
-	AccountID              string                       `json:"account_id" url:"account_id"`
-	BurnStrategy           BillingCreditBurnStrategy    `json:"burn_strategy" url:"burn_strategy"`
-	CostEditable           bool                         `json:"cost_editable" url:"cost_editable"`
-	CreatedAt              time.Time                    `json:"created_at" url:"created_at"`
-	CurrencyPrices         []*CreditCurrencyPrice       `json:"currency_prices" url:"currency_prices"`
-	DefaultExpiryUnit      BillingCreditExpiryUnit      `json:"default_expiry_unit" url:"default_expiry_unit"`
-	DefaultExpiryUnitCount *int64                       `json:"default_expiry_unit_count,omitempty" url:"default_expiry_unit_count,omitempty"`
-	DefaultRolloverPolicy  BillingCreditRolloverPolicy  `json:"default_rollover_policy" url:"default_rollover_policy"`
-	Description            string                       `json:"description" url:"description"`
-	EnvironmentID          string                       `json:"environment_id" url:"environment_id"`
-	Icon                   *string                      `json:"icon,omitempty" url:"icon,omitempty"`
-	ID                     string                       `json:"id" url:"id"`
-	LedgerAuthority        BillingCreditLedgerAuthority `json:"ledger_authority" url:"ledger_authority"`
-	Name                   string                       `json:"name" url:"name"`
-	PluralName             *string                      `json:"plural_name,omitempty" url:"plural_name,omitempty"`
-	Price                  *BillingPriceView            `json:"price,omitempty" url:"price,omitempty"`
-	PricePerUnit           *int64                       `json:"price_per_unit,omitempty" url:"price_per_unit,omitempty"`
-	PricePerUnitDecimal    *string                      `json:"price_per_unit_decimal,omitempty" url:"price_per_unit_decimal,omitempty"`
-	Product                *BillingProductResponseData  `json:"product,omitempty" url:"product,omitempty"`
-	SingularName           *string                      `json:"singular_name,omitempty" url:"singular_name,omitempty"`
-	UpdatedAt              time.Time                    `json:"updated_at" url:"updated_at"`
+	AccountID              string                            `json:"account_id" url:"account_id"`
+	BurnStrategy           BillingCreditBurnStrategy         `json:"burn_strategy" url:"burn_strategy"`
+	CostEditable           bool                              `json:"cost_editable" url:"cost_editable"`
+	CreatedAt              time.Time                         `json:"created_at" url:"created_at"`
+	CurrencyPrices         []*CreditCurrencyPrice            `json:"currency_prices" url:"currency_prices"`
+	DefaultExpiryUnit      BillingCreditExpiryUnit           `json:"default_expiry_unit" url:"default_expiry_unit"`
+	DefaultExpiryUnitCount *int64                            `json:"default_expiry_unit_count,omitempty" url:"default_expiry_unit_count,omitempty"`
+	DefaultRolloverPolicy  BillingCreditRolloverPolicy       `json:"default_rollover_policy" url:"default_rollover_policy"`
+	Description            string                            `json:"description" url:"description"`
+	EnvironmentID          string                            `json:"environment_id" url:"environment_id"`
+	Icon                   *string                           `json:"icon,omitempty" url:"icon,omitempty"`
+	ID                     string                            `json:"id" url:"id"`
+	LedgerAuthority        BillingCreditLedgerAuthority      `json:"ledger_authority" url:"ledger_authority"`
+	Name                   string                            `json:"name" url:"name"`
+	PluralName             *string                           `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	Price                  *BillingPriceView                 `json:"price,omitempty" url:"price,omitempty"`
+	PricePerUnit           *int64                            `json:"price_per_unit,omitempty" url:"price_per_unit,omitempty"`
+	PricePerUnitDecimal    *string                           `json:"price_per_unit_decimal,omitempty" url:"price_per_unit_decimal,omitempty"`
+	Product                *BillingProductRecordResponseData `json:"product,omitempty" url:"product,omitempty"`
+	SingularName           *string                           `json:"singular_name,omitempty" url:"singular_name,omitempty"`
+	UpdatedAt              time.Time                         `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2400,7 +2400,7 @@ func (b *BillingCreditView) GetPricePerUnitDecimal() *string {
 	return b.PricePerUnitDecimal
 }
 
-func (b *BillingCreditView) GetProduct() *BillingProductResponseData {
+func (b *BillingCreditView) GetProduct() *BillingProductRecordResponseData {
 	if b == nil {
 		return nil
 	}
@@ -2563,7 +2563,7 @@ func (b *BillingCreditView) SetPricePerUnitDecimal(pricePerUnitDecimal *string) 
 
 // SetProduct sets the Product field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingCreditView) SetProduct(product *BillingProductResponseData) {
+func (b *BillingCreditView) SetProduct(product *BillingProductRecordResponseData) {
 	b.Product = product
 	b.require(billingCreditViewFieldProduct)
 }
@@ -5359,6 +5359,230 @@ func (b *BillingProductPriceTierResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingProductPriceTierResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingProductRecordResponseDataFieldAccountID     = big.NewInt(1 << 0)
+	billingProductRecordResponseDataFieldCreatedAt     = big.NewInt(1 << 1)
+	billingProductRecordResponseDataFieldEnvironmentID = big.NewInt(1 << 2)
+	billingProductRecordResponseDataFieldExternalID    = big.NewInt(1 << 3)
+	billingProductRecordResponseDataFieldID            = big.NewInt(1 << 4)
+	billingProductRecordResponseDataFieldIsActive      = big.NewInt(1 << 5)
+	billingProductRecordResponseDataFieldName          = big.NewInt(1 << 6)
+	billingProductRecordResponseDataFieldProviderType  = big.NewInt(1 << 7)
+	billingProductRecordResponseDataFieldUpdatedAt     = big.NewInt(1 << 8)
+)
+
+type BillingProductRecordResponseData struct {
+	AccountID     string              `json:"account_id" url:"account_id"`
+	CreatedAt     time.Time           `json:"created_at" url:"created_at"`
+	EnvironmentID string              `json:"environment_id" url:"environment_id"`
+	ExternalID    string              `json:"external_id" url:"external_id"`
+	ID            string              `json:"id" url:"id"`
+	IsActive      bool                `json:"is_active" url:"is_active"`
+	Name          string              `json:"name" url:"name"`
+	ProviderType  BillingProviderType `json:"provider_type" url:"provider_type"`
+	UpdatedAt     time.Time           `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingProductRecordResponseData) GetAccountID() string {
+	if b == nil {
+		return ""
+	}
+	return b.AccountID
+}
+
+func (b *BillingProductRecordResponseData) GetCreatedAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.CreatedAt
+}
+
+func (b *BillingProductRecordResponseData) GetEnvironmentID() string {
+	if b == nil {
+		return ""
+	}
+	return b.EnvironmentID
+}
+
+func (b *BillingProductRecordResponseData) GetExternalID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ExternalID
+}
+
+func (b *BillingProductRecordResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingProductRecordResponseData) GetIsActive() bool {
+	if b == nil {
+		return false
+	}
+	return b.IsActive
+}
+
+func (b *BillingProductRecordResponseData) GetName() string {
+	if b == nil {
+		return ""
+	}
+	return b.Name
+}
+
+func (b *BillingProductRecordResponseData) GetProviderType() BillingProviderType {
+	if b == nil {
+		return ""
+	}
+	return b.ProviderType
+}
+
+func (b *BillingProductRecordResponseData) GetUpdatedAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.UpdatedAt
+}
+
+func (b *BillingProductRecordResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingProductRecordResponseData) require(field *big.Int) {
+	if b.explicitFields == nil {
+		b.explicitFields = big.NewInt(0)
+	}
+	b.explicitFields.Or(b.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductRecordResponseData) SetAccountID(accountID string) {
+	b.AccountID = accountID
+	b.require(billingProductRecordResponseDataFieldAccountID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductRecordResponseData) SetCreatedAt(createdAt time.Time) {
+	b.CreatedAt = createdAt
+	b.require(billingProductRecordResponseDataFieldCreatedAt)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductRecordResponseData) SetEnvironmentID(environmentID string) {
+	b.EnvironmentID = environmentID
+	b.require(billingProductRecordResponseDataFieldEnvironmentID)
+}
+
+// SetExternalID sets the ExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductRecordResponseData) SetExternalID(externalID string) {
+	b.ExternalID = externalID
+	b.require(billingProductRecordResponseDataFieldExternalID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductRecordResponseData) SetID(id string) {
+	b.ID = id
+	b.require(billingProductRecordResponseDataFieldID)
+}
+
+// SetIsActive sets the IsActive field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductRecordResponseData) SetIsActive(isActive bool) {
+	b.IsActive = isActive
+	b.require(billingProductRecordResponseDataFieldIsActive)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductRecordResponseData) SetName(name string) {
+	b.Name = name
+	b.require(billingProductRecordResponseDataFieldName)
+}
+
+// SetProviderType sets the ProviderType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductRecordResponseData) SetProviderType(providerType BillingProviderType) {
+	b.ProviderType = providerType
+	b.require(billingProductRecordResponseDataFieldProviderType)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductRecordResponseData) SetUpdatedAt(updatedAt time.Time) {
+	b.UpdatedAt = updatedAt
+	b.require(billingProductRecordResponseDataFieldUpdatedAt)
+}
+
+func (b *BillingProductRecordResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingProductRecordResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingProductRecordResponseData(unmarshaler.embed)
+	b.CreatedAt = unmarshaler.CreatedAt.Time()
+	b.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingProductRecordResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingProductRecordResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*b),
+		CreatedAt: internal.NewDateTime(b.CreatedAt),
+		UpdatedAt: internal.NewDateTime(b.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingProductRecordResponseData) String() string {
 	if b == nil {
 		return "<nil>"
 	}
@@ -22015,7 +22239,7 @@ var (
 type FeatureView struct {
 	AccountID             string                             `json:"account_id" url:"account_id"`
 	BillingLinkedResource *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
-	BillingProduct        *BillingProductResponseData        `json:"billing_product,omitempty" url:"billing_product,omitempty"`
+	BillingProduct        *BillingProductRecordResponseData  `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
 	Description           string                             `json:"description" url:"description"`
 	EventSubtype          *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
@@ -22056,7 +22280,7 @@ func (f *FeatureView) GetBillingLinkedResource() *BillingLinkedResourceResponseD
 	return f.BillingLinkedResource
 }
 
-func (f *FeatureView) GetBillingProduct() *BillingProductResponseData {
+func (f *FeatureView) GetBillingProduct() *BillingProductRecordResponseData {
 	if f == nil {
 		return nil
 	}
@@ -22219,7 +22443,7 @@ func (f *FeatureView) SetBillingLinkedResource(billingLinkedResource *BillingLin
 
 // SetBillingProduct sets the BillingProduct field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FeatureView) SetBillingProduct(billingProduct *BillingProductResponseData) {
+func (f *FeatureView) SetBillingProduct(billingProduct *BillingProductRecordResponseData) {
 	f.BillingProduct = billingProduct
 	f.require(featureViewFieldBillingProduct)
 }

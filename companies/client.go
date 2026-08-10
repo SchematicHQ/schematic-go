@@ -300,12 +300,45 @@ func (c *Client) ListEntityKeyDefinitions(
 	return response.Body, nil
 }
 
+func (c *Client) DeleteEntityKeyDefinition(
+	ctx context.Context,
+	// entity_key_definition_id
+	entityKeyDefinitionID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeleteEntityKeyDefinitionResponse, error) {
+	response, err := c.WithRawResponse.DeleteEntityKeyDefinition(
+		ctx,
+		entityKeyDefinitionID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CountEntityKeyDefinitions(
 	ctx context.Context,
 	request *schematichq.CountEntityKeyDefinitionsRequest,
 	opts ...option.RequestOption,
 ) (*schematichq.CountEntityKeyDefinitionsResponse, error) {
 	response, err := c.WithRawResponse.CountEntityKeyDefinitions(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) CountEntityKeys(
+	ctx context.Context,
+	request *schematichq.CountEntityKeysRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CountEntityKeysResponse, error) {
+	response, err := c.WithRawResponse.CountEntityKeys(
 		ctx,
 		request,
 		opts...,

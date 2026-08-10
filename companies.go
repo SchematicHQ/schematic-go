@@ -290,6 +290,60 @@ func (c *CountEntityKeyDefinitionsRequest) SetOffset(offset *int64) {
 }
 
 var (
+	countEntityKeysRequestFieldDefinitionID = big.NewInt(1 << 0)
+	countEntityKeysRequestFieldEntityType   = big.NewInt(1 << 1)
+	countEntityKeysRequestFieldLimit        = big.NewInt(1 << 2)
+	countEntityKeysRequestFieldOffset       = big.NewInt(1 << 3)
+)
+
+type CountEntityKeysRequest struct {
+	DefinitionID *string     `json:"-" url:"definition_id,omitempty"`
+	EntityType   *EntityType `json:"-" url:"entity_type,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CountEntityKeysRequest) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetDefinitionID sets the DefinitionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysRequest) SetDefinitionID(definitionID *string) {
+	c.DefinitionID = definitionID
+	c.require(countEntityKeysRequestFieldDefinitionID)
+}
+
+// SetEntityType sets the EntityType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysRequest) SetEntityType(entityType *EntityType) {
+	c.EntityType = entityType
+	c.require(countEntityKeysRequestFieldEntityType)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysRequest) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countEntityKeysRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysRequest) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countEntityKeysRequestFieldOffset)
+}
+
+var (
 	countEntityTraitDefinitionsRequestFieldEntityType = big.NewInt(1 << 0)
 	countEntityTraitDefinitionsRequestFieldIDs        = big.NewInt(1 << 1)
 	countEntityTraitDefinitionsRequestFieldQ          = big.NewInt(1 << 2)
@@ -5615,6 +5669,242 @@ func (c *CountEntityKeyDefinitionsResponse) String() string {
 
 // Input parameters
 var (
+	countEntityKeysParamsFieldDefinitionID = big.NewInt(1 << 0)
+	countEntityKeysParamsFieldEntityType   = big.NewInt(1 << 1)
+	countEntityKeysParamsFieldLimit        = big.NewInt(1 << 2)
+	countEntityKeysParamsFieldOffset       = big.NewInt(1 << 3)
+)
+
+type CountEntityKeysParams struct {
+	DefinitionID *string     `json:"definition_id,omitempty" url:"definition_id,omitempty"`
+	EntityType   *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountEntityKeysParams) GetDefinitionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.DefinitionID
+}
+
+func (c *CountEntityKeysParams) GetEntityType() *EntityType {
+	if c == nil {
+		return nil
+	}
+	return c.EntityType
+}
+
+func (c *CountEntityKeysParams) GetLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountEntityKeysParams) GetOffset() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountEntityKeysParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountEntityKeysParams) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetDefinitionID sets the DefinitionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysParams) SetDefinitionID(definitionID *string) {
+	c.DefinitionID = definitionID
+	c.require(countEntityKeysParamsFieldDefinitionID)
+}
+
+// SetEntityType sets the EntityType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysParams) SetEntityType(entityType *EntityType) {
+	c.EntityType = entityType
+	c.require(countEntityKeysParamsFieldEntityType)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysParams) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countEntityKeysParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysParams) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countEntityKeysParamsFieldOffset)
+}
+
+func (c *CountEntityKeysParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountEntityKeysParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountEntityKeysParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountEntityKeysParams) MarshalJSON() ([]byte, error) {
+	type embed CountEntityKeysParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountEntityKeysParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	countEntityKeysResponseFieldData   = big.NewInt(1 << 0)
+	countEntityKeysResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CountEntityKeysResponse struct {
+	Data *CountResponse `json:"data" url:"data"`
+	// Input parameters
+	Params *CountEntityKeysParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountEntityKeysResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountEntityKeysResponse) GetParams() *CountEntityKeysParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountEntityKeysResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountEntityKeysResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysResponse) SetData(data *CountResponse) {
+	c.Data = data
+	c.require(countEntityKeysResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountEntityKeysResponse) SetParams(params *CountEntityKeysParams) {
+	c.Params = params
+	c.require(countEntityKeysResponseFieldParams)
+}
+
+func (c *CountEntityKeysResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountEntityKeysResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountEntityKeysResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountEntityKeysResponse) MarshalJSON() ([]byte, error) {
+	type embed CountEntityKeysResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountEntityKeysResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+var (
 	countEntityTraitDefinitionsParamsFieldEntityType = big.NewInt(1 << 0)
 	countEntityTraitDefinitionsParamsFieldIDs        = big.NewInt(1 << 1)
 	countEntityTraitDefinitionsParamsFieldLimit      = big.NewInt(1 << 2)
@@ -7029,6 +7319,107 @@ func (d *DeleteCompanyResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeleteCompanyResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+var (
+	deleteEntityKeyDefinitionResponseFieldData   = big.NewInt(1 << 0)
+	deleteEntityKeyDefinitionResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type DeleteEntityKeyDefinitionResponse struct {
+	Data *DeleteResponse `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteEntityKeyDefinitionResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteEntityKeyDefinitionResponse) GetParams() map[string]any {
+	if d == nil {
+		return nil
+	}
+	return d.Params
+}
+
+func (d *DeleteEntityKeyDefinitionResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeleteEntityKeyDefinitionResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteEntityKeyDefinitionResponse) SetData(data *DeleteResponse) {
+	d.Data = data
+	d.require(deleteEntityKeyDefinitionResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteEntityKeyDefinitionResponse) SetParams(params map[string]any) {
+	d.Params = params
+	d.require(deleteEntityKeyDefinitionResponseFieldParams)
+}
+
+func (d *DeleteEntityKeyDefinitionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteEntityKeyDefinitionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteEntityKeyDefinitionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteEntityKeyDefinitionResponse) MarshalJSON() ([]byte, error) {
+	type embed DeleteEntityKeyDefinitionResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeleteEntityKeyDefinitionResponse) String() string {
 	if d == nil {
 		return "<nil>"
 	}

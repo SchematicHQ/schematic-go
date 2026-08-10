@@ -523,19 +523,28 @@ func (e *EntitlementTriggerConfig) String() string {
 }
 
 var (
-	testWebhookResponseDataFieldResponseCode = big.NewInt(1 << 0)
-	testWebhookResponseDataFieldSuccess      = big.NewInt(1 << 1)
+	testWebhookResponseDataFieldFailureReason = big.NewInt(1 << 0)
+	testWebhookResponseDataFieldResponseCode  = big.NewInt(1 << 1)
+	testWebhookResponseDataFieldSuccess       = big.NewInt(1 << 2)
 )
 
 type TestWebhookResponseData struct {
-	ResponseCode int64 `json:"response_code" url:"response_code"`
-	Success      bool  `json:"success" url:"success"`
+	FailureReason *string `json:"failure_reason,omitempty" url:"failure_reason,omitempty"`
+	ResponseCode  int64   `json:"response_code" url:"response_code"`
+	Success       bool    `json:"success" url:"success"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (t *TestWebhookResponseData) GetFailureReason() *string {
+	if t == nil {
+		return nil
+	}
+	return t.FailureReason
 }
 
 func (t *TestWebhookResponseData) GetResponseCode() int64 {
@@ -564,6 +573,13 @@ func (t *TestWebhookResponseData) require(field *big.Int) {
 		t.explicitFields = big.NewInt(0)
 	}
 	t.explicitFields.Or(t.explicitFields, field)
+}
+
+// SetFailureReason sets the FailureReason field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (t *TestWebhookResponseData) SetFailureReason(failureReason *string) {
+	t.FailureReason = failureReason
+	t.require(testWebhookResponseDataFieldFailureReason)
 }
 
 // SetResponseCode sets the ResponseCode field and marks it as non-optional;

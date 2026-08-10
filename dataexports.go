@@ -304,13 +304,16 @@ var (
 	companyFeatureUsageExportMetadataFieldPlanIDs                                  = big.NewInt(1 << 7)
 	companyFeatureUsageExportMetadataFieldPlanVersionID                            = big.NewInt(1 << 8)
 	companyFeatureUsageExportMetadataFieldQ                                        = big.NewInt(1 << 9)
-	companyFeatureUsageExportMetadataFieldSubscriptionStatuses                     = big.NewInt(1 << 10)
-	companyFeatureUsageExportMetadataFieldSubscriptionTypes                        = big.NewInt(1 << 11)
-	companyFeatureUsageExportMetadataFieldWithEntitlementFor                       = big.NewInt(1 << 12)
-	companyFeatureUsageExportMetadataFieldWithSubscription                         = big.NewInt(1 << 13)
-	companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor                = big.NewInt(1 << 14)
-	companyFeatureUsageExportMetadataFieldWithoutPlan                              = big.NewInt(1 << 15)
-	companyFeatureUsageExportMetadataFieldWithoutSubscription                      = big.NewInt(1 << 16)
+	companyFeatureUsageExportMetadataFieldSortOrderColumn                          = big.NewInt(1 << 10)
+	companyFeatureUsageExportMetadataFieldSortOrderDirection                       = big.NewInt(1 << 11)
+	companyFeatureUsageExportMetadataFieldSubscriptionStatuses                     = big.NewInt(1 << 12)
+	companyFeatureUsageExportMetadataFieldSubscriptionTypes                        = big.NewInt(1 << 13)
+	companyFeatureUsageExportMetadataFieldVisibleColumns                           = big.NewInt(1 << 14)
+	companyFeatureUsageExportMetadataFieldWithEntitlementFor                       = big.NewInt(1 << 15)
+	companyFeatureUsageExportMetadataFieldWithSubscription                         = big.NewInt(1 << 16)
+	companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor                = big.NewInt(1 << 17)
+	companyFeatureUsageExportMetadataFieldWithoutPlan                              = big.NewInt(1 << 18)
+	companyFeatureUsageExportMetadataFieldWithoutSubscription                      = big.NewInt(1 << 19)
 )
 
 type CompanyFeatureUsageExportMetadata struct {
@@ -318,8 +321,8 @@ type CompanyFeatureUsageExportMetadata struct {
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Restrict the export to companies with these billing credit type IDs
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
-	// Schematic feature IDs (starting with 'feat_') to include as usage columns; at least one is required
-	FeatureIDs []string `json:"feature_ids" url:"feature_ids"`
+	// Schematic feature IDs (starting with 'feat_') to include as usage columns; empty means no usage columns
+	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
 	// Restrict the export to companies that do (or do not) have a scheduled downgrade
 	HasScheduledDowngrade *bool `json:"has_scheduled_downgrade,omitempty" url:"has_scheduled_downgrade,omitempty"`
 	// Restrict the export to companies with (or without) a monetized subscription
@@ -334,10 +337,16 @@ type CompanyFeatureUsageExportMetadata struct {
 	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Free-text search over company name and keys
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Column to sort the exported rows by (e.g. name, created_at, plan); defaults to name
+	SortOrderColumn *string `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	// Direction to sort the exported rows by; defaults to asc
+	SortOrderDirection *CompanyFeatureUsageExportMetadataSortOrderDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
 	// Restrict the export to companies whose subscription has one of these statuses
 	SubscriptionStatuses []string `json:"subscription_statuses,omitempty" url:"subscription_statuses,omitempty"`
 	// Restrict the export to companies whose subscription has one of these types
 	SubscriptionTypes []string `json:"subscription_types,omitempty" url:"subscription_types,omitempty"`
+	// Company columns to include, mirroring the companies list; omit to include the plan column only
+	VisibleColumns []CompanyFeatureUsageExportMetadataVisibleColumnsItem `json:"visible_columns,omitempty" url:"visible_columns,omitempty"`
 	// Restrict the export to companies that have an entitlement for this feature ID
 	WithEntitlementFor *string `json:"with_entitlement_for,omitempty" url:"with_entitlement_for,omitempty"`
 	// Restrict the export to companies with a subscription
@@ -426,6 +435,20 @@ func (c *CompanyFeatureUsageExportMetadata) GetQ() *string {
 	return c.Q
 }
 
+func (c *CompanyFeatureUsageExportMetadata) GetSortOrderColumn() *string {
+	if c == nil {
+		return nil
+	}
+	return c.SortOrderColumn
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetSortOrderDirection() *CompanyFeatureUsageExportMetadataSortOrderDirection {
+	if c == nil {
+		return nil
+	}
+	return c.SortOrderDirection
+}
+
 func (c *CompanyFeatureUsageExportMetadata) GetSubscriptionStatuses() []string {
 	if c == nil {
 		return nil
@@ -438,6 +461,13 @@ func (c *CompanyFeatureUsageExportMetadata) GetSubscriptionTypes() []string {
 		return nil
 	}
 	return c.SubscriptionTypes
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetVisibleColumns() []CompanyFeatureUsageExportMetadataVisibleColumnsItem {
+	if c == nil {
+		return nil
+	}
+	return c.VisibleColumns
 }
 
 func (c *CompanyFeatureUsageExportMetadata) GetWithEntitlementFor() *string {
@@ -559,6 +589,20 @@ func (c *CompanyFeatureUsageExportMetadata) SetQ(q *string) {
 	c.require(companyFeatureUsageExportMetadataFieldQ)
 }
 
+// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetSortOrderColumn(sortOrderColumn *string) {
+	c.SortOrderColumn = sortOrderColumn
+	c.require(companyFeatureUsageExportMetadataFieldSortOrderColumn)
+}
+
+// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetSortOrderDirection(sortOrderDirection *CompanyFeatureUsageExportMetadataSortOrderDirection) {
+	c.SortOrderDirection = sortOrderDirection
+	c.require(companyFeatureUsageExportMetadataFieldSortOrderDirection)
+}
+
 // SetSubscriptionStatuses sets the SubscriptionStatuses field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyFeatureUsageExportMetadata) SetSubscriptionStatuses(subscriptionStatuses []string) {
@@ -571,6 +615,13 @@ func (c *CompanyFeatureUsageExportMetadata) SetSubscriptionStatuses(subscription
 func (c *CompanyFeatureUsageExportMetadata) SetSubscriptionTypes(subscriptionTypes []string) {
 	c.SubscriptionTypes = subscriptionTypes
 	c.require(companyFeatureUsageExportMetadataFieldSubscriptionTypes)
+}
+
+// SetVisibleColumns sets the VisibleColumns field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetVisibleColumns(visibleColumns []CompanyFeatureUsageExportMetadataVisibleColumnsItem) {
+	c.VisibleColumns = visibleColumns
+	c.require(companyFeatureUsageExportMetadataFieldVisibleColumns)
 }
 
 // SetWithEntitlementFor sets the WithEntitlementFor field and marks it as non-optional;
@@ -650,10 +701,62 @@ func (c *CompanyFeatureUsageExportMetadata) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+// Direction to sort the exported rows by; defaults to asc
+type CompanyFeatureUsageExportMetadataSortOrderDirection string
+
+const (
+	CompanyFeatureUsageExportMetadataSortOrderDirectionAsc  CompanyFeatureUsageExportMetadataSortOrderDirection = "asc"
+	CompanyFeatureUsageExportMetadataSortOrderDirectionDesc CompanyFeatureUsageExportMetadataSortOrderDirection = "desc"
+)
+
+func NewCompanyFeatureUsageExportMetadataSortOrderDirectionFromString(s string) (CompanyFeatureUsageExportMetadataSortOrderDirection, error) {
+	switch s {
+	case "asc":
+		return CompanyFeatureUsageExportMetadataSortOrderDirectionAsc, nil
+	case "desc":
+		return CompanyFeatureUsageExportMetadataSortOrderDirectionDesc, nil
+	}
+	var t CompanyFeatureUsageExportMetadataSortOrderDirection
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CompanyFeatureUsageExportMetadataSortOrderDirection) Ptr() *CompanyFeatureUsageExportMetadataSortOrderDirection {
+	return &c
+}
+
+type CompanyFeatureUsageExportMetadataVisibleColumnsItem string
+
+const (
+	CompanyFeatureUsageExportMetadataVisibleColumnsItemPlan         CompanyFeatureUsageExportMetadataVisibleColumnsItem = "plan"
+	CompanyFeatureUsageExportMetadataVisibleColumnsItemSubscription CompanyFeatureUsageExportMetadataVisibleColumnsItem = "subscription"
+	CompanyFeatureUsageExportMetadataVisibleColumnsItemUsers        CompanyFeatureUsageExportMetadataVisibleColumnsItem = "users"
+	CompanyFeatureUsageExportMetadataVisibleColumnsItemLastSeenAt   CompanyFeatureUsageExportMetadataVisibleColumnsItem = "last_seen_at"
+)
+
+func NewCompanyFeatureUsageExportMetadataVisibleColumnsItemFromString(s string) (CompanyFeatureUsageExportMetadataVisibleColumnsItem, error) {
+	switch s {
+	case "plan":
+		return CompanyFeatureUsageExportMetadataVisibleColumnsItemPlan, nil
+	case "subscription":
+		return CompanyFeatureUsageExportMetadataVisibleColumnsItemSubscription, nil
+	case "users":
+		return CompanyFeatureUsageExportMetadataVisibleColumnsItemUsers, nil
+	case "last_seen_at":
+		return CompanyFeatureUsageExportMetadataVisibleColumnsItemLastSeenAt, nil
+	}
+	var t CompanyFeatureUsageExportMetadataVisibleColumnsItem
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CompanyFeatureUsageExportMetadataVisibleColumnsItem) Ptr() *CompanyFeatureUsageExportMetadataVisibleColumnsItem {
+	return &c
+}
+
 type DataExportMetadata struct {
 	ExportType          string
 	AuditLog            *AuditLogExportMetadata
 	CompanyFeatureUsage *CompanyFeatureUsageExportMetadata
+	Event               *EventExportMetadata
 
 	rawJSON json.RawMessage
 }
@@ -677,6 +780,13 @@ func (d *DataExportMetadata) GetCompanyFeatureUsage() *CompanyFeatureUsageExport
 		return nil
 	}
 	return d.CompanyFeatureUsage
+}
+
+func (d *DataExportMetadata) GetEvent() *EventExportMetadata {
+	if d == nil {
+		return nil
+	}
+	return d.Event
 }
 
 func (d *DataExportMetadata) UnmarshalJSON(data []byte) error {
@@ -703,6 +813,12 @@ func (d *DataExportMetadata) UnmarshalJSON(data []byte) error {
 			return err
 		}
 		d.CompanyFeatureUsage = value
+	case "event":
+		value := new(EventExportMetadata)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		d.Event = value
 	}
 	d.rawJSON = json.RawMessage(data)
 	return nil
@@ -718,6 +834,9 @@ func (d DataExportMetadata) MarshalJSON() ([]byte, error) {
 	if d.CompanyFeatureUsage != nil {
 		return internal.MarshalJSONWithExtraProperty(d.CompanyFeatureUsage, "export_type", "company-feature-usage")
 	}
+	if d.Event != nil {
+		return internal.MarshalJSONWithExtraProperty(d.Event, "export_type", "event")
+	}
 	if len(d.rawJSON) > 0 {
 		return d.rawJSON, nil
 	}
@@ -727,6 +846,7 @@ func (d DataExportMetadata) MarshalJSON() ([]byte, error) {
 type DataExportMetadataVisitor interface {
 	VisitAuditLog(*AuditLogExportMetadata) error
 	VisitCompanyFeatureUsage(*CompanyFeatureUsageExportMetadata) error
+	VisitEvent(*EventExportMetadata) error
 }
 
 func (d *DataExportMetadata) Accept(visitor DataExportMetadataVisitor) error {
@@ -735,6 +855,9 @@ func (d *DataExportMetadata) Accept(visitor DataExportMetadataVisitor) error {
 	}
 	if d.CompanyFeatureUsage != nil {
 		return visitor.VisitCompanyFeatureUsage(d.CompanyFeatureUsage)
+	}
+	if d.Event != nil {
+		return visitor.VisitEvent(d.Event)
 	}
 	return fmt.Errorf("type %T does not define a non-empty union type", d)
 }
@@ -749,6 +872,9 @@ func (d *DataExportMetadata) validate() error {
 	}
 	if d.CompanyFeatureUsage != nil {
 		fields = append(fields, "company-feature-usage")
+	}
+	if d.Event != nil {
+		fields = append(fields, "event")
 	}
 	if len(fields) == 0 {
 		if d.ExportType != "" {
@@ -1052,6 +1178,7 @@ type DataExportType string
 const (
 	DataExportTypeAuditLog            DataExportType = "audit-log"
 	DataExportTypeCompanyFeatureUsage DataExportType = "company-feature-usage"
+	DataExportTypeEvent               DataExportType = "event"
 )
 
 func NewDataExportTypeFromString(s string) (DataExportType, error) {
@@ -1060,6 +1187,8 @@ func NewDataExportTypeFromString(s string) (DataExportType, error) {
 		return DataExportTypeAuditLog, nil
 	case "company-feature-usage":
 		return DataExportTypeCompanyFeatureUsage, nil
+	case "event":
+		return DataExportTypeEvent, nil
 	}
 	var t DataExportType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1067,6 +1196,250 @@ func NewDataExportTypeFromString(s string) (DataExportType, error) {
 
 func (d DataExportType) Ptr() *DataExportType {
 	return &d
+}
+
+var (
+	eventExportMetadataFieldCompanyID                                = big.NewInt(1 << 0)
+	eventExportMetadataFieldEndTime                                  = big.NewInt(1 << 1)
+	eventExportMetadataFieldEventSubtype                             = big.NewInt(1 << 2)
+	eventExportMetadataFieldEventTypes                               = big.NewInt(1 << 3)
+	eventExportMetadataFieldFlagID                                   = big.NewInt(1 << 4)
+	eventExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 5)
+	eventExportMetadataFieldStartTime                                = big.NewInt(1 << 6)
+	eventExportMetadataFieldUserID                                   = big.NewInt(1 << 7)
+)
+
+type EventExportMetadata struct {
+	// Restrict the export to events for this company ID (starting with 'comp_')
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Restrict the export to events captured at or before this time
+	EndTime *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// Restrict the export to track events with this subtype
+	EventSubtype *string `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	// Restrict the export to these event types (e.g. "track", "identify"); defaults to track, identify and inference events. Flag check events are only exported when requested here explicitly, and require a flag_id.
+	EventTypes []EventExportMetadataEventTypesItem `json:"event_types,omitempty" url:"event_types,omitempty"`
+	// Restrict the export to flag-check events for this flag ID (starting with 'flag_')
+	FlagID *string `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	// Account member emails to notify when the export completes; empty means the artifact is only retrievable via the API
+	NotificationEmailRecipientEmailAddresses []string `json:"notification_email_recipient_email_addresses,omitempty" url:"notification_email_recipient_email_addresses,omitempty"`
+	// Restrict the export to events captured at or after this time
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
+	// Restrict the export to events for this user ID (starting with 'user_')
+	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EventExportMetadata) GetCompanyID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.CompanyID
+}
+
+func (e *EventExportMetadata) GetEndTime() *time.Time {
+	if e == nil {
+		return nil
+	}
+	return e.EndTime
+}
+
+func (e *EventExportMetadata) GetEventSubtype() *string {
+	if e == nil {
+		return nil
+	}
+	return e.EventSubtype
+}
+
+func (e *EventExportMetadata) GetEventTypes() []EventExportMetadataEventTypesItem {
+	if e == nil {
+		return nil
+	}
+	return e.EventTypes
+}
+
+func (e *EventExportMetadata) GetFlagID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.FlagID
+}
+
+func (e *EventExportMetadata) GetNotificationEmailRecipientEmailAddresses() []string {
+	if e == nil {
+		return nil
+	}
+	return e.NotificationEmailRecipientEmailAddresses
+}
+
+func (e *EventExportMetadata) GetStartTime() *time.Time {
+	if e == nil {
+		return nil
+	}
+	return e.StartTime
+}
+
+func (e *EventExportMetadata) GetUserID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.UserID
+}
+
+func (e *EventExportMetadata) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.extraProperties
+}
+
+func (e *EventExportMetadata) require(field *big.Int) {
+	if e.explicitFields == nil {
+		e.explicitFields = big.NewInt(0)
+	}
+	e.explicitFields.Or(e.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventExportMetadata) SetCompanyID(companyID *string) {
+	e.CompanyID = companyID
+	e.require(eventExportMetadataFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventExportMetadata) SetEndTime(endTime *time.Time) {
+	e.EndTime = endTime
+	e.require(eventExportMetadataFieldEndTime)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventExportMetadata) SetEventSubtype(eventSubtype *string) {
+	e.EventSubtype = eventSubtype
+	e.require(eventExportMetadataFieldEventSubtype)
+}
+
+// SetEventTypes sets the EventTypes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventExportMetadata) SetEventTypes(eventTypes []EventExportMetadataEventTypesItem) {
+	e.EventTypes = eventTypes
+	e.require(eventExportMetadataFieldEventTypes)
+}
+
+// SetFlagID sets the FlagID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventExportMetadata) SetFlagID(flagID *string) {
+	e.FlagID = flagID
+	e.require(eventExportMetadataFieldFlagID)
+}
+
+// SetNotificationEmailRecipientEmailAddresses sets the NotificationEmailRecipientEmailAddresses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventExportMetadata) SetNotificationEmailRecipientEmailAddresses(notificationEmailRecipientEmailAddresses []string) {
+	e.NotificationEmailRecipientEmailAddresses = notificationEmailRecipientEmailAddresses
+	e.require(eventExportMetadataFieldNotificationEmailRecipientEmailAddresses)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventExportMetadata) SetStartTime(startTime *time.Time) {
+	e.StartTime = startTime
+	e.require(eventExportMetadataFieldStartTime)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventExportMetadata) SetUserID(userID *string) {
+	e.UserID = userID
+	e.require(eventExportMetadataFieldUserID)
+}
+
+func (e *EventExportMetadata) UnmarshalJSON(data []byte) error {
+	type embed EventExportMetadata
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*e),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*e = EventExportMetadata(unmarshaler.embed)
+	e.EndTime = unmarshaler.EndTime.TimePtr()
+	e.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EventExportMetadata) MarshalJSON() ([]byte, error) {
+	type embed EventExportMetadata
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*e),
+		EndTime:   internal.NewOptionalDateTime(e.EndTime),
+		StartTime: internal.NewOptionalDateTime(e.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, e.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (e *EventExportMetadata) String() string {
+	if e == nil {
+		return "<nil>"
+	}
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+type EventExportMetadataEventTypesItem string
+
+const (
+	EventExportMetadataEventTypesItemFlagCheck EventExportMetadataEventTypesItem = "flag_check"
+	EventExportMetadataEventTypesItemIdentify  EventExportMetadataEventTypesItem = "identify"
+	EventExportMetadataEventTypesItemInference EventExportMetadataEventTypesItem = "inference"
+	EventExportMetadataEventTypesItemTrack     EventExportMetadataEventTypesItem = "track"
+)
+
+func NewEventExportMetadataEventTypesItemFromString(s string) (EventExportMetadataEventTypesItem, error) {
+	switch s {
+	case "flag_check":
+		return EventExportMetadataEventTypesItemFlagCheck, nil
+	case "identify":
+		return EventExportMetadataEventTypesItemIdentify, nil
+	case "inference":
+		return EventExportMetadataEventTypesItemInference, nil
+	case "track":
+		return EventExportMetadataEventTypesItemTrack, nil
+	}
+	var t EventExportMetadataEventTypesItem
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (e EventExportMetadataEventTypesItem) Ptr() *EventExportMetadataEventTypesItem {
+	return &e
 }
 
 var (

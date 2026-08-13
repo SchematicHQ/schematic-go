@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/schematichq/rulesengine"
+	"github.com/schematichq/schematic-go/rulesengine"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

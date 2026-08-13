@@ -1,0 +1,5 @@
+# Version marker written by scripts/download-wasm.sh so it can skip redundant
+# downloads. The WASM binary it sits next to is deliberately tracked -- see the
+# comment at the top of that script for why Go cannot gitignore it the way the
+# other Schematic SDKs do.
+rulesengine/wasm/.wasm_version

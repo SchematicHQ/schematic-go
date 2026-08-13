@@ -1,0 +1,1244 @@
+package rulesengine_test
+
+import (
+	"context"
+	"testing"
+
+	"github.com/schematichq/schematic-go/rulesengine"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+// TestCheckFlag is ported from the Go rules engine's own flagcheck_test.go, so
+// that the WebAssembly engine can be held to the same evaluation semantics the
+// native implementation was pinned to. Subtest names, structure, and assertions
+// are kept identical; only the call boundary (a package function becoming a
+// method) and the type/helper packages differ.
+func TestCheckFlag(t *testing.T) {
+	ctx := context.Background()
+
+	// One engine for the whole suite: construction compiles the module, which
+	// costs orders of magnitude more than a check.
+	engine := newTestEngine(t)
+
+	t.Run("Basic flag checks", func(t *testing.T) {
+		t.Run("Returns error result when flag is nil", func(t *testing.T) {
+			company := createTestCompany()
+
+			result, err := engine.CheckFlag(ctx, company, nil, nil)
+
+			assert.NoError(t, err)
+			assert.Equal(t, rulesengine.ReasonFlagNotFound, result.Reason)
+			assert.Equal(t, rulesengine.ErrorFlagNotFound, result.Err)
+		})
+
+		t.Run("Returns default value when no rules match", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = true
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)
+			assert.True(t, result.Value)
+			assert.Equal(t, &company.ID, result.CompanyID)
+		})
+
+		t.Run("Returns first matching rule's value", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			rule1 := createTestRule()
+			rule1.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition.ResourceIDs = []string{company.ID}
+			rule1.Conditions = append(rule1.Conditions, condition)
+
+			flag.Rules = append(flag.Rules, rule1)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Contains(t, result.Reason, "Matched standard rule")
+			assert.Equal(t, &rule1.ID, result.RuleID)
+		})
+	})
+
+	t.Run("Rule prioritization", func(t *testing.T) {
+		t.Run("Global override takes precedence", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+
+			// Create a standard rule that matches
+			standardRule := createTestRule()
+			standardRule.Value = false
+			standardCondition := createTestCondition(rulesengine.ConditionTypeCompany)
+			standardCondition.ResourceIDs = []string{company.ID}
+			standardRule.Conditions = append(standardRule.Conditions, standardCondition)
+
+			// Create a global override rule
+			overrideRule := createTestRule()
+			overrideRule.RuleType = rulesengine.RuleTypeGlobalOverride
+			overrideRule.Value = true
+
+			flag.Rules = append(flag.Rules, standardRule, overrideRule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &overrideRule.ID, result.RuleID)
+		})
+
+		t.Run("Rules evaluated in priority order", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+
+			// Create two matching rules with different priorities
+			rule1 := createTestRule()
+			rule1.Priority = 2
+			rule1.Value = false
+			condition1 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition1.ResourceIDs = []string{company.ID}
+			rule1.Conditions = append(rule1.Conditions, condition1)
+
+			rule2 := createTestRule()
+			rule2.Priority = 1 // Lower priority number = higher priority
+			rule2.Value = true
+			condition2 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition2.ResourceIDs = []string{company.ID}
+			rule2.Conditions = append(rule2.Conditions, condition2)
+
+			flag.Rules = append(flag.Rules, rule1, rule2)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &rule2.ID, result.RuleID)
+		})
+	})
+
+	t.Run("Condition groups", func(t *testing.T) {
+		t.Run("Matches when any condition in group matches", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+
+			rule := createTestRule()
+			rule.Value = true
+
+			// Create condition group with two conditions
+			condition1 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition1.ResourceIDs = []string{"non-matching-id"}
+
+			condition2 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition2.ResourceIDs = []string{company.ID}
+
+			group := &rulesengine.ConditionGroup{
+				Conditions: []*rulesengine.Condition{condition1, condition2},
+			}
+
+			rule.ConditionGroups = append(rule.ConditionGroups, group)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+	})
+
+	t.Run("Entitlement rules", func(t *testing.T) {
+		t.Run("Sets usage and allocation for metric condition", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+
+			// Create entitlement rule with metric condition
+			eventSubtype := "test-event"
+			rule := createTestRule()
+			rule.RuleType = rulesengine.RuleTypePlanEntitlement
+			rule.Value = true
+
+			condition := createTestCondition(rulesengine.ConditionTypeMetric)
+			condition.EventSubtype = &eventSubtype
+			metricValue := int64(10)
+			condition.MetricValue = &metricValue
+			condition.Operator = rulesengine.ComparableOperatorLte
+
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			// Create company metric
+			metric := createTestMetric(company, eventSubtype, *condition.MetricPeriod, 5)
+			metric.EventSubtype = eventSubtype
+			company.Metrics = append(company.Metrics, metric)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &rule.ID, result.RuleID)
+			assert.NotNil(t, result.FeatureUsage)
+			assert.Equal(t, int64(5), *result.FeatureUsage)
+			assert.NotNil(t, result.FeatureAllocation)
+			assert.Equal(t, int64(10), *result.FeatureAllocation)
+			assert.NotNil(t, result.FeatureUsageEvent)
+			assert.Equal(t, eventSubtype, *result.FeatureUsageEvent)
+		})
+
+		t.Run("Sets usage and allocation for trait condition", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+
+			// Create trait
+			traitDef := createTestTraitDefinition(rulesengine.ComparableTypeInt, rulesengine.EntityTypeCompany)
+			trait := createTestTrait("5", traitDef)
+			company.Traits = append(company.Traits, trait)
+
+			// Create entitlement rule with trait condition
+			rule := createTestRule()
+			rule.RuleType = rulesengine.RuleTypePlanEntitlement
+			rule.Value = true
+
+			condition := createTestCondition(rulesengine.ConditionTypeTrait)
+			condition.TraitDefinition = traitDef
+			condition.TraitValue = "10"
+			condition.Operator = rulesengine.ComparableOperatorLte
+
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &rule.ID, result.RuleID)
+			assert.NotNil(t, result.FeatureUsage)
+			assert.Equal(t, int64(5), *result.FeatureUsage)
+			assert.NotNil(t, result.FeatureAllocation)
+			assert.Equal(t, int64(10), *result.FeatureAllocation)
+		})
+
+		t.Run("Returns entitlement from company when rule matches", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+
+			// Create entitlement with matching feature key
+			allocation := int64(100)
+			usage := int64(50)
+			eventName := "test-event"
+			creditTotal := 1000.0
+
+			entitlement := &rulesengine.FeatureEntitlement{
+				FeatureID:   generateTestID("feat"),
+				FeatureKey:  flag.Key, // Match the flag key
+				ValueType:   rulesengine.EntitlementValueTypeNumeric,
+				Allocation:  &allocation,
+				Usage:       &usage,
+				EventName:   &eventName,
+				CreditTotal: &creditTotal,
+			}
+			company.Entitlements = []*rulesengine.FeatureEntitlement{entitlement}
+
+			// Create entitlement rule
+			rule := createTestRule()
+			rule.RuleType = rulesengine.RuleTypePlanEntitlement
+			rule.Value = true
+
+			// Add a simple company condition so the rule matches
+			condition := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition.ResourceIDs = []string{company.ID}
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &rule.ID, result.RuleID)
+			assert.NotNil(t, result.Entitlement)
+			assert.Equal(t, entitlement.FeatureID, result.Entitlement.FeatureID)
+			assert.Equal(t, entitlement.FeatureKey, result.Entitlement.FeatureKey)
+			assert.Equal(t, entitlement.ValueType, result.Entitlement.ValueType)
+			assert.Equal(t, entitlement.Allocation, result.Entitlement.Allocation)
+			assert.Equal(t, entitlement.Usage, result.Entitlement.Usage)
+		})
+	})
+
+	t.Run("User context", func(t *testing.T) {
+		t.Run("Matches user-specific conditions", func(t *testing.T) {
+			user := createTestUser()
+			flag := createTestFlag()
+
+			rule := createTestRule()
+			rule.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypeUser)
+			condition.ResourceIDs = []string{user.ID}
+			rule.Conditions = append(rule.Conditions, condition)
+
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, nil, user, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &user.ID, result.UserID)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("Checks user traits", func(t *testing.T) {
+			user := createTestUser()
+			traitDef := createTestTraitDefinition(rulesengine.ComparableTypeString, rulesengine.EntityTypeUser)
+			trait := createTestTrait("test-value", traitDef)
+			user.Traits = append(user.Traits, trait)
+
+			flag := createTestFlag()
+			rule := createTestRule()
+			rule.Value = true
+
+			condition := createTestCondition(rulesengine.ConditionTypeTrait)
+			condition.TraitDefinition = traitDef
+			condition.TraitValue = "test-value"
+			condition.Operator = rulesengine.ComparableOperatorEquals
+
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, nil, user, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+	})
+
+	t.Run("Company-provided rules", func(t *testing.T) {
+		t.Run("Company rule is evaluated along with flag rules", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			// Create a company-provided rule that matches
+			companyRule := createTestRule()
+			companyRule.FlagID = &flag.ID
+			companyRule.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition.ResourceIDs = []string{company.ID}
+			companyRule.Conditions = append(companyRule.Conditions, condition)
+
+			company.Rules = []*rulesengine.Rule{companyRule}
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &companyRule.ID, result.RuleID)
+		})
+
+		t.Run("Company rule respects priority ordering", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+
+			// Create flag rule with lower priority
+			flagRule := createTestRule()
+			flagRule.Priority = 2
+			flagRule.Value = false
+			condition1 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition1.ResourceIDs = []string{company.ID}
+			flagRule.Conditions = append(flagRule.Conditions, condition1)
+
+			// Create company rule with higher priority
+			companyRule := createTestRule()
+			companyRule.FlagID = &flag.ID
+			companyRule.Priority = 1
+			companyRule.Value = true
+			condition2 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition2.ResourceIDs = []string{company.ID}
+			companyRule.Conditions = append(companyRule.Conditions, condition2)
+
+			flag.Rules = []*rulesengine.Rule{flagRule}
+			company.Rules = []*rulesengine.Rule{companyRule}
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &companyRule.ID, result.RuleID)
+		})
+
+		t.Run("Company rule with global override type takes precedence", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+
+			// Create standard flag rule
+			flagRule := createTestRule()
+			flagRule.Value = false
+			condition1 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition1.ResourceIDs = []string{company.ID}
+			flagRule.Conditions = append(flagRule.Conditions, condition1)
+
+			// Create company rule with global override
+			companyRule := createTestRule()
+			companyRule.FlagID = &flag.ID
+			companyRule.RuleType = rulesengine.RuleTypeGlobalOverride
+			companyRule.Value = true
+
+			flag.Rules = []*rulesengine.Rule{flagRule}
+			company.Rules = []*rulesengine.Rule{companyRule}
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &companyRule.ID, result.RuleID)
+		})
+
+		t.Run("Multiple company rules are all evaluated", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			// Create two company rules, only one matches
+			companyRule1 := createTestRule()
+			companyRule1.FlagID = &flag.ID
+			companyRule1.Priority = 1
+			companyRule1.Value = true
+			condition1 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition1.ResourceIDs = []string{"non-matching-id"}
+			companyRule1.Conditions = append(companyRule1.Conditions, condition1)
+
+			companyRule2 := createTestRule()
+			companyRule2.FlagID = &flag.ID
+			companyRule2.Priority = 2
+			companyRule2.Value = true
+			condition2 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition2.ResourceIDs = []string{company.ID}
+			companyRule2.Conditions = append(companyRule2.Conditions, condition2)
+
+			company.Rules = []*rulesengine.Rule{companyRule1, companyRule2}
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &companyRule2.ID, result.RuleID)
+		})
+	})
+
+	t.Run("User-provided rules", func(t *testing.T) {
+		t.Run("User rule is evaluated along with flag rules", func(t *testing.T) {
+			user := createTestUser()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			// Create a user-provided rule that matches
+			userRule := createTestRule()
+			userRule.FlagID = &flag.ID
+			userRule.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypeUser)
+			condition.ResourceIDs = []string{user.ID}
+			userRule.Conditions = append(userRule.Conditions, condition)
+
+			user.Rules = []*rulesengine.Rule{userRule}
+
+			result, err := engine.CheckFlag(ctx, nil, user, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &userRule.ID, result.RuleID)
+		})
+
+		t.Run("User rule respects priority ordering", func(t *testing.T) {
+			user := createTestUser()
+			flag := createTestFlag()
+
+			// Create flag rule with lower priority
+			flagRule := createTestRule()
+			flagRule.Priority = 2
+			flagRule.Value = false
+			condition1 := createTestCondition(rulesengine.ConditionTypeUser)
+			condition1.ResourceIDs = []string{user.ID}
+			flagRule.Conditions = append(flagRule.Conditions, condition1)
+
+			// Create user rule with higher priority
+			userRule := createTestRule()
+			userRule.FlagID = &flag.ID
+			userRule.Priority = 1
+			userRule.Value = true
+			condition2 := createTestCondition(rulesengine.ConditionTypeUser)
+			condition2.ResourceIDs = []string{user.ID}
+			userRule.Conditions = append(userRule.Conditions, condition2)
+
+			flag.Rules = []*rulesengine.Rule{flagRule}
+			user.Rules = []*rulesengine.Rule{userRule}
+
+			result, err := engine.CheckFlag(ctx, nil, user, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &userRule.ID, result.RuleID)
+		})
+
+		t.Run("User rule with global override type takes precedence", func(t *testing.T) {
+			user := createTestUser()
+			flag := createTestFlag()
+
+			// Create standard flag rule
+			flagRule := createTestRule()
+			flagRule.Value = false
+			condition1 := createTestCondition(rulesengine.ConditionTypeUser)
+			condition1.ResourceIDs = []string{user.ID}
+			flagRule.Conditions = append(flagRule.Conditions, condition1)
+
+			// Create user rule with global override
+			userRule := createTestRule()
+			userRule.FlagID = &flag.ID
+			userRule.RuleType = rulesengine.RuleTypeGlobalOverride
+			userRule.Value = true
+
+			flag.Rules = []*rulesengine.Rule{flagRule}
+			user.Rules = []*rulesengine.Rule{userRule}
+
+			result, err := engine.CheckFlag(ctx, nil, user, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &userRule.ID, result.RuleID)
+		})
+	})
+
+	t.Run("Combined company and user rules", func(t *testing.T) {
+		t.Run("Both company and user rules are evaluated", func(t *testing.T) {
+			company := createTestCompany()
+			user := createTestUser()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			// Create company rule that doesn't match
+			companyRule := createTestRule()
+			companyRule.FlagID = &flag.ID
+			companyRule.Priority = 1
+			companyRule.Value = true
+			condition1 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition1.ResourceIDs = []string{"non-matching-id"}
+			companyRule.Conditions = append(companyRule.Conditions, condition1)
+
+			// Create user rule that matches
+			userRule := createTestRule()
+			userRule.FlagID = &flag.ID
+			userRule.Priority = 2
+			userRule.Value = true
+			condition2 := createTestCondition(rulesengine.ConditionTypeUser)
+			condition2.ResourceIDs = []string{user.ID}
+			userRule.Conditions = append(userRule.Conditions, condition2)
+
+			company.Rules = []*rulesengine.Rule{companyRule}
+			user.Rules = []*rulesengine.Rule{userRule}
+
+			result, err := engine.CheckFlag(ctx, company, user, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &userRule.ID, result.RuleID)
+		})
+
+		t.Run("All three rule sources evaluated with correct priority", func(t *testing.T) {
+			company := createTestCompany()
+			user := createTestUser()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			// Create rules from all three sources - all matching their respective conditions
+			flagRule := createTestRule()
+			flagRule.Priority = 2
+			flagRule.Value = true
+			condition1 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition1.ResourceIDs = []string{company.ID}
+			flagRule.Conditions = append(flagRule.Conditions, condition1)
+
+			companyRule := createTestRule()
+			companyRule.FlagID = &flag.ID
+			companyRule.Priority = 3
+			companyRule.Value = true
+			condition2 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition2.ResourceIDs = []string{company.ID}
+			companyRule.Conditions = append(companyRule.Conditions, condition2)
+
+			userRule := createTestRule()
+			userRule.FlagID = &flag.ID
+			userRule.Priority = 1 // Highest priority
+			userRule.Value = true
+			condition3 := createTestCondition(rulesengine.ConditionTypeUser)
+			condition3.ResourceIDs = []string{user.ID}
+			userRule.Conditions = append(userRule.Conditions, condition3)
+
+			flag.Rules = []*rulesengine.Rule{flagRule}
+			company.Rules = []*rulesengine.Rule{companyRule}
+			user.Rules = []*rulesengine.Rule{userRule}
+
+			result, err := engine.CheckFlag(ctx, company, user, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.NotNil(t, result.RuleID)
+			// Should match the user rule since it has highest priority (lowest number)
+			assert.Equal(t, &userRule.ID, result.RuleID)
+		})
+
+		t.Run("Company rules for different flag are not evaluated", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			otherFlagID := "other-flag-id"
+
+			// Create a company rule for a different flag
+			companyRuleForOtherFlag := createTestRule()
+			companyRuleForOtherFlag.FlagID = &otherFlagID
+			companyRuleForOtherFlag.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition.ResourceIDs = []string{company.ID}
+			companyRuleForOtherFlag.Conditions = append(companyRuleForOtherFlag.Conditions, condition)
+
+			company.Rules = []*rulesengine.Rule{companyRuleForOtherFlag}
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			// Should use default value since the company rule is for a different flag
+			assert.False(t, result.Value)
+			assert.Nil(t, result.RuleID)
+			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)
+		})
+
+		t.Run("User rules for different flag are not evaluated", func(t *testing.T) {
+			user := createTestUser()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			otherFlagID := "other-flag-id"
+
+			// Create a user rule for a different flag
+			userRuleForOtherFlag := createTestRule()
+			userRuleForOtherFlag.FlagID = &otherFlagID
+			userRuleForOtherFlag.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypeUser)
+			condition.ResourceIDs = []string{user.ID}
+			userRuleForOtherFlag.Conditions = append(userRuleForOtherFlag.Conditions, condition)
+
+			user.Rules = []*rulesengine.Rule{userRuleForOtherFlag}
+
+			result, err := engine.CheckFlag(ctx, nil, user, flag)
+
+			assert.NoError(t, err)
+			// Should use default value since the user rule is for a different flag
+			assert.False(t, result.Value)
+			assert.Nil(t, result.RuleID)
+			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)
+		})
+
+		t.Run("Rules with nil FlagID are not evaluated", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			// Create a company rule with nil FlagID (legacy rule before FlagID was added)
+			companyRuleWithoutFlagID := createTestRule()
+			companyRuleWithoutFlagID.FlagID = nil
+			companyRuleWithoutFlagID.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition.ResourceIDs = []string{company.ID}
+			companyRuleWithoutFlagID.Conditions = append(companyRuleWithoutFlagID.Conditions, condition)
+
+			company.Rules = []*rulesengine.Rule{companyRuleWithoutFlagID}
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			// Should use default value since the company rule has nil FlagID
+			assert.False(t, result.Value)
+			assert.Nil(t, result.RuleID)
+			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)
+		})
+
+		t.Run("Correct flag rule is selected when company has multiple flag rules", func(t *testing.T) {
+			company := createTestCompany()
+			flag1 := createTestFlag()
+			flag2 := createTestFlag()
+
+			// Create rules for two different flags
+			ruleForFlag1 := createTestRule()
+			ruleForFlag1.FlagID = &flag1.ID
+			ruleForFlag1.Value = true
+			condition1 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition1.ResourceIDs = []string{company.ID}
+			ruleForFlag1.Conditions = append(ruleForFlag1.Conditions, condition1)
+
+			ruleForFlag2 := createTestRule()
+			ruleForFlag2.FlagID = &flag2.ID
+			ruleForFlag2.Value = false
+			condition2 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition2.ResourceIDs = []string{company.ID}
+			ruleForFlag2.Conditions = append(ruleForFlag2.Conditions, condition2)
+
+			company.Rules = []*rulesengine.Rule{ruleForFlag1, ruleForFlag2}
+
+			// Check flag1 - should use ruleForFlag1
+			result1, err := engine.CheckFlag(ctx, company, nil, flag1)
+			assert.NoError(t, err)
+			assert.True(t, result1.Value)
+			assert.Equal(t, &ruleForFlag1.ID, result1.RuleID)
+
+			// Check flag2 - should use ruleForFlag2
+			result2, err := engine.CheckFlag(ctx, company, nil, flag2)
+			assert.NoError(t, err)
+			assert.False(t, result2.Value)
+			assert.Equal(t, &ruleForFlag2.ID, result2.RuleID)
+		})
+	})
+
+	t.Run("Plan version condition type", func(t *testing.T) {
+		t.Run("Matches when plan version IDs match", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			rule := createTestRule()
+			rule.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypePlanVersion)
+			condition.ResourceIDs = []string{company.PlanVersionIDs[0]}
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("Does not match when plan version IDs differ", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			rule := createTestRule()
+			rule.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypePlanVersion)
+			condition.ResourceIDs = []string{"non-matching-version-id"}
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.False(t, result.Value)
+			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)
+		})
+
+		t.Run("Returns false when company has no plan version IDs", func(t *testing.T) {
+			company := createTestCompany()
+			company.PlanVersionIDs = []string{} // Clear version IDs
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			rule := createTestRule()
+			rule.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypePlanVersion)
+			condition.ResourceIDs = []string{"some-version-id"}
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.False(t, result.Value)
+			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)
+		})
+
+		t.Run("NotEquals operator returns true when versions differ", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			rule := createTestRule()
+			rule.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypePlanVersion)
+			condition.ResourceIDs = []string{"non-matching-version-id"}
+			condition.Operator = rulesengine.ComparableOperatorNotEquals
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("NotEquals operator returns false when versions match", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			flag.DefaultValue = true
+
+			rule := createTestRule()
+			rule.Value = false
+			condition := createTestCondition(rulesengine.ConditionTypePlanVersion)
+			condition.ResourceIDs = []string{company.PlanVersionIDs[0]}
+			condition.Operator = rulesengine.ComparableOperatorNotEquals
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value) // Fallback to default, rule condition doesn't match
+			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)
+		})
+
+		t.Run("Returns false when company is nil", func(t *testing.T) {
+			flag := createTestFlag()
+			flag.DefaultValue = false
+
+			rule := createTestRule()
+			rule.Value = true
+			condition := createTestCondition(rulesengine.ConditionTypePlanVersion)
+			condition.ResourceIDs = []string{"some-version-id"}
+			rule.Conditions = append(rule.Conditions, condition)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, nil, nil, flag)
+
+			assert.NoError(t, err)
+			assert.False(t, result.Value)
+			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)
+		})
+	})
+
+	t.Run("Complex scenarios", func(t *testing.T) {
+		t.Run("Handles multiple condition types and groups", func(t *testing.T) {
+			company := createTestCompany()
+			trait := createTestTrait("test-value", nil)
+			company.Traits = append(company.Traits, trait)
+
+			flag := createTestFlag()
+			rule := createTestRule()
+			rule.Value = true
+
+			// Add direct conditions
+			condition1 := createTestCondition(rulesengine.ConditionTypeCompany)
+			condition1.ResourceIDs = []string{company.ID}
+			rule.Conditions = append(rule.Conditions, condition1)
+
+			condition2 := createTestCondition(rulesengine.ConditionTypeTrait)
+			condition2.TraitDefinition = trait.TraitDefinition
+			condition2.TraitValue = "test-value"
+			condition2.Operator = rulesengine.ComparableOperatorEquals
+			rule.Conditions = append(rule.Conditions, condition2)
+
+			// Add condition group
+			group := &rulesengine.ConditionGroup{
+				Conditions: []*rulesengine.Condition{
+					createTestCondition(rulesengine.ConditionTypePlan),
+					createTestCondition(rulesengine.ConditionTypeBasePlan),
+				},
+			}
+			group.Conditions[0].ResourceIDs = []string{company.PlanIDs[0]}
+			if company.BasePlanID != nil {
+				group.Conditions[1].ResourceIDs = []string{*company.BasePlanID}
+			}
+
+			rule.ConditionGroups = append(rule.ConditionGroups, group)
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			assert.NoError(t, err)
+			assert.True(t, result.Value)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("Handles missing or invalid data gracefully", func(t *testing.T) {
+			company := createTestCompany()
+			flag := createTestFlag()
+			rule := createTestRule()
+
+			// Add condition with nil fields
+			condition := &rulesengine.Condition{
+				ConditionType: rulesengine.ConditionTypeMetric,
+			}
+			rule.Conditions = append(rule.Conditions, condition)
+
+			// Add empty condition group
+			group := &rulesengine.ConditionGroup{}
+			rule.ConditionGroups = append(rule.ConditionGroups, group)
+
+			flag.Rules = append(flag.Rules, rule)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag)
+
+			// An unusable condition simply fails to match, and evaluation falls
+			// through to the flag's default -- the same contract the Go engine
+			// held. require, not assert: result is nil when err is non-nil.
+			require.NoError(t, err)
+			assert.Equal(t, flag.DefaultValue, result.Value)
+			assert.Equal(t, rulesengine.ReasonNoRulesMatched, result.Reason)
+		})
+	})
+
+	t.Run("Preflight options", func(t *testing.T) {
+		// Builds a flag wrapping a credit-balance rule with an optional event_subtype.
+		// Returns flag and rule so callers can assert on result.RuleID == &rule.ID.
+		creditFlag := func(creditID string, consumptionRate float64, eventSubtype *string) (*rulesengine.Flag, *rulesengine.Rule) {
+			rule := createTestRule()
+			condition := createTestCondition(rulesengine.ConditionTypeCredit)
+			condition.Operator = rulesengine.ComparableOperatorGte
+			condition.CreditID = &creditID
+			condition.ConsumptionRate = ptr(consumptionRate)
+			condition.EventSubtype = eventSubtype
+			rule.Conditions = []*rulesengine.Condition{condition}
+
+			flag := createTestFlag()
+			flag.DefaultValue = false
+			flag.Rules = []*rulesengine.Rule{rule}
+			return flag, rule
+		}
+
+		t.Run("Validation", func(t *testing.T) {
+			t.Run("Rejects negative WithUsage", func(t *testing.T) {
+				company := createTestCompany()
+				flag := createTestFlag()
+
+				result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithUsage(-1))
+
+				assert.Equal(t, rulesengine.ErrorNegativePreflightUsage, err)
+				assert.Equal(t, rulesengine.ErrorNegativePreflightUsage, result.Err)
+			})
+
+			t.Run("Rejects negative WithEventUsage", func(t *testing.T) {
+				company := createTestCompany()
+				flag := createTestFlag()
+
+				result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithEventUsage("api-calls", -5))
+
+				assert.Equal(t, rulesengine.ErrorNegativePreflightUsage, err)
+				assert.Equal(t, rulesengine.ErrorNegativePreflightUsage, result.Err)
+			})
+
+			t.Run("Rejects negative WithCreditCost", func(t *testing.T) {
+				company := createTestCompany()
+				flag := createTestFlag()
+
+				result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithCreditCost("credit-abc", -0.5))
+
+				assert.Equal(t, rulesengine.ErrorNegativePreflightCreditCost, err)
+				assert.Equal(t, rulesengine.ErrorNegativePreflightCreditCost, result.Err)
+			})
+
+			t.Run("Accepts zero values", func(t *testing.T) {
+				company := createTestCompany()
+				flag := createTestFlag()
+
+				result, err := engine.CheckFlag(
+					ctx, company, nil, flag,
+					rulesengine.WithUsage(0),
+					rulesengine.WithEventUsage("api-calls", 0),
+					rulesengine.WithCreditCost("credit-abc", 0),
+				)
+
+				assert.NoError(t, err)
+				assert.Nil(t, result.Err)
+			})
+		})
+
+		t.Run("WithCreditCost gates credit balance directly", func(t *testing.T) {
+			// Balance 100, rate 1 (would pass alone), credit_cost 50 → 100 >= 50 → true
+			company := createTestCompany()
+			creditID := "credit-abc"
+			company.CreditBalances = map[string]float64{creditID: 100.0}
+
+			flag, rule := creditFlag(creditID, 1.0, nil)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithCreditCost(creditID, 50.0))
+
+			assert.NoError(t, err)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("WithCreditCost fails when balance < cost", func(t *testing.T) {
+			// Balance 10, consumption_rate 1 (would pass), cost 50 → 10 < 50 → false
+			company := createTestCompany()
+			creditID := "credit-abc"
+			company.CreditBalances = map[string]float64{creditID: 10.0}
+
+			flag, _ := creditFlag(creditID, 1.0, nil)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithCreditCost(creditID, 50.0))
+
+			assert.NoError(t, err)
+			assert.Nil(t, result.RuleID)
+		})
+
+		t.Run("WithCreditCost ignores unrelated credit_id keys", func(t *testing.T) {
+			// credit_cost has a different credit_id → engine falls through to rate.
+			company := createTestCompany()
+			creditID := "credit-abc"
+			company.CreditBalances = map[string]float64{creditID: 5.0}
+
+			flag, rule := creditFlag(creditID, 1.0, nil)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithCreditCost("credit-other", 9999))
+
+			assert.NoError(t, err)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("WithUsage multiplies by consumption_rate on credit balance", func(t *testing.T) {
+			// usage 50, rate 0.0001 → 0.005 credits needed, balance 1.0 → true
+			company := createTestCompany()
+			creditID := "credit-abc"
+			company.CreditBalances = map[string]float64{creditID: 1.0}
+
+			flag, rule := creditFlag(creditID, 0.0001, nil)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithUsage(50))
+
+			assert.NoError(t, err)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("WithUsage fails credit balance when product exceeds balance", func(t *testing.T) {
+			// usage 20_000, rate 0.0001 → 2 credits needed, balance 1.0 → false
+			company := createTestCompany()
+			creditID := "credit-abc"
+			company.CreditBalances = map[string]float64{creditID: 1.0}
+
+			flag, _ := creditFlag(creditID, 0.0001, nil)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithUsage(20_000))
+
+			assert.NoError(t, err)
+			assert.Nil(t, result.RuleID)
+		})
+
+		t.Run("WithEventUsage with matching subtype on credit balance", func(t *testing.T) {
+			// quantity 100, rate 0.05 → 5 credits needed, balance 10 → true
+			company := createTestCompany()
+			creditID := "credit-abc"
+			eventSubtype := "api-calls"
+			company.CreditBalances = map[string]float64{creditID: 10.0}
+
+			flag, rule := creditFlag(creditID, 0.05, &eventSubtype)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithEventUsage(eventSubtype, 100))
+
+			assert.NoError(t, err)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("WithEventUsage with non-matching subtype falls through", func(t *testing.T) {
+			// event_usage is keyed to "other-events" but condition is "api-calls".
+			// Falls through to balance >= consumption_rate: 5 >= 1 → true.
+			company := createTestCompany()
+			creditID := "credit-abc"
+			eventSubtype := "api-calls"
+			company.CreditBalances = map[string]float64{creditID: 5.0}
+
+			flag, rule := creditFlag(creditID, 1.0, &eventSubtype)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithEventUsage("other-events", 9999))
+
+			assert.NoError(t, err)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("Repeated WithEventUsage replaces the previous pair", func(t *testing.T) {
+			// Last write wins (matching WithUsage): the surviving pair is
+			// ("api-calls", 100) → 100 × 0.05 = 5 needed, balance 10 → true.
+			// If the earlier ("api-calls", 1M) entry survived, the check
+			// would fail.
+			company := createTestCompany()
+			creditID := "credit-abc"
+			eventSubtype := "api-calls"
+			company.CreditBalances = map[string]float64{creditID: 10.0}
+
+			flag, rule := creditFlag(creditID, 0.05, &eventSubtype)
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag,
+				rulesengine.WithEventUsage(eventSubtype, 1_000_000),
+				rulesengine.WithEventUsage(eventSubtype, 100),
+			)
+
+			assert.NoError(t, err)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("WithEventUsage preferred over WithUsage on credit balance", func(t *testing.T) {
+			// event_usage matches subtype → 5 × 1 = 5 needed, balance 10 → true.
+			// usage 1M × 1 = 1M would fail. event_usage must win.
+			company := createTestCompany()
+			creditID := "credit-abc"
+			eventSubtype := "api-calls"
+			company.CreditBalances = map[string]float64{creditID: 10.0}
+
+			flag, rule := creditFlag(creditID, 1.0, &eventSubtype)
+
+			result, err := engine.CheckFlag(
+				ctx, company, nil, flag,
+				rulesengine.WithUsage(1_000_000),
+				rulesengine.WithEventUsage(eventSubtype, 5),
+			)
+
+			assert.NoError(t, err)
+			assert.Equal(t, &rule.ID, result.RuleID, "event_usage match should win over generic usage on credit balance")
+		})
+
+		t.Run("WithCreditCost takes precedence over WithUsage", func(t *testing.T) {
+			// credit_cost says 5 (passes); usage 1M × 0.05 = 50K (would fail).
+			// credit_cost should short-circuit and pass.
+			company := createTestCompany()
+			creditID := "credit-abc"
+			company.CreditBalances = map[string]float64{creditID: 10.0}
+
+			flag, rule := creditFlag(creditID, 0.05, nil)
+
+			result, err := engine.CheckFlag(
+				ctx, company, nil, flag,
+				rulesengine.WithCreditCost(creditID, 5.0),
+				rulesengine.WithUsage(1_000_000),
+			)
+
+			assert.NoError(t, err)
+			assert.Equal(t, &rule.ID, result.RuleID)
+		})
+
+		t.Run("WithCreditCost takes precedence over WithEventUsage", func(t *testing.T) {
+			// credit_cost says 5 (passes); event_usage 1M × 0.05 = 50K (would fail).
+			// credit_cost should short-circuit and pass.
+			company := createTestCompany()
+			creditID := "credit-abc"
+			eventSubtype := "api-calls"
+			company.CreditBalances = map[string]float64{creditID: 10.0}
+
+			flag, rule := creditFlag(creditID, 0.05, &eventSubtype)
+
+			result, err := engine.CheckFlag(
+				ctx, company, nil, flag,
+				rulesengine.WithCreditCost(creditID, 5.0),
+				rulesengine.WithEventUsage(eventSubtype, 1_000_000),
+			)
+
+			assert.NoError(t, err)
+			assert.Equal(t, &rule.ID, result.RuleID, "credit_cost should short-circuit event_usage")
+		})
+
+		t.Run("WithUsage flips metric condition to false", func(t *testing.T) {
+			// metric value 5, limit 10 → 5 <= 10 → true. With usage=10 → 15 > 10 → false.
+			company := createTestCompany()
+
+			rule := createTestRule()
+			condition := createTestCondition(rulesengine.ConditionTypeMetric)
+			condition.Operator = rulesengine.ComparableOperatorLte
+			limit := int64(10)
+			condition.MetricValue = &limit
+			rule.Conditions = []*rulesengine.Condition{condition}
+
+			metric := createTestMetric(company, *condition.EventSubtype, *condition.MetricPeriod, 5)
+			company.Metrics = append(company.Metrics, metric)
+
+			flag := createTestFlag()
+			flag.DefaultValue = false
+			flag.Rules = []*rulesengine.Rule{rule}
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithUsage(10))
+
+			assert.NoError(t, err)
+			assert.Nil(t, result.RuleID, "usage should push metric over the limit")
+		})
+
+		t.Run("WithEventUsage preferred over WithUsage on metric", func(t *testing.T) {
+			// event_usage matches subtype → uses 10 (push over). usage 1 ignored.
+			company := createTestCompany()
+
+			rule := createTestRule()
+			condition := createTestCondition(rulesengine.ConditionTypeMetric)
+			condition.Operator = rulesengine.ComparableOperatorLte
+			limit := int64(10)
+			condition.MetricValue = &limit
+			rule.Conditions = []*rulesengine.Condition{condition}
+
+			metric := createTestMetric(company, *condition.EventSubtype, *condition.MetricPeriod, 5)
+			company.Metrics = append(company.Metrics, metric)
+
+			flag := createTestFlag()
+			flag.DefaultValue = false
+			flag.Rules = []*rulesengine.Rule{rule}
+
+			result, err := engine.CheckFlag(
+				ctx, company, nil, flag,
+				rulesengine.WithUsage(1),
+				rulesengine.WithEventUsage(*condition.EventSubtype, 10),
+			)
+
+			assert.NoError(t, err)
+			assert.Nil(t, result.RuleID, "event_usage match should win over usage")
+		})
+
+		t.Run("WithEventUsage=0 falls through to WithUsage on metric", func(t *testing.T) {
+			// event_usage[subtype]=0 must NOT shadow usage. metric=5, usage=10
+			// → left=15 > limit=10 → false. The `ok && quantity > 0` guard in
+			// checkMetricCondition is what keeps usage in play when the
+			// event_usage entry is explicitly zero. Mirrored on rulesengine-rust.
+			company := createTestCompany()
+
+			rule := createTestRule()
+			condition := createTestCondition(rulesengine.ConditionTypeMetric)
+			condition.Operator = rulesengine.ComparableOperatorLte
+			limit := int64(10)
+			condition.MetricValue = &limit
+			rule.Conditions = []*rulesengine.Condition{condition}
+
+			metric := createTestMetric(company, *condition.EventSubtype, *condition.MetricPeriod, 5)
+			company.Metrics = append(company.Metrics, metric)
+
+			flag := createTestFlag()
+			flag.DefaultValue = false
+			flag.Rules = []*rulesengine.Rule{rule}
+
+			result, err := engine.CheckFlag(
+				ctx, company, nil, flag,
+				rulesengine.WithEventUsage(*condition.EventSubtype, 0),
+				rulesengine.WithUsage(10),
+			)
+
+			assert.NoError(t, err)
+			assert.Nil(t, result.RuleID, "event_usage=0 must fall through to usage, pushing metric over the limit")
+		})
+
+		t.Run("WithUsage flips int trait condition to false", func(t *testing.T) {
+			// trait 5, limit 10 → 5 <= 10 → true. With usage=10 → 15 > 10 → false.
+			company := createTestCompany()
+
+			rule := createTestRule()
+			condition := createTestCondition(rulesengine.ConditionTypeTrait)
+			condition.Operator = rulesengine.ComparableOperatorLte
+			condition.TraitValue = "10"
+			rule.Conditions = []*rulesengine.Condition{condition}
+
+			company.Traits = append(company.Traits, createTestTrait("5", condition.TraitDefinition))
+
+			flag := createTestFlag()
+			flag.DefaultValue = false
+			flag.Rules = []*rulesengine.Rule{rule}
+
+			result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithUsage(10))
+
+			assert.NoError(t, err)
+			assert.Nil(t, result.RuleID, "usage should push int trait over limit")
+		})
+	})
+}

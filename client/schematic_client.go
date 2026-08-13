@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/schematichq/rulesengine"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/buffer"
 	"github.com/schematichq/schematic-go/cache"
@@ -15,6 +14,7 @@ import (
 	"github.com/schematichq/schematic-go/flags"
 	"github.com/schematichq/schematic-go/logger"
 	option "github.com/schematichq/schematic-go/option"
+	"github.com/schematichq/schematic-go/rulesengine"
 )
 
 type SchematicClient struct {
